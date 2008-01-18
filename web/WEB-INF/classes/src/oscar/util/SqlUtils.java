@@ -38,8 +38,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -584,4 +586,60 @@ public class SqlUtils {
             }
         }
     }
+    
+    public static String isoToOracleDate(String isoDate) throws ParseException
+    {
+        if (isoDate==null) return(null);
+        
+        SimpleDateFormat isoFormat=new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date date=isoFormat.parse(isoDate);
+        
+        SimpleDateFormat oracleFormat=new SimpleDateFormat("dd-MMM-yyyy");
+        return(oracleFormat.format(date));
+    }
+    
+    /**
+     * Hey! that's not an iso date format.
+     */
+    public static String isoToOracleDate2(String isoDate) throws ParseException
+    {
+        if (isoDate==null) return(null);
+        
+        SimpleDateFormat isoFormat=new SimpleDateFormat("yyyy/MM/dd");
+        java.util.Date date=isoFormat.parse(isoDate);
+        
+        SimpleDateFormat oracleFormat=new SimpleDateFormat("dd-MMM-yyyy");
+        return(oracleFormat.format(date));
+    }
+    
+    /**
+     * Hey! that's not an iso date format.
+     */
+    public static String isoToOracleDate3(String isoDate) throws ParseException
+    {
+        if (isoDate==null) return(null);
+        
+        SimpleDateFormat isoFormat=new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+        java.util.Date date=isoFormat.parse(isoDate);
+        
+        SimpleDateFormat oracleFormat=new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
+        return(oracleFormat.format(date));
+    }
+    
+      
+    public static String addOneDay(String oldDate) throws ParseException
+    {
+        SimpleDateFormat isoFormat=new SimpleDateFormat("dd-MMM-yyyy");
+        java.util.Date date1=isoFormat.parse(oldDate);
+        
+        Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date1);
+		calendar.add(Calendar.DAY_OF_YEAR, 1);
+		date1 = calendar.getTime();
+        
+        SimpleDateFormat oracleFormat=new SimpleDateFormat("dd-MMM-yyyy");
+        
+        return(oracleFormat.format(date1));
+    }
+    
 }

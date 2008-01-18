@@ -56,7 +56,7 @@ public class ScratchData {
             //Get Provider from database
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            String sql = "SELECT * FROM scratch_pad WHERE provider_no = '" + providerNo + "' order by id  desc limit 1";
+            String sql = "SELECT * FROM scratch_pad WHERE provider_no = " + providerNo + " order by id  desc limit 1";
             rs = db.GetSQL(sql);
    
             if (rs.next()){
