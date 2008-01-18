@@ -131,7 +131,7 @@ public class ProgramManagerViewAction extends BaseAction {
         request.setAttribute("ageConflict", ageConflict);
 
         if (formBean.getTab() == null || formBean.getTab().equals("")) {
-            if (queue.size() > 0 || remoteReferrals.length>0) {
+            if ((queue!=null && queue.size() > 0) || (remoteReferrals!=null && remoteReferrals.length>0)) {
                 formBean.setTab("Queue");
             }
             else {
