@@ -5,7 +5,9 @@
         <reportFont name="sansserif" isDefault="false" fontName="sansserif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
         <parameter name="demo" class="java.lang.String">
         </parameter>
-        <queryString><![CDATA[select d.last_name, d.first_name, d.address, d.city , d.province, d.postal, CONCAT(p.last_name, ', ' ,p.first_name) as doc_name from demographic d, provider p where demographic_no =$P{demo} and d.provider_no = p.provider_no ]]></queryString>
+        <queryString><![CDATA[select d.last_name, d.first_name, CONCAT(d.address,' ') as address, 
+                        CONCAT(d.city,' ') as city, CONCAT(d.province,' ') as province, CONCAT(d.postal,' ') as postal,  CONCAT(p.last_name, CONCAT(', ' ,p.first_name)) as doc_name 
+			from demographic d, provider p where demographic_no =$P{demo} and d.provider_no = p.provider_no ]]></queryString>
         <field name="last_name" class="java.lang.String">
         </field>
         <field name="first_name" class="java.lang.String">
