@@ -106,7 +106,7 @@
 				//If the user don't have the role "perform bed assignments" for this program, then tab "perform bed assignments" won't show up.
 				if(OscarProperties.getInstance().isTorontoRFQ())  {
                     Object pfb = request.getSession().getAttribute("performBedAssignments");
-                    if((pfb != null) && !((Boolean) pfb) &&
+                    if((pfb != null) && !(((Boolean) pfb).booleanValue()) &&
                             "Bed Reservation".equalsIgnoreCase(ClientManagerFormBean.tabs[x]))
 						continue;					
 				}
@@ -132,5 +132,5 @@ if(selectedTab.contains("Bed/Room")){
 }
 %>	
 	<%@ include file="/common/messages.jsp"%>
-	<jsp:include page="<%="/PMmodule/ClientManager/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>" />
+	<jsp:include page='<%="/PMmodule/ClientManager/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>' />
 </html:form>
