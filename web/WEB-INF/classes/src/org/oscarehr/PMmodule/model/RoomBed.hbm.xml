@@ -25,6 +25,6 @@
 		</composite-id>
 		<property name="assignStart" column="assign_start" type="date" not-null="true" length="10"  />
 		<property name="assignEnd" column="assign_end" type="date" not-null="true" length="10" />
-		<property name="comment" column="comment" type="string" not-null="false" length="50" />
+		<property name="comment" column="comments" type="string" not-null="false" length="50" />
 	</class>
 </hibernate-mapping>
