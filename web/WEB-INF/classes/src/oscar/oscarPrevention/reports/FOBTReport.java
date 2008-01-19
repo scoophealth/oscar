@@ -68,23 +68,23 @@ public class FOBTReport implements PreventionReport{
 
              //search   prevention_date prevention_type  deleted   refused 
              ArrayList  prevs = pd.getPreventionData("FOBT",demo); 
+             ArrayList  colonoscopys = pd.getPreventionData("COLONOSCOPY",demo); 
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
-
-             if (prevs.size() == 0){// no info
-                prd.rank = 1;
-                prd.lastDate = "------";
-                prd.state = "No Info";                
-                prd.numMonths = "------";
-                prd.color = "Magenta";
-             }else if(ineligible((Hashtable) prevs.get(prevs.size()-1))){
+             if(ineligible(prevs) || colonoscopywith5(colonoscopys,asofDate)){
                 prd.rank = 5;
                 prd.lastDate = "------"; 
                 prd.state = "Ineligible"; 
                 prd.numMonths = "------";
                 prd.color = "grey";
                 inList++;
+             }else if (prevs.size() == 0){// no info
+                prd.rank = 1;
+                prd.lastDate = "------";
+                prd.state = "No Info";                
+                prd.numMonths = "------";
+                prd.color = "Magenta";
              }else{
                 Hashtable h = (Hashtable) prevs.get(prevs.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -209,6 +209,39 @@ public class FOBTReport implements PreventionReport{
        return ret;
    }
     
+   boolean ineligible(ArrayList list){
+       for (int i =0; i < list.size(); i ++){
+           Hashtable h = (Hashtable) list.get(i);
+           if (ineligible(h)){
+               return true;
+           }
+       }
+       return false;
+   } 
+   
+   boolean colonoscopywith5(ArrayList list,Date asofDate){
+       DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+       Calendar cal = Calendar.getInstance();
+       cal.setTime(asofDate);
+       cal.add(Calendar.YEAR, -5);
+       Date fiveyearcutoff = cal.getTime();
+       for (int i =0; i < list.size(); i ++){
+           Hashtable h = (Hashtable) list.get(i);
+           if ( h.get("refused") != null && ((String) h.get("refused")).equals("0")){
+                   
+                String prevDateStr = (String) h.get("prevention_date");
+                Date prevDate = null;
+                try{
+                   prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                }catch (Exception e){}
+                
+                if (fiveyearcutoff.before(prevDate)){
+                   return true;   
+                }
+           }
+       }
+       return false;
+   } 
     
     
    //TODO: THIS MAY NEED TO BE REFACTORED AT SOME POINT IF MAM and PAP are exactly the same  
@@ -251,8 +284,8 @@ public class FOBTReport implements PreventionReport{
                   log.debug("toString: "+measurementData.toString());
                   prd.lastFollowup = measurementData.getDateObservedAsDate();
                   prd.lastFollupProcedure = measurementData.getDataField();
-                  
-                  
+                          
+                          
                   Calendar oneyear = Calendar.getInstance();
                   oneyear.setTime(asofDate);                
                   oneyear.add(Calendar.YEAR,-1);
@@ -264,12 +297,12 @@ public class FOBTReport implements PreventionReport{
                       
                       Calendar threemonth = Calendar.getInstance();
                       threemonth.setTime(asofDate);                
-                      threemonth.add(Calendar.MONTH,-3);
+                      threemonth.add(Calendar.MONTH,-1);
                           if ( measurementData.getDateObservedAsDate().before(threemonth.getTime())){
                               if (prd.lastFollupProcedure.equals(this.LETTER1)){
                                     prd.nextSuggestedProcedure = this.LETTER2;
                                     return this.LETTER2;
-                              }else if(prd.lastFollupProcedure.equals(this.LETTER1)){
+                              }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
                                     prd.nextSuggestedProcedure = this.PHONE1;
                                     return this.PHONE1;
                               }else{
@@ -277,6 +310,12 @@ public class FOBTReport implements PreventionReport{
                                   return "----";
                               }
                           
+                          }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
+                              prd.nextSuggestedProcedure = this.PHONE1;
+                              return this.PHONE1;
+                          }else{
+                              prd.nextSuggestedProcedure = "----";
+                              return "----";
                           }
                   }
 
