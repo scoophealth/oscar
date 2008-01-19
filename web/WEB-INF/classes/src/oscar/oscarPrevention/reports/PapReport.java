@@ -70,36 +70,59 @@ public class PapReport implements PreventionReport {
              String demo = (String) fieldList.get(0);  
              //search   prevention_date prevention_type  deleted   refused 
              ArrayList  prevs = pd.getPreventionData("PAP",demo); 
+             ArrayList noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
-             if (prevs.size() == 0){// no info
-                prd.rank = 1;
-                prd.lastDate = "------";
-                prd.state = "No Info";                
-                prd.numMonths = "------";
-                prd.color = "Magenta";
-             }else if(ineligible((Hashtable) prevs.get(prevs.size()-1))){
+             if(ineligible(prevs)){
                 prd.rank = 5;
                 prd.lastDate = "------"; 
                 prd.state = "Ineligible"; 
                 prd.numMonths = "------";
                 prd.color = "grey";
                 inList++;
+             }else if (noFutureItems.size() == 0){// no info
+                prd.rank = 1;
+                prd.lastDate = "------";
+                prd.state = "No Info";                
+                prd.numMonths = "------";
+                prd.color = "Magenta";
              }else{
-                Hashtable h = (Hashtable) prevs.get(prevs.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                Hashtable h = (Hashtable) noFutureItems.get(noFutureItems.size()-1);
+                
+                boolean refused = false;
+                boolean dateIsRefused = false;
+                if ( h.get("refused") != null && ((String) h.get("refused")).equals("1")){
+                   refused = true;
+                   dateIsRefused = true;
+                }
+                
                 String prevDateStr = (String) h.get("prevention_date");
+                
+                
+                if (refused && noFutureItems.size() > 1){
+                    log.debug("REFUSED AND PREV IS greater than one for demo "+demo);
+                    for (int pr = (noFutureItems.size() -2) ; pr > -1; pr--){
+                        log.debug("pr #"+pr);
+                        Hashtable h2 = (Hashtable) noFutureItems.get(pr);
+                        log.debug("pr #"+pr+ "  "+((String) h2.get("refused")));
+                        if ( h2.get("refused") != null && ((String) h2.get("refused")).equals("0")){
+                            prevDateStr = (String) h2.get("prevention_date");
+                            dateIsRefused = false;
+                            log.debug("REFUSED prevDateStr "+prevDateStr);
+                            pr = 0;
+                        }
+                    }
+                }
                 Date prevDate = null;
                 try{
                    prevDate = (java.util.Date)formatter.parse(prevDateStr);
                 }catch (Exception e){}
-                boolean refused = false;
-                if ( h.get("refused") != null && ((String) h.get("refused")).equals("1")){
-                   refused = true;
-                }
                 
-                Calendar cal = Calendar.getInstance();
+                
+                
+                    Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.YEAR, -2);
                 Date dueDate = cal.getTime();                
                 cal.add(Calendar.MONTH,-6);
@@ -125,14 +148,19 @@ public class PapReport implements PreventionReport {
                 
                 // if prevDate is less than as of date and greater than 2 years prior 
                 Calendar bonusEl = Calendar.getInstance();
-                bonusEl.setTime(asofDate);                
-                bonusEl.add(Calendar.YEAR,-2);
+                bonusEl.setTime(asofDate);    
+                bonusEl.add(Calendar.MONTH,-30);
+                //bonusEl.add(Calendar.YEAR,-2);
                 Date bonusStartDate = bonusEl.getTime();
                 
                 log.debug("\n\n\n prevDate "+prevDate);
                 log.debug("bonusEl date "+bonusStartDate+ " "+bonusEl.after(prevDate));
                 log.debug("asofDate date"+asofDate+" "+asofDate.after(prevDate));
-                if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate)){
+                
+                //IF REFUSED SHOULD CHECK TO SEE IF
+                
+                
+                if (!dateIsRefused && bonusStartDate.before(prevDate) && asofDate.after(prevDate)){
                    prd.bonusStatus = "Y";
                    done++;
                 }
@@ -146,7 +174,10 @@ public class PapReport implements PreventionReport {
                    prd.state = "due";
                    prd.numMonths = numMonths;
                    prd.color = "yellow"; //FF00FF
-                   doneWithGrace++;
+                   if (!prd.bonusStatus.equals("Y")){
+                      prd.bonusStatus = "Y";
+                      doneWithGrace++;
+                   }
                    
                 } else if (!refused && cutoffDate.after(prevDate)){ // overdue
                    prd.rank = 2;
@@ -157,7 +188,7 @@ public class PapReport implements PreventionReport {
                    
                 } else if (refused){  // recorded and refused
                    prd.rank = 3;
-                   prd.lastDate = "-----";
+                   prd.lastDate = prevDateStr;                
                    prd.state = "Refused";
                    prd.numMonths = numMonths;
                    prd.color = "orange"; //FF9933
@@ -177,7 +208,7 @@ public class PapReport implements PreventionReport {
           String percentStr = "0";
           String percentWithGraceStr = "0";
           double eligible = list.size() - inList;
-          log.debug("eligible "+eligible+" done "+done);
+          log.debug("eligible "+eligible+" done "+done+" doneWithGrace "+doneWithGrace);
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
              double percentageWithGrace =  (done+doneWithGrace) / eligible  * 100 ;
@@ -212,6 +243,34 @@ public class PapReport implements PreventionReport {
           ret = true;
        }
        return ret;
+   }
+    
+   boolean ineligible(ArrayList list){
+       for (int i =0; i < list.size(); i ++){
+           Hashtable h = (Hashtable) list.get(i);
+           if (ineligible(h)){
+               return true;
+           }
+       }
+       return false;
+   } 
+   
+   ArrayList removeFutureItems(ArrayList list,Date asOfDate){
+       ArrayList noFutureItems = new ArrayList();
+       DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+       for (int i =0; i < list.size(); i ++){
+            Hashtable h = (Hashtable) list.get(i);       
+            String prevDateStr = (String) h.get("prevention_date");
+            Date prevDate = null;
+            try{
+                prevDate = (java.util.Date)formatter.parse(prevDateStr);
+            }catch (Exception e){}
+
+            if (prevDate != null && prevDate.before(asOfDate)){
+               noFutureItems.add(h);
+            }
+       }
+       return noFutureItems;
    }
 
     
@@ -260,7 +319,7 @@ public class PapReport implements PreventionReport {
                   Calendar oneyear = Calendar.getInstance();
                   oneyear.setTime(asofDate);                
                   oneyear.add(Calendar.YEAR,-1);
-                  
+                  //NEED CLEANER METHOD OF DOING THIS
                   if ( measurementData.getDateObservedAsDate().before(oneyear.getTime())){
                       prd.nextSuggestedProcedure = this.LETTER1;
                       return this.LETTER1;
@@ -268,12 +327,12 @@ public class PapReport implements PreventionReport {
                       
                       Calendar threemonth = Calendar.getInstance();
                       threemonth.setTime(asofDate);                
-                      threemonth.add(Calendar.MONTH,-3);
+                      threemonth.add(Calendar.MONTH,-1);
                           if ( measurementData.getDateObservedAsDate().before(threemonth.getTime())){
                               if (prd.lastFollupProcedure.equals(this.LETTER1)){
                                     prd.nextSuggestedProcedure = this.LETTER2;
                                     return this.LETTER2;
-                              }else if(prd.lastFollupProcedure.equals(this.LETTER1)){
+                              }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
                                     prd.nextSuggestedProcedure = this.PHONE1;
                                     return this.PHONE1;
                               }else{
@@ -281,6 +340,12 @@ public class PapReport implements PreventionReport {
                                   return "----";
                               }
                           
+                          }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
+                              prd.nextSuggestedProcedure = this.PHONE1;
+                              return this.PHONE1;
+                          }else{
+                              prd.nextSuggestedProcedure = "----";
+                              return "----";
                           }
                   }
 
@@ -293,6 +358,15 @@ public class PapReport implements PreventionReport {
           
           }else if (prd.state.equals("Refused")){  //Not sure what to do about refused
                 //prd.lastDate = "-----";  
+              EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
+              log.debug("getting followup data for "+prd.demographicNo);
+              Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+              System.out.print("fluFollowupData size = "+followupData.size());
+              if ( followupData.size() > 0 ){
+                  EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+                  prd.lastFollowup = measurementData.getDateObservedAsDate();
+                  prd.lastFollupProcedure = measurementData.getDataField();
+              }
               prd.nextSuggestedProcedure = "----";
                 //prd.numMonths ;
           }else if(prd.state.equals("Ineligible")){
@@ -300,6 +374,15 @@ public class PapReport implements PreventionReport {
                 prd.nextSuggestedProcedure = "----"; 
           }else if(prd.state.equals("Up to date")){
                 //Do nothing
+              EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
+              log.debug("getting followup data for "+prd.demographicNo);
+              Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+              System.out.print("fluFollowupData size = "+followupData.size());
+              if ( followupData.size() > 0 ){
+                  EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+                  prd.lastFollowup = measurementData.getDateObservedAsDate();
+                  prd.lastFollupProcedure = measurementData.getDataField();
+              }
               prd.nextSuggestedProcedure = "----";
           }else{
                log.debug("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
