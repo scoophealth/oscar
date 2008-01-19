@@ -178,11 +178,11 @@ public class ChildImmunizationReport implements PreventionReport{
                 Date dob = dd.getDemographicDOB(demo);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(dob);
-                cal.add(Calendar.YEAR, 2);
+                cal.add(Calendar.MONTH, 30);
                 Date twoYearsAfterDOB = cal.getTime();
                 
-                //log.debug("twoYearsAfterDOB date "+twoYearsAfterDOB+ " "+lastDate.before(twoYearsAfterDOB) );
-                if (!refused && (totalImmunizations >= recommTotal  ) && lastDate.before(twoYearsAfterDOB) ){//&& endOfYear.after(prevDate)){                  
+                log.debug("twoYearsAfterDOB date "+twoYearsAfterDOB+ " "+lastDate.before(twoYearsAfterDOB) );
+                if (!refused && (totalImmunizations >= recommTotal  ) && lastDate.before(twoYearsAfterDOB) && ( ageInMonths > 24 )){//&& endOfYear.after(prevDate)){                  
                    prd.bonusStatus = "Y";
                    done++;
                 }
@@ -288,7 +288,7 @@ public class ChildImmunizationReport implements PreventionReport{
   
    private String letterProcessing(PreventionReportDisplay prd,String measurementType,Date asofDate){
        if (prd != null){
-          if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue")){
+          if (prd.state.equals("No Info") ){
               // Get LAST contact method
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
               log.debug("getting followup data for "+prd.demographicNo);
@@ -310,12 +310,20 @@ public class ChildImmunizationReport implements PreventionReport{
                   
                   Calendar threemonth = Calendar.getInstance();
                   threemonth.setTime(asofDate);                
-                  threemonth.add(Calendar.MONTH,-3);
-                  if ( measurementData.getDateObservedAsDate().before(threemonth.getTime())){
+                  threemonth.add(Calendar.MONTH,-1);
+                  Date onemon = threemonth.getTime();
+                  threemonth.add(Calendar.MONTH,-2);
+                  Date threemon = threemonth.getTime();
+                  
+                  if ( measurementData.getDateObservedAsDate().before(onemon)){
                       if (prd.lastFollupProcedure.equals(this.LETTER1)){
                                     prd.nextSuggestedProcedure = this.LETTER2;
                                     return this.LETTER2;
-                      }else if(prd.lastFollupProcedure.equals(this.LETTER1)){
+                      //is last measurementData within 3 months               
+                      }else if( measurementData.getDateObservedAsDate().before(threemon)){
+                                  prd.nextSuggestedProcedure = "----";
+                                  return "----";                  
+                      }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
                                     prd.nextSuggestedProcedure = this.PHONE1;
                                     return this.PHONE1;
                       }else{
@@ -323,11 +331,27 @@ public class ChildImmunizationReport implements PreventionReport{
                                   return "----";
                       }
                           
+                  }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
+                      prd.nextSuggestedProcedure = this.PHONE1;
+                      return this.PHONE1;
+                  }else{
+                      prd.nextSuggestedProcedure = "----";
+                      return "----";
                   }                  
               }
-          
-          }else if (prd.state.equals("Refused")){  //Not sure what to do about refused
+          }else if (prd.state.equals("Refused")  || prd.state.equals("due") || prd.state.equals("Overdue") ){  //Not sure what to do about refused
                 //prd.lastDate = "-----";  
+              
+              EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
+              log.debug("getting followup data for "+prd.demographicNo);
+              Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+              System.out.print("fluFollowupData size = "+followupData.size());
+              if ( followupData.size() > 0 ){
+                  EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+                  prd.lastFollowup = measurementData.getDateObservedAsDate();
+                  prd.lastFollupProcedure = measurementData.getDataField();
+              }
+              
               prd.nextSuggestedProcedure = "----";
                 //prd.numMonths ;
           }else if(prd.state.equals("Ineligible")){
