@@ -68,25 +68,25 @@ public class MammogramReport implements PreventionReport{
 
              //search   prevention_date prevention_type  deleted   refused 
              ArrayList  prevs = pd.getPreventionData("MAM",demo); 
+             ArrayList noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
-
-             if (prevs.size() == 0){// no info
-                prd.rank = 1;
-                prd.lastDate = "------";
-                prd.state = "No Info";                
-                prd.numMonths = "------";
-                prd.color = "Magenta";
-             }else if(ineligible((Hashtable) prevs.get(prevs.size()-1))){
+             if(ineligible(prevs)){
                 prd.rank = 5;
                 prd.lastDate = "------"; 
                 prd.state = "Ineligible"; 
                 prd.numMonths = "------";
                 prd.color = "grey";
                 inList++;
-             }else{
-                Hashtable h = (Hashtable) prevs.get(prevs.size()-1);
+             }else if (noFutureItems.size() == 0){// no info
+                prd.rank = 1;
+                prd.lastDate = "------";
+                prd.state = "No Info";                
+                prd.numMonths = "------";
+                prd.color = "Magenta";
+             } else{
+                Hashtable h = (Hashtable) noFutureItems.get(noFutureItems.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 String prevDateStr = (String) h.get("prevention_date");
                 Date prevDate = null;
@@ -116,7 +116,8 @@ public class MammogramReport implements PreventionReport{
                 // if prevDate is less than as of date and greater than 2 years prior 
                 Calendar bonusEl = Calendar.getInstance();
                 bonusEl.setTime(asofDate);                
-                bonusEl.add(Calendar.YEAR,-2);
+                //bonusEl.add(Calendar.YEAR,-2);
+                bonusEl.add(Calendar.MONTH,-30);
                 Date bonusStartDate = bonusEl.getTime();
                 
                 log.debug("\n\n\n prevDate "+prevDate);
@@ -146,7 +147,9 @@ public class MammogramReport implements PreventionReport{
                    prd.state = "due";
                    prd.numMonths = numMonths;
                    prd.color = "yellow"; //FF00FF
-                   doneWithGrace++;
+                   if(!prd.bonusStatus.equals("Y")){
+                      doneWithGrace++;
+                   }
                    
                 } else if (!refused && cutoffDate.after(prevDate)){ // overdue
                    prd.rank = 2;
@@ -209,7 +212,33 @@ public class MammogramReport implements PreventionReport{
        return ret;
    }
     
+    boolean ineligible(ArrayList list){
+       for (int i =0; i < list.size(); i ++){
+           Hashtable h = (Hashtable) list.get(i);
+           if (ineligible(h)){
+               return true;
+           }
+       }
+       return false;
+   } 
     
+   ArrayList removeFutureItems(ArrayList list,Date asOfDate){
+       ArrayList noFutureItems = new ArrayList();
+       DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+       for (int i =0; i < list.size(); i ++){
+            Hashtable h = (Hashtable) list.get(i);       
+            String prevDateStr = (String) h.get("prevention_date");
+            Date prevDate = null;
+            try{
+                prevDate = (java.util.Date)formatter.parse(prevDateStr);
+            }catch (Exception e){}
+
+            if (prevDate != null && prevDate.before(asOfDate)){
+               noFutureItems.add(h);
+            }
+       }
+       return noFutureItems;
+   }
     
    //TODO: THIS MAY NEED TO BE REFACTORED AT SOME POINT IF MAM and PAP are exactly the same  
    //If they don't have a MAM Test with guidelines
@@ -264,12 +293,12 @@ public class MammogramReport implements PreventionReport{
                       
                       Calendar threemonth = Calendar.getInstance();
                       threemonth.setTime(asofDate);                
-                      threemonth.add(Calendar.MONTH,-3);
+                      threemonth.add(Calendar.MONTH,-1);
                           if ( measurementData.getDateObservedAsDate().before(threemonth.getTime())){
                               if (prd.lastFollupProcedure.equals(this.LETTER1)){
                                     prd.nextSuggestedProcedure = this.LETTER2;
                                     return this.LETTER2;
-                              }else if(prd.lastFollupProcedure.equals(this.LETTER1)){
+                              }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
                                     prd.nextSuggestedProcedure = this.PHONE1;
                                     return this.PHONE1;
                               }else{
@@ -277,6 +306,12 @@ public class MammogramReport implements PreventionReport{
                                   return "----";
                               }
                           
+                          }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
+                              prd.nextSuggestedProcedure = this.PHONE1;
+                              return this.PHONE1;
+                          }else{
+                              prd.nextSuggestedProcedure = "----";
+                              return "----";
                           }
                   }
 
@@ -288,7 +323,15 @@ public class MammogramReport implements PreventionReport{
           
           
           }else if (prd.state.equals("Refused")){  //Not sure what to do about refused
-                //prd.lastDate = "-----";  
+              EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
+              log.debug("getting followup data for "+prd.demographicNo);
+              Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+              System.out.print("fluFollowupData size = "+followupData.size());
+              if ( followupData.size() > 0 ){
+                  EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+                  prd.lastFollowup = measurementData.getDateObservedAsDate();
+                  prd.lastFollupProcedure = measurementData.getDataField();
+              }
               prd.nextSuggestedProcedure = "----";
                 //prd.numMonths ;
           }else if(prd.state.equals("Ineligible")){
@@ -296,6 +339,15 @@ public class MammogramReport implements PreventionReport{
                 prd.nextSuggestedProcedure = "----"; 
           }else if(prd.state.equals("Up to date")){
                 //Do nothing
+              EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
+              log.debug("getting followup data for "+prd.demographicNo);
+              Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+              System.out.print("fluFollowupData size = "+followupData.size());
+              if ( followupData.size() > 0 ){
+                  EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+                  prd.lastFollowup = measurementData.getDateObservedAsDate();
+                  prd.lastFollupProcedure = measurementData.getDataField();
+              }
               prd.nextSuggestedProcedure = "----";
           }else{
                log.debug("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
