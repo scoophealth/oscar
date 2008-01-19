@@ -1858,7 +1858,7 @@ CREATE TABLE `room_demographic` (
   `provider_no` varchar(6) NOT NULL default '',
   `assign_start` date  NULL default '0000-00-00',
   `assign_end` date  NULL default '0000-00-00',
-  `comment` varchar(50)  NULL default '',
+  `comments` varchar(50)  NULL default '',
 
   PRIMARY KEY  (`room_id`,`demographic_no`)
 );
@@ -1869,7 +1869,7 @@ CREATE TABLE `room_bed` (
   `bed_id` int(10) unsigned NOT NULL default '0',
   `assign_start` date NULL default '0000-00-00',
   `assign_end` date NULL default '0000-00-00',
-  `comment` varchar(50)  NULL default '',
+  `comments` varchar(50)  NULL default '',
 
   PRIMARY KEY  (`room_id`,`bed_id`)
 );
