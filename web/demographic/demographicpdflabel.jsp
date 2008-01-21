@@ -73,8 +73,6 @@ You have no rights to access the data!
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 
-
-
 </head>
 <%
 java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
@@ -85,11 +83,11 @@ String resident="", nurse="", alert="", notes="", midwife="";
 ResultSet rs = null;
 rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
 while (rs.next()) {
-resident = rs.getString("cust1");
-nurse = rs.getString("cust2");
-alert = rs.getString("cust3");
-midwife = rs.getString("cust4");
-notes = SxmlMisc.getXmlContent(rs.getString("content"),"unotes") ;
+resident = apptMainBean.getString(rs,"cust1");
+nurse = apptMainBean.getString(rs,"cust2");
+alert = apptMainBean.getString(rs,"cust3");
+midwife = apptMainBean.getString(rs,"cust4");
+notes = SxmlMisc.getXmlContent(apptMainBean.getString(rs,"content"),"unotes") ;
 notes = notes==null?"":notes;
 }
 
@@ -108,136 +106,135 @@ out.println("failed!!!");
 } else {
 while (rs.next()) {
         //----------------------------REFERRAL DOCTOR------------------------------
-        fd=rs.getString("family_doctor");
+        fd=apptMainBean.getString(rs,"family_doctor");
         if (fd==null) {
                 rd = "";
                 rdohip="";
                 family_doc = "";
         }else{
-                rd = SxmlMisc.getXmlContent(rs.getString("family_doctor"),"rd")    ;
+                rd = SxmlMisc.getXmlContent(apptMainBean.getString(rs,"family_doctor"),"rd")    ;
                 rd = rd !=null ? rd : "" ;
-                rdohip = SxmlMisc.getXmlContent(rs.getString("family_doctor"),"rdohip");
+                rdohip = SxmlMisc.getXmlContent(apptMainBean.getString(rs,"family_doctor"),"rdohip");
                 rdohip = rdohip !=null ? rdohip : "" ;
-                family_doc = SxmlMisc.getXmlContent(rs.getString("family_doctor"),"family_doc");
+                family_doc = SxmlMisc.getXmlContent(apptMainBean.getString(rs,"family_doctor"),"family_doc");
                 family_doc = family_doc !=null ? family_doc : "" ;
         }
         //----------------------------REFERRAL DOCTOR --------------end-----------
 
-        dob_year = Integer.parseInt(rs.getString("year_of_birth"));
-        dob_month = Integer.parseInt(rs.getString("month_of_birth"));
-        dob_date = Integer.parseInt(rs.getString("date_of_birth"));
+        dob_year = Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"));
+        dob_month = Integer.parseInt(apptMainBean.getString(rs,"month_of_birth"));
+        dob_date = Integer.parseInt(apptMainBean.getString(rs,"date_of_birth"));
         if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
                     WaitingList wL = WaitingList.getInstance();                       
 %>
  
 
 <body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();" topmargin="0" leftmargin="0" rightmargin="0">
-
- <table width="100%" class="MainTableLeftColumn">
  <form> 
+ <table width="100%" class="MainTableLeftColumn">
     <tr>
         <td class="RowTop" colspan="3" align="center"  bgcolor="#EEEEFF">
-            <b>Record</b> (<%=rs.getString("demographic_no")%>)  <%=rs.getString("last_name")%>, <%=rs.getString("first_name")%> <%=rs.getString("sex")%> <%=age%> years
+            <b>Record</b> (<%=apptMainBean.getString(rs,"demographic_no")%>)  <%=apptMainBean.getString(rs,"last_name")%>, <%=apptMainBean.getString(rs,"first_name")%> <%=apptMainBean.getString(rs,"sex")%> <%=age%> years
         </td>
     </tr>                                        
     <tr>
-        <td align="left" title='<%=rs.getString("demographic_no")%>'> <b><bean:message key="demographic.demographiceditdemographic.formLastName"/>: </b><%=rs.getString("last_name")%></td>
+        <td align="left" title='<%=apptMainBean.getString(rs,"demographic_no")%>'> <b><bean:message key="demographic.demographiceditdemographic.formLastName"/>: </b><%=apptMainBean.getString(rs,"last_name")%></td>
         <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formFirstName"/>: </b> </td>
-        <td align="left"><%=rs.getString("first_name")%></td>
+        <td align="left"><%=apptMainBean.getString(rs,"first_name")%></td>
     </tr>
 
     <%
     if (vLocale.getCountry().equals("BR")) { %>
     <tr>
       <td align="left"> <b><bean:message key="demographic.demographicaddrecordhtm.formRG"/>:</b>
-        <%=rs.getString("rg")==null?"":rs.getString("rg")%>
+        <%=apptMainBean.getString(rs,"rg")==null?"":apptMainBean.getString(rs,"rg")%>
       </td>
       <td align="left"><b><bean:message key="demographic.demographicaddrecordhtm.formCPF"/>:</b> </td>
       <td align="left">
-        <%=rs.getString("cpf")==null?"":rs.getString("cpf")%>
+        <%=apptMainBean.getString(rs,"cpf")==null?"":apptMainBean.getString(rs,"cpf")%>
       </td>
     </tr>
     <tr>
       <td align="left"> <b><bean:message key="demographic.demographicaddrecordhtm.formMaritalState"/>:</b>
         <select name="marital_state">
             <option value="-">-</option>
-                <option value="S" <%if (rs.getString("marital_state").trim().equals("S")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optSingle"/></option>
-                <option value="M" <%if (rs.getString("marital_state").trim().equals("M")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optMarried"/></option>
-                <option value="R" <%if (rs.getString("marital_state").trim().equals("R")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optSeparated"/></option>
-                <option value="D" <%if (rs.getString("marital_state").trim().equals("D")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optDivorced"/></option>
-                <option value="W" <%if (rs.getString("marital_state").trim().equals("W")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optWidower"/></option>
+                <option value="S" <%if (apptMainBean.getString(rs,"marital_state").trim().equals("S")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optSingle"/></option>
+                <option value="M" <%if (apptMainBean.getString(rs,"marital_state").trim().equals("M")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optMarried"/></option>
+                <option value="R" <%if (apptMainBean.getString(rs,"marital_state").trim().equals("R")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optSeparated"/></option>
+                <option value="D" <%if (apptMainBean.getString(rs,"marital_state").trim().equals("D")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optDivorced"/></option>
+                <option value="W" <%if (apptMainBean.getString(rs,"marital_state").trim().equals("W")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optWidower"/></option>
         </select>
       </td>
       <td align="left"><b><bean:message key="demographic.demographicaddrecordhtm.formBirthCertificate"/>:</b> </td>
       <td align="left">
-        <%=rs.getString("birth_certificate")==null?"":rs.getString("birth_certificate")%>
+        <%=apptMainBean.getString(rs,"birth_certificate")==null?"":apptMainBean.getString(rs,"birth_certificate")%>
       </td>
     </tr>
     <tr>
       <td align="left"> <b><bean:message key="demographic.demographicaddrecordhtm.formMarriageCertificate"/>:</b>
-        <%=rs.getString("marriage_certificate")==null?"":rs.getString("marriage_certificate")%>
+        <%=apptMainBean.getString(rs,"marriage_certificate")==null?"":apptMainBean.getString(rs,"marriage_certificate")%>
       </td>
       <td align="left"><b><bean:message key="demographic.demographicaddrecordhtm.formPartnerName"/>:</b> </td>
       <td align="left">
-        <%=rs.getString("partner_name")==null?"":rs.getString("partner_name")%>
+        <%=apptMainBean.getString(rs,"partner_name")==null?"":apptMainBean.getString(rs,"partner_name")%>
       </td>
     </tr>
     <tr>
       <td align="left"> <b><bean:message key="demographic.demographicaddrecordhtm.formFatherName"/>:</b>
-        <%=rs.getString("father_name")==null?"":rs.getString("father_name")%>
+        <%=apptMainBean.getString(rs,"father_name")==null?"":apptMainBean.getString(rs,"father_name")%>
       </td>
       <td align="left"><b><bean:message key="demographic.demographicaddrecordhtm.formMotherName"/>:</b> </td>
       <td align="left">
-        <%=rs.getString("mother_name")==null?"":rs.getString("mother_name")%>
+        <%=apptMainBean.getString(rs,"mother_name")==null?"":apptMainBean.getString(rs,"mother_name")%>
       </td>
     </tr>
     <%}%>
     <tr valign="top">
-          <td  align="left"> <b><bean:message key="demographic.demographiceditdemographic.formAddr"/>: </b> <%=rs.getString("address")%>
+          <td  align="left"> <b><bean:message key="demographic.demographiceditdemographic.formAddr"/>: </b> <%=apptMainBean.getString(rs,"address")%>
             <% if (vLocale.getCountry().equals("BR")) { %>
                 <b><bean:message key="demographic.demographicaddrecordhtm.formAddressNo"/>:</b>
-                <%=rs.getString("address_no")==null?"":rs.getString("address_no")%>
+                <%=apptMainBean.getString(rs,"address_no")==null?"":apptMainBean.getString(rs,"address_no")%>
             <%}%>
           </td>
           <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formCity"/>: </b></td>
-          <td align="left"><%=rs.getString("city")%></td>
+          <td align="left"><%=apptMainBean.getString(rs,"city")%></td>
     </tr>
     <% if (vLocale.getCountry().equals("BR")) { %>
     <tr valign="top">
-          <td align="left"><b><bean:message key="demographic.demographicaddrecordhtm.formComplementaryAddress"/>: </b><%=rs.getString("complementary_address")==null?"":rs.getString("complementary_address")%></td>
+          <td align="left"><b><bean:message key="demographic.demographicaddrecordhtm.formComplementaryAddress"/>: </b><%=apptMainBean.getString(rs,"complementary_address")==null?"":apptMainBean.getString(rs,"complementary_address")%></td>
           <td  align="left"><b><bean:message key="demographic.demographicaddrecordhtm.formDistrict"/>: </b> </td>
-          <td  align="left"><%=rs.getString("district")==null?"":rs.getString("district")%></td>
+          <td  align="left"><%=apptMainBean.getString(rs,"district")==null?"":apptMainBean.getString(rs,"district")%></td>
     </tr>
     <%}%>
         <tr valign="top">
-          <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formProcvince"/>: </b><%=rs.getString("province")%></td>
+          <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formProcvince"/>: </b><%=apptMainBean.getString(rs,"province")%></td>
           <td  align="left"><b><bean:message key="demographic.demographiceditdemographic.formPostal"/>: </b> </td>
-          <td  align="left"><%=rs.getString("postal")%></td>
+          <td  align="left"><%=apptMainBean.getString(rs,"postal")%></td>
         </tr>
         <tr valign="top">
-          <td  align="left"><b><bean:message key="demographic.demographiceditdemographic.formPhoneH"/>: </b><%=rs.getString("phone")%></td>
+          <td  align="left"><b><bean:message key="demographic.demographiceditdemographic.formPhoneH"/>: </b><%=apptMainBean.getString(rs,"phone")%></td>
           <td  align="left"><b><bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:</b> </td>
-          <td  align="left"><%=rs.getString("phone2")%></td>
+          <td  align="left"><%=apptMainBean.getString(rs,"phone2")%></td>
         </tr>
         <tr valign="top">
-          <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formEmail"/>: </b><%=rs.getString("email")!=null? rs.getString("email") : ""%></td>
+          <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formEmail"/>: </b><%=apptMainBean.getString(rs,"email")!=null? apptMainBean.getString(rs,"email") : ""%></td>
           <td  align="left"><b><bean:message key="demographic.demographiceditdemographic.formPIN"/>: </b> </td>
-          <td  align="left"><%=rs.getString("pin")!=null? rs.getString("pin") : ""%></td>
+          <td  align="left"><%=apptMainBean.getString(rs,"pin")!=null? apptMainBean.getString(rs,"pin") : ""%></td>
         </tr>
         <tr valign="top">
           <td  align="left"><b><bean:message key="demographic.demographiceditdemographic.formDOB"/></b><bean:message key="demographic.demographiceditdemographic.formDOBDetais"/><b>: </b>
-            <%=rs.getString("year_of_birth")%>/
-            <%=rs.getString("month_of_birth")%>/
-            <%=rs.getString("date_of_birth")%>
+            <%=apptMainBean.getString(rs,"year_of_birth")%>/
+            <%=apptMainBean.getString(rs,"month_of_birth")%>/
+            <%=apptMainBean.getString(rs,"date_of_birth")%>
             <b>Age:  </b> <%=age%>
           </td>
           <td  align="left" nowrap><b><bean:message key="demographic.demographiceditdemographic.formSex"/>:</b> </td>
-          <td align="left"><%=rs.getString("sex")%></td>
+          <td align="left"><%=apptMainBean.getString(rs,"sex")%></td>
         </tr>
         <tr valign="top">
-          <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formHin"/>: </b><%=rs.getString("hin")%>
+          <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formHin"/>: </b><%=apptMainBean.getString(rs,"hin")%>
                                 <b><bean:message key="demographic.demographiceditdemographic.formVer"/></b>
-                                <%=rs.getString("ver")%>
+                                <%=apptMainBean.getString(rs,"ver")%>
           </td>
           <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formEFFDate"/>:</b></td>
           <td align="left">
@@ -246,11 +243,11 @@ while (rs.next()) {
              DecimalFormat decF = new DecimalFormat();
              // Year
              decF.applyPattern("0000");
-             String effDateYear = decF.format(MyDateFormat.getYearFromStandardDate(rs.getString("eff_date")));
+             String effDateYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"eff_date")));
              // Month and Day
              decF.applyPattern("00");
-             String effDateMonth = decF.format(MyDateFormat.getMonthFromStandardDate(rs.getString("eff_date")));
-             String effDateDay = decF.format(MyDateFormat.getDayFromStandardDate(rs.getString("eff_date")));
+             String effDateMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"eff_date")));
+             String effDateDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"eff_date")));
           %>
             <%= effDateYear%>/
             <%= effDateMonth%>/
@@ -259,7 +256,7 @@ while (rs.next()) {
         </tr>
         <tr valign="top">
           <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formHCType"/>:</b>
-               <% String hctype = rs.getString("hc_type")==null?"":rs.getString("hc_type"); %>
+               <% String hctype = apptMainBean.getString(rs,"hc_type")==null?"":apptMainBean.getString(rs,"hc_type"); %>
                <%=hctype%>
           </td>
           <td></td>
@@ -270,7 +267,7 @@ while (rs.next()) {
     <%
       ResultSet rsdemo = apptMainBean.queryResults("search_provider_doc");
       while (rsdemo.next()) {
-        if ( rsdemo.getString("provider_no").equals(rs.getString("provider_no")) ) {%>
+        if ( rsdemo.getString("provider_no").equals(apptMainBean.getString(rs,"provider_no")) ) {%>
             <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%>
     <%  }
       } %>
@@ -365,7 +362,7 @@ while (rs.next()) {
 
         <tr valign="top">
           <td align="left" nowrap><b><bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>: </b>
-            <%String rosterStatus = rs.getString("roster_status");
+            <%String rosterStatus = apptMainBean.getString(rs,"roster_status");
               if (rosterStatus == null) {
                  rosterStatus = "";
               }
@@ -377,10 +374,10 @@ while (rs.next()) {
           <%
              // Format year
              decF.applyPattern("0000");
-             String hcRenewYear = decF.format(MyDateFormat.getYearFromStandardDate(rs.getString("hc_renew_date")));
+             String hcRenewYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
              decF.applyPattern("00");
-             String hcRenewMonth = decF.format(MyDateFormat.getMonthFromStandardDate(rs.getString("hc_renew_date")));
-             String hcRenewDay = decF.format(MyDateFormat.getDayFromStandardDate(rs.getString("hc_renew_date")));
+             String hcRenewMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
+             String hcRenewDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
           %>
             <%= hcRenewYear %>
             <%= hcRenewMonth %>
@@ -390,7 +387,7 @@ while (rs.next()) {
         <tr valign="top">
           <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formPatientStatus"/>:</b> 
 
-          <% String pacStatus = rs.getString("patient_status"); %>
+          <% String pacStatus = apptMainBean.getString(rs,"patient_status"); %>
            <% if (vLocale.getCountry().equals("BR")) { %>
                  <%=pacStatus%>
            <% } else {
@@ -416,7 +413,7 @@ while (rs.next()) {
           </td>
           <td align="left"><b><bean:message key="demographic.demographiceditdemographic.formChartNo"/>:</b> </td>
           <td align="left">
-            <%=rs.getString("chart_no")%>
+            <%=apptMainBean.getString(rs,"chart_no")%>
           </td>
         </tr>
         <%
@@ -426,7 +423,7 @@ while (rs.next()) {
           </td>
           <td align="left"><b><bean:message key="demographic.demographicaddrecordhtm.formChartAddress"/>: </b></td>
           <td align="left">
-            <%=rs.getString("chart_address")==null?"":rs.getString("chart_address")%>
+            <%=apptMainBean.getString(rs,"chart_address")==null?"":apptMainBean.getString(rs,"chart_address")%>
           </td>
         </tr>
         <%}%>
@@ -460,10 +457,10 @@ while (rs.next()) {
           <%
              // Format year
              decF.applyPattern("0000");
-             String dateJoinedYear = decF.format(MyDateFormat.getYearFromStandardDate(rs.getString("date_joined")));
+             String dateJoinedYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"date_joined")));
              decF.applyPattern("00");
-             String dateJoinedMonth = decF.format(MyDateFormat.getMonthFromStandardDate(rs.getString("date_joined")));
-             String dateJoinedDay = decF.format(MyDateFormat.getDayFromStandardDate(rs.getString("date_joined")));
+             String dateJoinedMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"date_joined")));
+             String dateJoinedDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"date_joined")));
           %>
             <%= dateJoinedYear %>
             <%= dateJoinedMonth %>
@@ -474,10 +471,10 @@ while (rs.next()) {
           <%
              // Format year
              decF.applyPattern("0000");
-             String endYear = decF.format(MyDateFormat.getYearFromStandardDate(rs.getString("end_date")));
+             String endYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"end_date")));
              decF.applyPattern("00");
-             String endMonth = decF.format(MyDateFormat.getMonthFromStandardDate(rs.getString("end_date")));
-             String endDay = decF.format(MyDateFormat.getDayFromStandardDate(rs.getString("end_date")));
+             String endMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"end_date")));
+             String endDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"end_date")));
           %>
             <%= endYear %>
             <%= endMonth %>
@@ -497,8 +494,8 @@ while (rs.next()) {
             </table>
         </td>
        </tr>
-</form>       
 </table>
+</form>       
 
 
 <%

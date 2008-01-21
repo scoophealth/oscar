@@ -96,17 +96,17 @@
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
 
-     if(!(rs.getString("month_of_birth").equals(""))) {//   ||rs.getString("year_of_birth")||rs.getString("date_of_birth")) {
-    	if(curMonth>Integer.parseInt(rs.getString("month_of_birth"))) {
-    		age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+     if(!(apptMainBean.getString(rs,"month_of_birth").equals(""))) {//   ||apptMainBean.getString(rs,"year_of_birth")||apptMainBean.getString(rs,"date_of_birth")) {
+    	if(curMonth>Integer.parseInt(apptMainBean.getString(rs,"month_of_birth"))) {
+    		age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"));
     	} else {
-    		if(curMonth==Integer.parseInt(rs.getString("month_of_birth")) &&
-    			curDay>Integer.parseInt(rs.getString("date_of_birth"))) {
-    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
-    		} else {
-    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"))-1; 
+    		if(curMonth==Integer.parseInt(apptMainBean.getString(rs,"month_of_birth")) &&
+    			curDay>Integer.parseInt(apptMainBean.getString(rs,"date_of_birth"))) {
+    			age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"));
+    		} else { 
+    			age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"))-1; 
     		}
-    	}	
+    	}
      }	
    
 %>

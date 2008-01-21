@@ -169,16 +169,17 @@ function checkTypeIn() {
     		//age = UtilDateUtilities.calcAge(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
 			//}	
 %>
+
 <tr bgcolor="<%=bodd?"white":"#EEEEFF"%>">
       <td align="center"> 
 	    <%DemographicMerged dmDAO = new DemographicMerged();
-            String dem_no = rs.getString("demographic_no");    
+            String dem_no = apptMainBean.getString(rs,"demographic_no");    
             String head = dmDAO.getHead(dem_no);
             if (vLocale.getCountry().equals("BR")) { %>  
 	       	<a href="demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail_ptbr"><%=dem_no%></a>
 	    <!-- Link to Oscar Message with display mode = linkMsg2Demo -->
             <%}else if ( fromMessenger ) {%>
-			<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(rs.getString("last_name")+", "+rs.getString("first_name"))%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=rs.getString("demographic_no")%></a>	        
+			<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name")+", "+apptMainBean.getString(rs,"first_name"))%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=apptMainBean.getString(rs,"demographic_no")%></a>	        
             <!-- Link to Oscar Message with display mode = edit ( default) -->
             <%}else{%>
 			<a href="demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail"><%=dem_no%></a>	        
@@ -190,15 +191,15 @@ function checkTypeIn() {
 
 	    <%}%>
       </td>
-      <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
-      <td><%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
-      <td align="center"><%=rs.getString("chart_no")==null||rs.getString("chart_no").equals("")?"&nbsp;":rs.getString("chart_no")%></td>
-      <td align="center"><%=rs.getString("sex")%></td>
-      <td align="center" nowrap><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
-      <td align="center"><%=Misc.getShortStr(providerBean.getProperty(rs.getString("provider_no")),"_",12 )%></td>
-      <td align="center"><%=rs.getString("roster_status")==null||rs.getString("roster_status").equals("")?"&nbsp;":rs.getString("roster_status")%></td>
-      <td align="center"><%=rs.getString("patient_status")==null||rs.getString("patient_status").equals("")?"&nbsp;":rs.getString("patient_status")%></td>
-      <td align="center" nowrap><%=rs.getString("phone")==null||rs.getString("phone").equals("")?"&nbsp;":(rs.getString("phone").length()==10?(rs.getString("phone").substring(0,3)+"-"+rs.getString("phone").substring(3)):rs.getString("phone"))%></td>
+      <td><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name"))%></td>
+      <td><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"first_name"))%></td>
+      <td align="center"><%=apptMainBean.getString(rs,"chart_no")==null||apptMainBean.getString(rs,"chart_no").equals("")?"&nbsp;":apptMainBean.getString(rs,"chart_no")%></td>
+      <td align="center"><%=apptMainBean.getString(rs,"sex")%></td>
+      <td align="center" nowrap><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></td>
+      <td align="center"><%=Misc.getShortStr(providerBean.getProperty(apptMainBean.getString(rs,"provider_no")),"_",12 )%></td>
+      <td align="center"><%=apptMainBean.getString(rs,"roster_status")==null||apptMainBean.getString(rs,"roster_status").equals("")?"&nbsp;":apptMainBean.getString(rs,"roster_status")%></td>
+      <td align="center"><%=apptMainBean.getString(rs,"patient_status")==null||apptMainBean.getString(rs,"patient_status").equals("")?"&nbsp;":apptMainBean.getString(rs,"patient_status")%></td>
+      <td align="center" nowrap><%=apptMainBean.getString(rs,"phone")==null||apptMainBean.getString(rs,"phone").equals("")?"&nbsp;":(apptMainBean.getString(rs,"phone").length()==10?(apptMainBean.getString(rs,"phone").substring(0,3)+"-"+apptMainBean.getString(rs,"phone").substring(3)):apptMainBean.getString(rs,"phone"))%></td>
 </tr>
 <%
 		}

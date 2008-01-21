@@ -26,7 +26,6 @@
 
 <%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-
 <%
   //if action is good, then give me the result
 	  //param[0]=Integer.parseInt((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
@@ -81,7 +80,7 @@
     String name = param[0]+","+param[1];
     String cpp_id=null;
  		rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
-  	if(rs.next()) cpp_id=rs.getString("cpp_id");
+  	if(rs.next()) cpp_id=apptMainBean.getString(rs,"cpp_id");
 %>
   <p><h2>Successful Addition of a cpp Record.
   </h2></p>

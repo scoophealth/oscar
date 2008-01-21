@@ -274,16 +274,16 @@ public class DemographicData {
             
             if (rs.next()) {
                 demographic = new Demographic(DemographicNo, rs.getString("last_name"),
-                rs.getString("first_name"), rs.getString("address"), rs.getString("city"),
-                rs.getString("province"), rs.getString("postal"), rs.getString("phone"),
-                rs.getString("phone2"), rs.getString("email"), rs.getString("pin"),
-                rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"),
-                rs.getString("hin"), rs.getString("ver"), rs.getString("roster_status"),
-                rs.getString("patient_status"), rs.getString("date_joined"), rs.getString("chart_no"),
-                rs.getString("provider_no"), rs.getString("sex"), rs.getString("end_date"),
-                rs.getString("eff_date"), rs.getString("pcn_indicator"), rs.getString("hc_type"),
-                rs.getString("hc_renew_date"), rs.getString("family_doctor"),
-                rs.getString("alias"),rs.getString("previousAddress"),rs.getString("children"),rs.getString("sourceOfIncome"),rs.getString("citizenship"),rs.getString("sin"));
+                db.getString(rs,"first_name"), db.getString(rs,"address"), db.getString(rs,"city"),
+                db.getString(rs,"province"), db.getString(rs,"postal"), db.getString(rs,"phone"),
+                db.getString(rs,"phone2"), db.getString(rs,"email"), db.getString(rs,"pin"),
+                db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"),
+                db.getString(rs,"hin"), db.getString(rs,"ver"), db.getString(rs,"roster_status"),
+                db.getString(rs,"patient_status"), db.getString(rs,"date_joined"), db.getString(rs,"chart_no"),
+                db.getString(rs,"provider_no"), db.getString(rs,"sex"), db.getString(rs,"end_date"),
+                db.getString(rs,"eff_date"), db.getString(rs,"pcn_indicator"), db.getString(rs,"hc_type"),
+                db.getString(rs,"hc_renew_date"), db.getString(rs,"family_doctor"),
+                db.getString(rs,"alias"),db.getString(rs,"previousAddress"),db.getString(rs,"children"),db.getString(rs,"sourceOfIncome"),db.getString(rs,"citizenship"),db.getString(rs,"sin"));
             }
             
             rs.close();
@@ -305,7 +305,7 @@ public class DemographicData {
             String sql = "SELECT demographic_no FROM demographic WHERE pin = '" + pin +"'";
             rs = db.GetSQL(sql);
             if (rs.next()) {
-                demographicNo = rs.getString("demographic_no");
+                demographicNo = db.getString(rs,"demographic_no");
             }
             rs.close();
             db.CloseConn();
@@ -327,7 +327,7 @@ public class DemographicData {
             rs = db.GetSQL(sql);
             
             if (rs.next()) {
-                date = rs.getString("date_joined");//getString("date_joined");                
+                date = db.getString(rs,"date_joined");//getString("date_joined");                
             }
             
             rs.close();
@@ -442,39 +442,39 @@ public class DemographicData {
 
                 if (rs.next()) {
                     this.demographic_no= DemographicNo;
-                    this.last_name = rs.getString("last_name");
-                    this.first_name = rs.getString("first_name");
-                    this.address = rs.getString("address");
-                    this.city = rs.getString("city");
-                    this.province = rs.getString("province");
-                    this.postal = rs.getString("postal");
-                    this.phone= rs.getString("phone");
-                    this.phone2 = rs.getString("phone2");
-                    this.email = rs.getString("email");
-                    this.pin = rs.getString("pin");
-                    this.year_of_birth = rs.getString("year_of_birth");
-                    this.month_of_birth = rs.getString("month_of_birth");
-                    this.date_of_birth = rs.getString("date_of_birth");
-                    this.hin = rs.getString("hin");
-                    this.ver = rs.getString("ver");
-                    this.roster_status=rs.getString("roster_status");
-                    this.patient_status= rs.getString("patient_status");
-                    this.date_joined = rs.getString("date_joined");
-                    this.chart_no = rs.getString("chart_no");
-                    this.provider_no = rs.getString("provider_no");
-                    this.sex = rs.getString("sex");
-                    this.end_date = rs.getString("end_date");
-                    this.eff_date = rs.getString("eff_date");
-                    this.pcn_indicator= rs.getString("pcn_indicator");
-                    this.hc_type = rs.getString("hc_type");
-                    this.hc_renew_date = rs.getString("hc_renew_date");
-                    this.family_doctor = rs.getString("family_doctor");
-                    this.alias = rs.getString("alias");
-                    this.previousAddress = rs.getString("previousAddress");
-                    this.children = rs.getString("children");
-                    this.sourceOfIncome = rs.getString("sourceOfIncome");
-                    this.citizenship = rs.getString("citizenship");
-                    this.sin = rs.getString("sin");
+                    this.last_name = db.getString(rs,"last_name");
+                    this.first_name = db.getString(rs,"first_name");
+                    this.address = db.getString(rs,"address");
+                    this.city = db.getString(rs,"city");
+                    this.province = db.getString(rs,"province");
+                    this.postal = db.getString(rs,"postal");
+                    this.phone= db.getString(rs,"phone");
+                    this.phone2 = db.getString(rs,"phone2");
+                    this.email = db.getString(rs,"email");
+                    this.pin = db.getString(rs,"pin");
+                    this.year_of_birth = db.getString(rs,"year_of_birth");
+                    this.month_of_birth = db.getString(rs,"month_of_birth");
+                    this.date_of_birth = db.getString(rs,"date_of_birth");
+                    this.hin = db.getString(rs,"hin");
+                    this.ver = db.getString(rs,"ver");
+                    this.roster_status=db.getString(rs,"roster_status");
+                    this.patient_status= db.getString(rs,"patient_status");
+                    this.date_joined = db.getString(rs,"date_joined");
+                    this.chart_no = db.getString(rs,"chart_no");
+                    this.provider_no = db.getString(rs,"provider_no");
+                    this.sex = db.getString(rs,"sex");
+                    this.end_date = db.getString(rs,"end_date");
+                    this.eff_date = db.getString(rs,"eff_date");
+                    this.pcn_indicator= db.getString(rs,"pcn_indicator");
+                    this.hc_type = db.getString(rs,"hc_type");
+                    this.hc_renew_date = db.getString(rs,"hc_renew_date");
+                    this.family_doctor = db.getString(rs,"family_doctor");
+                    this.alias = db.getString(rs,"alias");
+                    this.previousAddress = db.getString(rs,"previousAddress");
+                    this.children = db.getString(rs,"children");
+                    this.sourceOfIncome = db.getString(rs,"sourceOfIncome");
+                    this.citizenship = db.getString(rs,"citizenship");
+                    this.sin = db.getString(rs,"sin");
                 }
 
                 rs.close();

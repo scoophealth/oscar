@@ -18,7 +18,8 @@ public class PrintDemoLabelAction extends OscarAction {
     public ActionForward execute(ActionMapping actionMapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
         //patient
         String classpath = (String)request.getSession().getServletContext().getAttribute("org.apache.catalina.jsp_classpath");
-
+        if (classpath==null) classpath = (String)request.getSession().getServletContext().getAttribute("com.ibm.websphere.servlet.application.classpath");
+        
         System.setProperty("jasper.reports.compile.class.path", classpath);
 
         HashMap parameters = new HashMap();

@@ -60,7 +60,7 @@
     String curUser_no = (String)session.getAttribute("user");
     
     //check to see if new case management is request
-    ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+    ArrayList users = (ArrayList)session.getServletContext().getAttribute("CaseMgmtUsers");
     boolean newCaseManagement = false;
     
     if( users != null && users.size() > 0 )
@@ -214,7 +214,7 @@
 	  param1[4]=request.getParameter("date_of_birth");
 	  param1[5]=request.getParameter("hin");
 	  param1[6]=request.getParameter("ver");
-
+ 
     rs = apptMainBean.queryResults(param1, "search_demoaddno");
     if(rs.next()) { //
         
@@ -222,7 +222,7 @@
         if( newCaseManagement ) {
             oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
             String[] caisiParam = new String[4];
-            caisiParam[0] = rs.getString("demographic_no");
+            caisiParam[0] = apptMainBean.getString(rs,"demographic_no");
             caisiParam[1] = program.getProgram(request.getParameter("staff"));
             caisiParam[2] = request.getParameter("staff");
             caisiParam[3] = request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date");
@@ -231,7 +231,7 @@
         
         //add democust record for alert
         String[] param2 =new String[6];
-	    param2[0]=rs.getString("demographic_no");
+	    param2[0]=apptMainBean.getString(rs,"demographic_no");
 	    param2[1]=request.getParameter("cust1");
 	    param2[2]=request.getParameter("cust2");
 	    param2[3]=request.getParameter("cust3");
@@ -240,7 +240,7 @@
 	    //System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
 
-       String dem = rs.getString("demographic_no");
+       String dem = apptMainBean.getString(rs,"demographic_no");
        DemographicExt dExt = new DemographicExt();
        String proNo = (String) session.getValue("user");
        dExt.addKey(proNo,dem,"language",request.getParameter("language"),"" );
@@ -276,7 +276,7 @@
                     System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
                     String[] paramWL = new String[6]; 
                     paramWL[0] = request.getParameter("list_id");
-                    paramWL[1] = rs.getString("demographic_no");
+                    paramWL[1] = apptMainBean.getString(rs,"demographic_no");
                     paramWL[2] = request.getParameter("waiting_list_note");
                     paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
                     paramWL[4] = request.getParameter("waiting_list_referral_date");
@@ -290,7 +290,7 @@
 	  	if (request.getParameter("dboperation2") != null) {
 	  	  	String[] parametros = new String[13];
 
-	  	  	parametros[0]=rs.getString("demographic_no");
+	  	  	parametros[0]=apptMainBean.getString(rs,"demographic_no");
 	  	  	parametros[1]=request.getParameter("cpf");
 	  	  	parametros[2]=request.getParameter("rg");
 	  	  	parametros[3]=request.getParameter("chart_address");

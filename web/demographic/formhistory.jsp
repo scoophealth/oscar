@@ -58,10 +58,10 @@
       
       rs = formHistBean.queryResults(request.getParameter("form_no"+i), "search_formdetail");
       while (rs.next()) { 
-        keyword = rs.getString("form_name")+rs.getString("form_date");
-        content = "<form_no>"+rs.getString("form_no")+"</form_no>"+ "<demographic_no>"+rs.getString("demographic_no")+"</demographic_no>"+ "<provider_no>"+rs.getString("provider_no")+"</provider_no>";
-        content += "<form_date>"+rs.getString("form_date")+"</form_date>"+ "<form_time>"+rs.getString("form_time")+"</form_time>"+ "<form_name>"+rs.getString("form_name")+"</form_name>";
-        content += "<content>"+rs.getString("content")+"</content>" ;
+        keyword = formHistBean.getString(rs,"form_name")+formHistBean.getString(rs,"form_date");
+        content = "<form_no>"+formHistBean.getString(rs,"form_no")+"</form_no>"+ "<demographic_no>"+formHistBean.getString(rs,"demographic_no")+"</demographic_no>"+ "<provider_no>"+formHistBean.getString(rs,"provider_no")+"</provider_no>";
+        content += "<form_date>"+formHistBean.getString(rs,"form_date")+"</form_date>"+ "<form_time>"+formHistBean.getString(rs,"form_time")+"</form_time>"+ "<form_name>"+formHistBean.getString(rs,"form_name")+"</form_name>";
+        content += "<content>"+formHistBean.getString(rs,"content")+"</content>" ;
       }
       
 	    param[0]=user_no;
@@ -110,8 +110,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   <tr bgcolor="silver"><th align=CENTER NOWRAP><font face="Helvetica" color="navy">FORM HISTORY</font></th></tr>
 </table>
 
+<form name="encounterrep" method="post" action="formhistory.jsp">
 <table width="100%" border="0" bgcolor="ivory">
-  <form name="encounterrep" method="post" action="formhistory.jsp">
   <tr > 
     <td ><font size="-1"> </font></td>
   </tr><tr>  
@@ -140,8 +140,9 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     <input type="hidden" name="formnum" value="<%=i%>">
     <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
     <input type="submit" name="submit" value="Delete"><input type="button" name="button" value="Cancel" onClick="window.close()">
-  </td></tr></form>
+  </td></tr>
 </table>
+</form>
 <center></center>
 </body>
 </html>

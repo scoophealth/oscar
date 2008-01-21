@@ -475,11 +475,11 @@ div.demographicWrapper {
                                 String resident="", nurse="", alert="", notes="", midwife="";
                                 ResultSet rs = null;
                                 rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
-                                while (rs.next()) {
-                                        resident = s(rs.getString("cust1"));
-                                        nurse = s(apptMainBean.getString(rs,"cust2"));
-                                        alert = s(apptMainBean.getString(rs,"cust3"));
-                                        midwife = s(apptMainBean.getString(rs,"cust4"));
+                                while (rs.next()) { 
+                                        resident = (apptMainBean.getString(rs,"cust1"));
+                                        nurse = (apptMainBean.getString(rs,"cust2"));
+                                        alert = (apptMainBean.getString(rs,"cust3"));
+                                        midwife = (apptMainBean.getString(rs,"cust4"));
                                         notes = SxmlMisc.getXmlContent(apptMainBean.getString(rs,"content"),"unotes") ;
                                         notes = notes==null?"":notes;
                                 }
@@ -718,7 +718,7 @@ div.demographicWrapper {
                                                 <bean:message key="demographic.demographiceditdemographic.formSex"/>:<b><%=apptMainBean.getString(rs,"sex")%></b>
                                             </li>
                                             <li>
-                                                Language: <b><%=s(demoExt.get("language"))%></b>
+                                                Language: <b><%= apptMainBean.getString(demoExt.get("language"))%></b>
                                             </li>
                                         </ul>
                                         </div>
@@ -760,7 +760,7 @@ div.demographicWrapper {
                                                 <bean:message key="demographic.demographiceditdemographic.formChartNo"/>:<b><%=apptMainBean.getString(rs,"chart_no")%></b>
                                             </li>
                                              <li>
-                                                <bean:message key="demographic.demographiceditdemographic.cytolNum"/>: <b> <%=s(demoExt.get("cytolNum"))%></b>
+                                                <bean:message key="demographic.demographiceditdemographic.cytolNum"/>: <b> <%=apptMainBean.getString(demoExt.get("cytolNum"))%></b>
                                             </li>
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: <b><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"date_joined"))%></b>
@@ -784,13 +784,13 @@ div.demographicWrapper {
                                     <div style="background-color: #EEEEFF;" >
                                     <ul>
                                         <li>
-                                            <bean:message key="demographic.demographiceditdemographic.formPhoneH"/>:<b><%=apptMainBean.getString(rs,"phone")%> <%=s(demoExt.get("hPhoneExt"))%></b>
-                                            <bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:<b> <%=apptMainBean.getString(rs,"phone2")%> <%=s(demoExt.get("wPhoneExt"))%></b>
+                                            <bean:message key="demographic.demographiceditdemographic.formPhoneH"/>:<b><%=apptMainBean.getString(rs,"phone")%> <%=apptMainBean.getString(demoExt.get("hPhoneExt"))%></b>
+                                            <bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:<b> <%=apptMainBean.getString(rs,"phone2")%> <%=apptMainBean.getString(demoExt.get("wPhoneExt"))%></b>
 
 
                                         </li>
                                         <li>
-                                        <bean:message key="demographic.demographiceditdemographic.formPhoneC"/>:<b> <%=s(demoExt.get("demo_cell"))%></b>
+                                        <bean:message key="demographic.demographiceditdemographic.formPhoneC"/>:<b> <%=apptMainBean.getString(demoExt.get("demo_cell"))%></b>
                                         </li>
                                         <li>
                                             <bean:message key="demographic.demographiceditdemographic.formAddr"/>: <b><%=apptMainBean.getString(rs,"address")%></b>
@@ -882,7 +882,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                     <h3>&nbsp;Special</h3>
                                     <div style="background-color: #EEEEFF;" >
 <% 	for(int k=0; k<propDemoExt.length; k++) {%>
-                                    <%=propDemoExt[k]+": <b>" + s(demoExt.get(propDemoExt[k].replace(' ', '_')))%> </b>&nbsp;<%=((k+1)%4==0&&(k+1)<propDemoExt.length)?"<br>":"" %>
+                                    <%=propDemoExt[k]+": <b>" + apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))%> </b>&nbsp;<%=((k+1)%4==0&&(k+1)<propDemoExt.length)?"<br>":"" %>
 <% 	} %>
                                     </div>
                                 </div>
@@ -1039,22 +1039,22 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                               <td align="left" >
                                 <%-- // <input type="text" name="phone" size="30" value="<%=apptMainBean.getString(rs,"phone")!=null && apptMainBean.getString(rs,"phone").length()==10?apptMainBean.getString(rs,"phone").substring(0,3) + "-" + apptMainBean.getString(rs,"phone").substring(3,6) +"-"+  apptMainBean.getString(rs,"phone").substring(6):apptMainBean.getString(rs,"phone")%>">--%>
                                 <input type="text" name="phone"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=apptMainBean.getString(rs,"phone")%>">
-                                Ext:<input type="text" name="hPhoneExt" value="<%=s(demoExt.get("hPhoneExt"))%>"  size="4" />
-                                <input type="hidden" name="hPhoneExtOrig" value="<%=s(demoExt.get("hPhoneExt"))%>" />
+                                Ext:<input type="text" name="hPhoneExt" value="<%=apptMainBean.getString(demoExt.get("hPhoneExt"))%>"  size="4" />
+                                <input type="hidden" name="hPhoneExtOrig" value="<%=apptMainBean.getString(demoExt.get("hPhoneExt"))%>" />
                               </td>
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:</b> </td>
                               <td  align="left">
                                 <input type="text" name="phone2"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=apptMainBean.getString(rs,"phone2")%>">
-                                Ext:<input type="text" name="wPhoneExt" value="<%=s(demoExt.get("wPhoneExt"))%>"  style="display:inline" size="4" />
-                                <input type="hidden" name="wPhoneExtOrig" value="<%=s(demoExt.get("wPhoneExt"))%>" />
+                                Ext:<input type="text" name="wPhoneExt" value="<%=apptMainBean.getString(demoExt.get("wPhoneExt"))%>"  style="display:inline" size="4" />
+                                <input type="hidden" name="wPhoneExtOrig" value="<%=apptMainBean.getString(demoExt.get("wPhoneExt"))%>" />
                               </td>
                             </tr>
                              <tr valign="top">
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneC"/>: </b> </td>
                               <td align="left" >
                                 <%-- // <input type="text" name="phone" size="30" value="<%=apptMainBean.getString(rs,"phone")!=null && apptMainBean.getString(rs,"phone").length()==10?apptMainBean.getString(rs,"phone").substring(0,3) + "-" + apptMainBean.getString(rs,"phone").substring(3,6) +"-"+  apptMainBean.getString(rs,"phone").substring(6):apptMainBean.getString(rs,"phone")%>">--%>
-                                <input type="text" name="demo_cell"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=s(demoExt.get("demo_cell"))%>">
-                                <input type="hidden" name="demo_cellOrig" value="<%=s(demoExt.get("demo_cell"))%>" />
+                                <input type="text" name="demo_cell"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=apptMainBean.getString(demoExt.get("demo_cell"))%>">
+                                <input type="hidden" name="demo_cellOrig" value="<%=apptMainBean.getString(demoExt.get("demo_cell"))%>" />
                               </td>
                             </tr>
                             <tr valign="top">
@@ -1080,8 +1080,8 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                               <td align="left" valign="top">
                                 <input type="text" name="sex" style="width:20px;" value="<%=apptMainBean.getString(rs,"sex")%>" onBlur="upCaseCtrl(this)" size="1" maxlength="1">
                                 <b>Language:</b>
-                                    <input type="text" name="language" value="<%=s(demoExt.get("language"))%>" onBlur="upCaseCtrl(this)" size="19" />
-                                    <input type="hidden" name="languageOrig" value="<%=s(demoExt.get("language"))%>" />
+                                    <input type="text" name="language" value="<%=apptMainBean.getString(demoExt.get("language"))%>" onBlur="upCaseCtrl(this)" size="19" />
+                                    <input type="hidden" name="languageOrig" value="<%=apptMainBean.getString(demoExt.get("language"))%>" />
                               </td>
                             </tr>
                             <tr valign="top">
@@ -1147,8 +1147,8 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                <bean:message key="demographic.demographiceditdemographic.cytolNum"/>:</b>
                               </td>
                               <td>
-                                <input type="text" name="cytolNum" style="display:inline;width:auto;" value="<%=s(demoExt.get("cytolNum"))%>">
-                                <input type="hidden" name="cytolNumOrig" value="<%=s(demoExt.get("cytolNum"))%>" />
+                                <input type="text" name="cytolNum" style="display:inline;width:auto;" value="<%=apptMainBean.getString(demoExt.get("cytolNum"))%>">
+                                <input type="hidden" name="cytolNumOrig" value="<%=apptMainBean.getString(demoExt.get("cytolNum"))%>" />
                               </td>
                             </tr>
                             <tr valign="top">
@@ -1206,7 +1206,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                           while (rsdemo.next()) {
                         %>
                           <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(nurse)?"selected":""%> >
-                          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
+                          <%=Misc.getShortStr( (apptMainBean.getString(rsdemo,"last_name")+","+apptMainBean.getString(rsdemo,"first_name")),"",nStrShowLen)%></option>
                         <% } %>
                                 </select>
                               </td>
@@ -1225,11 +1225,11 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									  Vector vecRef = new Vector();
 									  while (rs1.next()) {
 									  	prop = new Properties();
-									  	prop.setProperty("referral_no",rs1.getString("referral_no"));
-									  	prop.setProperty("last_name",rs1.getString("last_name"));
-									  	prop.setProperty("first_name",rs1.getString("first_name"));
-									  	//prop.setProperty("specialty",rs1.getString("specialty"));
-									  	//prop.setProperty("phone",rs1.getString("phone"));
+									  	prop.setProperty("referral_no",apptMainBean.getString(rs1,"referral_no"));
+									  	prop.setProperty("last_name",apptMainBean.getString(rs1,"last_name"));
+									  	prop.setProperty("first_name",apptMainBean.getString(rs1,"first_name"));
+									  	//prop.setProperty("specialty",apptMainBean.getString(rs1,"specialty"));
+									  	//prop.setProperty("phone",apptMainBean.getString(rs1,"phone"));
 									  	vecRef.add(prop);
                                       }
                                   %>
@@ -1452,28 +1452,28 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                               <td align="left" >
                               <% if(bExtForm) {
                                   	if(propDemoExtForm[k].indexOf("<select")>=0) {
-                                		out.println(propDemoExtForm[k].replaceAll("value=\""+s(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" , "value=\""+s(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" + " selected") );
+                                		out.println(propDemoExtForm[k].replaceAll("value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" , "value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" + " selected") );
                                   	} else {
-                              			out.println(propDemoExtForm[k].replaceAll("value=\"\"", "value=\""+s(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" ) );
+                              			out.println(propDemoExtForm[k].replaceAll("value=\"\"", "value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" ) );
                                   	}
                               	 } else { %>
-                                <input type="text" name="<%=propDemoExt[k].replace(' ', '_')%>" value="<%=s(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
+                                <input type="text" name="<%=propDemoExt[k].replace(' ', '_')%>" value="<%=apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
                               <% }  %>
-								<input type="hidden" name="<%=propDemoExt[k].replace(' ', '_')%>Orig" value="<%=s(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
+								<input type="hidden" name="<%=propDemoExt[k].replace(' ', '_')%>Orig" value="<%=apptMainBean.getString(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
                               </td>
                               <% if((k+1)<propDemoExt.length) { %>
                               <td align="right" nowrap><b><%out.println(propDemoExt[k+1]+":");%> </b></td>
                               <td align="left" >
                               <% if(bExtForm) {
                                   	if(propDemoExtForm[k+1].indexOf("<select")>=0) {
-                                		out.println(propDemoExtForm[k+1].replaceAll("value=\""+s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" , "value=\""+s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" + " selected") );
+                                		out.println(propDemoExtForm[k+1].replaceAll("value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" , "value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" + " selected") );
                                   	} else {
-                              			out.println(propDemoExtForm[k+1].replaceAll("value=\"\"", "value=\""+s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" ) );
+                              			out.println(propDemoExtForm[k+1].replaceAll("value=\"\"", "value=\""+apptMainBean.getString(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" ) );
                                   	}
                               	 } else { %>
-                                <input type="text" name="<%=propDemoExt[k+1].replace(' ', '_')%>" value="<%=s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
+                                <input type="text" name="<%=propDemoExt[k+1].replace(' ', '_')%>" value="<%=apptMainBean.getString(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
                               <% }  %>
-								<input type="hidden" name="<%=propDemoExt[k+1].replace(' ', '_')%>Orig" value="<%=s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
+								<input type="hidden" name="<%=propDemoExt[k+1].replace(' ', '_')%>Orig" value="<%=apptMainBean.getString(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
                               </td>
                               <% } else {%>
                               <td>&nbsp;</td><td>&nbsp;</td>
@@ -1569,14 +1569,5 @@ Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d
 </script>     
 </body>
 </html:html>
-
-<%!
- String s(Object o){
-     String ret = "";
-     if (null != o){
-         ret = (String) o;
-     }
-     return ret;
- }
 %>
 

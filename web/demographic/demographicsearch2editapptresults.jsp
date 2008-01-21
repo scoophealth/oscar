@@ -35,7 +35,7 @@
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-
+ 
 <html>
 <head>
 <title> PATIENT SEARCH RESULTS </title>
@@ -134,18 +134,18 @@ function addName(lastname, firstname) {
 <TH align="center" width="10%"><b>SEX</B></TH>
 <TH align="center" width="10%"><b>DOB(yy/mm/dd)</B></TH>
 </tr>
-
+ 
 <%@ include file="zcppsearchresult.jsp" %>
 
 <tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td align="center" width="10%" height="25"><input type="submit" name="cpp_id" value="<%=rs.getString("cpp_id")%>"  onClick="addName('<%=rs.getString("last_name")%>','<%=rs.getString("first_name")%>')"></td>
-      <!--td width="20%" align="center" height="25"> <!--a href="cppcontrol.jsp?cpp_id=<%=rs.getString("cpp_id")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("cpp_id")%></a></td-->
-      <td align="center" width="20%" height="25"><%=rs.getString("first_name")%></td>
-      <td align="center" width="20%" height="25"><%=rs.getString("last_name")%></td>
+      <td align="center" width="10%" height="25"><input type="submit" name="cpp_id" value="<%=apptMainBean.getString(rs,"cpp_id")%>"  onClick="addName('<%=apptMainBean.getString(rs,"last_name")%>','<%=apptMainBean.getString(rs,"first_name")%>')"></td>
+      <!--td width="20%" align="center" height="25"> <!--a href="cppcontrol.jsp?cpp_id=<%=apptMainBean.getString(rs,"cpp_id")%>&displaymode=edit&dboperation=search_detail"><%=apptMainBean.getString(rs,"cpp_id")%></a></td-->
+      <td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"first_name")%></td>
+      <td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"last_name")%></td>
       <td align="center" width="10%" height="25"><%=age%></td>
-      <td align="center" width="10%" height="25"><%=rs.getString("roster_status")%></td>
-      <td align="center" width="10%" height="25"><%=rs.getString("sex")%></td>
-      <td align="center" width="10%" height="25"><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
+      <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"roster_status")%></td>
+      <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"sex")%></td>
+      <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></td>
 </tr>
 <%
     }

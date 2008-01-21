@@ -44,8 +44,8 @@ function searchAll() {
 }
 </script>
 
+<form method="post" name="titlesearch" action="demographiccontrol.jsp" onsubmit="return checkTypeIn()">
 <table BORDER="0" CELLPADDING="0" CELLSPACING="2" WIDTH="100%" bgcolor="#CCCCFF">
-	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onsubmit="return checkTypeIn()">
             <tr><td colspan="6" class="RowTop"><b><bean:message key="demographic.zdemographicfulltitlesearch.msgSearch"/></b></td></tr>
       <% String searchMode = request.getParameter("search_mode");
          String keyWord = request.getParameter("keyword");
@@ -96,5 +96,5 @@ function searchAll() {
             </table>
         </td>
     </tr>
-</form>
 </table>
+</form>

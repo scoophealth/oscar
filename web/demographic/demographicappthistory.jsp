@@ -114,7 +114,7 @@ function refresh() {
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-						<bean:message key="demographic.demographicappthistory.msgResults"/></i>: <%=demolastname%>,<%=demofirstname%> (<%=request.getParameter("demographic_no")%>)
+						<bean:message key="demographic.demographicappthistory.msgResults"/>: <%=demolastname%>,<%=demofirstname%> (<%=request.getParameter("demographic_no")%>)
                         </td>
                         <td  >&nbsp;
 							
@@ -160,14 +160,14 @@ function refresh() {
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
        
-%>
+%> 
 <tr bgcolor="<%=bodd?weakColor:"white"%>">
-      <td align="center"><a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&displaymode=edit&dboperation=search');return false;" ><%=rs.getString("appointment_date")%></a></td>
-      <td align="center"><%=rs.getString("start_time")%></td>
-      <td align="center"><%=rs.getString("end_time")%></td>
-      <td><%=rs.getString("reason")%></td>
-      <td><%=rs.getString("last_name")+","+rs.getString("first_name")%></td>
-      <td>&nbsp;<%=rs.getString("status")==null?"":(rs.getString("status").equals("N")?"No Show":(rs.getString("status").equals("C")?"Cancelled":"") ) %></td>
+      <td align="center"><a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&displaymode=edit&dboperation=search');return false;" ><%=apptMainBean.getString(rs,"appointment_date")%></a></td>
+      <td align="center"><%=apptMainBean.getString(rs,"start_time")%></td>
+      <td align="center"><%=apptMainBean.getString(rs,"end_time")%></td>
+      <td><%=apptMainBean.getString(rs,"reason")%></td>
+      <td><%=apptMainBean.getString(rs,"last_name")+","+apptMainBean.getString(rs,"first_name")%></td>
+      <td>&nbsp;<%=apptMainBean.getString(rs,"status")==null?"":(apptMainBean.getString(rs,"status").equals("N")?"No Show":(apptMainBean.getString(rs,"status").equals("C")?"Cancelled":"") ) %></td>
 </tr>
 <%
     }

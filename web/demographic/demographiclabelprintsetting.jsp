@@ -181,7 +181,7 @@ function ClipBoard4() {
   String providername = "";
   ResultSet rs = apptMainBean.queryResults(param, "search_provider");
   while (rs.next()) {
-    providername = rs.getString("last_name") +","+ rs.getString("first_name");
+    providername = apptMainBean.getString(rs,"last_name") +","+ apptMainBean.getString(rs,"first_name");
   }
 
   rs = apptMainBean.queryResults(param, "search_detail");
@@ -190,24 +190,24 @@ function ClipBoard4() {
    // out.println("failed!!!");
   } else {
     while (rs.next()) {
-      dob_year = Integer.parseInt(rs.getString("year_of_birth"));
-      dob_month = Integer.parseInt(rs.getString("month_of_birth"));
-      dob_date = Integer.parseInt(rs.getString("date_of_birth"));
+      dob_year = Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"));
+      dob_month = Integer.parseInt(apptMainBean.getString(rs,"month_of_birth"));
+      dob_date = Integer.parseInt(apptMainBean.getString(rs,"date_of_birth"));
       if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
 
-      first_name = Misc.JSEscape(rs.getString("first_name"));
-      last_name = Misc.JSEscape(rs.getString("last_name"));
-      chart_no = rs.getString("chart_no");
-      address = Misc.JSEscape(rs.getString("address"));
-      city = rs.getString("city");
-      province = rs.getString("province");
-      postal = rs.getString("postal");
-      phone = rs.getString("phone");
-      phone2 = rs.getString("phone2");
-      dob=dob_year+"/"+rs.getString("month_of_birth")+"/"+rs.getString("date_of_birth");
-      sex = rs.getString("sex");
-      hin = "HN "+ rs.getString("hc_type") +" "+rs.getString("hin")+ " " +rs.getString("ver");
-      refDoc = SxmlMisc.getXmlContent(rs.getString("family_doctor"),"rd");
+      first_name = Misc.JSEscape(apptMainBean.getString(rs,"first_name"));
+      last_name = Misc.JSEscape(apptMainBean.getString(rs,"last_name"));
+      chart_no = apptMainBean.getString(rs,"chart_no");
+      address = Misc.JSEscape(apptMainBean.getString(rs,"address"));
+      city = apptMainBean.getString(rs,"city");
+      province = apptMainBean.getString(rs,"province");
+      postal = apptMainBean.getString(rs,"postal");
+      phone = apptMainBean.getString(rs,"phone");
+      phone2 = apptMainBean.getString(rs,"phone2");
+      dob=dob_year+"/"+apptMainBean.getString(rs,"month_of_birth")+"/"+apptMainBean.getString(rs,"date_of_birth");
+      sex = apptMainBean.getString(rs,"sex");
+      hin = "HN "+ apptMainBean.getString(rs,"hc_type") +" "+apptMainBean.getString(rs,"hin")+ " " +apptMainBean.getString(rs,"ver");
+      refDoc = SxmlMisc.getXmlContent(apptMainBean.getString(rs,"family_doctor"),"rd");
     }
   }
   phone2 = phone2.equals("")?"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":(phone2+"&nbsp;") ;

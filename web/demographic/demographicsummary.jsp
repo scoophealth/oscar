@@ -65,13 +65,13 @@
 // System.out.println("      1     ");
         continue;
       }
-      
+       
       rs = demosummaryBean.queryResults(request.getParameter("encounter_no"+i), "search_encounterdetail");
       while (rs.next()) { 
-        keyword = rs.getString("encounter_date");
-        content = "<encounter_no>"+rs.getString("encounter_no")+"</encounter_no>"+ "<demographic_no>"+rs.getString("demographic_no")+"</demographic_no>"+ "<encounter_date>"+rs.getString("encounter_date")+"</encounter_date>";
-        content += "<encounter_time>"+rs.getString("encounter_time")+"</encounter_time>"+ "<provider_no>"+rs.getString("provider_no")+"</provider_no>"+ "<subject>"+rs.getString("subject")+"</subject>";
-        content += "<content>"+rs.getString("content")+"</content>" +"<encounterattachment>"+rs.getString("encounterattachment")+"</encounterattachment>";
+        keyword = demosummaryBean.getString(rs,"encounter_date");
+        content = "<encounter_no>"+demosummaryBean.getString(rs,"encounter_no")+"</encounter_no>"+ "<demographic_no>"+demosummaryBean.getString(rs,"demographic_no")+"</demographic_no>"+ "<encounter_date>"+demosummaryBean.getString(rs,"encounter_date")+"</encounter_date>";
+        content += "<encounter_time>"+demosummaryBean.getString(rs,"encounter_time")+"</encounter_time>"+ "<provider_no>"+demosummaryBean.getString(rs,"provider_no")+"</provider_no>"+ "<subject>"+demosummaryBean.getString(rs,"subject")+"</subject>";
+        content += "<content>"+demosummaryBean.getString(rs,"content")+"</content>" +"<encounterattachment>"+demosummaryBean.getString(rs,"encounterattachment")+"</encounterattachment>";
       }
       
 	    param[0]=user_no;
@@ -190,8 +190,9 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   </tr>
 </table>
 
-<p><table width="100%" border="0" bgcolor="ivory">
-  <form name="encounterrep" method="post" action="demographicsummary.jsp">
+<p>
+<form name="encounterrep" method="post" action="demographicsummary.jsp">
+<table width="100%" border="0" bgcolor="ivory">
   <tr > 
     <td ><font size="-1"> <b>Encounter History</b></font></td>
   </tr><tr>  
@@ -240,8 +241,9 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
     <input type="submit" name="submit" value="Create Encounter Report">
     <input type="submit" name="submit" value="Delete"><input type="button" name="button" value="Cancel" onClick="window.close()">
-  </td></tr></form>
+  </td></tr>
 </table>
+</form>
 <center></center>
 </body>
 </html>
