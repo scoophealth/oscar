@@ -458,6 +458,10 @@ public static String space(int i) {
     	}
     	return text;
     }
-
+    public static String getString(Object s)
+    {
+    	if (s==null) return "";
+    	return (String) s;
+    }
 
 }

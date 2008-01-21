@@ -237,4 +237,9 @@ public class AppointmentMainBean {
   {
 	  return Misc.getString(rs, columnIndex);
   }
+  public String getString(Object o)
+  {
+	  if(o==null) return "";
+	  return (String)o;
+  }
 }
