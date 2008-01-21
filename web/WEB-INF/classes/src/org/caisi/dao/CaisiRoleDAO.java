@@ -38,7 +38,8 @@ public class CaisiRoleDAO extends HibernateDaoSupport {
 		return (CaisiRole)this.getHibernateTemplate().find("from CaisiRole cr where cr.provider_no = ?",new Object[] {provider_no}).get(0);
 	}
 
-	public List getRolesByRole(String role) {
+	@SuppressWarnings("unchecked")
+    public List<CaisiRole> getRolesByRole(String role) {
 		return this.getHibernateTemplate().find("from CaisiRole cr where cr.role = ?",new Object[] {role});
 	}
 
@@ -59,7 +60,6 @@ public class CaisiRoleDAO extends HibernateDaoSupport {
 		query.executeUpdate();
 */
 	}
-	
 	
 	@SuppressWarnings("unchecked")
     public List<CaisiRole> getRoles() {

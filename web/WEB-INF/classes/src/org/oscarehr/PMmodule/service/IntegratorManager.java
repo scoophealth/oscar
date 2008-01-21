@@ -29,9 +29,11 @@ import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -62,20 +64,26 @@ import org.caisi.integrator.model.transfer.AgencyTransfer;
 import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.caisi.integrator.model.transfer.DemographicTransfer;
 import org.caisi.integrator.model.transfer.GetReferralResponseTransfer;
+import org.caisi.integrator.model.transfer.IssueTransfer;
 import org.caisi.integrator.model.transfer.ProgramTransfer;
 import org.caisi.integrator.service.IntegratorService;
+import org.caisi.model.Role;
 import org.codehaus.xfire.annotations.AnnotationServiceFactory;
 import org.codehaus.xfire.client.XFireProxyFactory;
 import org.codehaus.xfire.service.Service;
 import org.oscarehr.PMmodule.dao.AgencyDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
+import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -92,6 +100,8 @@ public class IntegratorManager {
     protected ClientManager clientManager;
     protected ProviderDao providerDao;
     private ProgramDao programDao;
+    private CaseManagementIssueDAO caseManagementIssueDAO;
+    private RoleDAO roleDAO;
 
     public void setProgramDao(ProgramDao programDao) {
         this.programDao = programDao;
@@ -103,6 +113,14 @@ public class IntegratorManager {
 
     public Agency getLocalAgency() {
         return(agencyDao.getLocalAgency());
+    }
+
+    public void setCaseManagementIssueDAO(CaseManagementIssueDAO caseManagementIssueDAO) {
+        this.caseManagementIssueDAO = caseManagementIssueDAO;
+    }
+
+    public void setRoleDAO(RoleDAO roleDAO) {
+        this.roleDAO = roleDAO;
     }
 
     public boolean isEnabled() {
@@ -419,16 +437,22 @@ public class IntegratorManager {
 
             List<DemographicTransfer> demographicTransfers = new ArrayList<DemographicTransfer>();
             boolean shareNotes = getLocalAgency().isShareNotes();
+            ArrayList<IssueTransfer> issues=new ArrayList<IssueTransfer>();
+            HashSet<String> caisiDefinedRoles=new HashSet<String>();
+            for (Role role : roleDAO.getDefaultRoles()) caisiDefinedRoles.add(role.getName());
+            
             for (Demographic demographic : demographics) {
                 demographicTransfers.add(caisiDemographicToIntegratorDemographic(demographic));
 
                 if (shareNotes) {
-// TODO : Ted, copy issues and notes over                    
+                    addShareableIssues(issues, demographic.getDemographicNo(), caisiDefinedRoles);
+// TODO : Ted, copy notes over                    
                 }
             }
 
             PublishDemographicsRequest request = new PublishDemographicsRequest();
             request.setDemographics(demographicTransfers);
+            request.setIssues(issues.toArray(new IssueTransfer[0]));
             GenericResponse response = getIntegratorService().publishDemographics(request, getAuthenticationToken());
 
             if (!response.getAck().equals(MessageAck.OK)) {
@@ -440,6 +464,42 @@ public class IntegratorManager {
         }
     }
 
+    private void addShareableIssues(ArrayList<IssueTransfer> allowedIssues, int demographicNo, HashSet<String> caisiDefinedRoles)
+    {
+        List<CaseManagementIssue> allIssues=caseManagementIssueDAO.getIssuesByDemographic(String.valueOf(demographicNo));
+
+        for (CaseManagementIssue caseManagementIssue : allIssues)
+        {
+            // only issues that with system defined roles are sharable, it's the only way to guarantee all agencies will have the role setup properly
+            if (caisiDefinedRoles.contains(caseManagementIssue.getIssue().getRole()))
+            {
+                allowedIssues.add(getIssueTransfer(caseManagementIssue));
+            }
+        }
+    }
+    
+    private IssueTransfer getIssueTransfer(CaseManagementIssue caseManagementIssue)
+    {
+        IssueTransfer issueTransfer=new IssueTransfer();
+        
+        issueTransfer.setAcute(caseManagementIssue.isAcute());
+        issueTransfer.setAgencyDemographicNo(new Long(caseManagementIssue.getDemographic_no()));
+        issueTransfer.setCertain(caseManagementIssue.isCertain());
+
+        Issue issue=caseManagementIssue.getIssue();
+        issueTransfer.setIssue(issue.getCode() + " : "+issue.getDescription());
+        
+        Calendar cal=Calendar.getInstance();
+        cal.setTimeInMillis(caseManagementIssue.getUpdate_date().getTime());
+        issueTransfer.setLastUpdated(cal);
+        
+        issueTransfer.setMajor(caseManagementIssue.isMajor());
+        issueTransfer.setResolved(caseManagementIssue.isResolved());
+        issueTransfer.setRole(issue.getRole());
+        
+        return(issueTransfer);
+    }
+    
     /**
      * This method will publish all user generated programs in this agency.
      */

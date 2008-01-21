@@ -30,16 +30,19 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class CaseManagementIssueDAO extends HibernateDaoSupport {
 
-    public List getIssuesByDemographic(String demographic_no) {
+    @SuppressWarnings("unchecked")
+    public List<CaseManagementIssue> getIssuesByDemographic(String demographic_no) {
         return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ?", new Object[] {demographic_no});
     }
 
-    public List getIssuesByDemographicOrderActive(String demographic_no) {
+    @SuppressWarnings("unchecked")
+    public List<CaseManagementIssue> getIssuesByDemographicOrderActive(String demographic_no) {
         return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? order by cmi.resolved", new Object[] {demographic_no});
 
     }
 
-    public List getActiveIssuesByDemographic(String demographic_no) {
+    @SuppressWarnings("unchecked")
+    public List<CaseManagementIssue> getActiveIssuesByDemographic(String demographic_no) {
         return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? and cmi.resolved=false", new Object[] {demographic_no});
     }
 
@@ -49,10 +52,11 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
 
     }
 
-    public void saveAndUpdateCaseIssues(List issuelist) {
-        Iterator itr = issuelist.iterator();
+    @SuppressWarnings("unchecked")
+    public void saveAndUpdateCaseIssues(List<CaseManagementIssue> issuelist) {
+        Iterator<CaseManagementIssue> itr = issuelist.iterator();
         while (itr.hasNext()) {
-            getHibernateTemplate().saveOrUpdate((CaseManagementIssue)itr.next());
+            getHibernateTemplate().saveOrUpdate(itr.next());
         }
 
     }

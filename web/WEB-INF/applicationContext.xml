@@ -128,6 +128,7 @@
     <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
     <bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName"/>
     <bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName"/>
+    <bean id="caseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName"/>
     <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" autowire="byName"/>
     <bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.CaseManagementCPPDAO" autowire="byName"/>
     <bean id="AllergyDAO" class="org.oscarehr.casemgmt.dao.AllergyDAO" autowire="byName"/>
