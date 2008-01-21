@@ -428,7 +428,9 @@ public class IntegratorManager {
             for (Demographic demographic : demographics) {
                 demographicTransfers.add(caisiDemographicToIntegratorDemographic(demographic));
             }
-            SynchronizeAgencyDemographicsResponse response=getIntegratorService().synchronizeAgencyDemographics(new SynchronizeAgencyDemographicsRequest(new Date(), demographicTransfers), getAuthenticationToken());
+            SynchronizeAgencyDemographicsRequest request=new SynchronizeAgencyDemographicsRequest();
+            request.setDemographics(demographicTransfers);
+            SynchronizeAgencyDemographicsResponse response=getIntegratorService().synchronizeAgencyDemographics(request, getAuthenticationToken());
 
             if (!response.getAck().equals(MessageAck.OK)) {
                 log.error("Error publishing Clients. " + response.getAck());
