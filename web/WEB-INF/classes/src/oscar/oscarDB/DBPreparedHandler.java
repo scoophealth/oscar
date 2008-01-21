@@ -240,5 +240,14 @@ public class DBPreparedHandler {
 
     public void closeConn() throws SQLException {
     }
+    
+    public String getString(ResultSet rs, String columnName) throws SQLException
+    {
+    	return oscar.Misc.getString(rs, columnName);
+    }
+    public String getString(ResultSet rs, int columnIndex) throws SQLException
+    {
+    	return oscar.Misc.getString(rs, columnIndex);
+    }
 
 }
