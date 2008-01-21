@@ -31,7 +31,7 @@
   ApptData apptObj = (new ApptOpt()).getApptObj(request);
 
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*, oscar.appt.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*, oscar.appt.*, oscar.oscarDB.*" errorPage="../appointment/errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="addApptBean" class="oscar.AppointmentMainBean" scope="page" /><%@ include file="../admin/dbconnection.jsp" %>
@@ -47,13 +47,15 @@ String [][] dbQueries=new String[][] {
     {"search_provider_name", "select last_name,first_name from provider where provider_no= ? " },
 
     {"search_demographic_statusroster", "select patient_status,roster_status from demographic where demographic_no = ? " }, 
-    {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= now() and appt.appointment_date < date_add(now(), interval 365 day) order by appointment_date limit 5" },
-    {"search_appt_past", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < now() and appt.appointment_date > date_sub(now(), interval 365 day) order by appointment_date desc limit 5"}
+    {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= ? and appt.appointment_date < ? order by appointment_date" },
+    {"search_appt_past", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < ? and appt.appointment_date > ? order by appointment_date desc"}
 
   };
+//    {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= now() and appt.appointment_date < date_add(now(), interval 365 day) order by appointment_date" },
+//    {"search_appt_past", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < now() and appt.appointment_date > date_sub(now(), interval 365 day) order by appointment_date desc"}
 
   addApptBean.doConfigure(dbParams,dbQueries);
-
+  int iPageSize=5;
 %>
 <!--  
 
@@ -303,7 +305,19 @@ function pasteAppt() {
 
   SimpleDateFormat outform = new SimpleDateFormat ("EEE");
 
-  java.util.Date apptDate = fullform.parse(bFirstDisp?(request.getParameter("year")+"-"+request.getParameter("month")+"-"+request.getParameter("day")+" "+ request.getParameter("start_time")):(request.getParameter("appointment_date")+" "+ request.getParameter("start_time") )) ;
+  java.util.Date apptDate;
+  
+  if(request.getParameter("year")==null || request.getParameter("month")==null || request.getParameter("day")==null){
+    Calendar cal = Calendar.getInstance();
+    String sDay = String.valueOf(cal.get(Calendar.DATE));
+    String sMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);
+    String sYear = String.valueOf(cal.get(Calendar.YEAR));
+    apptDate = fullform.parse(bFirstDisp?(sYear + "-" + sMonth + "-" + sDay + " "+ request.getParameter("start_time")):
+        (request.getParameter("appointment_date") + " " + request.getParameter("start_time"))) ;
+  }else{
+    apptDate = fullform.parse(bFirstDisp?(request.getParameter("year") + "-" + request.getParameter("month") + "-" + request.getParameter("day")+" "+ request.getParameter("start_time")):
+        (request.getParameter("appointment_date") + " " + request.getParameter("start_time"))) ;
+  }
 
   String dateString1 = outform.format(apptDate );
 
@@ -498,27 +512,27 @@ String disabled="";
             <td width="20%"> <INPUT TYPE="TEXT" NAME="appointment_date" VALUE="<%=dateString2%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td> 
             <td width="5%" ></td> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formStatus"/>:</font></div></td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="status" VALUE="<%=bFirstDisp?"t":request.getParameter("status").equals("")?"":request.getParameter("status")%>"  WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td> 
+            <td width="20%"> <INPUT TYPE="TEXT" NAME="status" VALUE='<%=bFirstDisp?"t":request.getParameter("status").equals("")?"":request.getParameter("status")%>'  WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td> 
           </tr> 
           <tr valign="middle" BGCOLOR="#EEEEFF"> 
             <td width="20%"> <div align="right"><font face="arial"><font face="arial"><bean:message key="Appointment.formStartTime"/>:</font></font></div></td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="start_time" VALUE="<%=request.getParameter("start_time")%>" WIDTH="25" HEIGHT="20" border="0"  onChange="checkTimeTypeIn(this)"> </td> 
+            <td width="20%"> <INPUT TYPE="TEXT" NAME="start_time" VALUE='<%=request.getParameter("start_time")%>' WIDTH="25" HEIGHT="20" border="0"  onChange="checkTimeTypeIn(this)"> </td> 
             <td width="5%" ></td> 
             <td width="20%" > <div align="right"><font face="arial"><bean:message key="Appointment.formType"/>:</font></div></td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="type" VALUE="<%=bFirstDisp?"":request.getParameter("type").equals("")?"":request.getParameter("type")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td> 
+            <td width="20%"> <INPUT TYPE="TEXT" NAME="type" VALUE='<%=bFirstDisp?"":request.getParameter("type").equals("")?"":request.getParameter("type")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td> 
           </tr> 
           <tr valign="middle" BGCOLOR="#EEEEFF" > 
             <td width="20%"  align="right"> <font face="arial"><bean:message key="Appointment.formDuration"/>:</font> 
               <!--font face="arial"> End Time :</font--> </td> 
             <td width="20%"> <INPUT TYPE="TEXT" NAME="duration" VALUE="<%=duration%>" WIDTH="25" HEIGHT="20" border="0" hspace="2" > 
-              <INPUT TYPE="hidden" NAME="end_time" VALUE="<%=request.getParameter("end_time")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"  onChange="checkTimeTypeIn(this)"> </td> 
+              <INPUT TYPE="hidden" NAME="end_time" VALUE='<%=request.getParameter("end_time")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2"  onChange="checkTimeTypeIn(this)"> </td> 
             <td width="5%" ></td> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formDoctor"/>:</font></div></td> 
             <td width="20%"><%--RJ 07/10/2006 --%><%=bFirstDisp ? "" : providerBean.getProperty(curDoctor_no,"")%></td> 
           </tr> 
           <tr valign="middle" BGCOLOR="#CCCCFF"> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="appointment.addappointment.formSurName"/>:</font></div></td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="keyword" VALUE="<%=(bFirstDisp && !bFromWL)?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname")==null?"":session.getAttribute("appointmentname"):request.getParameter("name")%>" HEIGHT="20" border="0" hspace="2" width="25" tabindex="1"> </td> 
+            <td width="20%"> <INPUT TYPE="TEXT" NAME="keyword" VALUE='<%=(bFirstDisp && !bFromWL)?"":request.getParameter("name")==null?session.getAttribute("appointmentname")==null?"":session.getAttribute("appointmentname"):request.getParameter("name")%>' HEIGHT="20" border="0" hspace="2" width="25" tabindex="1"> </td> 
             <td width="5%"><font size=-1><a href=# onclick="onNotBook();">Not book</font></a></td> 
             <td width="20%"> <div align="right"><font face="arial"> 
                 <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name" > 
@@ -530,7 +544,7 @@ String disabled="";
                 <!--input type="hidden" name="displaymode" value="Search " --> 
                 <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Search '" VALUE="<bean:message key="appointment.addappointment.btnSearch"/> 
 "></font></div></td> 
-            <td width="20%" > <input type="TEXT" name="demographic_no" ONFOCUS="onBlockFieldFocus(this)" readonly value="<%=(bFirstDisp && !bFromWL)?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>" width="25" height="20" border="0" hspace="2"> </td> 
+            <td width="20%" > <input type="TEXT" name="demographic_no" ONFOCUS="onBlockFieldFocus(this)" readonly value='<%=(bFirstDisp && !bFromWL)?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>' width="25" height="20" border="0" hspace="2"> </td> 
           </tr> 
           <tr valign="middle" BGCOLOR="#CCCCFF"> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formReason"/>:</font></div></td> 
@@ -559,7 +573,7 @@ String disabled="";
             <td width="20%"> <input type="TEXT" name="location" style="background-color: <%=colo%>" tabindex="4" value="<%=loc%>" width="25" height="20" border="0" hspace="2"> </TD> 
             <td width="5%" ></td> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formResources"/>:</font></div></td> 
-            <td width="20%"> <input type="TEXT" name="resources"  tabindex="5" value="<%=bFirstDisp?"":request.getParameter("resources").equals("")?"":request.getParameter("resources")%>" width="25" height="20" border="0" hspace="2"> </td> 
+            <td width="20%"> <input type="TEXT" name="resources"  tabindex="5" value='<%=bFirstDisp?"":request.getParameter("resources").equals("")?"":request.getParameter("resources")%>' width="25" height="20" border="0" hspace="2"> </td> 
           </tr> 
           <tr valign="middle" BGCOLOR="#EEEEFF"> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formCreator"/>:</font></div></td> 
@@ -582,7 +596,7 @@ String disabled="";
               <INPUT TYPE="TEXT" NAME="createdatetime" readonly VALUE="<%=strDateTime%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"> 
               <INPUT TYPE="hidden" NAME="provider_no" VALUE="<%=curProvider_no%>"> 
               <INPUT TYPE="hidden" NAME="dboperation" VALUE="add_apptrecord"> 
-              <INPUT TYPE="hidden" NAME="creator" VALUE="<%=userlastname+", "+userfirstname%>"> 
+              <INPUT TYPE="hidden" NAME="creator" VALUE='<%=userlastname+", "+userfirstname%>'> 
               <INPUT TYPE="hidden" NAME="remarks" VALUE=""> </td> 
           </tr> 
         </table></td> 
@@ -636,11 +650,21 @@ String disabled="";
         </tr>
       <%        
         String demoNo = request.getParameter("demographic_no");
+        int iRow=0;
         if( bFromWL && demoNo != null && demoNo.length() > 0 ) {
-            rsdemo = addApptBean.queryResults(demoNo, "search_appt_future");
+//            rsdemo = addApptBean.queryResults(demoNo, "search_appt_future");
+            DBPreparedHandlerParam[] param2 =new DBPreparedHandlerParam[3];
+            param2[0]= new DBPreparedHandlerParam(demoNo);
+            Calendar cal2 = Calendar.getInstance();
+            param2[1]=new DBPreparedHandlerParam(new java.sql.Date(cal2.getTime().getTime()));
+            cal2.add(Calendar.YEAR, 1);
+            param2[2]=new DBPreparedHandlerParam(new java.sql.Date(cal2.getTime().getTime()));
+            rsdemo = addApptBean.queryResults_paged(param2, "search_appt_future", 0);
             ArrayList appts = new ArrayList();
             ApptData appt;
             while(rsdemo.next()) {
+                iRow ++;
+                if(iRow>iPageSize) break;
                 appt = new ApptData();
                 appt.setAppointment_date(rsdemo.getString("appointment_date"));
                 appt.setStart_time(rsdemo.getString("start_time"));
@@ -661,8 +685,18 @@ String disabled="";
         <%
             }
             rsdemo.close();
-            rsdemo = addApptBean.queryResults(demoNo, "search_appt_past");
+            iRow=0;
+//            rsdemo = addApptBean.queryResults_paged(demoNo, "search_appt_past", 0);
+            DBPreparedHandlerParam[] param3 =new DBPreparedHandlerParam[3];
+            param3[0]= new DBPreparedHandlerParam(demoNo);
+            Calendar cal3 = Calendar.getInstance();
+            param3[1]=new DBPreparedHandlerParam(new java.sql.Date(cal3.getTime().getTime()));
+            cal3.add(Calendar.YEAR, -1);
+            param3[2]=new DBPreparedHandlerParam(new java.sql.Date(cal3.getTime().getTime()));
+            rsdemo = addApptBean.queryResults_paged(param3, "search_appt_past", 0);
             while(rsdemo.next()) {
+                iRow ++;
+                if(iRow>iPageSize) break;
         %>
             <tr bgcolor="#eeeeff">
                 <td style="padding-right:25px"><%=rsdemo.getString("appointment_date")%></td>

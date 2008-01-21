@@ -182,6 +182,23 @@ public class DBPreparedHandler {
         return(rs);
     }
     
+    synchronized public ResultSet queryResults_paged(String preparedSQL, DBPreparedHandlerParam[] param, int iOffSet) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < param.length; i++) {
+           if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_STRING)){
+               preparedStmt.setString((i + 1), param[i].getStringValue());
+           }
+           else if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_DATE)){
+               preparedStmt.setDate((i + 1), param[i].getDateValue());
+           }
+        }
+        rs = preparedStmt.executeQuery();
+        for(int i=1; i<=iOffSet; i++){
+            if(rs.next()==false) break;
+        }
+        return(rs);
+    }
+
     synchronized public Object[] queryResultsCaisi(String preparedSQL, int param) throws SQLException {
         preparedStmt = getConnection().prepareStatement(preparedSQL);
         preparedStmt.setInt(1, param);
