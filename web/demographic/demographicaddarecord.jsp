@@ -281,7 +281,8 @@
                     paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
                     paramWL[4] = request.getParameter("waiting_list_referral_date");
                     paramWL[5] = "N"; 
-                    apptMainBean.queryExecuteUpdate(paramWL, "add2WaitingList");
+                    if(paramWL[0]!=null && !paramWL[0].equals("") && !paramWL[0].equals("0"))
+                        apptMainBean.queryExecuteUpdate(paramWL, "add2WaitingList");
                 }
             }
         }
