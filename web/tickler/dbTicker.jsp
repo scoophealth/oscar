@@ -36,7 +36,7 @@
 
 
   String [][] dbQueries=new String[][] {
-    {"search_provider_all_dt", "select * from provider where provider_type='doctor' and provider_no like ? order by last_name"},
+    {"search_provider_all_dt", "select * from provider where provider_type='doctor' and status = '1' and provider_no like ? order by last_name"},
     {"search_provider_all", "select * from provider where provider_no like ?  and status = '1' order by last_name"},
 	{"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no != '' and provider_no like ? order by last_name"},
     {"search_demographic_details", "select * from demographic where demographic_no=?"},
