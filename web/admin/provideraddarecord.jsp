@@ -12,7 +12,7 @@
 <%@ page  import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.login.*" %>
 <%@ page import="oscar.log.*" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils,oscar.oscarProvider.data.ProviderBillCenter" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils,oscar.oscarProvider.data.ProviderBillCenter,oscar.util.SqlUtils" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <!--
 /*
@@ -51,6 +51,7 @@
   </tr>
 </table>
 <%
+
 String curUser_no = (String)session.getAttribute("user");
   String[] param =new String[18];
   param[0]=request.getParameter("provider_no");
@@ -60,7 +61,13 @@ String curUser_no = (String)session.getAttribute("user");
   param[4]=request.getParameter("specialty");
   param[5]=request.getParameter("team");
   param[6]=request.getParameter("sex");
+  
   param[7]=request.getParameter("dob");
+  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+  if("oracle".equalsIgnoreCase(strDbType)){
+  	param[7] = SqlUtils.isoToOracleDate(param[7]);
+  }
+  
   param[8]=request.getParameter("address");
   param[9]=request.getParameter("phone");
   param[10]=request.getParameter("workphone");
@@ -73,6 +80,7 @@ String curUser_no = (String)session.getAttribute("user");
   param[17]=request.getParameter("provider_activity");
 
 DBHelp dbObj = new DBHelp();
+
 String	sql   = "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity) values (";
 sql += "'" + param[0] + "',";
 sql += "'" + StringEscapeUtils.escapeSql(param[1]) + "',";
