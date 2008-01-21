@@ -39,6 +39,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.integrator.message.AuthenticationToken;
+import org.caisi.integrator.message.GenericResponse;
 import org.caisi.integrator.message.GetIntegratorInformationRequest;
 import org.caisi.integrator.message.GetIntegratorInformationResponse;
 import org.caisi.integrator.message.MessageAck;
@@ -48,16 +49,12 @@ import org.caisi.integrator.message.clientGroup.JoinClientRequest;
 import org.caisi.integrator.message.demographics.AddUpdateDemographicRequest;
 import org.caisi.integrator.message.demographics.GetDemographicRequest;
 import org.caisi.integrator.message.demographics.GetDemographicResponse;
-import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsRequest;
-import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsResponse;
+import org.caisi.integrator.message.demographics.PublishDemographicsRequest;
 import org.caisi.integrator.message.program.GetProgramsResponse;
 import org.caisi.integrator.message.program.GetReferralsResponse;
 import org.caisi.integrator.message.program.MakeReferralRequest;
-import org.caisi.integrator.message.program.MakeReferralResponse;
 import org.caisi.integrator.message.program.PublishProgramRequest;
-import org.caisi.integrator.message.program.PublishProgramResponse;
 import org.caisi.integrator.message.program.RemoveReferralRequest;
-import org.caisi.integrator.message.program.RemoveReferralResponse;
 import org.caisi.integrator.message.search.SearchCandidateDemographicRequest;
 import org.caisi.integrator.message.search.SearchCandidateDemographicResponse;
 import org.caisi.integrator.model.Client;
@@ -407,30 +404,32 @@ public class IntegratorManager {
     }
 
     /**
-     * This method should publish all clients who have consented to be published. As a side effect it should
-     * also remove all clients which have not consented or have removed consent.
+     * This method should publish all clients who have consented to be published. As a side effect it should also remove all clients which have not consented or have removed consent.
      * 
-     * This method should publish both the demographic data as well as issue and notes associated with the 
-     * client. This method is responsible for sorting out the level of consent and if it's appropriate
-     * to send the notes / issues based on consent, integrator notes and issues sharing enabled or not,
-     * and if the issues / notes have roles which are not caisi standard or not.
+     * This method should publish both the demographic data as well as issue and notes associated with the client. This method is responsible for sorting out the level of consent and if it's appropriate to send the notes / issues based on consent,
+     * integrator notes and issues sharing enabled or not, and if the issues / notes have roles which are not caisi standard or not.
      */
-    public void publishClients()
-    {
+    public void publishClients() {
         try {
             if (!isEnabled()) return;
 
 // TODO : Ted, right now it just sends everything, no checking of permissions.
-            
-            List<Demographic> demographics=clientManager.getClients();
-            
+
+            List<Demographic> demographics = clientManager.getClients();
+
             List<DemographicTransfer> demographicTransfers = new ArrayList<DemographicTransfer>();
+            boolean shareNotes = getLocalAgency().isShareNotes();
             for (Demographic demographic : demographics) {
                 demographicTransfers.add(caisiDemographicToIntegratorDemographic(demographic));
+
+                if (shareNotes) {
+// TODO : Ted, copy issues and notes over                    
+                }
             }
-            SynchronizeAgencyDemographicsRequest request=new SynchronizeAgencyDemographicsRequest();
+
+            PublishDemographicsRequest request = new PublishDemographicsRequest();
             request.setDemographics(demographicTransfers);
-            SynchronizeAgencyDemographicsResponse response=getIntegratorService().synchronizeAgencyDemographics(request, getAuthenticationToken());
+            GenericResponse response = getIntegratorService().publishDemographics(request, getAuthenticationToken());
 
             if (!response.getAck().equals(MessageAck.OK)) {
                 log.error("Error publishing Clients. " + response.getAck());
@@ -438,7 +437,7 @@ public class IntegratorManager {
         }
         catch (Exception e) {
             log.error("Unexpected error occurred.", e);
-        }        
+        }
     }
 
     /**
@@ -448,16 +447,16 @@ public class IntegratorManager {
         try {
             if (!isEnabled()) return;
 
-            List<Program> programs=programDao.getActiveUserDefinedPrograms();
-            ArrayList<ProgramTransfer> al=new ArrayList<ProgramTransfer>();
-            for (Program program : programs) al.add(program.getProgramTransfer());
+            List<Program> programs = programDao.getActiveUserDefinedPrograms();
+            ArrayList<ProgramTransfer> al = new ArrayList<ProgramTransfer>();
+            for (Program program : programs)
+                al.add(program.getProgramTransfer());
             publishPrograms(al.toArray(new ProgramTransfer[0]));
         }
         catch (Exception e) {
             log.error("Unexpected error occurred.", e);
         }
     }
-    
 
     /**
      * This method will publish the provided program list to the integrator. The program list should not contain caisi standard programs, just user generated ones.
@@ -467,7 +466,7 @@ public class IntegratorManager {
             if (!isEnabled()) return;
 
             PublishProgramRequest request = new PublishProgramRequest(new Date(), programTransfers);
-            PublishProgramResponse response = getIntegratorService().publishProgram(request, getAuthenticationToken());
+            GenericResponse response = getIntegratorService().publishProgram(request, getAuthenticationToken());
 
             if (!response.getAck().equals(MessageAck.OK)) {
                 log.error("Error publishing programs. " + response.getAck());
@@ -555,7 +554,7 @@ public class IntegratorManager {
             providerInfo.append(provider.getWorkPhone());
             request.setSourceProviderInfo(providerInfo.toString());
 
-            MakeReferralResponse response = getIntegratorService().makeReferral(request, getAuthenticationToken());
+            GenericResponse response = getIntegratorService().makeReferral(request, getAuthenticationToken());
 
             if (!response.getAck().equals(MessageAck.OK)) {
                 log.error("Error making referral. " + response.getAck());
@@ -592,7 +591,7 @@ public class IntegratorManager {
 
         return(null);
     }
-    
+
     public boolean removeReferral(int referralId) {
         try {
             if (!isEnabled()) return(false);
@@ -600,7 +599,7 @@ public class IntegratorManager {
             RemoveReferralRequest request = new RemoveReferralRequest();
             request.setReferralId(referralId);
 
-            RemoveReferralResponse response = getIntegratorService().removeReferral(request, getAuthenticationToken());
+            GenericResponse response = getIntegratorService().removeReferral(request, getAuthenticationToken());
 
             if (!response.getAck().equals(MessageAck.OK)) {
                 log.error("Error making referral. " + response.getAck());
