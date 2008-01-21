@@ -239,17 +239,15 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 <%@ include file="../demographic/zzdemographicsearchresult.jsp" %>
 <%
 String bgColor = bodd?"#EEEEFF":"white";
-
-String sChart_no=(apptMainBean.getString(rs,"chart_no")==null)?"":apptMainBean.getString(rs,"chart_no");
 %>
  
 <tr bgcolor="<%=bgColor%>" align="center" 
 <%-- 07/10/2006 RJ Added doctor provider_no to url --%>
 onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';" 
-onClick="document.forms[0].demographic_no.value=<%=apptMainBean.getString(rs,"demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(sChart_no)%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')"
+onClick="document.forms[0].demographic_no.value=<%=apptMainBean.getString(rs,"demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')"
 >
 <%-- 07/10/2006 RJ Added doctor provider_no to url --%>
-      <td><input type="submit" class="mbttn" name="demographic_no" value="<%=apptMainBean.getString(rs,"demographic_no")%>"  onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(sChart_no)%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')"></td>
+      <td><input type="submit" class="mbttn" name="demographic_no" value="<%=apptMainBean.getString(rs,"demographic_no")%>"  onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"chart_no"))%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')"></td>
       <td><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name"))%></td>
       <td><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"first_name"))%></td>
       <td><%=age%></td>
@@ -261,7 +259,7 @@ onClick="document.forms[0].demographic_no.value=<%=apptMainBean.getString(rs,"de
 <%
       bufName = new StringBuffer( (apptMainBean.getString(rs,"last_name")+ ","+ apptMainBean.getString(rs,"first_name")) );
       bufNo = new StringBuffer( (apptMainBean.getString(rs,"demographic_no")) );
-      bufChart = new StringBuffer(sChart_no);
+      bufChart = new StringBuffer(apptMainBean.getString(rs,"chart_no"));
       bufDoctorNo = new StringBuffer( apptMainBean.getString(rs,"provider_no") ); 
     }
   }
