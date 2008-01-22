@@ -87,7 +87,8 @@ public class EChartDAO {
       ResultSet rs;
       String sql = "select * from eChart where demographicNo=" +
           demographicNo
-          + " ORDER BY eChartId DESC limit 1";
+          + " ORDER BY eChartId DESC";
+//          + " ORDER BY eChartId DESC limit 1";
       rs = db.GetSQL(sql);
       if (rs.next()) {
         echart = new Echart();

@@ -52,7 +52,8 @@ public class WaitingList{
        ResultSet rs = null;
        try{
            db = new DBHandler(DBHandler.OSCAR_DATA);
-           String sql = "SELECT * FROM waitingListName where is_history = 'N' limit 1 ";
+//           String sql = "SELECT * FROM waitingListName where is_history = 'N' limit 1 ";
+           String sql = "SELECT * FROM waitingListName where is_history = 'N'";
            rs = db.GetSQL(sql);
            if(rs.next()){
                return true;

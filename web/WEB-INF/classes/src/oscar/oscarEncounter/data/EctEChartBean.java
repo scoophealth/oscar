@@ -37,7 +37,8 @@ public class EctEChartBean {
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			String sql = "select * from eChart where demographicNo=" + demoNo
-					+ " ORDER BY eChartId DESC limit 1";
+					+ " ORDER BY eChartId DESC";
+//         			+ " ORDER BY eChartId DESC limit 1";
 			ResultSet rs = db.GetSQL(sql);
 			if (rs.next()) {
 				eChartTimeStamp = rs.getTimestamp("timeStamp");

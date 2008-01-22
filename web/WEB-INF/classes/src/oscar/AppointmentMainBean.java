@@ -138,6 +138,21 @@ public class AppointmentMainBean {
    // System.out.println("sqlQuery=" + sqlQuery);
 	return rs;
 }
+
+  public ResultSet queryResults_paged(DBPreparedHandlerParam[] aKeyword, String dboperation, int iOffSet) throws Exception{
+	 	String sqlQuery =null;
+
+	  ResultSet rs =null;
+	  if(aKeyword[0].getParamType().equals(DBPreparedHandlerParam.PARAM_STRING) && 
+			  aKeyword[0].getStringValue().equals("*")) {
+	  	sqlQuery = dbSQL.getDef("search*","");
+	    rs = dbPH.queryResults_paged(sqlQuery, iOffSet);
+	  } else {
+	  	sqlQuery = dbSQL.getDef(dboperation,"");
+	    rs = dbPH.queryResults_paged(sqlQuery, aKeyword, iOffSet);
+	  }
+	return rs;
+  }
   
   public Object[] queryResultsCaisi(String[] aKeyword, String dboperation) throws Exception{
 	String sqlQuery =null;

@@ -61,7 +61,8 @@ public class NextApptTag extends TagSupport {
        if (demoNo != null && !demoNo.equalsIgnoreCase("") && !demoNo.equalsIgnoreCase("null")){
            try {
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-              String sql = "select * from appointment where demographic_no = '"+demoNo+"' and status not like '%C%' and appointment_date >= now() order by appointment_date limit 1";
+//              String sql = "select * from appointment where demographic_no = '"+demoNo+"' and status not like '%C%' and appointment_date >= now() order by appointment_date limit 1";
+              String sql = "select * from appointment where demographic_no = '"+demoNo+"' and status not like '%C%' and appointment_date >= now() order by appointment_date";
               ResultSet rs = db.GetSQL(sql);
               if (rs.next()) {
                  nextApptDate = rs.getDate("appointment_date");
