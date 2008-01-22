@@ -35,6 +35,9 @@
   
   DemographicSets  ds = new DemographicSets();
   ArrayList sets = ds.getDemographicSets();
+  
+  oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();    
+  ArrayList queryArray = searchData.getQueryTypes();
 
   String userRole = (String)session.getAttribute("userrole");
 %>
@@ -44,7 +47,7 @@
 <head>
 <!--I18n-->
 <title>
-oscarPrevention 
+oscarPrevention
 </title>
 <script src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
@@ -215,20 +218,38 @@ if (!userRole.toLowerCase().contains("admin")) { %>
             <td valign="top" class="MainTableRightColumn">
                <html:form action="/demographic/DemographicExport" method="get" onsubmit="return checkSelect(patientSet.value);">
                <div>
-                  Patient Set:
+		    <% if (demographic_no!= null) { %>
+		    <input type="hidden" name="demographicNo" value="<%=demographic_no%>"/>
+		    Exporting :
+		    
+		    <%} else {%>
+		   Patient Set:
                   <html:select property="patientSet">
                       <html:option value="-1" >--Select Set--</html:option>
-<% for ( int i = 0 ; i < sets.size(); i++ ){  
-    String s = (String) sets.get(i);%>
-                      <html:option value="<%=s%>"><%=s%></html:option>
-<%}%>
-                  </html:select>                  
+                      <%for (int i =0 ; i < queryArray.size(); i++){
+                        RptSearchData.SearchCriteria sc = (RptSearchData.SearchCriteria) queryArray.get(i);
+                        String qId = sc.id;
+                        String qName = sc.queryName;%>
+                        <html:option value="<%=qId%>"><%=qName%></html:option>
+                      <%}%>
+                  </html:select>          
+		    <%}%>
+		   
+                 
+<!--
                   <input type="submit" value="Export" />
+//-->
                </div>               
                
                </html:form>
                <html:form action="/demographic/DemographicExport2" method="get" onsubmit="patientSet.value = document.forms[0].patientSet.value;return checkSelect(patientSet.value);">
+		    <% if (demographic_no!= null) { %>
+		    <input type="hidden" name="demographicNo" value="<%=demographic_no%>"/>
+		    Exporting :
+		    
+		    <%} else {%>
 		   <html:hidden property="patientSet"/>
+		   <%}%>
 		   Media Type:
 		   <html:select property="mediaType">
 		       <html:option value="Hard Disk">Hard Disk</html:option>
@@ -241,7 +262,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		   Number of Media:
 		   <html:text property="noOfMedia" size="1" value="1"/>
 		   <p>
-		   <input type="submit" value="Export (Spec 2.0)" />               
+		   <input type="submit" value="Export (CMS spec 2.0)" />               
                </html:form>
                
             </td>
