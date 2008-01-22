@@ -1518,6 +1518,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
                                   <%}%>
                               <input type="button" name="Button" value="<bean:message key="global.btnBack" />" onclick="history.go(-1);return false;">
                               <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onclick=self.close();>
+			      <input type="button" size="110" name="Button" value="Export This Demographic" onclick="window.open('demographicExport.jsp?demographic_no=<%=rs.getString("demographic_no")%>');">
                             </td>
                             <td  width="30%" align='center' valign="top">
                               <input type="hidden" name="displaymode" value="Update Record" >
