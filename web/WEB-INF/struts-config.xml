@@ -1120,6 +1120,9 @@
         <action input="/demographic/demographicImport.jsp" name="ImportDemographicDataForm" path="/form/importUpload2" scope="request" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataAction2">
             <forward name="success" path="/demographic/demographicImport.jsp" />
         </action>
+        <action input="/demographic/demographicImport.jsp" name="ImportDemographicDataForm" path="/form/importLogDownload" scope="request" type="oscar.oscarDemographic.pageUtil.ImportLogDownloadAction">
+            <forward name="success" path="/demographic/demographicImport.jsp" />
+        </action>
         <action input="/demographic/demographicExport.jsp" name="DemographicExportForm" path="/demographic/DemographicExport" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicExportAction">
             <forward name="success" path="/demographic/demographicExport.jsp" />
         </action>
