@@ -428,6 +428,10 @@ public class PreventionData {
 		       addToHashIfNotNull(h, "manufacture", (String)ext.get("manufacture"));
 		       summary += "Manufacturer: " + ext.get("manufacture");
 		   }
+		   if (ext.containsKey("comments") && !ext.get("comments").equals("")) {
+		       addToHashIfNotNull(h, "comments", (String)ext.get("comments"));
+		       summary += "Comments: " + ext.get("comments");
+		   }
 	       }
 	       addToHashIfNotNull(h,"summary", summary);
                log.debug("1"+h.get("preventionType")+" "+h.size());
