@@ -110,7 +110,7 @@ public class ImportDemographicDataAction2 extends Action {
 		    cleanFile(ifile);
 		    throw new Exception ("Error! No XML file in zip");
 		} else {
-		    importLog = makeImportLog(logResult, tmpDir);
+		    if (logResult.size()>0) importLog = makeImportLog(logResult, tmpDir);
 		}
 		in.close();
 		if (!cleanFile(ifile)) throw new Exception ("Error! Cannot delete import file!");
@@ -119,7 +119,7 @@ public class ImportDemographicDataAction2 extends Action {
 		String[] logR = importXML(ifile, proNo, warnings, request);
 		if (logR!=null) {
 		    logResult.add(logR);
-		    importLog = makeImportLog(logResult, tmpDir);
+		    if (logResult.size()>0) importLog = makeImportLog(logResult, tmpDir);
 		}
 		
 	    } else {
@@ -132,6 +132,7 @@ public class ImportDemographicDataAction2 extends Action {
 	    e.printStackTrace();
 	}
         request.setAttribute("warnings",warnings);
+	if (importLog!=null) request.setAttribute("importlog",importLog.getPath());
         
         System.out.println("warnings size "+warnings.size());
         for( int i = 0; i < warnings.size(); i++ ){
