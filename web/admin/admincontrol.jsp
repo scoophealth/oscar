@@ -50,7 +50,11 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     limit2=request.getParameter("limit2");
     limit="limit "+limit2 + " offset "+limit1;
   }
-
+  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+  if("oracle".equalsIgnoreCase(strDbType)){
+  	limit = "";
+  }
+  
   String fieldname="", regularexp="like"; // exactly search is not required by users, e.g. regularexp="=";
   if(request.getParameter("search_mode")!=null) {
 	  if(request.getParameter("keyword").indexOf("*")!=-1 || request.getParameter("keyword").indexOf("%")!=-1) regularexp="like";

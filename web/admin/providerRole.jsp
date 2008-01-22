@@ -264,7 +264,7 @@ if(temp.length>1) {
 	lastName = keyword + "%";
 	firstName = "%";
 }
-String query = "select u.*, p.provider_no, p.first_name, p.last_name from provider p LEFT JOIN secUserRole u ON ";
+String query = "select u.role_name, p.provider_no, p.first_name, p.last_name from provider p LEFT JOIN secUserRole u ON ";
 query += " p.provider_no=u.provider_no where p.last_name like '" + lastName + "' and p.first_name like '" + firstName + "' and p.status='1' order by p.first_name, p.last_name, u.role_name";
 System.out.println(query);
 rs = dbObj.searchDBRecord(query);

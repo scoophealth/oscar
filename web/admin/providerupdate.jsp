@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.oscarProvider.data.ProviderBillCenter" errorPage="errorpage.jsp" %>
+<%@ page import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.util.SqlUtils,oscar.oscarProvider.data.ProviderBillCenter" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <!--  
 /*
@@ -49,7 +49,12 @@
   param[3]=request.getParameter("specialty");
   param[4]=request.getParameter("team");
   param[5]=request.getParameter("sex");
+  
   param[6]=request.getParameter("dob");
+  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+  if("oracle".equalsIgnoreCase(strDbType)){
+  	param[6] = SqlUtils.isoToOracleDate(param[6]);
+  }
   param[7]=request.getParameter("address");
   param[8]=request.getParameter("phone");
   param[9]=request.getParameter("workphone");
