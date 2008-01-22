@@ -221,7 +221,9 @@ public class ImportDemographicDataAction2 extends Action {
 		    else {
 			cdsDt.AddressStructured addrStr = addr.getStructured();
 			if (addrStr!=null) {
-			    address = addrStr.getLine1() + " " + addrStr.getLine2() + " " + addrStr.getLine3();
+			    address = addrStr.getLine1();
+			    address += addrStr.getLine2()!=null ? " "+addrStr.getLine2() : "";
+			    address += addrStr.getLine3()!=null ? " "+addrStr.getLine3() : "";
 			    city = addrStr.getCity();
 			    province = addrStr.getCountrySubdivisionCode();
 			    cdsDt.PostalZipCode postalZip = addrStr.getPostalZipCode();
