@@ -231,7 +231,7 @@ public class ImportDemographicDataAction2 extends Action {
 		}
 	    }
 	    cdsDt.PhoneNumber[] pn = demo.getPhoneNumberArray();
-	    String workPhone="", workExt="", homePhone="", homeExt="", cellPhone="", ext="";
+	    String workPhone="", workExt="", homePhone="", homeExt="", cellPhone="", ext="", patientPhone="";
 	    for (int i=0; i<pn.length; i++) {
 		String phone = pn[i].getPhoneNumber();
 		if (phone==null) {
@@ -255,6 +255,10 @@ public class ImportDemographicDataAction2 extends Action {
 		    }
 		}
 	    }
+	    if (!homePhone.equals("")) patientPhone = homePhone+" "+homeExt;
+	    else if (!workPhone.equals("")) patientPhone = workPhone+" "+workExt;
+	    else if (!cellPhone.equals("")) patientPhone = cellPhone;
+		    
 	    String email = "";
 	    if (demo.getEmail()!=null) email = demo.getEmail();
 	    ProviderData provD = new ProviderData();
@@ -621,9 +625,10 @@ public class ImportDemographicDataAction2 extends Action {
 
 		//LABORATORY RESULTS
 		cds.LaboratoryResultsDocument.LaboratoryResults[] labResultArray = patientRec.getLaboratoryResultsArray();
+		String pre_accession_num="", ppId="";
 		for (int i=0; i<labResultArray.length; i++) {
 		    String testName="", abn="", minimum="", maximum="", result="", unit="", description="", location="";
-		    String accession_num="", coll_date="", ppId="";
+		    String accession_num="", coll_date="";
 		    if (labResultArray[i].getTestName()!=null) testName = labResultArray[i].getTestName();
 		    if (labResultArray[i].getResultNormalAbnormalFlag()!=null) {
 			cdsDt.ResultNormalAbnormalFlag.Enum flag = labResultArray[i].getResultNormalAbnormalFlag();
@@ -656,13 +661,16 @@ public class ImportDemographicDataAction2 extends Action {
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 			e.printStackTrace();
 		    }
-		    LabResultImport lri = new LabResultImport();
-		    
 		    coll_date = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(coll_date,"yyyy-MM-dd"));
-		    String RIId = lri.saveLabRI(location, coll_date, "00:00:00");
 		    
-		    ppId = lri.saveLabPPInfo(RIId, accession_num, firstName, lastName, sex, hin, birthDate, coll_date);
-		    lri.SaveLabTR(testName, abn, minimum, maximum, result, unit, description, ppId);
+		    LabResultImport lri = new LabResultImport();
+		    if (!accession_num.equals(pre_accession_num)) {
+			coll_date = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(coll_date),"yyyyMMdd");
+			String RIId = lri.saveLabRI(location, coll_date, "00:00:00");
+			ppId = lri.saveLabPPInfo(RIId, accession_num, firstName, lastName, sex, hin, birthDate, patientPhone, coll_date);
+			pre_accession_num = accession_num;
+		    }
+		    lri.SaveLabTR(testName, abn, minimum, maximum, result, unit, description, location, ppId);
 		    lri.savePatientLR(demoNo, ppId);
 		}
 
