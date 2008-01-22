@@ -25,6 +25,7 @@ package org.oscarehr.casemgmt.web;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,6 +57,7 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.model.UserProperty;
 import org.springframework.web.context.WebApplicationContext;
@@ -1230,6 +1232,34 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		
 		return edit(mapping, form, request, response);
 	}
+        
+        public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+             String ids = request.getParameter("notes2print");
+             if( ids == null || ids.equals("") ) {
+                 response.sendError(response.SC_BAD_REQUEST, "No Notes specified");
+             }  
+             
+             String demono = getDemographicNo(request);             
+             request.setAttribute("demoName", getDemoName(demono));
+             request.setAttribute("demoAge", getDemoAge(demono));
+             request.setAttribute("demoDOB", getDemoDOB(demono));
+             
+             String[] noteIds = ids.split(",");
+             ArrayList<CaseManagementNote>notes = new ArrayList<CaseManagementNote>();
+             for( int idx = 0; idx < noteIds.length; ++idx )
+                 notes.add(this.caseManagementMgr.getNote(noteIds[idx]));
+             
+             //we're not guaranteed any ordering of notes given to us, so sort by observation date
+             Collections.sort(notes, CaseManagementNote.getObservationComparator());
+             
+             response.setContentType("application/pdf");  //octet-stream
+             response.setHeader("Content-Disposition", "attachment; filename=\"Encounter-"+UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf\"");
+            
+             CaseManagementPrintPdf printer = new CaseManagementPrintPdf(request, response);
+             printer.printPdf(notes);
+             
+             return null;
+        }
         
         public CaseManagementNote getLastSaved(HttpServletRequest request, String demono, String providerNo) {
             CaseManagementNote note = null;
