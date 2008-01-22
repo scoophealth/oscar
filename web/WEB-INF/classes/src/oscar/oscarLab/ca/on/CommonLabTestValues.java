@@ -594,6 +594,8 @@ public class CommonLabTestValues {
                 String abn = rs.getString("abn")==null ? "" : rs.getString("abn");
                 String result = rs.getString("result")==null ? "" : rs.getString("result");
                 String range = getReferenceRange(rs.getString("minimum"),rs.getString("maximum"));
+		String min = rs.getString("minimum");
+		String max = rs.getString("maximum");
                 String units = rs.getString("units")==null ? "" : rs.getString("units");
 		String location = rs.getString("location_id")==null ? "" : rs.getString("location_id");
 		String description = rs.getString("description")==null ? "" : rs.getString("description");
@@ -607,6 +609,8 @@ public class CommonLabTestValues {
                 h.put("abn",abn);
                 h.put("result",result);
                 h.put("range",range);
+		h.put("min",min);
+		h.put("max",max);
                 h.put("units",units);
 		h.put("location",location);
 		h.put("description",description);
@@ -677,6 +681,4 @@ public class CommonLabTestValues {
         
         return labList;
     }
-    
-    
 }
