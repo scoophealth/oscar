@@ -28,7 +28,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page  import="java.sql.*, java.util.*, oscar.OscarProperties" errorPage="errorpage.jsp" %>
+<%@ page import="java.sql.*, java.util.*, oscar.OscarProperties" errorPage="errorpage.jsp" %>
 <%
   //if(session.getAttribute("user") == null && session.getValue("user").equals("admin") )  response.sendRedirect("../logout.jsp");
 %>
@@ -89,7 +89,7 @@
       } else return true;
       // do nothing at the moment
       // check input data in the future
-    }
+     
     //-->
     </script>
 </head>

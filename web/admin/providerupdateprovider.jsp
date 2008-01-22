@@ -110,7 +110,7 @@ function setfocus() {
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formDOB"/>: </td>
-    <td><input type="text" name="dob" value="<%= rs.getString("dob") %>" maxlength="10"></td>
+    <td><input type="text" name="dob" value="<%= rs.getString("dob") %>" maxlength="11"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formAddress"/>: </td>

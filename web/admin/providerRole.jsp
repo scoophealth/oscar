@@ -270,10 +270,17 @@ System.out.println(query);
 rs = dbObj.searchDBRecord(query);
 while (rs.next()) {
 	prop = new Properties();
-	prop.setProperty("provider_no", rs.getString("p.provider_no"));
-	prop.setProperty("first_name", rs.getString("p.first_name"));
-	prop.setProperty("last_name", rs.getString("p.last_name"));
-	prop.setProperty("role_name", rs.getString("u.role_name")!=null?rs.getString("u.role_name"):"");
+	//prop.setProperty("provider_no", rs.getString("provider_no")==null?"":rs.getString("provider_no"));
+	//prop.setProperty("first_name", rs.getString("p.first_name"));
+	//prop.setProperty("last_name", rs.getString("p.last_name"));
+	//prop.setProperty("role_name", rs.getString("u.role_name")!=null?rs.getString("u.role_name"):"");
+	
+	prop.setProperty("provider_no", rs.getString("provider_no")==null?"":rs.getString("provider_no"));
+	prop.setProperty("first_name", rs.getString("first_name"));
+	prop.setProperty("last_name", rs.getString("last_name"));
+	prop.setProperty("role_name", rs.getString("role_name")!=null?rs.getString("role_name"):"");
+	
+	
 	vec.add(prop);
 }
 %>
