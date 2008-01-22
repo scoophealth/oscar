@@ -665,8 +665,8 @@ public class ImportDemographicDataAction2 extends Action {
 		    
 		    LabResultImport lri = new LabResultImport();
 		    if (!accession_num.equals(pre_accession_num)) {
-			coll_date = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(coll_date),"yyyyMMdd");
-			String RIId = lri.saveLabRI(location, coll_date, "00:00:00");
+			String print_date = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(coll_date),"yyyyMMdd");
+			String RIId = lri.saveLabRI(location, print_date, "00:00:00");
 			ppId = lri.saveLabPPInfo(RIId, accession_num, firstName, lastName, sex, hin, birthDate, patientPhone, coll_date);
 			pre_accession_num = accession_num;
 		    }
