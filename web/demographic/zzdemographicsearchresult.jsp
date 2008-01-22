@@ -70,17 +70,21 @@
             //System.out.println("1111111111111111111 " +param[0]+param[1]+param[2]);
             rs = apptMainBean.queryResults_paged(param, dboperation, iRSOffSet);
   } else if(request.getParameter("search_mode").equals("search_address") || request.getParameter("search_mode").equals("search_phone")) {
-            keyword = keyword.replaceAll("-", "-?");
-            if (keyword.length() < 1) keyword="^";
-            rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
+      keyword = keyword.replaceAll("-", "-?");
+      if (keyword.length() < 1){
+        if (sDbType.equalsIgnoreCase("oracle")) 
+          keyword="%";
+        else  
+          keyword="^";
+      }
+      rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
   } else {
       if (sDbType.equalsIgnoreCase("oracle")) {
-          keyword= "%" + request.getParameter("keyword") + "%";
-          rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
-      }else
-      {
-          keyword="^"+request.getParameter("keyword");
-          rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
+         keyword= "%" + request.getParameter("keyword") + "%";
+         rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
+      }else{
+        keyword="^"+request.getParameter("keyword");
+        rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
       }
   }
  
