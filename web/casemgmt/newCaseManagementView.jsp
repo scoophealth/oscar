@@ -56,6 +56,10 @@
     boolean found = false;
     ArrayList lockedNotes = new ArrayList();
     ArrayList unLockedNotes = new ArrayList();
+    ArrayList unEditableNotes = new ArrayList();
+    
+    java.util.List noteList=(java.util.List)request.getAttribute("Notes");
+    int noteSize = noteList != null ? noteList.size() : 0;
 %>
 <script type="text/javascript">   
     var X       = 10;    
@@ -437,8 +441,15 @@ function changeToView(id) {
     }
     var input = "<pre>" + tmp + "<\/pre>";
     new Insertion.Top(parent, input);
-    //$(txt).style.fontSize = normalFont; 
-    var img = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
+    //$(txt).style.fontSize = normalFont;
+    
+    //if we're not restoring a new note display print img
+    if( nId.substr(0,1) != "0" ) {
+        img = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>";
+        new Insertion.Top(parent, img);
+    }
+    
+    var img = "<img title='Minimize' id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
     new Insertion.Top(parent, img);    
     
     $(parent).style.height = "auto";        
@@ -453,7 +464,7 @@ function minView(e) {
     var img = Event.element(e).id;    
     var dateId = "obs" + nId;
     var content = "c" + nId;
-    var date = "d" + nId;
+    var date = "d" + nId;    
     
     Event.stop(e);
     var imgs = $(txt).getElementsBySelector("img");
@@ -472,10 +483,13 @@ function minView(e) {
     if( nodes.length > 0 ) {
         var line = nodes[0].innerHTML;
         var dateValue = $(dateId) != null ? $(dateId).innerHTML : "";
-        line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:25%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:70%;'>" + line + "<\/div>";
+        line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:25%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:65%;'>" + line + "<\/div>";
         new Insertion.Top(txt,line);        
     }
     
+    //img = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>";
+    //new Insertion.Top(txt, img);
+
     img = "<img title='Maximize Display' alt='Maximize Display' id='xpImg" + nId + "' onclick='xpandView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'/>";
     new Insertion.Top(txt, img);
 }
@@ -660,7 +674,7 @@ function editNote(e) {
         }
     }
             
-    //get rid of minimize button
+    //get rid of minimize and print buttons
     var nodes = $(txt).getElementsBySelector('img');    
     for(var i = 0; i < nodes.length; ++i ) {
         nodes[i].remove();        
@@ -736,6 +750,13 @@ function editNote(e) {
     $(caseNote).focus();
     origCaseNote = $F(caseNote); 
     
+    //if note is already signed, remove save button to force edits to be signed
+    var sign = "signed" + nId;
+    if( $F(sign) == "true" )
+        $("saveImg").style.visibility = "hidden";
+    else
+        $("saveImg").style.visibility = "visible";
+        
     //start AutoSave
     setTimer();
 }
@@ -1087,7 +1108,7 @@ function filterCheckBox(checkbox) {
 var newNoteCounter = 0;
 function newNote(e) {
     Event.stop(e);
-    var id = "new" + Math.round(Math.random()*1000);
+    var id = "new" + newNoteCounter;
     var reason = "<%=insertReason(request)%>";    //function defined bottom of file
     ++newNoteCounter;
     var newNoteIdx = "0" + newNoteCounter;
@@ -1099,7 +1120,7 @@ function newNote(e) {
                 </c:if>
                 "";
                 
-    var div = "<div id='" + id + "' class='newNote'><div id='n" + newNoteIdx + "'>" +
+    var div = "<div id='" + id + "' class='newNote'><input type='hidden' id='signed" + newNoteIdx + "' value='false'><div id='n" + newNoteIdx + "'>" +
               input + "<div class='sig' style='display:inline;' id='" + sigId + "'><\/div>" + passwd + "<\/div><\/div>";
               
     if( changeToView(caseNote) ) {
@@ -1129,6 +1150,9 @@ function newNote(e) {
 
         //hide new note button
         //$("newNoteImg").hide();
+        
+        //enable saving of notes
+        $("saveImg").style.visibility = "visible";
         
         //start AutoSave
         setTimer();
@@ -1310,6 +1334,101 @@ function autoCompleteShowMenu(element, update){
             default:
                 return false;
         } 
+    }
+    
+    function togglePrint(noteId,e) {    
+        var selected = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printerGreen.png";
+        var unselected = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png";
+        var imgId = "print" + noteId;
+        var idx;
+        var idx2;
+        var tmp = "";
+        
+        //see whether we're called in a click event or not
+        if( e != null )
+            Event.stop(e);
+            
+        //if selected note has been inserted into print queue, remove it and update image src
+        //else insert note into print queue
+        if( (idx = $F("notes2print").indexOf(noteId)) >= 0 ) {
+            $(imgId).src = unselected;
+            
+            //if we're slicing first note off list
+            if( idx == 0 ) {
+                idx2 = $F("notes2print").indexOf(",");
+                if( idx2 > 0 )
+                    tmp = $F("notes2print").substring(idx2+1);
+            }
+            //or we're slicing after first element
+            else {                
+                idx2 = $F("notes2print").indexOf(",",idx);
+                //are we in the middle of the list?
+                if( idx2 > 0 ) {
+                    tmp = $F("notes2print").substring(0,idx);
+                    tmp += $F("notes2print").substring(idx2+1);
+                }
+                //or are we at the end of the list; don't copy comma
+                else
+                    tmp = $F("notes2print").substring(0,idx-1);
+                    
+           }
+            
+            $("notes2print").value = tmp;
+        }
+        else {
+            $(imgId).src = selected
+            if( $F("notes2print").length > 0 ) 
+                $("notes2print").value += "," + noteId;
+            else
+               $("notes2print").value = noteId;         
+        }
+        
+        return false;
+    }
+    
+    function printNotes() {
+        <c:url value="/CaseManagementEntry.do" var="printURL" />
+        
+        if( $F("notes2print").length == 0 ) {
+            if( confirm("No notes are selected.  Do you wish to print all of them?") )
+                printAll();
+            else
+                return false;
+        }
+        
+        var url = "<c:out value="${printURL}" />";
+        var frm = document.forms["caseManagementEntryForm"];
+
+        frm.method.value = "print";
+        frm.submit();
+
+        
+        return false;
+    }
+    
+    function printAll() {
+        var numNotes = <%=noteSize%>;
+        var idx;
+        var noteId;
+        var notesDiv;
+        
+        //$("notes2print").value = "";
+        
+        //cycle through container divs for each note
+        for( idx = 0; idx < numNotes; ++idx ) {
+            notesDiv = $("nc" + idx).down('div');
+            noteId = notesDiv.id.substr(1);  //get note id
+                        
+            //if print img present, add note to print queue if not already there
+            if( $("print"+noteId) != undefined && $F("notes2print").indexOf(noteId) == -1 ) {
+                togglePrint(noteId,null);                              
+            }
+        }                
+    }
+    
+    function noPrivs(e) {
+        Event.stop(e);
+        alert("This note has not been signed by owner.  Select new note to add a note.");
     }
 </script>
 
@@ -1642,6 +1761,7 @@ Version version = (Version) ctx.getBean("version");
         <input type="hidden" name="verify" value="off">
         <input type="hidden" name="forceNote" value="false">
         <input type="hidden" name="newNoteIdx" value="">
+        <input type="hidden" name="notes2print" id="notes2print" value="">
         <div id="mainContent" style="background-color:#FFFFFF; width:75%; display:inline; float:left; margin-right:-5px;"> 
             <span id="issueList" style="background-color:#FFFFFF; height:440px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
                 <table id="issueTable" class="enTemplate_name_auto_complete" style="position:relative; left:0px; display:none;">
@@ -1658,9 +1778,9 @@ Version version = (Version) ctx.getBean("version");
                 <c:if test="${not empty Notes}">                        
                     
                     <%
-                    java.util.List noteList=(java.util.List)request.getAttribute("Notes");
+                    //java.util.List noteList=(java.util.List)request.getAttribute("Notes");
                     int idx = 0;
-                    int noteSize = noteList.size();            
+                    //int noteSize = noteList.size();            
                     
                     //Notes list will contain all notes including most recently saved
                     //we need to skip this one when displaying
@@ -1677,7 +1797,8 @@ Version version = (Version) ctx.getBean("version");
                     CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
                     String noteStr = note.getNote();
                     %>                               
-                    <div class="note"> 
+                    <div id="nc<%=idx%>" class="note"> 
+                        <input type="hidden" id="signed<%=note.getId()%>" value="<%=note.isSigned()%>">
                         <div id="n<%=note.getId()%>">
                             <%
                             //display last saved note for editing
@@ -1697,8 +1818,9 @@ Version version = (Version) ctx.getBean("version");
                             }
                             //else display contents of note for viewing
                             else {
-                            %>
+                            %>                            
                             <img title="Minimize Display" id='quitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
+                            <img title="Print" id='print<%=note.getId()%>' alt="Toggle Print Note" onclick="togglePrint(<%=note.getId()%>, event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>
                             
                             <%
                             if( note.isLocked() ) {
@@ -1777,15 +1899,19 @@ Version version = (Version) ctx.getBean("version");
                     //Internet Explorer does not play nice with inserting javascript between divs
                     //so we store the ids here and list the event listeners at the end of this script
                     if( note.getId() != savedId ) {
-                    
-                    if( note.isLocked() ) { 
-                    lockedNotes.add(note.getId());
-                    }
-                    else {
-                    unLockedNotes.add(note.getId());
-                    }
-                    }
-                    
+                        
+                        if( note.isSigned() || (!note.isSigned() && note.getProvider_no().equals(provNo))) {
+                            if( note.isLocked() ) { 
+                                lockedNotes.add(note.getId());
+                            }
+                            else {
+                                unLockedNotes.add(note.getId());
+                            }
+                        }
+                        else {
+                            unEditableNotes.add(note.getId());
+                        }
+                    }    
                     
                     } //end for 
                     %>
@@ -1797,6 +1923,7 @@ Version version = (Version) ctx.getBean("version");
                 savedId = 0;
                 %>    
                 <div class="note">
+                    <input type="hidden" id="signed<%=savedId%>" value="false">
                     <div id="n<%=savedId%>" style="line-height:1.1em;">                                     
                         <textarea  tabindex="7" cols="84" rows="10" wrap='hard' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
                         <div id="sig0">
@@ -1817,12 +1944,13 @@ Version version = (Version) ctx.getBean("version");
             </div>
             <div id='save' style="width:99%; background-color:#CCCCFF; padding-top:5px; margin-left:2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">  
                 <span style="float:right; margin-right:5px;">                                
-                    <input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" onclick="Event.stop(event);return savePage('save');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;                              
+                    <input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return savePage('save');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;                              
                     <input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;                              
                     <input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
                     <input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
                     <input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
-                    <input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>
+                    <input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp;
+                    <input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printNotes();" title='<bean:message key="oscarEncounter.Index.btnPrint"/>'>                              
                 </span>
                 <input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='Display Issues'>&nbsp;
                 <input  tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp;
@@ -1858,6 +1986,14 @@ Version version = (Version) ctx.getBean("version");
             num = (Long)iterator.next();
     %>
             Element.observe('n<%=num%>', 'click', editNote);
+    <%
+        }      
+    
+        iterator = unEditableNotes.iterator();
+        while( iterator.hasNext() ) {
+            num = (Long)iterator.next();
+    %>
+            Element.observe('n<%=num%>', 'click', noPrivs);
     <%
         }
     %>   
