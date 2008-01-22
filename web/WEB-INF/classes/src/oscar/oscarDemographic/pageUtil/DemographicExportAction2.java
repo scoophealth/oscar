@@ -28,35 +28,15 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import cds.*;
-import cdsDt.DateYYYY;
-import cdsDt.DateYYYYMM;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.zip.*;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
-import javax.servlet.jsp.JspFactory;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
 import org.apache.struts.action.*;
-import org.apache.struts.util.MessageResources;
 import org.apache.xmlbeans.GDateBuilder;
-import org.apache.xmlbeans.QNameSet;
-import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlCalendar;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlDate;
-import org.apache.xmlbeans.XmlDateTime;
-import org.apache.xmlbeans.XmlDocumentProperties;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.w3c.dom.Node;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
 import oscar.appt.AppointmentDAO;
 import oscar.appt.AppointmentDAO.Appointment;
 import oscar.appt.ApptStatusData;
@@ -65,11 +45,12 @@ import oscar.dms.EDocUtil;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.*;
 import oscar.oscarEncounter.data.EctEChartBean;
-import oscar.oscarFax.client.OSCARFAXClient;
 import oscar.oscarLab.ca.on.CommonLabTestValues;
 import oscar.oscarPrevention.*;
 import oscar.oscarProvider.data.ProviderData;
-import oscar.oscarReport.data.DemographicSets;
+import oscar.oscarReport.data.RptDemographicQueryBuilder;
+import oscar.oscarReport.data.RptDemographicQueryLoader;
+import oscar.oscarReport.pageUtil.RptDemographicReportForm;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
 import oscar.util.UtilDateUtilities;
@@ -82,10 +63,26 @@ public class DemographicExportAction2 extends Action {
 
 public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
     String setName = request.getParameter("patientSet");
+    String demoNo = request.getParameter("demographicNo");
+System.out.println("\nRonnie: setName="+setName);
+System.out.println("Ronnie: demoNo="+demoNo);
     
-    DemographicSets dsets = new DemographicSets();
-    ArrayList list = dsets.getDemographicSet(setName);
-
+    ArrayList list = new ArrayList();
+    if (demoNo==null) {
+	Date asofDate = UtilDateUtilities.Today();
+	RptDemographicReportForm frm = new RptDemographicReportForm ();
+	frm.setSavedQuery(setName);
+	RptDemographicQueryLoader demoL = new RptDemographicQueryLoader();
+	frm = demoL.queryLoader(frm);
+	frm.addDemoIfNotPresent();
+	frm.setAsofDate(UtilDateUtilities.DateToString(asofDate));
+	RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
+	list = demoQ.buildQuery(frm,UtilDateUtilities.DateToString(asofDate));
+    }else{
+	list.add(demoNo);
+    }    
+    
+    
     DemographicData d = new DemographicData();
 
     ArrayList inject = new ArrayList();
@@ -119,8 +116,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	
 	files = new File[list.size()];
 	String data = null;
-	for(int i = 0 ; i < list.size(); i++){	
-	    String demoNo = (String) list.get(i);
+	for(int i = 0 ; i < list.size(); i++){
+	    Object obj = list.get(i);
+	    if ( obj instanceof String){
+		demoNo = (String) obj;
+	    }else{
+		ArrayList l2 = (ArrayList) obj;
+		demoNo = (String) l2.get(0);
+	    } 
 	    if (demoNo==null || demoNo.trim().equals("")) {
 		demoNo="";
 		err.add("Error: No Demographic Number");
@@ -150,6 +153,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    firstName.setPart(data);
 	    firstName.setPartType(cdsDt.PersonNamePartTypeCode.GIV);
 	    firstName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
+	    
+	    if (setName==null || setName.equals("")) setName = data;
 	    
 	    data = demographic.getLastName();
 	    if (data==null || data.trim().equals("")) {
