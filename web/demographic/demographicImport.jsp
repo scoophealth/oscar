@@ -141,6 +141,7 @@ function displayAndDisable(){
                 </ul>
 		<%}%>
 		<% if (importLog!=null) { %>
+		Demographic Imported! 
 		<html:form action="/form/importLogDownload.do" method="POST">
 		    <input type="hidden" name="importlog" value="<%=importLog%>">
 		    <input type="submit" name="Submit" value="Download Import Event Log">
