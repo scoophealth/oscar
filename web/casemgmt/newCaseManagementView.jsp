@@ -1336,6 +1336,24 @@ function autoCompleteShowMenu(element, update){
         } 
     }
     
+    function noteIsQeued(noteId) {    
+        var foundIdx = -1;
+        var curpos = 0;
+        var arrNoteIds = $F("notes2print").split(",");
+        
+        for( var idx = 0; idx < arrNoteIds.length; ++idx ) {
+            if( arrNoteIds[idx] == noteId ) {
+                foundIdx = curpos;
+                break;
+            }
+            curpos += arrNoteIds[idx].length+1;
+        }
+        
+        
+    
+        return foundIdx;
+    }
+    
     function togglePrint(noteId,e) {    
         var selected = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printerGreen.png";
         var unselected = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png";
@@ -1349,8 +1367,9 @@ function autoCompleteShowMenu(element, update){
             Event.stop(e);
             
         //if selected note has been inserted into print queue, remove it and update image src
-        //else insert note into print queue
-        if( (idx = $F("notes2print").indexOf(noteId)) >= 0 ) {
+        //else insert note into print queue        
+        idx = noteIsQeued(noteId);
+        if( idx  >= 0 ) {
             $(imgId).src = unselected;
             
             //if we're slicing first note off list
@@ -1382,7 +1401,7 @@ function autoCompleteShowMenu(element, update){
             else
                $("notes2print").value = noteId;         
         }
-        
+                
         return false;
     }
     
@@ -1418,11 +1437,11 @@ function autoCompleteShowMenu(element, update){
         for( idx = 0; idx < numNotes; ++idx ) {
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
-                        
+            
             //if print img present, add note to print queue if not already there
-            if( $("print"+noteId) != undefined && $F("notes2print").indexOf(noteId) == -1 ) {
+            if( $("print"+noteId) != undefined ) {
                 togglePrint(noteId,null);                              
-            }
+            }            
         }                
     }
     
