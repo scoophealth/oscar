@@ -415,9 +415,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    // extract Onset Date from Summary Line
 		    dataIn = dataIn.toLowerCase();
 		    int date_index = dataIn.indexOf("onset date:");
-		    if (date_index!=-1) {
+		    if (date_index>-1) {
 			date_index = date_index + "onset date:".length();
 			int date_end = dataIn.indexOf("\n", date_index);
+			if (date_end==-1) date_end = dataIn.indexOf("\r", date_index);
+			if (date_end==-1 && date_index+12>=dataIn.length()) date_end = dataIn.length()-1;
 			if (date_end>date_index) {
 			    String onset_date = dataIn.substring(date_index, date_end).trim();
 			    if (!onset_date.equals("")) {
@@ -556,7 +558,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    data = (String) extraData.get("location");
 		    if (data!=null && !data.trim().equals("")) immu.setSite(data);
 		    data = (String) extraData.get("comments");
-		    if (data!=null && !data.trim().equals("")) immu.setNotes((String)extraData.get("comments"));
+		    if (data!=null && !data.trim().equals("")) immu.setNotes(data);
 		    
 		    data = (String) a.get("prevention_date");
 		    if (data!=null && !data.trim().equals("")) {
@@ -767,7 +769,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    ApptStatusData asd = new ApptStatusData();
 		    asd.setApptStatus(data);
 		    String msg = getResources(request).getMessage(asd.getTitle());
-		    if (msg!=null) aptm.setAppointmentStatus(data);
+		    if (msg!=null) aptm.setAppointmentStatus(msg);
 		    else throw new Exception ("Error! No matching message for appointment status code: " + data);
 		}
 		
