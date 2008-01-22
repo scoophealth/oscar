@@ -312,9 +312,14 @@ function pasteAppt() {
     String sDay = String.valueOf(cal.get(Calendar.DATE));
     String sMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);
     String sYear = String.valueOf(cal.get(Calendar.YEAR));
-    apptDate = fullform.parse(bFirstDisp?(sYear + "-" + sMonth + "-" + sDay + " "+ request.getParameter("start_time")):
-        (request.getParameter("appointment_date") + " " + request.getParameter("start_time"))) ;
-  }else{
+    String sTime=(request.getParameter("start_time")==null)?"00:00AM":request.getParameter("start_time");
+    apptDate = fullform.parse(bFirstDisp?(sYear + "-" + sMonth + "-" + sDay + " "+ sTime):
+        (request.getParameter("appointment_date") + " " + sTime)) ;
+  }else if(request.getParameter("start_time")==null){
+    apptDate = fullform.parse(bFirstDisp?(request.getParameter("year") + "-" + request.getParameter("month") + "-" + request.getParameter("day")+" "+ "00:00 AM"):
+        (request.getParameter("appointment_date") + " " + "00:00AM")) ;
+  }else
+  {
     apptDate = fullform.parse(bFirstDisp?(request.getParameter("year") + "-" + request.getParameter("month") + "-" + request.getParameter("day")+" "+ request.getParameter("start_time")):
         (request.getParameter("appointment_date") + " " + request.getParameter("start_time"))) ;
   }
@@ -374,6 +379,7 @@ function pasteAppt() {
       pLastname = rspvd.getString("last_name");
       pFirstname = rspvd.getString("first_name");
   }
+  rspvd.close();
 %>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0"  leftmargin="0" rightmargin="0"> 
 <%
@@ -445,7 +451,8 @@ String disabled="";
 	      }
 
       }
-
+      rsdemo.close();
+      
 	  rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_demographiccust_alert");
 
       while (rsdemo.next()) { 

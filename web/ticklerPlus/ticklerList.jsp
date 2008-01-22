@@ -92,6 +92,7 @@
                 window.close();
             }
         }        
+        
 </script>
 
 <html:form action="/Tickler">
@@ -166,14 +167,16 @@
 			<html:options collection="customFilters" property="name" />
 		</html:select></td>
 
-		<!-- 
+<!-- 
 		<td><input type="button" value="Print Preview" onclick="location.href='<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp' " /></td>
-		-->
+ -->
 		<!-- the following only works in Firefox, not in IE
 		<td><input type="button" value="Print Preview" onClick="window.open('<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp','Tickler Print Preview','width=800,height=600,toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,copyhistory=no,resizable=yes')" /> </td>
 		 -->
-		 
+<!-- 
 		<td><a href='<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp' onClick="window.open(this.href,'Tickler Print Preview','width=800,height=600,toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,copyhistory=no,resizable=yes');return false;">Print Preview</a> </td>
+ -->		 
+		<td><a id="pre_print" href='<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp' target="_pre_print">Print Preview</a> </td>
 		
 	</tr>
 

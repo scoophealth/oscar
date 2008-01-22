@@ -216,8 +216,12 @@ function addName(demographic_no, lastname, firstname, chartno, messageID, doctor
 <%if(caisi) {%>
 function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
   	fullname=lastname+","+firstname;
-  	opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementName")%>'].value=fullname;
-	opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementId")%>'].value=demographic_no;
+  	if(opener.document.<%=request.getParameter("formName")%>!=null){
+      if(opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementName")%>']!=null)
+    	 opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementName")%>'].value=fullname;
+	  if(opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementId")%>']!=null)
+  	     opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementId")%>'].value=demographic_no;
+	}
 	self.close();
 }
 <%}%>
@@ -302,8 +306,10 @@ onClick="document.forms[0].demographic_no.value=<%=apptMainBean.getString(rs,"de
 
 	fullname='<%=bufName.toString()%>';
 	demographic_no='<%=bufNo.toString()%>';
-	opener.document.ticklerForm.elements['tickler.demographic_webName'].value=fullname;
-	opener.document.ticklerForm.elements['tickler.demographic_no'].value=demographic_no;
+	if(opener.document.ticklerForm.elements['tickler.demographic_webName']!=null)
+	   opener.document.ticklerForm.elements['tickler.demographic_webName'].value=fullname;
+	if(opener.document.ticklerForm.elements['tickler.demographic_no']!=null)   
+  	   opener.document.ticklerForm.elements['tickler.demographic_no'].value=demographic_no;
 	self.close();
 //-->
 </SCRIPT>
