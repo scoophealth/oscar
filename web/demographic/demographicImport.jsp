@@ -111,12 +111,12 @@ function displayAndDisable(){
             &nbsp;
             </td>
             <td valign="top" class="MainTableRightColumn">
-            
+<!--            
             <html:form action="/form/importUpload.do" method="POST" enctype="multipart/form-data" onsubmit="displayAndDisable()">
                         <input type="file" name="importFile" value="">                    
                         <input type="submit" name="Submit" value="Import">
             </html:form>
-	    
+//-->	    
             <html:form action="/form/importUpload2.do" method="POST" enctype="multipart/form-data" onsubmit="displayAndDisable()">
                         <input type="file" name="importFile" value="">
 			<input type="submit" name="Submit" value="Import (CMS spec 2.0)">
@@ -126,17 +126,26 @@ function displayAndDisable(){
             <h2>This make take several minutes</h2>
             </div>
             
-            <% ArrayList list = (ArrayList)  request.getAttribute("warnings"); 
-               if ( list != null) {
+            <% ArrayList list = (ArrayList)  request.getAttribute("warnings");
+	       String importLog = (String) request.getAttribute("importlog");
+               if ( list != null ) {
+	          if (list.size()>0) {
             %>
             <div>
                 <h2>Warnings</h2>
                 <ul>
-                <% for (int i = 0; i < list.size(); i++){
-                      String warn = (String) list.get(i); %>
-                   <li><%=warn%></li>
-                <%}%>
+		    <% for (int i = 0; i < list.size(); i++){
+			  String warn = (String) list.get(i); %>
+		       <li><%=warn%></li>
+		    <%}%>
                 </ul>
+		<%}%>
+		<% if (importLog!=null) { %>
+		<html:form action="/form/importLogDownload.do" method="POST">
+		    <input type="hidden" name="importlog" value="<%=importLog%>">
+		    <input type="submit" name="Submit" value="Download Import Event Log">
+		</html:form>
+		<% } %>
             </div>            
             <% } %>
             </td>
