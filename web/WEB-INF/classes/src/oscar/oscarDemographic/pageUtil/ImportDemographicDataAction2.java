@@ -619,10 +619,11 @@ public class ImportDemographicDataAction2 extends Action {
 		}
 
 
-		//LABORAORY RESULTS
+		//LABORATORY RESULTS
 		cds.LaboratoryResultsDocument.LaboratoryResults[] labResultArray = patientRec.getLaboratoryResultsArray();
 		for (int i=0; i<labResultArray.length; i++) {
-		    String testName="", abn="", minimum="", maximum="", result="", unit="", description="", ppId="";
+		    String testName="", abn="", minimum="", maximum="", result="", unit="", description="", location="";
+		    String accession_num="", coll_date="", ppId="";
 		    if (labResultArray[i].getTestName()!=null) testName = labResultArray[i].getTestName();
 		    if (labResultArray[i].getResultNormalAbnormalFlag()!=null) {
 			cdsDt.ResultNormalAbnormalFlag.Enum flag = labResultArray[i].getResultNormalAbnormalFlag();
@@ -643,16 +644,26 @@ public class ImportDemographicDataAction2 extends Action {
 			if (labResultArray[i].getResult().getUnitOfMeasure()!=null) unit = labResultArray[i].getResult().getUnitOfMeasure();
 		    }   
 		    if (labResultArray[i].getNotesFromLab()!=null) description = labResultArray[i].getNotesFromLab();
-
-		    LabResultImport lri = new LabResultImport();
+		    if (labResultArray[i].getLaboratoryName()!=null) location = labResultArray[i].getLaboratoryName();
+		    if (labResultArray[i].getAccessionNumber()!=null) accession_num = labResultArray[i].getAccessionNumber();
+		    
 		    try {
-			ppId = lri.saveLabPPInfo(getDateFullPartial(labResultArray[i].getCollectionDateTime()));
+			coll_date = getDateFullPartial(labResultArray[i].getCollectionDateTime());
 		    } catch (Exception e) {
-			errWarnings.add("Error! No Collection DateTime for Laboratory Results");
+			dataGood = "No";
+			errorMsg = "Error! No Collection DateTime for Laboratory Results";
+			errWarnings.add(errorMsg);
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 			e.printStackTrace();
 		    }
-		    boolean b = lri.SaveLabTR(testName, abn, minimum, maximum, result, unit, description, ppId);
-		    if (b) b = lri.savePatientLR(demoNo, ppId);
+		    LabResultImport lri = new LabResultImport();
+		    
+		    coll_date = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(coll_date,"yyyy-MM-dd"));
+		    String RIId = lri.saveLabRI(location, coll_date, "00:00:00");
+		    
+		    ppId = lri.saveLabPPInfo(RIId, accession_num, firstName, lastName, sex, hin, birthDate, coll_date);
+		    lri.SaveLabTR(testName, abn, minimum, maximum, result, unit, description, ppId);
+		    lri.savePatientLR(demoNo, ppId);
 		}
 
 		//APPOINTMENTS
