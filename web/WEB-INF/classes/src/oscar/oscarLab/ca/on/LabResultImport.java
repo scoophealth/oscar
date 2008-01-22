@@ -30,21 +30,21 @@ import java.sql.*;
 
 public class LabResultImport {
    
-    public void SaveLabTR(String testName, String abn, String minimum, String maximum, String result, String units, String description, String ppId) throws SQLException {
+    public void SaveLabTR(String testName, String abn, String minimum, String maximum, String result, String units, String description, String location, String ppId) throws SQLException {
 	boolean b = false;            
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
-	String sql = "INSERT INTO labTestResults (test_name, abn, minimum, maximum, result, units, description, labPatientPhysicianInfo_id) VALUES ('"
-		+ testName + "','" + abn + "','" + minimum + "','" + maximum + "','" + result + "','" + units + "','" + description + "','" + ppId + "')";
+	String sql = "INSERT INTO labTestResults (test_name, abn, minimum, maximum, result, units, description, location_id, labPatientPhysicianInfo_id, line_type) VALUES ('"
+		+ testName + "','" + abn + "','" + minimum + "','" + maximum + "','" + result + "','" + units + "','" + description + "','" + location + "','" + ppId + "','C')";
 	db.RunSQL(sql);
 	db.CloseConn();
     }
     
-    public String saveLabPPInfo(String labReportInfo_id, String accession_num, String firstname, String lastname, String sex, String hin, String birthdate, String collDate) throws SQLException {
+    public String saveLabPPInfo(String labReportInfo_id, String accession_num, String firstname, String lastname, String sex, String hin, String birthdate, String phone, String collDate) throws SQLException {
 	int id = 1;
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	
-	String sql = "insert into labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, collection_date) values ('"
-		+labReportInfo_id+"','"+accession_num+"','"+firstname+"','"+lastname+"','"+sex+"','"+hin+"','"+birthdate+"','"+collDate+"')";
+	String sql = "insert into labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, lab_status, service_date, doc_num) values ('"
+		+labReportInfo_id+"','"+accession_num+"','"+firstname+"','"+lastname+"','"+sex+"','"+hin+"','"+birthdate+"','"+phone+"','"+collDate+"','N','','')";
 	db.RunSQL(sql);
 	sql = "select max(id) from labPatientPhysicianInfo";
 	ResultSet rs = db.GetSQL(sql);
