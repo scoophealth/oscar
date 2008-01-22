@@ -889,11 +889,10 @@ public class ImportDemographicDataAction2 extends Action {
 		}
 	    }
 	    out.newLine();
+	    out.write(fillUp("",'-',tableWidth));
+	    out.newLine();
 	}
-	out.write(fillUp("",'-',tableWidth));
-	out.newLine();
 	out.close();
-	
 	return importLog;
     }
 
