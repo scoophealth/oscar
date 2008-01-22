@@ -578,7 +578,7 @@ public class CommonLabTestValues {
     public ArrayList findValuesForDemographic(String demographicNo){
         ArrayList labList = new ArrayList();
         
-        String sql = "select p.lab_no , p.lab_type, ltr.title, ltr.test_name, ltr.result,ltr.abn, ltr.minimum, ltr.maximum, ltr.units, ltr.location_id, ltr.description, lpp.collection_date " +
+        String sql = "select p.lab_no , p.lab_type, ltr.title, ltr.test_name, ltr.result,ltr.abn, ltr.minimum, ltr.maximum, ltr.units, ltr.location_id, ltr.description, lpp.accession_num, lpp.collection_date " +
                 "from patientLabRouting p , labTestResults ltr, labPatientPhysicianInfo lpp " +
                 " where p.lab_type = 'CML' " +
                 " and p.demographic_no = '"+demographicNo+"' " +
@@ -597,6 +597,7 @@ public class CommonLabTestValues {
                 String units = rs.getString("units")==null ? "" : rs.getString("units");
 		String location = rs.getString("location_id")==null ? "" : rs.getString("location_id");
 		String description = rs.getString("description")==null ? "" : rs.getString("description");
+		String accession = rs.getString("accession_num")==null ? "" : rs.getString("accession_num");
 		
                 String collDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(rs.getString("collection_date"),"dd-MMM-yy"),"yyyy-MM-dd");
                 logger.info("This went in "+rs.getString("collection_date")+" this came out "+UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(rs.getString("collection_date"),"dd-MMM-yy"),"yyyy-MM-dd"));
@@ -609,6 +610,7 @@ public class CommonLabTestValues {
                 h.put("units",units);
 		h.put("location",location);
 		h.put("description",description);
+		h.put("accession",accession);
                 h.put("collDate",collDate);
                 labList.add(h);
             }
