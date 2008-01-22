@@ -64,8 +64,6 @@ public class DemographicExportAction2 extends Action {
 public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
     String setName = request.getParameter("patientSet");
     String demoNo = request.getParameter("demographicNo");
-System.out.println("\nRonnie: setName="+setName);
-System.out.println("Ronnie: demoNo="+demoNo);
     
     ArrayList list = new ArrayList();
     if (demoNo==null) {
@@ -711,6 +709,7 @@ System.out.println("Ronnie: demoNo="+demoNo);
 		else labr.setLaboratoryName(data);
 		
 		if (h.get("description")!=null) labr.setNotesFromLab((String) h.get("description"));
+		if (h.get("accession")!=null) labr.setAccessionNumber((String) h.get("accession"));
 		if (h.get("result")!=null) labResult.setValue((String) h.get("result"));
 		if (h.get("unit")!=null) labResult.setUnitOfMeasure((String) h.get("unit"));
 		if (h.get("range")!=null) labRef.setReferenceRangeText((String) h.get("range"));
