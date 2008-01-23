@@ -56,7 +56,7 @@ public class RoleDAO extends HibernateDaoSupport {
 
     @SuppressWarnings("unchecked")
     public List<Role> getDefaultRoles() {
-        return this.getHibernateTemplate().find("from Role r where r.userDefined=1");
+        return this.getHibernateTemplate().find("from Role r where r.userDefined=0");
     }
 
 }

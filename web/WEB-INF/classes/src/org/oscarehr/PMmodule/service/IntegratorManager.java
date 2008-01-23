@@ -431,22 +431,24 @@ public class IntegratorManager {
         try {
             if (!isEnabled()) return;
 
-// TODO : Ted, right now it just sends everything, no checking of permissions.
+            // TODO : Ted, right now it just sends everything, no checking of permissions.
 
             List<Demographic> demographics = clientManager.getClients();
 
             List<DemographicTransfer> demographicTransfers = new ArrayList<DemographicTransfer>();
             boolean shareNotes = getLocalAgency().isShareNotes();
-            ArrayList<IssueTransfer> issues=new ArrayList<IssueTransfer>();
-            HashSet<String> caisiDefinedRoles=new HashSet<String>();
-            for (Role role : roleDAO.getDefaultRoles()) caisiDefinedRoles.add(role.getName());
-            
+            ArrayList<IssueTransfer> issues = new ArrayList<IssueTransfer>();
+            HashSet<String> caisiDefinedRoles = new HashSet<String>();
+            for (Role role : roleDAO.getDefaultRoles()) {
+                caisiDefinedRoles.add(role.getName());
+            }
+
             for (Demographic demographic : demographics) {
                 demographicTransfers.add(caisiDemographicToIntegratorDemographic(demographic));
 
                 if (shareNotes) {
                     addShareableIssues(issues, demographic.getDemographicNo(), caisiDefinedRoles);
-// TODO : Ted, copy notes over                    
+                    // TODO : Ted, copy notes over
                 }
             }
 
@@ -464,42 +466,38 @@ public class IntegratorManager {
         }
     }
 
-    private void addShareableIssues(ArrayList<IssueTransfer> allowedIssues, int demographicNo, HashSet<String> caisiDefinedRoles)
-    {
-        List<CaseManagementIssue> allIssues=caseManagementIssueDAO.getIssuesByDemographic(String.valueOf(demographicNo));
+    private void addShareableIssues(ArrayList<IssueTransfer> allowedIssues, int demographicNo, HashSet<String> caisiDefinedRoles) {
+        List<CaseManagementIssue> allIssues = caseManagementIssueDAO.getIssuesByDemographic(String.valueOf(demographicNo));
 
-        for (CaseManagementIssue caseManagementIssue : allIssues)
-        {
+        for (CaseManagementIssue caseManagementIssue : allIssues) {
             // only issues that with system defined roles are sharable, it's the only way to guarantee all agencies will have the role setup properly
-            if (caisiDefinedRoles.contains(caseManagementIssue.getIssue().getRole()))
-            {
+            if (caisiDefinedRoles.contains(caseManagementIssue.getIssue().getRole())) {
                 allowedIssues.add(getIssueTransfer(caseManagementIssue));
             }
         }
     }
-    
-    private IssueTransfer getIssueTransfer(CaseManagementIssue caseManagementIssue)
-    {
-        IssueTransfer issueTransfer=new IssueTransfer();
-        
+
+    private IssueTransfer getIssueTransfer(CaseManagementIssue caseManagementIssue) {
+        IssueTransfer issueTransfer = new IssueTransfer();
+
         issueTransfer.setAcute(caseManagementIssue.isAcute());
         issueTransfer.setAgencyDemographicNo(new Long(caseManagementIssue.getDemographic_no()));
         issueTransfer.setCertain(caseManagementIssue.isCertain());
 
-        Issue issue=caseManagementIssue.getIssue();
-        issueTransfer.setIssue(issue.getCode() + " : "+issue.getDescription());
-        
-        Calendar cal=Calendar.getInstance();
+        Issue issue = caseManagementIssue.getIssue();
+        issueTransfer.setIssue(issue.getCode() + " : " + issue.getDescription());
+
+        Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(caseManagementIssue.getUpdate_date().getTime());
         issueTransfer.setLastUpdated(cal);
-        
+
         issueTransfer.setMajor(caseManagementIssue.isMajor());
         issueTransfer.setResolved(caseManagementIssue.isResolved());
         issueTransfer.setRole(issue.getRole());
-        
+
         return(issueTransfer);
     }
-    
+
     /**
      * This method will publish all user generated programs in this agency.
      */
