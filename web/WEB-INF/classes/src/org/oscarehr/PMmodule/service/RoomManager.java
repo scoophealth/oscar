@@ -175,7 +175,6 @@ public class RoomManager {
         return (Room[]) roomList.toArray(new Room[roomList.size()]);
     }
     
-    
 	/**
 	 * Get available rooms
 	 *
@@ -192,22 +191,24 @@ public class RoomManager {
     	
     	List<RoomDemographic> roomDemograhics = null;
     	List<Room> availableRooms = new ArrayList<Room>();
-    	
+		
     	//get rooms that are not full or clients can still be assigned to these rooms
     	//however, even if room capacity is reached, the rooms will still be added if that particular client is 
     	//assigned to that particular room.
     	for(int i=0; rooms != null  &&  i < rooms.length; i++){
-
     			int totalClientsInRoom = 0;
-				//get  all demographicNo  from  table  'room_demographic' via rooms[i].id	
+				//get  all (multiple) demographicNo  from  table  'room_demographic' via rooms[i].id	
 				roomDemograhics = roomDemographicManager.getRoomDemographicByRoom(rooms[i].getId());
-				Integer roomDemographicNo = null;
+				List<Integer> roomDemographicNumbers = new ArrayList<Integer>();
+				
 				if(roomDemograhics != null){
 					totalClientsInRoom = roomDemograhics.size();
+					for(int j=0; j < roomDemograhics.size(); j++){
+						roomDemographicNumbers.add(((RoomDemographic)roomDemograhics.get(j)).getId().getDemographicNo() );
+					}
 				}
-				
 				//if client is assigned to this room, even if capacity reached, still display room in dropdown
-				if(isClientAssignedToThisRoom(Integer.valueOf(demographicNo), roomDemographicNo)){
+				if(isClientAssignedToThisRoom(Integer.valueOf(demographicNo), roomDemographicNumbers)){
 					availableRooms.add(rooms[i]);
 				}else{
 					//if client not in this room, only display room if capacity is not reached
@@ -222,16 +223,20 @@ public class RoomManager {
 		return (Room[]) availableRooms.toArray(new Room[availableRooms.size()]);
 	}
 
-    private boolean isClientAssignedToThisRoom(Integer demographicNo, Integer roomDemographicNo){
-    	
-    	try{
-    		if(demographicNo.intValue() == roomDemographicNo.intValue()){
-    			return true;
+    private boolean isClientAssignedToThisRoom(Integer demographicNo, List<Integer> demographicNumbers){
+     	try{
+    		if(demographicNo == null  ||  demographicNumbers == null){
+    			return false;
     		}
+    		for(int i=0; i < demographicNumbers.size(); i++ ){
+	    		if(demographicNo.intValue() == ((Integer)demographicNumbers.get(i)).intValue()){
+	    			return true;
+	    		}
+    		}
+    		return false;
     	}catch(Exception ex){
     		return false;
     	}
-    	return false;
     }
     
     /**

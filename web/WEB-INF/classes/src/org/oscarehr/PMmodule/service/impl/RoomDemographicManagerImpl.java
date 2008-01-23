@@ -105,14 +105,11 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 			handleException(new IllegalArgumentException("roomId must not be null"));
 		}
 		List<RoomDemographic> roomDemographicList = null;
-		if (roomDemographicDAO.demographicExists(roomId)) {
+		roomDemographicList = roomDemographicDAO.getRoomDemographicByRoom(roomId);
 			
-			roomDemographicList = roomDemographicDAO.getRoomDemographicByRoom(roomId);
-			
-			if(roomDemographicList != null  &&  roomDemographicList.size() > 0){
-				Demographic demographic = demographicDAO.getClientByDemographicNo(roomDemographicList.get(0).getId().getDemographicNo());
-				roomDemographicList.get(0).setDemographic(demographic);
-			}
+		if(roomDemographicList != null  &&  roomDemographicList.size() > 0){
+			//Demographic demographic = demographicDAO.getClientByDemographicNo(roomDemographicList.get(0).getId().getDemographicNo());
+			//roomDemographicList.get(0).setDemographic(demographic);
 		}
 		return roomDemographicList;
 	}
