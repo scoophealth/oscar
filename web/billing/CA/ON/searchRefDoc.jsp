@@ -54,10 +54,19 @@
 	  } else {
 	    where = search_mode + " like '" + StringEscapeUtils.escapeSql(keyword) + "%'";
 	  }
-	  String        sql   = "select referral_no, last_name, first_name, specialty, phone, fax, CONCAT('Dr. ', first_name, ' ', last_name) AS to_name, CONCAT(address1, ' ', address2) AS to_address1, CONCAT(city, ', ', province, ' ', postal) AS to_address2 from billingreferral where " + where + " order by " + orderBy + " limit " +strLimit1+"," +strLimit2; 
+	  String  sql = "select referral_no, last_name, first_name, specialty, phone, fax, " +
+	                "CONCAT(CONCAT(CONCAT('Dr. ', first_name), ' '), last_name) AS to_name, " +
+	                "CONCAT(CONCAT(address1, ' '), address2) AS to_address1, " + 
+	                "CONCAT(CONCAT(CONCAT(CONCAT(city, ', '), province), ' '), postal) AS to_address2 " + 
+	                "from billingreferral where " + where + " order by " + orderBy;
+	                // + " limit " +strLimit1+"," +strLimit2;
+
+      int iRow=0;	   
 	  ResultSet rs = dbObj.searchDBRecord(sql);
 		// System.out.println(sql);
 	  while (rs.next()) {
+	    iRow++;
+	    if(iRow>Integer.parseInt(strLimit2)) break;
 	  	prop = new Properties();
 	  	prop.setProperty("referral_no",rs.getString("referral_no"));
 	  	prop.setProperty("last_name",rs.getString("last_name"));

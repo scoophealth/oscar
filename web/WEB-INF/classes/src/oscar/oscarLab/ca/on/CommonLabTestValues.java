@@ -583,7 +583,7 @@ public class CommonLabTestValues {
                 " where p.lab_type = 'CML' " +
                 " and p.demographic_no = '"+demographicNo+"' " +
                 " and p.lab_no = ltr.labPatientPhysicianInfo_id " +
-                " and ltr.labPatientPhysicianInfo_id = lpp.id and test_name != \"\" ";
+                " and ltr.labPatientPhysicianInfo_id = lpp.id and test_name != ''";
         
         logger.info(sql);
         try {
