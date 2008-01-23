@@ -907,6 +907,17 @@ public class DemographicData {
         return ret;
     }
     
+    public void addDemographiccust(String demoNo, String content) {
+	String sql = "INSERT INTO demographiccust VALUES ('"+demoNo+"','','','','','<unotes>"+content+"</unotes>')";
+	DBHandler db;
+	try {
+		db = new DBHandler(DBHandler.OSCAR_DATA);
+		db.RunSQL(sql);
+	} catch (SQLException ex) {
+		ex.printStackTrace();
+	}
+    }
+    
     public class DemographicAddResult{
        ArrayList warnings =null;
        boolean added = false;
