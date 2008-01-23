@@ -1312,6 +1312,9 @@ public class ImportDemographicDataAction2 extends Action {
 	return f.format(c.getTime());
     }
     String getDateFullPartial(cdsDt.DateFullOrPartial dfp) {
+	if (dfp==null) {
+	    return "";
+	}
 	if (dfp.getDateTime()!=null) return getCalDateTime(dfp.getDateTime());
 	else if (dfp.getFullDate()!=null) return getCalDate(dfp.getFullDate());
 	else if (dfp.getYearMonth()!=null) return getCalDate(dfp.getYearMonth());
@@ -1380,8 +1383,10 @@ appendIfNotNull(s,"AccessionNumber",labRes.getAccessionNumber());
         
         if (labRes.getResultReviewer() != null){ //ResultReviewer){
 //<xs:element name="ResultReviewer" type="cdsd:ohipBillingNumber" minOccurs="0"/>
+	if (labRes.getResultReviewer().getName()!=null) {
         appendIfNotNull(s,"Reviewer First Name:", labRes.getResultReviewer().getName().getFirstName());
         appendIfNotNull(s,"Reviewer Last Name:",labRes.getResultReviewer().getName().getLastName());
+	}
         appendIfNotNull(s,"OHIP ID :", labRes.getResultReviewer().getOHIPPhysicianId());
         }
 //<xs:element name="ResultNormalAbnormalFlag">xs:restriction base="xs:token"> xs:enumeration value="Y"/><xs:enumeration value="N"/<xs:enumeration value="U"/>
