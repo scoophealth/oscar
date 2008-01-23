@@ -54,7 +54,11 @@ public class Startup implements ServletContextListener {
 			// Anyone know a better way to do this?
 			String url = sc.getServletContext().getResource("/index.jsp").getPath();
                         log.info(url);
-			url = url.substring(url.indexOf('/', 1) + 1, url.lastIndexOf('/'));
+            int idx = url.lastIndexOf('/') + 1;
+			url = url.substring(1,idx-1);
+
+			idx = url.lastIndexOf('/') + 1;
+			url = url.substring(idx);
 			
 			contextPath = url;
 		} catch (Exception e) {
