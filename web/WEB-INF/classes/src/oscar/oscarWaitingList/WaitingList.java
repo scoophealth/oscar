@@ -52,17 +52,15 @@ public class WaitingList{
        ResultSet rs = null;
        try{
            db = new DBHandler(DBHandler.OSCAR_DATA);
+           String sql = "SELECT count(*) FROM waitingListName where is_history = 'N' ";
 //           String sql = "SELECT * FROM waitingListName where is_history = 'N' limit 1 ";
-           String sql = "SELECT * FROM waitingListName where is_history = 'N'";
            rs = db.GetSQL(sql);
-           if(rs.next()){
-               return true;
-           }
-           
+           rs.next();
+           int count = rs.getInt(1);
+           return count > 0;
        } catch (Exception e) {
             e.printStackTrace();
             return false;
-            
        }finally{
     	   try{
     		   if(rs != null){
@@ -73,7 +71,6 @@ public class WaitingList{
     		   System.out.println("WaitingList.checkWaitingListTable():" + ex2.getMessage()); 
     	   }
        }
-       return false;
     }
         
     public boolean getFound(){
