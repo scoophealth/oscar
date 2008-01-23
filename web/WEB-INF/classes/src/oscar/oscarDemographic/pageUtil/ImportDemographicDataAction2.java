@@ -733,10 +733,10 @@ public class ImportDemographicDataAction2 extends Action {
 				reaction += aRes[j].getDescription()!=null ? "\nDescription: " + aRes[j].getDescription() : "";
 				reaction += aRes[j].getDataType()!=null ? "\nData Type: " + aRes[j].getDataType() : "";
 				reaction += aRes[j].getContent()!=null ? "\nContent: " + aRes[j].getContent() : "";
-				errorMsg = "Note: Allergies Residual Info imported in [reaction] ("+(i+1)+")";
-				errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 			    }
 			}
+			errorMsg = "Note: Allergies Residual Info imported in [reaction] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
 		    if (aaReactArray[i].getOffendingAgentDescription()!=null) 
 		    if (aaReactArray[i].getPropertyOfOffendingAgent()!=null) {
@@ -872,10 +872,10 @@ public class ImportDemographicDataAction2 extends Action {
 				special += mRes[j].getDescription()!=null ? "\nDescription: " + mRes[j].getDescription() : "";
 				special += mRes[j].getDataType()!=null ? "\nData Type: " + mRes[j].getDataType() : "";
 				special += mRes[j].getContent()!=null ? "\nContent: " + mRes[j].getContent() : "";
-				errorMsg = "Note: Medication Residual Info imported in [special] ("+(i+1)+")";
-				errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 			    }
 			}
+			errorMsg = "Note: Medication Residual Info imported in [special] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
 		    if (medArray[i].getStrength()!=null) {
 			dosage = medArray[i].getStrength().getAmount()!=null ? medArray[i].getStrength().getAmount() : "";
@@ -997,10 +997,10 @@ public class ImportDemographicDataAction2 extends Action {
 				comments += iRes[j].getDescription()!=null ? "\nDescription: " + iRes[j].getDescription() : "";
 				comments += iRes[j].getDataType()!=null ? "\nData Type: " + iRes[j].getDataType() : "";
 				comments += iRes[j].getContent()!=null ? "\nContent: " + iRes[j].getContent() : "";
-				errorMsg = "Note: Immunization Residual Info imported in [comments] ("+(i+1)+")";
-				errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 			    }
 			}
+			errorMsg = "Note: Immunization Residual Info imported in [comments] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
 		    PreventionData prevD = new PreventionData();
 		    prevD.insertPreventionData(providerNo, demoNo, preventionDate, providerNo, providerName, preventionType, refused, "", "", preventionExt);
