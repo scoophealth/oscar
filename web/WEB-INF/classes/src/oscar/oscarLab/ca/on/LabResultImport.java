@@ -39,6 +39,18 @@ public class LabResultImport {
 	db.CloseConn();
     }
     
+    
+    public void SaveLabDesc(String description, String ppId) throws SQLException {
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+	String sql = "INSERT INTO labTestResults (description,  labPatientPhysicianInfo_id, line_type) VALUES (? , ? , 'D')";
+        Connection c = db.GetConnection();
+        PreparedStatement ps = c.prepareStatement(sql);
+        ps.setString(1,description);
+        ps.setString(2,ppId);
+        ps.executeUpdate();
+	db.CloseConn();
+    }
+    
     public String saveLabPPInfo(String labReportInfo_id, String accession_num, String firstname, String lastname, String sex, String hin, String birthdate, String phone, String collDate) throws SQLException {
 	int id = 1;
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
