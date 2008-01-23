@@ -345,7 +345,7 @@ function resetView(frm, error, e) {
     if( frm )
         Element.remove("passwdPara");        
         
-    new Insertion.Top(parent, img);
+    //new Insertion.Top(parent, img);
     Element.observe(parent, 'click', unlockNote);
 }
 
@@ -577,9 +577,9 @@ function unlock_ajax(id) {
                         evalScripts: true,
                         onSuccess: function(request) {                                    
                                     var html = request.responseText;
-                                    if( navigator.userAgent.indexOf("AppleWebKit") > -1 )
-                                        $(id).updateSafari(html);
-                                    else
+                                    //if( navigator.userAgent.indexOf("AppleWebKit") > -1 )
+                                    //    $(id).updateSafari(html);
+                                    //else
                                         $(id).update(html);
                                                                             
                                     },
@@ -612,24 +612,8 @@ function unlockNote(e) {
         txt = $(el).up('div',level).id;        
     } 
       
-   var passwd = "passwd";
-
-    for( var i = 0; i < $(txt).childNodes.length; ++i ) {
-        if( $(txt).childNodes[i].nodeName == "IMG" ) {
-            Element.remove($(txt).childNodes[i].id);
-            break;
-        }
-    }
-    
-    //check for line item displayed when note is minimized    
+    var passwd = "passwd"; 
     var nId = txt.substr(1);
-    var content = "c" + nId;
-    var date = "d" + nId; 
-    if( $(date) != null ) {
-        Element.remove(date);
-        Element.remove(content);    
-    }
-                   
     var img = "<img id='quitImg" + nId + "' onclick='resetView(true, false, event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
     new Insertion.Top(txt,img);
     var lockForm = "<p id='passwdPara' class='passwd'>Password:&nbsp;<input onkeypress=\"return grabEnter('btnUnlock', event);\" type='password' id='" + passwd + "' size='16'>&nbsp;<input id='btnUnlock' type='button' onclick=\"return unlock_ajax('" + txt + "');\" value='<bean:message key="oscarEncounter.Index.btnUnLock"/>'><\/p>";
@@ -1837,11 +1821,7 @@ Version version = (Version) ctx.getBean("version");
                             }
                             //else display contents of note for viewing
                             else {
-                            %>                            
-                            <img title="Minimize Display" id='quitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
-                            <img title="Print" id='print<%=note.getId()%>' alt="Toggle Print Note" onclick="togglePrint(<%=note.getId()%>, event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>
-                            
-                            <%
+                                                                                                                                            
                             if( note.isLocked() ) {
                             %>
                             <pre><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></pre>                                  
@@ -1851,6 +1831,8 @@ Version version = (Version) ctx.getBean("version");
                             
                             String rev = note.getRevision();
                             %>
+                            <img title="Minimize Display" id='quitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
+                            <img title="Print" id='print<%=note.getId()%>' alt="Toggle Print Note" onclick="togglePrint(<%=note.getId()%>, event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>
                             <pre><%=noteStr%></pre>
                             <%
                             if( largeNote(noteStr) ) {
