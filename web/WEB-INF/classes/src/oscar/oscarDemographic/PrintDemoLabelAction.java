@@ -10,6 +10,7 @@ import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.*;
 import java.io.*;
+import org.springframework.web.context.support.*;
 
 public class PrintDemoLabelAction extends OscarAction {
     public PrintDemoLabelAction() {
@@ -25,12 +26,14 @@ public class PrintDemoLabelAction extends OscarAction {
         HashMap parameters = new HashMap();
         parameters.put("demo", request.getParameter("demographic_no"));
         ServletOutputStream sos = null;
-        FileInputStream ins = null;
-        System.err.println("ROOT: " + System.getProperty("user.home"));
+        InputStream ins = null;
         try {
-            ins = new FileInputStream(System.getProperty("user.home") + "/label.xml");
+            ServletContext context = getServlet().getServletContext();
+            ins = getClass().getResourceAsStream("/oscar/oscarDemographic/label.xml");
+//            ins = context.getResourceAsStream("/label.xml");
+//            ins = new FileInputStream(System.getProperty("user.home") + "/label.xml");
         }
-        catch (FileNotFoundException ex1) {
+        catch (Exception ex1) {
             ex1.printStackTrace();
         }
 

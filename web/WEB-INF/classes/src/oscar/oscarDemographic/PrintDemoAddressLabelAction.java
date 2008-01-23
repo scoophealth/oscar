@@ -24,12 +24,12 @@ public class PrintDemoAddressLabelAction extends OscarAction {
         HashMap parameters = new HashMap();
         parameters.put("demo", request.getParameter("demographic_no"));
         ServletOutputStream sos = null;
-        FileInputStream ins = null;
-        System.err.println("ROOT: " + System.getProperty("user.home"));
+        InputStream ins = null;
+//        System.err.println("ROOT: " + System.getProperty("user.home"));
         try {
-            ins = new FileInputStream(System.getProperty("user.home") + "/Addresslabel.xml");
+            ins = getClass().getResourceAsStream("/oscar/oscarDemographic/Addresslabel.xml");
         }
-        catch (FileNotFoundException ex1) {
+        catch (Exception ex1) {
             ex1.printStackTrace();
         }
 

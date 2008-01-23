@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+
+<jasperReport name="label" pageWidth="229" pageHeight="74" columnWidth="200" leftMargin="15" rightMargin="0" topMargin="0" bottomMargin="4">
+        <reportFont name="sansserif" isDefault="false" fontName="sansserif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+        <parameter name="demo" class="java.lang.String">
+        </parameter>
+        <queryString><![CDATA[select d.last_name, d.first_name, CONCAT(d.address,' ') as address, 
+                        CONCAT(d.city,' ') as city, CONCAT(d.province,' ') as province, CONCAT(d.postal,' ') as postal,  CONCAT(p.last_name, CONCAT(', ' ,p.first_name)) as doc_name 
+			from demographic d, provider p where demographic_no =$P{demo} and d.provider_no = p.provider_no ]]></queryString>
+        <field name="last_name" class="java.lang.String">
+        </field>
+        <field name="first_name" class="java.lang.String">
+        </field>
+        <field name="address" class="java.lang.String">
+        </field>
+        <field name="city" class="java.lang.String">
+        </field>
+        <field name="province" class="java.lang.String">
+        </field>
+        <field name="postal" class="java.lang.String">
+        </field>
+        <title>
+                <band height="60">
+                        <textField>
+                                <reportElement positionType="Float" mode="Opaque" x="0" y="10" width="330" height="14"/>
+                                <textElement>
+                                        <font size="10" isBold="true"/>
+                                </textElement>
+                                <textFieldExpression class="java.lang.String"><![CDATA[$F{first_name} + " " + $F{last_name}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                                <reportElement positionType="Float" mode="Opaque" x="0" y="25" width="330" height="14"/>
+                                <textElement>
+                                        <font size="10"/>
+                                </textElement>
+                                <textFieldExpression class="java.lang.String"><![CDATA[$F{address}]]></textFieldExpression>
+                        </textField>
+			 <textField>
+                                <reportElement positionType="Float" mode="Opaque" x="0" y="38" width="330" height="14"/>
+                                <textElement>
+                                        <font size="10"/>
+                                </textElement>
+                                <textFieldExpression class="java.lang.String"><![CDATA[$F{city} + "," + $F{province} + " " + $F{postal}]]></textFieldExpression>
+                        </textField>
+
+                </band>
+        </title>
+</jasperReport>
+
