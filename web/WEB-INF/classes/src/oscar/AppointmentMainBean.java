@@ -202,15 +202,31 @@ public class AppointmentMainBean {
   }
   
   public ResultSet queryResults_paged(String aKeyword, String dboperation, int iOffSet) throws Exception{
-	  String sqlQuery = null;
-	  ResultSet rs =null;
-	  if(aKeyword.equals("*")) {
+	String sqlQuery = null;
+	ResultSet rs =null;
+	if(aKeyword.equals("*")) {
 	  	sqlQuery = dbSQL.getDef("search*","");
     	rs = dbPH.queryResults_paged(sqlQuery, iOffSet);
-	  } else {
+	} else {
 	  	sqlQuery = dbSQL.getDef(dboperation,"");
-    	rs = dbPH.queryResults_paged(sqlQuery, aKeyword, iOffSet);
-	  }
+        //works with only one " like ?"
+	  	if(aKeyword.length()<1){
+          int iIndex1= sqlQuery.indexOf("like");
+	  	  if(iIndex1>0){
+            String str1=sqlQuery.substring(0, iIndex1-1).trim();
+            String str2=str1.substring(0, str1.lastIndexOf(" "));
+            String str3=sqlQuery.substring(iIndex1+5, sqlQuery.length());
+            int iIndex2=str3.indexOf("?");
+//            if(str3.indexOf("and")>iIndex2) iIndex2=str3.indexOf("and") + 3; 
+            sqlQuery= str2 +  " 1=1 " + str3.substring(iIndex2+1, str3.length());
+	  	  }
+    	  rs = dbPH.queryResults_paged(sqlQuery, iOffSet);
+        }
+        else
+        {
+          rs = dbPH.queryResults_paged(sqlQuery, aKeyword, iOffSet);
+        }
+	}
   	return rs;
   }
   

@@ -1,12 +1,12 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.lang.*, oscar.oscarDemographic.data.DemographicMerged" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, oscar.oscarDemographic.data.DemographicMerged" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
 <%
-	if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 
 	String strLimit1="0";
 	String strLimit2="18";
@@ -126,35 +126,75 @@ function checkTypeIn() {
 	String keyword=request.getParameter("keyword").trim();
 	//keyword.replace('*', '%').trim();
 
-	if(request.getParameter("search_mode").equals("search_name")) {
-		keyword="^"+keyword;
-		if(keyword.indexOf(",")==-1)  rs = apptMainBean.queryResults(keyword, dboperation) ; //lastname
-		else if(keyword.indexOf(",")==(keyword.length()-1))  rs = apptMainBean.queryResults(keyword.substring(0,(keyword.length()-1)), dboperation);//lastname
-		else { //lastname,firstname
-                    String[] param =new String[2];
-                    int index = keyword.indexOf(",");
-                    param[0]=keyword.substring(0,index).trim(); // already has an "^" at the front, so no need to add another
-                    param[1]="^"+keyword.substring(index+1).trim();
-                    rs = apptMainBean.queryResults(param, dboperation);
-   		}
-	} else if(request.getParameter("search_mode").equals("search_dob")) {
-		String[] param =new String[3];
-		param[0] = keyword.substring(0,4);//+"%";//(",");
-		param[1] = keyword.substring(keyword.indexOf("-")+1, keyword.lastIndexOf("-"));
-		//param[1] = param[1].startsWith("0") ? param[1].substring(1) : param[1];
-		param[2] = keyword.substring(keyword.lastIndexOf("-")+1);
-		//param[2] = param[2].startsWith("0") ? param[2].substring(1) : param[2];
-		System.out.println(param[1] + " "+ param[2] );
-		rs = apptMainBean.queryResults(param, dboperation);
-        } else if(request.getParameter("search_mode").equals("search_address") || request.getParameter("search_mode").equals("search_phone")) {
-                keyword = keyword.replaceAll("-", "-?");
-                if (keyword.length() < 1) keyword="^";
-                rs = apptMainBean.queryResults(keyword, dboperation);
-	} else {
-		keyword="^"+request.getParameter("keyword");		
-		rs = apptMainBean.queryResults(keyword, dboperation);
-	}
- 
+    int iRSOffSet=0;
+    int iPageSize=10;
+    int iRow=0;
+    if(request.getParameter("limit1")!=null) iRSOffSet= Integer.parseInt(request.getParameter("limit1"));
+    if(request.getParameter("limit2")!=null) iPageSize = Integer.parseInt(request.getParameter("limit2"));
+
+    String sDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+    if (sDbType.equalsIgnoreCase("oracle")) {
+	  if(request.getParameter("search_mode").equals("search_name")) {
+	 	 if(keyword.indexOf(",")==-1) 
+		    rs = apptMainBean.queryResults_paged("%" + keyword + "%", dboperation, iRSOffSet) ; //lastname
+		 else if(keyword.indexOf(",")==(keyword.length()-1))  
+		    rs = apptMainBean.queryResults_paged("%" + keyword.substring(0,(keyword.length()-1)) + "%", dboperation, iRSOffSet);//lastname
+		 else { //lastname,firstname
+            String[] param =new String[2];
+            int index = keyword.indexOf(",");
+            param[0]="%" + keyword.substring(0,index).trim() + "%";
+            param[1]=keyword.substring(index+1).trim() + "%";
+            rs = apptMainBean.queryResults_paged(param, dboperation, iRSOffSet);
+   		 }
+	  } else if(request.getParameter("search_mode").equals("search_dob")) {
+		 String[] param =new String[3];
+		 param[0] = keyword.substring(0,4);
+		 param[1] = keyword.substring(keyword.indexOf("-")+1, keyword.lastIndexOf("-"));
+		 param[2] = keyword.substring(keyword.lastIndexOf("-")+1);
+		 rs = apptMainBean.queryResults_paged(param, dboperation, iRSOffSet);
+      } else if(request.getParameter("search_mode").equals("search_address") || request.getParameter("search_mode").equals("search_phone") ||
+         request.getParameter("search_mode").equals("search_hin")) {
+         if(keyword.length()>0) keyword="%" + request.getParameter("keyword") + "%";		
+         keyword = keyword.replaceAll("-", "%-%");
+         rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
+	  } else {
+		 keyword="%" + request.getParameter("keyword") + "%";		
+		 rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
+	  }
+    
+    }else{  //MySQL
+	  if(request.getParameter("search_mode").equals("search_name")) {
+		 keyword="^"+keyword;
+		 if(keyword.indexOf(",")==-1)
+		    rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet) ; //lastname
+		 else if(keyword.indexOf(",")==(keyword.length()-1))
+		    rs = apptMainBean.queryResults_paged(keyword.substring(0,(keyword.length()-1)), dboperation, iRSOffSet);//lastname
+		 else { //lastname,firstname
+            String[] param =new String[2];
+            int index = keyword.indexOf(",");
+            param[0]=keyword.substring(0,index).trim(); // already has an "^" at the front, so no need to add another
+            param[1]="^"+keyword.substring(index+1).trim();
+            rs = apptMainBean.queryResults_paged(param, dboperation, iRSOffSet);
+   		 }
+	  } else if(request.getParameter("search_mode").equals("search_dob")) {
+		 String[] param =new String[3];
+		 param[0] = keyword.substring(0,4);//+"%";//(",");
+		 param[1] = keyword.substring(keyword.indexOf("-")+1, keyword.lastIndexOf("-"));
+		 //param[1] = param[1].startsWith("0") ? param[1].substring(1) : param[1];
+		 param[2] = keyword.substring(keyword.lastIndexOf("-")+1);
+		 //param[2] = param[2].startsWith("0") ? param[2].substring(1) : param[2];
+		 System.out.println(param[1] + " "+ param[2] );
+		 rs = apptMainBean.queryResults_paged(param, dboperation, iRSOffSet);
+      } else if(request.getParameter("search_mode").equals("search_address") || request.getParameter("search_mode").equals("search_phone")) {
+         keyword = keyword.replaceAll("-", "-?");
+         if (keyword.length() < 1) keyword="^";
+         rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
+	  } else {
+		 keyword="^"+request.getParameter("keyword");		
+		 rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
+	  }
+    }
+    
 	boolean bodd=false;
 	int nItems=0;
   
