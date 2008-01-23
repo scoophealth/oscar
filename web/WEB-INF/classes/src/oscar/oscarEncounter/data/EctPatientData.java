@@ -175,13 +175,13 @@ public class EctPatientData {
                     rs = db.GetSQL(sql);
                     if (rs.next()) {
                         this.eChartTimeStamp = rs.getTimestamp("timeStamp");
-                        this.socialHistory = rs.getString("socialHistory");
-                        this.familyHistory = rs.getString("familyHistory");
-                        this.medicalHistory = rs.getString("medicalHistory");
-                        this.ongoingConcerns = rs.getString("ongoingConcerns");
-                        this.reminders = rs.getString("reminders");
-                        this.encounter = rs.getString("encounter");
-                        this.subject = rs.getString("subject");
+                        this.socialHistory = db.getString(rs,"socialHistory");
+                        this.familyHistory = db.getString(rs,"familyHistory");
+                        this.medicalHistory = db.getString(rs,"medicalHistory");
+                        this.ongoingConcerns = db.getString(rs,"ongoingConcerns");
+                        this.reminders = db.getString(rs,"reminders");
+                        this.encounter = db.getString(rs,"encounter");
+                        this.subject = db.getString(rs,"subject");
                     }
                     rs.close();
                     db.CloseConn();
