@@ -1570,5 +1570,5 @@ Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d
 </script>     
 </body>
 </html:html>
-%>
+
 
