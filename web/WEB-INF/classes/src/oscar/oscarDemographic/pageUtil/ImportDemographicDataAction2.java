@@ -1349,7 +1349,7 @@ public class ImportDemographicDataAction2 extends Action {
     
 void appendIfNotNull(StringBuffer s, String name, String object){
         if (object != null){
-            s.append(name+": "+object);
+            s.append(name+": "+object+"\n");
         }
     }
 
