@@ -728,7 +728,7 @@ public class ImportDemographicDataAction2 extends Action {
 		for (int i=0; i<immuArray.length; i++) {
 		    String preventionDate="", providerName="", preventionType="", refused="0";
 		    ArrayList preventionExt = new ArrayList();
-		    Hashtable ht = new Hashtable();
+		   
 		    
 		    String otherName = "";   //JAY ADDED
 		    if (immuArray[i].getImmunizationName()!=null) { //JRG
@@ -751,24 +751,26 @@ public class ImportDemographicDataAction2 extends Action {
 		    } else if (immuArray[i].getRefusedFlag().getBoolean()) refused = "1";
 
 		    if (immuArray[i].getManufacturer()!=null) {
+System.out.println("Ronnie: manu="+immuArray[i].getManufacturer());
+			Hashtable ht = new Hashtable();
 			ht.put("manufacture", immuArray[i].getManufacturer());
 			preventionExt.add(ht);
-			ht.clear();
 		    }
 		    if (immuArray[i].getLotNumber()!=null) {
+System.out.println("Ronnie: lot="+immuArray[i].getLotNumber());
+			Hashtable ht = new Hashtable();
 			ht.put("lot", immuArray[i].getLotNumber());
 			preventionExt.add(ht);
-			ht.clear();
 		    }
 		    if (immuArray[i].getRoute()!=null) {
+			Hashtable ht = new Hashtable();
 			ht.put("route", immuArray[i].getRoute());
 			preventionExt.add(ht);
-			ht.clear();
 		    }
 		    if (immuArray[i].getSite()!=null) {
+			Hashtable ht = new Hashtable();
 			ht.put("location", immuArray[i].getSite());
 			preventionExt.add(ht);
-			ht.clear();
 		    }
 		    
 		    String comments="", iSummary="";
@@ -798,9 +800,9 @@ public class ImportDemographicDataAction2 extends Action {
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
 		    if (!comments.equals("")) {
+			Hashtable ht = new Hashtable();
 			ht.put("comments", comments);
 			preventionExt.add(ht);
-			ht.clear();
 		    }
 		    PreventionData prevD = new PreventionData();
 		    prevD.insertPreventionData(providerNo, demoNo, preventionDate, providerNo, providerName, preventionType, refused, "", "", preventionExt);
