@@ -714,7 +714,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		if (h.get("accession")!=null) labr.setAccessionNumber((String) h.get("accession"));
 		if (h.get("result")!=null) labResult.setValue((String) h.get("result"));
 		if (h.get("units")!=null) labResult.setUnitOfMeasure((String) h.get("units"));
-		if (h.get("range")!=null) labRef.setReferenceRangeText((String) h.get("range"));
+		//if (h.get("range")!=null) labRef.setReferenceRangeText((String) h.get("range"));
 		if (h.get("min")!=null) labRef.setLowLimit((String) h.get("min"));
 		if (h.get("max")!=null) labRef.setHighLimit((String) h.get("max"));
 		data = (String) h.get("collDate");
