@@ -175,6 +175,7 @@ public class RoomManager {
         return (Room[]) roomList.toArray(new Room[roomList.size()]);
     }
     
+    
 	/**
 	 * Get available rooms
 	 *
@@ -185,81 +186,52 @@ public class RoomManager {
 	 * 			its occupancy limit. 
 	 */
     @SuppressWarnings("unchecked")
-    public Room[] getAvailableRooms(Integer facilityId, Integer programId, Boolean active) {
+    public Room[] getAvailableRooms(Integer facilityId, Integer programId, Boolean active, String demographicNo) {
     	//rooms of particular facilityId, programId, active=1, (assignedBed=1 or assignedBed=0) 
     	Room[] rooms = roomDAO.getRooms(facilityId, programId, active);
+    	
+    	List<RoomDemographic> roomDemograhics = null;
     	List<Room> availableRooms = new ArrayList<Room>();
     	
-//    	get rooms that are not full or clients can still be assigned to these rooms
+    	//get rooms that are not full or clients can still be assigned to these rooms
+    	//however, even if room capacity is reached, the rooms will still be added if that particular client is 
+    	//assigned to that particular room.
     	for(int i=0; rooms != null  &&  i < rooms.length; i++){
-    		
-    	List<RoomDemographic> roomDemograhics = null;
-    	
-    	List clientsFromBedDemographic = new ArrayList();
-    	List clientsFromRoomDemographic = new ArrayList();
-    	int numOfUniqueClientsAssignedToRoom = 0;
-    	
-		/*
-			roomId -->  get  all (multiple) bedIds from  table 'bed'
-			       -->  get  all demographicNo  from  table  'room_demographic'
-			bedIds -->  get all (1 to 1 relationship) demographicNo  from  table  'bed_demographic'
-			numOfClientsAssignedToRoom  ==  sum of  all unique demographicNo (subtracting the duplicates
-			of clients from both 'bed_demographic' & 'room_demographic' tables)
-		*/    	
-    	  	
 
-			Bed[] bedsForRoom = null;
-    		if(rooms != null && rooms.length > 0){
-   				//get  all bedIds from  table 'bed' via room[i].id
-				bedsForRoom = bedManager.getBedsByRoom(rooms[i].getId());
-				int bedsInOneRoom = bedsForRoom.length;
+    			int totalClientsInRoom = 0;
+				//get  all demographicNo  from  table  'room_demographic' via rooms[i].id	
+				roomDemograhics = roomDemographicManager.getRoomDemographicByRoom(rooms[i].getId());
+				Integer roomDemographicNo = null;
+				if(roomDemograhics != null){
+					totalClientsInRoom = roomDemograhics.size();
+				}
 				
-				if(bedsForRoom != null){
-					//get all demographicNo  from  table  'bed_demographic' via Bed[j].id -- 1 to 1 relationship
-					for(int j=0; j < bedsForRoom.length; j++){
-						BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(bedsForRoom[j].getId()); 
-						if(bedDemographic != null ){
-							clientsFromBedDemographic.add(bedDemographic.getId().getDemographicNo());
-						}
+				//if client is assigned to this room, even if capacity reached, still display room in dropdown
+				if(isClientAssignedToThisRoom(Integer.valueOf(demographicNo), roomDemographicNo)){
+					availableRooms.add(rooms[i]);
+				}else{
+					//if client not in this room, only display room if capacity is not reached
+					if(rooms[i].getOccupancy().intValue() -  totalClientsInRoom > 0){
+							availableRooms.add(rooms[i]);
 					}
 				}
-				//get  all demographicNo  from  table  'room_demographic' via room[i].id	
-				roomDemograhics = roomDemographicManager.getRoomDemographicByRoom(rooms[i].getId());
-				
-				if(roomDemograhics != null  &&  roomDemograhics.size() == 1){
-					clientsFromRoomDemographic.add(((RoomDemographic)roomDemograhics.get(0)).getId().getDemographicNo());
-				}
-				numOfUniqueClientsAssignedToRoom = getNumOfUniqueClientsAssignedToRoom(clientsFromBedDemographic, clientsFromRoomDemographic);	
-				
-				//What is the meaning occupancy, how many beds in the room ? why is it always 1 ? 
-				//if(rooms[i].getOccupancy().intValue() -  numOfUniqueClientsAssignedToRoom > 0){
-				if(bedsInOneRoom -  numOfUniqueClientsAssignedToRoom > 0){
-					availableRooms.add(rooms[i]);
-				}
     			
-    		}else{//end of rooms != null
-    			return null;
-    		}//end of rooms == null
     	}
+    	
 		log.debug("getAvailableRooms(): availableRooms = " + availableRooms.size());
 		return (Room[]) availableRooms.toArray(new Room[availableRooms.size()]);
 	}
 
-    private int getNumOfUniqueClientsAssignedToRoom(List clientsFromBedDemographic, List clientsFromRoomDemographic){
+    private boolean isClientAssignedToThisRoom(Integer demographicNo, Integer roomDemographicNo){
     	
-    	if(clientsFromBedDemographic == null  &&  clientsFromRoomDemographic == null){
-    		return 0;
+    	try{
+    		if(demographicNo.intValue() == roomDemographicNo.intValue()){
+    			return true;
+    		}
+    	}catch(Exception ex){
+    		return false;
     	}
-    	List<Integer> clientsCombined = new ArrayList<Integer>();
-    	clientsCombined.addAll(clientsFromBedDemographic);
-    	clientsCombined.addAll(clientsFromRoomDemographic);
-    	
-    	Collections.sort(clientsCombined);
-    	Set treeSet = new TreeSet(clientsCombined);
-    	if(treeSet == null){
-    		return 0;
-    	}
-    	return treeSet.size();
+    	return false;
     }
     
     /**

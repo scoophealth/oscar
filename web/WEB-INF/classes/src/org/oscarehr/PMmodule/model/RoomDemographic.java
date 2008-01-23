@@ -45,6 +45,7 @@ public class RoomDemographic implements Auditable, Serializable {
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private RoomDemographicPK id;// fields
+    private Integer demographicNo;
     private String providerNo;
     private Date assignStart;
     private Date assignEnd;
@@ -106,6 +107,7 @@ public class RoomDemographic implements Auditable, Serializable {
 			return;
 		}
 		setRoomId(bedDemographic.getRoomId());
+		setDemographicNo(bedDemographic.getId().getDemographicNo());
 		setProviderNo(bedDemographic.getProviderNo());
 		setAssignStart(bedDemographic.getReservationStart());
 		setAssignEnd(bedDemographic.getReservationEnd());
@@ -114,6 +116,9 @@ public class RoomDemographic implements Auditable, Serializable {
 		return; 
     }
 	
+	public void setDemographicNo(Integer demographicNo){
+		this.demographicNo = demographicNo;
+	}
 	public void setProvider(Provider provider) {
 	    this.provider = provider;
     }

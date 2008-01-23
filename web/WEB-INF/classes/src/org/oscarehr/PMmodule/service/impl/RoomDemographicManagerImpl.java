@@ -140,6 +140,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 			handleException(new IllegalArgumentException("roomDemographic must not be null"));
 		}
 		boolean isNoRoomAssigned = (roomDemographic.getId().getRoomId().intValue() == 0);
+		
 		if(!isNoRoomAssigned){
 			validate(roomDemographic);
 		}
@@ -147,9 +148,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		if(roomDemographicPrevious != null){
 			deleteRoomDemographic(roomDemographicPrevious);
 		}
-		if(!isNoRoomAssigned){
-			roomDemographicDAO.saveRoomDemographic(roomDemographic);
-		}
+		roomDemographicDAO.saveRoomDemographic(roomDemographic);
 	}
 
 	public void cleanUpBedTables(RoomDemographic roomDemographic){

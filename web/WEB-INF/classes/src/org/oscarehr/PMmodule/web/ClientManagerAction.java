@@ -598,13 +598,10 @@ public class ClientManagerAction extends BaseAction {
         String roomId = request.getParameter("roomId");
         bedDemographic.setReservationStart(today);
         bedDemographic.setRoomId(Integer.valueOf(roomId));
-
-        RoomDemographic roomDemographic = new RoomDemographic();
         
-        List roomDemographics = getRoomDemographicManager().getRoomDemographicByRoom(bedDemographic.getRoomId());
+        RoomDemographic roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(bedDemographic.getId().getDemographicNo());
 
-        if (roomDemographics != null && roomDemographics.size() > 0) {//only 1 to 1 relationship for now
-            roomDemographic = (RoomDemographic) roomDemographics.get(0);
+        if (roomDemographic != null) {
             roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
         }
         else {
@@ -623,7 +620,7 @@ public class ClientManagerAction extends BaseAction {
             bedDemographicManager.saveBedDemographic(bedDemographic);
         }
         else {
-            // if only select room without bed, delete previous selected bedId from 'bed' & 'bed_demographic' tables
+            // if only select room without bed, delete previous selected bedId 'bed_demographic' table
             getRoomDemographicManager().cleanUpBedTables(roomDemographic);
         }
 
@@ -1096,7 +1093,7 @@ public class ClientManagerAction extends BaseAction {
 
             clientForm.set("bedDemographic", bedDemographic);
 
-            Room[] availableRooms = getRoomManager().getAvailableRooms(null, bedProgramId, Boolean.TRUE);
+            Room[] availableRooms = getRoomManager().getAvailableRooms(null, bedProgramId, Boolean.TRUE, demographicNo);
             
             request.setAttribute("availableRooms", availableRooms);
 
