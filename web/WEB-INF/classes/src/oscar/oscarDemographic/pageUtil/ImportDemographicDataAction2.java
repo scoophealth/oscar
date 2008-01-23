@@ -199,9 +199,15 @@ public class ImportDemographicDataAction2 extends Action {
 	    }
 	    String date_joined = demo.getEnrollmentDate()!=null ? getDateFullPartial(demo.getEnrollmentDate()) : "";
 	    String end_date = demo.getEnrollmentTerminationDate()!= null ? getDateFullPartial(demo.getEnrollmentTerminationDate()) : "";
+	    
+	    boolean in_note = false;
+	    String dNote = "";
 	    String sin = demo.getSIN()!=null ? demo.getSIN() : "";
+	    if (demo.getSIN()!=null) {
+		dNote += "SIN: " + demo.getSIN();
+		in_note = true;
+	    }
 	    String chart_no = demo.getChartNumber()!=null ? demo.getChartNumber() : "";
-	    boolean UVId_note = false;
 	    if (chart_no.equals("")) {
 		if (demo.getUniqueVendorIdSequence()!=null) {
 		    chart_no = demo.getUniqueVendorIdSequence();
@@ -209,7 +215,11 @@ public class ImportDemographicDataAction2 extends Action {
 		    errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		}
 	    } else {
-		if (demo.getUniqueVendorIdSequence()!=null) UVId_note = true;
+		if (demo.getUniqueVendorIdSequence()!=null) {
+		    String uid = "Vendor ID Sequence: "+demo.getUniqueVendorIdSequence();
+		    dNote += dNote.equals("") ? uid : "\n"+uid;
+		    in_note = true;
+		}
 	    }
 	    
 	    String versionCode="", hin="", hc_type="", eff_date="";
@@ -322,7 +332,9 @@ public class ImportDemographicDataAction2 extends Action {
 	    demoNo = demoRes.getId();
 	    if (demoNo!=null)
 	    {
-		if (UVId_note) dd.addDemographiccust(demoNo, "Unique Vendor Id Sequence = "+demo.getUniqueVendorIdSequence());
+		if (in_note) {
+		    dd.addDemographiccust(demoNo, dNote);
+		}
 		
 		if (!workExt.equals("")) dExt.addKey(providerNo, demoNo, "wPhoneExt", workExt);
 		if (!homeExt.equals("")) dExt.addKey(providerNo, demoNo, "hPhoneExt", homeExt);
@@ -432,6 +444,31 @@ public class ImportDemographicDataAction2 extends Action {
 			    }
 			}
 		    }
+		    if (fHistArray[i].getAgeAtOnset()!=null) {
+			familyHist += "\nAge at Onset: " + fHistArray[i].getAgeAtOnset().toString();
+		    }
+		    if (fHistArray[i].getDiagnosisCode()!=null) {
+			cdsDt.Code diagCode = fHistArray[i].getDiagnosisCode();
+			familyHist += "\nDiagnosis Code -";
+			familyHist += diagCode.getCodingSystem()!=null ? "\nCoding System: "+diagCode.getCodingSystem() : "";
+			familyHist += diagCode.getDescription()!=null ? "\nDescription: "+diagCode.getDescription() : "";
+			familyHist += diagCode.getValue()!=null ? "\nValue: "+diagCode.getValue() : "";
+		    }
+		    if (fHistArray[i].getDiagnosisProblemDescription()!=null) {
+			familyHist += "\nDiagnosis Problem Description: " + fHistArray[i].getDiagnosisProblemDescription();
+		    }
+		    if (fHistArray[i].getNotes()!=null) {
+			familyHist += "\nNotes: " + fHistArray[i].getNotes();
+		    }
+		    if (fHistArray[i].getRelationship()!=null) {
+			familyHist += "\nRelationship: " + fHistArray[i].getRelationship();
+		    }
+		    if (fHistArray[i].getStartDate()!=null) {
+			familyHist += "\nStart Date: " + getDateFullPartial(fHistArray[i].getStartDate());
+		    }
+		    if (fHistArray[i].getTreatment()!=null) {
+			familyHist += "\nTreatment: " + fHistArray[i].getTreatment();
+		    }
 		    familyHist += familyHist.equals("") ? "" : "\n===\n";
 		}
 		//PAST HEALTH
@@ -455,7 +492,32 @@ public class ImportDemographicDataAction2 extends Action {
 			    }
 			}
 		    }
-		    socialHist += socialHist.equals("") ? "" : "\n===\n";
+		    if (pHealth[i].getDiagnosisOrProcedureCode()!=null) {
+			cdsDt.Code diagCode = pHealth[i].getDiagnosisOrProcedureCode();
+			medicalHist += "\nDiagnosis/Procedure Code -";
+			medicalHist += diagCode.getCodingSystem()!=null ? "\nCoding System: "+diagCode.getCodingSystem() : "";
+			medicalHist += diagCode.getDescription()!=null ? "\nDescription: "+diagCode.getDescription() : "";
+			medicalHist += diagCode.getValue()!=null ? "\nValue: "+diagCode.getValue() : "";
+		    }
+		    if (pHealth[i].getMedicalSurgicalFlag()!=null) {
+			medicalHist += "\nMedical Surgical Flag: " + pHealth[i].getMedicalSurgicalFlag().toString();
+		    }
+		    if (pHealth[i].getNotes()!=null) {
+			medicalHist += "\nNotes: " + pHealth[i].getNotes();
+		    }
+		    if (pHealth[i].getOnsetOrEventDate()!=null) {
+			medicalHist += "\nOset/Event Date: " + getDateFullPartial(pHealth[i].getOnsetOrEventDate());
+		    }
+		    if (pHealth[i].getPastHealthProblemDescriptionOrProcedures()!=null) {
+			medicalHist += "\nPast Health Problem Description: " + pHealth[i].getPastHealthProblemDescriptionOrProcedures();
+		    }
+		    if (pHealth[i].getResolvedDate()!=null) {
+			medicalHist += "\nResolved Date: " + getDateFullPartial(pHealth[i].getResolvedDate());
+		    }
+		    if (pHealth[i].getResolvedIndicator()!=null) {
+			medicalHist += "\nResolved ? " + pHealth[i].getResolvedIndicator();
+		    }
+		    medicalHist += medicalHist.equals("") ? "" : "\n===\n";
 		}
 		//PROBLEM LIST
 		cds.ProblemListDocument.ProblemList[] probList = patientRec.getProblemListArray();
@@ -481,6 +543,25 @@ public class ImportDemographicDataAction2 extends Action {
 				    ongConcerns += plRes[j].getContent()!=null ? "\nContent: " + plRes[j].getContent() : "";
 				}
 			    }
+			}
+			if (probList[i].getDiagnosisCode()!=null) {
+			    cdsDt.Code diagCode = probList[i].getDiagnosisCode();
+			    ongConcerns += "\nDiagnosis Code -";
+			    ongConcerns += diagCode.getCodingSystem()!=null ? "\nCoding System: "+diagCode.getCodingSystem() : "";
+			    ongConcerns += diagCode.getDescription()!=null ? "\nDescription: "+diagCode.getDescription() : "";
+			    ongConcerns += diagCode.getValue()!=null ? "\nValue: "+diagCode.getValue() : "";
+			}
+			if (probList[i].getNotes()!=null) {
+			    ongConcerns += "\nNotes: " + probList[i].getNotes();
+			}
+			if (probList[i].getProblemDescription()!=null) {
+			    ongConcerns += "\nProblem Description: " + probList[i].getProblemDescription();
+			}
+			if (probList[i].getProblemStatus()!=null) {
+			    ongConcerns += "\nProblem Status: " + probList[i].getProblemStatus();
+			}
+			if (probList[i].getResolutionDate()!=null) {
+			    ongConcerns += "\nResolution Date: " + getDateFullPartial(probList[i].getResolutionDate());
 			}
 			ongConcerns += ongConcerns.equals("") ? "" : "\n===\n";
 		    } else {
@@ -510,24 +591,60 @@ public class ImportDemographicDataAction2 extends Action {
 			    }
 			}
 		    }
-		    ongConcerns += ongConcerns.equals("") ? "" : "\n===\n";
+		    if (rFactors[i].getAgeOfOnset()!=null) {
+			reminders += "\nAge of Onset: " + rFactors[i].getAgeOfOnset().toString();
+		    }
+		    if (rFactors[i].getStartDate()!=null) {
+			reminders += "\nStart Date: " + getDateFullPartial(rFactors[i].getStartDate());
+		    }
+		    if (rFactors[i].getEndDate()!=null) {
+			reminders += "\nEnd Date: " + getDateFullPartial(rFactors[i].getEndDate());
+		    }
+		    if (rFactors[i].getExposureDetails()!=null) {
+			reminders += "\nExposure Details: " + rFactors[i].getExposureDetails();
+		    }
+		    if (rFactors[i].getNotes()!=null) {
+			reminders += "\nNotes: " + rFactors[i].getNotes();
+		    }
+		    if (rFactors[i].getRiskFactor()!=null) {
+			reminders += "\nRisk Factor: " + rFactors[i].getRiskFactor();
+		    }
+		    reminders += reminders.equals("") ? "" : "\n===\n";
 		}
 		//CLINICAL NOTES
 		cds.ClinicalNotesDocument.ClinicalNotes[] cNotes = patientRec.getClinicalNotesArray();
 		for (int i=0; i<cNotes.length; i++) {
-		    if (cNotes[i].getMyClinicalNotesContent()!=null) encounter += cNotes[i].getMyClinicalNotesContent() + "\n===\n";
-
-    /* Non-mandatory fields; not match in case of multiple Notes; disabled import here to avoid confusions.
-		    if (cNotes[i].getEnteredDateTime()!=null) timeStamp = cNotes[i].getEnteredDateTime().getDateTime().getTime();
+		    if (cNotes[i].getMyClinicalNotesContent()!=null) {
+			encounter += cNotes[i].getMyClinicalNotesContent();
+		    }
+		    if (cNotes[i].getNoteType()!=null) {
+			encounter += "\nNote Type: " + cNotes[i].getNoteType();
+		    }
+		    if (cNotes[i].getEnteredDateTime()!=null) {
+			encounter += "\nEntered DateTime: " + getDateFullPartial(cNotes[i].getEnteredDateTime());
+		    }
+		    if (cNotes[i].getEventDateTime()!=null) {
+			encounter += "\nEvent DateTime: " + getDateFullPartial(cNotes[i].getEventDateTime());
+		    }
 		    if (cNotes[i].getPrincipalAuthor()!=null) {
-			cds.ClinicalNotesDocument.ClinicalNotes.PrincipalAuthor pAuthor = cNotes[i].getPrincipalAuthor();
-			if (pAuthor.getOHIPPhysicianId()!=null) providerNo = provD.getProviderNoByOhip(pAuthor.getOHIPPhysicianId());
-			if (providerNo==null) {   //this is a new provider
-			    providerNo = provD.getNewExtProviderNo();
-			    provD.addProvider(providerNo, pAuthor.getName().getFirstName(), pAuthor.getName().getLastName(), pAuthor.getOHIPPhysicianId());
+			cds.ClinicalNotesDocument.ClinicalNotes.PrincipalAuthor cpAuthor = cNotes[i].getPrincipalAuthor();
+			encounter += "\nPrincipal Author -";
+			String cpaName = "";
+			if (cpAuthor.getName().getFirstName()!=null) cpaName += cpAuthor.getName().getFirstName();
+			if (cpAuthor.getName().getLastName()!=null) cpaName += cpAuthor.getName().getLastName();
+			encounter += cpaName.equals("") ? "" : "\nName: " + cpaName;
+			encounter += cpAuthor.getOHIPPhysicianId().equals("") ? "" : "\nOHIP ID: " + cpAuthor.getOHIPPhysicianId();
+			if (cNotes[i].getPrincipalAuthorFunction()!=null) {
+			    encounter += "\nFunction: " + cNotes[i].getPrincipalAuthorFunction();
 			}
 		    }
-     */
+		    if (cNotes[i].getSignedDateTime()!=null) {
+			encounter += "\nSigned DateTime: " + getDateFullPartial(cNotes[i].getSignedDateTime());
+		    }
+		    if (cNotes[i].getSigningOHIPPhysicianId()!=null) {
+			encounter += "\nSigning Physician OHIP Id: " + cNotes[i].getSigningOHIPPhysicianId();
+		    }
+		    encounter += encounter.equals("") ? "" : "\n===\n";
 		}
 		Echart ec = new Echart();
 		ec.setDemographicNo(demoNo);
@@ -554,16 +671,10 @@ public class ImportDemographicDataAction2 extends Action {
 			errorMsg = "No Summary for Allergies & Adverse Reactions ("+(i+1)+")";
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
-		    if (aaReactArray[i].getReaction()!=null) {
-			reaction = aaReactArray[i].getReaction();
-			if (!aSummary.equals("")) {
-			    summaryGood = "No";
-			    errorMsg = "Allergies Summary not imported ("+(i+1)+")";
-			    errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
-			}
-		    } else if (!aSummary.equals("")) {
-			reaction = aSummary;
-			errorMsg = "Note: Allergies Summary imported as [reaction] ("+(i+1)+")";
+		    if (aaReactArray[i].getReaction()!=null) reaction = aaReactArray[i].getReaction();
+		    if (!aSummary.equals("")) {
+			reaction += reaction.equals("") ? aSummary : "\n"+aSummary;
+			errorMsg = "Note: Allergies Summary imported in [reaction] ("+(i+1)+")";
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
 		    if (aaReactArray[i].getOffendingAgentDescription()!=null) description = aaReactArray[i].getOffendingAgentDescription();
@@ -573,6 +684,24 @@ public class ImportDemographicDataAction2 extends Action {
 			String aStartDate = "Start Date: " + getDateFullPartial(aaReactArray[i].getStartDate());
 			reaction += reaction.equals("") ? aStartDate : "\n"+aStartDate;
 			errorMsg = "Note: Allergies Start Date imported in [reaction] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+		    }
+		    if (aaReactArray[i].getReactionType()!=null) {
+			String aRType = "Reaction Type: " + aaReactArray[i].getReactionType().toString();
+			reaction += reaction.equals("") ? aRType : "\n"+aRType;
+			errorMsg = "Note: Allergies Reaction Type imported in [reaction] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+		    }
+		    if (aaReactArray[i].getKnownAllergies()!=null) {
+			String knownAl = "Known Allergles: ";
+			if (aaReactArray[i].getKnownAllergies().getYnIndicatorsimple()==cdsDt.YnIndicatorsimple.Y ||
+			    aaReactArray[i].getKnownAllergies().getYnIndicatorsimple()==cdsDt.YnIndicatorsimple.Y_2)
+			    knownAl += "Yes";
+			else if (aaReactArray[i].getKnownAllergies().getBoolean()) knownAl += "Yes";
+			else knownAl += "No";
+			
+			reaction += reaction.equals("") ? knownAl : "\n"+knownAl;
+			errorMsg = "Note: Known Allergies Indicator imported in [reaction] ("+(i+1)+")";
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
 		    if (aaReactArray[i].getCode()!=null) {
@@ -589,6 +718,25 @@ public class ImportDemographicDataAction2 extends Action {
 			reaction += reaction.equals("") ? aNotes : "\n"+aNotes;
 			errorMsg = "Note: Allergies Notes imported in [reaction] ("+(i+1)+")";
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+		    }
+		    if (aaReactArray[i].getHealthcarePractitionerType()!=null) {
+			String aHPType = "Healthcare Practitioner Type: " + aaReactArray[i].getHealthcarePractitionerType().toString();
+			reaction += reaction.equals("") ? aHPType : "\n"+aHPType;
+			errorMsg = "Note: Allergies Healthcare Practitioner Type imported in [reaction] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+		    }
+		    if (aaReactArray[i].getResidualInfo()!=null) {
+			cdsDt.ResidualInformation.DataElement[] aRes = aaReactArray[i].getResidualInfo().getDataElementArray();
+			for (int j=0; j<aRes.length; j++) {
+			    if (aRes[j].getName()!=null) {
+				reaction += "\nData Name: " + aRes[j].getName();
+				reaction += aRes[j].getDescription()!=null ? "\nDescription: " + aRes[j].getDescription() : "";
+				reaction += aRes[j].getDataType()!=null ? "\nData Type: " + aRes[j].getDataType() : "";
+				reaction += aRes[j].getContent()!=null ? "\nContent: " + aRes[j].getContent() : "";
+				errorMsg = "Note: Allergies Residual Info imported in [reaction] ("+(i+1)+")";
+				errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+			    }
+			}
 		    }
 		    if (aaReactArray[i].getOffendingAgentDescription()!=null) 
 		    if (aaReactArray[i].getPropertyOfOffendingAgent()!=null) {
@@ -625,41 +773,56 @@ public class ImportDemographicDataAction2 extends Action {
 			errorMsg = "No Summary for Medications & Treatments ("+(i+1)+")";
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
-		    if (medArray[i].getPrescriptionInstructions()!=null) {
-			special = medArray[i].getPrescriptionInstructions();
-			if (!mSummary.equals("")) {
-			    summaryGood = "No";
-			    errorMsg = "Medications Summary not imported ("+(i+1)+")";
-			    errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
-			}
-		    } else if (!mSummary.equals("")) {
-			special = mSummary;
-			errorMsg = "Note: Medications Summary imported as [special] ("+(i+1)+")";
-			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
-		    }
 		    if (medArray[i].getPrescriptionWrittenDate()!=null) createDate = getDateFullPartial(medArray[i].getPrescriptionWrittenDate());
 		    if (medArray[i].getStartDate()!=null) rxDate = getDateFullPartial(medArray[i].getStartDate());
 		    if (medArray[i].getEndDate()!=null) endDate = getDateFullPartial(medArray[i].getEndDate());
-		    if (medArray[i].getDrugIdentificationNumber()!=null) regionalId = medArray[i].getDrugIdentificationNumber();
 		    if (medArray[i].getDrugName()!=null) {
 			BN = medArray[i].getDrugName();
+			special = medArray[i].getDrugName();
 		    } else {
 			dataGood = "No";
 			errorMsg = "No Drug Name in Medications & Treatments ("+(i+1)+")";
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
+		    if (medArray[i].getDrugIdentificationNumber()!=null) {
+			regionalId = medArray[i].getDrugIdentificationNumber();
+			special += special.equals("") ? medArray[i].getDrugIdentificationNumber() : "\n"+medArray[i].getDrugIdentificationNumber();
+		    }
+		    if (medArray[i].getPrescriptionInstructions()!=null) {
+			special += special.equals("") ? medArray[i].getPrescriptionInstructions() : "\n"+medArray[i].getPrescriptionInstructions();
+		    }
+		    if (!mSummary.equals("")) {
+			special += special.equals("") ? mSummary : "\n"+mSummary;
+			errorMsg = "Note: Medications Summary imported in [special] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+		    }
 		    if (medArray[i].getNumberOfRefills()!=null) repeat = Integer.parseInt(medArray[i].getNumberOfRefills());
-		    if (medArray[i].getRoute()!=null) route = medArray[i].getRoute();
-		    if (medArray[i].getLastRefillDate()!=null) {
-			String lastRefill = "Last Refill Date: " + getDateFullPartial(medArray[i].getLastRefillDate());
-			special += special.equals("") ? lastRefill : "\n"+lastRefill;
-			errorMsg = "Note: Medication Last Refill Date imported in [special] ("+(i+1)+")";
+		    if (medArray[i].getRoute()!=null) {
+			route = medArray[i].getRoute();
+			special += special.equals("") ? "Route: "+route : "\nRoute: "+route;
+			errorMsg = "Note: Medication Route imported in [special] ("+(i+1)+")";
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
 		    if (medArray[i].getForm()!=null) {
 			String mForm = "Form: " + medArray[i].getForm();
 			special += special.equals("") ? mForm : "\n"+mForm;
 			errorMsg = "Note: Medication Form imported in [special] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+		    }
+		    if (medArray[i].getDosage()!=null) {
+			String mDosage = "Dosage: " + medArray[i].getDosage();
+			special += special.equals("") ? mDosage : "\n"+mDosage;
+			errorMsg = "Note: Medication Dosage imported in [special] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+		    }
+		    if (medArray[i].getQuantity()!=null) {
+			String mQty = "Quantity: " + medArray[i].getQuantity();
+			special += special.equals("") ? mQty : "\n"+mQty;
+		    }
+		    if (medArray[i].getLastRefillDate()!=null) {
+			String lastRefill = "Last Refill Date: " + getDateFullPartial(medArray[i].getLastRefillDate());
+			special += special.equals("") ? lastRefill : "\n"+lastRefill;
+			errorMsg = "Note: Medication Last Refill Date imported in [special] ("+(i+1)+")";
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
 		    if (medArray[i].getNotes()!=null) {
@@ -701,6 +864,19 @@ public class ImportDemographicDataAction2 extends Action {
 			errorMsg = "Note: Past Medication indicator imported in [special] ("+(i+1)+")";
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
+		    if (medArray[i].getResidualInfo()!=null) {
+			cdsDt.ResidualInformation.DataElement[] mRes = medArray[i].getResidualInfo().getDataElementArray();
+			for (int j=0; j<mRes.length; j++) {
+			    if (mRes[j].getName()!=null) {
+				special += "\nData Name: " + mRes[j].getName();
+				special += mRes[j].getDescription()!=null ? "\nDescription: " + mRes[j].getDescription() : "";
+				special += mRes[j].getDataType()!=null ? "\nData Type: " + mRes[j].getDataType() : "";
+				special += mRes[j].getContent()!=null ? "\nContent: " + mRes[j].getContent() : "";
+				errorMsg = "Note: Medication Residual Info imported in [special] ("+(i+1)+")";
+				errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+			    }
+			}
+		    }
 		    if (medArray[i].getStrength()!=null) {
 			dosage = medArray[i].getStrength().getAmount()!=null ? medArray[i].getStrength().getAmount() : "";
 			unit = medArray[i].getStrength().getUnitOfMeasure()!=null ? medArray[i].getStrength().getUnitOfMeasure() : "";
@@ -717,8 +893,8 @@ public class ImportDemographicDataAction2 extends Action {
 			    provD.addProvider(providerNo, presb.getName().getFirstName(), presb.getName().getLastName(), presb.getOHIPPhysicianId());
 			}
 		    }
-		    RxPrescriptionImport rpi = new RxPrescriptionImport(providerNo,demoNo,rxDate,endDate,BN,
-			regionalId,frequencyCode,duration,quantity,repeat,special,route,createDate,dosage,unit);
+		    RxPrescriptionImport rpi = new RxPrescriptionImport(providerNo,demoNo,rxDate,endDate,BN,regionalId,
+					frequencyCode,duration,quantity,repeat,special,route,createDate,dosage,unit,(i+1));
 		    rpi.Save();
 		}
 
@@ -751,13 +927,11 @@ public class ImportDemographicDataAction2 extends Action {
 		    } else if (immuArray[i].getRefusedFlag().getBoolean()) refused = "1";
 
 		    if (immuArray[i].getManufacturer()!=null) {
-System.out.println("Ronnie: manu="+immuArray[i].getManufacturer());
 			Hashtable ht = new Hashtable();
 			ht.put("manufacture", immuArray[i].getManufacturer());
 			preventionExt.add(ht);
 		    }
 		    if (immuArray[i].getLotNumber()!=null) {
-System.out.println("Ronnie: lot="+immuArray[i].getLotNumber());
 			Hashtable ht = new Hashtable();
 			ht.put("lot", immuArray[i].getLotNumber());
 			preventionExt.add(ht);
@@ -777,9 +951,8 @@ System.out.println("Ronnie: lot="+immuArray[i].getLotNumber());
 		    if (immuArray[i].getCategorySummaryLine()!=null) {
 			iSummary = immuArray[i].getCategorySummaryLine();
 			if (!otherName.equals("")){   //JRG
-			    comments += "Imm: "+otherName +" ";  //JRG
+			    comments += "Imm: "+otherName + "\n";  //JRG
 			}   //JRG
-			comments += immuArray[i].getCategorySummaryLine(); //JRG
 		    } else {
 			summaryGood = "No";
 			errorMsg = "No Summary for Immunizations ("+(i+1)+")";
@@ -787,16 +960,28 @@ System.out.println("Ronnie: lot="+immuArray[i].getLotNumber());
 		    }
 		    if (immuArray[i].getNotes()!=null) {
 			comments += immuArray[i].getNotes();
-			/*
-			if (!iSummary.equals("")) {
-			    summaryGood = "No";
-			    errorMsg = "Immunization Summary not imported ("+(i+1)+")";
-			    errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
-			}
-			 */
 		    } else if (!iSummary.equals("")) {
-			comments = iSummary;
-			errorMsg = "Note: Immunization Summary imported as [comments] ("+(i+1)+")";
+			comments += "\n"+iSummary;
+			errorMsg = "Note: Immunization Summary imported in [comments] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+		    }
+		    if (immuArray[i].getImmunizationCode()!=null) {
+			cdsDt.Code iCode = immuArray[i].getImmunizationCode();
+			String iCodeStr = iCode.getCodingSystem()!=null ? "\nCoding System: "+iCode.getCodingSystem() : "";
+			iCodeStr += iCode.getDescription()!=null ? "\nDescription: "+iCode.getDescription() : "";
+			iCodeStr += iCode.getValue()!=null ? "\nValue: "+iCode.getValue() : "";
+			comments += comments.equals("") ? iCodeStr : "\n"+iCodeStr;
+			errorMsg = "Note: Immunization Code imported in [comments] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+		    }
+		    if (immuArray[i].getDose()!=null) {
+			comments += "\nDose: " + immuArray[i].getDose();
+			errorMsg = "Note: Immunization Dose imported in [comments] ("+(i+1)+")";
+			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+		    }
+		    if (immuArray[i].getInstructions()!=null) {
+			comments += "\nInstructions: " + immuArray[i].getInstructions();
+			errorMsg = "Note: Immunization Instructions imported in [comments] ("+(i+1)+")";
 			errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 		    }
 		    if (!comments.equals("")) {
@@ -804,10 +989,22 @@ System.out.println("Ronnie: lot="+immuArray[i].getLotNumber());
 			ht.put("comments", comments);
 			preventionExt.add(ht);
 		    }
+		    if (immuArray[i].getResidualInfo()!=null) {
+			cdsDt.ResidualInformation.DataElement[] iRes = immuArray[i].getResidualInfo().getDataElementArray();
+			for (int j=0; j<iRes.length; j++) {
+			    if (iRes[j].getName()!=null) {
+				comments += "\nData Name: " + iRes[j].getName();
+				comments += iRes[j].getDescription()!=null ? "\nDescription: " + iRes[j].getDescription() : "";
+				comments += iRes[j].getDataType()!=null ? "\nData Type: " + iRes[j].getDataType() : "";
+				comments += iRes[j].getContent()!=null ? "\nContent: " + iRes[j].getContent() : "";
+				errorMsg = "Note: Immunization Residual Info imported in [comments] ("+(i+1)+")";
+				errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+			    }
+			}
+		    }
 		    PreventionData prevD = new PreventionData();
 		    prevD.insertPreventionData(providerNo, demoNo, preventionDate, providerNo, providerName, preventionType, refused, "", "", preventionExt);
 		}
-
 
 		//LABORATORY RESULTS
 		cds.LaboratoryResultsDocument.LaboratoryResults[] labResultArray = patientRec.getLaboratoryResultsArray();
@@ -857,6 +1054,10 @@ System.out.println("Ronnie: lot="+immuArray[i].getLotNumber());
 			pre_accession_num = accession_num;
 		    }
 		    lri.SaveLabTR(testName, abn, minimum, maximum, result, unit, description, location, ppId);
+                    String labEverything = getLabDline(labResultArray[i]);
+                    if (labEverything != null && !labEverything.equals("")){
+                       lri.SaveLabDesc(labEverything,ppId);
+                    }
 		    lri.savePatientLR(demoNo, ppId);
 		}
 
@@ -1142,6 +1343,83 @@ System.out.println("Ronnie: lot="+immuArray[i].getLotNumber());
        }
        return ret;
     }
+    
+String appendIfNotNull(StringBuffer s, String name, String object){
+        if (object != null){
+            s.append(name+": "+object);
+        }
+    }
+    String getLabDline( cds.LaboratoryResultsDocument.LaboratoryResults labRes){
+        StringBuffer s = new StringBuffer();
+        appendIfNotNull(s,"LaboratoryName",labRes.getLaboratoryName());
+        appendIfNotNull(s,"TestNameReportedByLab", labRes.getTestNameReportedByLab());
+        appendIfNotNull(s,"LabTestCode",labRes.getLabTestCode()); 
+appendIfNotNull(s,"TestName", labRes.getTestName());
+appendIfNotNull(s,"AccessionNumber",labRes.getAccessionNumber());
+        
+        if (labRes.getResult ()!=null) {
+            appendIfNotNull(s,"Value",labRes.getResult().getValue());
+            appendIfNotNull(s,"UnitOfMeasure",labRes.getResult().getUnitOfMeasure());
+}   
+        if (labRes.getReferenceRange()!=null) {
+            cds.LaboratoryResultsDocument.LaboratoryResults.ReferenceRange ref = labRes.getReferenceRange();
+            appendIfNotNull(s,"LowLimit",ref.getLowLimit());
+            appendIfNotNull(s,"HighLimit",ref.getHighLimit());
+            appendIfNotNull(s,"ReferenceRangeText", ref.getReferenceRangeText());                                             
+}
+        
+//<xs:element name="LabRequisitionDateTime" type="cdsd:dateTimeYYYYMMDDHHMM" minOccurs="0"/>
+        appendIfNotNull(s,"LabRequisitionDateTime",getDateFullPartial(labRes.getLabRequisitionDateTime ()));     
+//<xs:element name="CollectionDateTime" type="cdsd:dateTimeYYYYMMDDHHMM"/>
+        appendIfNotNull(s,"CollectionDateTime",getDateFullPartial( labRes.getCollectionDateTime()));     
+//<xs:element name="DateTimeResultReceivedByCMS" type="cdsd:dateTimeYYYYMMDDHHMM" minOccurs="0"/>
+        appendIfNotNull(s,"DateTimeResultReceivedByCMS",getDateFullPartial(labRes.getDateTimeResultReceivedByCMS()));     
+//<xs:element name="DateTimeResultReviewed" type="cdsd:dateTimeYYYYMMDDHHMM" minOccurs="0"/>
+        appendIfNotNull(s,"DateTimeResultReviewed",getDateFullPartial(labRes.getDateTimeResultReviewed()));     
+        
+        if (labRes.getResultReviewer() != null){ //ResultReviewer){
+//<xs:element name="ResultReviewer" type="cdsd:ohipBillingNumber" minOccurs="0"/>
+        appendIfNotNull(s,"Reviewer First Name:", labRes.getResultReviewer().getName().getFirstName());
+        appendIfNotNull(s,"Reviewer Last Name:",labRes.getResultReviewer().getName().getLastName());
+        appendIfNotNull(s,"OHIP ID :", labRes.getResultReviewer().getOHIPPhysicianId());
+        }
+//<xs:element name="ResultNormalAbnormalFlag">xs:restriction base="xs:token"> xs:enumeration value="Y"/><xs:enumeration value="N"/<xs:enumeration value="U"/>
+        appendIfNotNull(s,"ResultNormalAbnormalFlag",""+labRes.getResultNormalAbnormalFlag());     
+//<xs:element name="TestResultsInformationreportedbytheLaboratory" type="cdsd:text32K"/>
+        appendIfNotNull(s,"TestResultsInformationreportedbytheLaboratory",labRes.getTestResultsInformationReportedByTheLab());     
+//<xs:element name="NotesFromLab" type="cdsd:text32K" minOccurs="0"/>
+        appendIfNotNull(s,"NotesFromLab",labRes.getNotesFromLab());     
+//<xs:element name="PhysiciansNotes" type="cdsd:text32K" minOccurs="0"/>
+        appendIfNotNull(s,"PhysiciansNotes",labRes.getPhysiciansNotes());     
+        
+        /*
+         <xs:element name="LaboratoryName" <xs:restriction base="cdsd:text"xs:maxLength value="120"/>
+<xs:element name="TestNameReportedByLab" minOccurs="0">xs:restriction base="xs:token"xs:maxLength value="120"/>
+<xs:element name="LabTestCode" minOccurs="0"xs:restriction base="xs:token"xs:maxLength value="50"/>
+<xs:element name="TestName" minOccurs="0"xs:restriction base="cdsd:text"xs:maxLength value="120"/>
+<xs:element name="AccessionNumber" minOccurs="0"xs:restriction base="cdsd:text"xs:maxLength value="120"/>
+<xs:element name="Result" minOccurs="0"
+<xs:all>
+<xs:element name="Value" type="cdsd:labResultValue"/>
+<xs:element name="UnitOfMeasure" type="xs:token"/>
+<xs:element name="ReferenceRange" minOccurs="0"
+<xs:element name="LowLimit" type="cdsd:labResultValue"/>
+<xs:element name="HighLimit" type="cdsd:labResultValue"/>
+<xs:element name="ReferenceRangeText">xs:restriction base="cdsd:text"> xs:maxLength value="1024"/>
+<xs:element name="LabRequisitionDateTime" type="cdsd:dateTimeYYYYMMDDHHMM" minOccurs="0"/>
+<xs:element name="CollectionDateTime" type="cdsd:dateTimeYYYYMMDDHHMM"/>
+<xs:element name="DateTimeResultReceivedByCMS" type="cdsd:dateTimeYYYYMMDDHHMM" minOccurs="0"/>
+<xs:element name="DateTimeResultReviewed" type="cdsd:dateTimeYYYYMMDDHHMM" minOccurs="0"/>
+<xs:element name="ResultReviewer" type="cdsd:ohipBillingNumber" minOccurs="0"/>
+<xs:element name="ResultNormalAbnormalFlag">xs:restriction base="xs:token"> xs:enumeration value="Y"/><xs:enumeration value="N"/<xs:enumeration value="U"/>
+<xs:element name="TestResultsInformationreportedbytheLaboratory" type="cdsd:text32K"/>
+<xs:element name="NotesFromLab" type="cdsd:text32K" minOccurs="0"/>
+<xs:element name="PhysiciansNotes" type="cdsd:text32K" minOccurs="0"/>
+         */
+return s.toString();
+    }
+    
+    
     
     public ImportDemographicDataAction2() {
    }
