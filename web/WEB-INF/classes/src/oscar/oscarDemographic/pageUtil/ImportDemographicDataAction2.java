@@ -1008,7 +1008,7 @@ public class ImportDemographicDataAction2 extends Action {
 
 		//LABORATORY RESULTS
 		cds.LaboratoryResultsDocument.LaboratoryResults[] labResultArray = patientRec.getLaboratoryResultsArray();
-		String pre_accession_num="", ppId="";
+		String pre_accession_num="-1", ppId="";
 		for (int i=0; i<labResultArray.length; i++) {
 		    String testName="", abn="", minimum="", maximum="", result="", unit="", description="", location="";
 		    String accession_num="", coll_date="";
