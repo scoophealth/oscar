@@ -81,12 +81,12 @@ public class RxPrescriptionImport {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "INSERT INTO drugs (provider_no, demographic_no, rx_date, end_date, BN, " +
 		    "regional_identifier, freqcode, duration, durunit, quantity, special, route, " +
-		    "create_date, dosage, unit, `repeat`, nosubs, prn, archived, GCN_SEQNO) VALUES ('" +
+		    "create_date, dosage, unit, `repeat`, nosubs, prn, archived, GCN_SEQNO, custom_instructions) VALUES ('" +
 		    this.providerNo + "','" + this.demographicNo + "','" + this.rxDate + "','" + this.endDate + "','" + 
 		    this.BN + "','" + this.regionalId + "','" + this.frequencyCode + "','" + this.duration + "','" + 
 		    this.durationUnit + "','" + this.quantity + "','" + this.special + "','" + this.route + "','" + 
 		    this.createDate + "','" + this.dosage + "','" + this.unit + "'," + 
-		    this.repeat + "," + this.nosubs + "," + this.prn + "," + this.archived + "," + this.seq_no + ")";
+		    this.repeat + "," + this.nosubs + "," + this.prn + "," + this.archived + "," + this.seq_no + ",1)";
 	    
 	    db.RunSQL(sql);
             db.CloseConn();
