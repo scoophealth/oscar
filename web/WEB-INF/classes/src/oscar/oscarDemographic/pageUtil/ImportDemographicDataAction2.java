@@ -1344,11 +1344,12 @@ public class ImportDemographicDataAction2 extends Action {
        return ret;
     }
     
-String appendIfNotNull(StringBuffer s, String name, String object){
+void appendIfNotNull(StringBuffer s, String name, String object){
         if (object != null){
             s.append(name+": "+object);
         }
     }
+
     String getLabDline( cds.LaboratoryResultsDocument.LaboratoryResults labRes){
         StringBuffer s = new StringBuffer();
         appendIfNotNull(s,"LaboratoryName",labRes.getLaboratoryName());

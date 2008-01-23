@@ -53,10 +53,11 @@ public class RxPrescriptionImport {
     String createDate = "";
     String dosage = "";
     String unit = "";
+    int seq_no = 1;
     
     public RxPrescriptionImport(String providerNo, String demographicNo, String rxDate, String endDate,
-	    String BN, String regionalId, String frequencyCode, String duration, String quantity,
-	    int repeat, String special, String route, String createDate, String dosage, String unit) {
+	    String BN, String regionalId, String frequencyCode, String duration, String quantity, int repeat, 
+	    String special, String route, String createDate, String dosage, String unit, int seq_no) {
 	this.providerNo = providerNo;
 	this.demographicNo = demographicNo;
 	this.rxDate = rxDate;
@@ -72,6 +73,7 @@ public class RxPrescriptionImport {
 	this.createDate = createDate;
 	this.dosage = dosage;
 	this.unit = unit;
+	this.seq_no = seq_no;
     }
     
     public void Save() {
@@ -82,9 +84,9 @@ public class RxPrescriptionImport {
 		    "create_date, dosage, unit, `repeat`, nosubs, prn, archived, GCN_SEQNO) VALUES ('" +
 		    this.providerNo + "','" + this.demographicNo + "','" + this.rxDate + "','" + this.endDate + "','" + 
 		    this.BN + "','" + this.regionalId + "','" + this.frequencyCode + "','" + this.duration + "','" + 
-		    this.durationUnit + "','" + this.quantity + "','" + this.special + "','" + 
-		    this.route + "','" + this.createDate + "','" + this.dosage + "','" + this.unit + "'," + 
-		    this.repeat + "," + this.nosubs + "," + this.prn + "," + this.archived + ",1)";
+		    this.durationUnit + "','" + this.quantity + "','" + this.special + "','" + this.route + "','" + 
+		    this.createDate + "','" + this.dosage + "','" + this.unit + "'," + 
+		    this.repeat + "," + this.nosubs + "," + this.prn + "," + this.archived + "," + this.seq_no + ")";
 	    
 	    db.RunSQL(sql);
             db.CloseConn();

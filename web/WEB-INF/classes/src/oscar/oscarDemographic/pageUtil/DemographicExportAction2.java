@@ -432,8 +432,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			} else date_index = -1;
 		    }
 		    if (date_index==-1) {
-			pList.addNewOnsetDate();
-			err.add("Error: Missing Onset Date (Problem List) for Patient "+demoNo+" ("+(j+1)+")");
+			pList.addNewOnsetDate().setFullDate(getCalDate(UtilDateUtilities.StringToDate("1900-01-01")));
+			err.add("Error: Missing Onset Date (Problem List) for Patient "+demoNo+" ("+(j+1)+"). Exporting as \"1900-01-01\"");
 		    }
 		}
 	    }
