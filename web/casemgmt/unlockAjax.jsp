@@ -19,6 +19,7 @@
 
     <c:if test="${success}">    
         <img title="Minimize Display" id='quitImg<c:out value="${Note.id}"/>' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
+        <img title="Print" id='print<c:out value="${Note.id}"/>' alt="Toggle Print Note" onclick="togglePrint(<c:out value="${Note.id}"/>, event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>
         <pre><c:out value="${Note.note}"/></pre>
         <div id="sig<c:out value="${Note.id}"/>">
             <div class="sig" id="sumary<c:out value="${Note.id}"/>">
