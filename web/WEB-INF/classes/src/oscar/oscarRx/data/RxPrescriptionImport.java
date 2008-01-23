@@ -44,7 +44,7 @@ public class RxPrescriptionImport {
     String duration = "";
     String durationUnit = "D";
     String quantity = "";
-    String repeat = "";
+    int repeat = 0;
     String special = "";
     boolean nosubs = false;
     boolean prn = false;
@@ -56,9 +56,9 @@ public class RxPrescriptionImport {
     
     public RxPrescriptionImport(String providerNo, String demographicNo, String rxDate, String endDate,
 	    String BN, String regionalId, String frequencyCode, String duration, String quantity,
-	    String repeat, String special, String route, String createDate, String dosage, String unit) {
+	    int repeat, String special, String route, String createDate, String dosage, String unit) {
 	this.providerNo = providerNo;
-	this.demographicNo = "";
+	this.demographicNo = demographicNo;
 	this.rxDate = rxDate;
 	this.endDate = endDate;
 	this.BN = BN;
@@ -74,25 +74,22 @@ public class RxPrescriptionImport {
 	this.unit = unit;
     }
     
-    public boolean Save() {
-        boolean b = false;
+    public void Save() {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs;
             String sql = "INSERT INTO drugs (provider_no, demographic_no, rx_date, end_date, BN, " +
-		    "regional_identifier, freqcode, duration, durunit, quantity, repeat, special, route, " +
-		    "create_date, dosage, unit, nosubs, prn, archived) VALUES ('" +
-		    this.providerNo + "','" + this. demographicNo + "','" + this.rxDate + "','" + "','" +
-		    this.endDate + "','" + this.BN + "','" + this.regionalId + "','" + this.frequencyCode + "','" +
-		    this.duration + "','" + this.durationUnit + "','" + this.quantity + "','" + this.repeat + "','" + 
-		    this.special + "','" + this.route + "','" + this.createDate + "','" + this.dosage + "','" + 
-		    this.unit + "'," + this.nosubs + "," + this.prn + "," + this.archived + ")";
-                    
-	    b = db.RunSQL(sql);
+		    "regional_identifier, freqcode, duration, durunit, quantity, special, route, " +
+		    "create_date, dosage, unit, `repeat`, nosubs, prn, archived, GCN_SEQNO) VALUES ('" +
+		    this.providerNo + "','" + this.demographicNo + "','" + this.rxDate + "','" + this.endDate + "','" + 
+		    this.BN + "','" + this.regionalId + "','" + this.frequencyCode + "','" + this.duration + "','" + 
+		    this.durationUnit + "','" + this.quantity + "','" + this.special + "','" + 
+		    this.route + "','" + this.createDate + "','" + this.dosage + "','" + this.unit + "'," + 
+		    this.repeat + "," + this.nosubs + "," + this.prn + "," + this.archived + ",1)";
+	    
+	    db.RunSQL(sql);
             db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return b;
     }
 }
