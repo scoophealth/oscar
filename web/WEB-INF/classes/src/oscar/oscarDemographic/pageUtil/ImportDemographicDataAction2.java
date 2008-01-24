@@ -1166,6 +1166,11 @@ public class ImportDemographicDataAction2 extends Action {
 			    String docDesc = docFileName;
 			    
 			    String docDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+			    if (docDir==null || docDir.trim().equals("")) {
+				throw new Exception("Document Directory not set! Check oscar.properties.");
+			    } else {
+				if (docDir.charAt(docDir.length()-1)!='/') docDir = docDir + '/';
+			    }
 			    FileOutputStream f = new FileOutputStream(docDir+docFileName);
 			    f.write(b);
 			    f.close();

@@ -855,7 +855,7 @@ public class DemographicData {
                add_record.setString(6,postal);
                add_record.setString(7,phone);
                add_record.setString(8,phone2);
-               add_record.setString(9,"");
+               add_record.setString(9,email);
                add_record.setString(10,"");
                add_record.setString(11,year_of_birth);
                add_record.setString(12,month_of_birth);
