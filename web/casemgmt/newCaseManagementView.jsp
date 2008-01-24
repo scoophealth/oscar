@@ -1123,7 +1123,7 @@ function newNote(e) {
         Element.observe(caseNote, 'keyup', monitorCaseNote);
         Element.observe(caseNote, 'click', getActiveText);
 
-        origCaseNote = "";        
+        origCaseNote = $F(caseNote);        
         ajaxUpdateIssues("edit", sigId); 
         addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, sigId);
         Element.observe('asgnIssues', 'click', addIssueFunc);        
