@@ -114,7 +114,7 @@ public class MyDateFormat {
 	}
 
 	// Convert yyyy/mm/dd or yyyy-mm-dd or yyyymmdd to System format, used to pickup screen values
-    public static java.sql.Date GetSysDate(String pDate)
+    public static java.sql.Date getSysDate(String pDate)
     {
         if (pDate == null || "".equals(pDate)) return null;
         if ("TODAY".equals(pDate.toUpperCase())) return new java.sql.Date(new Date().getTime());
