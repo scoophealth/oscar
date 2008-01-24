@@ -6,10 +6,12 @@ import java.sql.Date;
 public class DBPreparedHandlerParam {
    private Date dateValue;
    private String stringValue;
+   private int intValue;
    private String paramType;
 
    public static String PARAM_STRING = "String";
    public static String PARAM_DATE = "Date";
+   public static String PARAM_INT = "Int";
 
    public DBPreparedHandlerParam(String stringValue){
 	   this.stringValue= stringValue;
@@ -24,8 +26,19 @@ public class DBPreparedHandlerParam {
 	   this.paramType=PARAM_DATE;
    }
 
+   public DBPreparedHandlerParam(int intValue){
+	   this.intValue= intValue;
+	   this.stringValue = "";
+	   this.dateValue=null;
+	   this.paramType=PARAM_INT;
+   }
+
    public Date getDateValue() {
 	  return dateValue;
+   }
+
+   public int getIntValue() {
+		  return intValue;
    }
 
 //   public void setDateValue(Date dateValue) {
