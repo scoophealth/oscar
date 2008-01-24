@@ -268,9 +268,39 @@ public class BedManager {
             
         }
         return bedList.toArray(new Bed[bedList.size()]);
-        
     }
-
+    
+    /**
+	 * Used by AdmissionManager during processDischarge()  to  delete discharged 
+	 * program-related room/bed reservation records
+     * @param demographicNo
+     * @param programId
+     */
+    public boolean isBedOfDischargeProgramAssignedToClient(Integer demographicNo, Integer programId){
+    	/*
+		 *(1)admission.clientId ===[table:bed_demographic]===>>  bedDemographic.bedId
+		 *(2)bedDemographic.bedId ===[table:bed]===>>  bed.roomId
+		 *(3)bed.roomId ===[table:room]===>>   room.programId
+		 *(4)Compare  admission.programId  with  room.programId
+	     *   - if true -->  delete  bedDemographic record
+		 *   - if false -->  do nothing
+    	 */
+    	if(demographicNo == null  ||  programId == null){
+    		return false;
+    	}
+    	BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(demographicNo);
+    	if(bedDemographic != null){
+	    	Bed bed = getBed(bedDemographic.getId().getBedId());
+	    	if(bed != null){
+		    	Room room = roomDAO.getRoom(bed.getRoomId());
+		    	if(room != null  &&  programId.intValue() == room.getProgramId().intValue()){
+		    		return true;
+		    	}
+	    	}
+    	}
+    	return false;
+    }
+    
     /**
      * @see org.oscarehr.PMmodule.service.BedManager#getBedTypes()
      */

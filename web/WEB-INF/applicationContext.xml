@@ -226,6 +226,9 @@
                 <property name="bedDemographicManager" ref="bedDemographicManager"/>
                 <property name="programClientStatusDAO" ref="programClientStatusDAO"/>
                 <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
+                <property name="roomManager" ref="roomManager"/>
+                <property name="bedManager" ref="bedManager"/>
+                <property name="roomDemographicManager" ref="roomDemographicManager"/>                
             </bean>
         </property>
     </bean>

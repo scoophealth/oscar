@@ -43,6 +43,9 @@ public class AdmissionManager {
 	private BedDemographicManager bedDemographicManager;
 	private ProgramClientStatusDAO programClientStatusDAO;
 	private ClientRestrictionManager clientRestrictionManager;
+	private RoomManager roomManager;
+	private BedManager bedManager;
+	private RoomDemographicManager roomDemographicManager;
 
     public List getAdmissions_archiveView(String programId, Integer demographicNo) {
 		return dao.getAdmissions_archiveView(Integer.valueOf(programId), demographicNo);
@@ -269,34 +272,52 @@ public class AdmissionManager {
 		return dao.search(searchBean);
 	}
 
-        public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason) throws AdmissionException {
-            processDischarge(programId, demographicNo, dischargeNotes, radioDischargeReason,null);
-        }
-        public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason,List<Long> dependents) throws AdmissionException {
-		
+    public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason) throws AdmissionException {
+        processDischarge(programId, demographicNo, dischargeNotes, radioDischargeReason,null);
+    }
+    
+    public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason,List<Long> dependents) throws AdmissionException {
+	
 		Admission fullAdmission = getCurrentAdmission(String.valueOf(programId), demographicNo);
-
+	
 		if (fullAdmission == null) {
 			throw new AdmissionException("Admission Record not found");
 		}
-
+	
 		fullAdmission.setDischargeDate(new Date());
 		fullAdmission.setDischargeNotes(dischargeNotes);
 		fullAdmission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
 		fullAdmission.setRadioDischargeReason(radioDischargeReason);
 		saveAdmission(fullAdmission);
-                
-                if (dependents != null){
-                    for(Long l:dependents){
-                        processDischarge(programId,new Integer(l.intValue()),dischargeNotes,radioDischargeReason,null);
-                    }
-                }
-                
-	}
-
-        public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes, String radioDischargeReason) throws AdmissionException {
-                processDischargeToCommunity(communityProgramId,demographicNo,providerNo,notes,radioDischargeReason,null);
+		
+		if(roomManager != null  &&  roomManager.isRoomOfDischargeProgramAssignedToClient(demographicNo, programId)){
+			if(roomDemographicManager != null){
+				RoomDemographic roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo);
+				if(roomDemographic != null){
+					roomDemographicManager.deleteRoomDemographic(roomDemographic);
+				}
+			}
+		}
+		
+		if(bedManager != null  &&  bedManager.isBedOfDischargeProgramAssignedToClient(demographicNo, programId)){
+			if(bedDemographicManager != null){
+				BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(demographicNo);
+				if(bedDemographic != null){
+					bedDemographicManager.deleteBedDemographic(bedDemographic);
+				}
+			}
+		}
+		
+        if (dependents != null){
+            for(Long l:dependents){
+                processDischarge(programId,new Integer(l.intValue()),dischargeNotes,radioDischargeReason,null);
+            }
         }
+    }
+
+    public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes, String radioDischargeReason) throws AdmissionException {
+            processDischargeToCommunity(communityProgramId,demographicNo,providerNo,notes,radioDischargeReason,null);
+    }
         
 	public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes, String radioDischargeReason,List<Long> dependents) throws AdmissionException {
 		Admission currentBedAdmission = getCurrentBedProgramAdmission(demographicNo);
@@ -372,6 +393,21 @@ public class AdmissionManager {
     @Required
     public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
         this.clientRestrictionManager = clientRestrictionManager;
+    }
+
+    @Required
+    public void setRoomManager(RoomManager roomManager) {
+        this.roomManager = roomManager;
+    }
+    
+    @Required
+    public void setBedManager(BedManager bedManager) {
+        this.bedManager= bedManager;
+    }
+    
+    @Required
+    public void setRoomDemographicManager(RoomDemographicManager roomDemographicManager) {
+        this.roomDemographicManager = roomDemographicManager;
     }
 
 

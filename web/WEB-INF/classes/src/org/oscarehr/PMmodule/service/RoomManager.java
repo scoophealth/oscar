@@ -316,6 +316,33 @@ public class RoomManager {
     	return false;
     }
     
+    /**
+	 * Used by AdmissionManager during processDischarge()  to  delete discharged
+     * program-related room/bed reservation records
+     * @param demographicNo
+     * @param programId
+     */
+    public boolean isRoomOfDischargeProgramAssignedToClient(Integer demographicNo, Integer programId){
+    	/*
+    	 *(1)admission.clientId ===[table:room_demographic]===>>  roomDemographic.roomId
+		 *(2)roomDemographic.roomId ===[table:room]===>>   room.programId
+		 *(3)Compare  admission.programId  with  room.programId
+		 *   - if true -->  return true -- delete  roomDemographic record
+		 *   - if false -->  return false -- do nothing
+    	 */
+    	
+    	if(demographicNo == null  ||  programId == null){
+    		return false;
+    	}
+    	RoomDemographic roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo);
+    	if(roomDemographic != null){
+ 	    	Room room = getRoom(roomDemographic.getId().getRoomId());
+	    	if(room != null  &&  programId.intValue() == room.getProgramId().intValue()){
+	    		return true;
+	    	}
+    	}
+    	return false;
+    }
     
     /**
      * Get room types
