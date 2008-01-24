@@ -626,7 +626,7 @@ public class SqlUtils {
         return(oracleFormat.format(date));
     }
     
-      
+    
     public static String addOneDay(String oldDate) throws ParseException
     {
         SimpleDateFormat isoFormat=new SimpleDateFormat("dd-MMM-yyyy");

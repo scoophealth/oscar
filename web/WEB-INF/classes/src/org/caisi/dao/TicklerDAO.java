@@ -24,6 +24,7 @@ package org.caisi.dao;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
@@ -97,8 +98,11 @@ public class TicklerDAO extends HibernateDaoSupport {
     
     public int getActiveTicklerCount(String providerNo){
         ArrayList paramList = new ArrayList();
-        String query = "select count(*) from Tickler t where t.status = 'A' and t.service_date <= ? and t.task_assigned_to  = '"+ providerNo +"' ";
-        paramList.add(new Date());
+        String query = "select count(*) from Tickler t where t.status = 'A' and t.service_date <= ? and t.task_assigned_to  = "+ providerNo;
+        GregorianCalendar currentDate = new GregorianCalendar();
+        currentDate.setTime(new Date());
+        paramList.add(currentDate.getTime());
+        //paramList.add(new Date());
         Object params[] = paramList.toArray(new Object[paramList.size()]);
         Long count = (Long) getHibernateTemplate().find(query ,params).get(0);
         return count.intValue();

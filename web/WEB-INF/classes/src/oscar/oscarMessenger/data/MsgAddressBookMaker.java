@@ -49,14 +49,14 @@ public class MsgAddressBookMaker
 
         addressBook.appendChild(this.getChildren(doc, 0, ""));
 
-        ResultSet rs = db.GetSQL("SELECT addressBook FROM oscarcommlocations WHERE current = 1");
+        ResultSet rs = db.GetSQL("SELECT addressBook FROM oscarcommlocations WHERE current1 = 1");
         if(rs.next())
         {
             String newAddressBook = MsgCommxml.toXML(addressBook);
 
             //if((rs.getString("addressBook")==null) /*|| (rs.getString("addressBook").equals(newAddressBook)==false)*/)
             //{
-                db.RunSQL("UPDATE oscarcommlocations SET addressBook = '" + MsgUtil.replaceQuote(newAddressBook) + "' WHERE current = 1");
+                db.RunSQL("UPDATE oscarcommlocations SET addressBook = '" + MsgUtil.replaceQuote(newAddressBook) + "' WHERE current1 = 1");
             //}
             //else
             //{

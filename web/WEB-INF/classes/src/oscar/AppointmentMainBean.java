@@ -120,7 +120,7 @@ public class AppointmentMainBean {
 	  	sqlQuery = dbSQL.getDef(dboperation,"");
     	rs = dbPH.queryResults(sqlQuery, aKeyword);
 	  }
-     // System.out.println("sqlQuery=" + sqlQuery);
+	//  System.out.println("sqlQuery=" + sqlQuery);  
   	return rs;
   }
 
