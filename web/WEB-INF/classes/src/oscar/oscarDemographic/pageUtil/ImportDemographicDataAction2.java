@@ -1333,11 +1333,11 @@ public class ImportDemographicDataAction2 extends Action {
     String addFileExt(String fileName, String mimeType) {
 	String[] type = {"image/bmp","image/x-windows-bmp","application/msword","image/gif","image/jpeg","image/pjpeg",
 			 "application/pdf","image/png","application/mspowerpoint","application/powerpoint",
-			 "application/vnd.ms-powerpoint","application/x-mspowerpoint","image/tiff","image/x-tiff",
+			 "application/vnd.ms-powerpoint","application/x-mspowerpoint","image/tiff","image/x-tiff","text/plain",
 			 "application/excel","application/vnd.ms-excel","application/x-excel","application/x-msexcel",
 			 "application/x-compressed","application/x-zip-compressed","application/zip","multipart/x-zip"};
 	String[] extn = {".bmp",".bmp",".doc",".gif",".jpg",".jpg",".pdf",".png",".ppt",".ppt",".ppt",".ppt",
-			 ".tif",".tif",".xls",".xls",".xls",".xls",".zip",".zip",".zip",".zip"};
+			 ".tif",".tif",".txt",".xls",".xls",".xls",".xls",".zip",".zip",".zip",".zip"};
 	
 	String retFile = fileName;
 	for (int i=0; i<type.length; i++) {
