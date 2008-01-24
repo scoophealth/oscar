@@ -183,6 +183,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.caisi.service.Version"%>
 <%@page import="oscar.util.*"%>
+<%@page import="oscar.oscarDB.*"%>
 <html:html locale="true">
 <head>
 <title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
@@ -732,7 +733,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 	Version version = (Version) ctx.getBean("version");
 %>
-<span style="font-weight:bold;color:blue">caisi core version <%=version.getVersion()%></span>&nbsp&nbsp&nbsp&nbsp
+<!-- <span style="font-weight:bold;color:blue">caisi core version <%=version.getVersion()%></span>-->&nbsp&nbsp&nbsp&nbsp
 </logic:equal>
 
          <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a>
@@ -770,7 +771,7 @@ int iCols=0, iRows=0, iS=0,iE=0,iSm=0,iEm=0; //for each S/E starting/Ending hour
 int ih=0, im=0, iSn=0, iEn=0 ; //hour, minute, nthStartTime, nthEndTime, rowspan
 boolean bFirstTimeRs=true;
 boolean bFirstFirstR=true;
-String[] paramTickler =new String[2];
+DBPreparedHandlerParam[] paramTickler =new DBPreparedHandlerParam[2];
 String[] param =new String[2];
 String strsearchappointmentday=request.getParameter("dboperation");
 ResultSet rs = null;
@@ -897,10 +898,10 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
          	    //String endTime   = (iE>12?("0"+(iE-12)):rs.getString("end_time").substring(0,2))  +":"+rs.getString("end_time").substring(3,5)+(iE<12?"am":"pm");
                     String name = UtilMisc.toUpperLowerCase(rs.getString("name"));
           	  int demographic_no = rs.getInt("demographic_no");
-                  paramTickler[0]=String.valueOf(demographic_no);
-                  paramTickler[1]=strDate; //year+"-"+month+"-"+day;//e.g."2001-02-02";
+                  paramTickler[0]=new DBPreparedHandlerParam(String.valueOf(demographic_no));
+                  paramTickler[1]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(strDate)); //year+"-"+month+"-"+day;//e.g."2001-02-02";
                   rsTickler = null;
-                  rsTickler = apptMainBean.queryResults(paramTickler, "search_tickler");
+                  rsTickler = apptMainBean.queryResults_paged(paramTickler, "search_tickler", 0);
                   tickler_no = "";
                   tickler_note="";
                   while (rsTickler.next()){

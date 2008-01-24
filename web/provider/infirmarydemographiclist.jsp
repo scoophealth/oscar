@@ -1,3 +1,5 @@
+<%@ page import="oscar.*" %>
+
 <logic:equal name="infirmaryView_isOscar" value="false">
 <%	
 	session.setAttribute("case_program_id", session.getAttribute("infirmaryView_programId"));
@@ -52,24 +54,25 @@ param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
 //rs = apptMainBean.queryResults(param, strsearchappointmentday);
 //System.out.println(param[0]+"::"+param[1]+"::"+rs);
 //original oscar code for demographic table
-paramTickler[0]=String.valueOf(demographic_no);
-paramTickler[1]=strDate; //year+"-"+month+"-"+day;//e.g."2001-02-02";
-rsTickler = null;
-Object[] rss = apptMainBean.queryResultsCaisi(paramTickler, "search_tickler");
-rsTickler = (java.sql.ResultSet)rss[0];
+
+paramTickler[0]=new DBPreparedHandlerParam(String.valueOf(demographic_no));
+paramTickler[1]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(strDate)); //year+"-"+month+"-"+day;//e.g."2001-02-02";
+//rsTickler = null;
+rsTickler = apptMainBean.queryResults_paged(paramTickler, "search_tickler", 0);
+//rsTickler = (java.sql.ResultSet)rss[0];
 tickler_no = "";
 tickler_note="";
 while (rsTickler.next()){
     tickler_no = rsTickler.getString("tickler_no");
     tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
 }
-((java.sql.Statement)rss[1]).close();
+//((java.sql.Statement)rss[1]).close();
 
 
 rsDemo = null;
 ver = "";
 roster = "";
-rss = apptMainBean.queryResultsCaisi(demographic_no, "search_demograph");
+Object[] rss = apptMainBean.queryResultsCaisi(demographic_no, "search_demograph");
 rsDemo = (java.sql.ResultSet) rss[0];
 if(rsDemo.next()){
 	  ver = (rsDemo.getString("ver")==null)? "" : rsDemo.getString("ver");
