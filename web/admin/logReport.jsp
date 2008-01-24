@@ -26,7 +26,7 @@
   <%@ page errorPage="../errorpage.jsp" %>
   <%@ page import="java.util.*" %>
   <%@ page import="java.sql.*" %>
-  <%@ page import="oscar.login.*" %>
+  <%@ page import="oscar.login.*,oscar.util.SqlUtils" %>
   <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
   <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%
@@ -167,8 +167,25 @@ function onSub() {
 	  String content = request.getParameter("content");
 	  if(content.equals("login")) content = "login";
 	  if(content.equals("admin")) content = "%";
+	  
 	  String sDate = request.getParameter("startDate");
 	  String eDate = request.getParameter("endDate");
+	  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+	  if("oracle".equalsIgnoreCase(strDbType)){
+		if("".equals(sDate) || sDate==null) {
+			sDate = "01-JAN-1900";
+		} else {
+			sDate = SqlUtils.isoToOracleDate2(sDate);
+		}
+		if("".equals(eDate) || eDate==null) {
+			eDate = "01-JAN-2999";
+		} else {
+			eDate = SqlUtils.isoToOracleDate2(eDate);
+		} 	
+		
+	  }
+	  
+	  
       sql = "select * from log where provider_no='" + providerNo + "' and dateTime <= '";
       sql += eDate + "' and dateTime >= '" + sDate + "' and content like '" + content + "' order by dateTime desc ";
       if("*".equals(providerNo)) {
