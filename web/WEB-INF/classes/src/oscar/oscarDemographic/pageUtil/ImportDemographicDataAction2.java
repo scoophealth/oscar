@@ -404,7 +404,7 @@ public class ImportDemographicDataAction2 extends Action {
 		cds.PersonalHistoryDocument.PersonalHistory[] pHistArray = patientRec.getPersonalHistoryArray();
 		for (int i=0; i<pHistArray.length; i++) {
 		    if (pHistArray[i].getCategorySummaryLine()!=null) {
-			socialHist += pHistArray[i].getCategorySummaryLine();
+			socialHist += pHistArray[i].getCategorySummaryLine().trim();
 		    } else {
 			summaryGood = "No";
 			errorMsg = "No Summary for Personal History ("+(i+1)+")";
@@ -427,7 +427,7 @@ public class ImportDemographicDataAction2 extends Action {
 		cds.FamilyHistoryDocument.FamilyHistory[] fHistArray = patientRec.getFamilyHistoryArray();
 		for (int i=0; i<fHistArray.length; i++) {
 		    if (fHistArray[i].getCategorySummaryLine()!=null) {
-			familyHist += fHistArray[i].getCategorySummaryLine();
+			familyHist += fHistArray[i].getCategorySummaryLine().trim();
 		    } else {
 			summaryGood = "No";
 			errorMsg = "No Summary for Family History ("+(i+1)+")";
@@ -475,7 +475,7 @@ public class ImportDemographicDataAction2 extends Action {
 		cds.PastHealthDocument.PastHealth[] pHealth = patientRec.getPastHealthArray();
 		for (int i=0; i< pHealth.length; i++) {
 		    if (pHealth[i].getCategorySummaryLine()!=null) {
-			medicalHist += pHealth[i].getCategorySummaryLine();
+			medicalHist += pHealth[i].getCategorySummaryLine().trim();
 		    } else {
 			summaryGood = "No";
 			errorMsg = "No Summary for Past Health ("+(i+1)+")";
@@ -523,7 +523,7 @@ public class ImportDemographicDataAction2 extends Action {
 		cds.ProblemListDocument.ProblemList[] probList = patientRec.getProblemListArray();
 		for (int i=0; i<probList.length; i++) {
 		    if (probList[i].getCategorySummaryLine()!=null) {
-			ongConcerns += probList[i].getCategorySummaryLine();
+			ongConcerns += probList[i].getCategorySummaryLine().trim();
 			if (probList[i].getOnsetDate()!=null) {
 			    if (ongConcerns.toLowerCase().indexOf("onset date")==-1) {
 				ongConcerns += "\nOnset Date: " + getDateFullPartial(probList[i].getOnsetDate());
@@ -574,7 +574,7 @@ public class ImportDemographicDataAction2 extends Action {
 		cds.RiskFactorsDocument.RiskFactors[] rFactors = patientRec.getRiskFactorsArray();
 		for (int i=0; i<rFactors.length; i++) {
 		    if (rFactors[i].getCategorySummaryLine()!=null) {
-			reminders += rFactors[i].getCategorySummaryLine();
+			reminders += rFactors[i].getCategorySummaryLine().trim();
 		    } else {
 			summaryGood = "No";
 			errorMsg = "No Summary for Risk Factors ("+(i+1)+")";
@@ -665,7 +665,7 @@ public class ImportDemographicDataAction2 extends Action {
 		    String description="", drugrefId="", reaction="", severity="", entryDate="", typeCode="";
 		    String aSummary = "";
 		    if (aaReactArray[i].getCategorySummaryLine()!=null) {
-			aSummary = aaReactArray[i].getCategorySummaryLine();
+			aSummary = aaReactArray[i].getCategorySummaryLine().trim();
 		    } else {
 			summaryGood = "No";
 			errorMsg = "No Summary for Allergies & Adverse Reactions ("+(i+1)+")";
@@ -767,7 +767,7 @@ public class ImportDemographicDataAction2 extends Action {
 
 		    String mSummary = "";
 		    if (medArray[i].getCategorySummaryLine()!=null) {
-			mSummary = medArray[i].getCategorySummaryLine();
+			mSummary = medArray[i].getCategorySummaryLine().trim();
 		    } else {
 			summaryGood = "No";
 			errorMsg = "No Summary for Medications & Treatments ("+(i+1)+")";
@@ -786,7 +786,7 @@ public class ImportDemographicDataAction2 extends Action {
 		    }
 		    if (medArray[i].getDrugIdentificationNumber()!=null) {
 			regionalId = medArray[i].getDrugIdentificationNumber();
-			special += special.equals("") ? medArray[i].getDrugIdentificationNumber() : "\n"+medArray[i].getDrugIdentificationNumber();
+			special += special.equals("") ? "DIN: "+regionalId : "\nDIN: "+regionalId;
 		    }
 		    if (medArray[i].getPrescriptionInstructions()!=null) {
 			special += special.equals("") ? medArray[i].getPrescriptionInstructions() : "\n"+medArray[i].getPrescriptionInstructions();
@@ -880,6 +880,7 @@ public class ImportDemographicDataAction2 extends Action {
 		    if (medArray[i].getStrength()!=null) {
 			dosage = medArray[i].getStrength().getAmount()!=null ? medArray[i].getStrength().getAmount() : "";
 			unit = medArray[i].getStrength().getUnitOfMeasure()!=null ? medArray[i].getStrength().getUnitOfMeasure() : "";
+			if (!dosage.equals("") || !unit.equals("")) special += "\nStrength: "+dosage+" "+unit;
 		    }
 		    if (medArray[i].getFrequency()!=null) frequencyCode = medArray[i].getFrequency();
 		    if (medArray[i].getDuration()!=null) duration = medArray[i].getDuration();
@@ -949,7 +950,7 @@ public class ImportDemographicDataAction2 extends Action {
 		    
 		    String comments="", iSummary="";
 		    if (immuArray[i].getCategorySummaryLine()!=null) {
-			iSummary = immuArray[i].getCategorySummaryLine();
+			iSummary = immuArray[i].getCategorySummaryLine().trim();
 			if (!otherName.equals("")){   //JRG
 			    comments += "Imm: "+otherName + "\n";  //JRG
 			}   //JRG
@@ -1120,9 +1121,9 @@ public class ImportDemographicDataAction2 extends Action {
 			String[] allTitle = asd.getAllTitle();
 			status = allStatus[0];
 			for (int j=1; j<allStatus.length; j++) {
-			    String msg = getResources(req).getMessage(allTitle[i]);
+			    String msg = getResources(req).getMessage(allTitle[j]);
 			    if (appArray[i].getAppointmentStatus().trim().equalsIgnoreCase(msg)) {
-				status = allStatus[i];
+				status = allStatus[j];
 				break;
 			    }
 			}
@@ -1152,21 +1153,23 @@ public class ImportDemographicDataAction2 extends Action {
 			    errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 			} else {
 			    String docFileName = "ImportReport-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+"-"+i;
-			    String docDesc = docFileName;
 			    String docType=null, contentType=null, observationDate=null, updateDateTime=null, docCreator=null;
+			    
+			    if (repR[i].getFileExtensionAndVersion()!=null) {
+				contentType = repR[i].getFileExtensionAndVersion();
+				docFileName = addFileExt(docFileName, contentType);
+			    } else {
+				dataGood = "No";
+				errorMsg = "No File Extension & Version for Reports ("+(i+1)+")";
+				errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
+			    }
+			    String docDesc = docFileName;
 			    
 			    String docDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 			    FileOutputStream f = new FileOutputStream(docDir+docFileName);
 			    f.write(b);
 			    f.close();
 
-			    if (repR[i].getFileExtensionAndVersion()!=null) {
-				contentType = repR[i].getFileExtensionAndVersion();
-			    } else {
-				dataGood = "No";
-				errorMsg = "No File Extension & Version for Reports ("+(i+1)+")";
-				errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
-			    }
 			    if (repR[i].getEventDateTime()!=null) observationDate = getDateFullPartial(repR[i].getEventDateTime());
 			    if (repR[i].getReceivedDateTime()!=null) updateDateTime = getDateFullPartial(repR[i].getReceivedDateTime());
 			    if (repR[i].getClass1()!=null) {
@@ -1322,11 +1325,23 @@ public class ImportDemographicDataAction2 extends Action {
 	else return "";
     }
 
-    String trim(String s){
-        if (s != null){
-            return s.trim();
-        }
-        return s;
+    String addFileExt(String fileName, String mimeType) {
+	String[] type = {"image/bmp","image/x-windows-bmp","application/msword","image/gif","image/jpeg","image/pjpeg",
+			 "application/pdf","image/png","application/mspowerpoint","application/powerpoint",
+			 "application/vnd.ms-powerpoint","application/x-mspowerpoint","image/tiff","image/x-tiff",
+			 "application/excel","application/vnd.ms-excel","application/x-excel","application/x-msexcel",
+			 "application/x-compressed","application/x-zip-compressed","application/zip","multipart/x-zip"};
+	String[] extn = {".bmp",".bmp",".doc",".gif",".jpg",".jpg",".pdf",".png",".ppt",".ppt",".ppt",".ppt",
+			 ".tif",".tif",".xls",".xls",".xls",".xls",".zip",".zip",".zip",".zip"};
+	
+	String retFile = fileName;
+	for (int i=0; i<type.length; i++) {
+	    if (mimeType.equalsIgnoreCase(type[i])) {
+		retFile += extn[i];
+		i = type.length;
+	    }
+	}
+	return retFile;
     }
     
     Properties immProperties = null;
