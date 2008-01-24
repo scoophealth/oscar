@@ -98,79 +98,79 @@ function setfocus() {
   </tr> 
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSpecialty"/>: </td>
-    <td><input type="text" name="specialty" value="<%= rs.getString("specialty") %>" maxlength="20"></td>
+    <td><input type="text" name="specialty" value="<%= apptMainBean.getString(rs,"specialty") %>" maxlength="20"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formTeam"/>: </td>
-    <td><input type="text" name="team" value="<%= rs.getString("team") %>" maxlength="20"></td>
+    <td><input type="text" name="team" value="<%= apptMainBean.getString(rs,"team") %>" maxlength="20"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSex"/>: </td>
-    <td><input type="text" name="sex" value="<%= rs.getString("sex") %>" maxlength="1"></td>
+    <td><input type="text" name="sex" value="<%= apptMainBean.getString(rs,"sex") %>" maxlength="1"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formDOB"/>: </td>
-    <td><input type="text" name="dob" value="<%= rs.getString("dob") %>" maxlength="11"></td>
+    <td><input type="text" name="dob" value="<%= apptMainBean.getString(rs,"dob") %>" maxlength="11"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formAddress"/>: </td>
-    <td><input type="text" name="address" value="<%= rs.getString("address") %>" size="40" maxlength="40"></td>
+    <td><input type="text" name="address" value="<%= apptMainBean.getString(rs,"address") %>" size="40" maxlength="40"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formHomePhone"/>: </td>
-    <td><input type="text" name="phone" value="<%= rs.getString("phone") %>"><bean:message key="admin.provider.formWorkPhone"/>: 
+    <td><input type="text" name="phone" value="<%= apptMainBean.getString(rs,"phone") %>"><bean:message key="admin.provider.formWorkPhone"/>: 
     <input type="text" name="workphone" value="<%= rs.getString("work_phone") == null?"":(rs.getString("work_phone")) %>" maxlength="50"></td></tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formPager"/>: </td>
     <td>
-          <input type="text" name="xml_p_pager" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_pager") %>" datafld='xml_p_pager'>
+          <input type="text" name="xml_p_pager" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_pager")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_pager") %>" datafld='xml_p_pager'>
         </td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formCell"/>: </td>
     <td>
-          <input type="text" name="xml_p_cell" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_cell") %>" datafld='xml_p_cell'>
+          <input type="text" name="xml_p_cell" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_cell")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_cell")%>" datafld='xml_p_cell'>
         </td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formOtherPhone"/>: </td> 
     <td>
-          <input type="text" name="xml_p_phone2" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_phone2") %>" datafld='xml_p_phone2'>
+          <input type="text" name="xml_p_phone2" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_phone2")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_phone2") %>" datafld='xml_p_phone2'>
         </td> 
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formFax"/>: </td>
     <td>
-          <input type="text" name="xml_p_fax" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_fax") %>" datafld='xml_p_fax'>
+          <input type="text" name="xml_p_fax" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_fax")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_fax")%>" datafld='xml_p_fax'>
         </td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formOhipNo"/>: </td>
-    <td><input type="text" name="ohip_no" value="<%= rs.getString("ohip_no") %>" maxlength="20"></td>
+    <td><input type="text" name="ohip_no" value="<%= apptMainBean.getString(rs,"ohip_no") %>" maxlength="20"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formRmaNo"/>: </td>
-    <td><input type="text" name="rma_no" value="<%= rs.getString("rma_no") %>" maxlength="20"></td>
+    <td><input type="text" name="rma_no" value="<%= apptMainBean.getString(rs,"rma_no") %>" maxlength="20"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formBillingNo"/>: </td>
-    <td><input type="text" name="billing_no" value="<%= rs.getString("billing_no") %>" maxlength="20"></td>
+    <td><input type="text" name="billing_no" value="<%= apptMainBean.getString(rs,"billing_no") %>" maxlength="20"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formHsoNo"/>: </td>
-    <td><input type="text" name="hso_no" value="<%= rs.getString("hso_no") %>" maxlength="10"></td>
+    <td><input type="text" name="hso_no" value="<%= apptMainBean.getString(rs,"hso_no") %>" maxlength="10"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formStatus"/>: </td>
-    <td><input type="text" name="status" value="<%= rs.getString("status") %>" maxlength="1"></td>
+    <td><input type="text" name="status" value="<%= apptMainBean.getString(rs,"status") %>" maxlength="1"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSpecialtyCode"/>: </td>
-    <td><input type="text" name="xml_p_specialty_code" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_specialty_code") %>" datafld='xml_p_specialty_code'></td>
+    <td><input type="text" name="xml_p_specialty_code" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_specialty_code")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_specialty_code") %>" datafld='xml_p_specialty_code'></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formBillingGroupNo"/>: </td>
-    <td><input type="text" name="xml_p_billinggroup_no" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_billinggroup_no") %>" datafld='xml_p_billinggroup_no'></td>
+    <td><input type="text" name="xml_p_billinggroup_no" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_billinggroup_no") %>" datafld='xml_p_billinggroup_no'></td>
   </tr>
   <tr>
       <td align="right">Bill Center:</td>
@@ -198,7 +198,7 @@ function setfocus() {
   <tr>
     <td align="right"><bean:message key="admin.provider.formProviderActivity"/>: </td>
     <td>
-      <input type="text" name="provider_activity" value="<%= rs.getString("provider_activity") %>" size="5" maxlength="3">
+      <input type="text" name="provider_activity" value="<%= apptMainBean.getString(rs,"provider_activity") %>" size="5" maxlength="3">
     </td>
   </tr>
   <% } else { %>
@@ -207,13 +207,13 @@ function setfocus() {
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSlpUsername"/>: </td>
     <td>
-          <input type="text" name="xml_p_slpusername" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_slpusername") %>" datafld='xml_p_slpusername'>
+          <input type="text" name="xml_p_slpusername" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slpusername")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slpusername") %>" datafld='xml_p_slpusername'>
         </td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSlpPassword"/>: </td>
     <td>
-          <input type="text" name="xml_p_slppassword" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_slppassword") %>" datafld='xml_p_slppassword'>
+          <input type="text" name="xml_p_slppassword" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slppassword")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slppassword")%>" datafld='xml_p_slppassword'>
         </td>
   </tr>
   <tr> 

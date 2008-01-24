@@ -66,6 +66,8 @@
   param[15]=SxmlMisc.createXmlDataString(request,"xml_p");
   param[16]=request.getParameter("provider_activity");
   param[17]=request.getParameter("provider_no");
+  
+  
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>

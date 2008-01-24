@@ -149,14 +149,14 @@
       <tr bgcolor="<%=bodd?"white":weakcolor%>">
         
       <td align="center"><a href='admincontrol.jsp?keyword=<%=rs.getString("provider_no")%>&displaymode=Provider_Update&dboperation=provider_search_detail'><%= rs.getString("provider_no") %></a></td>
-        <td > <%= rs.getString("first_name") %></td>
-        <td > <%= rs.getString("last_name") %></td>
-        <td ><%= rs.getString("specialty") %></td>
-        <td ><%= rs.getString("team") %></td>        
+        <td > <%= apptMainBean.getString(rs,"first_name") %></td>
+        <td > <%= apptMainBean.getString(rs,"last_name") %></td>
+        <td ><%= apptMainBean.getString(rs,"specialty") %></td>
+        <td ><%= apptMainBean.getString(rs,"team") %></td>        
         
-      <td align="center" ><%= rs.getString("sex") %></td>
-        <td ><%= rs.getString("phone") %></td>
-        <td ><%= rs.getString("status").equals("1")?"Active":"Inactive" %></td>
+      <td align="center" ><%= apptMainBean.getString(rs,"sex") %></td>
+        <td ><%= apptMainBean.getString(rs,"phone") %></td>
+        <td ><%= apptMainBean.getString(rs,"status").equals("1")?"Active":"Inactive" %></td>
         
       <!--td align="center" valign="middle" -->
         <!--img src="../images/buttondetail.gif" width="75" height="30" border="0" valign="middle"-->
