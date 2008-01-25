@@ -260,11 +260,11 @@ public class ClientDao extends HibernateDaoSupport {
 				
 		}
 		if(bean.getDateFrom() != null && bean.getDateFrom().length() > 0) {
-	    	Date dt = MyDateFormat.GetSysDate(bean.getDateFrom().trim());
+	    	Date dt = MyDateFormat.getSysDate(bean.getDateFrom().trim());
 	    	subq.add(Restrictions.ge("AdmissionDate",dt ));
 	    }
 	    if(bean.getDateTo() != null && bean.getDateTo().length() > 0) {
-	    	Date dt1 =  MyDateFormat.GetSysDate(bean.getDateTo().trim());
+	    	Date dt1 =  MyDateFormat.getSysDate(bean.getDateTo().trim());
 	    	subq.add(Restrictions.le("AdmissionDate",dt1));
 	    }
 	    
