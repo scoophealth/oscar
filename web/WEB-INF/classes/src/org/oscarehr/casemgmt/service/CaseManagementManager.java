@@ -665,6 +665,16 @@ public class CaseManagementManager {
         else return dg.getFirstName() + " " + dg.getLastName();
     }
 
+    public String getDemoGender(String demoNo) {
+        String gender = "";
+        
+        Demographic demo = demographicDAO.getClientByDemographicNo(new Integer(demoNo));
+        if (demo != null) {
+            gender = demo.getSex();
+        }
+
+        return gender;
+    }
     public String getDemoAge(String demoNo) {
         String age = "";
 

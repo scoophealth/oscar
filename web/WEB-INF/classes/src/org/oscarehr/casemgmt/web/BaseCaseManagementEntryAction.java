@@ -84,7 +84,14 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		return caseManagementMgr.getDemoName(demoNo);
 	}
 	
-	protected String getDemoAge(String demoNo){
+	protected String getDemoSex(String demoNo) {
+            if(demoNo == null) {
+                return "";
+            }
+            return caseManagementMgr.getDemoGender(demoNo);
+        }
+        
+        protected String getDemoAge(String demoNo){
 		if (demoNo==null) return "";
 		return caseManagementMgr.getDemoAge(demoNo);
 	}
