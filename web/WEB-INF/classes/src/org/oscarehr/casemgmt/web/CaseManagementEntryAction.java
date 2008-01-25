@@ -1241,8 +1241,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
              
              String demono = getDemographicNo(request);             
              request.setAttribute("demoName", getDemoName(demono));
+             request.setAttribute("demoSex", getDemoSex(demono));
              request.setAttribute("demoAge", getDemoAge(demono));
-             request.setAttribute("demoDOB", getDemoDOB(demono));
+             String dob = getDemoDOB(demono);
+             dob = convertDateFmt(dob);
+             request.setAttribute("demoDOB", dob);
+             
              
              String[] noteIds = ids.split(",");
              ArrayList<CaseManagementNote>notes = new ArrayList<CaseManagementNote>();
