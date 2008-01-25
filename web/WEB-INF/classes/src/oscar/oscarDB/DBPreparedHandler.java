@@ -78,6 +78,27 @@ public class DBPreparedHandler {
         }
         return(preparedStmt.executeUpdate());
     }
+    synchronized public int queryExecuteUpdate(String preparedSQL, DBPreparedHandlerParam[] params) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < params.length; i++) {
+        	DBPreparedHandlerParam param = params[i];
+        	
+        	if(DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType()))
+        	{
+                preparedStmt.setString(i+1, param.getStringValue());
+        	}
+        	else if (DBPreparedHandlerParam.PARAM_DATE.equals(param.getParamType()))
+        			{
+                    preparedStmt.setDate(i+1, param.getDateValue());
+        			}
+        	else if (DBPreparedHandlerParam.PARAM_INT.equals(param.getParamType()))
+        	{
+        		preparedStmt.setInt(i+1,param.getIntValue());
+        	}
+        }
+        return(preparedStmt.executeUpdate());
+    }
+
     synchronized public int queryExecuteUpdate(String preparedSQL, String[] param, Date[] dtparam,int[] intparam) throws SQLException {
         preparedStmt = getConnection().prepareStatement(preparedSQL);
         int idx = 1;
