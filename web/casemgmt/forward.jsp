@@ -30,8 +30,7 @@
     String useNewCaseMgmt;
     if((useNewCaseMgmt = request.getParameter("newCaseManagement")) != null ) {        
         session.setAttribute("newCaseManagement", useNewCaseMgmt); 
-        ArrayList users = (ArrayList)session.getServletContext().getAttribute("CaseMgmtUsers");
-//Jdk 1.5        ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+		ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
         if( users != null ) {
             users.add(request.getParameter("providerNo"));
             session.getServletContext().setAttribute("CaseMgmtUsers", users);
