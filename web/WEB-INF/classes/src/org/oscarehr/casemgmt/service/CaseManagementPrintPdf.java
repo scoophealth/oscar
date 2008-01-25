@@ -87,12 +87,17 @@ public class CaseManagementPrintPdf {
         float leading = font.leading(LINESPACING);
         
         //set up document title and header
-        String title = "Case Management Notes for " + (String)request.getAttribute("demoName");
+        String title = "Documentation for " + (String)request.getAttribute("demoName") + "\n";
+        String gender = "Gender: " + (String)request.getAttribute("demoSex") + "\n";
+        String dob = "Date of Birth: " + (String)request.getAttribute("demoDOB") + "\n";
+        String age = "Age: " + (String)request.getAttribute("demoAge") + "\n";
+        String[] info = new String[] { title, gender, dob, age };
+        
         ClinicData clinicData = new ClinicData();
         clinicData.refreshClinicData();
         String[] clinic = new String[] {clinicData.getClinicName(), clinicData.getClinicAddress(),
         clinicData.getClinicCity() + ", " + clinicData.getClinicProvince(),
-        clinicData.getClinicPostal(), clinicData.getClinicPhone(), title };
+        clinicData.getClinicPostal(), clinicData.getClinicPhone()};
         
         //Header will be printed at top of every page beginning with p2
         Phrase headerPhrase = new Phrase(LEADING, title, font);
@@ -121,17 +126,36 @@ public class CaseManagementPrintPdf {
         
         upperYcoord = document.top() - (font.leading(LINESPACING)*2f);
        
+        ColumnText ct = new ColumnText(cb);                
         Paragraph p = new Paragraph();
-        p.setAlignment(Paragraph.ALIGN_CENTER);
+        p.setAlignment(Paragraph.ALIGN_LEFT);
         Phrase phrase = new Phrase();
-
+        Phrase dummy = new Phrase();
         for( int idx = 0; idx < clinic.length; ++idx ) {
             phrase.add(clinic[idx] + "\n");
+            dummy.add("\n");
             upperYcoord -= phrase.leading();
         }
         
-        p.add(phrase);
+        ct.setSimpleColumn(document.left(), upperYcoord, document.right()/2f, document.top());
+        ct.addElement(phrase);
+        ct.go();
+                
+        p.add(dummy);
         document.add(p);
+        
+        //add patient info
+        phrase = new Phrase();
+        p = new Paragraph();
+        p.setAlignment(Paragraph.ALIGN_RIGHT);
+        for( int idx = 0; idx < info.length; ++idx ) {            
+            phrase.add(info[idx]);
+        }
+        
+        ct.setSimpleColumn(document.right()/2f, upperYcoord, document.right(), document.top());        
+        p.add(phrase);
+        ct.addElement(p);
+        ct.go();
         
         cb.moveTo(document.left(), upperYcoord);
         cb.lineTo(document.right(), upperYcoord);
@@ -147,7 +171,7 @@ public class CaseManagementPrintPdf {
             p = new Paragraph();
             p.setSpacingBefore(font.leading(LINESPACING)*2f);
             phrase = new Phrase(LEADING, "", font);              
-            chunk = new Chunk("Observation Date: " + formatter.format(note.getObservation_date()) + "\n", obsfont);
+            chunk = new Chunk("Documentation Date: " + formatter.format(note.getObservation_date()) + "\n", obsfont);
             phrase.add(chunk);            
             phrase.add(note.getNote() + "\n");            
             p.add(phrase);
