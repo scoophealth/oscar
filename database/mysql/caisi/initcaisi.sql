@@ -1686,7 +1686,7 @@ CREATE TABLE `program` (
   `maximum_restriction_days` tinyint(11) default NULL,
   `default_restriction_days` tinyint(11) not null default 30,
   PRIMARY KEY  (`program_id`),
-	ageMin int not null defautl 0,
+	ageMin int not null default 0,
 	ageMax int not null default 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
