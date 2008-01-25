@@ -1,4 +1,4 @@
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
+<%@ page  import="java.sql.*, java.util.*, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.log.*" %>
 <%@ page  import="oscar.oscarDemographic.data.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -70,31 +70,31 @@
 	  //param[0]=Integer.parseIntdemographicaddarecord((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
 	  //temp variables for test/set null dates
 	  String year, month, day;
-    String[] param =new String[27];
-	  param[0]=request.getParameter("last_name");
-	  param[1]=request.getParameter("first_name");
-	  param[2]=request.getParameter("address");
-	  param[3]=request.getParameter("city");
-	  param[4]=request.getParameter("province");
-	  param[5]=request.getParameter("postal");
-	  param[6]=request.getParameter("phone");
-	  param[7]=request.getParameter("phone2");
-	  param[8]=request.getParameter("email");
-	  param[9]=request.getParameter("pin");
-	  param[10]=request.getParameter("year_of_birth");
-	  param[11]=request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth");
-	  param[12]=request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth");
-	  param[13]=request.getParameter("hin");
-	  param[14]=request.getParameter("ver");
-	  param[15]=request.getParameter("roster_status");
-	  param[16]=request.getParameter("patient_status");
+      DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[27];
+	  param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));
+	  param[1]=new DBPreparedHandlerParam(request.getParameter("first_name"));
+	  param[2]=new DBPreparedHandlerParam(request.getParameter("address"));
+	  param[3]=new DBPreparedHandlerParam(request.getParameter("city"));
+	  param[4]=new DBPreparedHandlerParam(request.getParameter("province"));
+	  param[5]=new DBPreparedHandlerParam(request.getParameter("postal"));
+	  param[6]=new DBPreparedHandlerParam(request.getParameter("phone"));
+	  param[7]=new DBPreparedHandlerParam(request.getParameter("phone2"));
+	  param[8]=new DBPreparedHandlerParam(request.getParameter("email"));
+	  param[9]=new DBPreparedHandlerParam(request.getParameter("pin"));
+	  param[10]=new DBPreparedHandlerParam(request.getParameter("year_of_birth"));
+	  param[11]=new DBPreparedHandlerParam(request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth"));
+	  param[12]=new DBPreparedHandlerParam(request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth"));
+	  param[13]=new DBPreparedHandlerParam(request.getParameter("hin"));
+	  param[14]=new DBPreparedHandlerParam(request.getParameter("ver"));
+	  param[15]=new DBPreparedHandlerParam(request.getParameter("roster_status"));
+	  param[16]=new DBPreparedHandlerParam(request.getParameter("patient_status"));
 	  // Databases have an alias for today. It is not necessary give the current date.
           // ** Overridden - we want to give users option to change if needed
           // ** Now defaults to current date on the add demographic screen
-	  param[17]=request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date");
-	  param[18]=request.getParameter("chart_no");
-	  param[19]=request.getParameter("staff");
-	  param[20]=request.getParameter("sex");
+	  param[17]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date")));
+	  param[18]=new DBPreparedHandlerParam(request.getParameter("chart_no"));
+	  param[19]=new DBPreparedHandlerParam(request.getParameter("staff"));
+	  param[20]=new DBPreparedHandlerParam(request.getParameter("sex"));
 
 	  // If null, set year, month and date
 	  if (request.getParameter("end_date_year").equals("")) {
@@ -115,7 +115,7 @@
 	    day = request.getParameter("end_date_date");
 	  }
 
-	  param[21] = year + "-" + month + "-" + day;
+	  param[21] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
 
 	  // If null, set year, month and date
 	  if (request.getParameter("eff_date_year").equals("")) {
@@ -136,10 +136,10 @@
 	    day = request.getParameter("eff_date_date");
 	  }
 
-	  param[22] =  year + "-" + month + "-" + day;
+	  param[22] =  new DBPreparedHandlerParam(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
 
-	  param[23]=request.getParameter("pcn_indicator");
-	  param[24]=request.getParameter("hc_type");
+	  param[23]=new DBPreparedHandlerParam(request.getParameter("pcn_indicator"));
+	  param[24]=new DBPreparedHandlerParam(request.getParameter("hc_type"));
 
 	  // If null, set year, month and date
 	  if (request.getParameter("hc_renew_date_year").equals("")) {
@@ -160,15 +160,15 @@
 	    day = request.getParameter("hc_renew_date_date");
 	  }
 
-	  param[25] =  year + "-" + month + "-" + day;
-	  param[26]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "");
+	  param[25] = new DBPreparedHandlerParam(MyDateFormat.getSysDate( year + "-" + month + "-" + day));
+	  param[26]=new DBPreparedHandlerParam("<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : ""));
 
 	String[] paramName =new String[5];
-	  paramName[0]=param[0].trim();
-	  paramName[1]=param[1].trim();
-	  paramName[2]=param[10].trim();
-	  paramName[3]=param[11].trim();
-	  paramName[4]=param[12].trim();
+	  paramName[0]=param[0].getStringValue().trim(); //last name
+	  paramName[1]=param[1].getStringValue().trim(); //first name
+	  paramName[2]=param[10].getStringValue().trim(); // year of dob
+	  paramName[3]=param[11].getStringValue().trim(); // month of dob
+	  paramName[4]=param[12].getStringValue().trim(); // day of dob
 	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
 

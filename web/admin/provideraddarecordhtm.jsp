@@ -248,6 +248,7 @@ function upCaseCtrl(ctrl) {
                     String billCode = "";
                     String codeDesc = "";
                     Enumeration<?> keys = billCenter.getAllBillCenter().propertyNames();
+//                    Enumeration keys = billCenter.getAllBillCenter().propertyNames();
                     for(int i=0;i<billCenter.getAllBillCenter().size();i++){
                         billCode=(String)keys.nextElement();
                         codeDesc=(String)billCenter.getAllBillCenter().getProperty(billCode);

@@ -49,8 +49,7 @@
     </table>
 <%
   //check to see if new case management is request
-ArrayList users = (ArrayList)session.getServletContext().getAttribute("CaseMgmtUsers");
-//JDK1.5 ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
 boolean newCaseManagement = false;
 
 if( users != null && users.size() > 0 )

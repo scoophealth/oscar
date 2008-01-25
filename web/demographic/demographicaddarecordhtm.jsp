@@ -412,8 +412,8 @@ function checkFormTypeIn() {
     <b><bean:message key="demographic.record"/></b>
 </td></tr>
 <tr><td>
+<form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkFormTypeIn()">
 <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
-  <form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkFormTypeIn()">
     <tr>
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
       <td align="left">
@@ -713,7 +713,6 @@ function checkFormTypeIn() {
          <input type="text" name="language" value="" onBlur="upCaseCtrl(this)" size="19" />
       </td>
     </tr>
-     </tr>
      <tr valign="top">
       <td  align="right"><b>  <bean:message key="demographic.demographiceditdemographic.cytolNum"/>:</b> </td>
       <td align="left" colspan="3" >
@@ -735,6 +734,7 @@ function checkFormTypeIn() {
           <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
           <%
   }
+  rsdemo.close();
 %>
           <option value="" ></option>
         </select>
@@ -744,13 +744,14 @@ function checkFormTypeIn() {
         <select name="cust1">
           <option value="" ></option>
           <%
-  rsdemo.beforeFirst();
+  rsdemo=addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) {
 %>
           <option value="<%=rsdemo.getString("provider_no")%>">
-          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
+          <%=Misc.getShortStr( (Misc.getString(rsdemo,"last_name")+","+Misc.getString(rsdemo,"first_name")),"",12)%></option>
           <%
   }
+  rsdemo.close();
 %>
         </select>
       </td>
@@ -761,13 +762,14 @@ function checkFormTypeIn() {
         <select name="cust4">
           <option value="" ></option>
           <%
-  rsdemo.beforeFirst();
+  rsdemo=addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) {
 %>
-          <option value="<%=rsdemo.getString("provider_no")%>">
-          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
+          <option value="<%=Misc.getString(rsdemo,"provider_no")%>">
+          <%=Misc.getShortStr( (Misc.getString(rsdemo,"last_name")+","+Misc.getString(rsdemo,"first_name")),"",12)%></option>
           <%
   }
+  rsdemo.close();
 %>
         </select>
       </td>
@@ -776,13 +778,14 @@ function checkFormTypeIn() {
         <select name="cust2">
           <option value="" ></option>
           <%
-  rsdemo.beforeFirst();
+  rsdemo=addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) {
 %>
-          <option value="<%=rsdemo.getString("provider_no")%>">
-          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
+          <option value="<%=Misc.getString(rsdemo,"provider_no")%>">
+          <%=Misc.getShortStr( (Misc.getString(rsdemo,"last_name")+","+Misc.getString(rsdemo,"first_name")),"",12)%></option>
           <%
   }
+  rsdemo.close();
 %>
         </select>
       </td>
@@ -1032,8 +1035,8 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
         </div>
       </td>
     </tr>
-  </form>
 </table>
+ </form>
 </td></tr></table>
  * <font face="Courier New, Courier, mono" size="-1"><bean:message key="demographic.demographicaddrecordhtm.formDateFormat"/> </font>
 <% addDemoBean.closePstmtConn(); %>
