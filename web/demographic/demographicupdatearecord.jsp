@@ -86,10 +86,10 @@ if( users != null && users.size() > 0 )
 	  param[22]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip><rd>" + request.getParameter("r_doctor") + "</rd>" + (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "") ;  
 
 	  java.sql.Date [] dtparam = new java.sql.Date[4];
-	  dtparam[0]=MyDateFormat.GetSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date"));
-	  dtparam[1]=MyDateFormat.GetSysDate(request.getParameter("end_date_year")+"-"+request.getParameter("end_date_month")+"-"+request.getParameter("end_date_date"));
-	  dtparam[2]=MyDateFormat.GetSysDate(request.getParameter("eff_date_year")+"-"+request.getParameter("eff_date_month")+"-"+request.getParameter("eff_date_date"));
-	  dtparam[3]=MyDateFormat.GetSysDate(request.getParameter("hc_renew_date_year")+"-"+request.getParameter("hc_renew_date_month")+"-"+request.getParameter("hc_renew_date_date"));
+	  dtparam[0]=MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date"));
+	  dtparam[1]=MyDateFormat.getSysDate(request.getParameter("end_date_year")+"-"+request.getParameter("end_date_month")+"-"+request.getParameter("end_date_date"));
+	  dtparam[2]=MyDateFormat.getSysDate(request.getParameter("eff_date_year")+"-"+request.getParameter("eff_date_month")+"-"+request.getParameter("eff_date_date"));
+	  dtparam[3]=MyDateFormat.getSysDate(request.getParameter("hc_renew_date_year")+"-"+request.getParameter("hc_renew_date_month")+"-"+request.getParameter("hc_renew_date_date"));
  
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
 
