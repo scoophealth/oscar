@@ -10,7 +10,7 @@ public class ReportStatistic implements Comparable<ReportStatistic> {
 	private Fraction fraction;
 
 	public ReportStatistic(int count, int size) {
-		this.fraction = Fraction.getFraction(count, size);
+		fraction = Fraction.getFraction(count, size);
 	}
 
 	public String getLabel() {
@@ -23,6 +23,11 @@ public class ReportStatistic implements Comparable<ReportStatistic> {
 	
 	public int getSize() {
 		return fraction.getDenominator();
+	}
+	
+	public void setSize(int size)
+	{
+        fraction = Fraction.getFraction(getCount(), size);
 	}
 
 	public String getPercent() {

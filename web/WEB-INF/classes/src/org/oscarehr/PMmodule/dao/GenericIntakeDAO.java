@@ -138,7 +138,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		// endDate is "YYYY-MM-DD 00:00:00", it has to be "YYYY-MM-DD 23:59:59"
 		Calendar endCal = new GregorianCalendar();
 		endCal.setTime(endDate);
-		endCal.add(Calendar.DAY_OF_MONTH, 1);
+		endCal.add(Calendar.DAY_OF_YEAR, 1);
 
 		Calendar startCal = new GregorianCalendar();
 		startCal.setTime(startDate);

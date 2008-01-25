@@ -28,7 +28,6 @@ public class GenericIntakeReportAction extends BaseGenericIntakeAction {
 	private static final String FORWARD_REPORT = "report";
 
 	public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		long startTime = System.nanoTime();
 		
 		String intakeType = getType(request);
 		Integer programId = getProgramId(request);
@@ -36,14 +35,11 @@ public class GenericIntakeReportAction extends BaseGenericIntakeAction {
 		Date endDate = getEndDate(request);
 
 		Map<String, SortedSet<ReportStatistic>> questionStatistics = genericIntakeManager.getQuestionStatistics(intakeType, programId, startDate, endDate);
-
+		
 		request.setAttribute("intakeType", StringUtils.capitalize(intakeType));
 		request.setAttribute("startDate", DateTimeFormatUtils.getStringFromDate(startDate, DATE_FORMAT));
 		request.setAttribute("endDate", DateTimeFormatUtils.getStringFromDate(endDate, DATE_FORMAT));
 		request.setAttribute("questionStatistics", questionStatistics);
-
-		long stopTime = System.nanoTime();
-		LOG.info(intakeType + " intake report generated in " + ((stopTime - startTime) / 100000) + " ms");
 
 		return mapping.findForward(FORWARD_REPORT);
 	}

@@ -240,18 +240,24 @@ public class GenericIntakeManager {
 		if (!reportStatistics.isEmpty()) {
 			for (IntakeNode question : node.getQuestionsWithChoiceAnswers()) {
 				SortedSet<ReportStatistic> statistics = new TreeSet<ReportStatistic>();
-
+				int total=0;
+				
 				for (IntakeNode answer : question.getChoiceAnswers()) {
 					SortedMap<String, ReportStatistic> valueStatistics = reportStatistics.get(answer.getId());
 
 					for (Entry<String, ReportStatistic> valueStatistic : valueStatistics.entrySet()) {
 						ReportStatistic statistic = valueStatistic.getValue();
-
 						statistic.setLabel(createStatisticLabel(answer.getLabelStr(), valueStatistic.getKey()));
 						statistics.add(statistic);
+						total=total+statistic.getCount();
 					}
 				}
 
+				for (ReportStatistic reportStatistic : statistics)
+				{
+				    reportStatistic.setSize(total);
+				}
+				
 				questionStatistics.put(question.getLabelStr(), statistics);
 			}
 		}
