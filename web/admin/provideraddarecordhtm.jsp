@@ -4,7 +4,7 @@
 <%@ page import="java.util.*, oscar.oscarProvider.data.ProviderBillCenter" %>
 
 <%
-  if(session.getValue("user") == null)
+  if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.jsp");
   String curProvider_no,userfirstname,userlastname;
   curProvider_no = (String) session.getAttribute("user");
