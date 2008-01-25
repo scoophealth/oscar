@@ -170,7 +170,13 @@ public class AdmissionDao extends HibernateDaoSupport {
         String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
 
         Admission admission = null;
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        List rs = new ArrayList();
+        try{
+          rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex)
+        {
+        	;
+        }
 
         if (rs.isEmpty()) {
             return null;
@@ -204,8 +210,13 @@ public class AdmissionDao extends HibernateDaoSupport {
         String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
 
         Admission admission = null;
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
-
+        List rs = new ArrayList();
+        try{
+          rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex){
+        	;
+        }
+        
         if (rs.isEmpty()) {
             return null;
         }
@@ -239,8 +250,11 @@ public class AdmissionDao extends HibernateDaoSupport {
         Admission admission = null;
         List admissions = new ArrayList();
         List rs = new ArrayList();
-
-        rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        try{
+          rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex){
+        	;
+        }
 
         if (rs.isEmpty()) {
             return null;
@@ -271,7 +285,13 @@ public class AdmissionDao extends HibernateDaoSupport {
         String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
 
         Admission admission = null;
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        List rs = new ArrayList();
+        try{
+           rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex)
+        {
+          ;
+        }
 
         if (rs.isEmpty()) {
             return null;
