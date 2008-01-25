@@ -26,7 +26,7 @@
   <%@ page errorPage="../errorpage.jsp" %>
   <%@ page import="java.util.*" %>
   <%@ page import="java.sql.*" %>
-  <%@ page import="oscar.login.*,oscar.util.SqlUtils" %>
+  <%@ page import="oscar.login.*,oscar.util.SqlUtils, oscar.oscarDB.*, oscar.MyDateFormat" %>
   <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
   <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%
@@ -172,29 +172,22 @@ function onSub() {
 	  String eDate = request.getParameter("endDate");
 	  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
 	  if("oracle".equalsIgnoreCase(strDbType)){
-		if("".equals(sDate) || sDate==null) {
-			sDate = "01-JAN-1900";
-		} else {
-			sDate = SqlUtils.isoToOracleDate2(sDate);
-		}
-		if("".equals(eDate) || eDate==null) {
-			eDate = "01-JAN-2999";
-		} else {
-			eDate = SqlUtils.isoToOracleDate2(eDate);
-		} 	
-		
+		if("".equals(sDate) || sDate==null)  sDate = "1900-01-01";
+		if("".equals(eDate) || eDate==null)  eDate = "2999-01-01";
 	  }
 	  
-	  
-      sql = "select * from log where provider_no='" + providerNo + "' and dateTime <= '";
-      sql += eDate + "' and dateTime >= '" + sDate + "' and content like '" + content + "' order by dateTime desc ";
+	  DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[2];
+	  params[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(eDate));
+	  params[1]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(sDate));
+      sql = "select * from log where provider_no='" + providerNo + "' and dateTime <= ?";
+      sql += " and dateTime >= ? and content like '" + content + "' order by dateTime desc ";
       if("*".equals(providerNo)) {
 		  bAll = true;
-	      sql = "select * from log where dateTime <= '";
-	      sql += eDate + "' and dateTime >= '" + sDate + "' and content like '" + content + "' order by dateTime desc ";
+	      sql = "select * from log where dateTime <= ?";
+	      sql += " and dateTime >= ? and content like '" + content + "' order by dateTime desc ";
       }
-      System.out.println("sql:" + sql);
-      rs = dbObj.searchDBRecord(sql);
+//      System.out.println("sql:" + sql);
+      rs = dbObj.searchDBRecord(sql, params);
       while (rs.next()) {
         prop = new Properties();
         prop.setProperty("dateTime", "" + rs.getTimestamp("dateTime"));

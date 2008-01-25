@@ -11,7 +11,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page  import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.login.*" %>
-<%@ page import="oscar.log.*" %>
+<%@ page import="oscar.log.*, oscar.oscarDB.*" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils,oscar.oscarProvider.data.ProviderBillCenter,oscar.util.SqlUtils" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <!--
@@ -62,11 +62,11 @@ String curUser_no = (String)session.getAttribute("user");
   param[5]=request.getParameter("team");
   param[6]=request.getParameter("sex");
   
-  param[7]=request.getParameter("dob");
-  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
-  if("oracle".equalsIgnoreCase(strDbType)){
-  	param[7] = SqlUtils.isoToOracleDate(param[7]);
-  }
+//  param[7]=request.getParameter("dob");
+//  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+//  if("oracle".equalsIgnoreCase(strDbType)){
+//  	param[7] = SqlUtils.isoToOracleDate(param[7]);
+//  }
   
   param[8]=request.getParameter("address");
   param[9]=request.getParameter("phone");
@@ -89,7 +89,7 @@ sql += "'" + StringEscapeUtils.escapeSql(param[3]) + "',";
 sql += "'" + param[4] + "',";
 sql += "'" + param[5] + "',";
 sql += "'" + param[6] + "',";
-sql += "'" + param[7] + "',";
+sql += "?,";
 sql += "'" + param[8] + "',";
 sql += "'" + param[9] + "',";
 sql += "'" + param[10] + "',";
@@ -101,7 +101,10 @@ sql += "'" + param[15] + "',";
 sql += "'" + param[16] + "',";
 sql += "'" + param[17] + "')";
 //System.out.println(sql);
-if(dbObj.updateDBRecord(sql, curUser_no)) {
+DBPreparedHandlerParam[] param2= new DBPreparedHandlerParam[1];
+param2[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));
+
+if(dbObj.updateDBRecord(sql, param2)>0) {
 	String proId = param[0];
 	String ip = request.getRemoteAddr();
 	LogAction.addLog(curUser_no, "add", "adminAddUser", proId, ip);
