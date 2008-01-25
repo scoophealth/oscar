@@ -75,7 +75,7 @@ public class SxmlMisc extends Properties {
   	
 	int s = str.indexOf(sTag);
   	int e = str.indexOf(eTag);
-  	String val = null;
+  	String val = "";
   	if(s==-1 || e==-1) return val;
   	val = str.substring(s+sTag.length(),e);
   	//System.out.println(str+" - "+s+"  "+e+" - "+val);
