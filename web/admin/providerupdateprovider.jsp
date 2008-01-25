@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page  import="java.sql.*, java.util.*, oscar.SxmlMisc, oscar.oscarProvider.data.ProviderBillCenter" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
@@ -92,7 +93,18 @@ function setfocus() {
             <option value="billing"<% if (rs.getString("provider_type").equals("billing")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionBilling"/></option>
           </select>
 		  <% } else { %>
-            <input type="text" name="provider_type" value="<%= rs.getString("provider_type") %>" maxlength="15">
+		    <select name="provider_type">
+            <option value="receptionist" <% if (rs.getString("provider_type").equals("receptionist")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionReceptionist"/></option>
+            <option value="doctor" <% if (rs.getString("provider_type").equals("doctor")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionDoctor"/></option>
+            <option value="nurse" <% if (rs.getString("provider_type").equals("nurse")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionNurse"/></option>
+            <option value="resident" <% if (rs.getString("provider_type").equals("resident")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionResident"/></option>
+            <option value="midwife" <% if (rs.getString("provider_type").equals("midwife")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionMidwife"/></option>
+            <option value="admin" <% if (rs.getString("provider_type").equals("admin")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdmin"/></option>
+		<caisi:isModuleLoad moduleName="survey">
+			<option value="er_clerk" <% if (rs.getString("provider_type").equals("er_clerk")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionErClerk"/></option>
+        </caisi:isModuleLoad>
+		  	</select>
+            <!--input type="text" name="provider_type" value="<%= rs.getString("provider_type") %>" maxlength="15" -->
           <% } %>
      </td>
   </tr> 
@@ -110,7 +122,7 @@ function setfocus() {
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formDOB"/>: </td>
-    <td><input type="text" name="dob" value="<%= apptMainBean.getString(rs,"dob") %>" maxlength="11"></td>
+    <td><input type="text" name="dob" value="<%= oscar.MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"dob")) %>" maxlength="11"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formAddress"/>: </td>
