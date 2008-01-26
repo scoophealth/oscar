@@ -78,6 +78,9 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
     public RoomDemographic getRoomDemographicByDemographic(Integer demographicNo) {
    	
         List roomDemographics = getHibernateTemplate().find("from RoomDemographic rd where rd.id.demographicNo = ?", demographicNo);
+        if(roomDemographics == null){
+        	return null;
+        }
         if (roomDemographics.size() > 1) {
             throw new IllegalStateException("Client is assigned to more than one room");
         }
