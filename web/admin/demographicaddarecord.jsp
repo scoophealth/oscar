@@ -124,7 +124,7 @@
 	  	if (request.getParameter("dboperation2") != null) {
 	  	  	String[] parametros = new String[13];
   	  	
-	  	  	parametros[0]=rs.getString("demographic_no");
+	  	  	parametros[0]=apptMainBean.getString(rs,"demographic_no");
 	  	  	parametros[1]=request.getParameter("cpf");
 	  	  	parametros[2]=request.getParameter("rg");
 	  	  	parametros[3]=request.getParameter("chart_address");
