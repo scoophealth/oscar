@@ -90,19 +90,19 @@ function setfocus() {
   while (rs.next()) {
     bodd=bodd?false:true; //for the color of rows
     nItems++; 
-    if(rs.getString("year_of_birth")!=null && rs.getString("month_of_birth")!=null && rs.getString("date_of_birth")!=null) age=MyDateFormat.getAge(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")));
+    if(reportMainBean.getString(rs,"year_of_birth")!=null && reportMainBean.getString(rs,"month_of_birth")!=null && reportMainBean.getString(rs,"date_of_birth")!=null) age=MyDateFormat.getAge(Integer.parseInt(reportMainBean.getString(rs,"year_of_birth")),Integer.parseInt(reportMainBean.getString(rs,"month_of_birth")),Integer.parseInt(reportMainBean.getString(rs,"date_of_birth")));
 %>
 <tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td nowrap><%=rs.getString("last_name")%></td>
-      <td nowrap><%=rs.getString("first_name")%></td>
-      <td align="center" ><%=rs.getString("chart_no")%> </td>
+      <td nowrap><%=reportMainBean.getString(rs,"last_name")%></td>
+      <td nowrap><%=reportMainBean.getString(rs,"first_name")%></td>
+      <td align="center" ><%=reportMainBean.getString(rs,"chart_no")%> </td>
       <td align="center"><%=age%></td>
-      <td align="center"><%=rs.getString("sex")%></td>
-      <td><%=rs.getString("hin")%></td>
-      <td align="center"><%=rs.getString("ver")%></td>
-      <td><%=rs.getString("provider_no").length()>11?rs.getString("provider_no").substring(0,11):rs.getString("provider_no")%></td>
-      <td><%=rs.getString("date_joined")%></td>
-      <td><%=rs.getString("phone")%></td>
+      <td align="center"><%=reportMainBean.getString(rs,"sex")%></td>
+      <td><%=reportMainBean.getString(rs,"hin")%></td>
+      <td align="center"><%=reportMainBean.getString(rs,"ver")%></td>
+      <td><%=reportMainBean.getString(rs,"provider_no").length()>11?reportMainBean.getString(rs,"provider_no").substring(0,11):reportMainBean.getString(rs,"provider_no")%></td>
+      <td><%=reportMainBean.getString(rs,"date_joined")%></td>
+      <td><%=reportMainBean.getString(rs,"phone")%></td>
 </tr>
 <%
   }

@@ -85,8 +85,8 @@ function setfocus() {
 	ResultSet rs=null ;
 	rs = reportMainBean.queryResults("1", "search_study");
 	while (rs.next()) { 
-		studyBean.setProperty(rs.getString("study_no"), rs.getString("study_name") );
-		studyBean.setProperty(rs.getString("study_no") + rs.getString("study_name"), rs.getString("description") );
+		studyBean.setProperty(reportMainBean.getString(rs,"study_no"), reportMainBean.getString(rs,"study_name") );
+		studyBean.setProperty(reportMainBean.getString(rs,"study_no") + reportMainBean.getString(rs,"study_name"), reportMainBean.getString(rs,"description") );
 	}
     
 	//int[] itemp1 = new int[2];  //itemp1[0] = Integer.parseInt(strLimit1);
@@ -97,11 +97,11 @@ function setfocus() {
 		nItems++; 
 %>
 <tr bgcolor="<%=(nItems%2 == 0)?weakcolor:"white"%>">
-  <td nowrap><a href="../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("s.demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("last_name")%></a></td>
-  <td><%=rs.getString("d.first_name")%></td>
-  <td  title='<%=studyBean.getProperty(rs.getString("s.study_no")+studyBean.getProperty(rs.getString("s.study_no")), "")%>'><%=studyBean.getProperty(rs.getString("s.study_no"), "")%></td>
-  <td><%=rs.getString("d.email")%></td>
-  <td><%=providerBean.getProperty(rs.getString("d.provider_no"), "")%></td>
+  <td nowrap><a href="../demographic/demographiccontrol.jsp?demographic_no=<%=reportMainBean.getString(rs,"s.demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=reportMainBean.getString(rs,"last_name")%></a></td>
+  <td><%=reportMainBean.getString(rs,"d.first_name")%></td>
+  <td  title='<%=studyBean.getProperty(reportMainBean.getString(rs,"s.study_no")+studyBean.getProperty(reportMainBean.getString(rs,"s.study_no")), "")%>'><%=studyBean.getProperty(reportMainBean.getString(rs,"s.study_no"), "")%></td>
+  <td><%=reportMainBean.getString(rs,"d.email")%></td>
+  <td><%=providerBean.getProperty(reportMainBean.getString(rs,"d.provider_no"), "")%></td>
 </tr>
 <%
 	}

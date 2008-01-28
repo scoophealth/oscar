@@ -95,7 +95,7 @@ function setfocus() {
   ResultSet rs=null ;
   rs = reportMainBean.queryResults("search_provider");
   while (rs.next()) { 
-    providerNameBean.setProperty(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
+    providerNameBean.setProperty(reportMainBean.getString(rs,"provider_no"), new String( reportMainBean.getString(rs,"last_name")+","+reportMainBean.getString(rs,"first_name") ));
   }
   
   Properties demoProp = new Properties();
@@ -115,24 +115,24 @@ function setfocus() {
   int nItems=0;
   rs = reportMainBean.queryResults(param,itemp1, "select_bcformar");
   while (rs.next()) {
-    if (demoProp.containsKey(rs.getString("demographic_no")) ) continue;
-    else demoProp.setProperty(rs.getString("demographic_no"), "1");
+    if (demoProp.containsKey(reportMainBean.getString(rs,"demographic_no")) ) continue;
+    else demoProp.setProperty(reportMainBean.getString(rs,"demographic_no"), "1");
     bodd=bodd?false:true; //for the color of rows
     nItems++; 
 %>
 <tr bgcolor="<%=bodd?weakcolor:"white"%>">
-      <td align="center" nowrap><%=rs.getString("c_EDD")!=null?rs.getString("c_EDD").replace('-','/'):"0001/01/01"%></td>
-      <td><%=rs.getString("c_surname") + ", " + rs.getString("c_givenName")%></td>
-      <!--td align="center" ><%=rs.getString("demographic_no")%> </td-->
-      <td><%=rs.getString("pg1_dateOfBirth")!=null?rs.getString("pg1_dateOfBirth"):""%></td>
-      <td><%=rs.getString("pg1_gravida")!=null?rs.getString("pg1_gravida"):""%></td>
-      <td><%=rs.getString("pg1_term")!=null?rs.getString("pg1_term"):""%></td>
-      <td nowrap><%=rs.getString("c_phone")%></td>
-      <!--td><%--=rs.getString("c_phyMid")--%><%--=providerNameBean.getProperty(rs.getString("provider_no"), "")--%></td-->
-      <td><%=rs.getString("pg1_langPref")%></td>
-      <td><%=rs.getString("c_phn")%></td> 
-      <td><%=rs.getString("ar2_doula")%></td> 
-      <td><%=rs.getString("ar2_doulaNo")%></td> 
+      <td align="center" nowrap><%=reportMainBean.getString(rs,"c_EDD")!=null?reportMainBean.getString(rs,"c_EDD").replace('-','/'):"0001/01/01"%></td>
+      <td><%=reportMainBean.getString(rs,"c_surname") + ", " + reportMainBean.getString(rs,"c_givenName")%></td>
+      <!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
+      <td><%=reportMainBean.getString(rs,"pg1_dateOfBirth")!=null?reportMainBean.getString(rs,"pg1_dateOfBirth"):""%></td>
+      <td><%=reportMainBean.getString(rs,"pg1_gravida")!=null?reportMainBean.getString(rs,"pg1_gravida"):""%></td>
+      <td><%=reportMainBean.getString(rs,"pg1_term")!=null?reportMainBean.getString(rs,"pg1_term"):""%></td>
+      <td nowrap><%=reportMainBean.getString(rs,"c_phone")%></td>
+      <!--td><%--=reportMainBean.getString(rs,"c_phyMid")--%><%--=providerNameBean.getProperty(reportMainBean.getString(rs,"provider_no"), "")--%></td-->
+      <td><%=reportMainBean.getString(rs,"pg1_langPref")%></td>
+      <td><%=reportMainBean.getString(rs,"c_phn")%></td> 
+      <td><%=reportMainBean.getString(rs,"ar2_doula")%></td> 
+      <td><%=reportMainBean.getString(rs,"ar2_doulaNo")%></td> 
 </tr>
 <%
   }

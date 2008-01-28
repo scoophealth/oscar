@@ -265,7 +265,7 @@ if( (bDemoSelect && !bARSelect && bSpecSelect && !bARFilter) || (!bARFilter && b
         	System.out.println(" demographic and demographicExt: " + sql);
     		rs = dbObj.searchDBRecord(sql);
 			while (rs.next()) {
-    			propSpecValue.setProperty(rs.getString("demographic_no")+temp[i], rs.getString("value"));
+    			propSpecValue.setProperty(dbObj.getString(rs,"demographic_no")+temp[i], dbObj.getString(rs,"value"));
 			}
     	}
 
@@ -391,7 +391,7 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
     		sql += strDemoNo + ") order by date_time ";
     		rs = dbObj.searchDBRecord(sql);
 			while (rs.next()) {
-    			propSpecValue.setProperty(rs.getString("demographic_no")+temp[i], rs.getString("value"));
+    			propSpecValue.setProperty(dbObj.getString(rs,"demographic_no")+temp[i], dbObj.getString(rs,"value"));
 			}
     	}
     }
@@ -420,7 +420,7 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
     		sql += subFormDemoNo + ") order by date_time desc limit 1";
     		rs = dbObj.searchDBRecord(sql);
 			while (rs.next()) {
-    			propSpecValue.setProperty(rs.getString("demographic_no")+temp[i], rs.getString("value"));
+    			propSpecValue.setProperty(dbObj.getString(rs,"demographic_no")+temp[i], dbObj.getString(rs,"value"));
 			}
     	}
 

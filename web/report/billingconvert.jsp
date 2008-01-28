@@ -52,46 +52,46 @@ busy ...
 	ResultSet rs = dbObj.searchDBRecord(sql);
 	while(rs.next()) {
     	billing_no =id = "" + rs.getInt("billing_no");
-    	clinic_no = rs.getString("clinic_no");
+    	clinic_no = dbObj.getString(rs,"clinic_no");
     	location = clinic_no;
-    	demographic_no = rs.getString("demographic_no");
-    	provider_no = rs.getString("provider_no");
-    	appointment_no = rs.getString("appointment_no");
+    	demographic_no = dbObj.getString(rs,"demographic_no");
+    	provider_no = dbObj.getString(rs,"provider_no");
+    	appointment_no = dbObj.getString(rs,"appointment_no");
     	//organization_spec_code ; //|???
-    	demographic_name = rs.getString("demographic_name");  
+    	demographic_name = dbObj.getString(rs,"demographic_name");  
     	demographic_name = demographic_name.replaceAll("\\,", "0");
     	demographic_name = demographic_name.replaceAll("\\W", "");
     	demographic_name = demographic_name.replaceAll("0", ",");
-    	hin = rs.getString("hin");
+    	hin = dbObj.getString(rs,"hin");
     	String [] temp = getHinVer(hin);
     	hin = temp[0];
     	ver = temp[1];
     	
-    	update_date = rs.getString("update_date");
-    	update_time = rs.getString("update_time");
+    	update_date = dbObj.getString(rs,"update_date");
+    	update_time = dbObj.getString(rs,"update_time");
     	
     	// for mysql 4.1
     	timestamp = update_date + " " + update_time;
     	// for mysql 4.0
     	//timestamp = update_date + " " + update_time;
 
-    	billing_date  = rs.getString("billing_date");
-    	billing_time  = rs.getString("billing_time");
-    	clinic_ref_code  = rs.getString("clinic_ref_code");
+    	billing_date  = dbObj.getString(rs,"billing_date");
+    	billing_time  = dbObj.getString(rs,"billing_time");
+    	clinic_ref_code  = dbObj.getString(rs,"clinic_ref_code");
     	facilty_num = clinic_ref_code;
-    	content  = rs.getString("content");
+    	content  = dbObj.getString(rs,"content");
     	//; //  | text        | YES  |     | NULL    |                |
-    	total   = rs.getString("total");
-    	status   = rs.getString("status");
-    	dob  = rs.getString("dob");
-    	visitdate   = rs.getString("visitdate");
+    	total   = dbObj.getString(rs,"total");
+    	status   = dbObj.getString(rs,"status");
+    	dob  = dbObj.getString(rs,"dob");
+    	visitdate   = dbObj.getString(rs,"visitdate");
     	admission_date = visitdate;
-    	visittype  = rs.getString("visittype");
-    	provider_ohip_no  = rs.getString("provider_ohip_no");
-    	provider_rma_no  = rs.getString("provider_rma_no");
-    	apptProvider_no  = rs.getString("apptProvider_no");
-    	asstProvider_no  = rs.getString("asstProvider_no");
-    	creator  = rs.getString("creator");
+    	visittype  = dbObj.getString(rs,"visittype");
+    	provider_ohip_no  = dbObj.getString(rs,"provider_ohip_no");
+    	provider_rma_no  = dbObj.getString(rs,"provider_rma_no");
+    	apptProvider_no  = dbObj.getString(rs,"apptProvider_no");
+    	asstProvider_no  = dbObj.getString(rs,"asstProvider_no");
+    	creator  = dbObj.getString(rs,"creator");
     	
     	// get demo data
     	sex = getXMLStringWithDefault(content, "demosex", "1");
@@ -131,14 +131,14 @@ busy ...
 	while(rs.next()) {
 		billing_dt_no = "" + rs.getInt("billing_dt_no");
 		id = "" + rs.getInt("billing_no");
-		service_code = rs.getString("service_code");
-		billing_amount = rs.getString("billing_amount");
+		service_code = dbObj.getString(rs,"service_code");
+		billing_amount = dbObj.getString(rs,"billing_amount");
 		billing_amount = setDecNum(billing_amount);
-		diagnostic_code = rs.getString("diagnostic_code");
-		appointment_date = rs.getString("appointment_date");
-    	billingunit = rs.getString("billingunit");  
+		diagnostic_code = dbObj.getString(rs,"diagnostic_code");
+		appointment_date = dbObj.getString(rs,"appointment_date");
+    	billingunit = dbObj.getString(rs,"billingunit");  
     	
-    	status = rs.getString("status");  
+    	status = dbObj.getString(rs,"status");  
 	    
 		sql="insert into billing_on_item values (" + billing_dt_no + "," + id + ", 'HE', 'T', '" + service_code + "', '" 
 				+ billing_amount + "', '"+billingunit+"','"

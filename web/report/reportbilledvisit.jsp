@@ -60,13 +60,16 @@ out.flush();
 String sdate = request.getParameter("sdate")!=null?request.getParameter("sdate") : "2003-04-01" ;
 String edate = request.getParameter("edate")!=null?request.getParameter("edate") : "2003-12-31" ;
 Properties props = new Properties();
-DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+DBPreparedHandler db = new DBPreparedHandler();
 
 // get total patTotal
-String sql = "select count(distinct(b.demographic_no)) from billing b where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D'";
-ResultSet rs = db.GetSQL(sql); 
+DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[2];
+params[0] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(sdate));
+params[1] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(edate));
+String sql = "select count(distinct(b.demographic_no)) from billing b where  b.billing_date>=? and b.billing_date<=? and b.status!='D'";
+ResultSet rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("patTotal", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("patTotal", db.getString(rs,1));
 }
 
 /*
@@ -77,10 +80,10 @@ out.flush();
 */
 
 // get patRosterNR
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and d.roster_status='NR' and b.status!='D'";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and d.roster_status='NR' and b.status!='D'";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("patRosterNR", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("patRosterNR", db.getString(rs,1));
 }
 
 /*
@@ -91,10 +94,10 @@ out.flush();
 */
 
 // get patRosterRO
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and d.roster_status='RO' and b.status!='D'";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_b.billing_date>=? and b.billing_date<=?>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and d.roster_status='RO' and b.status!='D'";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("patRosterRO", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("patRosterRO", db.getString(rs,1));
 }
 
 /*
@@ -105,10 +108,10 @@ out.flush();
 */
 
 // get patSexF
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and d.sex='F' and b.status!='D'";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and d.sex='F' and b.status!='D'";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("patSexF", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("patSexF", db.getString(rs,1));
 }
 
 /*
@@ -119,10 +122,10 @@ out.flush();
 */
 
 // get patSexM
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and d.sex='M' and b.status!='D'";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and d.sex='M' and b.status!='D'";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("patSexM", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("patSexM", db.getString(rs,1));
 }
 
 /*
@@ -133,10 +136,10 @@ out.flush();
 */
 
 // get pat0_1
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=1 ";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=1 ";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("pat0_1", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("pat0_1", db.getString(rs,1));
 }
 
 /*
@@ -147,10 +150,10 @@ out.flush();
 */
 
 // get pat2_11
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=11 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=2 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=11 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=2 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("pat2_11", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("pat2_11", db.getString(rs,1));
 }
 
 /*
@@ -161,10 +164,10 @@ out.flush();
 */
 
 // get pat12_20
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=20 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=12 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=20 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=12 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("pat12_20", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("pat12_20", db.getString(rs,1));
 }
 
 /*
@@ -175,10 +178,10 @@ out.flush();
 */
 
 // get pat21_34
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=34 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=21 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=34 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=21 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("pat21_34", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("pat21_34", db.getString(rs,1));
 }
 
 /*
@@ -189,10 +192,10 @@ out.flush();
 */
 
 // get pat35_50
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=50 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=35 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=50 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=35 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("pat35_50", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("pat35_50", db.getString(rs,1));
 }
 
 /*
@@ -203,10 +206,10 @@ out.flush();
 */
 
 // get pat51_64
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=64 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=51 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=64 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=51 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("pat51_64", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("pat51_64", db.getString(rs,1));
 }
 
 /*
@@ -217,10 +220,10 @@ out.flush();
 */
 
 // get pat65_70
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=70 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=65 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=70 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=65 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("pat65_70", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("pat65_70", db.getString(rs,1));
 }
 
 /*
@@ -231,10 +234,10 @@ out.flush();
 */
 
 // get pat71_
-sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=71 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.demographic_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=71 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("pat71_", rs.getString("count(distinct(b.demographic_no))"));
+	props.setProperty("pat71_", db.getString(rs,1));
 }
 
 /*
@@ -247,10 +250,10 @@ out.flush();
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 // get total visTotal
-sql = "select count(distinct(b.billing_no)) from billing b where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D'";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b where  b.billing_date>=? and b.billing_date<=? and b.status!='D'";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("visTotal", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("visTotal", db.getString(rs,1));
 }
 
 /*
@@ -261,10 +264,10 @@ out.flush();
 */
 
 // get visRosterNR
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and d.roster_status='NR' and b.status!='D'";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and d.roster_status='NR' and b.status!='D'";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("visRosterNR", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("visRosterNR", db.getString(rs,1));
 }
 
 /*
@@ -275,10 +278,10 @@ out.flush();
 */
 
 // get visRosterRO
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and d.roster_status='RO' and b.status!='D'";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and d.roster_status='RO' and b.status!='D'";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("visRosterRO", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("visRosterRO", db.getString(rs,1));
 }
 
 /*
@@ -289,10 +292,10 @@ out.flush();
 */
 
 // get visSexF
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and d.sex='F' and b.status!='D'";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and d.sex='F' and b.status!='D'";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("visSexF", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("visSexF", db.getString(rs,1));
 }
 
 /*
@@ -303,10 +306,10 @@ out.flush();
 */
 
 // get visSexM
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and d.sex='M' and b.status!='D'";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and d.sex='M' and b.status!='D'";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("visSexM", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("visSexM", db.getString(rs,1));
 }
 
 /*
@@ -317,10 +320,10 @@ out.flush();
 */
 
 // get vis0_1
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=1 ";
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=1 ";
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("vis0_1", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("vis0_1", db.getString(rs,1));
 }
 
 /*
@@ -331,10 +334,10 @@ out.flush();
 */
 
 // get vis2_11
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=11 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=2 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=11 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=2 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("vis2_11", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("vis2_11", db.getString(rs,1));
 }
 
 /*
@@ -345,10 +348,10 @@ out.flush();
 */
 
 // get vis12_20
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=20 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=12 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=20 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=12 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("vis12_20", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("vis12_20", db.getString(rs,1));
 }
 
 /*
@@ -359,10 +362,10 @@ out.flush();
 */
 
 // get vis21_34
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=34 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=21 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=34 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=21 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("vis21_34", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("vis21_34", db.getString(rs,1));
 }
 
 /*
@@ -373,10 +376,10 @@ out.flush();
 */
 
 // get vis35_50
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=50 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=35 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=50 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=35 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("vis35_50", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("vis35_50", db.getString(rs,1));
 }
 
 /*
@@ -387,10 +390,10 @@ out.flush();
 */
 
 // get vis51_64
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=64 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=51 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=64 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=51 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("vis51_64", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("vis51_64", db.getString(rs,1));
 }
 
 /*
@@ -401,10 +404,10 @@ out.flush();
 */
 
 // get vis65_70
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=70 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=65 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=70 " + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=65 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("vis65_70", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("vis65_70", db.getString(rs,1));
 }
 
 /*
@@ -415,10 +418,10 @@ out.flush();
 */
 
 // get vis71_
-sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=71 " ;
-rs = db.GetSQL(sql); 
+sql = "select count(distinct(b.billing_no)) from billing b, demographic d where  b.billing_date>=? and b.billing_date<=? and b.demographic_no=d.demographic_no and b.status!='D'" + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=71 " ;
+rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("vis71_", rs.getString("count(distinct(b.billing_no))"));
+	props.setProperty("vis71_", db.getString(rs,1));
 }
 
 /*
@@ -431,7 +434,7 @@ out.flush();
 
 
 rs.close();
-db.CloseConn();
+db.closeConn();
 
 %>
 
