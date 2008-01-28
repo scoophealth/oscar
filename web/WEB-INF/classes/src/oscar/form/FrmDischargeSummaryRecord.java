@@ -114,29 +114,29 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             String sql0 = "SELECT name AS programName FROM program WHERE program_id='"+programNo+"'";
             ResultSet rs0 = db.GetSQL(sql0);
             if(rs0.next()) {
-            	props.setProperty("programName",rs0.getString("programName"));
+            	props.setProperty("programName",db.getString(rs0,"programName"));
             }
             rs0.close();  
             
-            String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth, CONCAT(hin,ver) AS ohip FROM demographic WHERE demographic_no = "
+            String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth, CONCAT(hin,ver) AS ohip FROM demographic WHERE demographic_no = "
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
-                Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"),
-                        rs.getString("date_of_birth"));
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
+                Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"),
+                        db.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
                 //props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd
                 // HH:mm:ss"));
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("clientName", rs.getString("clientName"));
-                props.setProperty("ohip",rs.getString("ohip"));
+                props.setProperty("clientName", db.getString(rs,"clientName"));
+                props.setProperty("ohip",db.getString(rs,"ohip"));
             }
             rs.close();
             
-            String sql1 = "SELECT CONCAT(last_name,', ',first_name) AS providerName FROM provider WHERE provider_no='"+providerNo+"'";
+            String sql1 = "SELECT CONCAT(CONCAT(last_name,', '),first_name) AS providerName FROM provider WHERE provider_no='"+providerNo+"'";
             ResultSet rs1 = db.GetSQL(sql1);
             if(rs1.next()) {
             	props.setProperty("providerName",rs1.getString("providerName"));
@@ -148,7 +148,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             ResultSet rs2 = db.GetSQL(sql2);
             if(rs2.next()){
             	if(rs2.isFirst()) {
-            		String admitDate = rs2.getString("admission_date").substring(0,10);
+            		String admitDate = db.getString(rs2,"admission_date").substring(0,10);
             		String admitDate_r = admitDate.replace("-", "/");
             		props.setProperty("admitDate",admitDate_r);
             		            		
@@ -161,10 +161,10 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             ResultSet rs3 = db.GetSQL(sql3);
             while(rs3.next()) {
             	if(rs3.isFirst())
-            		allergies.append(rs3.getString("DESCRIPTION"));
+            		allergies.append(db.getString(rs3,"DESCRIPTION"));
             	else {
             		allergies.append(",");
-            		allergies.append(rs3.getString("DESCRIPTION"));
+            		allergies.append(db.getString(rs3,"DESCRIPTION"));
             	}
             }
             props.setProperty("allergies",allergies.toString());
@@ -174,15 +174,15 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             String sql4 = "SELECT issue_id from casemgmt_issue where demographic_no="+demographicNo+" and resolved=0";
             ResultSet rs4 = db.GetSQL(sql4);
             while(rs4.next()) {
-            	String sql5 = "SELECT description from issue where issue_id="+rs4.getString("issue_id");
+            	String sql5 = "SELECT description from issue where issue_id="+db.getString(rs4,"issue_id");
             	ResultSet rs5 = db.GetSQL(sql5);
             	if(rs5.next()) {
             		if(rs4.isFirst()) {
-            			issues.append(rs5.getString("description"));
+            			issues.append(db.getString(rs5,"description"));
             		}
             		else {
             			issues.append(";");
-            			issues.append(rs5.getString("description"));
+            			issues.append(db.getString(rs5,"description"));
             		}
             	}
             	rs5.close();
@@ -196,11 +196,11 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             ResultSet rs5 = db.GetSQL(sql5);
             while(rs5.next()) {
             	if(rs5.isFirst()) {
-            		prescriptions.append(rs5.getString("special"));            	
+            		prescriptions.append(db.getString(rs5,"special"));            	
             	}
             	else {
             		//prescriptions.append(";");
-            		prescriptions.append(rs5.getString("special"));
+            		prescriptions.append(db.getString(rs5,"special"));
             	}
             }
             props.setProperty("prescriptionSummary", prescriptions.toString());
@@ -224,20 +224,20 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
         Properties props = new Properties();
         if (existingID <= 0) {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = "
+            String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = "
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
-                Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"),
-                        rs.getString("date_of_birth"));
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
+                Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"),
+                        db.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
                 //props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd
                 // HH:mm:ss"));
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("clientName", rs.getString("pName"));
+                props.setProperty("clientName", db.getString(rs,"pName"));
             }
             rs.close();
             db.CloseConn();
