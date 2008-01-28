@@ -108,5 +108,12 @@ public class DBHelp {
         }
         return ret;
     }
-
+    public static String getString(ResultSet rs,String columnName) throws SQLException
+    {
+    	return oscar.Misc.getString(rs, columnName);
+    }
+    public static String getString(ResultSet rs,int columnIndex) throws SQLException
+    {
+    	return oscar.Misc.getString(rs, columnIndex);
+    }
 }
