@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import oscar.oscarDB.DBHandler;
+import oscar.oscarDB.*;
 
 /**
  * @author yilee18
@@ -33,6 +33,22 @@ public class DBHelp {
         return ret;
     }
 
+//    public synchronized boolean updateDBRecord(String sql, DBPreparedHandlerParam[] param) throws SQLException {
+    public synchronized int updateDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
+        int ret = 0;
+        DBPreparedHandler db = null;
+        try {
+            db = new DBPreparedHandler();
+            ret = db.queryExecuteUpdate(sql, params);
+//            _logger.info("updateDBRecord(sql = " + sql + ", userId = " + userId + ")");
+        } catch (SQLException e) {
+//            _logger.error("updateDBRecord(sql = " + sql + ", userId = " + userId + ")");
+        } finally {
+            db.closeConn();
+        }
+        return ret;
+    }
+    	
     public synchronized ResultSet searchDBRecord(String sql) throws SQLException {
         ResultSet ret = null;
         DBHandler db = null;
@@ -47,6 +63,20 @@ public class DBHelp {
         return ret;
     }
 
+    public synchronized ResultSet searchDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
+        ResultSet ret = null;
+        DBPreparedHandler db = null;
+        try {
+            db = new DBPreparedHandler();
+            ret = db.queryResults_paged(sql, params, 0);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            db.closeConn();
+        }
+        return ret;
+    }
+    
     public synchronized boolean updateDBRecord(String sql, String userId) throws SQLException {
         boolean ret = false;
         DBHandler db = null;
