@@ -87,9 +87,9 @@ function setfocus() {
 		System.out.println(nItems);
 %>  
   <tr bgcolor="<%=bgcolor%>">
-    <td align="center"><%=rs.getString("s.study_no")%></td>
-    <td><a href="<%=rs.getString("s.study_link")%>?demographic_no=<%=request.getParameter("demographic_no")%>&study_no=<%=rs.getString("s.study_no")%>"><%=rs.getString("s.study_name")%></a></td>
-    <td><%=rs.getString("s.description")%></td>
+    <td align="center"><%=studyBean.getString(rs,"s.study_no")%></td>
+    <td><a href="<%=studyBean.getString(rs,"s.study_link")%>?demographic_no=<%=request.getParameter("demographic_no")%>&study_no=<%=studyBean.getString(rs,"s.study_no")%>"><%=studyBean.getString(rs,"s.study_name")%></a></td>
+    <td><%=studyBean.getString(rs,"s.description")%></td>
   </tr>
 <%
 	}

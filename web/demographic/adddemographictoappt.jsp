@@ -148,61 +148,61 @@ function goback(){
     out.println("failed!!!");
   } else {
     while (rs.next()) {
-     if(!(rs.getString("month_of_birth").equals(""))) {//   ||rs.getString("year_of_birth")||rs.getString("date_of_birth")) {
-    	if(curMonth>Integer.parseInt(rs.getString("month_of_birth"))) {
-    		age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+     if(!(apptMainBean.getString(rs,"month_of_birth").equals(""))) {//   ||apptMainBean.getString(rs,"year_of_birth")||apptMainBean.getString(rs,"date_of_birth")) {
+    	if(curMonth>Integer.parseInt(apptMainBean.getString(rs,"month_of_birth"))) {
+    		age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"));
     	} else {
-    		if(curMonth==Integer.parseInt(rs.getString("month_of_birth")) &&
-    			curDay>Integer.parseInt(rs.getString("date_of_birth"))) {
-    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+    		if(curMonth==Integer.parseInt(apptMainBean.getString(rs,"month_of_birth")) &&
+    			curDay>Integer.parseInt(apptMainBean.getString(rs,"date_of_birth"))) {
+    			age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"));
     		} else {
-    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"))-1; 
+    			age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"))-1; 
     		}
     	}	
      }
 %> 
-<div align="center"><b><font color="navy">Demographic No : <%=rs.getString("demographic_no")%></font></b></div>
+<div align="center"><b><font color="navy">Demographic No : <%=apptMainBean.getString(rs,"demographic_no")%></font></b></div>
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
 	<form method="post" name="updatedelete" action="../cpp/cppcontrol.jsp">
-	<input type="hidden" name="demographic_no" value="<%=rs.getString("demographic_no")%>">
+	<input type="hidden" name="demographic_no" value="<%=apptMainBean.getString(rs,"demographic_no")%>">
       <tr> 
       <td align="right"> <b>Last Name: </b></td>
       <td align="left"> 
-        <input type="text" name="last_name" value="<%=rs.getString("last_name")%>">
+        <input type="text" name="last_name" value="<%=apptMainBean.getString(rs,"last_name")%>">
       </td>
       <td align="right"><b>First Name: </b> </td>
       <td align="left"> 
-        <input type="text" name="first_name" value="<%=rs.getString("first_name")%>">
+        <input type="text" name="first_name" value="<%=apptMainBean.getString(rs,"first_name")%>">
       </td>
     </tr>
     <tr valign="top"> 
       <td  align="right"> <b>Address: </b></td>
       <td align="left" > 
-        <input type="text" name="address" value="<%=rs.getString("address")%>">
+        <input type="text" name="address" value="<%=apptMainBean.getString(rs,"address")%>">
       </td>
       <td align="right"><b>City: </b></td>
       <td align="left"> 
-        <input type="text" name="city" value="<%=rs.getString("city")%>">
+        <input type="text" name="city" value="<%=apptMainBean.getString(rs,"city")%>">
       </td>
     </tr>
     <tr valign="top"> 
       <td align="right"><b>Province: </b> </td>
       <td  align="left"> 
-        <input type="text" name="province" value="<%=rs.getString("province")%>">
+        <input type="text" name="province" value="<%=apptMainBean.getString(rs,"province")%>">
       </td>
       <td  align="right"><b>Postal: </b> </td>
       <td  align="left"> 
-        <input type="text" name="postal" value="<%=rs.getString("postal")%>">
+        <input type="text" name="postal" value="<%=apptMainBean.getString(rs,"postal")%>">
       </td>
     </tr>
     <tr valign="top"> 
       <td  align="right"><b>Phone: </b> </td>
       <td align="left" > 
-        <input type="text" name="phone" value="<%=rs.getString("phone")%>">
+        <input type="text" name="phone" value="<%=apptMainBean.getString(rs,"phone")%>">
       </td>
       <td  align="right"><b>Ext.:</b> </td>
       <td  align="left"> 
-        <input type="text" name="ext" value="<%=rs.getString("ext")%>">
+        <input type="text" name="ext" value="<%=apptMainBean.getString(rs,"ext")%>">
       </td>
     </tr>
     <tr valign="top"> 
@@ -212,15 +212,15 @@ function goback(){
         <table border="0" cellpadding="0" cellspacing="0">
           <tr> 
             <td> 
-              <input type="text" name="year_of_birth" value="<%=rs.getString("year_of_birth")%>" size="4" maxlength="4">
+              <input type="text" name="year_of_birth" value="<%=apptMainBean.getString(rs,"year_of_birth")%>" size="4" maxlength="4">
             </td>
             <td>-</td>
             <td> 
-              <input type="text" name="month_of_birth" value="<%=rs.getString("month_of_birth")%>" size="2" maxlength="2">
+              <input type="text" name="month_of_birth" value="<%=apptMainBean.getString(rs,"month_of_birth")%>" size="2" maxlength="2">
             </td>
             <td>-</td>
             <td> 
-              <input type="text" name="date_of_birth" value="<%=rs.getString("date_of_birth")%>" size="2" maxlength="2">
+              <input type="text" name="date_of_birth" value="<%=apptMainBean.getString(rs,"date_of_birth")%>" size="2" maxlength="2">
             </td>
           </tr>
         </table>
@@ -233,66 +233,66 @@ function goback(){
     <tr valign="top"> 
       <td align="right"><b>HIN: </b></td>
       <td align="left" > 
-        <input type="text" name="hin" value="<%=rs.getString("hin")%>">
+        <input type="text" name="hin" value="<%=apptMainBean.getString(rs,"hin")%>">
       </td>
       <td align="right"><b>Ver.</b> </td>
       <td align="left"> 
-        <input type="text" name="ver" value="<%=rs.getString("ver")%>">
+        <input type="text" name="ver" value="<%=apptMainBean.getString(rs,"ver")%>">
       </td>
     </tr>
     <tr valign="top"> 
       <td align="right"><b>Roster Status: </b> </td>
       <td align="left" > 
-        <input type="text" name="roster_status" value="<%=rs.getString("roster_status")%>">
+        <input type="text" name="roster_status" value="<%=apptMainBean.getString(rs,"roster_status")%>">
       </td>
       <td align="right"> <b>Patient Status:</b> <b> </b></td>
       <td align="left"> 
-        <input type="text" name="patient_status" value="<%=rs.getString("patient_status")%>">
+        <input type="text" name="patient_status" value="<%=apptMainBean.getString(rs,"patient_status")%>">
       </td>
     </tr>
     <tr valign="top"> 
       <td align="right"><b>Date Joined: </b></td>
       <td align="left" > 
-        <input type="text" name="date_joined" value="<%=rs.getString("date_joined")%>">
+        <input type="text" name="date_joined" value="<%=apptMainBean.getString(rs,"date_joined")%>">
       </td>
       <td align="right"><b>Chart No.:</b> </td>
       <td align="left"> 
-        <input type="text" name="chart_no" value="<%=rs.getString("chart_no")%>">
+        <input type="text" name="chart_no" value="<%=apptMainBean.getString(rs,"chart_no")%>">
       </td>
     </tr>
     <tr valign="top"> 
       <td align="right"><b>Doctor: </b></td>
       <td align="left" > 
-        <input type="text" name="provider_no" value="<%=rs.getString("provider_no")%>">
+        <input type="text" name="provider_no" value="<%=apptMainBean.getString(rs,"provider_no")%>">
       </td>
       <td align="right"><b>Sex: </b></td>
       <td align="left"> 
-        <input type="text" name="sex" value="<%=rs.getString("sex")%>">
+        <input type="text" name="sex" value="<%=apptMainBean.getString(rs,"sex")%>">
       </td>
     </tr>
     <tr valign="top"> 
       <td align="right"><b>End Date: </b></td>
       <td align="left" > 
-        <input type="text" name="end_date" value="<%=rs.getString("end_date")%>">
+        <input type="text" name="end_date" value="<%=apptMainBean.getString(rs,"end_date")%>">
       </td>
       <td align="right"> <b>EFF Date: </b></td>
       <td align="left"> 
-        <input type="text" name="eff_date" value="<%=rs.getString("eff_date")%>">
+        <input type="text" name="eff_date" value="<%=apptMainBean.getString(rs,"eff_date")%>">
       </td>
     </tr>
     <tr valign="top"> 
       <td align="right"><b>PCN Indicator: </b></td>
       <td align="left" > 
-        <input type="text" name="pcn_indicator" value="<%=rs.getString("pcn_indicator")%>">
+        <input type="text" name="pcn_indicator" value="<%=apptMainBean.getString(rs,"pcn_indicator")%>">
       </td>
       <td align="right"><b>HC Type: </b></td>
       <td align="left"> 
-        <input type="text" name="hc_type" value="<%=rs.getString("hc_type")%>">
+        <input type="text" name="hc_type" value="<%=apptMainBean.getString(rs,"hc_type")%>">
       </td>
     <tr valign="top"> 
       <td align="right"><b>HC Renew Date: </b></td>
       <td align="left" > 
-        <input type="text" name="hc_renew_date" value="<%=rs.getString("hc_renew_date")%>">
+        <input type="text" name="hc_renew_date" value="<%=apptMainBean.getString(rs,"hc_renew_date")%>">
       </td>
       <td align="right">&nbsp;</td>
       <td align="left">&nbsp; </td>
@@ -312,10 +312,10 @@ function goback(){
     <tr bgcolor="#486ebd"> 
       <td colspan="4"> 
         <div align="center"> 
-          <input type="hidden" name="name" value="<%=rs.getString("last_name")+","+rs.getString("first_name")%>">
+          <input type="hidden" name="name" value="<%=apptMainBean.getString(rs,"last_name")+","+apptMainBean.getString(rs,"first_name")%>">
           <input type="hidden" name="dboperation" value="update_record">
           <input type="submit" name="displaymode" value="Update Record & Back to Appointment">
-          <!--a href='cppcontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=delete&dboperation=delete'> 
+          <!--a href='cppcontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=delete&dboperation=delete'> 
           <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt="Delete the Record"></a--> 
           <input type="button" name="Button" value="Cancel" onclick="goback()">
         </div>

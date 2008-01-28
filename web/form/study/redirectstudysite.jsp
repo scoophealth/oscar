@@ -44,9 +44,9 @@
     String sql = "SELECT * from studylogin where provider_no=" + provNo + " and study_no = " + studyId + " and current=1" ;
 	ResultSet rs = db.GetSQL(sql);
 	while(rs.next()) {
-		baseURL = rs.getString("remote_login_url");
-		username = rs.getString("username");
-		password = rs.getString("password");
+		baseURL = db.getString(rs,"remote_login_url");
+		username = db.getString(rs,"username");
+		password = db.getString(rs,"password");
 	}
 
 	rs.close();

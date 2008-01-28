@@ -205,8 +205,8 @@ function checkTypeIn() {
 			bodd=bodd?false:true; //for the color of rows
 			nItems++; //to calculate if it is the end of records
 
-			//if( !(rs.getString("month_of_birth").equals("")) && !rs.getString("year_of_birth").equals("") && !rs.getString("date_of_birth").equals("") ) {  
-    		//age = UtilDateUtilities.calcAge(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
+			//if( !(apptMainBean.getString(rs,"month_of_birth").equals("")) && !apptMainBean.getString(rs,"year_of_birth").equals("") && !apptMainBean.getString(rs,"date_of_birth").equals("") ) {  
+    		//age = UtilDateUtilities.calcAge(apptMainBean.getString(rs,"year_of_birth"), apptMainBean.getString(rs,"month_of_birth"), rs.getString("date_of_birth"));
 			//}	
 %>
 
