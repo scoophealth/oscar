@@ -586,7 +586,10 @@ public class SqlUtils {
             }
         }
     }
-    
+
+//Use Prepared Statement and ? parameter for String, Date and int value, don't try to convert Date to String in this way,
+// not consistence on different computers    
+/*    
     public static String isoToOracleDate(String isoDate) throws ParseException
     {
         if (isoDate==null) return(null);
@@ -597,10 +600,11 @@ public class SqlUtils {
         SimpleDateFormat oracleFormat=new SimpleDateFormat("dd-MMM-yyyy");
         return(oracleFormat.format(date));
     }
-    
+*/    
     /**
      * Hey! that's not an iso date format.
      */
+/*  
     public static String isoToOracleDate2(String isoDate) throws ParseException
     {
         if (isoDate==null) return(null);
@@ -611,10 +615,11 @@ public class SqlUtils {
         SimpleDateFormat oracleFormat=new SimpleDateFormat("dd-MMM-yyyy");
         return(oracleFormat.format(date));
     }
-    
+*/    
     /**
      * Hey! that's not an iso date format.
      */
+/*    
     public static String isoToOracleDate3(String isoDate) throws ParseException
     {
         if (isoDate==null) return(null);
@@ -625,7 +630,7 @@ public class SqlUtils {
         SimpleDateFormat oracleFormat=new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
         return(oracleFormat.format(date));
     }
-    
+*/    
     
     public static String addOneDay(String oldDate) throws ParseException
     {
