@@ -110,9 +110,9 @@ function setfocus() {
         rs = studyBean.queryResults(new String[]{demographic_no,rsdemo.getString("s.study_no")}, "search_demostudy");
 %>  
   <tr bgcolor="<%=bgcolor%>">
-    <td align='center'><input type="checkbox" name="study_no" value="<%=rsdemo.getString("s.study_no")%>" <%=demographic_no.equals(rs.next()?rs.getString("demographic_no"):"0") ? "checked" : "" %>></td>
-    <td><%=rsdemo.getString("study_name")%></td>
-    <td align="center"><%=rsdemo.getString("description")%></td>
+    <td align='center'><input type="checkbox" name="study_no" value="<%=rsdemo.getString("s.study_no")%>" <%=demographic_no.equals(rs.next()?studyBean.getString(rs,"demographic_no"):"0") ? "checked" : "" %>></td>
+    <td><%=studyBean.getString(rsdemo,"study_name")%></td>
+    <td align="center"><%=studyBean.getString(rsdemo,"description")%></td>
   </tr>
 <%
   }

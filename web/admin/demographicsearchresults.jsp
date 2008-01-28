@@ -123,28 +123,28 @@ function setfocus() {
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
 
-     if(!(rs.getString("month_of_birth").equals(""))) {//   ||rs.getString("year_of_birth")||rs.getString("date_of_birth")) {
-    	if(curMonth>Integer.parseInt(rs.getString("month_of_birth"))) {
-    		age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+     if(!(rs.getString("month_of_birth").equals(""))) {//   ||apptMainBean.getString(rs,"year_of_birth")||apptMainBean.getString(rs,"date_of_birth")) {
+    	if(curMonth>Integer.parseInt(apptMainBean.getString(rs,"month_of_birth"))) {
+    		age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"));
     	} else {
-    		if(curMonth==Integer.parseInt(rs.getString("month_of_birth")) &&
-    			curDay>Integer.parseInt(rs.getString("date_of_birth"))) {
-    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+    		if(curMonth==Integer.parseInt(apptMainBean.getString(rs,"month_of_birth")) &&
+    			curDay>Integer.parseInt(apptMainBean.getString(rs,"date_of_birth"))) {
+    			age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"));
     		} else {
-    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"))-1; 
+    			age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"))-1; 
     		}
     	}	
      }	
    
 %>
 <tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td width="20%" align="center" height="25"> <a href="admincontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=Demographic_Edit&dboperation=demographic_search_detail"><%=rs.getString("demographic_no")%></a></td>
-      <td align="center" width="20%" height="25"><%=rs.getString("last_name")%></td>
-      <td align="center" width="20%" height="25"><%=rs.getString("first_name")%></td>
+      <td width="20%" align="center" height="25"> <a href="admincontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=Demographic_Edit&dboperation=demographic_search_detail"><%=apptMainBean.getString(rs,"demographic_no")%></a></td>
+      <td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"last_name")%></td>
+      <td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"first_name")%></td>
       <td align="center" width="10%" height="25"><%=age%></td>
-      <td align="center" width="10%" height="25"><%=rs.getString("roster_status")%></td>
-      <td align="center" width="10%" height="25"><%=rs.getString("sex")%></td>
-      <td align="center" width="10%" height="25"><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
+      <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"roster_status")%></td>
+      <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"sex")%></td>
+      <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></td>
 </tr>
 <%
     }

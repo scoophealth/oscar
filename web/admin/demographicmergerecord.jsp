@@ -238,15 +238,15 @@ if(rs==null) {
         bodd=bodd?false:true; //for the color of rows
         nItems++; //to calculate if it is the end of records
         
-        if(!(rs.getString("month_of_birth").equals(""))) {//   ||rs.getString("year_of_birth")||rs.getString("date_of_birth")) {
-            if(curMonth>Integer.parseInt(rs.getString("month_of_birth"))) {
-                age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+        if(!(apptMainBean.getString(rs,"month_of_birth").equals(""))) {//   ||apptMainBean.getString(rs,"year_of_birth")||apptMainBean.getString(rs,"date_of_birth")) {
+            if(curMonth>Integer.parseInt(apptMainBean.getString(rs,"month_of_birth"))) {
+                age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"));
             } else {
-                if(curMonth==Integer.parseInt(rs.getString("month_of_birth")) &&
-                        curDay>Integer.parseInt(rs.getString("date_of_birth"))) {
-                    age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+                if(curMonth==Integer.parseInt(apptMainBean.getString(rs,"month_of_birth")) &&
+                        curDay>Integer.parseInt(apptMainBean.getString(rs,"date_of_birth"))) {
+                    age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"));
                 } else {
-                    age=curYear-Integer.parseInt(rs.getString("year_of_birth"))-1;
+                    age=curYear-Integer.parseInt(apptMainBean.getString(rs,"year_of_birth"))-1;
                 }
             }
         }	
@@ -256,32 +256,32 @@ if(rs==null) {
     <%
         DemographicMerged dmDAO = new DemographicMerged();
         String dbop = "demographic_search_detail";
-        String head = dmDAO.getHead(rs.getString("demographic_no"));
-        String demographic = rs.getString("demographic_no") ;
+        String head = dmDAO.getHead(apptMainBean.getString(rs,"demographic_no"));
+        String demographic = apptMainBean.getString(rs,"demographic_no") ;
         boolean headRecord = head.equals(demographic);
         java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
         if (vLocale.getCountry().equals("BR"))
             dbop = "demographic_search_detail_ptbr";
     if(mergedSearch || headRecord  ){%>
-    <td align="center" width="5%" height="25"><input type="checkbox" name="records" value="<%= rs.getString("demographic_no") %>"></td>
+    <td align="center" width="5%" height="25"><input type="checkbox" name="records" value="<%= apptMainBean.getString(rs,"demographic_no") %>"></td>
     <%}else{%>
     <td align="center" width="5%" height="25">&nbsp;</td>
     <%}%>
     <% if (!mergedSearch ){
        if(headRecord){%>
-        <td align="center" width="5%" height="25"><input type="radio" name="head" value="<%= rs.getString("demographic_no") %>"></td>
+        <td align="center" width="5%" height="25"><input type="radio" name="head" value="<%= apptMainBean.getString(rs,"demographic_no") %>"></td>
        <%}else{%>
         <td align="center" width="5%" height="25">&nbsp;</td>
        <%}%>
   
     <%}%>    
-    <td width="15%" align="center" height="25"> <a href="javascript:popupWindow('admincontrol.jsp?demographic_no=<%= head %>&displaymode=Demographic_Edit2&dboperation=<%= dbop %>')"><%=rs.getString("demographic_no")%></a></td>
-    <td align="center" width="20%" height="25"><%=rs.getString("last_name")%></td>
-    <td align="center" width="20%" height="25"><%=rs.getString("first_name")%></td>
+    <td width="15%" align="center" height="25"> <a href="javascript:popupWindow('admincontrol.jsp?demographic_no=<%= head %>&displaymode=Demographic_Edit2&dboperation=<%= dbop %>')"><%=apptMainBean.getString(rs,"demographic_no")%></a></td>
+    <td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"last_name")%></td>
+    <td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"first_name")%></td>
     <td align="center" width="10%" height="25"><%=age%></td>
-    <td align="center" width="10%" height="25"><%=rs.getString("roster_status")%></td>
-    <td align="center" width="10%" height="25"><%=rs.getString("sex")%></td>
-    <td align="center" width="10%" height="25"><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
+    <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"roster_status")%></td>
+    <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"sex")%></td>
+    <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></td>
 </tr>
 <%
     }
