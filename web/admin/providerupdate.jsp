@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.util.SqlUtils,oscar.oscarProvider.data.ProviderBillCenter" errorPage="errorpage.jsp" %>
+<%@ page import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.oscarDB.*,oscar.util.SqlUtils,oscar.oscarProvider.data.ProviderBillCenter" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <!--  
 /*
@@ -42,30 +42,31 @@
   ProviderBillCenter billCenter = new ProviderBillCenter();
   billCenter.updateBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter")); 
   
-  String[] param =new String[18];
-  param[0]=request.getParameter("last_name");
-  param[1]=request.getParameter("first_name");
-  param[2]=request.getParameter("provider_type");
-  param[3]=request.getParameter("specialty");
-  param[4]=request.getParameter("team");
-  param[5]=request.getParameter("sex");
+  DBPreparedHandlerParam[] param =new DBPreparedHandlerParam[18];
+  param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));
+  param[1]=new DBPreparedHandlerParam(request.getParameter("first_name"));
+  param[2]=new DBPreparedHandlerParam(request.getParameter("provider_type"));
+  param[3]=new DBPreparedHandlerParam(request.getParameter("specialty"));
+  param[4]=new DBPreparedHandlerParam(request.getParameter("team"));
+  param[5]=new DBPreparedHandlerParam(request.getParameter("sex"));
   
-  param[6]=request.getParameter("dob");
-  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
-  if("oracle".equalsIgnoreCase(strDbType)){
-  	param[6] = SqlUtils.isoToOracleDate(param[6]);
-  }
-  param[7]=request.getParameter("address");
-  param[8]=request.getParameter("phone");
-  param[9]=request.getParameter("workphone");
-  param[10]=request.getParameter("ohip_no");
-  param[11]=request.getParameter("rma_no");
-  param[12]=request.getParameter("billing_no");
-  param[13]=request.getParameter("hso_no");
-  param[14]=request.getParameter("status");
-  param[15]=SxmlMisc.createXmlDataString(request,"xml_p");
-  param[16]=request.getParameter("provider_activity");
-  param[17]=request.getParameter("provider_no");
+  param[6]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));
+//  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+//  if("oracle".equalsIgnoreCase(strDbType)){
+//  	param[6] = SqlUtils.isoToOracleDate(param[6]);
+//  }
+
+  param[7]=new DBPreparedHandlerParam(request.getParameter("address"));
+  param[8]=new DBPreparedHandlerParam(request.getParameter("phone"));
+  param[9]=new DBPreparedHandlerParam(request.getParameter("workphone"));
+  param[10]=new DBPreparedHandlerParam(request.getParameter("ohip_no"));
+  param[11]=new DBPreparedHandlerParam(request.getParameter("rma_no"));
+  param[12]=new DBPreparedHandlerParam(request.getParameter("billing_no"));
+  param[13]=new DBPreparedHandlerParam(request.getParameter("hso_no"));
+  param[14]=new DBPreparedHandlerParam(request.getParameter("status"));
+  param[15]=new DBPreparedHandlerParam(SxmlMisc.createXmlDataString(request,"xml_p"));
+  param[16]=new DBPreparedHandlerParam(request.getParameter("provider_activity"));
+  param[17]=new DBPreparedHandlerParam(request.getParameter("provider_no"));
   
   
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));

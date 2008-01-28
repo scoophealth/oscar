@@ -63,10 +63,6 @@ String curUser_no = (String)session.getAttribute("user");
   param[6]=request.getParameter("sex");
   
 //  param[7]=request.getParameter("dob");
-//  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
-//  if("oracle".equalsIgnoreCase(strDbType)){
-//  	param[7] = SqlUtils.isoToOracleDate(param[7]);
-//  }
   
   param[8]=request.getParameter("address");
   param[9]=request.getParameter("phone");

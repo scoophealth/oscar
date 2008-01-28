@@ -26,7 +26,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.sql.*, java.util.*,java.security.*,oscar.util.SqlUtils" errorPage="errorpage.jsp" %>
+<%@ page import="java.sql.*, java.util.*,java.security.*,oscar.*,oscar.oscarDB.*, oscar.util.SqlUtils" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <html:html locale="true">
@@ -47,24 +47,19 @@
       for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
 	} else sbTemp = new StringBuffer(request.getParameter("password"));
 
-    String[] param =new String[8];
-	  param[0]=request.getParameter("user_name");
-	  param[1]=sbTemp.toString();
-	  param[2]=request.getParameter("provider_no");
-	  param[3]=request.getParameter("pin");
-	  param[4]=request.getParameter("b_ExpireSet")==null?"0":request.getParameter("b_ExpireSet");
+    DBPreparedHandlerParam[] param =new DBPreparedHandlerParam[9];
+	param[0]=new DBPreparedHandlerParam(request.getParameter("user_name"));
+	param[1]=new DBPreparedHandlerParam(sbTemp.toString());
+	param[2]=new DBPreparedHandlerParam(request.getParameter("provider_no"));
+	param[3]=new DBPreparedHandlerParam(request.getParameter("pin"));
+    param[4]=new DBPreparedHandlerParam(request.getParameter("b_ExpireSet")==null?"0":request.getParameter("b_ExpireSet"));
 	  
-	  param[5]=request.getParameter("date_ExpireDate");
-	  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
-	  if(!"".equals(param[5]) &&"oracle".equalsIgnoreCase(strDbType)){
-	  	param[5] = SqlUtils.isoToOracleDate(param[5]);
-	  }
+	param[5]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("date_ExpireDate")));
 	  
-	  param[6]=request.getParameter("b_LocalLockSet")==null?"0":request.getParameter("b_LocalLockSet");
-	  param[7]=request.getParameter("b_RemoteLockSet")==null?"0":request.getParameter("b_RemoteLockSet");
-	  int[] nparam=new int[1];
-	  nparam[0]=Integer.parseInt(request.getParameter("security_no"));
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param,nparam, request.getParameter("dboperation"));
+	param[6]=new DBPreparedHandlerParam(request.getParameter("b_LocalLockSet")==null?"0":request.getParameter("b_LocalLockSet"));
+	param[7]=new DBPreparedHandlerParam(request.getParameter("b_RemoteLockSet")==null?"0":request.getParameter("b_RemoteLockSet"));
+	param[8]=new DBPreparedHandlerParam(Integer.parseInt(request.getParameter("security_no")));
+  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
   <p><h2><bean:message key="admin.securityupdate.msgUpdateSuccess"/>
