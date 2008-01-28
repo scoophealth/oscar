@@ -254,7 +254,7 @@ String	sql   = "select * from secRole order by role_name";
 ResultSet rs = dbObj.searchDBRecord(sql);
 while (rs.next()) {
 %>
-<tr><td><%=rs.getString("role_name")%></td></tr>
+<tr><td><%=dbObj.getString(rs,"role_name")%></td></tr>
 <%}%>
 </table>
     </body>

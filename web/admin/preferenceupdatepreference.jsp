@@ -77,7 +77,7 @@
       <tr> 
         <td width="40%" align="right"><bean:message key="admin.provider.formProviderNo"/>: </td>
         <td> 
-          <% String provider_no = rs.getString("provider_no"); %>
+          <% String provider_no = apptMainBean.getString(rs,"provider_no"); %>
           <%= provider_no %> 
           <input type="hidden"  name="provider_no" value="<%= provider_no %>">
         </td>
@@ -87,7 +87,7 @@
           <div align="right"><bean:message key="admin.preference.formStartHour"/>: </div>
         </td>
         <td> 
-          <input type="text"  index="3" name="start_hour" value="<%= rs.getString("start_hour") %>">
+          <input type="text"  index="3" name="start_hour" value="<%= apptMainBean.getString(rs,"start_hour") %>">
         </td>
       </tr>
       <tr> 
@@ -95,19 +95,19 @@
           <div align="right"><bean:message key="admin.preference.formEndHour"/>: </div>
         </td>
         <td> 
-          <input type="text"  index="4" name="end_hour" value="<%= rs.getString("end_hour") %>">
+          <input type="text"  index="4" name="end_hour" value="<%= apptMainBean.getString(rs,"end_hour") %>">
         </td>
       </tr>
       <tr> 
         <td align="right"><bean:message key="admin.preference.formPeriod"/> (<bean:message key="admin.preference.inMin"/>):</td>
         <td> 
-          <input type="text" name="every_min" value="<%= rs.getString("every_min") %>">
+          <input type="text" name="every_min" value="<%= apptMainBean.getString(rs,"every_min") %>">
         </td>
       </tr>
       <tr> 
         <td align="right"><bean:message key="admin.preference.formGroupNo"/>: </td>
         <td> 
-          <input type="text" name="mygroup_no" value="<%= rs.getString("mygroup_no") %>">
+          <input type="text" name="mygroup_no" value="<%= apptMainBean.getString(rs,"mygroup_no") %>">
         </td>
       </tr>
       <tr> 
@@ -117,7 +117,7 @@
 	      <option value="no">-- no --</option>
 <%  ResultSet rs1 = apptMainBean.queryResults("preference_list_servicetype");
     while (rs1.next()) { %>
-	      <option value="<%=rs1.getString("servicetype")%>" <%=rs1.getString("servicetype").equals(rs.getString("default_servicetype"))?"selected":""%>>
+	      <option value="<%=rs1.getString("servicetype")%>" <%=rs1.getString("servicetype").equals(apptMainBean.getString(rs,"default_servicetype"))?"selected":""%>>
 		<%=rs1.getString("servicetype_name")%>
 	      </option>
 <%  } %>
@@ -128,11 +128,11 @@
         <td colspan="2"> 
           <div align="center"> 
             <input type="hidden" name="color_template" value="deepblue">
-            <input type="hidden" name="preference_no" value="<%= rs.getString("preference_no")%>">
+            <input type="hidden" name="preference_no" value="<%= apptMainBean.getString(rs,"preference_no")%>">
             <input type="hidden" name="dboperation" value="preference_update_record">
             <input type="hidden" name="displaymode" value="Preference_Update_Record">
             <input type="submit" name="subbutton" value="<bean:message key="admin.preferenceupdatepreference.btnSubmit"/>">
-            <input type="button" value="<bean:message key="admin.preferenceupdatepreference.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=rs.getString("preference_no")%>&displaymode=Preference_Delete&dboperation=preference_delete'">                         
+            <input type="button" value="<bean:message key="admin.preferenceupdatepreference.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=apptMainBean.getString(rs,"preference_no")%>&displaymode=Preference_Delete&dboperation=preference_delete'">                         
           </div>
         </td>
       </tr>

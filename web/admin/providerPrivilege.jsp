@@ -47,7 +47,7 @@ Vector vecRoleName = new Vector();
 String	sql   = "select * from secRole order by role_name";
 ResultSet rs = dbObj.searchDBRecord(sql);
 while (rs.next()) {
-	vecRoleName.add(rs.getString("role_name"));
+	vecRoleName.add(dbObj.getString(rs,"role_name"));
 }
 // get rights from database
 Vector vecRightsName = new Vector();
@@ -55,21 +55,21 @@ Vector vecRightsDesc = new Vector();
 sql   = "select * from secPrivilege order by id";
 rs = dbObj.searchDBRecord(sql);
 while (rs.next()) {
-	vecRightsName.add(rs.getString("privilege"));
-	vecRightsDesc.add(rs.getString("description"));
+	vecRightsName.add(dbObj.getString(rs,"privilege"));
+	vecRightsDesc.add(dbObj.getString(rs,"description"));
 }
 // get objId from database
 Vector vecObjectId = new Vector();
 sql   = "select objectName from secObjectName order by objectName";
 rs = dbObj.searchDBRecord(sql);
 while (rs.next()) {
-	vecObjectId.add(rs.getString("objectName"));
+	vecObjectId.add(dbObj.getString(rs,"objectName"));
 }
 sql   = "select distinct(objectName) from secObjPrivilege order by objectName";
 rs = dbObj.searchDBRecord(sql);
 while (rs.next()) {
-	if(!vecObjectId.contains(rs.getString("objectName")))
-		vecObjectId.add(rs.getString("objectName"));
+	if(!vecObjectId.contains(dbObj.getString(rs,"objectName")))
+		vecObjectId.add(dbObj.getString(rs,"objectName"));
 }
 // get provider name from database
 Vector vecProviderName = new Vector();
@@ -77,8 +77,8 @@ Vector vecProviderNo = new Vector();
 sql   = "select provider_no, last_name, first_name from provider order by last_name";
 rs = dbObj.searchDBRecord(sql);
 while (rs.next()) {
-	vecProviderNo.add(rs.getString("provider_no"));
-	vecProviderName.add(rs.getString("last_name") + "," + rs.getString("first_name"));
+	vecProviderNo.add(dbObj.getString(rs,"provider_no"));
+	vecProviderName.add(dbObj.getString(rs,"last_name") + "," + dbObj.getString(rs,"first_name"));
 }
 
 // add the role list
@@ -134,9 +134,9 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
 	sql = "select * from secObjPrivilege where roleUserGroup='" + roleUserGroup + "' and objectName='" + objectName + "'";
 	rs = dbObj.searchDBRecord(sql);
 	while (rs.next()) {
-		privilege = rs.getString("privilege");
-		priority = rs.getString("priority");
-		provider_no = rs.getString("provider_no");
+		privilege = dbObj.getString(rs,"privilege");
+		priority = dbObj.getString(rs,"priority");
+		provider_no = dbObj.getString(rs,"provider_no");
 	}
 	sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
 	sql += "'" + curUser_no + "',";
@@ -182,9 +182,9 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 	sql = "select * from secObjPrivilege where roleUserGroup='" + roleUserGroup + "' and objectName='" + objectName + "'";
 	rs = dbObj.searchDBRecord(sql);
 	while (rs.next()) {
-		privilege = rs.getString("privilege");
-		priority = rs.getString("priority");
-		provider_no = rs.getString("provider_no");
+		privilege = dbObj.getString(rs,"privilege");
+		priority = dbObj.getString(rs,"priority");
+		provider_no = dbObj.getString(rs,"provider_no");
 	}
 
     sql = "delete from secObjPrivilege where roleUserGroup='" + roleUserGroup + "' and objectName='" + objectName + "'";
@@ -271,7 +271,7 @@ function onChangeSelect(){
 <%
 String     color       = "#ccCCFF";
 Properties prop        = null;
-Vector     vec         = new Vector();
+Vector<Properties>     vec         = new Vector<Properties>();
 
 String nameWhere = "".equals(keyword)||vecRoleName.contains(keyword)? "roleUserGroup":"objectName";
 String nameValue = keyword + "%";
@@ -281,10 +281,10 @@ System.out.println(query);
 rs = dbObj.searchDBRecord(query);
 while (rs.next()) {
 	prop = new Properties();
-	prop.setProperty("roleUserGroup", rs.getString("roleUserGroup"));
-	prop.setProperty("objectName", rs.getString("objectName"));
-	prop.setProperty("privilege", rs.getString("privilege"));
-	prop.setProperty("priority", rs.getString("priority"));
+	prop.setProperty("roleUserGroup", dbObj.getString(rs,"roleUserGroup"));
+	prop.setProperty("objectName", dbObj.getString(rs,"objectName"));
+	prop.setProperty("privilege", dbObj.getString(rs,"privilege"));
+	prop.setProperty("priority", dbObj.getString(rs,"priority"));
 	vec.add(prop);
 }
 %>

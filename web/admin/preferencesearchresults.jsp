@@ -144,11 +144,11 @@
 
       <tr bgcolor="<%=bodd?"ivory":"white"%>">
         
-      <td align="center"><a href='admincontrol.jsp?keyword=<%=rs.getString("preference_no")%>&displaymode=Preference_Update&dboperation=preference_search_detail'><%= rs.getString("provider_no") %></a></td>
-        <td  align="center"> <%= rs.getString("start_hour") %></td>
-        <td  align="center"> <%= rs.getString("end_hour") %></td>
-        <td  align="center"><%= rs.getString("every_min") %></td>
-        <td  align="center"><%= rs.getString("mygroup_no") %></td>
+      <td align="center"><a href='admincontrol.jsp?keyword=<%=apptMainBean.getString(rs,"preference_no")%>&displaymode=Preference_Update&dboperation=preference_search_detail'><%= apptMainBean.getString(rs,"provider_no") %></a></td>
+        <td  align="center"> <%= apptMainBean.getString(rs,"start_hour") %></td>
+        <td  align="center"> <%= apptMainBean.getString(rs,"end_hour") %></td>
+        <td  align="center"><%= apptMainBean.getString(rs,"every_min") %></td>
+        <td  align="center"><%= apptMainBean.getString(rs,"mygroup_no") %></td>
         
       <!--td align="center" valign="middle" -->
         <!--img src="../images/buttondetail.gif" width="75" height="30" border="0" valign="middle"-->

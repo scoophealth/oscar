@@ -50,18 +50,18 @@ String curUser_no = (String)session.getAttribute("user");
 %>
 
 <%
-  DBHelp dbObj = new DBHelp();
+  DBPreparedHandler dbObj = new DBPreparedHandler();
   Properties propName = new   Properties();
   // select provider list
   sql   = "select * from provider p order by p.first_name, p.last_name ";
-  ResultSet rs = dbObj.searchDBRecord(sql);
+  ResultSet rs = dbObj.queryResults(sql);
 
   while (rs.next()) {
-    propName.setProperty(rs.getString("provider_no"), rs.getString("first_name") + " " + rs.getString("last_name"));
+    propName.setProperty(dbObj.getString(rs,"provider_no"), dbObj.getString(rs,"first_name") + " " + dbObj.getString(rs,"last_name"));
     prop = new Properties();
 
-    prop.setProperty("providerNo", rs.getString("provider_no"));
-    prop.setProperty("name", rs.getString("first_name") + " " + rs.getString("last_name"));
+    prop.setProperty("providerNo", dbObj.getString(rs,"provider_no"));
+    prop.setProperty("name", dbObj.getString(rs,"first_name") + " " + dbObj.getString(rs,"last_name"));
     vecProvider.add(prop);
   }
 %>
@@ -159,7 +159,7 @@ function onSub() {
 	//String startDate = "";
 	//String endDate = "";
 	boolean bAll = false;
-	Vector vec = new Vector();
+	Vector<Properties> vec = new Vector<Properties>();
 	String providerNo = "";
 	if (request.getParameter("submit") != null) {
 	  providerNo = request.getParameter("providerNo");
@@ -187,15 +187,15 @@ function onSub() {
 	      sql += " and dateTime >= ? and content like '" + content + "' order by dateTime desc ";
       }
 //      System.out.println("sql:" + sql);
-      rs = dbObj.searchDBRecord(sql, params);
+      rs = dbObj.queryResults(sql, params);
       while (rs.next()) {
         prop = new Properties();
         prop.setProperty("dateTime", "" + rs.getTimestamp("dateTime"));
-        prop.setProperty("action", rs.getString("action"));
-        prop.setProperty("content", rs.getString("content"));
-        prop.setProperty("contentId", rs.getString("contentId"));
-        prop.setProperty("ip", rs.getString("ip"));
-        prop.setProperty("provider_no", rs.getString("provider_no"));
+        prop.setProperty("action", dbObj.getString(rs,"action"));
+        prop.setProperty("content", dbObj.getString(rs,"content"));
+        prop.setProperty("contentId", dbObj.getString(rs,"contentId"));
+        prop.setProperty("ip", dbObj.getString(rs,"ip"));
+        prop.setProperty("provider_no", dbObj.getString(rs,"provider_no"));
         vec.add(prop);
       }
 

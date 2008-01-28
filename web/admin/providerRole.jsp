@@ -69,7 +69,7 @@ Vector vecRoleName = new Vector();
 String	sql   = "select * from secRole order by role_name";
 ResultSet rs = dbObj.searchDBRecord(sql);
 while (rs.next()) {
-	vecRoleName.add(rs.getString("role_name"));
+	vecRoleName.add(dbObj.getString(rs,"role_name"));
 }
 
 // update the role list
@@ -252,7 +252,7 @@ function submit(form) {
 <%
 String     color       = "#ccCCFF";
 Properties prop        = null;
-Vector     vec         = new Vector();
+Vector<Properties>     vec         = new Vector<Properties>();
 
 String lastName = "";
 String firstName = "";
@@ -270,15 +270,15 @@ System.out.println(query);
 rs = dbObj.searchDBRecord(query);
 while (rs.next()) {
 	prop = new Properties();
-	//prop.setProperty("provider_no", rs.getString("provider_no")==null?"":rs.getString("provider_no"));
-	//prop.setProperty("first_name", rs.getString("p.first_name"));
-	//prop.setProperty("last_name", rs.getString("p.last_name"));
-	//prop.setProperty("role_name", rs.getString("u.role_name")!=null?rs.getString("u.role_name"):"");
+	//prop.setProperty("provider_no", dbObj.getString(rs,"provider_no")==null?"":dbObj.getString(rs,"provider_no"));
+	//prop.setProperty("first_name", dbObj.getString(rs,"p.first_name"));
+	//prop.setProperty("last_name", dbObj.getString(rs,"p.last_name"));
+	//prop.setProperty("role_name", dbObj.getString(rs,"u.role_name")!=null?dbObj.getString(rs,"u.role_name"):"");
 	
-	prop.setProperty("provider_no", rs.getString("provider_no")==null?"":rs.getString("provider_no"));
-	prop.setProperty("first_name", rs.getString("first_name"));
-	prop.setProperty("last_name", rs.getString("last_name"));
-	prop.setProperty("role_name", rs.getString("role_name")!=null?rs.getString("role_name"):"");
+	prop.setProperty("provider_no", dbObj.getString(rs,"provider_no")==null?"":dbObj.getString(rs,"provider_no"));
+	prop.setProperty("first_name", dbObj.getString(rs,"first_name"));
+	prop.setProperty("last_name", dbObj.getString(rs,"last_name"));
+	prop.setProperty("role_name", dbObj.getString(rs,"role_name")!=null?dbObj.getString(rs,"role_name"):"");
 	
 	
 	vec.add(prop);
