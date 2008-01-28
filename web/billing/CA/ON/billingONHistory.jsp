@@ -29,7 +29,7 @@
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 %> 
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -80,7 +80,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <% // new billing records
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 String limit = " limit " + strLimit1 + "," + strLimit2;
-List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), limit, "");
+List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), Integer.parseInt(strLimit1), Integer.parseInt(strLimit2), null);
 int nItems=0;
 for(int i=0; i<aL.size(); i=i+2) {
 	nItems++;

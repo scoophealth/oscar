@@ -10,7 +10,7 @@
   String demofirstname = request.getParameter("first_name")==null?"":request.getParameter("first_name");
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 	String country = request.getLocale().getCountry();
@@ -147,8 +147,16 @@ function refresh() {
       <TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgComments"/></b></TH>
 </tr>
 <%
+  int iRSOffSet=0;
+  int iPageSize=10;
+  int iRow=0;
+  if(request.getParameter("limit1")!=null) iRSOffSet= Integer.parseInt(request.getParameter("limit1"));
+  if(request.getParameter("limit2")!=null) iPageSize = Integer.parseInt(request.getParameter("limit2"));
+
   ResultSet rs=null ;
-  rs = apptMainBean.queryResults(Integer.parseInt(request.getParameter("demographic_no")), request.getParameter("dboperation"));
+  DBPreparedHandlerParam[] params= new DBPreparedHandlerParam[1];
+  params[0]= new DBPreparedHandlerParam(Integer.parseInt(request.getParameter("demographic_no")));
+  rs = apptMainBean.queryResults_paged(params, request.getParameter("dboperation"), iRSOffSet);
 
   boolean bodd=false;
   int nItems=0;
@@ -157,6 +165,8 @@ function refresh() {
     out.println("failed!!!");
   } else {
     while (rs.next()) {
+      iRow ++;
+      if(iRow>iPageSize) break;
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
        

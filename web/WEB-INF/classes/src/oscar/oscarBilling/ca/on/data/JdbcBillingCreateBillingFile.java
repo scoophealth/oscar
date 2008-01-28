@@ -376,7 +376,7 @@ public class JdbcBillingCreateBillingFile {
 				ch1Obj.setTotal(rs.getString("total"));
 				ch1Obj.setPaid(rs.getString("paid"));
 				ch1Obj.setStatus(rs.getString("status"));
-				ch1Obj.setComment(rs.getString("comment"));
+				ch1Obj.setComment(rs.getString("comment1"));
 				ch1Obj.setVisittype(rs.getString("visittype"));
 				ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
 				ch1Obj.setProvider_rma_no(rs.getString("provider_rma_no"));

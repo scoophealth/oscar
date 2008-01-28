@@ -23,6 +23,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import oscar.oscarDB.*;
+
 public class JdbcBillingReviewImpl {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingReviewImpl.class);
 	BillingONDataHelp dbObj = new BillingONDataHelp();
@@ -38,6 +40,7 @@ public class JdbcBillingReviewImpl {
 			while (rs.next()) {
 				retval = rs.getString("value");
 			}
+			rs.close();
 		} catch (SQLException e) {
 			_logger.error("getCodeFee(sql = " + sql + ")");
 		}
@@ -56,6 +59,7 @@ public class JdbcBillingReviewImpl {
 			while (rs.next()) {
 				retval = rs.getString("percentage");
 			}
+			rs.close();
 		} catch (SQLException e) {
 			_logger.error("getPercFee(sql = " + sql + ")");
 		}
@@ -75,6 +79,7 @@ public class JdbcBillingReviewImpl {
 				retval[0] = rs.getString("min");
 				retval[1] = rs.getString("max");
 			}
+			rs.close();
 		} catch (SQLException e) {
 			_logger.error("getPercMinMaxFee(sql = " + sql + ")");
 		}
@@ -90,7 +95,7 @@ public class JdbcBillingReviewImpl {
 		String temp = demoNo + " " + providerNo + " " + statusType + " " + startDate + " " + endDate + " " + billType;
 		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
 		String sql = "select id,pay_program,demographic_no,demographic_name,billing_date,billing_time,status,"
-				+ "provider_no,provider_ohip_no, apptProvider_no,timestamp,total,paid" + " from billing_on_cheader1 where " + temp
+				+ "provider_no,provider_ohip_no, apptProvider_no,timestamp1,total,paid" + " from billing_on_cheader1 where " + temp
 				+ " order by billing_date, billing_time";
 
 		_logger.info("getBill(sql = " + sql + ")");
@@ -108,12 +113,13 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setProvider_no(rs.getString("provider_no"));
 				ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
 				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
-				ch1Obj.setUpdate_datetime(rs.getString("timestamp"));
+				ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
 				ch1Obj.setTotal(rs.getString("total"));
 				ch1Obj.setPay_program(rs.getString("pay_program"));
 				ch1Obj.setPaid(rs.getString("paid"));
 				retval.add(ch1Obj);
 			}
+			rs.close();
 		} catch (SQLException e) {
 			_logger.error("getBill(sql = " + sql + ")");
 		}
@@ -162,7 +168,9 @@ public class JdbcBillingReviewImpl {
 					ch1Obj.setTransc_id(rs1.getString("service_code"));
 					retval.add(ch1Obj);
 				}
+				rs1.close();
 			}
+			rs.close();
 		} catch (SQLException e) {
 			_logger.error("getBill(sql = " + sql + ")");
 		}
@@ -170,17 +178,33 @@ public class JdbcBillingReviewImpl {
 	}
 
 	// billing page
-	public List getBillingHist(String demoNo, String strLimit, String strDateRange) {
+	public List getBillingHist(String demoNo, int iPageSize, int iOffSet, DBPreparedHandlerParam[] pDateRange) throws Exception{
 		List retval = new Vector();
+		int iRow=0;
+		
 		BillingClaimHeader1Data ch1Obj = null;
-		String sql = "select * from billing_on_cheader1 where demographic_no=" + demoNo + strDateRange
-				+ " and status!='D' order by billing_date desc, billing_time desc, id desc " + strLimit;
+		
+		DBPreparedHandler dbPH=new DBPreparedHandler();
 
+		String sql;
+		ResultSet rs;
+		if(pDateRange==null){
+		  sql = "select * from billing_on_cheader1 where demographic_no=" + demoNo + 
+				" and status!='D' order by billing_date desc, billing_time desc, id desc ";// + strLimit;
+	      rs = dbPH.queryResults_paged(sql, iOffSet);
+		}
+		else{
+	      sql = "select * from billing_on_cheader1 where demographic_no=" + demoNo + 
+	            "  and billing_date>=? and  and billing_date <=?" + 
+				" and status!='D' order by billing_date desc, billing_time desc, id desc ";// + strLimit;
+	      rs = dbPH.queryResults_paged(sql, pDateRange, iOffSet);
+		}	
 		// _logger.info("getBillingHist(sql = " + sql + ")");
-		ResultSet rs = dbObj.searchDBRecord(sql);
 
 		try {
 			while (rs.next()) {
+				iRow++;
+		        if(iRow>iPageSize) break;
 				ch1Obj = new BillingClaimHeader1Data();
 				ch1Obj.setId("" + rs.getInt("id"));
 				ch1Obj.setBilling_date(rs.getString("billing_date"));
@@ -200,6 +224,7 @@ public class JdbcBillingReviewImpl {
 				sql = "select * from billing_on_item where ch1_id=" + ch1Obj.getId() + " and status!='D'";
 
 				// _logger.info("getBillingHist(sql = " + sql + ")");
+
 				ResultSet rs2 = dbObj.searchDBRecord(sql);
 				String dx = "";
 				String strService = "";
@@ -209,12 +234,14 @@ public class JdbcBillingReviewImpl {
 					dx = rs2.getString("dx");
 					strServiceDate = rs2.getString("service_date");
 				}
+				rs2.close();
 				BillingItemData itObj = new BillingItemData();
 				itObj.setService_code(strService);
 				itObj.setDx(dx);
 				itObj.setService_date(strServiceDate);
 				retval.add(itObj);
 			}
+			rs.close();
 		} catch (SQLException e) {
 			_logger.error("getBillingHist(sql = " + sql + ")");
 		}

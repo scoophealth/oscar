@@ -60,6 +60,7 @@ public class JdbcBillingRAImpl {
 			if (rs.next()) {
 				retval.setProperty(rs.getString("billing_no"), raheader_no);
 			}
+			rs.close();
 		} catch (SQLException e) {
 			_logger.error("getPropBillNoRAHeaderNo(sql = " + sql + ")");
 			retval = null;
@@ -127,7 +128,8 @@ public class JdbcBillingRAImpl {
 					while (rsdemo.next()) {
 						raNo = "" + rsdemo.getInt("raheader_no");
 					}
-
+					rsdemo.close();
+					
 					// judge if it is empty in table radt
 					int radtNum = 0;
 					if (raNo != null && raNo.length() > 0) {
@@ -139,6 +141,7 @@ public class JdbcBillingRAImpl {
 						while (rsdemo.next()) {
 							radtNum = rsdemo.getInt("count(raheader_no)");
 						}
+						rsdemo.close();
 
 						// if there is no radt record for the rahd, update the
 						// rahd status to "D"
@@ -386,6 +389,7 @@ public class JdbcBillingRAImpl {
 				prop.setProperty("status", rsdemo.getString("status"));
 				ret.add(prop);
 			}
+			rsdemo.close();
 		} catch (SQLException e) {
 			_logger.error("getAllRahd(sql = " + sql + ")");
 		}
@@ -415,6 +419,7 @@ public class JdbcBillingRAImpl {
 				prop.setProperty("first_name", rsdemo.getString("first_name"));
 				ret.add(prop);
 			}
+			rsdemo.close();
 		} catch (SQLException e) {
 			_logger.error("getProviderListFromRAReport(sql = " + sql + ")");
 		}
@@ -439,7 +444,8 @@ public class JdbcBillingRAImpl {
 					demoLast = rsdemo1.getString("demographic_name");
 					billingDate = rsdemo1.getString("billing_date");
 				}
-
+				rsdemo1.close();
+				
 				sql = "select * from radetail where raheader_no=" + raNo + " and billing_no=" + account;
 				ResultSet rsdemo2 = dbObj.searchDBRecord(sql);
 				while (rsdemo2.next()) {
@@ -464,7 +470,9 @@ public class JdbcBillingRAImpl {
 					prop.setProperty("demoLast", demoLast);
 					ret.add(prop);
 				}
+				rsdemo2.close();
 			}
+			rsdemo.close();
 		} catch (SQLException e) {
 			_logger.error("getRAErrorReport(sql = " + sql + ")");
 		}
@@ -480,6 +488,7 @@ public class JdbcBillingRAImpl {
 			while (rsdemo.next()) {
 				ret.add(rsdemo.getString("billing_no"));
 			}
+			rsdemo.close();
 		} catch (SQLException e) {
 			_logger.error("getRABillingNo4Code(sql = " + sql + ")");
 		}
@@ -498,6 +507,7 @@ public class JdbcBillingRAImpl {
 			while (rsdemo.next()) {
 				ret.add(rsdemo.getString("billing_no"));
 			}
+			rsdemo.close();
 		} catch (SQLException e) {
 			_logger.error("getRABillingNo4OB(sql = " + sql + ")");
 		}
@@ -514,6 +524,7 @@ public class JdbcBillingRAImpl {
 			while (rsdemo.next()) {
 				ret.add(rsdemo.getString("billing_no"));
 			}
+			rsdemo.close();
 		} catch (SQLException e) {
 			_logger.error("getRABillingNo4Colposcopy(sql = " + sql + ")");
 		}
@@ -556,7 +567,8 @@ public class JdbcBillingRAImpl {
 					// demo_docname = propProvierName.getProperty(("no_" +
 					// rsdemo3.getString("provider_no")), "");
 				}
-                                if (famProviderNo == null){famProviderNo = "";}
+				rsdemo3.close();
+                if (famProviderNo == null){famProviderNo = "";}
 				// proName =
 				// propProvierName.getProperty(rsdemo.getString("providerohip_no"));
 				String servicecode = rsdemo.getString("service_code");
@@ -580,6 +592,7 @@ public class JdbcBillingRAImpl {
                                 prop.setProperty("demo_doc",famProviderNo);
 				ret.add(prop);
 			}
+			rsdemo.close();
 		} catch (SQLException e) {
 			_logger.error("getRASummary(sql = " + sql + ")");
 		}
@@ -595,6 +608,7 @@ public class JdbcBillingRAImpl {
 			while (rsdemo.next()) {
 				ret.add(rsdemo.getString("billing_no"));
 			}
+			rsdemo.close();
 		} catch (SQLException e) {
 			_logger.error("getRAError35(sql = " + sql + ")");
 		}
@@ -610,6 +624,7 @@ public class JdbcBillingRAImpl {
 			while (rsdemo.next()) {
 				ret.add(rsdemo.getString("billing_no"));
 			}
+			rsdemo.close();
 		} catch (SQLException e) {
 			_logger.error("getRANoError35(sql = " + sql + ")");
 		}

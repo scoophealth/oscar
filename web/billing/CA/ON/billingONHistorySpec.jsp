@@ -31,10 +31,15 @@
   calendar.add(Calendar.DATE, Integer.parseInt(strDay)*(-1));
   String strStartDay = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.DATE);;
   //System.out.println(strToday + "|"+ strStartDay);
-  String dateRange = " and billing_date>='" + strStartDay + "' and billing_date <='" + strToday + "'";
+
+//  String dateRange = " and billing_date>='" + strStartDay + "' and billing_date <='" + strToday + "'";
+  DBPreparedHandlerParam[] pDateRange= new DBPreparedHandlerParam[2];
+  pDateRange[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(strStartDay));
+  pDateRange[1]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(strToday));
+  
   String serviceCode = request.getParameter("serviceCode")!=null? request.getParameter("serviceCode") : "";
 %> 
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -100,7 +105,8 @@ function upCaseCtrl(ctrl) {
 <% // new billing records
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 String limit = "";
-List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), limit, dateRange);
+//List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), limit, dateRange);
+List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), 10000000, 0, pDateRange);
 int nItems=0;
 for(int i=0; i<aL.size(); i=i+2) {
 	BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);

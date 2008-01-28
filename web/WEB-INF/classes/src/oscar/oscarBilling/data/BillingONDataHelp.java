@@ -98,4 +98,19 @@ public class BillingONDataHelp {
 		}
 		return ret;
 	}
+
+	public synchronized ResultSet searchDBRecord_paged(String sql, int iOffSet) {
+		ResultSet ret = null;
+		try {
+			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			ret = db.GetSQL(sql);
+	        for(int i=1; i<=iOffSet; i++){
+	            if(rs.next()==false) break;
+	        }
+			db.CloseConn();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return ret;
+	}
 }

@@ -95,7 +95,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 </tr>
 <% // new billing records
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
-List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), "", "");
+List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), Integer.parseInt(strLimit1), Integer.parseInt(strLimit2), null);
 for(int i=0; i<aL.size(); i=i+2) {
 	BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
 %>

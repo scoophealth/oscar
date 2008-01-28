@@ -253,8 +253,10 @@ public class JdbcBillingPageUtil {
 	// last_name,first_name,dob,hin,ver,hc_type,sex,family_doctor,provider_no,roster_status
 	public List getPatientCurBillingDemographic(String demoNo) {
 		List retval = null;
-		String sql = "select last_name,first_name,concat(year_of_birth,month_of_birth,date_of_birth) as dob,hin,ver,hc_type,sex, "
-				+ "family_doctor,provider_no,roster_status from demographic where demographic_no=" + demoNo + " ";
+//		String sql = "select last_name,first_name,concat(year_of_birth,month_of_birth,date_of_birth) as dob,hin,ver,hc_type,sex, "
+//				+ "family_doctor,provider_no,roster_status from demographic where demographic_no=" + demoNo + " ";
+		String sql = "select last_name,first_name,concat(concat(year_of_birth,month_of_birth),date_of_birth) as dob,hin,ver,hc_type,sex, "
+			+ "family_doctor,provider_no,roster_status from demographic where demographic_no=" + demoNo + " ";
 		ResultSet rslocal = dbObj.searchDBRecord(sql);
 		try {
 			while (rslocal.next()) {

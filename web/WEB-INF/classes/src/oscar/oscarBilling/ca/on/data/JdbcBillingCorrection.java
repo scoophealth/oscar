@@ -29,7 +29,7 @@ public class JdbcBillingCorrection {
 				+ ch1Obj.getSex() + "'," + " province='" + ch1Obj.getProvince() + "'," + " billing_date='"
 				+ ch1Obj.getBilling_date() + "'," + " billing_time='" + ch1Obj.getBilling_time() + "'," + " total='"
 				+ ch1Obj.getTotal() + "'," + " paid='" + ch1Obj.getPaid() + "'," + " status='" + ch1Obj.getStatus()
-				+ "'," + " comment='" + ch1Obj.getComment() + "'," + " visittype='" + ch1Obj.getVisittype() + "',"
+				+ "'," + " comment1='" + ch1Obj.getComment() + "'," + " visittype='" + ch1Obj.getVisittype() + "',"
 				+ " provider_ohip_no='" + ch1Obj.getProvider_ohip_no() + "'," + " provider_rma_no='"
 				+ ch1Obj.getProvider_rma_no() + "'," + " apptProvider_no='" + ch1Obj.getApptProvider_no() + "',"
 				+ " asstProvider_no='" + ch1Obj.getAsstProvider_no() + "'," + " creator='" + ch1Obj.getCreator()
