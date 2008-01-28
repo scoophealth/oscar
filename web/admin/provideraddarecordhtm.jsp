@@ -108,7 +108,7 @@ function upCaseCtrl(ctrl) {
         </td>
       </tr>
       <tr>
-        <td align="right"><font size="-2"><bean:message key="admin.provider.formType"/></font><font color="red">:</font>        </td>
+        <td align="right"><bean:message key="admin.provider.formType"/><font color="red">:</font>        </td>
         <td>
           <!--input type="text" name="provider_type" -->
           <% if (vLocale.getCountry().equals("BR")) { %>
