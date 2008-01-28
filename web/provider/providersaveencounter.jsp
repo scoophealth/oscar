@@ -124,12 +124,12 @@
       String[] param3 =new String[4];
       ResultSet rs = apptMainBean.queryResults(request.getParameter("del_encounter_no"), "search_encountersingle");
       while (rs.next()) { 
-        content = "<encounter_no>"+rs.getString("encounter_no")+"</encounter_no>"+ "<demographic_no>"+rs.getString("demographic_no")+"</demographic_no>"+ "<encounter_date>"+rs.getString("encounter_date")+"</encounter_date>";
-        content += "<encounter_time>"+rs.getString("encounter_time")+"</encounter_time>"+ "<provider_no>"+rs.getString("provider_no")+"</provider_no>"+ "<subject>"+rs.getString("subject")+"</subject>";
-        content += "<content>"+rs.getString("content")+"</content>" +"<encounterattachment>"+rs.getString("encounterattachment")+"</encounterattachment>";
+        content = "<encounter_no>"+apptMainBean.getString(rs,"encounter_no")+"</encounter_no>"+ "<demographic_no>"+apptMainBean.getString(rs,"demographic_no")+"</demographic_no>"+ "<encounter_date>"+apptMainBean.getString(rs,"encounter_date")+"</encounter_date>";
+        content += "<encounter_time>"+apptMainBean.getString(rs,"encounter_time")+"</encounter_time>"+ "<provider_no>"+apptMainBean.getString(rs,"provider_no")+"</provider_no>"+ "<subject>"+apptMainBean.getString(rs,"subject")+"</subject>";
+        content += "<content>"+apptMainBean.getString(rs,"content")+"</content>" +"<encounterattachment>"+apptMainBean.getString(rs,"encounterattachment")+"</encounterattachment>";
 	      param3[0]=user_no;
 	      param3[1]=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH) +" "+now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
-	      param3[2]=rs.getString("encounter_date"); //keyword
+	      param3[2]=apptMainBean.getString(rs,"encounter_date"); //keyword
 	      param3[3]=content;
       }
       int rowsAffected2 = apptMainBean.queryExecuteUpdate(param3, "delete_encounter1");
@@ -148,7 +148,7 @@
     rsdemo = apptMainBean.queryResults(param1, "search_encounter_no"); 
     String encounter_no = "0";
     while (rsdemo.next()) { 
-      encounter_no = rsdemo.getString("encounter_no");
+      encounter_no = apptMainBean.getString(rsdemo,"encounter_no");
     }
     apptMainBean.closePstmtConn();
     if(true) {

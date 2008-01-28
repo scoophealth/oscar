@@ -51,7 +51,7 @@
 
      //First search for template where provider_no == provider and name is set
      if(rs.next()) {
-       dateTimeCodeBean.put(rs.getString("provider_no"), rs.getString("timecode"));
+       dateTimeCodeBean.put(scheduleMainBean.getString(rs,"provider_no"), scheduleMainBean.getString(rs,"timecode"));
      }
      else {
        //no luck there, so we try for public template with same name
@@ -59,8 +59,8 @@
        param[0] = "Public";
        rs = scheduleMainBean.queryResults(param, "search_scheduletemplatesingle");
        if(rs.next()) {
-            provider = rs.getString("provider_no");
-            dateTimeCodeBean.put(provider, rs.getString("timecode"));
+            provider = scheduleMainBean.getString(rs,"provider_no");
+            dateTimeCodeBean.put(provider, scheduleMainBean.getString(rs,"timecode"));
        }
      }
    
@@ -69,10 +69,10 @@
      rs = (ResultSet)rst[0];
 	 
    while (rs.next()) {        
-     dateTimeCodeBean.put("description"+rs.getString("code"), rs.getString("description"));
-     dateTimeCodeBean.put("duration"+rs.getString("code"), rs.getString("duration"));
-     dateTimeCodeBean.put("color"+rs.getString("code"), (rs.getString("color")==null || rs.getString("color").equals(""))?bgcolordef:rs.getString("color") );
-     dateTimeCodeBean.put("confirm" + rs.getString("code"), rs.getString("confirm"));
+     dateTimeCodeBean.put("description"+scheduleMainBean.getString(rs,"code"), scheduleMainBean.getString(rs,"description"));
+     dateTimeCodeBean.put("duration"+scheduleMainBean.getString(rs,"code"), scheduleMainBean.getString(rs,"duration"));
+     dateTimeCodeBean.put("color"+scheduleMainBean.getString(rs,"code"), (scheduleMainBean.getString(rs,"color")==null || scheduleMainBean.getString(rs,"color").equals(""))?bgcolordef:scheduleMainBean.getString(rs,"color") );
+     dateTimeCodeBean.put("confirm" + scheduleMainBean.getString(rs,"code"), scheduleMainBean.getString(rs,"confirm"));
    }
    ((Statement)rst[1]).close();
           

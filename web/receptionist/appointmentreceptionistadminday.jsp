@@ -448,10 +448,10 @@ function findProvider(p,m,d) {
           	while (bFirstTimeRs?rs.next():true) { //if it's not the first time to parse the standard time, should pass it by
           	  len = bFirstTimeRs&&!bFirstFirstR?lenLimitedS:lenLimitedL;
           	  
-          	  iS=Integer.parseInt(rs.getString("start_time").substring(0,2));
-        	    iSm=Integer.parseInt(rs.getString("start_time").substring(3,5));
-         	    iE=Integer.parseInt(rs.getString("end_time").substring(0,2));
-     	        iEm=Integer.parseInt(rs.getString("end_time").substring(3,5));
+          	  iS=Integer.parseInt(apptMainBean.getString(rs,"start_time").substring(0,2));
+        	    iSm=Integer.parseInt(apptMainBean.getString(rs,"start_time").substring(3,5));
+         	    iE=Integer.parseInt(apptMainBean.getString(rs,"end_time").substring(0,2));
+     	        iEm=Integer.parseInt(apptMainBean.getString(rs,"end_time").substring(3,5));
           	  if( (ih < iS*60+iSm) && (ih+depth-1)<iS*60+iSm ) { //appt after this time slot, iS not in this time slot (both start&end), get to the next period
           	  	bFirstTimeRs=false;
           	  	break;
@@ -461,7 +461,7 @@ function findProvider(p,m,d) {
           	  	continue;
           	  }
          	    iRows=((iE*60+iEm)-ih)/depth+1; //to see if the period across an hour period
-          	  String name = Misc.toUpperLowerCase(rs.getString("name"));
+          	  String name = Misc.toUpperLowerCase(apptMainBean.getString(rs,"name"));
           	  int demographic_no = rs.getInt("demographic_no");
           	  	  			paramTickler[0]=String.valueOf(demographic_no);
 		  	 		 		paramTickler[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
@@ -473,9 +473,9 @@ function findProvider(p,m,d) {
 		            	  		tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
           	  	}
 		            	  	
-          	  String reason = rs.getString("reason").trim();
-          	  String notes = rs.getString("notes").trim();
-          	  String status = rs.getString("status").trim();
+          	  String reason = apptMainBean.getString(rs,"reason").trim();
+          	  String notes = apptMainBean.getString(rs,"notes").trim();
+          	  String status = apptMainBean.getString(rs,"status").trim();
           	  bFirstTimeRs=true;
 			  //ApptStatusData as = new ApptStatusData();
 			    as.setApptStatus(status);
@@ -484,7 +484,7 @@ function findProvider(p,m,d) {
 <%
 			    if (as.getNextStatus() != null && !as.getNextStatus().equals("")) {
 %>
-            <a href="receptionistcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="<bean:message key='<%=as.getTitle()%>' />" >
+            <a href="receptionistcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="<bean:message key='<%=as.getTitle()%>' />" >
 <%
 				} 
 			    if (as.getNextStatus() != null) {
@@ -500,7 +500,7 @@ function findProvider(p,m,d) {
         			if(demographic_no==0) {
         %>
         		<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title='<bean:message key="receptionist.appointmentreceptionistadminday.ticklerMsg"/>: <%=Misc.htmlEscape(tickler_note)%>'><font color="red">!</font></a><%} %>
-<a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
+<a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 reason: <%=Misc.htmlEscape(reason)%>
 notes: <%=Misc.htmlEscape(notes)%>">
             .<%=(view==0?(name.length()>len?name.substring(0,len):name):name).toUpperCase()%></font></a></td>
@@ -509,7 +509,7 @@ notes: <%=Misc.htmlEscape(notes)%>">
         			  //System.out.println(name+" / " +demographic_no);
 %>
         		<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" title='<bean:message key="receptionist.appointmentreceptionistadminday.ticklerMsg"/>: <%=Misc.htmlEscape(tickler_note)%>'><font color="red">!</font></a><%} %>
-<a href=# onClick ="tsr('appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>');return false;" title="<%=name%>
+<a href=# onClick ="tsr('appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>');return false;" title="<%=name%>
 reason: <%=Misc.htmlEscape(reason)%>
 notes: <%=Misc.htmlEscape(notes)%>" >
         		<%=view==0?(name.length()>len?name.substring(0,len):name):name%></a>

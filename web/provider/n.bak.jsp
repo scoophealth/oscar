@@ -339,10 +339,10 @@ function tsr(s) {
           	while (bFirstTimeRs?rs.next():true) { //if it's not the first time to parse the standard time, should pass it by
           	  len = bFirstTimeRs&&!bFirstFirstR?lenLimitedS:lenLimitedL;
           	  
-          	  iS=Integer.parseInt(rs.getString("start_time").substring(0,2));
-        	    iSm=Integer.parseInt(rs.getString("start_time").substring(3,5));
-         	    iE=Integer.parseInt(rs.getString("end_time").substring(0,2));
-     	        iEm=Integer.parseInt(rs.getString("end_time").substring(3,5));
+          	  iS=Integer.parseInt(apptMainBean.getString(rs,"start_time").substring(0,2));
+        	    iSm=Integer.parseInt(apptMainBean.getString(rs,"start_time").substring(3,5));
+         	    iE=Integer.parseInt(apptMainBean.getString(rs,"end_time").substring(0,2));
+     	        iEm=Integer.parseInt(apptMainBean.getString(rs,"end_time").substring(3,5));
           	  if( (ih < iS*60+iSm) && (ih+depth-1)<iS*60+iSm ) { //iS not in this period (both start&end), get to the next period
           	  	//out.println("<td width='10'>&nbsp;</td>"); //should be comment
           	  	bFirstTimeRs=false;
@@ -351,40 +351,40 @@ function tsr(s) {
          	    iRows=(iE-iS)*60/depth+iEm/depth-iSm/depth+1; //to see if the period across an hour period
          	    
          	    //get time format: 00:00am/pm
-         	    //String startTime = (iS>12?("0"+(iS-12)):rs.getString("start_time").substring(0,2))+":"+rs.getString("start_time").substring(3,5)+am_pm ; 
-         	    //String endTime   = (iE>12?("0"+(iE-12)):rs.getString("end_time").substring(0,2))  +":"+rs.getString("end_time").substring(3,5)+(iE<12?"am":"pm");
-          	  String name = rs.getString("name");
+         	    //String startTime = (iS>12?("0"+(iS-12)):apptMainBean.getString(rs,"start_time").substring(0,2))+":"+apptMainBean.getString(rs,"start_time").substring(3,5)+am_pm ; 
+         	    //String endTime   = (iE>12?("0"+(iE-12)):apptMainBean.getString(rs,"end_time").substring(0,2))  +":"+apptMainBean.getString(rs,"end_time").substring(3,5)+(iE<12?"am":"pm");
+          	  String name = apptMainBean.getString(rs,"name");
           	  int demographic_no = rs.getInt("demographic_no");
-          	  String reason = rs.getString("reason");
-          	  String notes = rs.getString("notes");
-          	  String status = rs.getString("status");
+          	  String reason = apptMainBean.getString(rs,"reason");
+          	  String notes = apptMainBean.getString(rs,"notes");
+          	  String status = apptMainBean.getString(rs,"status");
           	  bFirstTimeRs=true;
         %>	    
             <td bgcolor=<%=status.indexOf('T')!=-1?"#FDFEC7":status.indexOf('P')!=-1?"#e0ffff":status.indexOf('H')!=-1?"#00ee00":status.indexOf('B')!=-1?"#3ea4e1":status.indexOf('N')!=-1?"#cccccc":"#999999"%> rowspan="<%=iRows%>"  nowrap>
             <%
               if(status.indexOf('T')!=-1) {
             %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('T',' ').trim()%>&statusch=H&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="To Do" >
+            <a href="providercontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('T',' ').trim()%>&statusch=H&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=apptMainBean.getString(rs,"start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="To Do" >
             <img src="../images/todo.gif" border="0" height="10"></a>
             <%
               } else if(status.indexOf('P')!=-1) {
             %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('P',' ').trim()%>&statusch=N&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Picked" >
+            <a href="providercontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('P',' ').trim()%>&statusch=N&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=apptMainBean.getString(rs,"start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Picked" >
             <img src="../images/picked.gif" border="0"></a>
             <%
               } else if(status.indexOf('H')!=-1) {
             %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('H',' ').trim()%>&statusch=P&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Here" >
+            <a href="providercontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('H',' ').trim()%>&statusch=P&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=apptMainBean.getString(rs,"start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Here" >
             <img src="../images/here.gif" border="0" ></a>
             <%
               } else if(status.indexOf('N')!=-1) {
             %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('N',' ').trim()%>&statusch=C&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="No Show" >
+            <a href="providercontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('N',' ').trim()%>&statusch=C&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=apptMainBean.getString(rs,"start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="No Show" >
             <img src="../images/noshow.gif" border="0"></a>
             <%
               } else if(status.indexOf('C')!=-1) {
             %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('C',' ').trim()%>&statusch=T&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Cacelled" >
+            <a href="providercontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('C',' ').trim()%>&statusch=T&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=apptMainBean.getString(rs,"start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Cacelled" >
             <img src="../images/cancel.gif" border="0"></a>
             <%
               } else if(status.indexOf('B')!=-1) {
@@ -401,22 +401,22 @@ function tsr(s) {
         <%
         			if(demographic_no==0) {
         %>
-        		<a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>" >
+        		<a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>" >
             .<%=view==0?(name.length()>len?name.substring(0,len):name):name%></font></a></td>
         <%
         			} else {
         			  //System.out.println(name+" / " +demographic_no);
 				%>
-        		<a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;" title="reason=<%=reason%> notes=<%=notes%>" >
+        		<a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;" title="reason=<%=reason%> notes=<%=notes%>" >
         		<%=view==0?(name.length()>len?name.substring(0,len):name):name%></a>
-            <a href=# onClick="popupPage2('providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&demographic_no=<%=demographic_no%>&curProvider_no=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&username=<%= userfirstname+" "+userlastname %>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&status=<%=status%>&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Encounter">
+            <a href=# onClick="popupPage2('providercontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&demographic_no=<%=demographic_no%>&curProvider_no=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&username=<%= userfirstname+" "+userlastname %>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&status=<%=status%>&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Encounter">
             <!--img src="../images/encounter.gif" border="0" height="10"-->&nbsp;| E </a>  
 
 <% if(status.indexOf('B')==-1) { %>            
-    <a href=# onClick='popupPage(700,720, "../billing/billingOB.jsp?hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rs.getString("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="Billing">| 
+    <a href=# onClick='popupPage(700,720, "../billing/billingOB.jsp?hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="Billing">| 
      B | </a>
 <% } else {%>  
-    <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?appointment_no=<%=rs.getString("appointment_no")%>");return false;' title="Billing">| 
+    <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>");return false;' title="Billing">| 
      -B | </a>
 <% } %>          
     <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail');return false;" title="Master file">

@@ -56,45 +56,45 @@
 	  param[11]=request.getParameter("status");
 	  param[12]=request.getParameter("provider_no");
 
-  apptMainBean.queryExecute(param,request.getParameter("dboperation"));
+  apptMainBean.queryExecuteUpdate( param,request.getParameter("dboperation"));
   ResultSet rs = apptMainBean.queryResults(request.getParameter("provider_no"),"search_detail");
   while (rs.next()) {
     // the cursor of ResultSet only goes through once from top
 %>
       <tr bgcolor="#66FF66">
         <td><b>provider_no:</b></td>
-        <td colspan="3"><span style="color:black"><%= rs.getString("provider_no") %></span></td>
+        <td colspan="3"><span style="color:black"><%= apptMainBean.getString(rs,"provider_no") %></span></td>
       </tr><tr>
         <td bgcolor="#C4D9E7"><b>last_name:</b></td>
-        <td bgcolor="#C4D9E7"><%= rs.getString("last_name") %></td>
+        <td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"last_name") %></td>
         <td bgcolor="#C4D9E7"><b>first_name:</b></td>
-        <td bgcolor="#C4D9E7"><%= rs.getString("first_name") %></td>
+        <td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"first_name") %></td>
       </tr><tr>
         <td bgcolor="#C4D9E7"><b>specialty:</b></td>
-        <td bgcolor="#C4D9E7"><span style="color:blue"><%= rs.getString("specialty") %></span></td>
+        <td bgcolor="#C4D9E7"><span style="color:blue"><%= apptMainBean.getString(rs,"specialty") %></span></td>
         <td bgcolor="#C4D9E7"><b>team:</b></td>
-        <td bgcolor="#C4D9E7"><%= rs.getString("team") %></td>
+        <td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"team") %></td>
       </tr><tr>
         <td bgcolor="#C4D9E7"><b>sex:</b></td>
-        <td bgcolor="#C4D9E7"><%= rs.getString("sex") %></td>
+        <td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"sex") %></td>
         <td bgcolor="#C4D9E7"><b>dob:</b></td>
-        <td bgcolor="#C4D9E7"><%= rs.getString("dob") %></td>
+        <td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"dob") %></td>
       </tr><tr>
         <td bgcolor="#C4D9E7"><b>address:</b></td>
-        <td colspan="3" bgcolor="#C4D9E7"><%= rs.getString("address") %></td>
+        <td colspan="3" bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"address") %></td>
       </tr><tr>
         <td bgcolor="#C4D9E7"><b>phone:</b></td>
-        <td bgcolor="#C4D9E7"><%= rs.getString("phone") %></td>
+        <td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"phone") %></td>
         <td bgcolor="#C4D9E7"><b>ohip_no:</b></td>
-        <td bgcolor="#C4D9E7"><%= rs.getString("ohip_no") %></td>
+        <td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"ohip_no") %></td>
       </tr><tr>
         <td bgcolor="#C4D9E7"><b>rma_no:</b></td>
-        <td bgcolor="#C4D9E7"><%= rs.getString("rma_no") %></td>
+        <td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"rma_no") %></td>
         <td bgcolor="#C4D9E7"><b>hso_no:</b></td>
-        <td bgcolor="#C4D9E7"><%= rs.getString("hso_no") %></td>
+        <td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"hso_no") %></td>
       </tr><tr>
         <td bgcolor="#C4D9E7"><b>status:</b></td>
-        <td bgcolor="#C4D9E7"><%= rs.getString("status") %></td>
+        <td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"status") %></td>
         <td bgcolor="#C4D9E7"></td><td bgcolor="#C4D9E7"></td>
       </tr>
 <%

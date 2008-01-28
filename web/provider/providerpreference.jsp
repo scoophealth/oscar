@@ -311,8 +311,8 @@ function showHideBillPref() {
     if (rs.next()) {
         ResultSet rs1 = apptMainBean.queryResults("list_bills_servicetype");
         while (rs1.next()) { %>
-	      <option value="<%=rs1.getString("servicetype")%>" <%=rs1.getString("servicetype").equals(rs.getString("default_servicetype"))?"selected":""%>>
-		<%=rs1.getString("servicetype_name")%>
+	      <option value="<%=rs1.getString("servicetype")%>" <%=rs1.getString("servicetype").equals(apptMainBean.getString(rs,"default_servicetype"))?"selected":""%>>
+		<%=apptMainBean.getString(rs1,"servicetype_name")%>
 	      </option>
 <%  }	} 
     apptMainBean.closePstmtConn(); 
