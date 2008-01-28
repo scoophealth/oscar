@@ -153,7 +153,9 @@ public final class RxSearchAllergyAction extends Action {
                 String compString = null;
                 Vector strVec = null;
                 //System.out.println("size of listy_drug_class sending :"+classVec.size()+" returned :"+classVec2.size());
-                for(int j = 0; j < classVec2.size(); j++){
+                if(classVec2!=null) {
+                	for(int j = 0; j < classVec2.size(); j++){
+                
                     System.out.println("LOOPING");
                     hash = (java.util.Hashtable) classVec2.get(j);
                     //'id_drug'     'id_class'      'name'
@@ -173,6 +175,7 @@ public final class RxSearchAllergyAction extends Action {
                         strVec.add(strArr);
                         returnHash.put(idDrug,strVec);
                     }
+                }
                 }
             }
             System.out.println("Sending this many vector of this size back "+returnHash.values().size());
