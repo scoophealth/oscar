@@ -179,7 +179,7 @@ public class EctSessionBean {
 
             db.CloseConn();
 
-            sql = "select * from eChart where demographicNo=" + demographicNo + " ORDER BY eChartId DESC limit 1";
+            sql = "select * from eChart where demographicNo=" + demographicNo + " ORDER BY eChartId DESC";
             rs = db.GetSQL(sql);
             if (rs.next()) {
                 eChartId = rs.getString("eChartId");
