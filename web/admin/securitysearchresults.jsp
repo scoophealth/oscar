@@ -139,10 +139,10 @@
 
       <tr bgcolor="<%=bodd?"ivory":"white"%>">
         
-      <td ><a href='admincontrol.jsp?keyword=<%=rs.getString("security_no")%>&displaymode=Security_Update&dboperation=Security_search_detail'><%= rs.getString("user_name") %></a></td>
-        <td nowrap> <%= rs.getString("password") %></td>
-        <td align="center"> <%= rs.getString("provider_no") %></td>
-        <td align="center"> <%= rs.getString("pin")==null?"&nbsp;":rs.getString("pin") %></td>
+      <td ><a href='admincontrol.jsp?keyword=<%=apptMainBean.getString(rs,("security_no")%>&displaymode=Security_Update&dboperation=Security_search_detail'><%= apptMainBean.getString(rs,("user_name") %></a></td>
+        <td nowrap> <%= apptMainBean.getString(rs,("password") %></td>
+        <td align="center"> <%= apptMainBean.getString(rs,("provider_no") %></td>
+        <td align="center"> <%= apptMainBean.getString(rs,("pin")==null?"&nbsp;":apptMainBean.getString(rs,("pin") %></td>
       </tr>
 <%
     }

@@ -100,7 +100,7 @@
         <td  align="right" nowrap><bean:message key="admin.securityrecord.formPassword"/><font size='-2'>(<=10char)</font>:
         </td>
         <td>
-          <input type="text" name="password" value="<%= rs.getString("password") %>">
+          <input type="text" name="password" value="<%= apptMainBean.getString(rs,("password") %>">
         </td>
       </tr>
       <tr>
@@ -108,9 +108,9 @@
           <div align="right"><bean:message key="admin.securityrecord.formProviderNo"/>: </div>
         </td>
         <td>
-          <% String provider_no = rs.getString("provider_no"); %>
+          <% String provider_no = apptMainBean.getString(rs,"provider_no"); %>
           <%= provider_no %>
-          <input type="hidden"  index="4" name="provider_no" value="<%= rs.getString("provider_no") %>">
+          <input type="hidden"  index="4" name="provider_no" value="<%= apptMainBean.getString(rs,("provider_no") %>">
         </td>
       </tr>
 <!-- new security -->
@@ -119,7 +119,7 @@
         <td>
           <input type="checkbox" name="b_ExpireSet" value="1" <%= rs.getInt("b_ExpireSet")==0?"":"checked" %> >
           Date:
-          <input type="text" name="date_ExpireDate" id="date_ExpireDate" value="<%= rs.getString("date_ExpireDate")==null?"":rs.getString("date_ExpireDate") %>" size="10" readonly />
+          <input type="text" name="date_ExpireDate" id="date_ExpireDate" value="<%= apptMainBean.getString(rs,("date_ExpireDate")==null?"":apptMainBean.getString(rs,("date_ExpireDate") %>" size="10" readonly />
 		  <img src="../images/cal.gif" id="date_ExpireDate_cal"/>
         </td>
       </tr>
@@ -135,16 +135,16 @@
       <tr>
         <td  align="right" nowrap><bean:message key="admin.securityrecord.formPIN"/>:</td>
         <td>
-          <input type="text" name="pin" value="<%= rs.getString("pin")==null?"":rs.getString("pin") %>">
+          <input type="text" name="pin" value="<%= apptMainBean.getString(rs,("pin")==null?"":apptMainBean.getString(rs,("pin") %>">
         </td>
       </tr>
       <tr>
         <td colspan="2" align="center">
-            <input type="hidden" name="security_no" value="<%= rs.getString("security_no")%>">
+            <input type="hidden" name="security_no" value="<%= apptMainBean.getString(rs,("security_no")%>">
             <input type="hidden" name="dboperation" value="security_update_record">
             <input type="hidden" name="displaymode" value="Security_Update_Record">
             <input type="submit" name="subbutton" value='<bean:message key="admin.securityupdatesecurity.btnSubmit"/>'>
-            <input type="button" value="<bean:message key="admin.securityupdatesecurity.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=rs.getString("security_no")%>&displaymode=Security_Delete&dboperation=security_delete'">
+            <input type="button" value="<bean:message key="admin.securityupdatesecurity.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=apptMainBean.getString(rs,("security_no")%>&displaymode=Security_Delete&dboperation=security_delete'">
         </td>
       </tr>
       <%

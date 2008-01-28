@@ -67,44 +67,44 @@ function setfocus() {
 
   <tr> 
     <td width="50%" align="right"><bean:message key="admin.provider.formProviderNo"/>: </td>
-    <td><% String provider_no = rs.getString("provider_no"); %><%= provider_no %>
+    <td><% String provider_no = apptMainBean.getString(rs,"provider_no"); %><%= provider_no %>
           <input type="hidden"  name="provider_no" value="<%= provider_no %>">
           <input type="hidden"  name="dboperation" value="provider_update_record"></td>
   </tr>
   <tr> 
     <td><div align="right"><bean:message key="admin.provider.formLastName"/>: </div></td>
-    <td><input type="text"  index="3" name="last_name" value="<%= rs.getString("last_name") %>" maxlength="30"></td>
+    <td><input type="text"  index="3" name="last_name" value="<%= apptMainBean.getString(rs,("last_name") %>" maxlength="30"></td>
   </tr>
   <tr>
     <td><div align="right"><bean:message key="admin.provider.formFirstName"/>: </div></td>
-    <td><input type="text"  index="4" name="first_name" value="<%= rs.getString("first_name") %>" maxlength="30" ></td>
+    <td><input type="text"  index="4" name="first_name" value="<%= apptMainBean.getString(rs,("first_name") %>" maxlength="30" ></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formType"/>: </td>
     <td>
           <% if (vLocale.getCountry().equals("BR")) { %>  
           <select name="provider_type">
-            <option value="receptionist"<% if (rs.getString("provider_type").equals("receptionist")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionReceptionist"/></option>
-            <option value="doctor"<% if (rs.getString("provider_type").equals("doctor")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionDoctor"/></option>
+            <option value="receptionist"<% if (apptMainBean.getString(rs,"provider_type").equals("receptionist")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionReceptionist"/></option>
+            <option value="doctor"<% if (apptMainBean.getString(rs,"provider_type").equals("doctor")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionDoctor"/></option>
             <option value="doctor"><bean:message key="admin.provider.formType.optionNurse"/></option>
             <option value="doctor"><bean:message key="admin.provider.formType.optionResident"/></option>
-            <option value="admin"<% if (rs.getString("provider_type").equals("admin")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdmin"/></option>
-            <option value="admin_billing"<% if (rs.getString("provider_type").equals("admin_billing")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdminBilling"/></option>
-            <option value="billing"<% if (rs.getString("provider_type").equals("billing")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionBilling"/></option>
+            <option value="admin"<% if (apptMainBean.getString(rs,"provider_type").equals("admin")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdmin"/></option>
+            <option value="admin_billing"<% if (apptMainBean.getString(rs,"provider_type").equals("admin_billing")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdminBilling"/></option>
+            <option value="billing"<% if (apptMainBean.getString(rs,"provider_type").equals("billing")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionBilling"/></option>
           </select>
 		  <% } else { %>
 		    <select name="provider_type">
-            <option value="receptionist" <% if (rs.getString("provider_type").equals("receptionist")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionReceptionist"/></option>
-            <option value="doctor" <% if (rs.getString("provider_type").equals("doctor")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionDoctor"/></option>
-            <option value="nurse" <% if (rs.getString("provider_type").equals("nurse")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionNurse"/></option>
-            <option value="resident" <% if (rs.getString("provider_type").equals("resident")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionResident"/></option>
-            <option value="midwife" <% if (rs.getString("provider_type").equals("midwife")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionMidwife"/></option>
-            <option value="admin" <% if (rs.getString("provider_type").equals("admin")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdmin"/></option>
+            <option value="receptionist" <% if (apptMainBean.getString(rs,"provider_type").equals("receptionist")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionReceptionist"/></option>
+            <option value="doctor" <% if (apptMainBean.getString(rs,"provider_type").equals("doctor")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionDoctor"/></option>
+            <option value="nurse" <% if (apptMainBean.getString(rs,"provider_type").equals("nurse")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionNurse"/></option>
+            <option value="resident" <% if (apptMainBean.getString(rs,"provider_type").equals("resident")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionResident"/></option>
+            <option value="midwife" <% if (apptMainBean.getString(rs,"provider_type").equals("midwife")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionMidwife"/></option>
+            <option value="admin" <% if (apptMainBean.getString(rs,"provider_type").equals("admin")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdmin"/></option>
 		<caisi:isModuleLoad moduleName="survey">
-			<option value="er_clerk" <% if (rs.getString("provider_type").equals("er_clerk")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionErClerk"/></option>
+			<option value="er_clerk" <% if (apptMainBean.getString(rs,"provider_type").equals("er_clerk")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionErClerk"/></option>
         </caisi:isModuleLoad>
 		  	</select>
-            <!--input type="text" name="provider_type" value="<%= rs.getString("provider_type") %>" maxlength="15" -->
+            <!--input type="text" name="provider_type" value="<%= apptMainBean.getString(rs,("provider_type") %>" maxlength="15" -->
           <% } %>
      </td>
   </tr> 
@@ -131,7 +131,7 @@ function setfocus() {
   <tr> 
     <td align="right"><bean:message key="admin.provider.formHomePhone"/>: </td>
     <td><input type="text" name="phone" value="<%= apptMainBean.getString(rs,"phone") %>"><bean:message key="admin.provider.formWorkPhone"/>: 
-    <input type="text" name="workphone" value="<%= rs.getString("work_phone") == null?"":(rs.getString("work_phone")) %>" maxlength="50"></td></tr>
+    <input type="text" name="workphone" value="<%= apptMainBean.getString(rs,("work_phone") == null?"":(apptMainBean.getString(rs,("work_phone")) %>" maxlength="50"></td></tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formPager"/>: </td>
     <td>

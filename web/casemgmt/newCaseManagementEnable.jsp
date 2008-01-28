@@ -46,17 +46,17 @@
                 ResultSet rs = db.GetSQL(sql);                            
                 
                 while(rs.next()) {
-                    String provNo = rs.getString("provider_no");
+                    String provNo = db.getString(rs,"provider_no");
                     if(!userNo.equals(provNo)) 
                     	continue;
                     if( newDocArr.contains("all") || newDocArr.contains(provNo)) {
 %>
-                        <input type="checkbox" name="encTesters" value="<%=provNo%>" checked><%=rs.getString("last_name")%>, <%=rs.getString("first_name")%><br>
+                        <input type="checkbox" name="encTesters" value="<%=provNo%>" checked><%=db.getString(rs,"last_name")%>, <%=db.getString(rs,"first_name")%><br>
 <%
                     }
                     else {
 %>
-                        <input type="checkbox" name="encTesters" value="<%=provNo%>"><%=rs.getString("last_name")%>, <%=rs.getString("first_name")%><br>
+                        <input type="checkbox" name="encTesters" value="<%=provNo%>"><%=db.getString(rs,"last_name")%>, <%=db.getString(rs,"first_name")%><br>
 <%                   
                     }                
                 }

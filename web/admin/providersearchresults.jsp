@@ -60,7 +60,7 @@
 <body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
   <center>
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="<%=deepcolor%>"><th><bean:message key="admin.providersearchresults.description"/></font></th></tr>
+      <tr bgcolor="<%=deepcolor%>"><th><bean:message key="admin.providersearchresults.description"/></th></tr>
     </table>
   <table cellspacing="0" cellpadding="0" width="100%" border="0" BGCOLOR="<%=weakcolor%>">
   <form method="post" action="admincontrol.jsp" name="searchprovider">
@@ -148,7 +148,7 @@
 
       <tr bgcolor="<%=bodd?"white":weakcolor%>">
         
-      <td align="center"><a href='admincontrol.jsp?keyword=<%=rs.getString("provider_no")%>&displaymode=Provider_Update&dboperation=provider_search_detail'><%= rs.getString("provider_no") %></a></td>
+      <td align="center"><a href='admincontrol.jsp?keyword=<%=apptMainBean.getString(rs,"provider_no")%>&displaymode=Provider_Update&dboperation=provider_search_detail'><%= apptMainBean.getString(rs,"provider_no") %></a></td>
         <td > <%= apptMainBean.getString(rs,"first_name") %></td>
         <td > <%= apptMainBean.getString(rs,"last_name") %></td>
         <td ><%= apptMainBean.getString(rs,"specialty") %></td>

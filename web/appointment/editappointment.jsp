@@ -208,8 +208,8 @@ function onCut() {
   <% } else {
     while (bFirstDisp?rs.next():true) { 
 	  //get chart_no from demographic table if it exists.
-	  if(bFirstDisp && rs.getString("demographic_no")!=null) {
-	    String demono=rs.getString("demographic_no");
+	  if(bFirstDisp && apptMainBean.getString(rs,"demographic_no")!=null) {
+	    String demono=apptMainBean.getString(rs,"demographic_no");
 		  if(!demono.equals("0") && !demono.equals("") ) {
     	  rsdemo = apptMainBean.queryResults(demono, "search_detail");
 		    if(rsdemo.next()) {
@@ -247,7 +247,7 @@ function onCut() {
     String doctorNo = "";
     if( bFirstDisp ) {
         DemographicData dd = new DemographicData();
-        DemographicData.Demographic demo = dd.getDemographic(rs.getString("demographic_no"));
+        DemographicData.Demographic demo = dd.getDemographic(apptMainBean.getString(rs,"demographic_no"));
         doctorNo = demo!=null? (demo.getProviderNo()) : "";
     }
     else if( !request.getParameter("doctor_no").equals(""))
@@ -262,14 +262,14 @@ function onCut() {
               <div align="right"><font face="arial"> <bean:message key="Appointment.formDate"/> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="appointment_date" VALUE="<%=bFirstDisp?rs.getString("appointment_date"):strApptDate%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+              <INPUT TYPE="TEXT" NAME="appointment_date" VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"appointment_date"):strApptDate%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </td>
             <td width="5%"  ></td>
             <td width="20%"  ALIGN="LEFT"> 
               <div align="right"><font face="arial"> <bean:message key="Appointment.formStatus"/> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="status" VALUE="<%=bFirstDisp?rs.getString("status"):request.getParameter("status")%>"  WIDTH="25" HEIGHT="20" border="0" hspace="2">
+              <INPUT TYPE="TEXT" NAME="status" VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"status"):request.getParameter("status")%>"  WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </td>
           </tr>
           <tr valign="middle"> 
@@ -277,14 +277,14 @@ function onCut() {
               <div align="right"><font face="arial"><font face="arial"> <bean:message key="Appointment.formStartTime"/> :</font></font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="start_time" VALUE="<%=bFirstDisp?rs.getString("start_time").substring(0,5):request.getParameter("start_time")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+              <INPUT TYPE="TEXT" NAME="start_time" VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"start_time").substring(0,5):request.getParameter("start_time")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </td>
             <td width="5%"  ></td>
             <td width="20%"  ALIGN="LEFT"> 
               <div align="right"><font face="arial"> <bean:message key="Appointment.formType"/> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="type" VALUE="<%=bFirstDisp?rs.getString("type"):request.getParameter("type")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+              <INPUT TYPE="TEXT" NAME="type" VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"type"):request.getParameter("type")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </td>
           </tr>
           <tr valign="middle"> 
@@ -295,12 +295,12 @@ function onCut() {
 <%
   int everyMin = 1;
   if(bFirstDisp) {
-    int endtime = (Integer.parseInt(rs.getString("end_time").substring(0,2) ) )*60 + (Integer.parseInt(rs.getString("end_time").substring(3,5) ) ) ;
-    int starttime = (Integer.parseInt(rs.getString("start_time").substring(0,2) ) )*60 + (Integer.parseInt(rs.getString("start_time").substring(3,5) ) ) ;
+    int endtime = (Integer.parseInt(apptMainBean.getString(rs,"end_time").substring(0,2) ) )*60 + (Integer.parseInt(apptMainBean.getString(rs,"end_time").substring(3,5) ) ) ;
+    int starttime = (Integer.parseInt(apptMainBean.getString(rs,"start_time").substring(0,2) ) )*60 + (Integer.parseInt(apptMainBean.getString(rs,"start_time").substring(3,5) ) ) ;
     everyMin = endtime - starttime +1;
   }
 %>  
-                  <INPUT TYPE="hidden" NAME="end_time" VALUE="<%=bFirstDisp?rs.getString("end_time").substring(0,5):request.getParameter("end_time")%>" WIDTH="25" HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">          
+                  <INPUT TYPE="hidden" NAME="end_time" VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"end_time").substring(0,5):request.getParameter("end_time")%>" WIDTH="25" HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">          
 <%--              <INPUT TYPE="hidden" NAME="end_time" VALUE="<%=request.getParameter("end_time")%>" WIDTH="25" HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">--%>
               <INPUT TYPE="TEXT" NAME="duration" VALUE="<%=request.getParameter("duration")!=null?(request.getParameter("duration").equals(" ")||request.getParameter("duration").equals("")||request.getParameter("duration").equals("null")?(""+everyMin) :request.getParameter("duration")):(""+everyMin)%>" WIDTH="25" HEIGHT="20" border="0" hspace="2" >
             </td>
@@ -334,7 +334,7 @@ function onCut() {
               <div align="right"><font face="arial"> <a href="#" onclick="demographicdetail(550,700)" ><bean:message key="Appointment.formName"/></a> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="keyword"  tabindex="1" VALUE="<%=bFirstDisp?rs.getString("name"):request.getParameter("name")%>" HEIGHT="20" border="0" hspace="2" width="25" >
+              <INPUT TYPE="TEXT" NAME="keyword"  tabindex="1" VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"name"):request.getParameter("name")%>" HEIGHT="20" border="0" hspace="2" width="25" >
             </td>
             <td width="5%"  ></td>
             <td width="20%"  ALIGN="LEFT"> 
@@ -356,14 +356,14 @@ function onCut() {
               <div align="right"><font face="arial"> <bean:message key="Appointment.formReason"/> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"><font face="Times New Roman">
-              <textarea name="reason"  tabindex="2" rows="2"  wrap="virtual" cols="18"><%=bFirstDisp?rs.getString("reason"):request.getParameter("reason")%></textarea>
+              <textarea name="reason"  tabindex="2" rows="2"  wrap="virtual" cols="18"><%=bFirstDisp?apptMainBean.getString(rs,"reason"):request.getParameter("reason")%></textarea>
               </font> </TD>
             <td width="5%"  ><font face="Times New Roman"> </font></td>
             <td width="20%"  ALIGN="LEFT"> 
               <div align="right"><font face="arial"><bean:message key="Appointment.formNotes"/> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"><font face="Times New Roman">
-              <textarea name="notes" tabindex="3" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?rs.getString("notes"):request.getParameter("notes")%></textarea>
+              <textarea name="notes" tabindex="3" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?apptMainBean.getString(rs,"notes"):request.getParameter("notes")%></textarea>
               </font> </td>
           </tr>
           <tr valign="middle"> 
@@ -374,17 +374,17 @@ function onCut() {
             <% 
             OscarProperties props = OscarProperties.getInstance();
             boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
-            String loc = bFirstDisp?rs.getString("location"):request.getParameter("location").equals("")?"":request.getParameter("location");
+            String loc = bFirstDisp?apptMainBean.getString(rs,"location"):request.getParameter("location").equals("")?"":request.getParameter("location");
             String colo = bMoreAddr? (new ApptOpt()).getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
             %>
-              <INPUT TYPE="TEXT" NAME="location"  tabindex="4" style="background-color: <%=colo%>" VALUE="<%=bFirstDisp?rs.getString("location"):request.getParameter("location")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+              <INPUT TYPE="TEXT" NAME="location"  tabindex="4" style="background-color: <%=colo%>" VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"location"):request.getParameter("location")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </td>
             <td width="5%"  ></td>
             <td width="20%"  ALIGN="LEFT"> 
               <div align="right"><font face="arial"><bean:message key="Appointment.formResources"/> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
-              <input type="TEXT" name="resources" tabindex="5"  value="<%=bFirstDisp?rs.getString("resources"):request.getParameter("resources")%>" width="25" height="20" border="0" hspace="2">
+              <input type="TEXT" name="resources" tabindex="5"  value="<%=bFirstDisp?apptMainBean.getString(rs,"resources"):request.getParameter("resources")%>" width="25" height="20" border="0" hspace="2">
             </td>
           </tr>
           <tr valign="middle"> 
@@ -393,7 +393,7 @@ function onCut() {
             </td>
             <td width="20%"  ALIGN="LEFT"> 
 <%
-  String lastCreatorNo = bFirstDisp?rs.getString("creator"):request.getParameter("user_id");
+  String lastCreatorNo = bFirstDisp?apptMainBean.getString(rs,"creator"):request.getParameter("user_id");
 %>            
               <INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastCreatorNo%>" readonly WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </td>
@@ -403,8 +403,8 @@ function onCut() {
             </td>
             <td width="20%"  ALIGN="LEFT"> 
 		<%
-                 String lastDateTime = bFirstDisp?rs.getString("updatedatetime"):request.getParameter("updatedatetime");
-                 if (lastDateTime == null){ lastDateTime = bFirstDisp?rs.getString("createdatetime"):request.getParameter("createdatetime"); }
+                 String lastDateTime = bFirstDisp?apptMainBean.getString(rs,"updatedatetime"):request.getParameter("updatedatetime");
+                 if (lastDateTime == null){ lastDateTime = bFirstDisp?apptMainBean.getString(rs,"createdatetime"):request.getParameter("createdatetime"); }
 		%>
 <INPUT TYPE="TEXT" NAME="lastcreatedatetime" readonly VALUE="<%=bFirstDisp?lastDateTime:request.getParameter("lastcreatedatetime")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"> 
 <%

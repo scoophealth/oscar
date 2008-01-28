@@ -90,12 +90,12 @@
           if(rs.next()){                    
           %>        
             <form name="updateWLFrm" action="../oscarWaitingList/RemoveFromWaitingList.jsp">
-                <input type="hidden" name="listId" value="<%=rs.getString("listID")%>"/>
+                <input type="hidden" name="listId" value="<%=apptMainBean.getString(rs,"listID")%>"/>
                 <input type="hidden" name="demographicNo" value="<%=request.getParameter("demographic_no")%>"/>        
                 <script LANGUAGE="JavaScript">
-                var removeList = confirm("Click OK to remove patient from the waiting list: <%=rs.getString("name")%>");                
+                var removeList = confirm("Click OK to remove patient from the waiting list: <%=apptMainBean.getString(rs,"name")%>");                
                 if(removeList){                       
-                    document.forms[0].action = "../oscarWaitingList/RemoveFromWaitingList.jsp?demographicNo=<%=request.getParameter("demographic_no")%>&listID=<%=rs.getString("listID")%>";
+                    document.forms[0].action = "../oscarWaitingList/RemoveFromWaitingList.jsp?demographicNo=<%=request.getParameter("demographic_no")%>&listID=<%=apptMainBean.getString(rs,"listID")%>";
                     document.forms[0].submit();                      
                 }
                 </script>
