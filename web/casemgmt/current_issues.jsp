@@ -26,6 +26,8 @@
 
 <%@ page import="org.oscarehr.casemgmt.model.*" %>
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.*" %>
+<%@page import="org.oscarehr.PMmodule.service.IntegratorManager"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 
 
 Issue Filter Create Report View:
@@ -96,3 +98,28 @@ Issue Filter Create Report View:
 <logic:notEqual name="caseManagementViewForm" property="hideActiveIssue" value="true">
 	<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.hideActiveIssue.value='true';document.caseManagementViewForm.method.value='setHideActiveIssues';document.caseManagementViewForm.submit(); return false;" >hide resolved issues</span>
 </logic:notEqual>
+
+<%
+	IntegratorManager integratorManager=(IntegratorManager)SpringUtils.beanFactory.getBean("integratorManager");
+	if (integratorManager.isEnabled())
+	{
+	%>
+		<br />
+		<a id="showRemoteIssuesLink" href="" onclick="document.getElementById('remoteIssues').style.display='block';document.getElementById('showRemoteIssuesLink').style.display='none';document.getElementById('hideRemoteIssuesLink').style.display='inline';return(false);" >show issues from other agencies</a>
+		<a id="hideRemoteIssuesLink" href="" style="display:none" onclick="document.getElementById('remoteIssues').style.display='none'; document.getElementById('showRemoteIssuesLink').style.display='inline';document.getElementById('hideRemoteIssuesLink').style.display='none';return(false);" >hide issues from other agencies</a>
+		<br />
+		<table id="remoteIssues" style="display:none" width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
+			<tr class="title">
+				<td>Agency</td>
+				<td>Issue</td>
+				<td>Acute</td>
+				<td>Certain</td>
+				<td>Major</td>
+				<td>Resolved</td>
+				<td>type</td>
+			</tr>
+		</table>
+		
+	<%
+	}
+%>
