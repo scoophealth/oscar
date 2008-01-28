@@ -483,6 +483,7 @@ div.demographicWrapper {
                                         notes = SxmlMisc.getXmlContent(apptMainBean.getString(rs,"content"),"unotes") ;
                                         notes = notes==null?"":notes;
                                 }
+                                rs.close();
 
                                 GregorianCalendar now=new GregorianCalendar();
                                 int curYear = now.get(Calendar.YEAR);
@@ -1232,6 +1233,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									  	//prop.setProperty("phone",apptMainBean.getString(rs1,"phone"));
 									  	vecRef.add(prop);
                                       }
+                                      rs1.close();
                                   %>
                                 	<select name="r_doctor" onChange="changeRefDoc()" style="width:200px">
                                   	<option value="" ></option>
@@ -1291,7 +1293,9 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   <% ResultSet rsstatus1 = apptMainBean.queryResults("search_rsstatus");
                                      while (rsstatus1.next()) { %>
                                        <option<%=rosterStatus.equals(rsstatus1.getString("roster_status"))?" selected":""%>><%=rsstatus1.getString("roster_status")%></option>
-                                  <% } // end while %>
+                                  <% }
+                                     rsstatus1.close();
+                                   // end while %>
                                 </select>
 								<input type="button" onClick="newStatus1();" value="Add New">
                               </td>
@@ -1331,7 +1335,9 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   <% ResultSet rsstatus = apptMainBean.queryResults("search_ptstatus");
                                      while (rsstatus.next()) { %>
                                        <option<%=patientStatus.equals(rsstatus.getString("patient_status"))?" selected":""%>><%=rsstatus.getString("patient_status")%></option>
-                                  <% } // end while %>
+                                  <% }
+                                  rsstatus.close();
+                                   // end while %>
                                 </select>
                                 <input type="button" onClick="newStatus();" value="Add New">
                                 <% } // end if...then...else %>
@@ -1373,6 +1379,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                         wlReferralDate = wlReferralDate.substring(0, 11);
                                     }
                                 }
+                                rsWLStatus.close();
                                %>
                                <input type="hidden" name="wlId" value="<%=wlId%>">
                                 <select name="list_id">
@@ -1389,6 +1396,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                               <%=rsWL.getString("name")%></option>
                                               <%
                                       }
+                                      rsWL.close();
                                     %>
                                 </select>
                               </td>
