@@ -86,7 +86,7 @@ function setfocus() {
 
 	rs = daySheetBean.queryResults(par, "search_master");
 	while (rs.next()) { 
-		pin = rs.getString("pin") ;
+		pin = daySheetBean.getString(rs,"pin") ;
 	}
 	daySheetBean.closePstmtConn();
 

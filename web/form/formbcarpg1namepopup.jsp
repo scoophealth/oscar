@@ -93,11 +93,11 @@ function typeInData(v) {
   String lastName = null, firstName = null;
   ResultSet rs = reportMainBean.queryResults("search_provider");
   while (rs.next()) { 
-    providerNameBean.setProperty(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
+    providerNameBean.setProperty(reportMainBean.getString(rs,"provider_no"), new String( reportMainBean.getString(rs,"last_name")+","+reportMainBean.getString(rs,"first_name") ));
     nItems++; 
     bgColor = nItems%2==0?weakcolor:"white";
-    lastName = rs.getString("last_name")!=null?rs.getString("last_name") : "" ;
-    firstName = rs.getString("first_name")!=null?rs.getString("first_name") : "" ;
+    lastName = reportMainBean.getString(rs,"last_name")!=null?reportMainBean.getString(rs,"last_name") : "" ;
+    firstName = reportMainBean.getString(rs,"first_name")!=null?reportMainBean.getString(rs,"first_name") : "" ;
 %>
 <tr bgcolor="<%=bgColor%>" onMouseOver="this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';" 
 onClick='typeInData("<%=firstName + " " + lastName%>");'>

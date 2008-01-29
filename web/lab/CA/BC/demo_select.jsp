@@ -68,13 +68,13 @@ function PopupReturn(index){
 	while (rs.next()){
 %>
 <tr class="<%=(other? "LightBG" : "WhiteBG")%>">
-	<td class="Text" align="center"><a href="javascript:PopupReturn('<%=rs.getString("demographic_no")%>')"><%=rs.getString("demographic_no")%></a></td>
-	<td class="Text"><%=oscar.Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
-	<td class="Text"><%=oscar.Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
-	<td class="Text" align="center"><%=oscar.Misc.check(rs.getString("chart_no"), "")%></td>
-	<td class="Text" align="center"><%=oscar.Misc.check(rs.getString("sex"), "")%></td>
-	<td class="Text" align="center" nowrap><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
-	<td class="Text" align="center"><%=oscar.Misc.check(rs.getString("patient_status"), "")%></td>
+	<td class="Text" align="center"><a href="javascript:PopupReturn('<%=db.getString(rs,"demographic_no")%>')"><%=db.getString(rs,"demographic_no")%></a></td>
+	<td class="Text"><%=oscar.Misc.toUpperLowerCase(db.getString(rs,"last_name"))%></td>
+	<td class="Text"><%=oscar.Misc.toUpperLowerCase(db.getString(rs,"first_name"))%></td>
+	<td class="Text" align="center"><%=oscar.Misc.check(db.getString(rs,"chart_no"), "")%></td>
+	<td class="Text" align="center"><%=oscar.Misc.check(db.getString(rs,"sex"), "")%></td>
+	<td class="Text" align="center" nowrap><%=db.getString(rs,"year_of_birth")+"-"+db.getString(rs,"month_of_birth")+"-"+db.getString(rs,"date_of_birth")%></td>
+	<td class="Text" align="center"><%=oscar.Misc.check(db.getString(rs,"patient_status"), "")%></td>
 </tr>
 <%
 		count++;

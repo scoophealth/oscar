@@ -32,7 +32,7 @@
 	}
 	java.sql.ResultSet rs = db.GetSQL(select_signed.replaceAll("@pid", pid));
 	if(rs.next()){
-		boolean signed = (rs.getString("status")!=null && rs.getString("status").equalsIgnoreCase("S"));
+		boolean signed = (db.getString(rs,"status")!=null && db.getString(rs,"status").equalsIgnoreCase("S"));
 %>
 <html>
 <head>
@@ -53,7 +53,7 @@ function Sign(check){
     <td width="50%" align="left"> 
       <font color="#4D4D4D"><b><font size="4">oscar<font size="3">PathNET - View Lab Report</font></font></b></font> 
     </td>
-    <td align="right" class="Text" nowrap><%=(signed? ((rs.getString("last_name")!=null)? "<b>Signed Off By: </b>" +  rs.getString("last_name") + ", " + rs.getString("first_name") : "<b>Signed Off By Provider No.:</b> " + rs.getString("provider_no")) + " on " + rs.getString("signed_on") : "" )%>
+    <td align="right" class="Text" nowrap><%=(signed? ((db.getString(rs,"last_name")!=null)? "<b>Signed Off By: </b>" +  db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name") : "<b>Signed Off By Provider No.:</b> " + db.getString(rs,"provider_no")) + " on " + db.getString(rs,"signed_on") : "" )%>
     	<input type="checkbox" name="cmd_sign" onclick="Sign(this);" value="<%=pid%>" <%=(signed? "checked disabled" : "")%>/><input type="hidden" name="pid" value="<%=pid%>" />Sign</td>
   </tr>
 </table>
@@ -65,7 +65,7 @@ function Sign(check){
 		int age = 0;
 		java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-d HH:mm:ss");
 		java.util.GregorianCalendar calendar = new java.util.GregorianCalendar();
-		calendar.setTime(format.parse(rs.getString("date_of_birth")));
+		calendar.setTime(format.parse(db.getString(rs,"date_of_birth")));
 		age = oscar.MyDateFormat.getAge(calendar.get(java.util.GregorianCalendar.YEAR), calendar.get(java.util.GregorianCalendar.MONTH), calendar.get(java.util.GregorianCalendar.DATE));
 %>
 <table width="100%">
@@ -74,13 +74,13 @@ function Sign(check){
   </tr>
 	<tr>
 		<td class="Text" width="100px">Patient:</td>
-		<td class="Text"><%=rs.getString("patient_name")%></td>
+		<td class="Text"><%=db.getString(rs,"patient_name")%></td>
 		<td class="Text" align="right">DOB:</td>
-		<td class="Text" width="100px"><%=rs.getString("date_of_birth").substring(0, rs.getString("date_of_birth").indexOf(" "))%></td>
+		<td class="Text" width="100px"><%=db.getString(rs,"date_of_birth").substring(0, db.getString(rs,"date_of_birth").indexOf(" "))%></td>
 	</tr>
 	<tr>
 		<td class="Text">PHN:</td>
-		<td class="Text"><%=rs.getString("external_id")%></td>
+		<td class="Text"><%=db.getString(rs,"external_id")%></td>
 		<td class="Text" align="right">Age:</td>
 		<td class="Text"><%=age%></td>
 	</tr>
@@ -88,15 +88,15 @@ function Sign(check){
 		<td class="Text"></td>
 		<td class="Text"></td>
 		<td class="Text" align="right">Sex:</td>
-		<td class="Text"><%=rs.getString("sex")%></td>
+		<td class="Text"><%=db.getString(rs,"sex")%></td>
 	</tr>
 	<tr>
 		<td class="Text">Address:</td>
-		<td class="Text" colspan="3"><%=rs.getString("patient_address").replaceAll("\\\\\\.br\\\\", " ")%></td>
+		<td class="Text" colspan="3"><%=db.getString(rs,"patient_address").replaceAll("\\\\\\.br\\\\", " ")%></td>
 	</tr>
 	<tr>
 		<td class="Text">Phone:</td>
-		<td class="Text"><%=rs.getString("home_number")%></td>
+		<td class="Text"><%=db.getString(rs,"home_number")%></td>
 		<td class="Text"></td>
 		<td class="Text"></td>
 	</tr>
@@ -109,19 +109,19 @@ function Sign(check){
 	<tr><td colspan="4">&nbsp;</td></tr>
 	<tr>
 		<td class="Text">Lab:</td>
-		<td class="Text" colspan="3"><%=rs.getString("filler_order_number").substring(0, rs.getString("filler_order_number").indexOf("-", 3))%></td>
+		<td class="Text" colspan="3"><%=db.getString(rs,"filler_order_number").substring(0, db.getString(rs,"filler_order_number").indexOf("-", 3))%></td>
 	</tr>
 	<tr>
 		<td class="Text">Ordered By:</td>
-		<td class="Text"><%=rs.getString("ordering_provider").replaceAll("~", ",<br/>")%></td>
+		<td class="Text"><%=db.getString(rs,"ordering_provider").replaceAll("~", ",<br/>")%></td>
 		<td class="Text">Requested On:</td>
-		<td class="Text"><%=rs.getString("requested_date_time")%></td>
+		<td class="Text"><%=db.getString(rs,"requested_date_time")%></td>
 	</tr>
 	<tr>
 		<td class="Text">Copies To:</td>
-		<td class="Text"><%=rs.getString("result_copies_to").replaceAll("~", ",<br/>")%></td>
+		<td class="Text"><%=db.getString(rs,"result_copies_to").replaceAll("~", ",<br/>")%></td>
 		<td class="Text">Observed On:</td>
-		<td class="Text"><%=rs.getString("observation_date_time")%></td>
+		<td class="Text"><%=db.getString(rs,"observation_date_time")%></td>
 	</tr>
 <%
 	}
@@ -134,15 +134,15 @@ function Sign(check){
 	boolean other = true;
 	String section = "";
 	while(rs.next()){
-		if(rs.getString("set_id") == null || rs.getInt("set_id") == 1){
-			if(!section.equalsIgnoreCase(rs.getString("diagnostic_service_sect_id"))){
-				section = rs.getString("diagnostic_service_sect_id");
+		if(db.getString(rs,"set_id") == null || rs.getInt("set_id") == 1){
+			if(!section.equalsIgnoreCase(db.getString(rs,"diagnostic_service_sect_id"))){
+				section = db.getString(rs,"diagnostic_service_sect_id");
 %>
 	<tr>
 		<td colspan="7">&nbsp;</td>
 	</tr>
 	<tr>
-		<td class="Section" colspan="7"><%=((rs.getString("diagnostic_service_sect_id")!=null)? rs.getString("diagnostic_service_sect_id") : "Other")%></td>
+		<td class="Section" colspan="7"><%=((db.getString(rs,"diagnostic_service_sect_id")!=null)? db.getString(rs,"diagnostic_service_sect_id") : "Other")%></td>
 	</tr>
 <%
 			}
@@ -151,17 +151,17 @@ function Sign(check){
 		<td colspan="7">&nbsp;</td>
 	</tr>
 	<tr>
-		<td class="Text" colspan="3"><b>Service Id:</b><%=rs.getString("universal_service_id").substring(rs.getString("universal_service_id").indexOf(" "))%></td>
-		<td class="Text" nowrap><b>Last Modified:</b><%=rs.getString("results_report_status_change")%></td>
-		<td class="Text" nowrap colspan="3"><b>Result Status:</b><%=(rs.getString("result_status").equalsIgnoreCase("f")? "Final" : "Pending")%></td>
+		<td class="Text" colspan="3"><b>Service Id:</b><%=db.getString(rs,"universal_service_id").substring(db.getString(rs,"universal_service_id").indexOf(" "))%></td>
+		<td class="Text" nowrap><b>Last Modified:</b><%=db.getString(rs,"results_report_status_change")%></td>
+		<td class="Text" nowrap colspan="3"><b>Result Status:</b><%=(db.getString(rs,"result_status").equalsIgnoreCase("f")? "Final" : "Pending")%></td>
 	</tr>
 	<tr>
 		<td class="Text" valign="top">Note:</td>
-		<td class="Text" colspan="6"><%=rs.getString("obrnote").replaceAll("\\\\\\.br\\\\", " ")%>&nbsp;</td>
+		<td class="Text" colspan="6"><%=db.getString(rs,"obrnote").replaceAll("\\\\\\.br\\\\", " ")%>&nbsp;</td>
 	</tr>
 <%
 		}
-		if(rs.getString("set_id") != null){
+		if(db.getString(rs,"set_id") != null){
 			if(rs.getInt("set_id") == 1){
 			other = true;
 %>
@@ -179,12 +179,12 @@ function Sign(check){
 %>
 	<tr>
 		<td>&nbsp;</td>
-		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=rs.getString("observation_identifier").substring(rs.getString("observation_identifier").indexOf(" "))%></td>
-		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><b><%=((rs.getString("abnormal_flags").toUpperCase().equals("N"))? "&nbsp;" : oscar.Misc.check(rs.getString("abnormal_flags"), "", "&nbsp;"))%></b></td>
-		<td class="Text" class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((rs.getString("abnormal_flags").toUpperCase().equals("N"))? rs.getString("observation_results") : "<b>" + rs.getString("observation_results") + "</b>").replaceAll("\\\\\\.br\\\\", " ")%></td>
-		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=rs.getString("reference_range")%></td>
-		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=rs.getString("units")%></td>
-		<td class="Text" nowrap title="<%=rs.getString("obxnote").replaceAll("\\\\\\.br\\\\", " ")%>" class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((rs.getString("obxnote").length() < 20)? rs.getString("obxnote") : rs.getString("obxnote").substring(0, 20)).replaceAll("\\\\\\.br\\\\", " ")%></td>
+		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=db.getString(rs,"observation_identifier").substring(db.getString(rs,"observation_identifier").indexOf(" "))%></td>
+		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><b><%=((db.getString(rs,"abnormal_flags").toUpperCase().equals("N"))? "&nbsp;" : oscar.Misc.check(db.getString(rs,"abnormal_flags"), "", "&nbsp;"))%></b></td>
+		<td class="Text" class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((db.getString(rs,"abnormal_flags").toUpperCase().equals("N"))? db.getString(rs,"observation_results") : "<b>" + db.getString(rs,"observation_results") + "</b>").replaceAll("\\\\\\.br\\\\", " ")%></td>
+		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=db.getString(rs,"reference_range")%></td>
+		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=db.getString(rs,"units")%></td>
+		<td class="Text" nowrap title="<%=db.getString(rs,"obxnote").replaceAll("\\\\\\.br\\\\", " ")%>" class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((db.getString(rs,"obxnote").length() < 20)? db.getString(rs,"obxnote") : db.getString(rs,"obxnote").substring(0, 20)).replaceAll("\\\\\\.br\\\\", " ")%></td>
 	</tr>
 <%
 		}
@@ -198,7 +198,7 @@ function Sign(check){
 		<td colspan="7"><br><b>Notes:</b></td>
 	</tr>
 	<tr>
-		<td colspan="7"><textarea name="notes" rows="7" style="width:100%;"><%=oscar.Misc.check(rs.getString("notes"), "")%></textarea></td>
+		<td colspan="7"><textarea name="notes" rows="7" style="width:100%;"><%=oscar.Misc.check(db.getString(rs,"notes"), "")%></textarea></td>
 	</tr>
 	<tr class="LightBG">
 		<td colspan="7" align="right"><input type="submit" name="cmd_save" value="Save" /></td>

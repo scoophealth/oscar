@@ -20,7 +20,7 @@ DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 ResultSet rs = db.GetSQL(sql);
 String demographicID = "";
 while(rs.next()){
-    demographicID = rs.getString("demographic_no");
+    demographicID = db.getString(rs,"demographic_no");
 }
 rs.close();
 
