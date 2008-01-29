@@ -73,11 +73,11 @@ int rowCount1 = 0;
      
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
-     demoName = rs.getString("demographic_name");
-       apptDate = rs.getString("billing_date");
-     specialty = SxmlMisc.getXmlContent(rs.getString("content"),"specialty")==null?"":SxmlMisc.getXmlContent(rs.getString("content"),"specialty");
-     reason = rs.getString("status");
-    total = rs.getString("total").indexOf(".") > 0?rs.getString("total"):rs.getString("total").substring(0,rs.getString("total").length()-2)+"."+rs.getString("total").substring(rs.getString("total").length()-2) ;
+     demoName = apptMainBean.getString(rs,"demographic_name");
+       apptDate = apptMainBean.getString(rs,"billing_date");
+     specialty = SxmlMisc.getXmlContent(apptMainBean.getString(rs,"content"),"specialty")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"content"),"specialty");
+     reason = apptMainBean.getString(rs,"status");
+    total = apptMainBean.getString(rs,"total").indexOf(".") > 0?apptMainBean.getString(rs,"total"):apptMainBean.getString(rs,"total").substring(0,apptMainBean.getString(rs,"total").length()-2)+"."+apptMainBean.getString(rs,"total").substring(apptMainBean.getString(rs,"total").length()-2) ;
       
       if (specialty.equals("flu")){
             
@@ -88,15 +88,15 @@ int rowCount1 = 0;
 
 %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
-    <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
-      <%=rs.getString("billing_no")%></a></font></b></TD>
+    <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=apptMainBean.getString(rs,"billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+      <%=apptMainBean.getString(rs,"billing_no")%></a></font></b></TD>
         <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
         <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
 
     <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></b></TD>
   
     <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=total%></font></b></TD>
-   <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + rs.getString("billing_no") + "&billCode=" +reason+ "&dboperation=delete_bill&hotclick=0\")'>-B</a>"%></font></b></TD>
+   <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + apptMainBean.getString(rs,"billing_no") + "&billCode=" +reason+ "&dboperation=delete_bill&hotclick=0\")'>-B</a>"%></font></b></TD>
 
   </tr>
   <%  rowCount1 = rowCount1 + 1;
@@ -106,15 +106,15 @@ int rowCount1 = 0;
   } else{
   %>
     <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">       
-      <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../oscarBilling/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
-        <%=rs.getString("billing_no")%></a></font></b></TD>
+      <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../oscarBilling/billingView.do?billing_no=<%=apptMainBean.getString(rs,"billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+        <%=apptMainBean.getString(rs,"billing_no")%></a></font></b></TD>
           <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
           <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
       <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=total%></font></b></TD>
       <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></b></TD>
     
   
-     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + rs.getString("billing_no") + "&billCode=" +reason+ "&dboperation=delete_bill&hotclick=0\")'>-B</a>"%></font></b></TD>
+     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + apptMainBean.getString(rs,"billing_no") + "&billCode=" +reason+ "&dboperation=delete_bill&hotclick=0\")'>-B</a>"%></font></b></TD>
   
     </tr>
   <%  

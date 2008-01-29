@@ -621,9 +621,9 @@ function popFeeItemList(form,field){
                     String desc = null;
                     java.sql.ResultSet rs = apptMainBean.queryResults(new String[] {"O", request.getParameter("billing_no")}, "select_c12_record");
                     while (rs.next()) {
-                      String seqNum = rs.getString("t_dataseq");
+                      String seqNum = apptMainBean.getString(rs,"t_dataseq");
                       for (int i = 1; i < 8; i++) {
-                        desc = rs.getString("t_exp" + String.valueOf(i));
+                        desc = apptMainBean.getString(rs,"t_exp" + String.valueOf(i));
                         String descfull = (String) codes.get(desc);
                         if (null != desc || !desc.trim().equals("")) {
                           //rsCode = apptMainBean.queryResults(new String[]{desc},"select_msp_code");

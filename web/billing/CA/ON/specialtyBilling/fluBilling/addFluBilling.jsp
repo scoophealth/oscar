@@ -57,9 +57,9 @@ Vector billingProvider = new Vector();
 String sql = "select p.provider_no, p.ohip_no, p.last_name, p.first_name from reportprovider r, provider p where r.provider_no=p.provider_no order by p.last_name, p.first_name";
 ResultSet rs = dbObj.searchDBRecord(sql);
 while(rs.next()){
-	billingProvider.add(rs.getString("p.provider_no"));
-	billingProvider.add(rs.getString("p.ohip_no"));
-	billingProvider.add(rs.getString("p.last_name") +","+ rs.getString("p.first_name"));
+	billingProvider.add(dbObj.getString(rs,"p.provider_no"));
+	billingProvider.add(dbObj.getString(rs,"p.ohip_no"));
+	billingProvider.add(dbObj.getString(rs,"p.last_name") +","+ dbObj.getString(rs,"p.first_name"));
 }
 
 //System.out.println("size of result: "+ billingProvider.size());

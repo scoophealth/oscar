@@ -57,14 +57,14 @@
      
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
-      apptDoctorNo = rs.getString("apptProvider_no");
-      apptNo = rs.getString("appointment_no");
-      demoNo = rs.getString("demographic_no");
-      demoName = rs.getString("demographic_name");
-      userno=rs.getString("provider_no");
-      apptDate = rs.getString("billing_date");
-      apptTime = rs.getString("billing_time");
-      reason = rs.getString("status");
+      apptDoctorNo = apptMainBean.getString(rs,"apptProvider_no");
+      apptNo = apptMainBean.getString(rs,"appointment_no");
+      demoNo = apptMainBean.getString(rs,"demographic_no");
+      demoName = apptMainBean.getString(rs,"demographic_name");
+      userno=apptMainBean.getString(rs,"provider_no");
+      apptDate = apptMainBean.getString(rs,"billing_date");
+      apptTime = apptMainBean.getString(rs,"billing_time");
+      reason = apptMainBean.getString(rs,"status");
       
       if (apptDoctorNo.compareTo("none") == 0){
       note = "No Appt / INR";
@@ -84,8 +84,8 @@
     <TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptTime==null?"00:00:00":apptTime%></font></b></TD>
     <TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=note%></font></b></TD>    
-    <TD align="center" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
-      <%=rs.getString("billing_no")%></a></font></b></TD>
+    <TD align="center" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=apptMainBean.getString(rs,"billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+      <%=apptMainBean.getString(rs,"billing_no")%></a></font></b></TD>
   </tr>
   <%  rowCount = rowCount + 1;
     }

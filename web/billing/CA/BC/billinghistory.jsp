@@ -143,10 +143,10 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     else {
       String currentBillingNo = "";
       while (rs.next()) {
-        String billno = rs.getString("billing_no");
+        String billno = apptMainBean.getString(rs,"billing_no");
         bodd = !currentBillingNo.equals(billno) ? !bodd : bodd; //for the color of rows
         nItems++; //to calculate if it is the end of records
-        billCode = rs.getString("status");
+        billCode = apptMainBean.getString(rs,"status");
         if (billCode.compareTo("B") == 0) {
           billType = "Submitted MSP";
         }
@@ -195,7 +195,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
         if (billCode.substring(0, 1).compareTo("A") == 0) {
           billType = "Paid Private";
         }
-        proNo = rs.getString("apptProvider_no") == null ? "" : rs.getString("apptProvider_no");
+        proNo = apptMainBean.getString(rs,"apptProvider_no") == null ? "" : apptMainBean.getString(rs,"apptProvider_no");
         if (proNo.compareTo("") == 0 || proNo.compareTo("000") == 0 || proNo.compareTo("none") == 0) {
           proFirst = "Not Available";
           proLast = "";
@@ -229,20 +229,20 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <%=fmt.format(billAmt)%>        <br/>
       </td>
     <%}    %>
-      <td><%=rs.getString("billingmaster_no")%>      </td>
-      <td><%=rs.getString("billing_code")%>      </td>
+      <td><%=apptMainBean.getString(rs,"billingmaster_no")%>      </td>
+      <td><%=apptMainBean.getString(rs,"billing_code")%>      </td>
       <td><%=fmt.format(rs.getDouble("bill_amount"))%>      </td>
-      <td><%=rs.getString("dx_code1")%>        &nbsp
+      <td><%=apptMainBean.getString(rs,"dx_code1")%>        &nbsp
 </td>
-      <td><%=rs.getString("billing_date")%>      </td>
-      <td><%=rs.getString("billingtype")%>      </td>
+      <td><%=apptMainBean.getString(rs,"billing_date")%>      </td>
+      <td><%=apptMainBean.getString(rs,"billingtype")%>      </td>
       <td><%=billType%>      </td>
-      <td><%=rs.getString("last_name")+","+rs.getString("first_name")%>      </td>
+      <td><%=apptMainBean.getString(rs,"last_name")+","+apptMainBean.getString(rs,"first_name")%>      </td>
     <%if (billCode.substring(0, 1).compareTo("B") == 0 || billCode.substring(0, 1).compareTo("S") == 0) {    %>
       <td>&nbsp;</td>
     <%} else {    %>
       <td>
-        <a href="billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a>
+        <a href="billingDeleteNoAppt.jsp?billing_no=<%=apptMainBean.getString(rs,"billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a>
       </td>
     <%}    %>
     </tr>

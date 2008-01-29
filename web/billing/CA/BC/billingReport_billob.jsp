@@ -67,10 +67,10 @@ int rCount = 0;
      
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
-     demoName = rs.getString("demographic_name");
-       apptDate = rs.getString("billing_date");
-      reason = rs.getString("status");
-      total = rs.getString("total").indexOf(".") > 0?rs.getString("total"):rs.getString("total").substring(0,rs.getString("total").length()-2)+"."+rs.getString("total").substring(rs.getString("total").length()-2) ;
+     demoName = apptMainBean.getString(rs,"demographic_name");
+       apptDate = apptMainBean.getString(rs,"billing_date");
+      reason = apptMainBean.getString(rs,"status");
+      total = apptMainBean.getString(rs,"total").indexOf(".") > 0?apptMainBean.getString(rs,"total"):apptMainBean.getString(rs,"total").substring(0,apptMainBean.getString(rs,"total").length()-2)+"."+apptMainBean.getString(rs,"total").substring(apptMainBean.getString(rs,"total").length()-2) ;
       
       if (reason.equals("S")){
         dOBFee = Double.parseDouble(total);
@@ -82,7 +82,7 @@ int rCount = 0;
       param2[i] = "";
       }
       rCount = 0;
-   rs2 = apptMainBean.queryResults(rs.getString("billing_no"), "search_bill_record");
+   rs2 = apptMainBean.queryResults(apptMainBean.getString(rs,"billing_no"), "search_bill_record");
    while (rs2.next()){
    param2[rCount] = rs2.getString("service_code");
    rCount = rCount +1;
@@ -92,8 +92,8 @@ int rCount = 0;
 
 %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">  
-    <TD align="left" width="5%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
-      <%=rs.getString("billing_no")%></a></font></b></TD>
+    <TD align="left" width="5%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=apptMainBean.getString(rs,"billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+      <%=apptMainBean.getString(rs,"billing_no")%></a></font></b></TD>
         <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
         <TD align="left" width="12%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
 

@@ -38,7 +38,7 @@
 					&& (request.getParameter("submit").equals("Search")
 							|| request.getParameter("submit").equals("Next Page") || request.getParameter("submit")
 							.equals("Last Page"))) {
-				BillingONDataHelp dbObj = new BillingONDataHelp();
+				oscar.oscarDB.DBPreparedHandler dbObj = new oscar.oscarDB.DBPreparedHandler();
 				String search_mode = request.getParameter("search_mode") == null ? "search_name" : request
 						.getParameter("search_mode");
 				String orderBy = request.getParameter("orderby") == null ? "company_name" : request
@@ -55,22 +55,24 @@
 				} else {
 					where = search_mode + " like '" + StringEscapeUtils.escapeSql(keyword) + "%'";
 				}
-				String sql = "select * from billing_on_3rdPartyAddress where " + where + " order by " + orderBy + " limit "
-						+ strLimit1 + "," + strLimit2;
-				ResultSet rs = dbObj.searchDBRecord(sql);
+				String sql = "select * from billing_on_3rdPartyAddress where " + where + " order by " + orderBy;// + " limit "
+//						+ strLimit1 + "," + strLimit2;
+				ResultSet rs = dbObj.queryResults_paged(sql,Integer.parseInt(strLimit2));
 				// System.out.println(sql);
-				while (rs.next()) {
+				int idx = 0;
+				while (rs.next() && idx < Integer.parseInt(strLimit1)) {
 					prop = new Properties();
-					prop.setProperty("id", rs.getString("id"));
-					prop.setProperty("attention", rs.getString("attention"));
-					prop.setProperty("company_name", rs.getString("company_name"));
-					prop.setProperty("address", rs.getString("address"));
-					prop.setProperty("city", rs.getString("city"));
-					prop.setProperty("province", rs.getString("province"));
-					prop.setProperty("postcode", rs.getString("postcode"));
-					prop.setProperty("telephone", rs.getString("telephone"));
-					prop.setProperty("fax", rs.getString("fax"));
+					prop.setProperty("id", dbObj.getString(rs,"id"));
+					prop.setProperty("attention", dbObj.getString(rs,"attention"));
+					prop.setProperty("company_name", dbObj.getString(rs,"company_name"));
+					prop.setProperty("address", dbObj.getString(rs,"address"));
+					prop.setProperty("city", dbObj.getString(rs,"city"));
+					prop.setProperty("province", dbObj.getString(rs,"province"));
+					prop.setProperty("postcode", dbObj.getString(rs,"postcode"));
+					prop.setProperty("telephone", dbObj.getString(rs,"telephone"));
+					prop.setProperty("fax", dbObj.getString(rs,"fax"));
 					vec.add(prop);
+					idx ++;
 				}
 			}
 %>

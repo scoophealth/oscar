@@ -28,7 +28,7 @@
   <% 
  String dateBegin = request.getParameter("xml_vdate");
    String dateEnd = request.getParameter("xml_appointment_date");
-   if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
+   if (dateEnd.compareTo("") == 0) dateEnd = oscar.MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
    if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
  ResultSet rs=null ;
   String[] param =new String[3];
@@ -57,14 +57,14 @@
      
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
-      apptNo = rs.getString("appointment_no");
-      demoNo = rs.getString("demographic_no");
-      demoName = rs.getString("name");
-      userno=rs.getString("provider_no");
-      apptDate = rs.getString("appointment_date");
-      apptTime = rs.getString("start_time");
-      reason = rs.getString("reason");
-      apptStatus = rs.getString("status");
+      apptNo = apptMainBean.getString(rs,"appointment_no");
+      demoNo = apptMainBean.getString(rs,"demographic_no");
+      demoName = apptMainBean.getString(rs,"name");
+      userno=apptMainBean.getString(rs,"provider_no");
+      apptDate = apptMainBean.getString(rs,"appointment_date");
+      apptTime = apptMainBean.getString(rs,"start_time");
+      reason = apptMainBean.getString(rs,"reason");
+      apptStatus = apptMainBean.getString(rs,"status");
 %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
     <TD align="center" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
