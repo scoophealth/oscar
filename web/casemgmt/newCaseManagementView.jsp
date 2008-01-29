@@ -1552,7 +1552,7 @@ Version version = (Version) ctx.getBean("version");
 </tr>
 </table>
  
-<jsp:include page="<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>"/>
+<jsp:include page='<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>'/>
 --%>
 
     <html:form action="/CaseManagementView" method="post">        

@@ -69,7 +69,7 @@
 			</table>
 			</div>
 			<%@ include file="/common/messages.jsp"%>
-			<jsp:include page="<%="/PMmodule/Admin/StaffEdit/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>" />
+			<jsp:include page='<%="/PMmodule/Admin/StaffEdit/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
 		</c:when>
 		<c:otherwise>
 			<%@ include file="/common/messages.jsp"%>

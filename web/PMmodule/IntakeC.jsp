@@ -105,7 +105,7 @@
 	</table>
 	</div>
 	<%@ include file="/common/messages.jsp"%>
-	<jsp:include page="<%="/PMmodule/IntakeC/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>" />
+	<jsp:include page='<%="/PMmodule/IntakeC/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
 </html:form>
 </body>
 </html:html>
