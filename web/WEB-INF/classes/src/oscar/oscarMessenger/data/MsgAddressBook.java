@@ -67,7 +67,7 @@ public class MsgAddressBook {
       try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             java.sql.ResultSet rs;
-            String sql = new String("select locationDesc, addressBook from oscarcommlocations where current = 1");
+            String sql = new String("select locationDesc, addressBook from oscarcommlocations where current1 = 1");
             rs = db.GetSQL(sql);
             if (rs.next()){
                retval = rs.getString("addressBook");
@@ -94,7 +94,7 @@ public class MsgAddressBook {
       try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             java.sql.ResultSet rs;
-            String sql = new String("select locationDesc, locationId, addressBook from oscarcommlocations where current = 0");
+            String sql = new String("select locationDesc, locationId, addressBook from oscarcommlocations where current1 = 0");
             rs = db.GetSQL(sql);
             while (rs.next()){
                vector.add(rs.getString("addressBook"));

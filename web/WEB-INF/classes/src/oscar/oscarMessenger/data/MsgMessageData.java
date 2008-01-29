@@ -67,7 +67,7 @@ public class MsgMessageData {
             try{
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               java.sql.ResultSet rs;
-              rs = db.GetSQL("select locationId from oscarcommlocations where current = '1'");
+              rs = db.GetSQL("select locationId from oscarcommlocations where current1 = '1'");
 
               if (rs.next()) {
                 currentLocationId = rs.getString("locationId");

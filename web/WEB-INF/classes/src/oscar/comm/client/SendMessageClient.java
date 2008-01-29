@@ -44,7 +44,7 @@ public class SendMessageClient {
             db = new DBHandler(databaseURL, databaseName);
 
             //System.out.println("");
-            String sql = "SELECT remoteServerURL FROM oscarcommlocations WHERE current = 1";
+            String sql = "SELECT remoteServerURL FROM oscarcommlocations WHERE current1 = 1";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()) {
                 wsURL = rs.getString("remoteServerURL");

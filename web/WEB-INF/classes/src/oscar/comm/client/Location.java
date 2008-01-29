@@ -42,7 +42,7 @@ class Location {
     public Element getLocal(Document doc) throws SQLException {
         Element local = doc.createElement("local");
 
-        ResultSet rs = db.GetSQL("SELECT * FROM oscarcommlocations WHERE current = 1");
+        ResultSet rs = db.GetSQL("SELECT * FROM oscarcommlocations WHERE current1 = 1");
         if(rs.next()) {
             UtilXML.addNode(local, "locationId", String.valueOf(rs.getInt("locationId")));
             UtilXML.addNode(local, "locationDesc", rs.getString("locationDesc"));
@@ -56,7 +56,7 @@ class Location {
     public Element getRemotes(Document doc) throws SQLException {
         Element remoteLocations = doc.createElement("recipients");
 
-        ResultSet rs = db.GetSQL("SELECT * FROM oscarcommlocations WHERE current = 0");
+        ResultSet rs = db.GetSQL("SELECT * FROM oscarcommlocations WHERE current1 = 0");
         while(rs.next()) {
             UtilXML.addNode(remoteLocations, "remote").setAttribute("locationId", String.valueOf(rs.getInt("locationId")));
         }
