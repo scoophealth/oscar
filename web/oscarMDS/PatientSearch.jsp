@@ -218,7 +218,7 @@ function checkTypeIn() {
     }
   }
 
-  String sql = "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit;  
+  String sql = "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +orderby; // + " "+limit;  
   
   if(request.getParameter("search_mode").equals("search_name")) {      
       keyword=keyword+"%";
@@ -254,39 +254,45 @@ function checkTypeIn() {
   if(rs==null) {
     out.println("failed!!!");
   } else {
-    while (rs.next()) {
+  	int offset = Integer.parseInt(strLimit2);
+  	int idx = 0;
+  	while(idx < offset) {
+  		rs.next();
+  	}
+  	idx = 0;
+    while (rs.next() && idx < Integer.parseInt(strLimit1)) {
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
 
-     if(!(rs.getString("month_of_birth").equals(""))) {//   ||rs.getString("year_of_birth")||rs.getString("date_of_birth")) {
-    	if(curMonth>Integer.parseInt(rs.getString("month_of_birth"))) {
-    		age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+     if(!(db.getString(rs,"month_of_birth").equals(""))) {//   ||db.getString(rs,"year_of_birth")||db.getString(rs,"date_of_birth")) {
+    	if(curMonth>Integer.parseInt(db.getString(rs,"month_of_birth"))) {
+    		age=curYear-Integer.parseInt(db.getString(rs,"year_of_birth"));
     	} else {
-    		if(curMonth==Integer.parseInt(rs.getString("month_of_birth")) &&
-    			curDay>Integer.parseInt(rs.getString("date_of_birth"))) {
-    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+    		if(curMonth==Integer.parseInt(db.getString(rs,"month_of_birth")) &&
+    			curDay>Integer.parseInt(db.getString(rs,"date_of_birth"))) {
+    			age=curYear-Integer.parseInt(db.getString(rs,"year_of_birth"));
     		} else {
-    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"))-1; 
+    			age=curYear-Integer.parseInt(db.getString(rs,"year_of_birth"))-1; 
     		}
     	}	
      }	     
 %>
  
          <tr bgcolor="<%=bodd?"ivory":"white"%>" align="center">
-            <td><input type="submit" name="demographicNo" value="<%=rs.getString("demographic_no")%>"></td>
-            <td><%=nbsp( Misc.toUpperLowerCase(rs.getString("last_name")) )%></td>
-            <td><%=nbsp( Misc.toUpperLowerCase(rs.getString("first_name")) )%></td>
+            <td><input type="submit" name="demographicNo" value="<%=db.getString(rs,"demographic_no")%>"></td>
+            <td><%=nbsp( Misc.toUpperLowerCase(db.getString(rs,"last_name")) )%></td>
+            <td><%=nbsp( Misc.toUpperLowerCase(db.getString(rs,"first_name")) )%></td>
             <td><%= age %></td>
-            <td><%=nbsp( rs.getString("roster_status") )%></td>
-            <td><%=nbsp( rs.getString("sex") )%></td>
-            <td><%=nbsp( rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth") )%></td>
-            <td><%=providerBean.getProperty(rs.getString("provider_no"))==null?"&nbsp;":providerBean.getProperty(rs.getString("provider_no")) %></td>
+            <td><%=nbsp( db.getString(rs,"roster_status") )%></td>
+            <td><%=nbsp( db.getString(rs,"sex") )%></td>
+            <td><%=nbsp( db.getString(rs,"year_of_birth")+"-"+db.getString(rs,"month_of_birth")+"-"+db.getString(rs,"date_of_birth") )%></td>
+            <td><%=providerBean.getProperty(db.getString(rs,"provider_no"))==null?"&nbsp;":providerBean.getProperty(db.getString(rs,"provider_no")) %></td>
             
          </tr> 
 <%
-      bufName = new StringBuffer( (rs.getString("last_name")+ ","+ rs.getString("first_name")) );
-      bufNo = new StringBuffer( (rs.getString("demographic_no")) );
-      bufChart = new StringBuffer( (rs.getString("chart_no"))   );
+      bufName = new StringBuffer( (db.getString(rs,"last_name")+ ","+ db.getString(rs,"first_name")) );
+      bufNo = new StringBuffer( (db.getString(rs,"demographic_no")) );
+      bufChart = new StringBuffer( (db.getString(rs,"chart_no"))   );
     }
   }
 %> 
