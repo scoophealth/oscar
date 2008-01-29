@@ -59,5 +59,5 @@
 		</table>
 	</div>
 	<jsp:include page="/common/messages.jsp" />
-	<jsp:include page="<%="/PMmodule/Admin/ProgramView/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>" />
+	<jsp:include page='<%="/PMmodule/Admin/ProgramView/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>' />
 </html:form>
