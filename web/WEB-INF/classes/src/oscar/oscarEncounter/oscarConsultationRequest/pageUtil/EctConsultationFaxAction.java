@@ -244,7 +244,7 @@ public class EctConsultationFaxAction extends Action {
       String retval = "";
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         String sql = "select locationId from oscarcommlocations where current = '1' ";
+         String sql = "select locationId from oscarcommlocations where current1 = '1' ";
          ResultSet rs = db.GetSQL(sql);
          if(rs.next())
             retval = rs.getString("locationId");
