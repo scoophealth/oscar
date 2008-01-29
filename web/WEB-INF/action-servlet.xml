@@ -195,7 +195,7 @@
         <property name="providerManager" ref="providerManager"/>
     </bean>
     <!--  CASE MANAGEMENT -->
-    <bean name="/CaseManagementView" class="org.oscarehr.casemgmt.web.CaseManagementViewAction" singleton="false">
+    <bean name="/CaseManagementView" class="org.oscarehr.casemgmt.web.CaseManagementViewAction" singleton="false" autowire="byName">
         <property name="caseManagementManager" ref="CaseManagementManager"/>
         <property name="ticklerManager" ref="ticklerManager"/>
         <property name="clientImageManager" ref="ClientImageManager"/>

@@ -51,6 +51,8 @@ import org.caisi.integrator.message.clientGroup.JoinClientRequest;
 import org.caisi.integrator.message.demographics.AddUpdateDemographicRequest;
 import org.caisi.integrator.message.demographics.GetDemographicRequest;
 import org.caisi.integrator.message.demographics.GetDemographicResponse;
+import org.caisi.integrator.message.demographics.GetIssuesNotesRequest;
+import org.caisi.integrator.message.demographics.GetIssuesNotesResponse;
 import org.caisi.integrator.message.demographics.PublishDemographicsRequest;
 import org.caisi.integrator.message.program.GetProgramsResponse;
 import org.caisi.integrator.message.program.GetReferralsResponse;
@@ -671,6 +673,29 @@ public class IntegratorManager {
         }
 
         return(false);
+    }
+
+    public GetIssuesNotesResponse getIssueNotes(long demographicNo) {
+        try {
+            if (!isEnabled()) return(null);
+
+            GetIssuesNotesRequest request=new GetIssuesNotesRequest();
+            request.setDemographicNo(demographicNo);
+            
+            GetIssuesNotesResponse response = getIntegratorService().getIssuesAndNotes(request, getAuthenticationToken());
+
+            if (!response.getAck().equals(MessageAck.OK)) {
+                log.error("Error getting referrals. " + response.getAck());
+                return(null);
+            }
+
+            return(response);
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+        }
+
+        return(null);
     }
 
 }
