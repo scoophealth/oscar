@@ -538,7 +538,7 @@ CREATE TABLE document (
   updatedatetime datetime default NULL,
   status char(1) NOT NULL default '',
   contenttype varchar(60) NOT NULL default '',
-  public int(1) NOT NULL default '0',
+  public1 int(1) NOT NULL default '0',
   observationdate date default NULL,
   PRIMARY KEY  (document_no)
 ) TYPE=MyISAM;
