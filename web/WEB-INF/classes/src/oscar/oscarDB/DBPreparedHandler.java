@@ -61,6 +61,10 @@ public class DBPreparedHandler {
         }
         preparedStmt.execute();
     }
+    synchronized public int queryExecuteUpdate(String preparedSQL) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        return(preparedStmt.executeUpdate());
+    }
 
     synchronized public int queryExecuteUpdate(String preparedSQL, String[] param) throws SQLException {
         preparedStmt = getConnection().prepareStatement(preparedSQL);
