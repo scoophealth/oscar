@@ -339,11 +339,11 @@ function popup1(height, width, url, windowName){
                         <table id="privateDocs" class="docTable">
                            <tr>
                                <td><input class="tightCheckbox" type="checkbox" id="pdfCheck<%=i%>" onclick="checkAll('pdfCheck<%=i%>','privateDocsDiv', 'tightCheckbox<%=i%>');"/></td>
-                               <td width="30%"><b><a href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgDocDesc"/></b></a></td>
-                               <td width="10%"><b><a href="?sort=contenttype&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>">Content Type</b></a></td>
-                               <td width="15%"><b><a href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgDocType"/></b></a></td>
-                               <td width="20%"><b><a href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgCreator"/></b></a></td>
-                               <td width="15%"><a href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><b>Observation Date</b></a></td>
+                               <td width="30%"><b><a href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgDocDesc"/></a></b></td>
+                               <td width="10%"><b><a href="?sort=contenttype&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>">Content Type</a></b></td>
+                               <td width="15%"><b><a href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgDocType"/></a></b></td>
+                               <td width="20%"><b><a href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgCreator"/></a></b></td>
+                               <td width="15%"><a href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><b>Observation Date</a></td>
                                <td width="10%"><b><bean:message key="dms.documentReport.msgAction"/></b></td>
                            </tr>
 
