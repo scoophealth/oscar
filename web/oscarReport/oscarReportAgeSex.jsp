@@ -236,7 +236,7 @@ function refresh() {
       rs = null;
       rs = apptMainBean.queryResults(param, queryName);
       while(rs.next()){
-         Total = rs.getString("n");
+         Total = apptMainBean.getString(rs,"n");
       } 
 
       BigDecimal percent = new BigDecimal(100).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -416,7 +416,7 @@ function refresh() {
         rs = null;
         rs = apptMainBean.queryResults(param, queryName);
         while(rs.next()){
-           mNum = rs.getString("n");
+           mNum = apptMainBean.getString(rs,"n");
         }
   
         param[1] = "F%";

@@ -114,10 +114,10 @@ rs = null;
 rs = apptMainBean.queryResults(param, "search_reportprovider_ohip");
 
 while(rs.next()){
-    p_last = rs.getString("last_name");
-    p_first = rs.getString("first_name");
-    p_no = rs.getString("provider_no");
-    team = rs.getString("team");
+    p_last = apptMainBean.getString(rs,"last_name");
+    p_first = apptMainBean.getString(rs,"first_name");
+    p_no = apptMainBean.getString(rs,"provider_no");
+    team = apptMainBean.getString(rs,"team");
 
     oscar.oscarReport.data.VisitReportData vrd = new oscar.oscarReport.data.VisitReportData();
     vrd.setDateBegin(dateBegin);

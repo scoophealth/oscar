@@ -63,17 +63,17 @@ if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
 }
 rs = apptMainBean.queryResults(param, "count_larrykain_clinic"+newBilling);
 while(rs.next()){
-cTotal = rs.getString("n");
+cTotal = apptMainBean.getString(rs,"n");
 }
 rs = null;
 rs = apptMainBean.queryResults(param2, "count_larrykain_hospital"+newBilling);
 while(rs.next()){
-hTotal = rs.getString("n");
+hTotal = apptMainBean.getString(rs,"n");
 }
 rs = null;
 rs = apptMainBean.queryResults(param3, "count_larrykain_other"+newBilling);
 while(rs.next()){
-oTotal = rs.getString("n");
+oTotal = apptMainBean.getString(rs,"n");
 }
 
  

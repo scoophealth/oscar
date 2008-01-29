@@ -50,7 +50,7 @@ param[5] = dateEnd ;
 rs = null;
 rs = apptMainBean.queryResults(param, "count_reportagesex");
 while(rs.next()){
-Total = rs.getString("n");
+Total = apptMainBean.getString(rs,"n");
 } 
 
 
@@ -234,7 +234,7 @@ param1[5] = dateEnd ;
   rs = null;
   rs = apptMainBean.queryResults(param1, "count_reportagesex");
   while(rs.next()){
-  mNum = rs.getString("n");
+  mNum = apptMainBean.getString(rs,"n");
   }
   String[] param2 = new String[6];
   
