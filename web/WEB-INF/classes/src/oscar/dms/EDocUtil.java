@@ -89,7 +89,7 @@ public class EDocUtil extends SqlUtilBaseS {
     }
     
     public static void addDocumentSQL(EDoc newDocument) {
-        String documentSql = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status, contenttype, public, observationdate) " +
+        String documentSql = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status, contenttype, public1, observationdate) " +
                 "VALUES ('" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType()) + "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription()) + 
                 "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml()) + "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName()) + "', '" + newDocument.getCreatorId() + 
                 "', '" + newDocument.getDateTimeStamp() + "', '" + newDocument.getStatus() + "', '" + newDocument.getContentType() + "', '" + newDocument.getDocPublic() + "', '" + newDocument.getObservationDate() + "')";
@@ -118,7 +118,7 @@ public class EDocUtil extends SqlUtilBaseS {
        String html = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml());
        String contentType = newDocument.getContentType();
        System.out.println("obs date: " + newDocument.getObservationDate());
-       String editDocSql = "UPDATE document SET doctype='" + doctype + "', docdesc='" + docDescription + "', updatedatetime='" + getDmsDateTime() + "', public='" + newDocument.getDocPublic() + "', observationdate='" + newDocument.getObservationDate() + "', docxml='" + html + "'";
+       String editDocSql = "UPDATE document SET doctype='" + doctype + "', docdesc='" + docDescription + "', updatedatetime='" + getDmsDateTime() + "', public1='" + newDocument.getDocPublic() + "', observationdate='" + newDocument.getObservationDate() + "', docxml='" + html + "'";
        if (docFileName.length() > 0) {
            editDocSql = editDocSql + ", docfilename='" + docFileName + "', contenttype='" + newDocument.getContentType() + "'";
        }
@@ -231,14 +231,14 @@ public class EDocUtil extends SqlUtilBaseS {
         //if-statements to select the where condition (suffix)
         if (publicDoc.equals(PUBLIC)) {
             if ((docType == null) || (docType.equals("all")) || (docType.equals("")))
-                sql = sql + " AND d.public=1";
+                sql = sql + " AND d.public1=1";
             else
-                sql = sql + " AND d.public=1 AND d.doctype='" + docType + "'";
+                sql = sql + " AND d.public1=1 AND d.doctype='" + docType + "'";
         } else {
             if ((docType == null) || (docType.equals("all")) || (docType.equals("")))
-                sql = sql + " AND c.module_id='" + moduleid + "' AND d.public=0";
+                sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0";
             else
-                sql = sql + " AND c.module_id='" + moduleid + "' AND d.public=0 AND d.doctype='" + docType + "'";
+                sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0 AND d.doctype='" + docType + "'";
         }
         sql = sql + " ORDER BY " + sort;
         log.debug("sql list: " + sql);
@@ -328,7 +328,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
-                currentdoc.setDocPublic(rsGetString(rs, "public"));
+                currentdoc.setDocPublic(rsGetString(rs, "public1"));
                 currentdoc.setObservationDate(rs.getDate("observationdate"));
                 currentdoc.setHtml(rsGetString(rs, "docxml"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
@@ -385,7 +385,7 @@ public class EDocUtil extends SqlUtilBaseS {
     }
     
     public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator) throws SQLException {
-	String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,updatedatetime,status,contenttype,public,observationdate) values (?,?,?,?,?,'A',?,0,?)";
+	String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,updatedatetime,status,contenttype,public1,observationdate) values (?,?,?,?,?,'A',?,0,?)";
 	String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
 	int key = 0;
 	
