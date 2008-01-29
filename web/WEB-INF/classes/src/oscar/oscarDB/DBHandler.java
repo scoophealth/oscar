@@ -70,7 +70,8 @@ public class DBHandler {
             stmt = getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         }
         else {
-            stmt = getConnection().createStatement();
+            //stmt = getConnection().createStatement();
+        	stmt = getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
         }
 
         rs = stmt.executeQuery(SQLStatement);
