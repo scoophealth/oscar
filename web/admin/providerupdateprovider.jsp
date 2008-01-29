@@ -73,11 +73,11 @@ function setfocus() {
   </tr>
   <tr> 
     <td><div align="right"><bean:message key="admin.provider.formLastName"/>: </div></td>
-    <td><input type="text"  index="3" name="last_name" value="<%= apptMainBean.getString(rs,("last_name") %>" maxlength="30"></td>
+    <td><input type="text"  index="3" name="last_name" value="<%= apptMainBean.getString(rs,"last_name") %>" maxlength="30"></td>
   </tr>
   <tr>
     <td><div align="right"><bean:message key="admin.provider.formFirstName"/>: </div></td>
-    <td><input type="text"  index="4" name="first_name" value="<%= apptMainBean.getString(rs,("first_name") %>" maxlength="30" ></td>
+    <td><input type="text"  index="4" name="first_name" value="<%= apptMainBean.getString(rs,"first_name") %>" maxlength="30" ></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formType"/>: </td>
@@ -104,7 +104,7 @@ function setfocus() {
 			<option value="er_clerk" <% if (apptMainBean.getString(rs,"provider_type").equals("er_clerk")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionErClerk"/></option>
         </caisi:isModuleLoad>
 		  	</select>
-            <!--input type="text" name="provider_type" value="<%= apptMainBean.getString(rs,("provider_type") %>" maxlength="15" -->
+            <!--input type="text" name="provider_type" value="<%= apptMainBean.getString(rs,"provider_type") %>" maxlength="15" -->
           <% } %>
      </td>
   </tr> 
@@ -131,7 +131,7 @@ function setfocus() {
   <tr> 
     <td align="right"><bean:message key="admin.provider.formHomePhone"/>: </td>
     <td><input type="text" name="phone" value="<%= apptMainBean.getString(rs,"phone") %>"><bean:message key="admin.provider.formWorkPhone"/>: 
-    <input type="text" name="workphone" value="<%= apptMainBean.getString(rs,("work_phone") == null?"":(apptMainBean.getString(rs,("work_phone")) %>" maxlength="50"></td></tr>
+    <input type="text" name="workphone" value="<%= apptMainBean.getString(rs,"work_phone") == null?"":(apptMainBean.getString(rs,"work_phone")) %>" maxlength="50"></td></tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formPager"/>: </td>
     <td>
