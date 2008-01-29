@@ -6752,7 +6752,7 @@ CREATE TABLE studylogin (
   url_name_password varchar(20) NOT NULL default '',
   username varchar(30) NOT NULL default '',
   password varchar(100) NOT NULL default '',
-  current tinyint(1) default NULL,
+  current1 tinyint(1) default NULL,
   creator varchar(6) NOT NULL default '',
   timestamp timestamp(14) NOT NULL,
   PRIMARY KEY  (id)
