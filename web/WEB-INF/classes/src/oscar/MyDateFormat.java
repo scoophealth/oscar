@@ -144,6 +144,9 @@ public class MyDateFormat {
         		if(idx1<0) idx1 = pDate.length();
         		day = Integer.parseInt(pDate.substring(idx+1,idx1));
         	}
+        	if(month>0){
+        		month = month - 1;
+        	}
             GregorianCalendar cal = new GregorianCalendar(year, month, day);
             return new java.sql.Date(cal.getTime().getTime());
         }
