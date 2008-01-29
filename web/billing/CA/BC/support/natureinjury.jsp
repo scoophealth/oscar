@@ -90,16 +90,16 @@ function posttoText(index){
 			<a href=# onClick="posttoText('<%=rs.getString("code")%>');"><%=rs.getString("code")%></a>
 		</td>
 		<td class="SmallerText">
-			<%=rs.getString("level1")%>
+			<%=db.getString(rs,"level1")%>
 		</td>
 		<td class="SmallerText">
-			<%=rs.getString("level2")%>
+			<%=db.getString(rs,"level2")%>
 		</td>
 		<td class="SmallerText">
-			<%=rs.getString("level3")%>
+			<%=db.getString(rs,"level3")%>
 		</td>
 		<td class="SmallerText">
-			<%=rs.getString("usagenote")%>
+			<%=db.getString(rs,"usagenote")%>
 		</td>
 	</tr>
 <%

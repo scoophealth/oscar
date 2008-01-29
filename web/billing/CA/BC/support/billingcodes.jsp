@@ -71,9 +71,9 @@ function posttoText(index){
 %>
 	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left" valign="top">
 		<td class="SmallerText">
-			<a href=# onClick="posttoText('<%=rs.getString("service_code")%>');"><%=rs.getString("service_code")%></a>
+			<a href=# onClick="posttoText('<%=db.getString(rs,"service_code")%>');"><%=db.getString(rs,"service_code")%></a>
 		</td>
-		<td class="SmallerText"><%=rs.getString("description")%>
+		<td class="SmallerText"><%=db.getString(rs,"description")%>
 		</td>
 	</tr>
 <%

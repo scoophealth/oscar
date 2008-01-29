@@ -48,7 +48,7 @@ function posttoText(index){
 	opener.document.<%=form%>.<%=field%>.value = index;
 	opener.document.focus();	
 }
-</script
+</script>
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#D3D3D3">
   <tr> 
@@ -87,19 +87,19 @@ function posttoText(index){
 %>
 	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left" valign="top">
 		<td class="SmallerText">
-			<a href=# onClick="posttoText('<%=rs.getString("code")%>');"><%=rs.getString("code")%></a>
+			<a href=# onClick="posttoText('<%=db.getString(rs,"code")%>');"><%=db.getString(rs,"code")%></a>
 		</td>
 		<td class="SmallerText">
-			<%=rs.getString("level1")%>
+			<%=db.getString(rs,"level1")%>
 		</td>
 		<td class="SmallerText">
-			<%=rs.getString("level2")%>
+			<%=db.getString(rs,"level2")%>
 		</td>
 		<td class="SmallerText">
-			<%=rs.getString("level3")%>
+			<%=db.getString(rs,"level3")%>
 		</td>
 		<td class="SmallerText">
-			<%=rs.getString("usagenote")%>
+			<%=db.getString(rs,"usagenote")%>
 		</td>
 	</tr>
 <%

@@ -181,11 +181,11 @@ function updateFeeCodeValues(code,description,fee){
 			<%
 				if(request.getParameter("corrections") == null){
 			%>
-			<a href=# onClick="posttoText('<%=rs.getString("service_code")%>');"><%=rs.getString("service_code")%></a>
+			<a href=# onClick="posttoText('<%=db.getString(rs,"service_code")%>');"><%=db.getString(rs,"service_code")%></a>
 			<%}
 			  else{
 			%>
-			<a href=# onClick="updateFeeCodeValues('<%=rs.getString("service_code")%>',' ','<%=rs.getString("value")%>');"><%=rs.getString("service_code")%></a>
+			<a href=# onClick="updateFeeCodeValues('<%=db.getString(rs,"service_code")%>',' ','<%=db.getString(rs,"value")%>');"><%=db.getString(rs,"service_code")%></a>
 			<%
 			}
 			%>
@@ -194,7 +194,7 @@ function updateFeeCodeValues(code,description,fee){
 
 		<td class="SmallerText">
 
-			<%=rs.getString("description")%>
+			<%=db.getString(rs,"description")%>
 
 		</td>
 
