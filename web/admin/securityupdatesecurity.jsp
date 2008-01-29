@@ -93,7 +93,7 @@
       <tr>
         <td width="50%" align="right"><bean:message key="admin.securityrecord.formUserName"/>: </td>
         <td>
-          <input type="text"  name="user_name" value="<%= rs.getString("user_name") %>">
+          <input type="text"  name="user_name" value="<%= apptMainBean.getString(rs,"user_name") %>">
         </td>
       </tr>
       <tr>
