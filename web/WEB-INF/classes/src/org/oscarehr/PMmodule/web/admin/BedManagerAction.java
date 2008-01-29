@@ -49,7 +49,7 @@ public class BedManagerAction extends BaseAction {
         bForm.setAssignedBedRooms(roomManager.getAssignedBedRooms(facilityId));
         bForm.setRoomTypes(roomManager.getRoomTypes());
         bForm.setNumRooms(1);
-        bForm.setBeds(bedManager.getBedsByFacility(facilityId, false));
+        bForm.setBeds(bedManager.getBedsByFacility(facilityId));
         bForm.setBedTypes(bedManager.getBedTypes());
         bForm.setNumBeds(1);
         bForm.setPrograms(programManager.getBedPrograms());

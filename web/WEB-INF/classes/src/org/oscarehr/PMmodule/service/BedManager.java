@@ -154,14 +154,11 @@ public class BedManager {
      *            reserved flag
      * @return array of beds
      */
-    public Bed[] getBedsByFacility( Integer facilityId, boolean reserved) {
+    public Bed[] getBedsByFacility(Integer facilityId, boolean reserved) {
         if (facilityId == null) {
             return new Bed[] {};
         }
-
         List<Bed> beds = new ArrayList<Bed>();
-
-
         for (Bed bed : bedDAO.getBedsByFacility(facilityId, Boolean.TRUE)) {
             setAttributes(bed);
 
@@ -169,7 +166,28 @@ public class BedManager {
                 beds.add(bed);
             }
         }
+        return beds.toArray(new Bed[beds.size()]);
+    }
 
+    /**
+     * Get beds by facility
+     *
+     * @param facilityId
+     *            facility identifier
+     * @param reserved
+     *            reserved flag
+     * @return array of beds
+     */
+    public Bed[] getBedsByFacility(Integer facilityId) {
+        if (facilityId == null) {
+            return new Bed[] {};
+        }
+        List<Bed> beds = new ArrayList<Bed>();
+
+        for (Bed bed : bedDAO.getBedsByFacility(facilityId, Boolean.TRUE)) {
+            setAttributes(bed);
+            beds.add(bed);
+        }
         return beds.toArray(new Bed[beds.size()]);
     }
 
