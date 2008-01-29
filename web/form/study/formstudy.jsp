@@ -12,7 +12,7 @@
 <% 
     String [][] dbQueries=new String[][] { 
         {"search_study", "select s.* from study s order by ? " }, 
-        {"search_demostudy", "select d.demographic_no, s.* from demographicstudy d left join study s on d.study_no=s.study_no where d.demographic_no=? and s.current=1 order by d.study_no" }, 
+        {"search_demostudy", "select d.demographic_no, s.* from demographicstudy d left join study s on d.study_no=s.study_no where d.demographic_no=? and s.current1=1 order by d.study_no" }, 
 	};
     studyBean.doConfigure(dbParams,dbQueries);
 %>

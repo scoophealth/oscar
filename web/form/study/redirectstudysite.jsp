@@ -41,7 +41,7 @@
 	String password = "515750564848564853485353544852485248484851575150";
 
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA); 
-    String sql = "SELECT * from studylogin where provider_no=" + provNo + " and study_no = " + studyId + " and current=1" ;
+    String sql = "SELECT * from studylogin where provider_no=" + provNo + " and study_no = " + studyId + " and current1=1" ;
 	ResultSet rs = db.GetSQL(sql);
 	while(rs.next()) {
 		baseURL = db.getString(rs,"remote_login_url");
