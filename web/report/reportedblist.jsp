@@ -92,7 +92,7 @@ function setfocus() {
    ResultSet rs=null ;
    rs = reportMainBean.queryResults("search_provider");
    while (rs.next()) { 
-      providerNameBean.setDef(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
+      providerNameBean.setDef(reportMainBean.getString(rs,"provider_no"), new String( reportMainBean.getString(rs,"last_name")+","+reportMainBean.getString(rs,"first_name") ));
    }
     
    int rowsAffected = reportMainBean.queryExecuteUpdate("%", "delete_reporttemp");
@@ -100,7 +100,7 @@ function setfocus() {
 
    while (rs.next()) {
 	   String[] param1 =new String[2];
-	     param1[0]=rs.getString("demographic_no");
+	     param1[0]=reportMainBean.getString(rs,"demographic_no");
 	     param1[1]="ar%";
 	   ResultSet rsdemo = reportMainBean.queryResults(param1, "search_form_aredb");
       while (rsdemo.next()) {
@@ -135,14 +135,14 @@ function setfocus() {
 %>
             <tr bgcolor="<%=bodd?"ivory":"white"%>">
                 <td align="center"><%=nItems%></td>
-                <td align="center" nowrap><%=rs.getString("edb").replace('-','/')%></td>
-                <td><%=rs.getString("demo_name")%></td>
-                <!--td align="center" ><%=rs.getString("demographic_no")%> </td-->
-                <td><%=SxmlMisc.getXmlContent(rs.getString("address"),"age")%></td>
-                <td><%=SxmlMisc.getXmlContent(rs.getString("address"),"gravida")%></td>
-                <td><%=SxmlMisc.getXmlContent(rs.getString("address"),"term")%></td>
-                <td nowrap><%=SxmlMisc.getXmlContent(rs.getString("address"),"phone")%></td>
-                <td><%=providerNameBean.getShortDef(rs.getString("provider_no"), "", 11)%></td>
+                <td align="center" nowrap><%=reportMainBean.getString(rs,"edb").replace('-','/')%></td>
+                <td><%=reportMainBean.getString(rs,"demo_name")%></td>
+                <!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
+                <td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"age")%></td>
+                <td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"gravida")%></td>
+                <td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"term")%></td>
+                <td nowrap><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"phone")%></td>
+                <td><%=providerNameBean.getShortDef(reportMainBean.getString(rs,"provider_no"), "", 11)%></td>
             </tr>
 <%
   }

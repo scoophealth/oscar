@@ -36,7 +36,7 @@
   <%@ page import="java.sql.*" %>
   <%@ page import="oscar.oscarBilling.data.BillingONDataHelp" %>
 <%
-  BillingONDataHelp dbObj = new BillingONDataHelp();
+  DBPreparedHandler dbObj = new DBPreparedHandler();
 
   // update the role list
   if (request.getParameter("buttonUpdate") != null && request.getParameter("buttonUpdate").length() > 0) {
@@ -47,17 +47,17 @@
 
     String sql = "update userRole set role_name='" + name + "' where provider_no='" + number + "'";
 
-    dbObj.updateDBRecord(sql);
-  }
+    dbObj.queryExecuteUpdate(sql);
+  } 
 
   // save the role list
   if (request.getParameter("submit") != null && request.getParameter("submit").equals("Add Role(s)")) {
     Properties prop  = new Properties();
     String     query = "select u.provider_no from userRole u ";
-    ResultSet  rs    = dbObj.searchDBRecord(query);
+    ResultSet  rs    = dbObj.queryResults(query);
 
     while (rs.next()) {
-      prop.setProperty(rs.getString("provider_no"), "");
+      prop.setProperty(dbObj.getString(rs,"provider_no"), "");
     }
 
     for (Enumeration e = request.getParameterNames(); e.hasMoreElements(); ) {
@@ -71,11 +71,12 @@
       String sql   = "insert into userRole(provider_no, role_name) values('" + temp.substring(4, temp.length()) + "', '" +
               value + "')";
 
-      dbObj.updateDBRecord(sql);
+      dbObj.queryExecuteUpdate(sql);
     }
   }
 %>
-  <html>
+  <%@page import="oscar.oscarDB.DBPreparedHandler"%>
+<html>
     <head>
       <title>
         PROVIDER
@@ -121,32 +122,32 @@ function submit(form) {
 
       query += "where u.provider_no=p.provider_no  order by p.first_name, p.last_name";
 
-      ResultSet rs = dbObj.searchDBRecord(query);
+      ResultSet rs = dbObj.queryResults(query);
 
       while (rs.next()) {
-        oldRoleProp.setProperty(rs.getString("provider_no"), rs.getString("role_name"));
-        oldRoleList.add(rs.getString("first_name"));
-        oldRoleList.add(rs.getString("last_name"));
-        oldRoleList.add(rs.getString("role_name"));
-        oldRoleList.add(rs.getString("provider_no"));
+        oldRoleProp.setProperty(dbObj.getString(rs,"provider_no"), dbObj.getString(rs,"role_name"));
+        oldRoleList.add(dbObj.getString(rs,"first_name"));
+        oldRoleList.add(dbObj.getString(rs,"last_name"));
+        oldRoleList.add(dbObj.getString(rs,"role_name"));
+        oldRoleList.add(dbObj.getString(rs,"provider_no"));
       }
 
       query = "select * from provider order by first_name, last_name";
-      rs = dbObj.searchDBRecord(query);
+      rs = dbObj.queryResults(query);
 
       while (rs.next()) {
-        if (rs.getString("last_name").length() < 1 || oldRoleProp.containsKey((rs.getString("provider_no")))) {
+        if (dbObj.getString(rs,"last_name").length() < 1 || oldRoleProp.containsKey((dbObj.getString(rs,"provider_no")))) {
           continue;
         }
 
         prop = new Properties();
 
-        prop.setProperty("provider_no", rs.getString("provider_no"));
-        prop.setProperty("first_name", rs.getString("first_name"));
-        prop.setProperty("last_name", rs.getString("last_name"));
-        prop.setProperty("provider_type", rs.getString("provider_type"));
-        prop.setProperty("specialty", rs.getString("specialty"));
-        prop.setProperty("ohip_no", rs.getString("ohip_no"));
+        prop.setProperty("provider_no", dbObj.getString(rs,"provider_no"));
+        prop.setProperty("first_name", dbObj.getString(rs,"first_name"));
+        prop.setProperty("last_name", dbObj.getString(rs,"last_name"));
+        prop.setProperty("provider_type", dbObj.getString(rs,"provider_type"));
+        prop.setProperty("specialty", dbObj.getString(rs,"specialty"));
+        prop.setProperty("ohip_no", dbObj.getString(rs,"ohip_no"));
         vec.add(prop);
       }
 %>

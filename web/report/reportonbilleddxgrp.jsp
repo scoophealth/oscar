@@ -45,7 +45,7 @@
     ResultSet  rs    = dbObj.searchDBRecord(query);
 
     while (rs.next()) {
-      prop.setProperty(rs.getString("dxcode"), "");
+      prop.setProperty(dbObj.getString(rs,"dxcode"), "");
     }
 
     String dxcode = request.getParameter("dxcode");
@@ -121,9 +121,9 @@ function fillIn(dxcode, level1, level2, description) {
         prop = new Properties();
 
         prop.setProperty("dxcode", "" + rs.getInt("dxcode"));
-        prop.setProperty("level1", rs.getString("level1"));
-        prop.setProperty("level2", rs.getString("level2"));
-        prop.setProperty("description", rs.getString("description"));
+        prop.setProperty("level1", dbObj.getString(rs,"level1"));
+        prop.setProperty("level2", dbObj.getString(rs,"level2"));
+        prop.setProperty("description", dbObj.getString(rs,"description"));
         vec.add(prop);
       }
 

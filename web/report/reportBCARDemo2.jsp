@@ -236,7 +236,7 @@ if( (bDemoSelect && !bARSelect && bSpecSelect && !bARFilter) || (!bARFilter && b
     		sql += strDemoNo + ") order by date_time desc limit 1";
     		ResultSet rs = dbObj.searchDBRecord(sql);
 			while (rs.next()) {
-    			propSpecValue.setProperty(rs.getString("demographic_no")+temp[i], rs.getString("value"));
+    			propSpecValue.setProperty(dbObj.getString(rs,"demographic_no")+temp[i], dbObj.getString(rs,"value"));
 			}
     	}
     	System.out.println(" demographic and demographicExt: " + sql);

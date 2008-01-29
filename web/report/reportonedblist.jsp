@@ -74,7 +74,7 @@ function setfocus() {
   <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="report.reportnewdblist.msgEDBList"/></font></th>
   </tr><tr>
    <td align="right" ><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()">
-   <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onClick="window.close()"></th>
+   <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onClick="window.close()"></td>
   </tr>
 </table>
 <script type="text/javascript" src="../commons/scripts/sort_table/css.js"></script>
@@ -101,7 +101,7 @@ function setfocus() {
         ResultSet rs=null ;
         rs = reportMainBean.queryResults("search_provider");
         while (rs.next()) {
-        providerNameBean.setProperty(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
+        providerNameBean.setProperty(reportMainBean.getString(rs,"provider_no"), new String( reportMainBean.getString(rs,"last_name")+","+reportMainBean.getString(rs,"first_name") ));
         }
         Properties arMaxId = new Properties();
         String[] paramI =new String[2];
@@ -136,13 +136,13 @@ function setfocus() {
         System.out.println("0001-01-  01");
         if (!arMaxId.containsKey(""+rs.getInt("ID")) ) continue;
         System.out.println("0001 -01-  01");
-        if (demoProp.containsKey(rs.getString("demographic_no")) ) continue;
-        else demoProp.setProperty(rs.getString("demographic_no"), "1");
+        if (demoProp.containsKey(reportMainBean.getString(rs,"demographic_no")) ) continue;
+        else demoProp.setProperty(reportMainBean.getString(rs,"demographic_no"), "1");
         System.out.println("0001-01-  01");
         
         String providerNo = "0";
         // filter the "IN" patient from the list
-        ResultSet rs1=reportMainBean.queryResults(rs.getString("demographic_no"), "select_patientStatus");
+        ResultSet rs1=reportMainBean.queryResults(reportMainBean.getString(rs,"demographic_no"), "select_patientStatus");
         if (rs1.next()) {
             if(rs1.getString("patient_status").equals("IN")) continue;
             providerNo = rs1.getString("provider_no");
@@ -153,15 +153,15 @@ function setfocus() {
         %>
         <tr bgcolor="<%=bodd?weakcolor:"white"%>">
             <td><%=nItems%></td>
-            <td align="center" nowrap><%=rs.getString("c_finalEDB")!=null?rs.getString("c_finalEDB").replace('-','/'):"0001/01/01"%></td>
-            <td><%=rs.getString("c_pName")%></td>
-            <!--td align="center" ><%=rs.getString("demographic_no")%> </td-->
-            <td><%=rs.getString("pg1_age")%></td>
-            <td><%=rs.getString("c_gravida")%></td>
-            <td><%=rs.getString("c_term")%></td>
-            <td nowrap><%=rs.getString("pg1_homePhone")%></td>
+            <td align="center" nowrap><%=reportMainBean.getString(rs,"c_finalEDB")!=null?reportMainBean.getString(rs,"c_finalEDB").replace('-','/'):"0001/01/01"%></td>
+            <td><%=reportMainBean.getString(rs,"c_pName")%></td>
+            <!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
+            <td><%=reportMainBean.getString(rs,"pg1_age")%></td>
+            <td><%=reportMainBean.getString(rs,"c_gravida")%></td>
+            <td><%=reportMainBean.getString(rs,"c_term")%></td>
+            <td nowrap><%=reportMainBean.getString(rs,"pg1_homePhone")%></td>
             <td><%=providerNameBean.getProperty(providerNo, "")%></td>
-            <td><%=providerNameBean.getProperty(rs.getString("provider_no"), "")%></td>
+            <td><%=providerNameBean.getProperty(reportMainBean.getString(rs,"provider_no"), "")%></td>
         </tr>
         <%
         }

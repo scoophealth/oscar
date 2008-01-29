@@ -56,23 +56,23 @@
   <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
   <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%
-  BillingONDataHelp dbObj = new BillingONDataHelp();
+  DBPreparedHandler dbObj = new DBPreparedHandler();
   // select provider list
   Properties        prop  = new Properties();
   String            sql   = "select u.*, p.first_name, p.last_name from userRole u, provider p ";
 
   sql += "where u.provider_no=p.provider_no  order by p.first_name, p.last_name";
 
-  ResultSet rs = dbObj.searchDBRecord(sql);
+  ResultSet rs = dbObj.queryResults(sql);
 
   while (rs.next()) {
     prop = new Properties();
 
-    prop.setProperty("providerNo", rs.getString("provider_no"));
-    prop.setProperty("firstName", rs.getString("first_name"));
-    prop.setProperty("lastName", rs.getString("last_name"));
+    prop.setProperty("providerNo", dbObj.getString(rs,"provider_no"));
+    prop.setProperty("firstName", dbObj.getString(rs,"first_name"));
+    prop.setProperty("lastName", dbObj.getString(rs,"last_name"));
 
-    String roleName = rs.getString("role_name");
+    String roleName = dbObj.getString(rs,"role_name");
 
     for (int i = 0; i < ROLE.length; i++) {
       if (ROLE[i].equals(roleName)) {
@@ -80,11 +80,12 @@
       }
     }
 
-    if(rs.getString("provider_no").equals(providerNo))
-      providerName = rs.getString("first_name") + " " + rs.getString("last_name");
+    if(dbObj.getString(rs,"provider_no").equals(providerNo))
+      providerName = dbObj.getString(rs,"first_name") + " " + dbObj.getString(rs,"last_name");
   }
 %>
-  <html:html locale="true">
+  <%@page import="oscar.oscarDB.DBPreparedHandler"%>
+<html:html locale="true">
     <head>
       <title>
         PHCP Report
@@ -247,12 +248,12 @@ function onSub() {
         int indexNum = 0;
       Vector     vec   = new Vector();
       sql = "select * from dxphcpgroup order by dxcode, level1, level2 ";
-      rs    = dbObj.searchDBRecord(sql);
+      rs    = dbObj.queryResults(sql);
       while (rs.next()) {
         prop = new Properties();
         prop.setProperty("dxcode", "" + rs.getInt("dxcode"));
-        prop.setProperty("level1", rs.getString("level1"));
-        prop.setProperty("level2", rs.getString("level2"));
+        prop.setProperty("level1", dbObj.getString(rs,"level1"));
+        prop.setProperty("level2", dbObj.getString(rs,"level2"));
         vec.add(prop);
         propCatCode.setProperty("" + rs.getInt("dxcode"), ""+indexNum);
         indexNum++;
@@ -263,19 +264,19 @@ if(bDx) {
                 "select distinct(bd.dx), dt.description from billing_on_item bd, diagnosticcode dt where bd.status!='D' and bd.dx = dt.diagnostic_code and bd.service_date>='"
                  + startDate + "' and bd.service_date<='" + endDate + "' order by diagnostic_code";
         System.out.println("SQL "+sql);
-        rs = dbObj.searchDBRecord(sql);
+        rs = dbObj.queryResults(sql);
         while (rs.next()) {
-          vServiceCode.add(rs.getString("bd.dx"));
-          vServiceDesc.add(rs.getString("dt.description"));
+          vServiceCode.add(dbObj.getString(rs,"bd.dx"));
+          vServiceDesc.add(dbObj.getString(rs,"dt.description"));
         }
 } else {
 	// get service code list
 	sql = "select distinct(service_code), service_desc from billing_on_item bd where bd.status!='D' and bd.service_date>='" + startDate + "' and bd.service_date<='" + endDate + "' order by service_code";
     System.out.println("SQL "+sql);
-        rs = dbObj.searchDBRecord(sql);
+        rs = dbObj.queryResults(sql);
 	while (rs.next()) {
-		vServiceCode.add(rs.getString("service_code"));
-		vServiceDesc.add(rs.getString("service_desc"));
+		vServiceCode.add(dbObj.getString(rs,"service_code"));
+		vServiceDesc.add(dbObj.getString(rs,"service_desc"));
 	}
 	System.out.println("PHCP service code :" + sql);
 }
@@ -292,9 +293,9 @@ if(bDx) {
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'";
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -310,9 +311,9 @@ if(bDx) {
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'";
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i), rs.getString("count(distinct(b.id))"
+            props.setProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i), dbObj.getString(rs,"count(distinct(b.id))"
                     ));
           }
 
@@ -327,9 +328,9 @@ if(bDx) {
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='F'";
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "patSexF" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "patSexF" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -343,9 +344,9 @@ if(bDx) {
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='M'";
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "patSexM" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "patSexM" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -360,9 +361,9 @@ if(bDx) {
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='F'";
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "visSexF" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "visSexF" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.id))"));
           }
 
@@ -376,9 +377,9 @@ if(bDx) {
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='M'";
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "visSexM" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "visSexM" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.id))"));
           }
 
@@ -397,10 +398,10 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
 
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "pat0_1" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "pat0_1" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -418,10 +419,10 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
 
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "vis0_1" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "vis0_1" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.id))"));
           }
 
@@ -444,9 +445,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "pat2_11" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "pat2_11" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -468,9 +469,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "vis2_11" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "vis2_11" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.id))"));
           }
 
@@ -493,9 +494,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "pat12_20" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "pat12_20" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -517,9 +518,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "vis12_20" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "vis12_20" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.id))"));
           }
 
@@ -542,9 +543,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "pat21_34" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "pat21_34" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -566,9 +567,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "vis21_34" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "vis21_34" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.id))"));
           }
 
@@ -591,9 +592,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "pat35_50" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "pat35_50" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -615,9 +616,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "vis35_50" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "vis35_50" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.id))"));
           }
 
@@ -640,9 +641,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "pat51_64" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "pat51_64" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -664,9 +665,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "vis51_64" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "vis51_64" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.id))"));
           }
 
@@ -689,9 +690,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "pat65_70" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "pat65_70" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -713,9 +714,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "vis65_70" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "vis65_70" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.id))"));
           }
 
@@ -734,9 +735,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "pat71_" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "pat71_" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.demographic_no))"));
           }
 
@@ -754,9 +755,9 @@ if(bDx) {
 	 ;
 }
           System.out.println("SQL "+sql);
-          rs = dbObj.searchDBRecord(sql);
+          rs = dbObj.queryResults(sql);
           while (rs.next()) {
-            props.setProperty(vServiceCode.get(i) + "vis71_" + vServiceDesc.get(i), rs.getString(
+            props.setProperty(vServiceCode.get(i) + "vis71_" + vServiceDesc.get(i), dbObj.getString(rs,
                     "count(distinct(b.id))"));
           }
 

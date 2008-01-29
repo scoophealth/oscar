@@ -199,23 +199,23 @@ System.out.println("out of here ##############");
 		//String sql = "select year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no=" + rsdemo.getString("demographic_no");
 		//ResultSet rs = dbObj.searchDBRecord(sql);
 		//if (rs.next()) {
-		//	dob = rs.getString("year_of_birth") + "/" + rs.getString("month_of_birth")+ "/" + rs.getString("date_of_birth");
+		//	dob = dbObj.getString(rs,"year_of_birth") + "/" + dbObj.getString(rs,"month_of_birth")+ "/" + dbObj.getString(rs,"date_of_birth");
 		//}
 %>
       <td align="center">&nbsp;<%=dob==null?"":dob%></td>
 <% }%>
       <td>
-          <% if ( rsdemo.getString("doc_no") != null && ! rsdemo.getString("doc_no").equals("") && ! rsdemo.getString("doc_no").equals(rsdemo.getString("provider_no")) ) { %>
-              [<%=rsdemo.getString("doc_last_name")%>,
-              <%=rsdemo.getString("doc_first_name").charAt(0)%>] &nbsp;
+          <% if ( rsdemo.getString("doc_no") != null && ! daySheetBean.getString(rsdemo,"doc_no").equals("") && ! daySheetBean.getString(rsdemo,"doc_no").equals(daySheetBean.getString(rsdemo,"provider_no")) ) { %>
+              [<%=daySheetBean.getString(rsdemo,"doc_last_name")%>,
+              <%=daySheetBean.getString(rsdemo,"doc_first_name").charAt(0)%>] &nbsp;
           <% } %>
-          <% if ( bDob && rsdemo.getString("family_doctor") != null) {
-              String rd = SxmlMisc.getXmlContent(rsdemo.getString("family_doctor"),"rd");
+          <% if ( bDob && daySheetBean.getString(rsdemo,"family_doctor") != null) {
+              String rd = SxmlMisc.getXmlContent(daySheetBean.getString(rsdemo,"family_doctor"),"rd");
               rd = rd !=null ? rd : "" ;
           %>
               [<%=rd%>]&nbsp;
           <% } %>
-      <%=rsdemo.getString("reason")%>&nbsp;</td>
+      <%=daySheetBean.getString(rsdemo,"reason")%>&nbsp;</td>
 </tr>
 <%
   }
