@@ -14,15 +14,16 @@ public class DBPreparedHandlerParam {
    public static String PARAM_INT = "Int";
 
    public DBPreparedHandlerParam(String stringValue){
+	   this.intValue = 0;
 	   this.stringValue= stringValue;
 	   this.dateValue=null;
 	   this.paramType=PARAM_STRING;
    }
    
    public DBPreparedHandlerParam(Date dateValue){
+	   this.intValue = 0;
 	   this.stringValue=null;
 	   this.dateValue= dateValue;
-	   String xxx=dateValue.toString();
 	   this.paramType=PARAM_DATE;
    }
 
