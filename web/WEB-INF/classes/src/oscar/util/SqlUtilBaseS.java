@@ -68,6 +68,15 @@ public class SqlUtilBaseS {
        return "";
    }
    
+   protected static void runPreparedSqlUpdate(String preparedSql,DBPreparedHandlerParam[] params) {
+	   try {
+		   DBPreparedHandler dbPre = new DBPreparedHandler();
+		   dbPre.queryExecuteUpdate(preparedSql, params);
+		   dbPre.closeConn();
+	   } catch (SQLException sqe) { 
+		   sqe.printStackTrace(); 
+	   }       
+   }
    
    protected static ResultSet getSQL(String sql) {
        ResultSet rs = null;
