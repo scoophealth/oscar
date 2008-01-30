@@ -27,12 +27,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import oscar.login.DBHelp;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarDB.DBPreparedHandler;
+import oscar.oscarDB.DBPreparedHandlerParam;
+
 import java.util.*;
 import java.sql.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import oscar.util.*;
+import oscar.MyDateFormat;
 import oscar.OscarProperties;
 
 //all SQL statements here
@@ -89,14 +95,37 @@ public class EDocUtil extends SqlUtilBaseS {
     }
     
     public static void addDocumentSQL(EDoc newDocument) {
-        String documentSql = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status, contenttype, public1, observationdate) " +
+    	
+    	 String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status, contenttype, public1, observationdate) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    	 DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[10];
+         param[0] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType()));
+         param[1] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription()));
+         param[2] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml()));
+         param[3] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName()));
+         param[4] = new DBPreparedHandlerParam(newDocument.getCreatorId());
+        
+         java.sql.Date od1 = MyDateFormat.getSysDate(newDocument.getDateTimeStamp());
+         param[5] = new DBPreparedHandlerParam(od1);
+         
+         param[6] = new DBPreparedHandlerParam(String.valueOf(newDocument.getStatus()));
+         param[7] = new DBPreparedHandlerParam(newDocument.getContentType());
+         param[8] = new DBPreparedHandlerParam(newDocument.getDocPublic());
+         java.sql.Date od2 = MyDateFormat.getSysDate(newDocument.getObservationDate());
+         param[9] = new DBPreparedHandlerParam(od2);     
+       
+    	/*String documentSql = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status, contenttype, public1, observationdate) " +
                 "VALUES ('" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType()) + "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription()) + 
                 "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml()) + "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName()) + "', '" + newDocument.getCreatorId() + 
                 "', '" + newDocument.getDateTimeStamp() + "', '" + newDocument.getStatus() + "', '" + newDocument.getContentType() + "', '" + newDocument.getDocPublic() + "', '" + newDocument.getObservationDate() + "')";
+               
         String document_no = runSQLinsert(documentSql);
         System.out.println("addDoc: " + documentSql);
-        String ctlDocumentSql = "INSERT INTO ctl_document VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "');";
-        runSQL(ctlDocumentSql);
+       */
+         String document_no= runPreparedSqlInsert(preparedSQL, param);
+        
+        String ctlDocumentSql = "INSERT INTO ctl_document VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "')";
+       System.out.println("add ctl_document: " +ctlDocumentSql);
+        runSQL(ctlDocumentSql); 
     }
     
     public static void detachDocConsult(String docNo, String consultId) {
