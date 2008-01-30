@@ -147,13 +147,30 @@ public class EDocUtil extends SqlUtilBaseS {
        String html = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml());
        String contentType = newDocument.getContentType();
        System.out.println("obs date: " + newDocument.getObservationDate());
-       String editDocSql = "UPDATE document SET doctype='" + doctype + "', docdesc='" + docDescription + "', updatedatetime='" + getDmsDateTime() + "', public1='" + newDocument.getDocPublic() + "', observationdate='" + newDocument.getObservationDate() + "', docxml='" + html + "'";
+      
+       /*String editDocSql = "UPDATE document SET doctype='" + doctype + "', docdesc='" + docDescription + "', updatedatetime='" + getDmsDateTime() + "', public1='" + newDocument.getDocPublic() + "', observationdate='" + newDocument.getObservationDate() + "', docxml='" + html + "'";
        if (docFileName.length() > 0) {
            editDocSql = editDocSql + ", docfilename='" + docFileName + "', contenttype='" + newDocument.getContentType() + "'";
        }
        editDocSql = editDocSql + " WHERE document_no=" + newDocument.getDocId();
        System.out.println("doceditSQL: " + editDocSql);
-       runSQL(editDocSql);
+       runSQL(editDocSql);       
+       */
+       String editDocSql = "UPDATE document SET doctype='" + doctype + "', docdesc='" + docDescription + "', updatedatetime=?, public1='" + newDocument.getDocPublic() + "', observationdate=?, docxml='" + html + "'";
+       if (docFileName.length() > 0) {
+           editDocSql = editDocSql + ", docfilename='" + docFileName + "', contenttype='" + newDocument.getContentType() + "'";
+       }
+       editDocSql = editDocSql + " WHERE document_no=" + newDocument.getDocId();
+       
+       DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[2];       
+       java.sql.Date od1 = MyDateFormat.getSysDate(getDmsDateTime());
+       param[0] = new DBPreparedHandlerParam(od1);
+       java.sql.Date od2 = MyDateFormat.getSysDate(newDocument.getObservationDate());
+       param[1] = new DBPreparedHandlerParam(od2);
+       System.out.println("doceditSQL: " + editDocSql);
+       runPreparedSqlUpdate(editDocSql,param);       
+       
+       
     }
        
     public static void indivoRegister( EDoc doc ) {
