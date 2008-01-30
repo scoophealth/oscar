@@ -10,7 +10,8 @@
 package oscar.util;
 
 import oscar.oscarDB.DBHandler;
-import java.util.*;
+import oscar.oscarDB.DBPreparedHandler;
+import oscar.oscarDB.DBPreparedHandlerParam;
 import java.sql.*;
 
 public class SqlUtilBaseS {
@@ -38,6 +39,35 @@ public class SqlUtilBaseS {
        } catch (SQLException sqe) { sqe.printStackTrace(); }
        return "";
    }
+   
+   protected static String runPreparedSqlInsert(String preparedSql, DBPreparedHandlerParam[] params) {
+	   try {
+		   DBPreparedHandler dbPre = new DBPreparedHandler();
+		   dbPre.queryExecuteUpdate(preparedSql, params);
+		   dbPre.closeConn();
+		   
+		   String lastID;
+		   String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+		   if("oracle".equalsIgnoreCase(strDbType)){
+			   DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			   ResultSet rs = db.GetSQL("select HIBERNATE_SEQUENCE.NEXTVAL as nextval from dual");
+			   rs.next();
+			   int lastIDInt = rs.getInt("nextval") - 1;
+			   lastID = String.valueOf(lastIDInt);			   
+			   rs.close();
+		   } else {
+			   DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			   String sql = "SELECT LAST_INSERT_ID()";
+			   ResultSet rs = db.GetSQL(sql);
+			   rs.next();
+			   lastID = rs.getString("LAST_INSERT_ID()");
+			   rs.close();
+		   }
+           return(lastID);
+       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       return "";
+   }
+   
    
    protected static ResultSet getSQL(String sql) {
        ResultSet rs = null;
