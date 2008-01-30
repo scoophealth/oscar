@@ -23,7 +23,7 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.data;
-import oscar.oscarDB.DBHandler;
+import oscar.oscarDB.DBPreparedHandler;
 import oscar.OscarProperties;
 import org.w3c.dom.*;
 import  oscar.oscarMessenger.util.*;
@@ -45,18 +45,18 @@ public class MsgMessageData {
 
     public MsgMessageData(String msgID){
         try{            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBPreparedHandler db = new DBPreparedHandler();
             String sql = "";                               
             //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
             //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
             sql = "select thesubject, thedate from messagetbl where messageid='"+msgID+"'";
             
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = db.queryResults(sql);
             if(rs.next()){
-                this.messageSubject = rs.getString("thesubject");
-                this.messageDate = rs.getString("thedate");
+                this.messageSubject = db.getString(rs,"thesubject");
+                this.messageDate = db.getString(rs,"thedate");
             }
-            db.CloseConn();
+            db.closeConn();
         }
         catch (java.sql.SQLException e){ 
             System.out.println("Message data not found");
@@ -65,15 +65,15 @@ public class MsgMessageData {
     public String getCurrentLocationId(){
         if (currentLocationId == null){
             try{
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBPreparedHandler db = new DBPreparedHandler();
               java.sql.ResultSet rs;
-              rs = db.GetSQL("select locationId from oscarcommlocations where current1 = '1'");
+              rs = db.queryResults("select locationId from oscarcommlocations where current1 = '1'");
 
               if (rs.next()) {
-                currentLocationId = rs.getString("locationId");
+                currentLocationId = db.getString(rs,"locationId");
               }
               rs.close();
-              db.CloseConn();
+              db.closeConn();
             }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
         }
         return currentLocationId;
@@ -132,10 +132,10 @@ public class MsgMessageData {
             //message was viewed. The names are delimited with a '.'
             try
             {
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBPreparedHandler db = new DBPreparedHandler();
               java.sql.ResultSet rs;
 
-              rs = db.GetSQL(sql);
+              rs = db.queryResults(sql);
 
               boolean first = true;
               while (rs.next()) {
@@ -144,12 +144,12 @@ public class MsgMessageData {
                   } else {
                       first = false;
                   }
-                  sentToWho.append(" "+rs.getString("first_name") +" " +rs.getString("last_name"));
+                  sentToWho.append(" "+db.getString(rs,"first_name") +" " +db.getString(rs,"last_name"));
               }
               sentToWho.append(".");
 
         rs.close();
-        db.CloseConn();
+        db.closeConn();
 
       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -187,10 +187,10 @@ public class MsgMessageData {
             //message was viewed. The names are delimited with a '.'
             try
             {
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBPreparedHandler db = new DBPreparedHandler();
               java.sql.ResultSet rs;
 
-              rs = db.GetSQL(sql);
+              rs = db.queryResults(sql);
 
               boolean first = true;
               while (rs.next()) {
@@ -199,12 +199,12 @@ public class MsgMessageData {
                   } else {
                       first = false;
                   }
-                  sentToWho.append(" "+rs.getString("first_name") +" " +rs.getString("last_name"));
+                  sentToWho.append(" "+db.getString(rs,"first_name") +" " +db.getString(rs,"last_name"));
               }
               sentToWho.append(".");
 
         rs.close();
-        db.CloseConn();
+        db.closeConn();
 
       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -224,10 +224,10 @@ public class MsgMessageData {
        oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
        try{
 
-          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          DBPreparedHandler db = new DBPreparedHandler();
           java.sql.ResultSet rs;
 
-          db.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo)"
+          int msgid = db.queryExecuteInsertReturnId("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo)"
                         +" values (now(),now(),'"
                         +str.q(message)+"','"
                         +str.q(subject)+"','"
@@ -236,24 +236,24 @@ public class MsgMessageData {
                         +userNo+"') ");
 
 	  /* Choose the right command to recover the messageid inserted above */
-	  OscarProperties prop = OscarProperties.getInstance();
+      /*
+          OscarProperties prop = OscarProperties.getInstance();
 	  String db_type = prop.getProperty("db_type", "mysql").trim();
 	  if (db_type.equalsIgnoreCase("mysql")) {
-          	rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+          	rs = db.queryResults("SELECT LAST_INSERT_ID() ");
 	  } else if (db_type.equalsIgnoreCase("postgresql")) {
-		  rs = db.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
+		  rs = db.queryResults("SELECT CURRVAL('messagetbl_int_seq')");
 	  } else
 		  throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
           if(rs.next()){
              messageid = Integer.toString( rs.getInt(1) );
           }
-
+       */
+          messageid = String.valueOf(msgid);
           for (int i =0 ; i < providers.length ; i++){
-             db.RunSQL("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
+             db.queryExecuteUpdate("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
           }
-
-        rs.close();
-        db.CloseConn();
+        db.closeConn();
 
        }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
       return messageid;
@@ -270,7 +270,7 @@ public class MsgMessageData {
       oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
       String messageid=null;
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBPreparedHandler db = new DBPreparedHandler();
          java.sql.ResultSet rs;
             // System.out.println("here1");
             if (attach != null){
@@ -293,30 +293,30 @@ public class MsgMessageData {
                        +attach+"','"
                        +pdfAttach+"')");
          // System.out.println("here2 "+sql);
-         db.RunSQL(sql);
+         messageid = String.valueOf(db.queryExecuteInsertReturnId(sql));
          // System.out.println("here3");
 
          /* Choose the right command to recover the messageid inserted above */
-	 OscarProperties prop = OscarProperties.getInstance();
+/*
+         OscarProperties prop = OscarProperties.getInstance();
 	 String db_type = prop.getProperty("db_type", "mysql").trim();
 	 if (db_type.equalsIgnoreCase("mysql")) {
-               rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+               rs = db.queryResults("SELECT LAST_INSERT_ID() ");
          } else if (db_type.equalsIgnoreCase("postgresql")) {
-               rs = db.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
+               rs = db.queryResults("SELECT CURRVAL('messagetbl_int_seq')");
          } else
                throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
          // System.out.println("here4");
          if(rs.next()){
             messageid = Integer.toString( rs.getInt(1) );
          }
+    */
             // System.out.println("Sending message to this many providers"+providers.size());
          for (int i =0 ; i < providers.size(); i++){
             MsgProviderData providerData = (MsgProviderData) providers.get(i);
-            db.RunSQL("insert into messagelisttbl (message,provider_no,status,remoteLocation) values ('"+messageid+"','"+providerData.providerNo+"','new','"+providerData.locationId+"')");
+            db.queryExecuteUpdate("insert into messagelisttbl (message,provider_no,status,remoteLocation) values ('"+messageid+"','"+providerData.providerNo+"','new','"+providerData.locationId+"')");
          }
-
-       rs.close();
-       db.CloseConn();
+       db.closeConn();
 
       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
       return messageid;
@@ -434,16 +434,16 @@ public class MsgMessageData {
 //        String theAddressBook = new String();
 //        String theLocationDesc = new String();
 //        try{
-//        DBHandler db = new DBHandler(DBHandler.MSG_DATA);
+//        DBPreparedHandler db = new DBPreparedHandler(DBPreparedHandler.MSG_DATA);
 //        java.sql.ResultSet rs;
 //        String sql = new String("select  locationDesc, addressBook from oscarcommlocations where locationId = "+((String) different_remos.elementAt(i))     );
-//        rs = db.GetSQL(sql);
+//        rs = db.queryResults(sql);
 //        if (rs.next()){
-//           theLocationDesc = rs.getString("locationDesc");
-//           theAddressBook = rs.getString("addressBook");
+//           theLocationDesc = db.getString(rs,"locationDesc");
+//           theAddressBook = db.getString(rs,"addressBook");
 //        }
 //        rs.close();
-//        db.CloseConn();
+//        db.closeConn();
 //        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
 //        // get a node list of all the providers for that addressBook then search for ones i need
 //
@@ -516,16 +516,16 @@ public class MsgMessageData {
         String theAddressBook = new String();
         String theLocationDesc = new String();
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBPreparedHandler db = new DBPreparedHandler();
             java.sql.ResultSet rs;
             String sql = new String("select  locationDesc, addressBook from oscarcommlocations where locationId = "+(sortedArrayOfLocations[i])     );
-            rs = db.GetSQL(sql);
+            rs = db.queryResults(sql);
             if (rs.next()){
-               theLocationDesc = rs.getString("locationDesc");
-               theAddressBook = rs.getString("addressBook");
+               theLocationDesc = db.getString(rs,"locationDesc");
+               theAddressBook = db.getString(rs,"addressBook");
             }
             rs.close();
-            db.CloseConn();
+            db.closeConn();
         }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
         // get a node list of all the providers for that addressBook then search for ones i need
 
@@ -571,17 +571,17 @@ public class MsgMessageData {
   public String getSubject(String msgID){
       String subject=null;
       try{            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBPreparedHandler db = new DBPreparedHandler();
             String sql = "";                               
             //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
             //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
             sql = "select thesubject from messagetbl where messageid='"+msgID+"'";
             
-            ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = db.queryResults(sql);
             if(rs.next()){
-                subject = rs.getString("thesubject");
+                subject = db.getString(rs,"thesubject");
             }
-            db.CloseConn();
+            db.closeConn();
         }
         catch (java.sql.SQLException e){ 
             subject="error: subject not found!";
