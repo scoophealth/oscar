@@ -122,24 +122,6 @@
        
     //This object stores the key -> cmd value passed to action class and the id of the created div
     // and the value -> URL of the action class
-    <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
-    var rightURLs = { 
-                  allergies:    "<c:out value="${ctx}"/>/oscarEncounter/displayAllergy.do?hC=FF9933",
-                  Rx:           "<c:out value="${ctx}"/>/oscarEncounter/displayRx.do?hC=C3C3C3",
-                  issues:       "<c:out value="${ctx}"/>/oscarEncounter/displayIssues.do?hC=CC9900"   
-              };
-              
-    function loadRightNavBar() {
-        
-        for( var idx in rightURLs ) {        
-            var div = document.createElement("div");
-            div.id = idx;
-            div.className = "leftBox";
-            $("rightNavBar").appendChild(div);            
-            popColumn(rightURLs[idx],idx,idx);
-        }
-        
-   }      
-        
-    loadRightNavBar();
+    <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>    
+                  
 </script>

@@ -32,49 +32,9 @@
     //This object stores the key -> cmd value passed to action class and the id of the created div
     // and the value -> URL of the action class
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
-    var URLs = { 
-                  preventions:  "<c:out value="${ctx}"/>/oscarEncounter/displayPrevention.do?hC=009999",
-                  tickler:      "<c:out value="${ctx}"/>/oscarEncounter/displayTickler.do?hC=FF6600",
-                  Dx:           "<c:out value="${ctx}"/>/oscarEncounter/displayDisease.do?hC=5A5A5A",
-                  forms:        "<c:out value="${ctx}"/>/oscarEncounter/displayForms.do?hC=917611",
-                  eforms:       "<c:out value="${ctx}"/>/oscarEncounter/displayEForms.do?hC=11CC00",<%/*  88E900 */%> 
-                  docs:         "<c:out value="${ctx}"/>/oscarEncounter/displayDocuments.do?hC=476BB3",
-                  labs:         "<c:out value="${ctx}"/>/oscarEncounter/displayLabs.do?hC=A0509C", <%/* 550066   */%>                         
-                  msgs:         "<c:out value="${ctx}"/>/oscarEncounter/displayMessages.do?hC=DDDD00", <% /* FF33CC */ %>
-                  measurements: "<c:out value="${ctx}"/>/oscarEncounter/displayMeasurements.do?hC=344887",
-                  consultation: "<c:out value="${ctx}"/>/oscarEncounter/displayConsultation.do"
-              };
-              
-    function setup() {
         
-        for( var idx in URLs ) {        
-            var div = document.createElement("div");
-            div.id = idx;
-            div.className = "leftBox";
-            $("leftNavbar").appendChild(div);            
-            popColumn(URLs[idx],idx,idx);
-        }
-        
-   }
-   
-   
-
-var updateNeeded = false;
-
-function updateDiv() {
-    
-    if( updateNeeded ) { 
-        var div = $F("reloadDiv");
-        popColumn(URLs[div], div, div);  
-        updateNeeded = false;
-    }
-    
-    setTimeout("updateDiv();", 1000);
-}
-    setup();
-    setTimeout("updateDiv();", 1000);
 </script>
 
-<form name="dummyForm" action="">
+<form style="display: none;" name="dummyForm" action="">
     <input type="hidden" id="reloadDiv" name="reloadDiv" value="none" onchange="updateDiv();">
 </form>
