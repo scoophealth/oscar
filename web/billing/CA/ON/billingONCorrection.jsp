@@ -157,25 +157,21 @@ function validateNum(el){
    return true;
 }
 
-function validateAllItems(){   
-   if (!validateNum(document.getElementById("billingamount0")) ){
+function validateAllItems(){
+
+   var provider = document.getElementById("provider_no");   
+   if( provider.options[provider.selectedIndex].value == "" ) {
+      alert("Billing provider must be set");
       return false;
-   }   
-   if (!validateNum(document.getElementById("billingamount1")) ){
-      return false;
-   }   
-   if (!validateNum(document.getElementById("billingamount2")) ){
-      return false;
-   }   
-   if (!validateNum(document.getElementById("billingamount3")) ){
-      return false;
-   }   
-   if (!validateNum(document.getElementById("billingamount4")) ){
-      return false;
-   }   
-   if (!validateNum(document.getElementById("billingamount5")) ){
-      return false;
-   }   
+   }
+   
+   var billamt;   
+   for( idx = 0; idx < 6; ++idx ) {
+       billamt = document.getElementById("billingamount" + idx);
+       if( billamt != undefined && !validateNum(billamt) )
+           return false;
+   }
+      
    return true;
 }
 function popupPage(vheight,vwidth,varpage) {
@@ -425,7 +421,7 @@ if(bFlag) {
 
 				%>
 		</select></td>
-		<td width="46%"><b><bean:message key="billing.billingCorrection.formBillingPhysician" />: </b> <select
+		<td width="46%"><b><bean:message key="billing.billingCorrection.formBillingPhysician" />: </b> <select id="provider_no"
 			style="font-size:80%;" name="provider_no">
 			<option value=""><bean:message key="billing.billingCorrection.msgSelectProvider" /></option>
 			<%List pList = (Vector) (new JdbcBillingPageUtil()).getCurProviderStr();
@@ -551,7 +547,7 @@ if(bFlag) {
 	</tr>
 </table>
 <%=htmlPaid %>
-<form>
+</form>
 </body>
 <script type="text/javascript">
 Calendar.setup( { inputField : "xml_appointment_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_appointment_date_cal", singleClick : true, step : 1 } );
