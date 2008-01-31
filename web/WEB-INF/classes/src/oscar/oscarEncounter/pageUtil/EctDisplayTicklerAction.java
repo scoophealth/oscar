@@ -53,13 +53,23 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
 
     //Set lefthand module heading and link
     String winName = "ViewTickler" + bean.demographicNo;
-    String url = "popupPage(500,900,'" + winName + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd + "')";
+    String pathview, pathedit;
+    if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
+        pathview = request.getContextPath() + "/Tickler.do";
+        pathedit = request.getContextPath() + "/Tickler.do?method=edit";
+    }
+    else {
+        pathview = request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd;
+        pathedit = request.getContextPath() + "/appointment/appointmentcontrol.jsp?keyword=" + URLEncoder.encode(bean.patientLastName + "," + bean.patientFirstName,"UTF-8") + "&displaymode=" + URLEncoder.encode("Search ", "UTF-8") + "&search_mode=search_name&originalpage=" + URLEncoder.encode(request.getContextPath() + "/tickler/ticklerAdd.jsp", "UTF-8") + "&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "&updateParent=false";
+    }
+    
+    String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
     Dao.setLeftHeading(messages.getMessage("global.viewTickler"));
     Dao.setLeftURL(url);        
     
     //set right hand heading link
     winName = "AddTickler" + bean.demographicNo;
-    url = "popupPage(500,600,'" + winName + "','" + request.getContextPath() + "/appointment/appointmentcontrol.jsp?keyword=" + URLEncoder.encode(bean.patientLastName + "," + bean.patientFirstName,"UTF-8") + "&displaymode=" + URLEncoder.encode("Search ", "UTF-8") + "&search_mode=search_name&originalpage=" + URLEncoder.encode(request.getContextPath() + "/tickler/ticklerAdd.jsp", "UTF-8") + "&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "&updateParent=false'); return false;";
+    url = "popupPage(500,600,'" + winName + "','" + pathedit + "'); return false;";
     Dao.setRightURL(url);
     Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
         
@@ -82,8 +92,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
         if( days > 0 )
             item.setColour("FF0000");
             
-        itemHeader = StringUtils.maxLenString(oscar.Misc.getString(rs,"message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) + " " + DateUtils.getDate(serviceDate,dateFormat);                      
-        item.setLinkTitle(itemHeader);        
+        itemHeader = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
+        item.setLinkTitle(itemHeader+ " " + DateUtils.getDate(serviceDate,dateFormat));        
         item.setTitle(itemHeader);
         winName = StringUtils.maxLenString(oscar.Misc.getString(rs,"message"), MAX_LEN_TITLE, MAX_LEN_TITLE, "");                
         hash = Math.abs(winName.hashCode());        
