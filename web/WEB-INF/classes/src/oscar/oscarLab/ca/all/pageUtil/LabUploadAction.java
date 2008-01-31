@@ -178,8 +178,8 @@ public class LabUploadAction extends Action {
             ResultSet rs = db.GetSQL(query);
             
             while(rs.next()){
-                keyString = rs.getString("pubKey");
-                type = rs.getString("type");
+                keyString = db.getString(rs,"pubKey");
+                type = db.getString(rs,"type");
             }
             
             rs.close();
@@ -216,7 +216,7 @@ public class LabUploadAction extends Action {
             ResultSet rs = db.GetSQL(query);
             
             while(rs.next()){
-                keyString = rs.getString("privKey");
+                keyString = db.getString(rs,"privKey");
             }
             logger.info("oscar key: "+keyString);
             rs.close();

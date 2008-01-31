@@ -67,14 +67,14 @@ public class Hl7textResultsData {
                     String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
                     sql = "INSERT INTO measurementsDeleted"
                             +" (type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered, dateDeleted)"
-                            +" VALUES ('"+rs.getString("type")+"','"+rs.getString("demographicNo")+"','"+rs.getString("providerNo")+"','"
-                            + rs.getString("dataField")+"','" + rs.getString("measuringInstruction")+"','"+rs.getString("comments")+"','"
-                            + rs.getString("dateObserved")+"','"+rs.getString("dateEntered")+"','"+dateDeleted+"')";
+                            +" VALUES ('"+db.getString(rs,"type")+"','"+db.getString(rs,"demographicNo")+"','"+db.getString(rs,"providerNo")+"','"
+                            + db.getString(rs,"dataField")+"','" + db.getString(rs,"measuringInstruction")+"','"+db.getString(rs,"comments")+"','"
+                            + db.getString(rs,"dateObserved")+"','"+db.getString(rs,"dateEntered")+"','"+dateDeleted+"')";
                     db.RunSQL(sql);
                     
-                    sql = "DELETE FROM measurements WHERE id='"+rs.getString("id")+"'";
+                    sql = "DELETE FROM measurements WHERE id='"+db.getString(rs,"id")+"'";
                     db.RunSQL(sql);
-                    //sql = "DELETE FROM measurementsExt WHERE measurement_id='"+rs.getString("measurement_id")+"'";
+                    //sql = "DELETE FROM measurementsExt WHERE measurement_id='"+db.getString(rs,"measurement_id")+"'";
                     //db.RunSQL(sql);
                     
                 }
@@ -109,8 +109,8 @@ public class Hl7textResultsData {
                     String measInst="";
                     ResultSet rs = pstmt.executeQuery();
                     if(rs.next()){
-                        measType = rs.getString("ident_code");
-                        measInst = rs.getString("measuringInstruction");
+                        measType = db.getString(rs,"ident_code");
+                        measInst = db.getString(rs,"measuringInstruction");
                     }else{
                        logger.info("CODE:"+identifier+ " needs to be mapped"); 
                     }
@@ -129,7 +129,7 @@ public class Hl7textResultsData {
                     rs = pstmt.getGeneratedKeys();
                     String insertID = null;
                     if(rs.next())
-                        insertID = rs.getString(1);
+                        insertID = db.getString(rs,1);
 
                     sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'lab_no', '"+lab_no+"')";
                     logger.info(sql);
@@ -180,20 +180,20 @@ public class Hl7textResultsData {
                 //Accession numbers may be recycled, accession
                 //numbers for a lab should have lab dates within less than 4
                 //months of eachother even this is a large timespan
-                Date dateA = UtilDateUtilities.StringToDate(rs.getString("obr_date"), "yyyy-MM-dd hh:mm:ss");
-                Date dateB = UtilDateUtilities.StringToDate(rs.getString("labDate"), "yyyy-MM-dd hh:mm:ss");
+                Date dateA = UtilDateUtilities.StringToDate(db.getString(rs,"obr_date"), "yyyy-MM-dd hh:mm:ss");
+                Date dateB = UtilDateUtilities.StringToDate(db.getString(rs,"labDate"), "yyyy-MM-dd hh:mm:ss");
                 if (dateA.before(dateB)){
                     monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
                 }else{
                     monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
                 }
                 logger.info("monthsBetween: "+monthsBetween);
-                logger.info("lab_no: "+rs.getString("lab_no")+" lab: "+lab_no);
+                logger.info("lab_no: "+db.getString(rs,"lab_no")+" lab: "+lab_no);
                 if (monthsBetween < 4){
                     if(ret.equals(""))
-                        ret = rs.getString("lab_no");
+                        ret = db.getString(rs,"lab_no");
                     else
-                        ret = ret+","+rs.getString("lab_no");
+                        ret = ret+","+db.getString(rs,"lab_no");
                 }
             }
             rs.close();
@@ -228,7 +228,7 @@ public class Hl7textResultsData {
             ResultSet rs = db.GetSQL(attachQuery);
             while(rs.next()) {
                 LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
-                lbData.labPatientId = rs.getString("document_no");
+                lbData.labPatientId = db.getString(rs,"document_no");
                 attachedLabs.add(lbData);
             }
             rs.close();
@@ -239,11 +239,11 @@ public class Hl7textResultsData {
             
             while(rs.next()){
                 
-                lbData.segmentID = rs.getString("lab_no");
-                lbData.labPatientId = rs.getString("id");
-                lbData.dateTime = rs.getString("obr_date");
-                lbData.discipline = rs.getString("discipline");
-                lbData.accessionNumber = rs.getString("accessionNum");
+                lbData.segmentID = db.getString(rs,"lab_no");
+                lbData.labPatientId = db.getString(rs,"id");
+                lbData.dateTime = db.getString(rs,"obr_date");
+                lbData.discipline = db.getString(rs,"discipline");
+                lbData.accessionNumber = db.getString(rs,"accessionNum");
                 lbData.finalResultsCount = rs.getInt("final_result_count");
                 
                 if( attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0 )
@@ -299,27 +299,27 @@ public class Hl7textResultsData {
                 
                 LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
                 lbData.labType = LabResultData.HL7TEXT;
-                lbData.segmentID = rs.getString("lab_no");
+                lbData.segmentID = db.getString(rs,"lab_no");
                 
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    lbData.acknowledgedStatus = rs.getString("status");
+                    lbData.acknowledgedStatus = db.getString(rs,"status");
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }
                 
-                lbData.accessionNumber = rs.getString("accessionNum");
-                lbData.healthNumber = rs.getString("health_no");
-                lbData.patientName = rs.getString("last_name")+", "+rs.getString("first_name");
-                lbData.sex = rs.getString("sex");
+                lbData.accessionNumber = db.getString(rs,"accessionNum");
+                lbData.healthNumber = db.getString(rs,"health_no");
+                lbData.patientName = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
+                lbData.sex = db.getString(rs,"sex");
                 
-                lbData.resultStatus = rs.getString("result_status");
+                lbData.resultStatus = db.getString(rs,"result_status");
                 if (lbData.resultStatus.equals("A"))
                     lbData.abn = true;
                 
-                lbData.dateTime = rs.getString("obr_date");
+                lbData.dateTime = db.getString(rs,"obr_date");
                 
                 //priority
-                String priority = rs.getString("priority");
+                String priority = db.getString(rs,"priority");
                 
                 if(priority != null && !priority.equals("")){
                     switch ( priority.charAt(0) ) {
@@ -334,8 +334,8 @@ public class Hl7textResultsData {
                     lbData.priority = "----";
                 }
                 
-                lbData.requestingClient = rs.getString("requesting_client");
-                lbData.reportStatus =  rs.getString("report_status");
+                lbData.requestingClient = db.getString(rs,"requesting_client");
+                lbData.reportStatus =  db.getString(rs,"report_status");
                 
                 // the "C" is for corrected excelleris labs
                 if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
@@ -344,7 +344,7 @@ public class Hl7textResultsData {
                     lbData.finalRes = false;
                 }
                 
-                lbData.discipline = rs.getString("discipline");
+                lbData.discipline = db.getString(rs,"discipline");
                 lbData.finalResultsCount = rs.getInt("final_result_count");
                 labResults.add(lbData);
             }

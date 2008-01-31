@@ -49,9 +49,9 @@ public class Factory {
             
             while(rs.next()){
                 
-                String fileString = rs.getString("message");
+                String fileString = db.getString(rs,"message");
                 hl7Body = new String(base64.decode(fileString.getBytes("ASCII")), "ASCII");
-                type = rs.getString("type");
+                type = db.getString(rs,"type");
                 
             }
             

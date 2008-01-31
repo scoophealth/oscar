@@ -91,7 +91,7 @@ public class KeyPairGen {
             ResultSet rs = db.GetSQL(query);
             
             while(rs.next()){
-                key = rs.getString("pubKey");
+                key = db.getString(rs,"pubKey");
             }
             rs.close();
             db.CloseConn();
@@ -123,7 +123,7 @@ public class KeyPairGen {
             ResultSet rs = db.GetSQL(query);
             
             while(rs.next()){
-                result = rs.getString(0);
+                result = db.getString(rs,0);
             }
             rs.close();
             db.CloseConn();

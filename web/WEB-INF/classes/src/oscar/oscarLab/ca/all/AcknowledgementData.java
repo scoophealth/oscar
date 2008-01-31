@@ -36,7 +36,7 @@ public class AcknowledgementData {
             String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='"+segmentID+"' and providerLabRouting.lab_type='HL7'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                acknowledgements.add( new ReportStatus(rs.getString("first_name")+" "+rs.getString("last_name"), rs.getString("provider_no"), rs.getString("status"), rs.getString("comment"), rs.getString("timestamp"), segmentID ) );
+                acknowledgements.add( new ReportStatus(db.getString(rs,"first_name")+" "+db.getString(rs,"last_name"), db.getString(rs,"provider_no"), db.getString(rs,"status"), db.getString(rs,"comment"), db.getString(rs,"timestamp"), segmentID ) );
             }
             rs.close();
             db.CloseConn();
