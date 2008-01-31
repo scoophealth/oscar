@@ -43,11 +43,11 @@ public class FrmPalliativeCareRecord  extends FrmRecord {
             ResultSet rs = db.GetSQL(sql);
 
             if(rs.next()) {
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
+                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("pName", rs.getString("pName"));
+                props.setProperty("pName", db.getString(rs,"pName"));
             }
             rs.close();
 			db.CloseConn();

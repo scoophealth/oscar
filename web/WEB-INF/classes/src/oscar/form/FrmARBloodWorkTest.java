@@ -79,31 +79,31 @@ public class FrmARBloodWorkTest {
             throws SQLException    {
         int bwTestListSize = 0;
         
-    	if(rs.getString("pg1_labHb") != null  &&  rs.getString("pg1_labHb").length() > 0 ){
+    	if(oscar.Misc.getString(rs,"pg1_labHb") != null  &&  oscar.Misc.getString(rs,"pg1_labHb").length() > 0 ){
     		bwTestListSize++;
     	}
-    	if(rs.getString("pg1_labMCV") != null  &&  rs.getString("pg1_labMCV").length() > 0 ){
+    	if(oscar.Misc.getString(rs,"pg1_labMCV") != null  &&  oscar.Misc.getString(rs,"pg1_labMCV").length() > 0 ){
     		bwTestListSize++;
     	}
-    	if(rs.getString("pg1_labABO") != null  &&  rs.getString("pg1_labABO").length() > 0 ){
+    	if(oscar.Misc.getString(rs,"pg1_labABO") != null  &&  oscar.Misc.getString(rs,"pg1_labABO").length() > 0 ){
     		bwTestListSize++;
     	}
-    	if(rs.getString("pg1_labRh") != null  &&  rs.getString("pg1_labRh").length() > 0 ){
+    	if(oscar.Misc.getString(rs,"pg1_labRh") != null  &&  oscar.Misc.getString(rs,"pg1_labRh").length() > 0 ){
     		bwTestListSize++;
     	}
-    	if(rs.getString("pg1_labAntiScr") != null  &&  rs.getString("pg1_labAntiScr").length() > 0 ){
+    	if(oscar.Misc.getString(rs,"pg1_labAntiScr") != null  &&  oscar.Misc.getString(rs,"pg1_labAntiScr").length() > 0 ){
     		bwTestListSize++;
     	}
-    	if(rs.getString("pg1_labRubella") != null  &&  rs.getString("pg1_labRubella").length() > 0 ){
+    	if(oscar.Misc.getString(rs,"pg1_labRubella") != null  &&  oscar.Misc.getString(rs,"pg1_labRubella").length() > 0 ){
     		bwTestListSize++;
     	}
-    	if(rs.getString("pg1_labHBsAg") != null  &&  rs.getString("pg1_labHBsAg").length() > 0 ){
+    	if(oscar.Misc.getString(rs,"pg1_labHBsAg") != null  &&  oscar.Misc.getString(rs,"pg1_labHBsAg").length() > 0 ){
     		bwTestListSize++;
     	}
-    	if(rs.getString("pg1_labVDRL") != null  &&  rs.getString("pg1_labVDRL").length() > 0 ){
+    	if(oscar.Misc.getString(rs,"pg1_labVDRL") != null  &&  oscar.Misc.getString(rs,"pg1_labVDRL").length() > 0 ){
     		bwTestListSize++;
     	}
-    	if(rs.getString("pg1_labHIV") != null  &&  rs.getString("pg1_labHIV").length() > 0 ){
+    	if(oscar.Misc.getString(rs,"pg1_labHIV") != null  &&  oscar.Misc.getString(rs,"pg1_labHIV").length() > 0 ){
     		bwTestListSize++;
     	}
             	
@@ -116,11 +116,11 @@ public class FrmARBloodWorkTest {
     throws SQLException    {
 		Properties props = new Properties();
 		
-    	if(rs.getString("pg1_labABO") != null  &&  rs.getString("pg1_labABO").length() > 0 ){
-    		props.setProperty("pg1_labABO", rs.getString("pg1_labABO"));
+    	if(oscar.Misc.getString(rs,"pg1_labABO") != null  &&  oscar.Misc.getString(rs,"pg1_labABO").length() > 0 ){
+    		props.setProperty("pg1_labABO", oscar.Misc.getString(rs,"pg1_labABO"));
     	}
-    	if(rs.getString("pg1_labRh") != null  &&  rs.getString("pg1_labRh").length() > 0 ){
-    		props.setProperty("pg1_labRh", rs.getString("pg1_labRh"));
+    	if(oscar.Misc.getString(rs,"pg1_labRh") != null  &&  oscar.Misc.getString(rs,"pg1_labRh").length() > 0 ){
+    		props.setProperty("pg1_labRh", oscar.Misc.getString(rs,"pg1_labRh"));
     	}
 		return props;
 	}

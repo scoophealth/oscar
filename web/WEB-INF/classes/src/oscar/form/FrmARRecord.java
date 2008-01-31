@@ -31,20 +31,20 @@ public class FrmARRecord extends FrmRecord {
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs
-                        .getString("month_of_birth"), rs.getString("date_of_birth"));
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
+                java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
+                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities
                         .Today(), "yyyy/MM/dd"));
                 //props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
-                props.setProperty("c_pName", rs.getString("pName"));
-                props.setProperty("c_address", rs.getString("address"));
+                props.setProperty("c_pName", db.getString(rs,"pName"));
+                props.setProperty("c_address", db.getString(rs,"address"));
                 props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date,
                         "yyyy/MM/dd"));
                 props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
-                props.setProperty("pg1_homePhone", rs.getString("phone"));
-                props.setProperty("pg1_workPhone", rs.getString("phone2"));
+                props.setProperty("pg1_homePhone", db.getString(rs,"phone"));
+                props.setProperty("pg1_workPhone", db.getString(rs,"phone2"));
                 props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities
                         .Today(), "yyyy/MM/dd"));
             }
@@ -90,8 +90,8 @@ public class FrmARRecord extends FrmRecord {
             String sql = "select email from demographic where demographic_no=" + demographic_no;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
-                if (rs.getString("email") != null && rs.getString("email").length() > 5
-                        && rs.getString("email").matches(".*@.*"))
+                if (db.getString(rs,"email") != null && db.getString(rs,"email").length() > 5
+                        && db.getString(rs,"email").matches(".*@.*"))
                     ret = true;
             }
 

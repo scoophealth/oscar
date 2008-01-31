@@ -34,26 +34,26 @@ public class FrmONARRecord extends FrmRecord {
                     + demographicNo;
             ResultSet rs = db.searchDBRecord(sql);
             if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs
-                        .getString("month_of_birth"), rs.getString("date_of_birth"));
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
+                java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
+                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities
                         .DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 // props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
-                props.setProperty("c_lastName", rs.getString("last_name"));
-                props.setProperty("c_firstName", rs.getString("first_name"));
-                props.setProperty("c_address", rs.getString("address"));
-                props.setProperty("c_city", rs.getString("city"));
-                props.setProperty("c_province", rs.getString("province"));
-                props.setProperty("c_postal", rs.getString("postal"));
-                props.setProperty("c_hin", rs.getString("hin"));
-                props.setProperty("c_fileNo", rs.getString("chart_no"));
+                props.setProperty("c_lastName", db.getString(rs,"last_name"));
+                props.setProperty("c_firstName", db.getString(rs,"first_name"));
+                props.setProperty("c_address", db.getString(rs,"address"));
+                props.setProperty("c_city", db.getString(rs,"city"));
+                props.setProperty("c_province", db.getString(rs,"province"));
+                props.setProperty("c_postal", db.getString(rs,"postal"));
+                props.setProperty("c_hin", db.getString(rs,"hin"));
+                props.setProperty("c_fileNo", db.getString(rs,"chart_no"));
                 props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, "yyyy/MM/dd"));
-                props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(rs.getString("year_of_birth"), rs
-                        .getString("month_of_birth"), rs.getString("date_of_birth"))));
-                props.setProperty("pg1_homePhone", rs.getString("phone"));
-                props.setProperty("pg1_workPhone", rs.getString("phone2"));
+                props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(db.getString(rs,"year_of_birth"), rs
+                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"))));
+                props.setProperty("pg1_homePhone", db.getString(rs,"phone"));
+                props.setProperty("pg1_workPhone", db.getString(rs,"phone2"));
                 props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
             }
@@ -95,8 +95,8 @@ public class FrmONARRecord extends FrmRecord {
             String sql = "select email from demographic where demographic_no=" + demographic_no;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
-                if (rs.getString("email") != null && rs.getString("email").length() > 5
-                        && rs.getString("email").matches(".*@.*"))
+                if (db.getString(rs,"email") != null && db.getString(rs,"email").length() > 5
+                        && db.getString(rs,"email").matches(".*@.*"))
                     ret = true;
             }
 

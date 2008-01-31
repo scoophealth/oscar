@@ -35,15 +35,15 @@ public class FrmGrowth0_36Record extends FrmRecord {
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs
-                        .getString("month_of_birth"), rs.getString("date_of_birth"));
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
+                java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
+                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
                 props
                         .setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                                 _dateFormat));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), _dateFormat));
-                props.setProperty("patientName", rs.getString("first_name") + " " + rs.getString("last_name"));
-                props.setProperty("patientSex", rs.getString("sex"));
+                props.setProperty("patientName", db.getString(rs,"first_name") + " " + db.getString(rs,"last_name"));
+                props.setProperty("patientSex", db.getString(rs,"sex"));
                 props.setProperty("dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
             }
             rs.close();
@@ -59,9 +59,9 @@ public class FrmGrowth0_36Record extends FrmRecord {
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs
-                        .getString("month_of_birth"), rs.getString("date_of_birth"));
-                props.setProperty("patientSex", rs.getString("sex"));
+                java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
+                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"));
+                props.setProperty("patientSex", db.getString(rs,"sex"));
                 props.setProperty("dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
             }
         }

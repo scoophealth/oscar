@@ -49,26 +49,26 @@ public class FrmRhImmuneGlobulinRecord extends FrmRecord {
                               + demographicNo;
 			rs = db.GetSQL(sql);
 			if (rs.next()) {
-                                java.util.Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
-				props.setProperty("demographic_no",rs.getString("demographic_no"));
+                                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+				props.setProperty("demographic_no",db.getString(rs,"demographic_no"));
 				props.setProperty("formCreated",UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));	
                                 props.setProperty("dob", UtilDateUtilities.DateToString(dob,"yyyy-MM-dd"));
-                                props.setProperty("sex", rs.getString("sex"));
-                                props.setProperty("phone", rs.getString("phone"));
+                                props.setProperty("sex", db.getString(rs,"sex"));
+                                props.setProperty("phone", db.getString(rs,"phone"));
                                 
-                                String lastname = rs.getString("last_name");
+                                String lastname = db.getString(rs,"last_name");
                                 System.out.println("last name "+lastname);
                                 props.setProperty("motherSurname",lastname);
-                                props.setProperty("motherFirstname",rs.getString("first_name")); 
-                                props.setProperty("motherHIN",rs.getString("hin"));
-                                props.setProperty("motherVC",rs.getString("ver"));
-                                props.setProperty("motherCity",rs.getString("city"));
-                                props.setProperty("motherProvince",rs.getString("province"));
-                                props.setProperty("motherPostalCode",rs.getString("postal"));
+                                props.setProperty("motherFirstname",db.getString(rs,"first_name")); 
+                                props.setProperty("motherHIN",db.getString(rs,"hin"));
+                                props.setProperty("motherVC",db.getString(rs,"ver"));
+                                props.setProperty("motherCity",db.getString(rs,"city"));
+                                props.setProperty("motherProvince",db.getString(rs,"province"));
+                                props.setProperty("motherPostalCode",db.getString(rs,"postal"));
                                 
                                 
                                 
-                                props.setProperty("motherAddress",rs.getString("address")); 
+                                props.setProperty("motherAddress",db.getString(rs,"address")); 
                                                 
                                 Hashtable measurementHash = EctMeasurementsDataBeanHandler.getLast(""+demographicNo, "BLDT");
     
@@ -126,7 +126,7 @@ public class FrmRhImmuneGlobulinRecord extends FrmRecord {
                                     }
                                     else
                                     {
-                                        value = rs.getString(i);
+                                        value = db.getString(rs,i);
                                     }
                                 }
 

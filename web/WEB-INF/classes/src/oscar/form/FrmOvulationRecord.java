@@ -41,15 +41,15 @@ public class FrmOvulationRecord  extends FrmRecord {
             ResultSet rs = db.GetSQL(sql);
 
             if(rs.next()) {
-                    java.util.Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
+                    java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
 
-                    props.setProperty("demographic_no", rs.getString("demographic_no"));
-                    props.setProperty("clientFirstName", rs.getString("first_name"));
-                    props.setProperty("clientLastName", rs.getString("last_name"));
+                    props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                    props.setProperty("clientFirstName", db.getString(rs,"first_name"));
+                    props.setProperty("clientLastName", db.getString(rs,"last_name"));
                     props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("dob", String.valueOf(UtilDateUtilities.calcAge(dob)));
-                    props.setProperty("healthNum", rs.getString("hin") + rs.getString("ver"));
+                    props.setProperty("healthNum", db.getString(rs,"hin") + db.getString(rs,"ver"));
             }
             rs.close();
 			db.CloseConn();

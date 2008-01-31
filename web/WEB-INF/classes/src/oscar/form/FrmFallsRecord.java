@@ -50,7 +50,7 @@ public class FrmFallsRecord extends FrmRecord {
 			if (rs.next()) {				
 				props.setProperty(
 					"demographic_no",
-					rs.getString("demographic_no"));
+					db.getString(rs,"demographic_no"));
 				props.setProperty(
 					"formCreated",
 					UtilDateUtilities.DateToString(
@@ -61,7 +61,7 @@ public class FrmFallsRecord extends FrmRecord {
                         sql = "SELECT studyID FROM rehabStudy2004 WHERE demographic_no='"+demographicNo + "'";
                         rs = db.GetSQL(sql);
                         if (rs.next()){
-                            props.setProperty("studyID", rs.getString("studyID"));
+                            props.setProperty("studyID", db.getString(rs,"studyID"));
                         }
                         else{
                             props.setProperty("studyID", "N/A");
@@ -110,7 +110,7 @@ public class FrmFallsRecord extends FrmRecord {
                                     }
                                     else
                                     {
-                                        value = rs.getString(i);
+                                        value = db.getString(rs,i);
                                     }
                                 }
 

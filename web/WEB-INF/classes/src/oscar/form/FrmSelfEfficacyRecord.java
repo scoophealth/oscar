@@ -47,24 +47,24 @@ public class FrmSelfEfficacyRecord extends FrmRecord {
                               + demographicNo;
 			rs = db.GetSQL(sql);
 			if (rs.next()) {
-                                java.util.Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
+                                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
 				props.setProperty(
 					"demographic_no",
-					rs.getString("demographic_no"));
+					db.getString(rs,"demographic_no"));
 				props.setProperty(
 					"formCreated",
 					UtilDateUtilities.DateToString(
 						UtilDateUtilities.Today(),
 						_dateFormat));	
                                 props.setProperty("dob", UtilDateUtilities.DateToString(dob,"yyyy/MM/dd"));
-                                props.setProperty("sex", rs.getString("sex"));
-                                props.setProperty("phone", rs.getString("phone"));
+                                props.setProperty("sex", db.getString(rs,"sex"));
+                                props.setProperty("phone", db.getString(rs,"phone"));
 			}
 			rs.close();
                         sql = "SELECT studyID FROM rehabStudy2004 WHERE demographic_no='"+demographicNo + "'";
                         rs = db.GetSQL(sql);
                         if (rs.next()){
-                            props.setProperty("studyID", rs.getString("studyID"));
+                            props.setProperty("studyID", db.getString(rs,"studyID"));
                         }
                         else{
                             props.setProperty("studyID", "N/A");
@@ -112,7 +112,7 @@ public class FrmSelfEfficacyRecord extends FrmRecord {
                                     }
                                     else
                                     {
-                                        value = rs.getString(i);
+                                        value = db.getString(rs,i);
                                     }
                                 }
 

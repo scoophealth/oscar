@@ -42,20 +42,20 @@ public class FrmGrowthChartRecord extends FrmRecord {
             String sql = "SELECT demographic_no, last_name, first_name, sex, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin FROM demographic WHERE demographic_no = " + demographicNo;
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
+                java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
-                props.setProperty("patientName", rs.getString("first_name") + " " + rs.getString("last_name"));
-                props.setProperty("patientSex", rs.getString("sex"));
+                props.setProperty("patientName", db.getString(rs,"first_name") + " " + db.getString(rs,"last_name"));
+                props.setProperty("patientSex", db.getString(rs,"sex"));
                 props.setProperty("dateOfBirth", UtilDateUtilities.DateToString(date,_dateFormat));
-                //props.setProperty("c_surname", rs.getString("last_name"));
-                //props.setProperty("c_address", rs.getString("address"));
-                //props.setProperty("c_city", rs.getString("city"));
-                //props.setProperty("c_province", rs.getString("province"));
-                //props.setProperty("c_postal", rs.getString("postal"));
-                //props.setProperty("c_phn", rs.getString("hin"));
-                //props.setProperty("c_phone", rs.getString("phone") +"  "+ rs.getString("phone2"));
+                //props.setProperty("c_surname", db.getString(rs,"last_name"));
+                //props.setProperty("c_address", db.getString(rs,"address"));
+                //props.setProperty("c_city", db.getString(rs,"city"));
+                //props.setProperty("c_province", db.getString(rs,"province"));
+                //props.setProperty("c_postal", db.getString(rs,"postal"));
+                //props.setProperty("c_phn", db.getString(rs,"hin"));
+                //props.setProperty("c_phone", db.getString(rs,"phone") +"  "+ db.getString(rs,"phone2"));
             }
             rs.close();
 			db.CloseConn();
@@ -68,8 +68,8 @@ public class FrmGrowthChartRecord extends FrmRecord {
             sql = "SELECT sex, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = " + demographicNo;
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
-                props.setProperty("patientSex", rs.getString("sex"));
+                java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                props.setProperty("patientSex", db.getString(rs,"sex"));
                 props.setProperty("dateOfBirth", UtilDateUtilities.DateToString(date,_dateFormat));
             }
         }

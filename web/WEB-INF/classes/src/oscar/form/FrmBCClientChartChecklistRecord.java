@@ -35,26 +35,26 @@ public class FrmBCClientChartChecklistRecord extends FrmRecord {
 						.DateToString(UtilDateUtilities.Today(), _dateFormat));
 				props.setProperty("formEdited", UtilDateUtilities.DateToString(
 						UtilDateUtilities.Today(), _dateFormat));
-				props.setProperty("c_surname", rs.getString("last_name"));
-				props.setProperty("c_givenName", rs.getString("first_name"));
-				props.setProperty("c_address", rs.getString("address"));
-				props.setProperty("c_city", rs.getString("city"));
-				props.setProperty("c_province", rs.getString("province"));
-				props.setProperty("c_postal", rs.getString("postal"));
-				props.setProperty("c_phn", rs.getString("hin"));
+				props.setProperty("c_surname", db.getString(rs,"last_name"));
+				props.setProperty("c_givenName", db.getString(rs,"first_name"));
+				props.setProperty("c_address", db.getString(rs,"address"));
+				props.setProperty("c_city", db.getString(rs,"city"));
+				props.setProperty("c_province", db.getString(rs,"province"));
+				props.setProperty("c_postal", db.getString(rs,"postal"));
+				props.setProperty("c_phn", db.getString(rs,"hin"));
 				props.setProperty("pg1_dateOfBirth", UtilDateUtilities
 						.DateToString(date, _dateFormat));
 				props.setProperty("pg1_age", String.valueOf(UtilDateUtilities
 						.calcAge(date)));
-				props.setProperty("c_phone", rs.getString("phone") + "  "
-						+ rs.getString("phone2"));
+				props.setProperty("c_phone", db.getString(rs,"phone") + "  "
+						+ db.getString(rs,"phone2"));
 				props.setProperty("pg1_formDate", UtilDateUtilities
 						.DateToString(UtilDateUtilities.Today(), _dateFormat));
 			}
 			sql = "select clinic_name from clinic";
 			rs = db.GetSQL(sql);
 			if (rs.next()) {
-				props.setProperty("c_clinicName", rs.getString("clinic_name"));
+				props.setProperty("c_clinicName", db.getString(rs,"clinic_name"));
 			}
 			rs.close();
 			db.CloseConn();
@@ -66,19 +66,20 @@ public class FrmBCClientChartChecklistRecord extends FrmRecord {
 			props = frh.getFormRecord(sql);
 			sql = "SELECT last_name, first_name, address, city, province, postal, phone,phone2, hin FROM demographic WHERE demographic_no = "
 					+ demographicNo;
-			ResultSet rs = (new DBHelp()).searchDBRecord(sql);
+			DBHelp db = new DBHelp();
+			ResultSet rs = db.searchDBRecord(sql);
 			if (rs.next()) {
-				props.setProperty("c_surname_cur", rs.getString("last_name"));
+				props.setProperty("c_surname_cur", db.getString(rs,"last_name"));
 				props
 						.setProperty("c_givenName_cur", rs
 								.getString("first_name"));
-				props.setProperty("c_address_cur", rs.getString("address"));
-				props.setProperty("c_city_cur", rs.getString("city"));
-				props.setProperty("c_province_cur", rs.getString("province"));
-				props.setProperty("c_postal_cur", rs.getString("postal"));
-				props.setProperty("c_phn_cur", rs.getString("hin"));
-				props.setProperty("c_phone_cur", rs.getString("phone") + "  "
-						+ rs.getString("phone2"));
+				props.setProperty("c_address_cur", db.getString(rs,"address"));
+				props.setProperty("c_city_cur", db.getString(rs,"city"));
+				props.setProperty("c_province_cur", db.getString(rs,"province"));
+				props.setProperty("c_postal_cur", db.getString(rs,"postal"));
+				props.setProperty("c_phn_cur", db.getString(rs,"hin"));
+				props.setProperty("c_phone_cur", db.getString(rs,"phone") + "  "
+						+ db.getString(rs,"phone2"));
 			}
 		}
 		return props;

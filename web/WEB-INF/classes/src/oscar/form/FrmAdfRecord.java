@@ -46,12 +46,12 @@ public class FrmAdfRecord extends FrmRecord {
 			if (rs.next()) {
 				java.util.Date date =
 					UtilDateUtilities.calcDate(
-						rs.getString("year_of_birth"),
-						rs.getString("month_of_birth"),
-						rs.getString("date_of_birth"));
+						db.getString(rs,"year_of_birth"),
+						db.getString(rs,"month_of_birth"),
+						db.getString(rs,"date_of_birth"));
 				props.setProperty(
 					"demographic_no",
-					rs.getString("demographic_no"));
+					db.getString(rs,"demographic_no"));
 				props.setProperty(
 					"formCreated",
 					UtilDateUtilities.DateToString(
@@ -59,25 +59,25 @@ public class FrmAdfRecord extends FrmRecord {
 						_dateFormat));
 				//props.setProperty("formEdited",
 				// UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
-				props.setProperty("c_surname", rs.getString("last_name"));
-				props.setProperty("c_givenName", rs.getString("first_name"));
+				props.setProperty("c_surname", db.getString(rs,"last_name"));
+				props.setProperty("c_givenName", db.getString(rs,"first_name"));
 				props.setProperty(
 					"c_address",
-					rs.getString("address")
+					db.getString(rs,"address")
 						+ ", "
-						+ rs.getString("city")
+						+ db.getString(rs,"city")
 						+ ", "
-						+ rs.getString("province")
+						+ db.getString(rs,"province")
 						+ " "
-						+ rs.getString("postal"));
-				props.setProperty("c_phn", rs.getString("hin"));
+						+ db.getString(rs,"postal"));
+				props.setProperty("c_phn", db.getString(rs,"hin"));
 				props.setProperty(
 					"pg1_dateOfBirth",
 					UtilDateUtilities.DateToString(date, _dateFormat));
 				props.setProperty(
 					"pg1_age",
 					String.valueOf(UtilDateUtilities.calcAge(date)));
-				props.setProperty("c_phone", rs.getString("phone"));
+				props.setProperty("c_phone", db.getString(rs,"phone"));
 				props.setProperty(
 					"sigDate",
 					UtilDateUtilities.DateToString(
