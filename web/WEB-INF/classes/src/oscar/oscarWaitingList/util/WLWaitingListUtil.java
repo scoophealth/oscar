@@ -257,7 +257,7 @@ public class WLWaitingListUtil {
             	
                 sql =   " UPDATE waitingList SET position="+ i + 
                 		" WHERE listID=" + waitingListID + 
-                        " AND demographic_no=" + rs.getString("demographic_no") + 
+                        " AND demographic_no=" + db.getString(rs,"demographic_no") + 
                         " AND is_history = 'N' ";
                 System.out.println("WLWaitingListUtil.rePositionWaitingList(2): " + sql);
                 db.RunSQL(sql);
@@ -293,7 +293,7 @@ public class WLWaitingListUtil {
             	
                 sql =   " UPDATE waitingList SET position="+ i + 
                 		" WHERE listID=" + waitingListID + 
-                        " AND demographic_no=" + rs.getString("demographic_no") + 
+                        " AND demographic_no=" + db.getString(rs,"demographic_no") + 
                         " AND is_history = 'N' ";
                 System.out.println("WLWaitingListUtil.rePositionWaitingList(1): " + sql);
                 db.RunSQL(sql);

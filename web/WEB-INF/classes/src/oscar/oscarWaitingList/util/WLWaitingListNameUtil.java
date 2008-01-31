@@ -208,7 +208,7 @@ public class WLWaitingListNameUtil {
 			return false;
 		}
         if(rs.next()){
-        	System.out.println("WLWaitingListNameUtil/isWaitingListNameExist(): wlName2 = " + rs.getString("name")); 
+        	System.out.println("WLWaitingListNameUtil/isWaitingListNameExist(): wlName2 = " + oscar.Misc.getString(rs,"name")); 
 	       	return true;
         }
 		

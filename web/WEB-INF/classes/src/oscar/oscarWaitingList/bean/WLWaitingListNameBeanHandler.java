@@ -56,13 +56,13 @@ public class WLWaitingListNameBeanHandler {
             
             for(rs = db.GetSQL(sql); rs.next(); )
             {                
-                WLWaitingListNameBean wLBean = new WLWaitingListNameBean(   rs.getString("ID"),
-                                                                            rs.getString("name"),
-                                                                            rs.getString("group_no"),
-                                                                            rs.getString("provider_no"),
-                                                                            rs.getString("create_date"));                   
+                WLWaitingListNameBean wLBean = new WLWaitingListNameBean(   db.getString(rs,"ID"),
+                                                                            db.getString(rs,"name"),
+                                                                            db.getString(rs,"group_no"),
+                                                                            db.getString(rs,"provider_no"),
+                                                                            db.getString(rs,"create_date"));                   
                 waitingListNameList.add(wLBean);
-                waitingListNames.add(rs.getString("name"));
+                waitingListNames.add(db.getString(rs,"name"));
             }                            
             rs.close();                                
             db.CloseConn();

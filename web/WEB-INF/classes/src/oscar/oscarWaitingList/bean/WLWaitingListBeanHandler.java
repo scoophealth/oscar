@@ -59,14 +59,14 @@ public class WLWaitingListBeanHandler {
             String onListSinceDateOnly = "";
             for(rs = db.GetSQL(sql); rs.next(); )
             {                
-            	onListSinceDateOnly = rs.getString("onListSince").substring(0, 10);//2007-01-01
+            	onListSinceDateOnly = db.getString(rs,"onListSince").substring(0, 10);//2007-01-01
             	
-                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( rs.getString("demographic_no"),
-                                                                                rs.getString("listID"),
-                                                                                rs.getString("position"),
-                                                                                rs.getString("patientName"), 
-                                                                                rs.getString("phone"),
-                                                                                rs.getString("note"),
+                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( db.getString(rs,"demographic_no"),
+                                                                                db.getString(rs,"listID"),
+                                                                                db.getString(rs,"position"),
+                                                                                db.getString(rs,"patientName"), 
+                                                                                db.getString(rs,"phone"),
+                                                                                db.getString(rs,"note"),
                                                                                 onListSinceDateOnly);   
                 waitingListArrayList.add(wLBean);
             }                            
@@ -74,7 +74,7 @@ public class WLWaitingListBeanHandler {
             sql = "SELECT * FROM waitingListName where ID="+waitingListID + " AND is_history = 'N' ";
             rs = db.GetSQL(sql);
             if(rs.next()){
-                waitingListName = rs.getString("name");
+                waitingListName = db.getString(rs,"name");
             }
             rs.close();        
             db.CloseConn();
@@ -99,16 +99,16 @@ public class WLWaitingListBeanHandler {
                 
                 //check if the patient has an appointment already
                 sql = "select a.demographic_no, a.appointment_date, wl.onListSince from appointment a, waitingList wl where a.appointment_date >= wl.onListSince AND a.demographic_no=wl.demographic_no AND a.demographic_no="
-                      + rs.getString("demographic_no") + "";
+                      + db.getString(rs,"demographic_no") + "";
                 
                 ResultSet rsCheck = db.GetSQL(sql);        
                 
                 if(rsCheck.next())
                 {                
                     //delete patient from the waitingList
-                    //System.out.println("patient to be deleted: " + rs.getString("demographic_no"));
+                    //System.out.println("patient to be deleted: " + db.getString(rs,"demographic_no"));
                 	
-                	WLWaitingListUtil.removeFromWaitingList(waitingListID, rs.getString("demographic_no"));
+                	WLWaitingListUtil.removeFromWaitingList(waitingListID, db.getString(rs,"demographic_no"));
                     needUpdate = true;
                 }
                 rsCheck.close();
@@ -121,7 +121,7 @@ public class WLWaitingListBeanHandler {
                 for(rs = db.GetSQL(sql); rs.next();){                    
                     sql =   " UPDATE waitingList SET position="+ i + 
                     		" WHERE listID=" + waitingListID + 
-                            " AND demographic_no=" + rs.getString("demographic_no") +
+                            " AND demographic_no=" + db.getString(rs,"demographic_no") +
                             " AND is_history = 'N' ";
                     //System.out.println("update query from waiting list view: " + sql);
                     db.RunSQL(sql);

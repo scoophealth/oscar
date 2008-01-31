@@ -185,14 +185,14 @@ public class WorkFlowState {
 
     private Hashtable fillHash(final ResultSet rs) throws SQLException {
         Hashtable h = new Hashtable();
-        h.put("ID",rs.getString("ID"));
-        h.put("workflow_type", rs.getString("workflow_type"));
+        h.put("ID",oscar.Misc.getString(rs,"ID"));
+        h.put("workflow_type", oscar.Misc.getString(rs,"workflow_type"));
         h.put("create_date_time", rs.getDate("create_date_time"));
-        h.put("demographic_no", rs.getString("demographic_no"));
+        h.put("demographic_no", oscar.Misc.getString(rs,"demographic_no"));
         if (rs.getDate("completion_date") != null){
            h.put("completion_date", rs.getDate("completion_date"));
         }
-        h.put("current_state", rs.getString("current_state"));
+        h.put("current_state", oscar.Misc.getString(rs,"current_state"));
         return h;
     }
     
