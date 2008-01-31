@@ -207,7 +207,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 				ps.setInt(1, intakeId);
 				ResultSet rs = ps.executeQuery();
 				if (rs.next()) {
-					genericIntakeReportStatistics.addResult(rs.getInt("intake_node_id"), rs.getString("val"));
+					genericIntakeReportStatistics.addResult(rs.getInt("intake_node_id"), oscar.Misc.getString(rs,"val"));
 				}
 				else {
 					LOG.error("Error, an intake has no answers? intakeId=" + intakeId);

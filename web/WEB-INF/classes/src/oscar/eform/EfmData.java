@@ -62,11 +62,11 @@ public class EfmData {
          ResultSet rs = db.GetSQL(sql);                                                
          if (rs.next()){
             ret = new Hashtable();
-            ret.put("formName", rs.getString("form_name"));
-            ret.put("subject", rs.getString("subject"));
-            ret.put("date", rs.getString("form_date"));
-            ret.put("time", rs.getString("form_time"));
-            ret.put("provider", rs.getString("form_provider"));                          
+            ret.put("formName", db.getString(rs,"form_name"));
+            ret.put("subject", db.getString(rs,"subject"));
+            ret.put("date", db.getString(rs,"form_date"));
+            ret.put("time", db.getString(rs,"form_time"));
+            ret.put("provider", db.getString(rs,"form_provider"));                          
          }         
          db.CloseConn();            
       } catch (SQLException e) {

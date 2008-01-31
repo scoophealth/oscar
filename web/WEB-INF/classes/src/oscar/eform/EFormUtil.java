@@ -119,7 +119,7 @@ public class EFormUtil {
        try {
            while (rs.next()) {
                Hashtable curht = new Hashtable();
-               curht.put("fdid", rs.getString("fdid"));
+               curht.put("fdid", oscar.Misc.getString(rs,"fdid"));
                curht.put("fid", rsGetString(rs, "fid"));
                curht.put("formName", rsGetString(rs, "form_name"));
                curht.put("formSubject", rsGetString(rs, "subject"));
@@ -168,8 +168,8 @@ public class EFormUtil {
            curht.put("fid", rsGetString(rs, "fid"));
            curht.put("demographic_no", rsGetString(rs, "demographic_no"));
            curht.put("provider_no", rsGetString(rs, "form_provider"));
-           curht.put("formName", rs.getString("form_name"));
-           curht.put("formSubject", rs.getString("subject"));
+           curht.put("formName", oscar.Misc.getString(rs,"form_name"));
+           curht.put("formSubject", oscar.Misc.getString(rs,"subject"));
            //curht.put("formTime", rsGetString(rs, "form_time"));
            //curht.put("formDate", rsGetString(rs, "form_date"));
            curht.put("formHtml", rsGetString(rs, "form_data"));
@@ -269,7 +269,7 @@ public class EFormUtil {
                values = new ArrayList();
                for (int i=0; i<names.size(); i++) {
                    try {
-                       values.add(rs.getString((String) names.get(i)));
+                       values.add(oscar.Misc.getString(rs,(String) names.get(i)));
                        System.out.println("VALUE ====" + rs.getObject((String) names.get(i)) + "|");
                    } catch (Exception sqe) {
                        values.add("<(" + names.get(i) + ")NotFound>");
@@ -296,7 +296,7 @@ public class EFormUtil {
            sql = "SELECT LAST_INSERT_ID()";
            ResultSet rs = db.GetSQL(sql);
            rs.next();
-           String lastID = rs.getString("LAST_INSERT_ID()");
+           String lastID = oscar.Misc.getString(rs,"LAST_INSERT_ID()");
            rs.close();
            return(lastID);
        } catch (SQLException sqe) { sqe.printStackTrace(); }
@@ -383,8 +383,8 @@ public class EFormUtil {
            ResultSet rs = getSQL(sql);
            while (rs.next()) {
                Hashtable curhash = new Hashtable();
-               curhash.put("groupName", rs.getString("group_name"));
-               curhash.put("count", rs.getString("count"));
+               curhash.put("groupName", oscar.Misc.getString(rs,"group_name"));
+               curhash.put("count", oscar.Misc.getString(rs,"count"));
                al.add(curhash);
            }
        } catch (SQLException sqe) { sqe.printStackTrace(); }
@@ -402,8 +402,8 @@ public class EFormUtil {
            ResultSet rs = getSQL(sql);
            while (rs.next()) {
                Hashtable curhash = new Hashtable();
-               curhash.put("groupName", rs.getString("group_name"));
-               curhash.put("count", rs.getString("count"));
+               curhash.put("groupName", oscar.Misc.getString(rs,"group_name"));
+               curhash.put("count", oscar.Misc.getString(rs,"count"));
                al.add(curhash);
            }
        } catch (SQLException sqe) { sqe.printStackTrace(); }
@@ -483,7 +483,7 @@ public class EFormUtil {
        try {
            while (rs.next()) {
                Hashtable curht = new Hashtable();
-               curht.put("fdid", rs.getString("fdid"));
+               curht.put("fdid", oscar.Misc.getString(rs,"fdid"));
                curht.put("fid", rsGetString(rs, "fid"));
                curht.put("formName", rsGetString(rs, "form_name"));
                curht.put("formSubject", rsGetString(rs, "subject"));
@@ -515,7 +515,7 @@ public class EFormUtil {
            sql = "SELECT LAST_INSERT_ID()";
            ResultSet rs = db.GetSQL(sql);
            rs.next();
-           String lastID = rs.getString("LAST_INSERT_ID()");
+           String lastID = oscar.Misc.getString(rs,"LAST_INSERT_ID()");
            rs.close();
            return(lastID);
        } catch (SQLException sqe) { sqe.printStackTrace(); }
@@ -536,7 +536,7 @@ public class EFormUtil {
    
    private static String rsGetString(ResultSet rs, String column) throws SQLException {
        //protects agianst null values;
-       String thisStr = rs.getString(column);
+       String thisStr = oscar.Misc.getString(rs,column);
        if (thisStr == null) return "";
        return thisStr;
    }

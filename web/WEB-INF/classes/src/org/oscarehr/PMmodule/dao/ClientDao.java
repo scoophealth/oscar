@@ -733,16 +733,16 @@ public class ClientDao extends HibernateDaoSupport {
 
 				Calendar calendar=Calendar.getInstance();
 				calendar.setTimeInMillis(0);
-				calendar.set(Calendar.YEAR, Integer.parseInt(rs.getString("demographic.year_of_birth")));
+				calendar.set(Calendar.YEAR, Integer.parseInt(oscar.Misc.getString(rs,"demographic.year_of_birth")));
 				calendar.set(Calendar.MONTH, rs.getInt("demographic.month_of_birth")-1);
 				calendar.set(Calendar.DAY_OF_MONTH,  rs.getInt("demographic.date_of_birth"));
 				clientListsReportResults.dateOfBirth=calendar;
 				
 				clientListsReportResults.demographicId=rs.getInt("demographic.demographic_no");
-				clientListsReportResults.firstName=rs.getString("demographic.first_name");
-				clientListsReportResults.lastName=rs.getString("demographic.last_name");
+				clientListsReportResults.firstName=oscar.Misc.getString(rs,"demographic.first_name");
+				clientListsReportResults.lastName=oscar.Misc.getString(rs,"demographic.last_name");
 				clientListsReportResults.programId=rs.getInt("program.program_id");
-				clientListsReportResults.programName=rs.getString("program.name");
+				clientListsReportResults.programName=oscar.Misc.getString(rs,"program.name");
 				
 				results.put(clientListsReportResults.lastName+clientListsReportResults.firstName,clientListsReportResults);
 			}

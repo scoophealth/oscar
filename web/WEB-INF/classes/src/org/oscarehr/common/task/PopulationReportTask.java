@@ -58,7 +58,7 @@ public class PopulationReportTask extends TimerTask {
                 logger.debug("Population report task not run, no host / url configured.");
                 return;
             }
-
+/*
             HttpClient client = new HttpClient();
             HttpMethod method = new GetMethod(url);
 
@@ -69,7 +69,7 @@ public class PopulationReportTask extends TimerTask {
         }
         catch (UnknownHostException e) {
             logger.error("Error running population report task, unknown host, host=" + e.getMessage());
-        }
+*/        }
         catch (Throwable t) {
             logger.error("error running population report task", t);
         }

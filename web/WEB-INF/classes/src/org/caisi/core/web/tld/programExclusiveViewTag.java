@@ -51,7 +51,7 @@ public class programExclusiveViewTag extends TagSupport {
             String sql = new String("SELECT exclusive_view FROM program WHERE program_id = (SELECT program_id FROM provider_default_program WHERE provider_no='" + providerNo + "')");
             ResultSet rs = db.GetSQL(sql);
 	    while (rs.next()) {
-		exclusiveView = rs.getString(1);
+		exclusiveView = db.getString(rs,1);
 	    }
             rs.close();
             db.CloseConn();

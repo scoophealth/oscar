@@ -70,7 +70,7 @@ public class EDocUtil extends SqlUtilBaseS {
         String moduleName = "";
         try {
             if (rs.next()) {
-                moduleName = rs.getString("first_name") + ", " + rs.getString("last_name");
+                moduleName = oscar.Misc.getString(rs,"first_name") + ", " + oscar.Misc.getString(rs,"last_name");
             }
         } catch (SQLException sqe) {
             sqe.printStackTrace();
@@ -85,7 +85,7 @@ public class EDocUtil extends SqlUtilBaseS {
         String doctype = "";
         try {
             while (rs.next()) {
-                doctype = rs.getString("doctype");
+                doctype = oscar.Misc.getString(rs,"doctype");
                 doctypes.add(doctype);
             }
         } catch (SQLException sqe) {
@@ -381,7 +381,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setContentType(rsGetString(rs, "contenttype"));
                 
                 if( myOscarEnabled ) {
-                    String tmp = indivoSql.replaceFirst("\\?", rs.getString("document_no"));
+                    String tmp = indivoSql.replaceFirst("\\?", oscar.Misc.getString(rs,"document_no"));
                     rs2 = getSQL(tmp);
 
                     if( rs2.next() ) { 
@@ -406,7 +406,7 @@ public class EDocUtil extends SqlUtilBaseS {
           String sql = "select docfilename from document where document_no = '"+id+"'";
           ResultSet rs = db.GetSQL(sql);
           if (rs.next()){
-              filename = rs.getString("docfilename");
+              filename = oscar.Misc.getString(rs,"docfilename");
           }
           rs.close();
           db.CloseConn();
@@ -475,7 +475,7 @@ public class EDocUtil extends SqlUtilBaseS {
           String sql = "select max(document_no) from document";
           ResultSet rs = db.GetSQL(sql);
           if (rs.next()){
-              documentNo = rs.getString(1);
+              documentNo = oscar.Misc.getString(rs,1);
           }
           rs.close();
           db.CloseConn();
