@@ -301,7 +301,13 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             GetIssuesNotesResponse issuesAndNotes=integratorManager.getIssueNotes(Long.parseLong(demoNo));
 //            ArrayList<IssueTransfer> issuesTmp=new ArrayList<IssueTransfer>();
 //            request.setAttribute("remoteIssues",issuesTmp.toArray(new IssueTransfer[0]));
-          request.setAttribute("remoteIssues",issuesAndNotes.getIssues());
+            if (issuesAndNotes == null) {
+            	request.setAttribute("remoteIssues",null);
+            }
+            else
+            {
+            	request.setAttribute("remoteIssues",issuesAndNotes.getIssues());
+            }
         }
 
         CaseManagementCPP cpp = this.caseManagementMgr.getCPP(this.getDemographicNo(request));
