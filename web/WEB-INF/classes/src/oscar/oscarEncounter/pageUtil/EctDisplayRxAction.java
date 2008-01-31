@@ -59,18 +59,30 @@ public class EctDisplayRxAction extends EctDisplayAction {
         oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
         oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
         arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
-        
+        long now = System.currentTimeMillis();
+        long month = 1000L * 60L * 60L * 24L * 30L;
         for(int idx = 0; idx < arr.length; ++idx ) {
             NavBarDisplayDAO.Item item = Dao.Item();                                    
-                                     
-            date = arr[idx].getRxDate();
+            oscar.oscarRx.data.RxPrescriptionData.Prescription drug = arr[idx];
+            
+            String styleColor = "";
+            if(drug.isCurrent() == true && drug.isArchived() ){
+                styleColor="style=\"color:red;text-decoration: line-through;\"";  
+            }else if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
+                styleColor="style=\"color:orange;font-weight:bold;\"";
+            }else if (drug.isCurrent() && !drug.isArchived())  {                                        
+                styleColor="style=\"color:red;\"";
+            }else if (!drug.isCurrent() && drug.isArchived()){
+                styleColor="style=\"text-decoration: line-through;\"";
+            }
+            date = drug.getRxDate();
             serviceDateStr = DateUtils.getDate(date, dateFormat);                                        
       
             item.setDate(date);
-            String tmp = arr[idx].getFullOutLine().replaceAll(";", " ");
+            String tmp = drug.getFullOutLine().replaceAll(";", " ");
             String strTitle = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-            
-            item.setTitle(strTitle + " " + serviceDateStr);
+            strTitle = "<span " + styleColor + ">" + strTitle + "</span>";
+            item.setTitle(strTitle);
             item.setLinkTitle(tmp + " " + serviceDateStr + " - " + arr[idx].getEndDate());
             item.setURL("return false;");
             Dao.addItem(item);
