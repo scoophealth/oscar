@@ -150,7 +150,7 @@
 			// get patient's billing history
 			boolean bFirst = true;
 			JdbcBillingReviewImpl hdbObj = new JdbcBillingReviewImpl();
-			List aL = hdbObj.getBillingHist(demo_no, " limit 5 ", "");
+			List aL = hdbObj.getBillingHist(demo_no, 5,0, null);
 			
 			/////////////////////////////////////
 			//sql = "select id,billing_date,admission_date,visitType, timestamp, facilty_num, ref_num from billing_on_cheader1 "+ " where demographic_no="+ demo_no	+ " and status!='D' order by billing_date desc, id desc limit 1";
