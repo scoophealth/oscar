@@ -41,7 +41,7 @@ public class JdbcApptImpl {
 		ResultSet rs = dbObj.searchDBRecord(sql);
 		try {
 			while (rs.next()) {
-				retval = rs.getString("avail_hour");
+				retval = oscar.Misc.getString(rs,"avail_hour");
 			}
 		} catch (SQLException e) {
 			_logger.error("getLocationFromSchedule(sql = " + sql + ")");
@@ -74,7 +74,7 @@ public class JdbcApptImpl {
 		ResultSet rs = dbObj.searchDBRecord(sql);
 		try {
 			while (rs.next()) {
-				retval = rs.getString("reason");
+				retval = oscar.Misc.getString(rs,"reason");
 			}
 		} catch (SQLException e) {
 			_logger.error("getLocationFromSpec(sql = " + sql + ")");
@@ -92,7 +92,7 @@ public class JdbcApptImpl {
 		ResultSet rs = dbObj.searchDBRecord(sql);
 		try {
 			while (rs.next()) {
-				retval = rs.getString("appointment_date");
+				retval = oscar.Misc.getString(rs,"appointment_date");
 			}
 		} catch (SQLException e) {
 			_logger.error("getPrevApptDate(sql = " + sql + ")");

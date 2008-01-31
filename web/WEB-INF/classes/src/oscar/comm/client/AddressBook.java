@@ -50,7 +50,7 @@ class AddressBook {
         if(rs.next()) {
             String newAddressBook = UtilXML.toXML(addressBook);
 
-            if((rs.getString("addressBook")==null) || (rs.getString("addressBook").equals(newAddressBook)==false)) {
+            if((db.getString(rs,"addressBook")==null) || (db.getString(rs,"addressBook").equals(newAddressBook)==false)) {
                 db.RunSQL("UPDATE oscarcommlocations SET addressBook = '" + newAddressBook + "' WHERE current1 = 1");
             } else {
                 addressBook = null;
@@ -79,7 +79,7 @@ class AddressBook {
         String sql = "SELECT * FROM groups_tbl WHERE parentID = " + groupId;
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
-            group.appendChild(getChildren(doc, rs.getInt("groupID"), rs.getString("groupDesc")));
+            group.appendChild(getChildren(doc, rs.getInt("groupID"), db.getString(rs,"groupDesc")));
         }
         rs.close();
 
@@ -89,8 +89,8 @@ class AddressBook {
         rs = db.GetSQL(sql);
         while(rs.next()) {
             Element address = UtilXML.addNode(group, "address");
-            address.setAttribute("id", rs.getString("provider_no"));
-            address.setAttribute("desc", new String(rs.getString("last_name") + ", " + rs.getString("first_name")));
+            address.setAttribute("id", db.getString(rs,"provider_no"));
+            address.setAttribute("desc", new String(db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name")));
         }
         rs.close();
 

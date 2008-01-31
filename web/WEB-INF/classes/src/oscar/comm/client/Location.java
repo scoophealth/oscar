@@ -45,8 +45,8 @@ class Location {
         ResultSet rs = db.GetSQL("SELECT * FROM oscarcommlocations WHERE current1 = 1");
         if(rs.next()) {
             UtilXML.addNode(local, "locationId", String.valueOf(rs.getInt("locationId")));
-            UtilXML.addNode(local, "locationDesc", rs.getString("locationDesc"));
-            UtilXML.addNode(local, "locationAuth", rs.getString("locationAuth"));
+            UtilXML.addNode(local, "locationDesc", db.getString(rs,"locationDesc"));
+            UtilXML.addNode(local, "locationAuth", db.getString(rs,"locationAuth"));
         }
         rs.close();
 

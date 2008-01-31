@@ -79,15 +79,15 @@ public class AppointmentDAO extends DAO {
             ResultSet rs = db.GetSQL(sql);
 
             while (rs.next()) {
-		Appointment ap = new Appointment(rs.getString("prov.first_name"), rs.getString("prov.last_name"), rs.getString("prov.ohip_no"));
+		Appointment ap = new Appointment(db.getString(rs,"prov.first_name"), db.getString(rs,"prov.last_name"), db.getString(rs,"prov.ohip_no"));
 		
-		ap.setAppointment_no(rs.getString("appointment_no"));
-		ap.setAppointment_date(rs.getString("appointment_date"));
-		ap.setStart_time(rs.getString("start_time"));
-		ap.setEnd_time(rs.getString("end_time"));
-		ap.setNotes(rs.getString("notes"));
-		ap.setReason(rs.getString("reason"));
-		ap.setStatus(rs.getString("status"));
+		ap.setAppointment_no(db.getString(rs,"appointment_no"));
+		ap.setAppointment_date(db.getString(rs,"appointment_date"));
+		ap.setStart_time(db.getString(rs,"start_time"));
+		ap.setEnd_time(db.getString(rs,"end_time"));
+		ap.setNotes(db.getString(rs,"notes"));
+		ap.setReason(db.getString(rs,"reason"));
+		ap.setStatus(db.getString(rs,"status"));
 		
 		appointments.add(ap);
              }
