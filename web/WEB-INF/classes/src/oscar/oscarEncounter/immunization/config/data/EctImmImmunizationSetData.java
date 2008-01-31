@@ -76,9 +76,9 @@ public class EctImmImmunizationSetData {
 			ResultSet rs;
 			for (rs = db.GetSQL(sql);
 				rs.next();
-				createDateVec.add(rs.getString("createDate"))) {
-				setNameVec.add(rs.getString("setName"));
-				setIdVec.add(rs.getString("setId"));
+				createDateVec.add(db.getString(rs,"createDate"))) {
+				setNameVec.add(db.getString(rs,"setName"));
+				setIdVec.add(db.getString(rs,"setId"));
 			}
 
 			rs.close();
@@ -100,9 +100,9 @@ public class EctImmImmunizationSetData {
 			ResultSet rs;
 			for (rs = db.GetSQL(sql);
 				rs.next();
-				createDateVec.add(rs.getString("createDate"))) {
-				setNameVec.add(rs.getString("setName"));
-				setIdVec.add(rs.getString("setId"));
+				createDateVec.add(db.getString(rs,"createDate"))) {
+				setNameVec.add(db.getString(rs,"setName"));
+				setIdVec.add(db.getString(rs,"setId"));
 			}
 
 			rs.close();
@@ -127,7 +127,7 @@ public class EctImmImmunizationSetData {
 							.append("'")));
 			ResultSet rs = db.GetSQL(sql);
 			if (rs.next())
-				xmlDoc = rs.getString("setXmlDoc");
+				xmlDoc = db.getString(rs,"setXmlDoc");
 			rs.close();
 			db.CloseConn();
 		} catch (SQLException e) {

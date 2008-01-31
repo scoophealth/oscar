@@ -44,7 +44,7 @@ public class EctImmImmunizationData
         String sql = String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
         ResultSet rs = db.GetSQL(sql);
         if(rs.next())
-            sRet = rs.getString("immunizations");
+            sRet = db.getString(rs,"immunizations");
         rs.close();
         db.CloseConn();
         return sRet;
@@ -96,7 +96,7 @@ public class EctImmImmunizationData
         String s;
         for(rs = db.GetSQL(sql); rs.next(); vRet.add(s))
         {
-            s = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(rs.getString("provider_no"))))).append("/").append(rs.getString("namer"))));
+            s = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(db.getString(rs,"provider_no"))))).append("/").append(db.getString(rs,"namer"))));
             System.out.println(s);
         }
 
