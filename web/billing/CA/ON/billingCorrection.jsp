@@ -466,7 +466,7 @@ apptMainBean.closePstmtConn();
 	<input type="submit" name="submit" value="<bean:message key="billing.billingCorrection.btnSubmit"/>" ></td>
 </tr>
 </table>
-<form>
+</form>
 
 
 </body>
