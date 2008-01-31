@@ -4,7 +4,9 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class name="com.quatro.model.ScratchPad" table="scratch_pad">
-		<id name="id" />
+		<id name="id" unsaved-value="0">
+			<generator class="native" />
+		</id>
 		<property name="provider_no" />
 		<property name="date_time" type="java.util.Date" />
 		<property name="scratch_text" />
