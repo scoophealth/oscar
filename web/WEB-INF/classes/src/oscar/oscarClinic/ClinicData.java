@@ -82,17 +82,17 @@ public class ClinicData {
                rs = db.GetSQL(sql);
                 
                if(rs.next()){
-                 clinic_no              = rs.getString("clinic_no"); 
-                 clinic_name            = rs.getString("clinic_name");  
-                 clinic_address         = rs.getString("clinic_address"); 
-                 clinic_city            = rs.getString("clinic_city"); 
-                 clinic_postal          = rs.getString("clinic_postal"); 
-                 clinic_phone           = rs.getString("clinic_phone"); 
-                 clinic_fax             = rs.getString("clinic_fax"); 
-                 clinic_location_code   = rs.getString("clinic_location_code"); 
-                 clinic_province        = rs.getString("clinic_province"); 
-                 clinic_delim_phone     = rs.getString("clinic_delim_phone"); 
-                 clinic_delim_fax       = rs.getString("clinic_delim_fax"); 
+                 clinic_no              = db.getString(rs,"clinic_no"); 
+                 clinic_name            = db.getString(rs,"clinic_name");  
+                 clinic_address         = db.getString(rs,"clinic_address"); 
+                 clinic_city            = db.getString(rs,"clinic_city"); 
+                 clinic_postal          = db.getString(rs,"clinic_postal"); 
+                 clinic_phone           = db.getString(rs,"clinic_phone"); 
+                 clinic_fax             = db.getString(rs,"clinic_fax"); 
+                 clinic_location_code   = db.getString(rs,"clinic_location_code"); 
+                 clinic_province        = db.getString(rs,"clinic_province"); 
+                 clinic_delim_phone     = db.getString(rs,"clinic_delim_phone"); 
+                 clinic_delim_fax       = db.getString(rs,"clinic_delim_fax"); 
                   
                }
                
