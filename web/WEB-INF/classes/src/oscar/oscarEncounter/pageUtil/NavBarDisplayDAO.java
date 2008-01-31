@@ -289,7 +289,7 @@ public class NavBarDisplayDAO {
         }
         
         public Date getDate() {            
-            return (date == null?date = new Date(System.currentTimeMillis()):date);
+            return date;
         }
         
         //default compare is alphabetical
@@ -319,7 +319,17 @@ public class NavBarDisplayDAO {
             Item i1 = (Item)o1;
             Item i2 = (Item)o2;
             
-            return i1.getDate().compareTo(i2.getDate());
+            Date d1 = i1.getDate();
+            Date d2 = i2.getDate();
+            
+            if( d1 == null && d2 != null )
+                return -1;
+            else if( d1 != null && d2 == null )
+                return 1;
+            else if( d1 == null && d2 == null )
+                return 0;
+            else
+                return i1.getDate().compareTo(i2.getDate());
         }
     }
     
@@ -330,12 +340,21 @@ public class NavBarDisplayDAO {
             Date d1 = i1.getDate();
             Date d2 = i2.getDate();
             
-            if( d1.before(d2) )
+            /*if( d1.before(d2) )
                 return 1;
             else if( d1.after(d2) )
                 return -1;
             else 
                 return 0;                        
+             */
+            if( d1 == null && d2 != null )
+                return -1;
+            else if( d1 != null && d2 == null )
+                return 1;
+            else if( d1 == null && d2 == null )
+                return 0;
+            else
+                return -(i1.getDate().compareTo(i2.getDate()));
         }
     }
 
