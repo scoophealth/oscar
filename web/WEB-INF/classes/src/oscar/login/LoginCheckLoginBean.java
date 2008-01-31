@@ -154,14 +154,14 @@ public class LoginCheckLoginBean {
             ResultSet rs =  db.GetSQL(sql);
             while (rs.next()) {
                 secBean = new LoginSecurityBean();
-                secBean.setUser_name(rs.getString("user_name"));
-                secBean.setPassword(rs.getString("password"));
-                secBean.setProvider_no(rs.getString("provider_no"));
-                secBean.setPin(rs.getString("pin"));
+                secBean.setUser_name(db.getString(rs,"user_name"));
+                secBean.setPassword(db.getString(rs,"password"));
+                secBean.setProvider_no(db.getString(rs,"provider_no"));
+                secBean.setPin(db.getString(rs,"pin"));
                 secBean.setB_ExpireSet(new Integer(rs.getInt("b_ExpireSet")));
                 secBean.setDate_ExpireDate(rs.getDate("date_ExpireDate"));
-                secBean.setB_LocalLockSet(new Integer(rs.getString("b_LocalLockSet")));
-                secBean.setB_RemoteLockSet(new Integer(rs.getString("b_RemoteLockSet")));
+                secBean.setB_LocalLockSet(new Integer(db.getString(rs,"b_LocalLockSet")));
+                secBean.setB_RemoteLockSet(new Integer(db.getString(rs,"b_RemoteLockSet")));
             }
             rs.close();
 
@@ -173,17 +173,17 @@ public class LoginCheckLoginBean {
                     + secBean.getProvider_no() + "'";
             rs = accessDB.searchDBRecord(sql);
             while (rs.next()) {
-                firstname = rs.getString("first_name");
-                lastname = rs.getString("last_name");
-                profession = rs.getString("provider_type");
+                firstname = accessDB.getString(rs,"first_name");
+                lastname = accessDB.getString(rs,"last_name");
+                profession = accessDB.getString(rs,"provider_type");
             }
             sql = "select * from secUserRole where provider_no = '" + secBean.getProvider_no() + "'";
             rs = accessDB.searchDBRecord(sql);
             while (rs.next()) {
                 if (rolename == null) {
-                    rolename = rs.getString("role_name");
+                    rolename = accessDB.getString(rs,"role_name");
                 } else {
-                    rolename += "," + rs.getString("role_name");
+                    rolename += "," + accessDB.getString(rs,"role_name");
                 }
             }
             return secBean;
@@ -202,12 +202,12 @@ public class LoginCheckLoginBean {
                     + secBean.getProvider_no() + "'";
             rs = accessDB.searchDBRecord(strSQL);
             while (rs.next()) {
-                temp[0] = rs.getString("start_hour");
-                temp[1] = rs.getString("end_hour");
-                temp[2] = rs.getString("every_min");
-                temp[3] = rs.getString("mygroup_no");
-                temp[4] = rs.getString("new_tickler_warning_window");
-                temp[5] = rs.getString("default_caisi_pmm");
+                temp[0] = accessDB.getString(rs,"start_hour");
+                temp[1] = accessDB.getString(rs,"end_hour");
+                temp[2] = accessDB.getString(rs,"every_min");
+                temp[3] = accessDB.getString(rs,"mygroup_no");
+                temp[4] = accessDB.getString(rs,"new_tickler_warning_window");
+                temp[5] = accessDB.getString(rs,"default_caisi_pmm");
             }
             rs.close();
         } catch (SQLException e) {
@@ -230,10 +230,10 @@ public class LoginCheckLoginBean {
                     + secBean.getProvider_no() + "'";
             rs = accessDB.searchDBRecord(strSQL);
             while (rs.next()) {
-                temp[0] = rs.getString("start_hour");
-                temp[1] = rs.getString("end_hour");
-                temp[2] = rs.getString("every_min");
-                temp[3] = rs.getString("mygroup_no");
+                temp[0] = accessDB.getString(rs,"start_hour");
+                temp[1] = accessDB.getString(rs,"end_hour");
+                temp[2] = accessDB.getString(rs,"every_min");
+                temp[3] = accessDB.getString(rs,"mygroup_no");
             }
             rs.close();
         } catch (SQLException e) {

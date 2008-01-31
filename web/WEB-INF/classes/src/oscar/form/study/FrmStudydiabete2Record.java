@@ -41,12 +41,12 @@ public class FrmStudydiabete2Record extends FrmStudyRecord {
             ResultSet rs = db.GetSQL(sql);
             if(rs.next())
             {
-                Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
+                Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("pName", rs.getString("pName"));
+                props.setProperty("pName", db.getString(rs,"pName"));
             }
             rs.close();
         } else {
@@ -65,7 +65,7 @@ public class FrmStudydiabete2Record extends FrmStudyRecord {
                     } else if(md.getColumnTypeName(i).equalsIgnoreCase("date"))
                         value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
                     else
-                        value = rs.getString(i);
+                        value = db.getString(rs,i);
                     if(value != null)
                         props.setProperty(name, value);
                 }

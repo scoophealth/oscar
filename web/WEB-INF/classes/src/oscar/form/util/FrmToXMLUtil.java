@@ -384,7 +384,7 @@ public class FrmToXMLUtil{
                 ResultSet rs = dbhandler.GetSQL(s1);
                 //System.out.println("flushot: " + s1);
                 if (rs.next())
-                        s = rs.getString("billing_date");
+                        s = dbhandler.getString(rs,"billing_date");
                 rs.close();
                 dbhandler.CloseConn();
             } catch (SQLException sqlexception) {

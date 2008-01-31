@@ -128,8 +128,8 @@ public class FrmStudyXMLClientSend {
         sql = "SELECT studydata_no, content from studydata where timestamp > '" + dateYesterday + "' and timestamp < '" + dateTomorrow + "' and status='ready' order by studydata_no";
         rs = db.GetSQL(sql);
         while(rs.next()) {
-			studyContent.add(rs.getString("content")); 
-			studyNo.add(rs.getString("studydata_no")); 
+			studyContent.add(db.getString(rs,"content")); 
+			studyNo.add(db.getString(rs,"studydata_no")); 
 		}
         rs.close();
 	}

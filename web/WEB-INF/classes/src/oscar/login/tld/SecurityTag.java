@@ -110,8 +110,8 @@ public class SecurityTag implements Tag {
             rs = db.GetSQL(sql);
             Vector roleInObj = new Vector();
             while (rs.next()) {
-                prop.setProperty(rs.getString("roleUserGroup"), rs.getString("privilege"));
-                roleInObj.add(rs.getString("roleUserGroup"));
+                prop.setProperty(db.getString(rs,"roleUserGroup"), db.getString(rs,"privilege"));
+                roleInObj.add(db.getString(rs,"roleUserGroup"));
             }
             ret.add(prop);
             ret.add(roleInObj);

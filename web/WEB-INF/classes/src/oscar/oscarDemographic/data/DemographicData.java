@@ -47,7 +47,7 @@ public class DemographicData {
             rs = db.GetSQL(sql);            
             if (rs.next()) {                      
                try{
-                date = (Date)formatter.parse(rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth"));
+                date = (Date)formatter.parse(db.getString(rs,"year_of_birth")+"-"+db.getString(rs,"month_of_birth")+"-"+db.getString(rs,"date_of_birth"));
                }catch(Exception eg){}
             }
             
@@ -69,7 +69,7 @@ public class DemographicData {
            String sql = "SELECT demographic_no FROM demographic WHERE pin = '" + pin +"'";
            rs = db.GetSQL(sql);
            if (rs.next()) {
-               demographicNo = rs.getString("demographic_no");
+               demographicNo = db.getString(rs,"demographic_no");
            }
            rs.close();
            db.CloseConn();
@@ -97,7 +97,7 @@ public class DemographicData {
 	   
 	   rs = db.GetSQL(sql);
 	   if (rs.next()) {
-	       demographicNo = rs.getString("demographic_no");
+	       demographicNo = db.getString(rs,"demographic_no");
 	   }
            rs.close();
            db.CloseConn();
@@ -140,7 +140,7 @@ public class DemographicData {
             //System.out.println("sql "+sql);
             rs = db.GetSQL(sql);            
             while (rs.next()) {                      
-               String demoNo =  rs.getString("demographic_no");
+               String demoNo =  db.getString(rs,"demographic_no");
                //System.out.println("same hin as "+demoNo);
                list.add(getDemographic(demoNo));              
             }            
@@ -172,7 +172,7 @@ public class DemographicData {
             +" WHERE last_name like '" + lastname + "%' and first_name like '" + lastname +"%'  and year_of_birth = '"+year_of_birth+"' and month_of_birth = '"+month_of_birth+"' and date_of_birth = '"+date_of_birth+"'";                                        
             rs = db.GetSQL(sql);            
             while (rs.next()) {                      
-               String demoNo =  rs.getString("demographic_no");
+               String demoNo =  db.getString(rs,"demographic_no");
                //System.out.println("looks to be the same  as "+demoNo);
                list.add(getDemographic(demoNo));              
             }            
@@ -193,9 +193,9 @@ public class DemographicData {
             String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo +"'";
             rs = db.GetSQL(sql);            
             if (rs.next()) {                                                                    
-               String age =  UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth")));
+               String age =  UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth")));
                if (age == null ){age = "" ;}               
-               nameage = rs.getString("last_name")+", "+rs.getString("first_name")+" "+rs.getString("sex")+" "+age;
+               nameage = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name")+" "+db.getString(rs,"sex")+" "+age;
             }
             
             rs.close();
@@ -215,9 +215,9 @@ public class DemographicData {
             String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo +"'";                                        
             rs = db.GetSQL(sql);            
             if (rs.next()) {                                                                    
-               String age =  UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth")));
+               String age =  UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth")));
                if (age == null ){age = "" ;}               
-               nameage = new String[] { rs.getString("last_name"),rs.getString("first_name"),rs.getString("sex"),age };
+               nameage = new String[] { db.getString(rs,"last_name"),db.getString(rs,"first_name"),db.getString(rs,"sex"),age };
             }
             
             rs.close();
@@ -239,7 +239,7 @@ public class DemographicData {
             rs = db.GetSQL(sql);            
             if (rs.next()) {                      
                try{
-                retval = rs.getString("sex");
+                retval = db.getString(rs,"sex");
                }catch(Exception eg){}
             }
             
@@ -273,7 +273,7 @@ public class DemographicData {
             rs = db.GetSQL(sql);
             
             if (rs.next()) {
-                demographic = new Demographic(DemographicNo, rs.getString("last_name"),
+                demographic = new Demographic(DemographicNo, db.getString(rs,"last_name"),
                 db.getString(rs,"first_name"), db.getString(rs,"address"), db.getString(rs,"city"),
                 db.getString(rs,"province"), db.getString(rs,"postal"), db.getString(rs,"phone"),
                 db.getString(rs,"phone2"), db.getString(rs,"email"), db.getString(rs,"pin"),

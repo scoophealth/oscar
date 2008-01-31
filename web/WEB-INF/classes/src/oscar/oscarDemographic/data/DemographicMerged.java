@@ -74,9 +74,9 @@ public class DemographicMerged {
         String priority = "";
         String provider_no = "";
         while (rs.next()) {
-            privilege = rs.getString("privilege");
-            priority = rs.getString("priority");
-            provider_no = rs.getString("provider_no");
+            privilege = db.getString(rs,"privilege");
+            priority = db.getString(rs,"priority");
+            provider_no = db.getString(rs,"provider_no");
         }
         pstmt.close();
         
@@ -115,7 +115,7 @@ public class DemographicMerged {
         pstmt.setInt(1, Integer.parseInt(demographic_no));
         rs = pstmt.executeQuery();
         if(rs.next())
-            head = rs.getString("merged_to");
+            head = db.getString(rs,"merged_to");
         
         pstmt.close();
         db.CloseConn();
@@ -142,7 +142,7 @@ public class DemographicMerged {
         pstmt.setInt(1, Integer.parseInt(demographic_no));
         rs = pstmt.executeQuery();
         while(rs.next()){
-            tailArray.add(rs.getString("demographic_no"));
+            tailArray.add(db.getString(rs,"demographic_no"));
         }
         
         pstmt.close();

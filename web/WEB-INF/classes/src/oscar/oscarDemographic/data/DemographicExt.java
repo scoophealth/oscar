@@ -90,7 +90,7 @@ public class DemographicExt {
             rs = pstmt.executeQuery();
             
             if(rs.next()){
-               retval = rs.getString("value");
+               retval = db.getString(rs,"value");
             }
                                       
             pstmt.close();                                     
@@ -121,8 +121,8 @@ public class DemographicExt {
             rs = pstmt.executeQuery();
             
             while(rs.next()){
-               String key = rs.getString("key_val");
-               String val = rs.getString("value");
+               String key = db.getString(rs,"key_val");
+               String val = db.getString(rs,"value");
                
                System.out.println("for hash Key "+key+" value "+val);
                if(key != null && val != null){

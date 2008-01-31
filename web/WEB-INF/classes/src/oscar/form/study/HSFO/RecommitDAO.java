@@ -40,10 +40,10 @@ public class RecommitDAO {
 	            if (rs.next()){
 	            	reSchedule=new RecommitSchedule();
 	            	reSchedule.setId(new Integer(rs.getInt("id")));
-	            	reSchedule.setStatus(rs.getString("status"));
-	            	reSchedule.setMemo(rs.getString("memo"));
-	            	reSchedule.setSchedule_time(sf.parse(rs.getString("schedule_time")));
-	            	reSchedule.setUser_no(rs.getString("user_no"));
+	            	reSchedule.setStatus(db.getString(rs,"status"));
+	            	reSchedule.setMemo(db.getString(rs,"memo"));
+	            	reSchedule.setSchedule_time(sf.parse(db.getString(rs,"schedule_time")));
+	            	reSchedule.setUser_no(db.getString(rs,"user_no"));
 	            	reSchedule.setCheck_flag(rs.getBoolean("check_flag"));
 	            }
 				

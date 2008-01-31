@@ -102,12 +102,12 @@ public class DemographicRelationship {
          rs = db.GetSQL(sql);
          while(rs.next()){
             Hashtable h = new Hashtable();
-            h.put("id", rs.getString("id"));
-            h.put("demographic_no", rs.getString("relation_demographic_no"));
-            h.put("relation", rs.getString("relation"));
-            h.put("sub_decision_maker", rs.getString("sub_decision_maker"));
-	    h.put("emergency_contact", rs.getString("emergency_contact"));
-            h.put("notes", rs.getString("notes"));
+            h.put("id", db.getString(rs,"id"));
+            h.put("demographic_no", db.getString(rs,"relation_demographic_no"));
+            h.put("relation", db.getString(rs,"relation"));
+            h.put("sub_decision_maker", db.getString(rs,"sub_decision_maker"));
+	    h.put("emergency_contact", db.getString(rs,"emergency_contact"));
+            h.put("notes", db.getString(rs,"notes"));
             list.add(h);
          }
          db.CloseConn();            
@@ -126,7 +126,7 @@ public class DemographicRelationship {
          String sql = "select * from relationships where demographic_no = '"+demographic+"' and deleted != '1' and sub_decision_maker = '1'";
          rs = db.GetSQL(sql);
          if(rs.next()){            
-            sdm = rs.getString("relation_demographic_no");
+            sdm = db.getString(rs,"relation_demographic_no");
          }
          db.CloseConn();            
       } catch (SQLException e) {
@@ -146,18 +146,18 @@ public class DemographicRelationship {
          rs = db.GetSQL(sql);
          while(rs.next()){
             Hashtable h = new Hashtable();
-            String demo = rs.getString("relation_demographic_no");
+            String demo = db.getString(rs,"relation_demographic_no");
             DemographicData dd = new DemographicData();
             DemographicData.Demographic demographic = dd.getDemographic(demo);    
             h.put("lastName", demographic.getLastName());
             h.put("firstName", demographic.getFirstName());
             h.put("phone", demographic.getPhone());
             h.put("demographicNo", demo);
-            h.put("relation", rs.getString("relation"));
+            h.put("relation", db.getString(rs,"relation"));
             
-            h.put("subDecisionMaker", booleanConverter(rs.getString("sub_decision_maker")));
-            h.put("emergencyContact", booleanConverter(rs.getString("emergency_contact")));
-            h.put("notes", rs.getString("notes"));
+            h.put("subDecisionMaker", booleanConverter(db.getString(rs,"sub_decision_maker")));
+            h.put("emergencyContact", booleanConverter(db.getString(rs,"emergency_contact")));
+            h.put("notes", db.getString(rs,"notes"));
             h.put("age",demographic.getAge());
             list.add(h);
          }
