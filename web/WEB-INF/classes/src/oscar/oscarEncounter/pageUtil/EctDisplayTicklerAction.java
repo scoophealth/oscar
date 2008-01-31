@@ -82,10 +82,10 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
         if( days > 0 )
             item.setColour("FF0000");
             
-        itemHeader = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) + " " + DateUtils.getDate(serviceDate,dateFormat);                      
+        itemHeader = StringUtils.maxLenString(oscar.Misc.getString(rs,"message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) + " " + DateUtils.getDate(serviceDate,dateFormat);                      
         item.setLinkTitle(itemHeader);        
         item.setTitle(itemHeader);
-        winName = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, MAX_LEN_TITLE, "");                
+        winName = StringUtils.maxLenString(oscar.Misc.getString(rs,"message"), MAX_LEN_TITLE, MAX_LEN_TITLE, "");                
         hash = Math.abs(winName.hashCode());        
         url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd + "'); return false;";        
         item.setURL(url);        

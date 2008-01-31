@@ -53,7 +53,7 @@ public class EctTypeDisplayNameBeanHandler {
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
-                EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(rs.getString("typeDisplayName"));
+                EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(db.getString(rs,"typeDisplayName"));
                 typeDisplayNameVector.add(typeDisplayName);
             }
 
@@ -85,7 +85,7 @@ public class EctTypeDisplayNameBeanHandler {
                 {
                     boolean foundInGroup = false;
                     for(rsGr = db.GetSQL(sqlGr); rsGr.next();){                        
-                        if(rs.getString("typeDisplayName").compareTo(rsGr.getString("typeDisplayName"))==0){
+                        if(db.getString(rs,"typeDisplayName").compareTo(rsGr.getString("typeDisplayName"))==0){
                             foundInGroup = true;
                             break;
                         }
@@ -94,7 +94,7 @@ public class EctTypeDisplayNameBeanHandler {
                         }                                                
                     }
                     if (!foundInGroup){
-                        EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(rs.getString("typeDisplayName"));
+                        EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(db.getString(rs,"typeDisplayName"));
                         typeDisplayNameVector.add(typeDisplayName);
                     }
                 }
@@ -106,7 +106,7 @@ public class EctTypeDisplayNameBeanHandler {
                 ResultSet rs;
                 for(rs = db.GetSQL(sql); rs.next(); )
                 {
-                    EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(rs.getString("typeDisplayName"));
+                    EctTypeDisplayNameBean typeDisplayName = new EctTypeDisplayNameBean(db.getString(rs,"typeDisplayName"));
                     typeDisplayNameVector.add(typeDisplayName);
                 }
                 rs.close();

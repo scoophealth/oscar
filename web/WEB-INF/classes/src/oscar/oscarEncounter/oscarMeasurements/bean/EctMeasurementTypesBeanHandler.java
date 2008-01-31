@@ -56,14 +56,14 @@ public class EctMeasurementTypesBeanHandler {
             ResultSet rs;        
             for(rs = db.GetSQL(sql); rs.next(); )
             {                
-                String validation = rs.getString("validation");
+                String validation = db.getString(rs,"validation");
                 String sqlValidation = "SELECT name FROM validations WHERE id='" + validation + "'";
                 ResultSet rsValidation = db.GetSQL(sqlValidation);
                 if (rsValidation.next()){
-                    EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean(rs.getInt("id"), rs.getString("type"), 
-                                                                                           rs.getString("typeDisplayName"), 
-                                                                                           rs.getString("typeDescription"), 
-                                                                                           rs.getString("measuringInstruction"), 
+                    EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean(rs.getInt("id"), db.getString(rs,"type"), 
+                                                                                           db.getString(rs,"typeDisplayName"), 
+                                                                                           db.getString(rs,"typeDescription"), 
+                                                                                           db.getString(rs,"measuringInstruction"), 
                                                                                            rsValidation.getString("name"));   
                     measurementTypeVector.add(measurementTypes);
                 }

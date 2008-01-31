@@ -163,19 +163,19 @@ public class EctSearchDemographicData
                 for(rs = db.GetSQL(sql); rs.next(); vector.add(demographicData))
                 {
                     demographicData = new EctDemographicData();
-                    demographicData.demographicNo = rs.getString("demographic_no");
-                    demographicData.firstName = rs.getString("first_name");
-                    demographicData.lastName = rs.getString("last_name");
-                    demographicData.address = rs.getString("address");
-                    demographicData.city = rs.getString("city");
-                    demographicData.province = rs.getString("province");
-                    demographicData.phone = rs.getString("phone");
-                    demographicData.phone2 = rs.getString("phone2");
-                    demographicData.hin = rs.getString("hin");
-                    demographicData.sex = rs.getString("sex");
-                    demographicData.yearOfBirth = rs.getString("year_of_birth");
-                    demographicData.monthOfBirth = rs.getString("month_of_birth");
-                    demographicData.dayOfBirth = rs.getString("date_of_birth");
+                    demographicData.demographicNo = db.getString(rs,"demographic_no");
+                    demographicData.firstName = db.getString(rs,"first_name");
+                    demographicData.lastName = db.getString(rs,"last_name");
+                    demographicData.address = db.getString(rs,"address");
+                    demographicData.city = db.getString(rs,"city");
+                    demographicData.province = db.getString(rs,"province");
+                    demographicData.phone = db.getString(rs,"phone");
+                    demographicData.phone2 = db.getString(rs,"phone2");
+                    demographicData.hin = db.getString(rs,"hin");
+                    demographicData.sex = db.getString(rs,"sex");
+                    demographicData.yearOfBirth = db.getString(rs,"year_of_birth");
+                    demographicData.monthOfBirth = db.getString(rs,"month_of_birth");
+                    demographicData.dayOfBirth = db.getString(rs,"date_of_birth");
                 }
 
                 rs.close();

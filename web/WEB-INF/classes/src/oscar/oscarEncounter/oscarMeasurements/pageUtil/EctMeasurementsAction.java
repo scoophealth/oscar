@@ -144,7 +144,7 @@ public class EctMeasurementsAction extends Action {
                         dMin = rs.getDouble("minValue");
                         iMax = rs.getInt("maxLength");
                         iMin = rs.getInt("minLength");
-                        regExp = rs.getString("regularExp");
+                        regExp = oscar.Misc.getString(rs,"regularExp");
                     }
                     rs.close();
 

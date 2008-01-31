@@ -96,7 +96,7 @@ public class EctDefineNewMeasurementGroupAction extends Action {
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
-                String groupName = rs.getString("groupName");
+                String groupName = db.getString(rs,"groupName");
                 if (inputGroupName.compareTo(groupName)==0){
                     isWrite2Database = false;
                     break;

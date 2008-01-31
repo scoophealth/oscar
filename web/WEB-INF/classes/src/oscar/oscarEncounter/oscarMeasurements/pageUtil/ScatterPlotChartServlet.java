@@ -221,7 +221,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                     
                     for(int i=0; i<nbData; i++){ 
                         sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
-                                + "' AND dateObserved='"+rs.getString("dateObserved") + "' ORDER BY dateEntered DESC limit 1";
+                                + "' AND dateObserved='"+db.getString(rs,"dateObserved") + "' ORDER BY dateEntered DESC limit 1";
                         ResultSet rsData;
                         rsData = db.GetSQL(sql);
                         if(rsData.next()){
@@ -254,7 +254,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                     for(int i=0; i<nbPatient; i++){
                         if(rs.next()){                            
                             sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
-                                    + "' AND dateObserved='"+rs.getString("dateObserved") + "' ORDER BY dateEntered DESC limit 1";
+                                    + "' AND dateObserved='"+db.getString(rs,"dateObserved") + "' ORDER BY dateEntered DESC limit 1";
                             System.out.println("sql dateObserved: " + sql);
                             ResultSet rsData;
                             rsData = db.GetSQL(sql);
@@ -305,7 +305,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                 ResultSet rs;
                 rs = db.GetSQL(sql);                
                 rs.next();
-                String validation = rs.getString("validation");
+                String validation = db.getString(rs,"validation");
                 rs.close();
                 
                 sql = "SELECT * FROM validations WHERE id='"+ validation + "'";

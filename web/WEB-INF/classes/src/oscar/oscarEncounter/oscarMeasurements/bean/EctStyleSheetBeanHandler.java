@@ -49,7 +49,7 @@ public class EctStyleSheetBeanHandler {
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
-                EctStyleSheetBean location = new EctStyleSheetBean(rs.getString("location"), rs.getInt("cssID"));
+                EctStyleSheetBean location = new EctStyleSheetBean(db.getString(rs,"location"), rs.getInt("cssID"));
                 styleSheetNameVector.add(location);
             }
 

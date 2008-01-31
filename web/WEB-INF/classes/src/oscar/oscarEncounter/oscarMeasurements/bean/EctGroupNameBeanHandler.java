@@ -49,7 +49,7 @@ public class EctGroupNameBeanHandler {
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
-                EctGroupNameBean groupName = new EctGroupNameBean(rs.getString("groupName"));
+                EctGroupNameBean groupName = new EctGroupNameBean(db.getString(rs,"groupName"));
                 groupNameVector.add(groupName);
             }
 

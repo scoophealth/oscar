@@ -98,7 +98,7 @@ public class WriteNewMeasurements {
                     sql = "SELECT measuringInstruction FROM measurementType WHERE type='" + type + "'";
                     rs = db.GetSQL(sql);
                     if (rs.next()) {
-                        measuringInst = rs.getString("measuringInstruction");
+                        measuringInst = db.getString(rs,"measuringInstruction");
                         curmeasure.put("measuringInstruction", measuringInst);
                         rs.close();
                     } else {
@@ -155,7 +155,7 @@ public class WriteNewMeasurements {
                     dMin = rs.getDouble("minValue");
                     iMax = rs.getInt("maxLength");
                     iMin = rs.getInt("minLength");
-                    regExp = rs.getString("regularExp");
+                    regExp = oscar.Misc.getString(rs,"regularExp");
                 }
                 else {
                     //if type with instruction does not exist

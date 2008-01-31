@@ -62,16 +62,16 @@ public class EctMeasurementsDataBeanHandler {
             String canPlot = null;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
-                    if (rs.getInt("numericValidation")==1 || rs.getString("validationName").compareTo("Blood Pressure")==0)
+                    if (rs.getInt("numericValidation")==1 || db.getString(rs,"validationName").compareTo("Blood Pressure")==0)
                         canPlot = "true";
                     else
                         canPlot = null;
                     //log.debug("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), rs.getString("typeDisplayName"), rs.getString("demographicNo"),
-                                                                               rs.getString("provider_first"), rs.getString("provider_last"),
-                                                                               rs.getString("dataField"), rs.getString("measuringInstruction"),
-                                                                               rs.getString("comments"), rs.getString("dateObserved"),
-                                                                               rs.getString("dateEntered"), canPlot);
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), db.getString(rs,"type"), db.getString(rs,"typeDisplayName"), db.getString(rs,"demographicNo"),
+                                                                               db.getString(rs,"provider_first"), db.getString(rs,"provider_last"),
+                                                                               db.getString(rs,"dataField"), db.getString(rs,"measuringInstruction"),
+                                                                               db.getString(rs,"comments"), db.getString(rs,"dateObserved"),
+                                                                               db.getString(rs,"dateEntered"), canPlot);
                     measurementsDataVector.add(data);
             }
      
@@ -98,11 +98,11 @@ public class EctMeasurementsDataBeanHandler {
             String canPlot = null;
             for(rs = db.GetSQL(sql); rs.next(); ) {
                 EctMeasurementsDataBean data = new EctMeasurementsDataBean();
-                data.setType(rs.getString("type"));
-                data.setTypeDisplayName(rs.getString("typeDisplayName"));
-                data.setTypeDescription(rs.getString("typeDescription"));
-                data.setMeasuringInstrc(rs.getString("measuringInstruction"));
-                //log.debug("Measurments: " + rs.getString("type") + " " + rs.getString("typeDisplayName") + " " + rs.getString("typeDescription"));
+                data.setType(db.getString(rs,"type"));
+                data.setTypeDisplayName(db.getString(rs,"typeDisplayName"));
+                data.setTypeDescription(db.getString(rs,"typeDescription"));
+                data.setMeasuringInstrc(db.getString(rs,"measuringInstruction"));
+                //log.debug("Measurments: " + db.getString(rs,"type") + " " + db.getString(rs,"typeDisplayName") + " " + db.getString(rs,"typeDescription"));
                 measurementsDataVector.add(data);
             }
             
@@ -147,23 +147,23 @@ public class EctMeasurementsDataBeanHandler {
                 rs = db.GetSQL(sql);
                 
                 while( rs.next() ){
-                    if (rs.getInt("numericValidation")==1 || rs.getString("validationName").compareTo("Blood Pressure")==0)
+                    if (rs.getInt("numericValidation")==1 || db.getString(rs,"validationName").compareTo("Blood Pressure")==0)
                         canPlot = "true";
                     else
                         canPlot = null;
                     
-                    firstName = rs.getString("provider_first");
-                    lastName = rs.getString("provider_last");
+                    firstName = db.getString(rs,"provider_first");
+                    lastName = db.getString(rs,"provider_last");
                     if (firstName == null && lastName == null){
                         firstName = "Automatic";
                         lastName = "";
                     }
                     //log.debug("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), mBean.getTypeDisplayName(),mBean.getTypeDesc(), rs.getString("demographicNo"),
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), db.getString(rs,"type"), mBean.getTypeDisplayName(),mBean.getTypeDesc(), db.getString(rs,"demographicNo"),
                             firstName, lastName,
-                            rs.getString("dataField"), rs.getString("measuringInstruction"),
-                            rs.getString("comments"), rs.getString("dateObserved"),
-                            rs.getString("dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
+                            db.getString(rs,"dataField"), db.getString(rs,"measuringInstruction"),
+                            db.getString(rs,"comments"), db.getString(rs,"dateObserved"),
+                            db.getString(rs,"dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
                     measurementsDataVector.add(data);
                     
                 }
@@ -197,16 +197,16 @@ public class EctMeasurementsDataBeanHandler {
             ResultSet rs;
             String canPlot = null;
             for(rs = db.GetSQL(sql); rs.next(); ) {
-                if (rs.getInt("numericValidation")==1 || rs.getString("validationName").compareTo("Blood Pressure")==0)
+                if (rs.getInt("numericValidation")==1 || db.getString(rs,"validationName").compareTo("Blood Pressure")==0)
                     canPlot = "true";
                 else
                     canPlot = null;
                 //log.debug("canPlot value: " + canPlot);
-                EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), rs.getString("typeDisplayName"), rs.getString("typeDescription"), rs.getString("demographicNo"),
-                        rs.getString("provider_first"), rs.getString("provider_last"),
-                        rs.getString("dataField"), rs.getString("measuringInstruction"),
-                        rs.getString("comments"), rs.getString("dateObserved"),
-                        rs.getString("dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
+                EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), db.getString(rs,"type"), db.getString(rs,"typeDisplayName"), db.getString(rs,"typeDescription"), db.getString(rs,"demographicNo"),
+                        db.getString(rs,"provider_first"), db.getString(rs,"provider_last"),
+                        db.getString(rs,"dataField"), db.getString(rs,"measuringInstruction"),
+                        db.getString(rs,"comments"), db.getString(rs,"dateObserved"),
+                        db.getString(rs,"dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
                 measurementsDataVector.add(data);
                 
             }
@@ -313,7 +313,7 @@ public class EctMeasurementsDataBeanHandler {
     
     private static String rsGetString(ResultSet rs, String column) throws SQLException {
         //protects agianst null values;
-        String thisStr = rs.getString(column);
+        String thisStr = oscar.Misc.getString(rs,column);
         if (thisStr == null) return "";
         return thisStr;
     }

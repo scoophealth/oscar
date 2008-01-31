@@ -55,7 +55,7 @@ public class EctValidation{
                 String sql = "SELECT validation FROM measurementType WHERE type = '"+ inputType + "'AND measuringInstruction='" + mInstrc + "'"; 
                 rs = db.GetSQL(sql);
                 if (rs.next()){
-                    String validation = rs.getString("validation");                
+                    String validation = db.getString(rs,"validation");                
                     rs.close();
 
                     sql = "SELECT * FROM validations where id=" + validation;
@@ -209,7 +209,7 @@ public class EctValidation{
             ResultSet rs;
             rs = db.GetSQL(sql);
             if(rs.next()){
-                String cssId = rs.getString("cssID");
+                String cssId = db.getString(rs,"cssID");
                 rs.close();   
                 
                 sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
@@ -224,7 +224,7 @@ public class EctValidation{
                         if(!place.endsWith("/"))
                             place = new StringBuffer(place).insert(place.length(),"/").toString();
                     }
-                    cssLocation = place+rs.getString("location");
+                    cssLocation = place+db.getString(rs,"location");
                 }
             }                                 
             
@@ -251,13 +251,13 @@ public class EctValidation{
             ResultSet rs;
             rs = db.GetSQL(sql);
             if(rs.next()){
-                String cssId = rs.getString("cssID");
+                String cssId = db.getString(rs,"cssID");
                 rs.close();   
                 
                 sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
                 rs = db.GetSQL(sql);
                 if(rs.next()){                    
-                    cssName = rs.getString("location");
+                    cssName = db.getString(rs,"location");
                 }
             }                                 
             

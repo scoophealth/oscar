@@ -88,13 +88,13 @@ public class EctFindMeasurementTypeUtil {
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){                                      
                 EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rs.getInt("typeId"), 
-                                                                                        rs.getString("type"), 
-                                                                                        rs.getString("typeDisplayName"), 
-                                                                                        rs.getString("typeDescription"), 
-                                                                                        rs.getString("measuringInstruction"), 
-                                                                                        rs.getString("validation")); 
+                                                                                        db.getString(rs,("type"), 
+                                                                                        db.getString(rs,("typeDisplayName"), 
+                                                                                        db.getString(rs,("typeDescription"), 
+                                                                                        db.getString(rs,("measuringInstruction"), 
+                                                                                        db.getString(rs,("validation")); 
                 measurementTypeVector.add(measurementTypes);                                                       
-                System.out.println("getMeasurementType() type: " + rs.getString("typeId"));
+                System.out.println("getMeasurementType() type: " + db.getString(rs,("typeId"));
             }
             
             rs.close();            
@@ -142,8 +142,8 @@ public class EctFindMeasurementTypeUtil {
                 verdict = false;
             }
             /*else{
-                if(!measurementFrmIsAdded(formName, rs.getString("id")))
-                    add2MeasurementForm(formName, rs.getString("id"));
+                if(!measurementFrmIsAdded(formName, db.getString(rs,("id")))
+                    add2MeasurementForm(formName, db.getString(rs,("id"));
             }*/
             rs.close();
             db.CloseConn();
@@ -215,8 +215,8 @@ public class EctFindMeasurementTypeUtil {
                 /*sql = "SELECT * FROM measurementType ORDER BY id DESC LIMIT 1";
                 ResultSet rs = db.GetSQL(sql);             
                 if(rs.next()){
-                    if(!measurementFrmIsAdded(formName, rs.getString("id")))
-                        add2MeasurementForm(formName, rs.getString("id"));
+                    if(!measurementFrmIsAdded(formName, db.getString(rs,("id")))
+                        add2MeasurementForm(formName, db.getString(rs,("id"));
                 }*/
             }
             db.CloseConn();

@@ -41,8 +41,8 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
                 Hashtable ht = new Hashtable();
-                ht.put("code", getString(rs.getString("loinc_code")));
-                ht.put("name", getString(rs.getString("name")));
+                ht.put("code", db.getString(rs,"loinc_code"));
+                ht.put("name", db.getString(rs,"name"));
                 ret.add(ht);
             }
             
@@ -70,11 +70,11 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
                 Hashtable ht = new Hashtable();
-                ht.put("id", getString(rs.getString("id")));
-                ht.put("loinc_code", getString(rs.getString("loinc_code")));
-                ht.put("ident_code", getString(rs.getString("ident_code")));
-                ht.put("name", getString(rs.getString("name")));
-                ht.put("lab_type", getString(rs.getString("lab_type")));
+                ht.put("id", getString(db.getString(rs,"id")));
+                ht.put("loinc_code", getString(db.getString(rs,"loinc_code")));
+                ht.put("ident_code", getString(db.getString(rs,"ident_code")));
+                ht.put("name", getString(db.getString(rs,"name")));
+                ht.put("lab_type", getString(db.getString(rs,"lab_type")));
                 ret.add(ht);
             }
             
@@ -106,9 +106,9 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
                 Hashtable ht = new Hashtable();
-                ht.put("type", getString(rs.getString("type")));
-                ht.put("identifier", getString(rs.getString("identifier")));
-                ht.put("name", getString(rs.getString("name")));
+                ht.put("type", getString(db.getString(rs,"type")));
+                ht.put("identifier", getString(db.getString(rs,"identifier")));
+                ht.put("name", getString(db.getString(rs,"name")));
                 ret.add(ht);
             }
             
@@ -150,10 +150,10 @@ public class MeasurementMapConfig {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()){
-            ident_code = getString(rs.getString("ident_code"));
-            loinc_code = getString(rs.getString("loinc_code"));
-            name = getString(rs.getString("name"));
-            lab_type = getString(rs.getString("lab_type"));
+            ident_code = getString(db.getString(rs,"ident_code"));
+            loinc_code = getString(db.getString(rs,"loinc_code"));
+            name = getString(db.getString(rs,"name"));
+            lab_type = getString(db.getString(rs,"lab_type"));
         }
         
         sql = "DELETE FROM measurementMap WHERE id='"+id+"'";

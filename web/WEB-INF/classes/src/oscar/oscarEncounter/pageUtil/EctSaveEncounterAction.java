@@ -60,7 +60,7 @@ public class EctSaveEncounterAction
       String latestID = null;
       
       if (rs.next()) {
-          latestID = rs.getString("maxID");
+          latestID = dbhandler.getString(rs,"maxID");
       }
       rs.close();
 

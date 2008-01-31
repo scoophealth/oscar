@@ -95,16 +95,16 @@ public class MeasurementTypes {
 
                ResultSet rs = db.GetSQL(sql);        
                while(rs.next()){                
-                  //log.debug("validation "+rs.getString("validation"));  
+                  //log.debug("validation "+db.getString(rs,("validation"));  
                   EctMeasurementTypesBean ret = null;
-                  ret = new EctMeasurementTypesBean(rs.getInt("id"), rs.getString("type"), 
-                                                     rs.getString("typeDisplayName"), 
-                                                     rs.getString("typeDescription"), 
-                                                     rs.getString("measuringInstruction"),  
-                                                     rs.getString("validation")); 
-                  ret.setValidationName(getValidation(rs.getString("validation")));
+                  ret = new EctMeasurementTypesBean(rs.getInt("id"), db.getString(rs,"type"), 
+                                                     db.getString(rs,"typeDisplayName"), 
+                                                     db.getString(rs,"typeDescription"), 
+                                                     db.getString(rs,"measuringInstruction"),  
+                                                     db.getString(rs,"validation")); 
+                  ret.setValidationName(getValidation(db.getString(rs,"validation")));
                   byId.put(""+rs.getInt("id"),ret);
-                  byType.put(rs.getString("type"),ret);
+                  byType.put(db.getString(rs,"type"),ret);
 
 
                 }
@@ -127,7 +127,7 @@ public class MeasurementTypes {
             String sqlValidation = "SELECT name FROM validations WHERE id='"+val+"'";
             ResultSet rs = db.GetSQL(sqlValidation);
             if (rs.next()){ 
-                validation = rs.getString("name");
+                validation = db.getString(rs,"name");
                 //log.debug("setting validation to "+validation);
             }
             rs.close();            

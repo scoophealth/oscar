@@ -59,14 +59,14 @@ public class EctMeasurementTypeBeanHandler {
 //            //System.out.println(sql);
 //            ResultSet rs = db.GetSQL(sql);        
 //            while(rs.next()){                
-//               System.out.println("validation "+rs.getString("validation"));  
-//               ret = new EctMeasurementTypesBean(rs.getInt("id"), rs.getString("type"), 
-//                                                 rs.getString("typeDisplayName"), 
-//                                                 rs.getString("typeDescription"), 
-//                                                 rs.getString("measuringInstruction"), 
-//                                                 //getValidation(rs.getString("validation"))); 
-//                                                 rs.getString("validation")); 
-//               ret.setValidationName(getValidation(rs.getString("validation")));
+//               System.out.println("validation "+db.getString(rs,"validation"));  
+//               ret = new EctMeasurementTypesBean(rs.getInt("id"), db.getString(rs,"type"), 
+//                                                 db.getString(rs,"typeDisplayName"), 
+//                                                 db.getString(rs,"typeDescription"), 
+//                                                 db.getString(rs,"measuringInstruction"), 
+//                                                 //getValidation(db.getString(rs,"validation"))); 
+//                                                 db.getString(rs,"validation")); 
+//               ret.setValidationName(getValidation(db.getString(rs,"validation")));
 //            }
 //            rs.close();            
 //            db.CloseConn();
@@ -84,7 +84,7 @@ public class EctMeasurementTypeBeanHandler {
             String sqlValidation = "SELECT name FROM validations WHERE id='"+val+"'";
             ResultSet rs = db.GetSQL(sqlValidation);
             if (rs.next()){ 
-                validation = rs.getString("name");
+                validation = db.getString(rs,"name");
                 //System.out.println("setting validation to "+validation);
             }
             rs.close();            

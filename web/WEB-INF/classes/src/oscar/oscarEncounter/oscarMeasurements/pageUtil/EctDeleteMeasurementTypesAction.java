@@ -61,13 +61,13 @@ public class EctDeleteMeasurementTypesAction extends Action {
                     rs = db.GetSQL(sql);
                     if(rs.next()){
                         sql = "INSERT INTO measurementTypeDeleted(type, typeDisplayName,  typeDescription, measuringInstruction, validation, dateDeleted)" +
-                              "VALUES('"+ rs.getString("type") + "','" + rs.getString("typeDisplayName")+ "','" +rs.getString("typeDescription")+ "','" +
-                              rs.getString("measuringInstruction")+ "','" + rs.getString("validation") + "','" + dateDeleted +"')";
+                              "VALUES('"+ db.getString(rs,"type") + "','" + db.getString(rs,"typeDisplayName")+ "','" +db.getString(rs,"typeDescription")+ "','" +
+                              db.getString(rs,"measuringInstruction")+ "','" + db.getString(rs,"validation") + "','" + dateDeleted +"')";
                         db.RunSQL(sql);
                         sql = "DELETE  FROM measurementType WHERE id='"+ deleteCheckbox[i] +"'";                                        
                         System.out.println(" sql statement "+sql);
                         db.RunSQL(sql);
-                        sql = "DELETE FROM measurementGroup WHERE typeDisplayName = '" + rs.getString("typeDisplayName") + "'";
+                        sql = "DELETE FROM measurementGroup WHERE typeDisplayName = '" + db.getString(rs,"typeDisplayName") + "'";
                         System.out.println("sql Statement " + sql);
                         db.RunSQL(sql);
                     }

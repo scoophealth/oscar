@@ -48,7 +48,7 @@ public class EctValidationsBeanHandler {
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
-                EctValidationsBean validation = new EctValidationsBean(rs.getString("name"), rs.getInt("id"));
+                EctValidationsBean validation = new EctValidationsBean(db.getString(rs,"name"), rs.getInt("id"));
                 validationsVector.add(validation);
             }
 
@@ -195,13 +195,13 @@ public class EctValidationsBeanHandler {
             
             if (rs.next()){
                 validation.setName(val);
-                validation.setRegularExp(rs.getString("regularExp")); 
-                validation.setMinValue(rs.getString("minValue"));
-                validation.setMaxValue(rs.getString("maxValue"));
-                validation.setMinLength(rs.getString("minLength"));
-                validation.setMaxLength(rs.getString("maxLength"));
-                validation.setIsNumeric(rs.getString("isNumeric"));
-                validation.setIsDate(rs.getString("isDate"));
+                validation.setRegularExp(db.getString(rs,"regularExp")); 
+                validation.setMinValue(db.getString(rs,"minValue"));
+                validation.setMaxValue(db.getString(rs,"maxValue"));
+                validation.setMinLength(db.getString(rs,"minLength"));
+                validation.setMaxLength(db.getString(rs,"maxLength"));
+                validation.setIsNumeric(db.getString(rs,"isNumeric"));
+                validation.setIsDate(db.getString(rs,"isDate"));
             }
             
             db.CloseConn();

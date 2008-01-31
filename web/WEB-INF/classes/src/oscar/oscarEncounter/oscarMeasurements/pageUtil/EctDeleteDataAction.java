@@ -72,9 +72,9 @@ public class EctDeleteDataAction extends Action {
                     if(rs.next()){
                         sql = "INSERT INTO measurementsDeleted"
                              +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered, dateDeleted)"
-                             +" VALUES ('"+rs.getString("type")+"','"+rs.getString("demographicNo")+"','"+rs.getString("providerNo")+"','"
-                             + rs.getString("dataField")+"','" + rs.getString("measuringInstruction")+"','"+rs.getString("comments")+"','"
-                             + rs.getString("dateObserved")+"','"+rs.getString("dateEntered")+"','"+dateDeleted+"')";
+                             +" VALUES ('"+db.getString(rs,"type")+"','"+db.getString(rs,"demographicNo")+"','"+db.getString(rs,"providerNo")+"','"
+                             + db.getString(rs,"dataField")+"','" + db.getString(rs,"measuringInstruction")+"','"+db.getString(rs,"comments")+"','"
+                             + db.getString(rs,"dateObserved")+"','"+db.getString(rs,"dateEntered")+"','"+dateDeleted+"')";
                         db.RunSQL(sql);
                         rs.close();
                         sql = "DELETE FROM `measurements` WHERE id='"+ deleteCheckbox[i] +"'"; 
