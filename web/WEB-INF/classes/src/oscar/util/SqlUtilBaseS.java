@@ -60,7 +60,7 @@ public class SqlUtilBaseS {
 			   String sql = "SELECT LAST_INSERT_ID()";
 			   ResultSet rs = db.GetSQL(sql);
 			   rs.next();
-			   lastID = rs.getString("LAST_INSERT_ID()");
+			   lastID = db.getString(rs,"LAST_INSERT_ID()");
 			   rs.close();
 		   }
            return(lastID);
@@ -92,7 +92,7 @@ public class SqlUtilBaseS {
    
    protected static String rsGetString(ResultSet rs, String column) throws SQLException {
        //protects agianst null values;
-       String thisStr = rs.getString(column);
+       String thisStr = oscar.Misc.getString(rs,column);
        if (thisStr == null) return "";
        return thisStr;
    }

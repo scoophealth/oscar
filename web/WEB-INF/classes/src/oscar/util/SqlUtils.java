@@ -309,7 +309,7 @@ public class SqlUtils {
                 case Types.LONGVARCHAR:
                 case Types.CHAR:
                 case Types.VARCHAR:
-                    return rs.getString(colNum);
+                    return oscar.Misc.getString(rs,colNum);
                 case Types.TINYINT:
                 case Types.SMALLINT:
                 case Types.INTEGER:
@@ -357,7 +357,7 @@ public class SqlUtils {
             while (rs.next()) {
                 String[] record = new String[cols];
                 for (int i = 0; i < cols; i++) {
-                    record[i] = rs.getString(i + 1);
+                    record[i] = oscar.Misc.getString(rs,i + 1);
                 }
                 records.add(record);
             }
@@ -425,7 +425,7 @@ public class SqlUtils {
                 Properties record = new Properties();
                 for (int i = 0; i < cols; i++) {
                     String columnName = rs.getMetaData().getColumnName(i + 1);
-                    String cellValue = rs.getString(i + 1);
+                    String cellValue = oscar.Misc.getString(rs,i + 1);
                     if (columnName != null && !"".equals(columnName)) {
 
                         cellValue = cellValue == null?"":cellValue;

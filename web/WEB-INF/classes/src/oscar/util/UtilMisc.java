@@ -392,7 +392,7 @@ public class UtilMisc {
         do {
             cols = new ArrayList();
             for(int j=0; j<columns; j++) {
-                cols.add(rs.getString(j+1));
+                cols.add(oscar.Misc.getString(rs,j+1));
             }
             rows.add(cols);
         } while (rs.next());

@@ -98,10 +98,10 @@ public class dbBillingData {
     try {
       rs = accessDB.queryResults(dbSQL);
       while (rs.next()) {
-        temp[0] = rs.getString(str1);
-        temp[1] = rs.getString(str2);
-        temp[2] = rs.getString(str3);
-        temp[3] = rs.getString(str4);
+        temp[0] = accessDB.getString(rs,str1);
+        temp[1] = accessDB.getString(rs,str2);
+        temp[2] = accessDB.getString(rs,str3);
+        temp[3] = accessDB.getString(rs,str4);
       }
       accessDB.closePstmt();
       return temp;

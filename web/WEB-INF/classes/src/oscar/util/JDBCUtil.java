@@ -83,7 +83,7 @@ public class JDBCUtil
           for (int i = 1; i <= colCount; i++)
           {
              String columnName = strEscUtils.escapeXml(rsmd.getColumnName(i));
-             String value      = strEscUtils.escapeXml(rs.getString(i));
+             String value      = strEscUtils.escapeXml(oscar.Misc.getString(rs,i));
              //System.out.println(columnName+": "+value );
              Element node      = doc.createElement(columnName);
              node.appendChild(doc.createTextNode(value));

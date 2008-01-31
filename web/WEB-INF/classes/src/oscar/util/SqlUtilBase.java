@@ -32,7 +32,7 @@ public class SqlUtilBase {
            sql = "SELECT LAST_INSERT_ID()";
            ResultSet rs = db.GetSQL(sql);
            rs.next();
-           String lastID = rs.getString("LAST_INSERT_ID()");
+           String lastID = db.getString(rs,"LAST_INSERT_ID()");
            rs.close();
            return(lastID);
        } catch (SQLException sqe) { sqe.printStackTrace(); }
@@ -53,7 +53,7 @@ public class SqlUtilBase {
    
    protected String rsGetString(ResultSet rs, String column) throws SQLException {
        //protects agianst null values;
-       String thisStr = rs.getString(column);
+       String thisStr = oscar.Misc.getString(rs,column);
        if (thisStr == null) return "";
        return thisStr;
    }
