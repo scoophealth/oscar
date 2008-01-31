@@ -62,25 +62,28 @@ public class EctDisplayConsultAction extends EctDisplayAction {
                     
             String dbFormat = "yyyy-MM-dd";
             String serviceDateStr;
+            Date date;
             for (int idx = theRequests.ids.size() - 1; idx >= 0; --idx ){
                 NavBarDisplayDAO.Item item = Dao.Item();
                 String service = (String) theRequests.service.get(idx);
                 String dateStr    = (String) theRequests.date.get(idx);
                 DateFormat formatter = new SimpleDateFormat(dbFormat);
                 try {
-                    Date date = (Date)formatter.parse(dateStr);
+                    date = (Date)formatter.parse(dateStr);
                     serviceDateStr = DateUtils.getDate(date, dateFormat);
                 }
                 catch(ParseException ex ) {
                     System.out.println("EctDisplayConsultationAction: Error creating date " + ex.getMessage());
                     serviceDateStr = "Error";
+                    date = null;
                 }
                 url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/ViewRequest.do?de=" + bean.demographicNo + "&requestId=" + (String)theRequests.ids.get(idx) + "'); return false;";
                 
                 item.setLinkTitle(service + " " + serviceDateStr);
                 service = StringUtils.maxLenString(service, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-                item.setTitle(service + " " + serviceDateStr);
+                item.setTitle(service);
                 item.setURL(url);
+                item.setDate(date);
                 Dao.addItem(item);
             } 
             

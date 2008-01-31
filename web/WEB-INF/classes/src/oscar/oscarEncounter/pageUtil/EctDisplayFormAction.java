@@ -100,15 +100,20 @@ public class EctDisplayFormAction extends EctDisplayAction {
                     }
                     catch(ParseException ex ) {
                         System.out.println("EctDisplayFormAction: Error creating date " + ex.getMessage());                        
-                        date = new Date(System.currentTimeMillis());
+                        //date = new Date(System.currentTimeMillis());
+                        date = null;
                     }
                     
-                    serviceDateStr = DateUtils.getDate(date, dateFormat);
+                    if( date != null )
+                        serviceDateStr = DateUtils.getDate(date, dateFormat);
+                    else
+                        serviceDateStr = "";
+                    
                     item.setDate(date);
                      
                     fullTitle = frm.getFormName();
                     strTitle = new StringBuffer(StringUtils.maxLenString(fullTitle, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
-                    strTitle.append(" " + serviceDateStr);
+                    
                     hash = Math.abs(winName.hashCode()); 
                     url = new StringBuffer("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+bean.demographicNo + "');");                    
                     key = StringUtils.maxLenString(fullTitle, MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
@@ -133,7 +138,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
             //we add all unhidden forms to the pop up menu
             if( !frm.isHidden() ) {                
                 hash = Math.abs(winName.hashCode());
-                url = new StringBuffer("popupPage(700,960,'" + hash + "new', '" + frm.getFormPage()+bean.demographicNo+"&formId=0&provNo="+bean.providerNo + "')");
+                url = new StringBuffer("popupPage(700,960,'" + hash + "new', '" + frm.getFormPage()+bean.demographicNo+"&formId=0&provNo="+bean.providerNo + "&parentAjaxId=" + cmd + "')");
                 Dao.addPopUpUrl(url.toString());
                 key = StringUtils.maxLenString(frm.getFormName(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
                 Dao.addPopUpText(frm.getFormName());

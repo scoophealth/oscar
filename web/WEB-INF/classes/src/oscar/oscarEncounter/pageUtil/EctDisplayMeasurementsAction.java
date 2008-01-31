@@ -124,7 +124,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
                 title = padd(title, data.getDataField());
                 String tmp = "<span class=\"measureCol1\">" + title + "</span>";
                 tmp += "<span class=\"measureCol2\">" + data.getDataField() + "&nbsp;</span>";
-                tmp += "<span class=\"measureCol3\">" + formattedDate + "</span><br style=\"clear:both\">";
+                //tmp += "<span class=\"measureCol3\">" + formattedDate + "</span><br style=\"clear:both\">";
                 item.setTitle(tmp);                       
                 item.setDate(date);            
                 item.setURL("popupPage(300,800,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupDisplayHistory.do?type=" + type + "'); return false;");

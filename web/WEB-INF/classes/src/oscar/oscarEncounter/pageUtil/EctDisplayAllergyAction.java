@@ -71,7 +71,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
             item.setDate(date);            
             String strTitle = StringUtils.maxLenString(allergies[idx].getAllergy().getDESCRIPTION(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
             
-            item.setTitle(strTitle + " " + serviceDateStr);
+            item.setTitle(strTitle);
             item.setLinkTitle(allergies[idx].getAllergy().getDESCRIPTION() + " " + serviceDateStr);
             item.setURL("return false;");
             Dao.addItem(item);

@@ -77,13 +77,14 @@ public class EctDisplayDxAction extends EctDisplayAction {
             catch(ParseException ex ) {
                 System.out.println("EctDisplayDxAction: Error creating date " + ex.getMessage());
                 serviceDateStr = "Error";
-                date = new Date(System.currentTimeMillis());
+                //date = new Date(System.currentTimeMillis());
+                date = null;
             }
             
             item.setDate(date);            
             String strTitle = StringUtils.maxLenString(dxBean.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
             
-            item.setTitle(strTitle + " " + serviceDateStr);
+            item.setTitle(strTitle);
             item.setLinkTitle(dxBean.getDescription() + " " + serviceDateStr);
             item.setURL("return false;");
             Dao.addItem(item);

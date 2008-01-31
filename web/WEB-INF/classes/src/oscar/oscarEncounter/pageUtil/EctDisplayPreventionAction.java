@@ -97,13 +97,15 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                 if( alist.size() > 0 ) {
                     Hashtable hdata = (Hashtable) alist.get(alist.size()-1);
                     date = (Date)hdata.get("prevention_date_asDate");
+                    System.out.println("Prevention Date " +  date);
+                    item.setDate(date);
                     if( date == null ) {
                         serviceDateStr = "";
-                        item.setDate(defaultDate);
+                        //item.setDate(defaultDate);
                     }
                     else {    
                         serviceDateStr = DateUtils.getDate(date, dateFormat);
-                        item.setDate(date);
+                        //item.setDate(date);
                     }
                     
                     if( hdata.get("refused").equals("2") )
@@ -111,10 +113,11 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                 }
                 else {
                     serviceDateStr = "";
-                    item.setDate(defaultDate);
+                    //item.setDate(defaultDate);
+                    item.setDate(null);
                 }                                                                
                 
-                String title = StringUtils.maxLenString((String)h.get("name"),  MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) + " " + serviceDateStr;
+                String title = StringUtils.maxLenString((String)h.get("name"),  MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
                 item.setTitle(title);
                 item.setLinkTitle((String)h.get("desc"));
                 item.setURL(url);

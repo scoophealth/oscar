@@ -71,6 +71,7 @@ public class EctDisplayMsgAction extends EctDisplayAction {
             String msgDate;
             String dbFormat = "yyyy-MM-dd";
             int hash;
+            Date date;
             for( int i=0; i<msgVector.size(); i++) {    
                 msgId = (String) msgVector.elementAt(i);
                 msgData = new MsgMessageData(msgId);
@@ -79,20 +80,21 @@ public class EctDisplayMsgAction extends EctDisplayAction {
                 NavBarDisplayDAO.Item item = Dao.Item();
                 try {                 
                     DateFormat formatter = new SimpleDateFormat(dbFormat);                                        
-                    Date date = (Date)formatter.parse(msgDate);
-                    msgDate = DateUtils.getDate(date, dateFormat);
-                    item.setDate(date);                                                            
+                    date = (Date)formatter.parse(msgDate);
+                    msgDate = DateUtils.getDate(date, dateFormat);                                                                                
                 }
                 catch(ParseException e ) {
                         System.out.println("EctDisplayMsgAction: Error creating date " + e.getMessage());
                         msgDate = "Error";
+                        date = null;
                 }                
                 
+                item.setDate(date);
                 hash = winName.hashCode();
                 hash = hash < 0 ? hash * -1 : hash;
                 url = "popupPage(600,900,'" + hash + "','" + request.getContextPath() + "/oscarMessenger/ViewMessageByPosition.do?from=encounter&orderBy=!date&demographic_no=" + bean.demographicNo + "&messagePosition="+i + "'); return false;";
                 item.setURL(url);                
-                item.setTitle(msgSubject + " " + msgDate);
+                item.setTitle(msgSubject);
                 item.setLinkTitle(msgData.getSubject() + " " + msgDate);
                 Dao.addItem(item);
             }

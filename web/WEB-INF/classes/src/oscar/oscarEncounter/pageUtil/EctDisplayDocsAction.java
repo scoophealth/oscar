@@ -79,6 +79,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     String title;
     int hash;
     String BGCOLOUR = request.getParameter("hC");
+    Date date;
     for (int i=0; i< docList.size(); i++) {
         EDoc curDoc = (EDoc) docList.get(i);
         String dispFilename = curDoc.getFileName();
@@ -96,19 +97,20 @@ public class EctDisplayDocsAction extends EctDisplayAction {
         String dateStr = curDoc.getObservationDate();
         NavBarDisplayDAO.Item item = Dao.Item();                        
         try {
-            Date date = (Date)formatter.parse(dateStr);
-            serviceDateStr = DateUtils.getDate(date, dateFormat);
-            item.setDate(date);            
+            date = (Date)formatter.parse(dateStr);
+            serviceDateStr = DateUtils.getDate(date, dateFormat);            
         }
         catch(ParseException ex ) {
             System.out.println("EctDisplayDocsAction: Error creating date " + ex.getMessage());
             serviceDateStr = "Error";
+            date = null;
         }        
                         
+        item.setDate(date);
         hash = Math.abs(winName.hashCode());
         url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
         item.setLinkTitle(title + serviceDateStr);
-        item.setTitle(title + serviceDateStr);
+        item.setTitle(title);
         key = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
         key = StringEscapeUtils.escapeJavaScript(key);
         js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";        

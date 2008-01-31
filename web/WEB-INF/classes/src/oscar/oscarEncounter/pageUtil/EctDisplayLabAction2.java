@@ -137,8 +137,9 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
             hash = winName.hashCode();
             hash = hash < 0 ? hash * -1 : hash;
             func.append(hash + "','" + url + "'); return false;");
-            item.setTitle(labDisplayName + " " + formattedDate);
+            item.setTitle(labDisplayName);
             item.setURL(func.toString());
+            item.setDate(date);
             //item.setBgColour(bgcolour);
             Dao.addItem(item);
         }
