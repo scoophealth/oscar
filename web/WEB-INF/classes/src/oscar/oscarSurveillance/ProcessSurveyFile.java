@@ -77,7 +77,7 @@ public class ProcessSurveyFile{
    String replaceAllValues(String guideString,ResultSet rs) throws SQLException{      
       String processString = getFirstVal(guideString);
       while (processString != null){         
-         String replaceVal = rs.getString(processString);   
+         String replaceVal = oscar.Misc.getString(rs,processString);   
          if(replaceVal == null) replaceVal ="";
          guideString = guideString.replaceAll("\\$\\{"+processString+"\\}", replaceVal);         
          processString = getFirstVal(guideString);
@@ -124,7 +124,7 @@ public class ProcessSurveyFile{
                try{
                   BufferedWriter out = new BufferedWriter(new FileWriter(fileDir+filename));                
                   while(rs.next()){ 
-                     String surveyDataId = rs.getString("surveyDataId");
+                     String surveyDataId = db.getString(rs,"surveyDataId");
                      String writeString = replaceAllValues(exp, rs);                     
                      out.write(writeString+'\n');                                    
                      setProcessed(surveyDataId,processedId);

@@ -192,7 +192,7 @@ public class Survey {
          
          ResultSet rs = db.GetSQL(sql);
          if(rs.next()){
-            surveyStatus = rs.getString("status");            
+            surveyStatus = db.getString(rs,"status");            
          }            
          rs.close();
          db.CloseConn();
@@ -212,7 +212,7 @@ public class Survey {
          
          ResultSet rs = db.GetSQL(sql);
          if(rs.next()){
-            sStatus = rs.getString("status");            
+            sStatus = db.getString(rs,"status");            
          }            
          rs.close();
          db.CloseConn();
@@ -246,7 +246,7 @@ public class Survey {
          db.RunSQL(sql);
          ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID()");
          if (rs.next()){
-            insertId = rs.getString(1);
+            insertId = db.getString(rs,1);
          }
          db.CloseConn();         
       }catch(Exception e){
@@ -273,7 +273,7 @@ public class Survey {
          
          ResultSet rs = db.GetSQL(sql);
          if(rs.next()){
-            surveyDataId = rs.getString("surveyDataId");            
+            surveyDataId = db.getString(rs,"surveyDataId");            
          }            
          rs.close();
          db.CloseConn();
@@ -531,7 +531,7 @@ public class Survey {
          ResultSet rs = db.GetSQL(sql);  
          
          while(rs.next()){
-            String[] s =  {rs.getString("status"),rs.getString("countstatus")};
+            String[] s =  {db.getString(rs,"status"),db.getString(rs,"countstatus")};
             list.add(s);
          }
          
@@ -551,7 +551,7 @@ public class Survey {
          ResultSet rs = db.GetSQL(sql);  
          
          while(rs.next()){
-            String[] s =  {rs.getString("answer"),rs.getString("countanswer")};
+            String[] s =  {db.getString(rs,"answer"),db.getString(rs,"countanswer")};
             list.add(s);
          }
          
