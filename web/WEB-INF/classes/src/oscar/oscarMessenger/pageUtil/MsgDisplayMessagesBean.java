@@ -329,39 +329,37 @@ public class MsgDisplayMessagesBean {
         java.sql.ResultSet rs;
         String messageLimit="";
         
-        if (moreMessages.equals("false"))
+/*        if (moreMessages.equals("false"))
         {messageLimit=" Limit "+initialDisplay;}
-        
+*/        
         String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
         +" where provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
-        +" and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby)+messageLimit);
+        +" and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));
                 
         rs = db.GetSQL(sql);
-
+        int idx = 0;
         while (rs.next()) {
-           oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
-           dm.status     = rs.getString("status");
-           dm.messageId  = rs.getString("message");
-           dm.thesubject = rs.getString("thesubject");
-           dm.thedate    = rs.getString("thedate");
-           dm.sentby     = rs.getString("sentby");
-           String att    = rs.getString("attachment");
-           String pdfAtt    = rs.getString("pdfattachment");           
-              if (att == null || att.equals("null") ){
-                dm.attach = "0";
-              }else{
-                dm.attach = "1";
-              }
-              if ( pdfAtt == null || pdfAtt.equals("null") ){
-                dm.pdfAttach = "0";
-              }else{
-                dm.pdfAttach = "1";
-              }
-           
-           msg.add(dm);
-
-           // System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
-
+        	idx ++;
+            if (moreMessages.equals("false") && idx > initialDisplay) break;
+            oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
+            dm.status     = db.getString(rs,"status");
+            dm.messageId  = db.getString(rs,"message");
+            dm.thesubject = db.getString(rs,"thesubject");
+            dm.thedate    = db.getString(rs,"thedate");
+            dm.sentby     = db.getString(rs,"sentby");
+            String att    = db.getString(rs,"attachment");
+            String pdfAtt    = db.getString(rs,"pdfattachment");           
+            if (att == null || att.equals("null") ){
+              dm.attach = "0";
+            }else{
+              dm.attach = "1";
+            }
+            if ( pdfAtt == null || pdfAtt.equals("null") ){
+              dm.pdfAttach = "0";
+            }else{
+              dm.pdfAttach = "1";
+            }
+            msg.add(dm);
         }
 
        rs.close();
@@ -405,15 +403,15 @@ public java.util.Vector estDemographicInbox(){
         while (rs.next()) {
 
            oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
-           dm.status     = "    ";//rs.getString("status");
-           dm.messageId  = rs.getString("messageid");
+           dm.status     = "    ";//db.getString(rs,"status");
+           dm.messageId  = db.getString(rs,"messageid");
            dm.messagePosition  = Integer.toString(index);
-           dm.thesubject = rs.getString("thesubject");
-           dm.thedate    = rs.getString("thedate");
-           dm.sentby     = rs.getString("sentby");
+           dm.thesubject = db.getString(rs,"thesubject");
+           dm.thedate    = db.getString(rs,"thedate");
+           dm.sentby     = db.getString(rs,"sentby");
            
-           String att    = rs.getString("attachment");
-           String pdfAtt    = rs.getString("pdfattachment");
+           String att    = db.getString(rs,"attachment");
+           String pdfAtt    = db.getString(rs,"pdfattachment");
               if (att == null || att.equals("null") ){
                 dm.attach = "0";
               }else{
@@ -477,12 +475,12 @@ public java.util.Vector estDemographicInbox(){
 
            oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
            dm.status     = "deleted";
-           dm.messageId  = rs.getString("message");
-           dm.thesubject = rs.getString("thesubject");
-           dm.thedate    = rs.getString("thedate");
-           dm.sentby     = rs.getString("sentby");
-           String att    = rs.getString("attachment");
-           String pdfAtt    = rs.getString("pdfattachment");
+           dm.messageId  = db.getString(rs,"message");
+           dm.thesubject = db.getString(rs,"thesubject");
+           dm.thedate    = db.getString(rs,"thedate");
+           dm.sentby     = db.getString(rs,"sentby");
+           String att    = db.getString(rs,"attachment");
+           String pdfAtt    = db.getString(rs,"pdfattachment");
               if (att == null || att.equals("null") ){
                 dm.attach = "0";
               }else{
@@ -496,7 +494,7 @@ public java.util.Vector estDemographicInbox(){
            
            msg.add(dm);
 
-           // System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+           // System.out.println("message "+db.getString(rs,"message")+" status "+db.getString(rs,"status"));
 
         }
 
@@ -530,7 +528,7 @@ public java.util.Vector estDemographicInbox(){
         rs = db.GetSQL(sql);
         int cou = 0;
         while (rs.next()) {
-           messageid.add( rs.getString("message")  );
+           messageid.add( db.getString(rs,"message")  );
            status.add("deleted");
            cou++;
         }
@@ -564,11 +562,11 @@ public java.util.Vector estDemographicInbox(){
         rs = db.GetSQL(sql);
         int cou = 0;
         while (rs.next()) {
-           messageid.add( rs.getString("messageid")  );
+           messageid.add( db.getString(rs,"messageid")  );
            status.add("sent");
-           sentby.add(rs.getString("sentby"));
-           date.add(rs.getString("thedate"));
-           subject.add(rs.getString("thesubject"));
+           sentby.add(db.getString(rs,"sentby"));
+           date.add(db.getString(rs,"thedate"));
+           subject.add(db.getString(rs,"thesubject"));
            cou++;
         }
         // System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
@@ -604,13 +602,13 @@ public java.util.Vector estDemographicInbox(){
 
            oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
            dm.status     = "sent";
-           dm.messageId  = rs.getString("status");
-           dm.thesubject = rs.getString("thesubject");
-           dm.thedate    = rs.getString("thedate");
-           dm.sentby     = rs.getString("sentby");
-           dm.sentto     = rs.getString("sentto");
-           String att    = rs.getString("attachment");
-           String pdfAtt    = rs.getString("pdfattachment");           
+           dm.messageId  = db.getString(rs,"status");
+           dm.thesubject = db.getString(rs,"thesubject");
+           dm.thedate    = db.getString(rs,"thedate");
+           dm.sentby     = db.getString(rs,"sentby");
+           dm.sentto     = db.getString(rs,"sentto");
+           String att    = db.getString(rs,"attachment");
+           String pdfAtt    = db.getString(rs,"pdfattachment");           
               if (att == null || att.equals("null") ){
                 dm.attach = "0";
               }else{
@@ -624,7 +622,7 @@ public java.util.Vector estDemographicInbox(){
            
            msg.add(dm);
 
-           //System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+           //System.out.println("message "+db.getString(rs,"message")+" status "+db.getString(rs,"status"));
 
         }
 
@@ -676,10 +674,10 @@ public java.util.Vector estDemographicInbox(){
            String sql = new String("select thesubject, thedate ,sentby, attachment from messagetbl where "+stringBuffer.toString()+" order by thedate");
            rs = db.GetSQL(sql);
            while (rs.next()) {
-              sentby.add( rs.getString("sentby")  );
-              date.add( rs.getString("thedate")  );
-              subject.add ( rs.getString("thesubject") );
-              att = rs.getString("attachment");
+              sentby.add( db.getString(rs,"sentby")  );
+              date.add( db.getString(rs,"thedate")  );
+              subject.add ( db.getString(rs,"thesubject") );
+              att = db.getString(rs,"attachment");
               if (att == null || att.equals("null") ){
                 attach.add("0");
               }else{
