@@ -290,7 +290,7 @@ public class EctConsultationFormRequestPrintPdf {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                String segmentId = rs.getString("lab_no");
+                String segmentId = db.getString(rs,"lab_no");
                 request.setAttribute("segmentID", segmentId);
                 Factory f = new Factory();
                 MessageHandler handler = f.getHandler(segmentId);

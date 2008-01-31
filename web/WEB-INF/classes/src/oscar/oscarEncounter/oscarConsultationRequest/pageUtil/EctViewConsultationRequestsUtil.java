@@ -125,16 +125,16 @@ public class EctViewConsultationRequestsUtil {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs= db.GetSQL(sql.toString());
          while(rs.next()) {
-            demographicNo.add(rs.getString("demographic_no"));
-            date.add(rs.getString("referalDate"));               
-            ids.add(rs.getString("requestId"));               
-            status.add(rs.getString("status"));
-            patient.add(rs.getString("last_name") +", "+ rs.getString("first_name")) ;
-            provider.add(rs.getString("lName") +", "+ rs.getString("fName"));
-            service.add(rs.getString("serviceDesc"));
-            urgency.add(rs.getString("urgency"));
-            apptDate.add(rs.getString("appointmentDate")+" "+rs.getString("appointmentTime"));
-            this.patientWillBook.add(rs.getString("patientWillBook"));
+            demographicNo.add(db.getString(rs,"demographic_no"));
+            date.add(db.getString(rs,"referalDate"));               
+            ids.add(db.getString(rs,"requestId"));               
+            status.add(db.getString(rs,"status"));
+            patient.add(db.getString(rs,"last_name") +", "+ db.getString(rs,"first_name")) ;
+            provider.add(db.getString(rs,"lName") +", "+ db.getString(rs,"fName"));
+            service.add(db.getString(rs,"serviceDesc"));
+            urgency.add(db.getString(rs,"urgency"));
+            apptDate.add(db.getString(rs,"appointmentDate")+" "+db.getString(rs,"appointmentTime"));
+            this.patientWillBook.add(db.getString(rs,"patientWillBook"));
          }            
          rs.close();            
          db.CloseConn();            
@@ -161,15 +161,15 @@ public class EctViewConsultationRequestsUtil {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);         
          String sql = " select cr.status, cr.referalDate, cr.requestId, cr.patientWillBook, cr.urgency, demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc from consultationRequests cr,  demographic demo, provider pro, consultationServices ser where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId and demographicNo ='"+demoNo+"' order by cr.referalDate ";         
          ResultSet rs;         
-         for(rs = db.GetSQL(sql); rs.next(); date.add(rs.getString("referalDate"))){            
-            ids.add(rs.getString("requestId"));            
-            status.add(rs.getString("status"));            
-            patient.add(rs.getString("last_name")+", "+rs.getString("first_name"));            
-            provider.add(rs.getString("lName")+", "+rs.getString("fName"));            
-            service.add(rs.getString("serviceDesc"));
-            urgency.add(rs.getString("urgency"));
+         for(rs = db.GetSQL(sql); rs.next(); date.add(db.getString(rs,"referalDate"))){            
+            ids.add(db.getString(rs,"requestId"));            
+            status.add(db.getString(rs,"status"));            
+            patient.add(db.getString(rs,"last_name")+", "+db.getString(rs,"first_name"));            
+            provider.add(db.getString(rs,"lName")+", "+db.getString(rs,"fName"));            
+            service.add(db.getString(rs,"serviceDesc"));
+            urgency.add(db.getString(rs,"urgency"));
             
-            patientWillBook.add(rs.getString("patientWillBook"));            
+            patientWillBook.add(db.getString(rs,"patientWillBook"));            
          }                  
          rs.close();         
          db.CloseConn();         

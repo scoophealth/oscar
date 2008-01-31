@@ -93,15 +93,15 @@ public class EChartDAO {
       if (rs.next()) {
         echart = new Echart();
         echart.setTimeStamp(rs.getTimestamp("timeStamp"));
-        echart.setSocialHistory(rs.getString("socialHistory"));
-        echart.setFamilyHistory(rs.getString("familyHistory"));
-        echart.setMedicalHistory(rs.getString("medicalHistory"));
-        echart.setOngoingConcerns(rs.getString("ongoingConcerns"));
-        echart.setReminders(rs.getString("reminders"));
-        echart.setEncounter(rs.getString("encounter"));
-        echart.setSubject(rs.getString("subject"));
+        echart.setSocialHistory(db.getString(rs,"socialHistory"));
+        echart.setFamilyHistory(db.getString(rs,"familyHistory"));
+        echart.setMedicalHistory(db.getString(rs,"medicalHistory"));
+        echart.setOngoingConcerns(db.getString(rs,"ongoingConcerns"));
+        echart.setReminders(db.getString(rs,"reminders"));
+        echart.setEncounter(db.getString(rs,"encounter"));
+        echart.setSubject(db.getString(rs,"subject"));
         echart.setDemographicNo(String.valueOf(demographicNo));
-        echart.setProviderNo(rs.getString("providerNo"));
+        echart.setProviderNo(db.getString(rs,"providerNo"));
       }
       rs.close();
       db.CloseConn();

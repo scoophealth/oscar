@@ -55,11 +55,11 @@ public class EctPalliativeCareRecord
 
             if(rs.next())
             {
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
+                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("pName", rs.getString("pName"));
+                props.setProperty("pName", db.getString(rs,"pName"));
             }
 
             rs.close();
@@ -99,7 +99,7 @@ public class EctPalliativeCareRecord
                         }
                         else
                         {
-                            value = rs.getString(i);
+                            value = db.getString(rs,i);
                         }
                     }
 

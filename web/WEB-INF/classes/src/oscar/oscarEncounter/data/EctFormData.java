@@ -41,14 +41,14 @@ public class EctFormData {
         String sql = "select * from encounterForm where form_name like 'BC%' order by form_name";
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
-            Form frm = new Form(rs.getString("form_name"), rs.getString("form_value"), rs.getString("form_table"), (!rs.getString("hidden").equals("0")?false:true));
+            Form frm = new Form(db.getString(rs,"form_name"), db.getString(rs,"form_value"), db.getString(rs,"form_table"), (!db.getString(rs,"hidden").equals("0")?false:true));
             forms.add(frm);
         }
         rs.close();
         sql = "select * from encounterForm where form_name not like 'BC%' order by hidden, form_name";
         rs = db.GetSQL(sql);
         while(rs.next()) {
-            Form frm = new Form(rs.getString("form_name"), rs.getString("form_value"), rs.getString("form_table"), (!rs.getString("hidden").equals("0")?false:true));
+            Form frm = new Form(db.getString(rs,"form_name"), db.getString(rs,"form_value"), db.getString(rs,"form_table"), (!db.getString(rs,"hidden").equals("0")?false:true));
             forms.add(frm);
         }
         rs.close();
@@ -103,7 +103,7 @@ public class EctFormData {
             ResultSet rs = db.GetSQL(sql);
 
             while(rs.next()) {
-                PatientForm frm = new PatientForm(rs.getString("ID"), rs.getString("demographic_no"),
+                PatientForm frm = new PatientForm(db.getString(rs,"ID"), db.getString(rs,"demographic_no"),
                                     UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getTimestamp("formEdited"), "yy/MM/dd"));
                 forms.add(frm);
             }
@@ -113,7 +113,7 @@ public class EctFormData {
             ResultSet rs = db.GetSQL(sql);
 
             while(rs.next()) {
-                PatientForm frm = new PatientForm(rs.getString("form_no"), rs.getString("demographic_no"),
+                PatientForm frm = new PatientForm(db.getString(rs,"form_no"), db.getString(rs,"demographic_no"),
                                     UtilDateUtilities.DateToString(rs.getDate("form_date"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getDate("form_date"), "yy/MM/dd"));
                 forms.add(frm);
             }
@@ -163,7 +163,7 @@ public class EctFormData {
         ResultSet rs = db.GetSQL(sql);
 
         while(rs.next()) {
-            ret = rs.getString("value");
+            ret = db.getString(rs,"value");
         }
 
         rs.close();
@@ -179,7 +179,7 @@ public class EctFormData {
             String sql = "SELECT form_name from encounterForm where form_value='" + value + "'";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next())
-                formName = rs.getString("form_name");
+                formName = db.getString(rs,"form_name");
             rs.close();
             db.CloseConn();
         }

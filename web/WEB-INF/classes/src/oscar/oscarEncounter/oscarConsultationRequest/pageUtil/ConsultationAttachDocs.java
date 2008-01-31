@@ -95,7 +95,7 @@ public class ConsultationAttachDocs {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                
                 ResultSet rs = db.GetSQL(sql);
                 if( rs.next() ) {
-                    demo = rs.getString("demographicNo");
+                    demo = db.getString(rs,"demographicNo");
                     demoNo = demo;
                 }
                 else

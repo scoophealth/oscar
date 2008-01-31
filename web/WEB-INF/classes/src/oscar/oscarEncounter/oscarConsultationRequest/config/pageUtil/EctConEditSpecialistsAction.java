@@ -86,15 +86,15 @@ public class EctConEditSpecialistsAction extends Action {
          String sql = String.valueOf(String.valueOf((new StringBuffer("select * from professionalSpecialists where specId = ")).append(specId)));
          ResultSet rs;
          for(rs = db.GetSQL(sql); rs.next();) {
-            fName = rs.getString("fName");
-            lName = rs.getString("lName");
-            proLetters = rs.getString("proLetters");
-            address = rs.getString("address");
-            phone = rs.getString("phone");
-            fax = rs.getString("fax");
-            website = rs.getString("website");
-            email = rs.getString("email");
-            specType = rs.getString("specType");
+            fName = db.getString(rs,"fName");
+            lName = db.getString(rs,"lName");
+            proLetters = db.getString(rs,"proLetters");
+            address = db.getString(rs,"address");
+            phone = db.getString(rs,"phone");
+            fax = db.getString(rs,"fax");
+            website = db.getString(rs,"website");
+            email = db.getString(rs,"email");
+            specType = db.getString(rs,"specType");
             updater = 1;
          }
          

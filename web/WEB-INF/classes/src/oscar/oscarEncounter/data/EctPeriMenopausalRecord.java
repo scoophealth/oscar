@@ -55,10 +55,10 @@ public class EctPeriMenopausalRecord
 
                 if(rs.next())
                 {
-                    java.util.Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
+                    java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
 
-                    props.setProperty("demographic_no", rs.getString("demographic_no"));
-                    props.setProperty("pName", rs.getString("pName"));
+                    props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                    props.setProperty("pName", db.getString(rs,"pName"));
                     props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
@@ -102,7 +102,7 @@ public class EctPeriMenopausalRecord
                             }
                             else
                             {
-                                value = rs.getString(i);
+                                value = db.getString(rs,i);
                             }
                         }
 

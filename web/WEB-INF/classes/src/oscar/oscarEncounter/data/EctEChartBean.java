@@ -42,14 +42,14 @@ public class EctEChartBean {
 			ResultSet rs = db.GetSQL(sql);
 			if (rs.next()) {
 				eChartTimeStamp = rs.getTimestamp("timeStamp");
-				socialHistory = rs.getString("socialHistory");
-				familyHistory = rs.getString("familyHistory");
-				medicalHistory = rs.getString("medicalHistory");
-				ongoingConcerns = rs.getString("ongoingConcerns");
-				reminders = rs.getString("reminders");
-				encounter = rs.getString("encounter");
-				subject = rs.getString("subject");
-				providerNo = rs.getString("providerNo");
+				socialHistory = db.getString(rs,"socialHistory");
+				familyHistory = db.getString(rs,"familyHistory");
+				medicalHistory = db.getString(rs,"medicalHistory");
+				ongoingConcerns = db.getString(rs,"ongoingConcerns");
+				reminders = db.getString(rs,"reminders");
+				encounter = db.getString(rs,"encounter");
+				subject = db.getString(rs,"subject");
+				providerNo = db.getString(rs,"providerNo");
 			} else {
 				eChartTimeStamp = null;
 				socialHistory = "";

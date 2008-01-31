@@ -42,7 +42,7 @@ public class EctConDisplayServiceUtil
             String sql = String.valueOf(String.valueOf((new StringBuffer("select serviceDesc from consultationServices where serviceId = '")).append(serId).append("' order by serviceDesc")));
             ResultSet rs = db.GetSQL(sql);
             if(rs.next())
-                retval = rs.getString("serviceDesc");
+                retval = db.getString(rs,"serviceDesc");
             rs.close();
             db.CloseConn();
         }
@@ -70,17 +70,17 @@ public class EctConDisplayServiceUtil
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "select * from professionalSpecialists order by lName ";
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); specIdVec.add(rs.getString("specId")))
+            for(rs = db.GetSQL(sql); rs.next(); specIdVec.add(db.getString(rs,"specId")))
             {
-                fNameVec.add(rs.getString("fName"));
-                lNameVec.add(rs.getString("lName"));
-                proLettersVec.add(rs.getString("proLetters"));
-                addressVec.add(rs.getString("address"));
-                phoneVec.add(rs.getString("phone"));
-                faxVec.add(rs.getString("fax"));
-                websiteVec.add(rs.getString("website"));
-                emailVec.add(rs.getString("email"));
-                specTypeVec.add(rs.getString("specType"));
+                fNameVec.add(db.getString(rs,"fName"));
+                lNameVec.add(db.getString(rs,"lName"));
+                proLettersVec.add(db.getString(rs,"proLetters"));
+                addressVec.add(db.getString(rs,"address"));
+                phoneVec.add(db.getString(rs,"phone"));
+                faxVec.add(db.getString(rs,"fax"));
+                websiteVec.add(db.getString(rs,"website"));
+                emailVec.add(db.getString(rs,"email"));
+                specTypeVec.add(db.getString(rs,"specType"));
             }
 
             rs.close();
@@ -100,7 +100,7 @@ public class EctConDisplayServiceUtil
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = String.valueOf(String.valueOf((new StringBuffer("select * from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); vector.add(rs.getString("specId")));
+            for(rs = db.GetSQL(sql); rs.next(); vector.add(db.getString(rs,"specId")));
             rs.close();
             db.CloseConn();
         }
@@ -120,8 +120,8 @@ public class EctConDisplayServiceUtil
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "select * from consultationServices where active = '1' order by serviceDesc";
             ResultSet rs;
-            for(rs = db.GetSQL(sql); rs.next(); serviceName.add(rs.getString("serviceDesc")))
-                serviceId.add(rs.getString("serviceId"));
+            for(rs = db.GetSQL(sql); rs.next(); serviceName.add(db.getString(rs,"serviceDesc")))
+                serviceId.add(db.getString(rs,"serviceId"));
 
             rs.close();
             db.CloseConn();

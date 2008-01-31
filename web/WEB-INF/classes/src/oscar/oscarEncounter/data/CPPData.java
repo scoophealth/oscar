@@ -143,19 +143,19 @@ public class CPPData {
          ResultSet rs =  db.GetSQL(sql);
          if(rs.next()){
    
-            String providerNo = rs.getString("provider_no");
-            String socialFam = rs.getString("socialFam");
-            String ongoingCon = rs.getString("ongoingCon");
-            String medHist = rs.getString("medHist");
-            String reminder = rs.getString("reminder");
-            String riskfactor = rs.getString("riskfactor"); 
-            String otherMed = rs.getString("otherMed");
-            String otherAller = rs.getString("otherAller");
+            String providerNo = db.getString(rs,"provider_no");
+            String socialFam = db.getString(rs,"socialFam");
+            String ongoingCon = db.getString(rs,"ongoingCon");
+            String medHist = db.getString(rs,"medHist");
+            String reminder = db.getString(rs,"reminder");
+            String riskfactor = db.getString(rs,"riskfactor"); 
+            String otherMed = db.getString(rs,"otherMed");
+            String otherAller = db.getString(rs,"otherAller");
             
-            String medsList = rs.getString("medsList");  
-            String allegryList = rs.getString("allergyList");              
-            String divArr = rs.getString("divArr");
-            String created= rs.getString("created");                                                               
+            String medsList = db.getString(rs,"medsList");  
+            String allegryList = db.getString(rs,"allergyList");              
+            String divArr = db.getString(rs,"divArr");
+            String created= db.getString(rs,"created");                                                               
             
             hm.put("providerNo",providerNo);
             hm.put("socialFam",socialFam);

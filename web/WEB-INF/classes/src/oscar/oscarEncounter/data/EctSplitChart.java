@@ -54,7 +54,7 @@ public class EctSplitChart {
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()) {
             String[] s = new String[2];
-             s[0] = rs.getString("eChartId");            
+             s[0] = db.getString(rs,"eChartId");            
              Timestamp timestamp = rs.getTimestamp("timeStamp");             
              java.util.Date d = new java.util.Date(timestamp.getTime());
              

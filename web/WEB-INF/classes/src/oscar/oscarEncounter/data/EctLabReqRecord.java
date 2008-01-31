@@ -56,21 +56,21 @@ public class EctLabReqRecord
 
                 if(rs.next())
                 {
-                    java.util.Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
+                    java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
 
-                    props.setProperty("demographic_no", rs.getString("demographic_no"));
-                    props.setProperty("patientName", rs.getString("patientName"));
-                    props.setProperty("healthNumber", rs.getString("hin"));
-                    props.setProperty("version", rs.getString("ver"));
+                    props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                    props.setProperty("patientName", db.getString(rs,"patientName"));
+                    props.setProperty("healthNumber", db.getString(rs,"hin"));
+                    props.setProperty("version", db.getString(rs,"ver"));
                     props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                    props.setProperty("homePhone", rs.getString("phone"));
-                    props.setProperty("patientAddress", rs.getString("address"));
-                    props.setProperty("patientCity", rs.getString("city"));
-                    props.setProperty("patientPC", rs.getString("postal"));
-                    props.setProperty("province", rs.getString("province"));
-                    props.setProperty("sex", rs.getString("sex"));
+                    props.setProperty("homePhone", db.getString(rs,"phone"));
+                    props.setProperty("patientAddress", db.getString(rs,"address"));
+                    props.setProperty("patientCity", db.getString(rs,"city"));
+                    props.setProperty("patientPC", db.getString(rs,"postal"));
+                    props.setProperty("province", db.getString(rs,"province"));
+                    props.setProperty("sex", db.getString(rs,"sex"));
                 }
                 rs.close();
 
@@ -82,8 +82,8 @@ public class EctLabReqRecord
 
                 if(rs.next())
                 {
-                    String num = rs.getString("ohip_no");
-                    props.setProperty("provName", rs.getString("provName"));
+                    String num = db.getString(rs,"ohip_no");
+                    props.setProperty("provName", db.getString(rs,"provName"));
                     props.setProperty("practitionerNo", "0000-"+num+"-00");
                 }
                 rs.close();
@@ -126,7 +126,7 @@ public class EctLabReqRecord
                         }
                         else
                         {
-                            value = rs.getString(i);
+                            value = db.getString(rs,i);
                         }
                     }
 

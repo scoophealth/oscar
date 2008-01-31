@@ -54,17 +54,17 @@ public class EctMentalHealthRecord
             rs = db.GetSQL(sql);
 
             if(rs.next())    {
-                java.util.Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
+                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
 
-                props.setProperty("demographic_no", rs.getString("demographic_no"));
-                props.setProperty("c_pName", rs.getString("pName"));
-                props.setProperty("c_sex", rs.getString("sex"));
+                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
+                props.setProperty("c_pName", db.getString(rs,"pName"));
+                props.setProperty("c_sex", db.getString(rs,"sex"));
                 props.setProperty("c_referralDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("c_address", rs.getString("address"));
+                props.setProperty("c_address", db.getString(rs,"address"));
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("c_homePhone", rs.getString("phone"));
+                props.setProperty("c_homePhone", db.getString(rs,"phone"));
             }
             rs.close();
 
@@ -75,7 +75,7 @@ public class EctMentalHealthRecord
             rs = db.GetSQL(sql);
 
             if(rs.next()) {
-                props.setProperty("c_referredBy", rs.getString("provName"));
+                props.setProperty("c_referredBy", db.getString(rs,"provName"));
             }
             rs.close();
         } else {
@@ -104,7 +104,7 @@ public class EctMentalHealthRecord
                                 value = UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd");
                             }
                         }  else  {
-                            value = rs.getString(i);
+                            value = db.getString(rs,i);
                         }
                     }
 

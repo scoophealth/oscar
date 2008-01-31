@@ -53,12 +53,12 @@ public class EctRemoteAttachments
             String sql ="Select * from remoteAttachments where demographic_no = '"+demoNo+"' order by date";
             System.out.println("sql message "+sql);
             rs = db.GetSQL(sql); 
-            //for(rs = db.GetSQL(String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM remoteAttachments WHERE demographic_no = '")).append(demoNo).append("' order by date ")))); rs.next(); dates.add(rs.getString("date")))
+            //for(rs = db.GetSQL(String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM remoteAttachments WHERE demographic_no = '")).append(demoNo).append("' order by date ")))); rs.next(); dates.add(db.getString(rs,"date")))
             while(rs.next())
 	    {
-		dates.add(rs.getString("date"));
-                messageIds.add(rs.getString("messageid"));
-                savedBys.add(rs.getString("savedBy"));
+		dates.add(db.getString(rs,"date"));
+                messageIds.add(db.getString(rs,"messageid"));
+                savedBys.add(db.getString(rs,"savedBy"));
             }
 
             rs.close();
@@ -82,8 +82,8 @@ public class EctRemoteAttachments
 	    rs = db.GetSQL(sql);
 //            for(rs = db.GetSQL(String.valueOf(String.valueOf((new StringBuffer("SELECT ocl.locationDesc, mess.thesubject FROM messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '")).append(messId).append("'"))));
              while ( rs.next()){
-                 retval.add(rs.getString("thesubject"));
-                 retval.add(rs.getString("locationDesc"));
+                 retval.add(db.getString(rs,"thesubject"));
+                 retval.add(db.getString(rs,"locationDesc"));
  	     }
             rs.close();
             db.CloseConn();

@@ -80,32 +80,32 @@ public class EctConsultationFormRequestUtil {
 
       if (rs.next()) {
 
-        patientName = rs.getString("last_name") + "," +
-            rs.getString("first_name");
+        patientName = db.getString(rs,"last_name") + "," +
+            db.getString(rs,"first_name");
 
-        patientAddress = rs.getString("address") + "<br>" + rs.getString("city") +
-            "," + rs.getString("province") + "," + rs.getString("postal");
+        patientAddress = db.getString(rs,"address") + "<br>" + db.getString(rs,"city") +
+            "," + db.getString(rs,"province") + "," + db.getString(rs,"postal");
 
-        patientPhone = rs.getString("phone");
+        patientPhone = db.getString(rs,"phone");
         
-        patientWPhone = rs.getString("phone2");
+        patientWPhone = db.getString(rs,"phone2");
 
-        patientDOB = rs.getString("year_of_birth") + "/" +
-            rs.getString("month_of_birth") + "/" + rs.getString("date_of_birth");
+        patientDOB = db.getString(rs,"year_of_birth") + "/" +
+            db.getString(rs,"month_of_birth") + "/" + db.getString(rs,"date_of_birth");
 
-        patientHealthNum = rs.getString("hin");
+        patientHealthNum = db.getString(rs,"hin");
 
-        patientSex = rs.getString("sex");
+        patientSex = db.getString(rs,"sex");
 
-        patientHealthCardType = rs.getString("hc_type");
+        patientHealthCardType = db.getString(rs,"hc_type");
 
-        patientHealthCardVersionCode = rs.getString("ver");
+        patientHealthCardVersionCode = db.getString(rs,"ver");
 
-        patientChartNo = rs.getString("chart_no");
+        patientChartNo = db.getString(rs,"chart_no");
 
         patientAge = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.
-            getString("year_of_birth"), rs.getString("month_of_birth"),
-                                               rs.getString("date_of_birth")));
+            getString("year_of_birth"), db.getString(rs,"month_of_birth"),
+                                               db.getString(rs,"date_of_birth")));
 
       }
 
@@ -142,7 +142,7 @@ public class EctConsultationFormRequestUtil {
 
       while (rs.next()) {
 
-        String teamName = rs.getString("team");
+        String teamName = db.getString(rs,"team");
 
         if (!teamName.equals("")) {
 
@@ -158,7 +158,7 @@ public class EctConsultationFormRequestUtil {
 
                           break;
 
-                      String teamName = rs.getString("team");
+                      String teamName = db.getString(rs,"team");
 
                       if(!teamName.equals(""))
 
@@ -199,43 +199,43 @@ public class EctConsultationFormRequestUtil {
       ResultSet rs = db.GetSQL(sql);
 
       if (rs.next()) {
-        pwb = rs.getString("patientWillBook");
-        urgency = rs.getString("urgency");
+        pwb = db.getString(rs,"patientWillBook");
+        urgency = db.getString(rs,"urgency");
 
-        providerNo = rs.getString("providerNo");
+        providerNo = db.getString(rs,"providerNo");
 
-        referalDate = rs.getString("referalDate");
+        referalDate = db.getString(rs,"referalDate");
 
-        service = rs.getString("serviceId");
+        service = db.getString(rs,"serviceId");
 
-        specialist = rs.getString("specId");
+        specialist = db.getString(rs,"specId");
 
-        String appointmentTime = rs.getString("appointmentTime");
+        String appointmentTime = db.getString(rs,"appointmentTime");
 
-        reasonForConsultation = rs.getString("reason");
+        reasonForConsultation = db.getString(rs,"reason");
 
-        clinicalInformation = rs.getString("clinicalInfo");
+        clinicalInformation = db.getString(rs,"clinicalInfo");
 
-        concurrentProblems = rs.getString("concurrentProblems");
+        concurrentProblems = db.getString(rs,"concurrentProblems");
 
-        currentMedications = rs.getString("currentMeds");
+        currentMedications = db.getString(rs,"currentMeds");
 
-        allergies = rs.getString("allergies");
+        allergies = db.getString(rs,"allergies");
 
-        sendTo = rs.getString("sendTo");
+        sendTo = db.getString(rs,"sendTo");
 
-        status = rs.getString("status");
+        status = db.getString(rs,"status");
 
-        appointmentNotes = rs.getString("statusText");
+        appointmentNotes = db.getString(rs,"statusText");
 
         if (appointmentNotes == null || appointmentNotes.equals("null")) {
 
           appointmentNotes = new String();
 
         }
-        estPatient(rs.getString("demographicNo"));
+        estPatient(db.getString(rs,"demographicNo"));
 
-        String date = rs.getString("appointmentDate");
+        String date = db.getString(rs,"appointmentDate");
 
         int fir = date.indexOf('-');
 
@@ -315,16 +315,16 @@ public class EctConsultationFormRequestUtil {
 
       if (rs.next()) {
 
-        retval = rs.getString("lName") + ", " + rs.getString("fName") + " " +
-            rs.getString("proLetters");
+        retval = db.getString(rs,"lName") + ", " + db.getString(rs,"fName") + " " +
+            db.getString(rs,"proLetters");
 
-        specPhone = rs.getString("phone");
+        specPhone = db.getString(rs,"phone");
 
-        specFax = rs.getString("fax");
+        specFax = db.getString(rs,"fax");
 
-        specAddr = rs.getString("address");
+        specAddr = db.getString(rs,"address");
         
-        specEmail = rs.getString("email");
+        specEmail = db.getString(rs,"email");
         System.out.println("getting Null"+specEmail+"<");
 
         if (specPhone == null || specPhone.equals("null")) {
@@ -364,7 +364,7 @@ public class EctConsultationFormRequestUtil {
       String sql = "select email from professionalSpecialists where specId  = '"+id+"'";
       ResultSet rs = db.GetSQL(sql);
       if (rs.next()) {
-         specEmail = rs.getString("email");
+         specEmail = db.getString(rs,"email");
          System.out.println("meial"+specEmail+"<");
          if (specEmail == null || specEmail.equalsIgnoreCase("null")) {
             specEmail = new String();
@@ -394,7 +394,7 @@ public class EctConsultationFormRequestUtil {
 
       if (rs.next()) {
 
-        retval = rs.getString("last_name") + ", " + rs.getString("first_name");
+        retval = db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name");
 
       }
       rs.close();
@@ -427,7 +427,7 @@ public class EctConsultationFormRequestUtil {
 
       if (rs.next()) {
 
-        retval = rs.getString("last_name") + ", " + rs.getString("first_name");
+        retval = db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name");
 
       }
       rs.close();
@@ -460,7 +460,7 @@ public class EctConsultationFormRequestUtil {
 
       if (rs.next()) {
 
-        retval = rs.getString("serviceDesc");
+        retval = db.getString(rs,"serviceDesc");
 
       }
       rs.close();
@@ -492,7 +492,7 @@ public class EctConsultationFormRequestUtil {
 
       if (rs.next()) {
 
-        retval = rs.getString("clinic_name");
+        retval = db.getString(rs,"clinic_name");
 
       }
       rs.close();

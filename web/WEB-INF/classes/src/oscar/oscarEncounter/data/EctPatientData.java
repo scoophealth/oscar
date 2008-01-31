@@ -43,7 +43,7 @@ public class EctPatientData {
                     .GetSQL("SELECT provider_no FROM demographic WHERE demographic_no = "
                             + demographicNo);
             if (rs.next())
-                ret = rs.getString("provider_no");
+                ret = db.getString(rs,"provider_no");
             rs.close();
             db.CloseConn();
         } catch (SQLException e) {
@@ -60,11 +60,11 @@ public class EctPatientData {
                     .GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, month_of_birth, date_of_birth, address, city, postal, phone, roster_status FROM demographic WHERE demographic_no = "
                             + demographicNo);
             if (rs.next())
-                p = new Patient(rs.getInt("demographic_no"), rs.getString("last_name"), rs.getString("first_name"),
-                        rs.getString("sex"), UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs
-                                .getString("month_of_birth"), rs.getString("date_of_birth")),
-                        rs.getString("address"), rs.getString("city"), rs.getString("postal"), rs.getString("phone"),
-                        rs.getString("roster_status"));
+                p = new Patient(rs.getInt("demographic_no"), db.getString(rs,"last_name"), db.getString(rs,"first_name"),
+                        db.getString(rs,"sex"), UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
+                                .getString("month_of_birth"), db.getString(rs,"date_of_birth")),
+                        db.getString(rs,"address"), db.getString(rs,"city"), db.getString(rs,"postal"), db.getString(rs,"phone"),
+                        db.getString(rs,"roster_status"));
             rs.close();
             db.CloseConn();
         } catch (SQLException e) {
