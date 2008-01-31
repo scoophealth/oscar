@@ -84,7 +84,7 @@ public class RptTableFieldNameCaption {
         for (int i = 0; i < vec.size(); i++) {
             tempName = (String) vec.get(i);
             if (tempName.matches(RptTableShadowFieldConst.fieldName)) {
-                //System.out.println(rs.getString("name"));
+                //System.out.println(db.getString(rs,"name"));
                 continue;
             }
             temp = prop.getProperty(tempName, "");
@@ -101,7 +101,7 @@ public class RptTableFieldNameCaption {
         try {
             ResultSet rs = dbObj.searchDBRecord(sql);
             while (rs.next()) {
-                ret.setProperty(rs.getString("name"), rs.getString("caption"));
+                ret.setProperty(dbObj.getString(rs,"name"), dbObj.getString(rs,"caption"));
             }
             rs.close();
         } catch (SQLException e) {
@@ -131,8 +131,8 @@ public class RptTableFieldNameCaption {
         String sql = "select * from encounterForm where hidden != 0 order by form_name";
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
-            ret.add(rs.getString("form_name"));
-            ret.add(rs.getString("form_table"));
+            ret.add(dbObj.getString(rs,"form_name"));
+            ret.add(dbObj.getString(rs,"form_table"));
         }
         rs.close();
         return ret;

@@ -42,34 +42,34 @@ public class RxProviderData {
 
             String providerClinicPhone=null, surname=null, firstName=null,  clinicName=null, clinicAddress=null, clinicCity=null, clinicPostal=null, clinicPhone=null, clinicFax=null,clinicProvince = null ;
             if (rs.next()) {
-                surname = rs.getString("last_name");
-                firstName = rs.getString("first_name");
+                surname = db.getString(rs,"last_name");
+                firstName = db.getString(rs,"first_name");
                 if(firstName.indexOf("Dr.")<0) {
                     firstName = "Dr. " + firstName;
                 }
-                providerClinicPhone = rs.getString("work_phone");
+                providerClinicPhone = db.getString(rs,"work_phone");
             }
 
             sql = "SELECT value FROM property WHERE name = 'faxnumber' AND provider_no = '" + providerNo + "'";
             rs = db.GetSQL(sql);
             
             if( rs.next() ) {
-                clinicFax = rs.getString("value");
+                clinicFax = db.getString(rs,"value");
             }
             
             sql = "SELECT * FROM clinic";
             rs = db.GetSQL(sql);
 
             if (rs.next()) {
-                clinicName = rs.getString("clinic_name");
-                clinicAddress = rs.getString("clinic_address");
-                clinicCity = rs.getString("clinic_city");
-                clinicPostal = rs.getString("clinic_postal");
-                clinicPhone = rs.getString("clinic_phone");
-                clinicProvince = rs.getString("clinic_province");
+                clinicName = db.getString(rs,"clinic_name");
+                clinicAddress = db.getString(rs,"clinic_address");
+                clinicCity = db.getString(rs,"clinic_city");
+                clinicPostal = db.getString(rs,"clinic_postal");
+                clinicPhone = db.getString(rs,"clinic_phone");
+                clinicProvince = db.getString(rs,"clinic_province");
                 
                 if( clinicFax == null )
-                    clinicFax = rs.getString("clinic_fax");
+                    clinicFax = db.getString(rs,"clinic_fax");
             }
 
             if((clinicPhone.length()>15) && (providerClinicPhone != null && !providerClinicPhone.equals(""))) clinicPhone = providerClinicPhone;

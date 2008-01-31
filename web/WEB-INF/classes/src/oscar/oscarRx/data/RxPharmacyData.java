@@ -227,7 +227,7 @@ public class RxPharmacyData {
             String sql = "select max(recordID) as maxrec from pharmacyInfo where status = 1 group by ID order by name";            
             rs = db.GetSQL(sql);            
             while ( rs.next()){
-               pharmacyList.add(getPharmacyByRecordID(rs.getString("maxrec")));
+               pharmacyList.add(getPharmacyByRecordID(db.getString(rs,"maxrec")));
             }                                                
             rs.close();
             db.CloseConn();
@@ -277,7 +277,7 @@ public class RxPharmacyData {
             
             rs = db.GetSQL(sql);            
             if ( rs.next()){
-               pharmacy = getPharmacy(rs.getString("pharmacyID"));
+               pharmacy = getPharmacy(db.getString(rs,"pharmacyID"));
             }                                                
             rs.close();
             db.CloseConn();
@@ -307,18 +307,18 @@ public class RxPharmacyData {
          
       }
       public Pharmacy(ResultSet rs) throws SQLException{
-         recordID   = rs.getString("recordID");
-         ID         = rs.getString("ID");
-         name       = rs.getString("name");                                                              
-         address    = rs.getString("address");                                                              
-         city       = rs.getString("city");                                                              
-         province   = rs.getString("province");                                                       
-         postalCode = rs.getString("postalCode");                                                 
-         phone1     = rs.getString("phone1");                                        
-         phone2     = rs.getString("phone2");                                                
-         fax        = rs.getString("fax");                                             
-         email      = rs.getString("email");                                                     
-         notes      = rs.getString("notes");
+         recordID   = oscar.Misc.getString(rs,"recordID");
+         ID         = oscar.Misc.getString(rs,"ID");
+         name       = oscar.Misc.getString(rs,"name");                                                              
+         address    = oscar.Misc.getString(rs,"address");                                                              
+         city       = oscar.Misc.getString(rs,"city");                                                              
+         province   = oscar.Misc.getString(rs,"province");                                                       
+         postalCode = oscar.Misc.getString(rs,"postalCode");                                                 
+         phone1     = oscar.Misc.getString(rs,"phone1");                                        
+         phone2     = oscar.Misc.getString(rs,"phone2");                                                
+         fax        = oscar.Misc.getString(rs,"fax");                                             
+         email      = oscar.Misc.getString(rs,"email");                                                     
+         notes      = oscar.Misc.getString(rs,"notes");
          
       }
    }

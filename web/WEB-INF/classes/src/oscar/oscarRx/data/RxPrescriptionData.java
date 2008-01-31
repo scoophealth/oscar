@@ -47,32 +47,32 @@ public class RxPrescriptionData {
             
             if (rs.next()) {
                 prescription = new Prescription(drugId,
-                rs.getString("provider_no"), rs.getInt("demographic_no"));
+                db.getString(rs,"provider_no"), rs.getInt("demographic_no"));
                 prescription.setRxDate(rs.getDate("rx_date"));
                 prescription.setRxCreatedDate(rs.getDate("create_date"));
                 prescription.setEndDate(rs.getDate("end_date"));
-                prescription.setBrandName(rs.getString("BN"));
+                prescription.setBrandName(db.getString(rs,"BN"));
                 prescription.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                prescription.setCustomName(rs.getString("customName"));
+                prescription.setCustomName(db.getString(rs,"customName"));
                 prescription.setTakeMin(rs.getFloat("takemin"));
                 prescription.setTakeMax(rs.getFloat("takemax"));
-                prescription.setFrequencyCode(rs.getString("freqcode"));
-                prescription.setDuration(rs.getString("duration"));
-                prescription.setDurationUnit(rs.getString("durunit"));
-                prescription.setQuantity(rs.getString("quantity"));
+                prescription.setFrequencyCode(db.getString(rs,"freqcode"));
+                prescription.setDuration(db.getString(rs,"duration"));
+                prescription.setDurationUnit(db.getString(rs,"durunit"));
+                prescription.setQuantity(db.getString(rs,"quantity"));
                 prescription.setRepeat(rs.getInt("repeat"));
                 prescription.setNosubs(rs.getInt("nosubs"));
                 prescription.setPrn(rs.getInt("prn"));
-                prescription.setSpecial(rs.getString("special"));
-                prescription.setGenericName(rs.getString("GN"));
-                prescription.setAtcCode(rs.getString("ATC"));
-                prescription.setScript_no(rs.getString("script_no"));
-                prescription.setRegionalIdentifier(rs.getString("regional_Identifier"));
-                prescription.setUnit(rs.getString("unit"));
-                prescription.setMethod(rs.getString("method"));
-                prescription.setRoute(rs.getString("route"));
+                prescription.setSpecial(db.getString(rs,"special"));
+                prescription.setGenericName(db.getString(rs,"GN"));
+                prescription.setAtcCode(db.getString(rs,"ATC"));
+                prescription.setScript_no(db.getString(rs,"script_no"));
+                prescription.setRegionalIdentifier(db.getString(rs,"regional_Identifier"));
+                prescription.setUnit(db.getString(rs,"unit"));
+                prescription.setMethod(db.getString(rs,"method"));
+                prescription.setRoute(db.getString(rs,"route"));
                 prescription.setCustomInstr(rs.getBoolean("custom_instructions"));
-                prescription.setDosage(rs.getString("dosage"));
+                prescription.setDosage(db.getString(rs,"dosage"));
             }
             
             
@@ -174,33 +174,33 @@ public class RxPrescriptionData {
             rs = db.GetSQL(sql);
             
             while(rs.next()) {
-                p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
+                p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
                 p.setRxDate(rs.getDate("rx_date"));
                 p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setEndDate(rs.getDate("end_date"));
-                p.setBrandName(rs.getString("BN"));
+                p.setBrandName(db.getString(rs,"BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                p.setCustomName(rs.getString("customName"));
+                p.setCustomName(db.getString(rs,"customName"));
                 p.setTakeMin(rs.getFloat("takemin"));
                 p.setTakeMax(rs.getFloat("takemax"));
-                p.setFrequencyCode(rs.getString("freqcode"));
-                p.setDuration(rs.getString("duration"));
-                p.setDurationUnit(rs.getString("durunit"));
-                p.setQuantity(rs.getString("quantity"));
+                p.setFrequencyCode(db.getString(rs,"freqcode"));
+                p.setDuration(db.getString(rs,"duration"));
+                p.setDurationUnit(db.getString(rs,"durunit"));
+                p.setQuantity(db.getString(rs,"quantity"));
                 p.setRepeat(rs.getInt("repeat"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
-                p.setSpecial(rs.getString("special"));
-                p.setArchived(rs.getString("archived"));
-                p.setGenericName(rs.getString("GN"));
-                p.setAtcCode(rs.getString("ATC"));
-                p.setScript_no(rs.getString("script_no"));
-                p.setRegionalIdentifier(rs.getString("regional_identifier"));
-                p.setUnit(rs.getString("unit"));
-                p.setMethod(rs.getString("method"));
-                p.setRoute(rs.getString("route"));
+                p.setSpecial(db.getString(rs,"special"));
+                p.setArchived(db.getString(rs,"archived"));
+                p.setGenericName(db.getString(rs,"GN"));
+                p.setAtcCode(db.getString(rs,"ATC"));
+                p.setScript_no(db.getString(rs,"script_no"));
+                p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
+                p.setUnit(db.getString(rs,"unit"));
+                p.setMethod(db.getString(rs,"method"));
+                p.setRoute(db.getString(rs,"route"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                p.setDosage(rs.getString("dosage"));
+                p.setDosage(db.getString(rs,"dosage"));
                 lst.add(p);
             }
             
@@ -238,35 +238,35 @@ public class RxPrescriptionData {
             rs = db.GetSQL(sql);
             
             while(rs.next()) {
-                p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
+                p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
                 p.setRxDate(rs.getDate("rx_date"));
                 p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setEndDate(rs.getDate("end_date"));
-                p.setBrandName(rs.getString("BN"));
+                p.setBrandName(db.getString(rs,"BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                p.setCustomName(rs.getString("customName"));
+                p.setCustomName(db.getString(rs,"customName"));
                 p.setTakeMin(rs.getFloat("takemin"));
                 p.setTakeMax(rs.getFloat("takemax"));
-                p.setFrequencyCode(rs.getString("freqcode"));
-                p.setDuration(rs.getString("duration"));
-                p.setDurationUnit(rs.getString("durunit"));
-                p.setQuantity(rs.getString("quantity"));
+                p.setFrequencyCode(db.getString(rs,"freqcode"));
+                p.setDuration(db.getString(rs,"duration"));
+                p.setDurationUnit(db.getString(rs,"durunit"));
+                p.setQuantity(db.getString(rs,"quantity"));
                 p.setRepeat(rs.getInt("repeat"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
-                p.setSpecial(rs.getString("special"));
-                p.setArchived(rs.getString("archived"));
-                p.setGenericName(rs.getString("GN"));
-                p.setAtcCode(rs.getString("ATC"));
-                p.setScript_no(rs.getString("script_no"));
-                p.setRegionalIdentifier(rs.getString("regional_identifier"));
-                p.setUnit(rs.getString("unit"));
-                p.setMethod(rs.getString("method"));
-                p.setRoute(rs.getString("route"));
+                p.setSpecial(db.getString(rs,"special"));
+                p.setArchived(db.getString(rs,"archived"));
+                p.setGenericName(db.getString(rs,"GN"));
+                p.setAtcCode(db.getString(rs,"ATC"));
+                p.setScript_no(db.getString(rs,"script_no"));
+                p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
+                p.setUnit(db.getString(rs,"unit"));
+                p.setMethod(db.getString(rs,"method"));
+                p.setRoute(db.getString(rs,"route"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                p.setDosage(rs.getString("dosage"));
+                p.setDosage(db.getString(rs,"dosage"));
                 
-                datesRePrinted = rs.getString("dates_reprinted");
+                datesRePrinted = db.getString(rs,"dates_reprinted");
                 if( datesRePrinted != null )
                     p.setNumPrints(datesRePrinted.split(",").length+1);
                 else
@@ -303,35 +303,35 @@ public class RxPrescriptionData {
             rs = db.GetSQL(sql);
             
             while(rs.next()) {
-                p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
+                p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
                 p.setRxDate(rs.getDate("rx_date"));
                 p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setEndDate(rs.getDate("end_date"));
-                p.setBrandName(rs.getString("BN"));
+                p.setBrandName(db.getString(rs,"BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                p.setCustomName(rs.getString("customName"));
+                p.setCustomName(db.getString(rs,"customName"));
                 p.setTakeMin(rs.getFloat("takemin"));
                 p.setTakeMax(rs.getFloat("takemax"));
-                p.setFrequencyCode(rs.getString("freqcode"));
-                p.setDuration(rs.getString("duration"));
-                p.setDurationUnit(rs.getString("durunit"));
-                p.setQuantity(rs.getString("quantity"));
+                p.setFrequencyCode(db.getString(rs,"freqcode"));
+                p.setDuration(db.getString(rs,"duration"));
+                p.setDurationUnit(db.getString(rs,"durunit"));
+                p.setQuantity(db.getString(rs,"quantity"));
                 p.setRepeat(rs.getInt("repeat"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
-                p.setSpecial(rs.getString("special"));
-                p.setGenericName(rs.getString("GN"));
-                p.setAtcCode(rs.getString("ATC"));
-                p.setScript_no(rs.getString("script_no"));
-                p.setRegionalIdentifier(rs.getString("regional_identifier"));
-                p.setUnit(rs.getString("unit"));
-                p.setMethod(rs.getString("method"));
-                p.setRoute(rs.getString("route"));
+                p.setSpecial(db.getString(rs,"special"));
+                p.setGenericName(db.getString(rs,"GN"));
+                p.setAtcCode(db.getString(rs,"ATC"));
+                p.setScript_no(db.getString(rs,"script_no"));
+                p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
+                p.setUnit(db.getString(rs,"unit"));
+                p.setMethod(db.getString(rs,"method"));
+                p.setRoute(db.getString(rs,"route"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                p.setDosage(rs.getString("dosage"));
+                p.setDosage(db.getString(rs,"dosage"));
                 p.setPrintDate(rs.getDate("date_printed"));
                 
-                datesRePrinted = rs.getString("dates_reprinted");
+                datesRePrinted = db.getString(rs,"dates_reprinted");
                 if( datesRePrinted != null )
                     p.setNumPrints(datesRePrinted.split(",").length+1);
                 else
@@ -368,32 +368,32 @@ public class RxPrescriptionData {
             rs = db.GetSQL(sql);
             
             while(rs.next()) {
-                p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
+                p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
                 p.setRxDate(rs.getDate("rx_date"));
                 p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setEndDate(rs.getDate("end_date"));
-                p.setBrandName(rs.getString("BN"));
+                p.setBrandName(db.getString(rs,"BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                p.setCustomName(rs.getString("customName"));
+                p.setCustomName(db.getString(rs,"customName"));
                 p.setTakeMin(rs.getFloat("takemin"));
                 p.setTakeMax(rs.getFloat("takemax"));
-                p.setFrequencyCode(rs.getString("freqcode"));
-                p.setDuration(rs.getString("duration"));
-                p.setDurationUnit(rs.getString("durunit"));
-                p.setQuantity(rs.getString("quantity"));
+                p.setFrequencyCode(db.getString(rs,"freqcode"));
+                p.setDuration(db.getString(rs,"duration"));
+                p.setDurationUnit(db.getString(rs,"durunit"));
+                p.setQuantity(db.getString(rs,"quantity"));
                 p.setRepeat(rs.getInt("repeat"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
-                p.setSpecial(rs.getString("special"));
-                p.setGenericName(rs.getString("GN"));
-                p.setAtcCode(rs.getString("ATC"));
-                p.setScript_no(rs.getString("script_no"));
-                p.setRegionalIdentifier(rs.getString("regional_identifier"));
-                p.setUnit(rs.getString("unit"));
-                p.setMethod(rs.getString("method"));
-                p.setRoute(rs.getString("route"));
+                p.setSpecial(db.getString(rs,"special"));
+                p.setGenericName(db.getString(rs,"GN"));
+                p.setAtcCode(db.getString(rs,"ATC"));
+                p.setScript_no(db.getString(rs,"script_no"));
+                p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
+                p.setUnit(db.getString(rs,"unit"));
+                p.setMethod(db.getString(rs,"method"));
+                p.setRoute(db.getString(rs,"route"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                p.setDosage(rs.getString("dosage"));
+                p.setDosage(db.getString(rs,"dosage"));
                 lst.add(p);
             }
             
@@ -457,8 +457,8 @@ public class RxPrescriptionData {
                         }
                         else // custom
                         {
-                            if(p2.getCustomName() != null && rs.getString("customName") != null) {
-                                if(p2.getCustomName().equals(rs.getString("customName"))) // same custom
+                            if(p2.getCustomName() != null && db.getString(rs,"customName") != null) {
+                                if(p2.getCustomName().equals(db.getString(rs,"customName"))) // same custom
                                 {
                                     b = false;
                                 }
@@ -468,35 +468,35 @@ public class RxPrescriptionData {
                 }
                 
                 if(b) {
-                    p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
+                    p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
                     p.setRxDate(rs.getDate("rx_date"));
                     p.setRxCreatedDate(rs.getDate("create_date"));
                     p.setEndDate(rs.getDate("end_date"));
-                    p.setBrandName(rs.getString("BN"));
+                    p.setBrandName(db.getString(rs,"BN"));
                     p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                    p.setCustomName(rs.getString("customName"));
+                    p.setCustomName(db.getString(rs,"customName"));
                     p.setTakeMin(rs.getFloat("takemin"));
                     p.setTakeMax(rs.getFloat("takemax"));
-                    p.setFrequencyCode(rs.getString("freqcode"));
-                    p.setDuration(rs.getString("duration"));
-                    p.setDurationUnit(rs.getString("durunit"));
-                    p.setQuantity(rs.getString("quantity"));
+                    p.setFrequencyCode(db.getString(rs,"freqcode"));
+                    p.setDuration(db.getString(rs,"duration"));
+                    p.setDurationUnit(db.getString(rs,"durunit"));
+                    p.setQuantity(db.getString(rs,"quantity"));
                     p.setRepeat(rs.getInt("repeat"));
                     p.setNosubs(rs.getInt("nosubs"));
                     p.setPrn(rs.getInt("prn"));
-                    p.setSpecial(rs.getString("special"));
-                    p.setGenericName(rs.getString("GN"));
-                    p.setAtcCode(rs.getString("ATC"));
-                    p.setScript_no(rs.getString("script_no"));
-                    p.setRegionalIdentifier(rs.getString("regional_identifier"));
-                    p.setUnit(rs.getString("unit"));
-                    p.setMethod(rs.getString("method"));
-                    p.setRoute(rs.getString("route")); 
+                    p.setSpecial(db.getString(rs,"special"));
+                    p.setGenericName(db.getString(rs,"GN"));
+                    p.setAtcCode(db.getString(rs,"ATC"));
+                    p.setScript_no(db.getString(rs,"script_no"));
+                    p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
+                    p.setUnit(db.getString(rs,"unit"));
+                    p.setMethod(db.getString(rs,"method"));
+                    p.setRoute(db.getString(rs,"route")); 
                     p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                    p.setDosage(rs.getString("dosage"));
+                    p.setDosage(db.getString(rs,"dosage"));
                     
                     if( myOscarEnabled ) {
-                        String tmp = indivoSql.replaceFirst("\\?", rs.getString("drugid"));
+                        String tmp = indivoSql.replaceFirst("\\?", db.getString(rs,"drugid"));
                         rs2 = db.GetSQL(tmp);
                         
                         if( rs2.next() ) { 
@@ -550,33 +550,33 @@ public class RxPrescriptionData {
             rs = db.GetSQL(sql);
             
             while(rs.next()) {
-                p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
+                p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
                 p.setRxDate(rs.getDate("rx_date"));
                 p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setEndDate(rs.getDate("end_date"));
-                p.setBrandName(rs.getString("BN"));
+                p.setBrandName(db.getString(rs,"BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                p.setCustomName(rs.getString("customName"));
+                p.setCustomName(db.getString(rs,"customName"));
                 p.setTakeMin(rs.getFloat("takemin"));
                 p.setTakeMax(rs.getFloat("takemax"));
-                p.setFrequencyCode(rs.getString("freqcode"));
-                p.setDuration(rs.getString("duration"));
-                p.setDurationUnit(rs.getString("durunit"));
-                p.setQuantity(rs.getString("quantity"));
+                p.setFrequencyCode(db.getString(rs,"freqcode"));
+                p.setDuration(db.getString(rs,"duration"));
+                p.setDurationUnit(db.getString(rs,"durunit"));
+                p.setQuantity(db.getString(rs,"quantity"));
                 p.setRepeat(rs.getInt("repeat"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
-                p.setArchived(rs.getString("archived"));
-                p.setSpecial(rs.getString("special"));
-                p.setGenericName(rs.getString("GN"));
-                p.setAtcCode(rs.getString("ATC"));
-                p.setScript_no(rs.getString("script_no"));
-                p.setRegionalIdentifier(rs.getString("regional_identifier"));
-                p.setUnit(rs.getString("unit"));
-                p.setMethod(rs.getString("method"));
-                p.setRoute(rs.getString("route"));
+                p.setArchived(db.getString(rs,"archived"));
+                p.setSpecial(db.getString(rs,"special"));
+                p.setGenericName(db.getString(rs,"GN"));
+                p.setAtcCode(db.getString(rs,"ATC"));
+                p.setScript_no(db.getString(rs,"script_no"));
+                p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
+                p.setUnit(db.getString(rs,"unit"));
+                p.setMethod(db.getString(rs,"method"));
+                p.setRoute(db.getString(rs,"route"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                p.setDosage(rs.getString("dosage"));
+                p.setDosage(db.getString(rs,"dosage"));
                 lst.add(p);
             }
             
@@ -605,15 +605,15 @@ public class RxPrescriptionData {
             + providerNo + "' ORDER BY favoritename");
             
             while(rs.next()) {
-                favorite = new Favorite(rs.getInt("favoriteid"), rs.getString("provider_no"),
-                rs.getString("favoritename"),
-                rs.getString("BN"), rs.getInt("GCN_SEQNO"), rs.getString("customName"),
-                rs.getFloat("takemin"), rs.getFloat("takemax"), rs.getString("freqcode"),
-                rs.getString("duration"), rs.getString("durunit"),
-                rs.getString("quantity"),
+                favorite = new Favorite(rs.getInt("favoriteid"), db.getString(rs,"provider_no"),
+                db.getString(rs,"favoritename"),
+                db.getString(rs,"BN"), rs.getInt("GCN_SEQNO"), db.getString(rs,"customName"),
+                rs.getFloat("takemin"), rs.getFloat("takemax"), db.getString(rs,"freqcode"),
+                db.getString(rs,"duration"), db.getString(rs,"durunit"),
+                db.getString(rs,"quantity"),
                 rs.getInt("repeat"), rs.getInt("nosubs"),
-                rs.getInt("prn"), rs.getString("special"),rs.getString("GN"),rs.getString("ATC"),rs.getString("regional_identifier"),
-                rs.getString("unit"),rs.getString("method"),rs.getString("route"),rs.getBoolean("custom_instructions"),rs.getString("dosage"));
+                rs.getInt("prn"), db.getString(rs,"special"),db.getString(rs,"GN"),db.getString(rs,"ATC"),db.getString(rs,"regional_identifier"),
+                db.getString(rs,"unit"),db.getString(rs,"method"),db.getString(rs,"route"),rs.getBoolean("custom_instructions"),db.getString(rs,"dosage"));
                 
               
                 
@@ -642,15 +642,15 @@ public class RxPrescriptionData {
             rs = db.GetSQL("SELECT * FROM favorites WHERE favoriteid = " + favoriteId);
             
             if(rs.next()) {
-                favorite = new Favorite(rs.getInt("favoriteid"), rs.getString("provider_no"),
-                rs.getString("favoritename"),
-                rs.getString("BN"), rs.getInt("GCN_SEQNO"), rs.getString("customName"),
-                rs.getFloat("takemin"), rs.getFloat("takemax"), rs.getString("freqcode"),
-                rs.getString("duration"), rs.getString("durunit"),
-                rs.getString("quantity"),
+                favorite = new Favorite(rs.getInt("favoriteid"), db.getString(rs,"provider_no"),
+                db.getString(rs,"favoritename"),
+                db.getString(rs,"BN"), rs.getInt("GCN_SEQNO"), db.getString(rs,"customName"),
+                rs.getFloat("takemin"), rs.getFloat("takemax"), db.getString(rs,"freqcode"),
+                db.getString(rs,"duration"), db.getString(rs,"durunit"),
+                db.getString(rs,"quantity"),
                 rs.getInt("repeat"), rs.getInt("nosubs"),
-                rs.getInt("prn"), rs.getString("special"),rs.getString("GN"),rs.getString("ATC"),rs.getString("regional_identifier"),
-                rs.getString("unit"),rs.getString("method"),rs.getString("route"),rs.getBoolean("custom_instructions"),rs.getString("dosage"));
+                rs.getInt("prn"), db.getString(rs,"special"),db.getString(rs,"GN"),db.getString(rs,"ATC"),db.getString(rs,"regional_identifier"),
+                db.getString(rs,"unit"),db.getString(rs,"method"),db.getString(rs,"route"),rs.getBoolean("custom_instructions"),db.getString(rs,"dosage"));
             }
             
             rs.close();
@@ -1381,8 +1381,8 @@ public class Prescription {
             rs = db.GetSQL(sql);
                 
             if(rs.next()) {
-                String dates_reprinted = rs.getString(1);
-                String now = rs.getString(2);
+                String dates_reprinted = db.getString(rs,1);
+                String now = db.getString(rs,2);
                 if( dates_reprinted != null )
                     dates_reprinted += "," + now;
                 else

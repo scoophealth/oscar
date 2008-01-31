@@ -69,12 +69,12 @@ public class RptReportFilter {
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
             str = new String[6];
-            str[0] = rs.getString("description");
-            str[1] = rs.getString("value");
-            str[2] = rs.getString("position");
+            str[0] = dbObj.getString(rs,"description");
+            str[1] = dbObj.getString(rs,"value");
+            str[2] = dbObj.getString(rs,"position");
             str[3] = "" + rs.getInt("order_no");
-            str[4] = rs.getString("javascript");
-            str[5] = rs.getString("date_format");
+            str[4] = dbObj.getString(rs,"javascript");
+            str[5] = dbObj.getString(rs,"date_format");
             ret.add(str);
         }
         rs.close();
@@ -89,12 +89,12 @@ public class RptReportFilter {
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
             str = new String[6];
-            str[0] = rs.getString("description");
-            str[1] = rs.getString("value");
-            str[2] = rs.getString("position");
+            str[0] = dbObj.getString(rs,"description");
+            str[1] = dbObj.getString(rs,"value");
+            str[2] = dbObj.getString(rs,"position");
             str[3] = "" + rs.getInt("order_no");
-            str[4] = rs.getString("javascript");
-            str[5] = rs.getString("date_format");
+            str[4] = dbObj.getString(rs,"javascript");
+            str[5] = dbObj.getString(rs,"date_format");
             ret.add(str);
         }
         rs.close();

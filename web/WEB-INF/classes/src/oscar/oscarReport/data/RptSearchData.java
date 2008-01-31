@@ -48,8 +48,8 @@ public class RptSearchData {
               rs = db.GetSQL("select distinct roster_status from demographic where roster_status is not null order by roster_status");
 
               while (rs.next()) {
-                retval.add( rs.getString("roster_status") );
-                //System.out.println("roster "+rs.getString("roster_status"));
+                retval.add( db.getString(rs,"roster_status") );
+                //System.out.println("roster "+db.getString(rs,"roster_status"));
               }
               rs.close();
               db.CloseConn();
@@ -67,8 +67,8 @@ public class RptSearchData {
               rs = db.GetSQL("select distinct patient_status from demographic where patient_status is not null order by patient_status");
 
               while (rs.next()) {
-                retval.add( rs.getString("patient_status") );
-                //System.out.println("patient "+rs.getString("patient_status"));
+                retval.add( db.getString(rs,"patient_status") );
+                //System.out.println("patient "+db.getString(rs,"patient_status"));
               }
               rs.close();
               db.CloseConn();
@@ -84,8 +84,8 @@ public class RptSearchData {
               rs = db.GetSQL("select distinct provider_no from demographic order by provider_no");
 
               while (rs.next()) {
-                retval.add( rs.getString("provider_no") );
-                //System.out.println("patient "+rs.getString("patient_status"));
+                retval.add( db.getString(rs,"provider_no") );
+                //System.out.println("patient "+db.getString(rs,"patient_status"));
               }
               rs.close();
               db.CloseConn();
@@ -102,11 +102,11 @@ public class RptSearchData {
 
               while (rs.next()) {
                 SearchCriteria sc = new SearchCriteria();
-                sc.id = rs.getString("favId");
-                sc.queryName = rs.getString("queryName");
+                sc.id = db.getString(rs,"favId");
+                sc.queryName = db.getString(rs,"queryName");
 
                 retval.add( sc );
-                //System.out.println("patient "+rs.getString("patient_status"));
+                //System.out.println("patient "+db.getString(rs,"patient_status"));
               }
               rs.close();
               db.CloseConn();

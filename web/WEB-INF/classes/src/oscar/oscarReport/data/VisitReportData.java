@@ -74,8 +74,8 @@ public class VisitReportData {
              System.out.println(sql);
              ResultSet rs = db.GetSQL(sql);
              while (rs.next()){
-                retval = rs.getString("visit");
-                retcount =rs.getString("n");
+                retval = db.getString(rs,"visit");
+                retcount =db.getString(rs,"n");
                 retVisit[Integer.parseInt(retval)] = retcount;
 
 			}
@@ -111,8 +111,8 @@ public class VisitReportData {
                      System.out.println(sql);
                      ResultSet rs = db.GetSQL(sql);
 	             while (rs.next()){
-	                retval = rs.getString("visit");
-	                retcount =rs.getString("n");
+	                retval = db.getString(rs,"visit");
+	                retcount =db.getString(rs,"n");
 	                retVisit[Integer.parseInt(retval)] = retcount;
 
 				}

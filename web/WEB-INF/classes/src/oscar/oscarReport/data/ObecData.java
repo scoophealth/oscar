@@ -63,9 +63,9 @@ public class ObecData {
               while(rs.next()){
 				  count = count + 1;
 				  if (count == 1){
-					   retval = retval + "OBEC01" + space(rs.getString("hin"),10) + space(rs.getString("ver"),2) + "\r";
+					   retval = retval + "OBEC01" + space(db.getString(rs,"hin"),10) + space(db.getString(rs,"ver"),2) + "\r";
 				  }else{
-                 retval = retval+ "\n" + "OBEC01" + space(rs.getString("hin"),10) + space(rs.getString("ver"),2) + "\r";
+                 retval = retval+ "\n" + "OBEC01" + space(db.getString(rs,"hin"),10) + space(db.getString(rs,"ver"),2) + "\r";
 }
 			 }
               rs.close();

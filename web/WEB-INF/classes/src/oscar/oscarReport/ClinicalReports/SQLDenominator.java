@@ -79,7 +79,7 @@ public class SQLDenominator implements Denominator{
             ResultSet rs = db.GetSQL(exeSql);
             System.out.println("SQL Statement: " + exeSql);
             while(rs.next()){
-               String toAdd = rs.getString(resultString);
+               String toAdd = db.getString(rs,resultString);
                list.add(toAdd);
             }
             rs.close();

@@ -76,7 +76,7 @@ public class dxQuickListBeanHandler {
                 sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName LIMIT 1";
                 rs = db.GetSQL(sql);
                 if(rs.next()) 
-                    lastUsed = rs.getString("quickListName");                                           
+                    lastUsed = db.getString(rs,"quickListName");                                           
 
                 rs.close();
             }
@@ -84,14 +84,14 @@ public class dxQuickListBeanHandler {
             sql = "Select quickListName, createdByProvider from quickList "+codSys+" group by quickListName";            
             rs = db.GetSQL(sql);
             while(rs.next()){                
-                dxQuickListBean bean = new dxQuickListBean(rs.getString("quickListName"),
-                                                           rs.getString("createdByProvider"));
-                quickListName = rs.getString("quickListName");
+                dxQuickListBean bean = new dxQuickListBean(db.getString(rs,"quickListName"),
+                                                           db.getString(rs,"createdByProvider"));
+                quickListName = db.getString(rs,"quickListName");
                                     
                 if(lastUsed.equals(quickListName)){
                     //System.out.println("lastused: " + lastUsed);
                     bean.setLastUsed("Selected");
-                    lastUsedQuickList = rs.getString("quickListName");
+                    lastUsedQuickList = db.getString(rs,"quickListName");
                 }                
                 dxQuickListBeanVector.add(bean);
             }
@@ -118,7 +118,7 @@ public class dxQuickListBeanHandler {
             //System.out.println(sql);
             rs = db.GetSQL(sql);
             while(rs.next()){                
-                dxQuickListBean bean = new dxQuickListBean(rs.getString("quickListName"));                              
+                dxQuickListBean bean = new dxQuickListBean(db.getString(rs,"quickListName"));                              
                 dxQuickListBeanVector.add(bean);
             }
             rs.close();

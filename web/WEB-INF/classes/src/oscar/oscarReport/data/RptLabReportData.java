@@ -54,8 +54,8 @@ public class RptLabReportData {
               rs = db.GetSQL(sql);
               while (rs.next()) {
                  ArrayList a = new ArrayList (); 
-                 a.add( rs.getString("provider_no") );
-                 a.add( rs.getString("last_name") +", "+ rs.getString("first_name") );
+                 a.add( db.getString(rs,"provider_no") );
+                 a.add( db.getString(rs,"last_name") +", "+ db.getString(rs,"first_name") );
                  arrayList.add(a);
               }
               rs.close();
@@ -85,7 +85,7 @@ public class RptLabReportData {
               DemoLabDataStruct d;
               while (rs.next()) {
                 d = new DemoLabDataStruct();
-                d.demoNo = rs.getString("demographic_no");
+                d.demoNo = db.getString(rs,"demographic_no");
                 demoList.add(d);
               }
 
@@ -115,9 +115,9 @@ public class DemoLabDataStruct{
           consultList = new ArrayList();
           while (rs.next()){
              con = new Consult(); 
-             con.requestId   = rs.getString("ID");
-             con.referalDate = rs.getString("formCreated");
-             con.proNo       = rs.getString("provider_no");
+             con.requestId   = db.getString(rs,"ID");
+             con.referalDate = db.getString(rs,"formCreated");
+             con.proNo       = db.getString(rs,"provider_no");
              consultList.add(con);
           }
           rs.close();
@@ -136,11 +136,11 @@ public class DemoLabDataStruct{
           conReplyList = new ArrayList();
           while( rs.next()){
              conLetter = new ConLetter();
-             conLetter.document_no = rs.getString("document_no"); 
-             conLetter.docdesc     = rs.getString("docdesc");
-             conLetter.docfileName = rs.getString("docfilename");
+             conLetter.document_no = db.getString(rs,"document_no"); 
+             conLetter.docdesc     = db.getString(rs,"docdesc");
+             conLetter.docfileName = db.getString(rs,"docfilename");
              conLetter.docDate     = rs.getDate("updatedatetime");     
-             conLetter.docStatus   = rs.getString("status");
+             conLetter.docStatus   = db.getString(rs,"status");
              conReplyList.add(conLetter);
           }         
           rs.close();
@@ -161,13 +161,13 @@ public class DemoLabDataStruct{
           
           list = new ArrayList();         
           while( rs.next()){
-             java.util.Date lab = getDateFromCML(rs.getString("collection_date"));
+             java.util.Date lab = getDateFromCML(db.getString(rs,"collection_date"));
              System.out.println(lab+" "+startDate+" "+lab.after(startDate));
              if (startDate != null && lab != null && lab.after(startDate) ){
                 Hashtable h = new Hashtable();              
                 h.put("collectionDate",getCommonDate(lab));
-                h.put("id",rs.getString("lab_no"));
-                h.put("labType",rs.getString("lab_type"));
+                h.put("id",db.getString(rs,"lab_no"));
+                h.put("labType",db.getString(rs,"lab_type"));
                 list.add(h);
              }
           }                  
@@ -178,13 +178,13 @@ public class DemoLabDataStruct{
           rs = db.GetSQL(sql);
                     
           while( rs.next()){
-             java.util.Date lab = getDateFromMDS(rs.getString("dateTime"));
+             java.util.Date lab = getDateFromMDS(db.getString(rs,"dateTime"));
              System.out.println(lab+" "+startDate+" "+lab.after(startDate));
              if (startDate != null && lab != null && lab.after(startDate) ){
                Hashtable h = new Hashtable(); 
                h.put("collectionDate",getCommonDate(lab));
-               h.put("id",rs.getString("lab_no"));
-               h.put("labType",rs.getString("lab_type"));
+               h.put("id",db.getString(rs,"lab_no"));
+               h.put("labType",db.getString(rs,"lab_type"));
                list.add(h);
              }
           }                  
@@ -231,7 +231,7 @@ public class DemoLabDataStruct{
            String sql = "Select last_name, first_name from demographic where demographic_no = '"+demoNo+"' ";
            rs = db.GetSQL(sql);
            if (rs.next()){
-              retval = rs.getString("last_name")+", "+rs.getString("first_name");
+              retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
            }
            rs.close();
            db.CloseConn();

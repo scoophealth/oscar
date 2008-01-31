@@ -52,7 +52,7 @@ public static String getStructure(ResultSet rs) throws SQLException {
 		sb.append("<tr class='"+rowColor+"'>");
 		for(int j=0; j<columns; j++) {
 			sb.append("<td>");
-			sb.append(rs.getString(columnNames[j]));
+			sb.append(oscar.Misc.getString(rs,columnNames[j]));
 			sb.append("</td>");
 
 		}
@@ -103,7 +103,7 @@ public static String getStructure2(ResultSet rs) throws SQLException {
                     sb.append("<tr class=\""+rowCSS+"\">");
                     for(int j=0; j<columns; j++) {
                             sb.append("<td>");
-                            sb.append(rs.getString(columnNames[j]));
+                            sb.append(oscar.Misc.getString(rs,columnNames[j]));
                             sb.append("</td>\n");
 
                     }

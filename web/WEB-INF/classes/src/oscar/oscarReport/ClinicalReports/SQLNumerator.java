@@ -134,7 +134,7 @@ public class SQLNumerator implements Numerator {
                 if (outputfields != null){
                     outputValues = new Hashtable();
                     for (int i = 0; i < outputfields.length; i++){
-                        outputValues.put(outputfields[i],rs.getString(outputfields[i]));
+                        outputValues.put(outputfields[i],db.getString(rs,outputfields[i]));
                     }
                     outputValues.put("_evaluation",new Boolean(evalTrue));
                 }

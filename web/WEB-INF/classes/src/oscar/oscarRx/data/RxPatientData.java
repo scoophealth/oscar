@@ -49,14 +49,14 @@ public class RxPatientData {
          + surname + "%' AND first_name LIKE '" + firstName + "%'");
          
          while (rs.next()) {            
-            p = new Patient(rs.getInt("demographic_no"), rs.getString("last_name"),            
-            rs.getString("first_name"), rs.getString("sex"),            
-            calcDate(rs.getString("year_of_birth"),
-            rs.getString("month_of_birth"),            
-            rs.getString("date_of_birth")),            
-            rs.getString("address"), rs.getString("city"),
-            rs.getString("postal"),            
-            rs.getString("phone"), rs.getString("hin"));            
+            p = new Patient(rs.getInt("demographic_no"), db.getString(rs,"last_name"),            
+            db.getString(rs,"first_name"), db.getString(rs,"sex"),            
+            calcDate(db.getString(rs,"year_of_birth"),
+            db.getString(rs,"month_of_birth"),            
+            db.getString(rs,"date_of_birth")),            
+            db.getString(rs,"address"), db.getString(rs,"city"),
+            db.getString(rs,"postal"),            
+            db.getString(rs,"phone"), db.getString(rs,"hin"));            
             lst.add(p);            
          }         
          rs.close();         
@@ -83,15 +83,15 @@ public class RxPatientData {
          + "FROM demographic WHERE demographic_no = " + demographicNo);
          
          if (rs.next()) {            
-            p = new Patient(rs.getInt("demographic_no"), rs.getString("last_name"),            
-            rs.getString("first_name"), rs.getString("sex"),            
-            calcDate(rs.getString("year_of_birth"),
-            rs.getString("month_of_birth"),            
-            rs.getString("date_of_birth")),            
-            rs.getString("address"), rs.getString("city"),
-            rs.getString("postal"),            
-            rs.getString("phone"), rs.getString("hin"));            
-            System.out.println(rs.getString("first_name"));
+            p = new Patient(rs.getInt("demographic_no"), db.getString(rs,"last_name"),            
+            db.getString(rs,"first_name"), db.getString(rs,"sex"),            
+            calcDate(db.getString(rs,"year_of_birth"),
+            db.getString(rs,"month_of_birth"),            
+            db.getString(rs,"date_of_birth")),            
+            db.getString(rs,"address"), db.getString(rs,"city"),
+            db.getString(rs,"postal"),            
+            db.getString(rs,"phone"), db.getString(rs,"hin"));            
+            System.out.println(db.getString(rs,"first_name"));
          }         
          rs.close();         
          db.CloseConn();         
@@ -115,14 +115,14 @@ public class RxPatientData {
          + "FROM demographic WHERE demographic_no = " + demographicNo);
          
          if (rs.next()) {            
-            p = new Patient(rs.getInt("demographic_no"), rs.getString("last_name"),            
-            rs.getString("first_name"), rs.getString("sex"),            
-            calcDate(rs.getString("year_of_birth"),
-            rs.getString("month_of_birth"),            
-            rs.getString("date_of_birth")),            
-            rs.getString("address"), rs.getString("city"),
-            rs.getString("postal"),            
-            rs.getString("phone"), rs.getString("hin"));            
+            p = new Patient(rs.getInt("demographic_no"), db.getString(rs,"last_name"),            
+            db.getString(rs,"first_name"), db.getString(rs,"sex"),            
+            calcDate(db.getString(rs,"year_of_birth"),
+            db.getString(rs,"month_of_birth"),            
+            db.getString(rs,"date_of_birth")),            
+            db.getString(rs,"address"), db.getString(rs,"city"),
+            db.getString(rs,"postal"),            
+            db.getString(rs,"phone"), db.getString(rs,"hin"));            
          }         
          rs.close();         
          db.CloseConn();         
@@ -247,15 +247,15 @@ public class RxPatientData {
             
             while (rs.next()) {               
                allergy = new Allergy(rs.getInt("allergyid"), rs.getDate("entry_date"),               
-               rs.getString("DESCRIPTION"),
+               db.getString(rs,"DESCRIPTION"),
                rs.getInt("HICL_SEQNO"), rs.getInt("HIC_SEQNO"),               
                rs.getInt("AGCSP"), rs.getInt("AGCCS"),
                rs.getInt("TYPECODE"));
                               
-               allergy.getAllergy().setReaction(rs.getString("reaction"));
-               allergy.getAllergy().setAgeOfOnset(rs.getString("age_of_onset"));
-               allergy.getAllergy().setSeverityOfReaction(rs.getString("severity_of_reaction"));
-               allergy.getAllergy().setOnSetOfReaction(rs.getString("onset_of_reaction"));
+               allergy.getAllergy().setReaction(db.getString(rs,"reaction"));
+               allergy.getAllergy().setAgeOfOnset(db.getString(rs,"age_of_onset"));
+               allergy.getAllergy().setSeverityOfReaction(db.getString(rs,"severity_of_reaction"));
+               allergy.getAllergy().setOnSetOfReaction(db.getString(rs,"onset_of_reaction"));
                
                lst.add(allergy);               
             }            
@@ -304,7 +304,7 @@ public class RxPatientData {
             Disease d;            
             rs = db.GetSQL("SELECT * FROM diseases WHERE demographic_no = '" + getDemographicNo()+"'");            
             while (rs.next()) {               
-               d = new Disease(rs.getInt("diseaseid"), rs.getString("ICD9_E"),rs.getDate("entry_date"));               
+               d = new Disease(rs.getInt("diseaseid"), db.getString(rs,"ICD9_E"),rs.getDate("entry_date"));               
                lst.add(d);               
             }            
             rs.close();            

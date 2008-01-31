@@ -70,7 +70,7 @@ public class DemographicSets {
          ResultSet rs = db.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
          
          while (rs.next()){
-            retval.add(rs.getString("demographic_no"));            
+            retval.add(db.getString(rs,"demographic_no"));            
          }
          rs.close();
          db.CloseConn();
@@ -86,8 +86,8 @@ public class DemographicSets {
          
          while (rs.next()){
             Hashtable h = new Hashtable();
-            h.put("demographic_no",rs.getString("demographic_no"));            
-            String el = rs.getString("eligibility");
+            h.put("demographic_no",db.getString(rs,"demographic_no"));            
+            String el = db.getString(rs,"eligibility");
             if (el == null || el.equalsIgnoreCase("null")){
                el = "0";
             }
@@ -108,7 +108,7 @@ public class DemographicSets {
          ResultSet rs = db.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and eligibility = '1' ");          
          
          while (rs.next()){
-            retval.add(rs.getString("demographic_no"));            
+            retval.add(db.getString(rs,"demographic_no"));            
          }
          rs.close();
          db.CloseConn();
@@ -123,7 +123,7 @@ public class DemographicSets {
          ResultSet rs = db.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and eligibility = '0' ");          
          
          while (rs.next()){
-            retval.add(rs.getString("demographic_no"));            
+            retval.add(db.getString(rs,"demographic_no"));            
          }
          rs.close();
          db.CloseConn();
@@ -150,7 +150,7 @@ public class DemographicSets {
          ResultSet rs = db.GetSQL("select distinct set_name from demographicSets ");
          
          while (rs.next()){
-            retval.add(rs.getString("set_name"));            
+            retval.add(db.getString(rs,"set_name"));            
          }
          rs.close();
          db.CloseConn();

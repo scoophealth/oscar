@@ -97,16 +97,16 @@ public class RptReportConfigData {
                 + "' order by order_no, id";
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
-            //System.out.println(rs.getString("name"));
-            if (rs.getString("name").matches(RptTableShadowFieldConst.fieldName)) {
-                //System.out.println(rs.getString("name"));
+            //System.out.println(dbObj.getString(rs,"name"));
+            if (dbObj.getString(rs,"name").matches(RptTableShadowFieldConst.fieldName)) {
+                //System.out.println(dbObj.getString(rs,"name"));
                 continue;
             }
-            ret[0].add(rs.getString("table_name") + "." + rs.getString("name"));
-            if ("".equals(rs.getString("caption"))) {
-                ret[1].add(rs.getString("name"));
+            ret[0].add(dbObj.getString(rs,"table_name") + "." + dbObj.getString(rs,"name"));
+            if ("".equals(dbObj.getString(rs,"caption"))) {
+                ret[1].add(dbObj.getString(rs,"name"));
             } else {
-                ret[1].add(rs.getString("caption"));
+                ret[1].add(dbObj.getString(rs,"caption"));
             }
         }
         rs.close();
@@ -119,12 +119,12 @@ public class RptReportConfigData {
                 + "' order by order_no, id";
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
-            //System.out.println(rs.getString("name"));
-            if (rs.getString("name").matches(RptTableShadowFieldConst.fieldName)) {
-                //System.out.println(rs.getString("name"));
+            //System.out.println(dbObj.getString(rs,"name"));
+            if (dbObj.getString(rs,"name").matches(RptTableShadowFieldConst.fieldName)) {
+                //System.out.println(dbObj.getString(rs,"name"));
                 continue;
             }
-            ret.add(rs.getString("caption") + " |" + rs.getString("name"));
+            ret.add(dbObj.getString(rs,"caption") + " |" + dbObj.getString(rs,"name"));
         }
         rs.close();
         return ret;
@@ -138,8 +138,8 @@ public class RptReportConfigData {
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
             prop = new Properties();
-            prop.setProperty("name", rs.getString("name"));
-            prop.setProperty("caption", rs.getString("caption"));
+            prop.setProperty("name", dbObj.getString(rs,"name"));
+            prop.setProperty("caption", dbObj.getString(rs,"caption"));
             prop.setProperty("id", "" + rs.getInt("id"));
             prop.setProperty("order_no", "" + rs.getInt("order_no"));
             ret.add(prop);
@@ -155,7 +155,7 @@ public class RptReportConfigData {
                 + " and table_name like 'form%'" + " order by table_name";
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
-            ret.add(rs.getString("table_name"));
+            ret.add(dbObj.getString(rs,"table_name"));
         }
         rs.close();
         return ret;

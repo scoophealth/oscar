@@ -228,10 +228,10 @@ public class ManageLetters {
     
     private Hashtable getHashFromResultSet(ResultSet rs) throws Exception{
         Hashtable h = new Hashtable();
-        h.put("ID",rs.getString("ID"));
-        h.put("provider_no",rs.getString("provider_no"));
-        h.put("report_name",rs.getString("report_name"));
-        h.put("file_name",rs.getString("file_name"));
+        h.put("ID",oscar.Misc.getString(rs,"ID"));
+        h.put("provider_no",oscar.Misc.getString(rs,"provider_no"));
+        h.put("report_name",oscar.Misc.getString(rs,"report_name"));
+        h.put("file_name",oscar.Misc.getString(rs,"file_name"));
         h.put("date_time",rs.getDate("date_time"));
         return h;
     }

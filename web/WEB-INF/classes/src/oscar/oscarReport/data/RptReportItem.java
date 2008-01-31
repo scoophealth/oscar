@@ -48,7 +48,7 @@ public class RptReportItem {
         String sql = "select report_name from reportItem where id = " + recordId;
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
-            ret = rs.getString("report_name");
+            ret = dbObj.getString(rs,"report_name");
         }
         rs.close();
         return ret;
@@ -63,7 +63,7 @@ public class RptReportItem {
         while (rs.next()) {
             prop = new Properties();
             prop.setProperty("id", "" + rs.getInt("id"));
-            prop.setProperty("" + rs.getInt("id"), rs.getString("report_name"));
+            prop.setProperty("" + rs.getInt("id"), dbObj.getString(rs,"report_name"));
             ret.add(prop);
         }
         rs.close();

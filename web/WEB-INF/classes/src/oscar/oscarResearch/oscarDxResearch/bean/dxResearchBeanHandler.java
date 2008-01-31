@@ -58,15 +58,15 @@ public class dxResearchBeanHandler {
                         +" order by d.start_date desc, d.update_date desc";
                 for(rs = db.GetSQL(sql); rs.next(); )
                 {                
-                    dxResearchBean bean = new dxResearchBean(   rs.getString("description"), 
-                                                            rs.getString("dxresearch_no"),
-                                                            rs.getString(codingSystem),
-                                                            rs.getString("update_date"),
-                                                            rs.getString("start_date"),
-                                                            rs.getString("status"),
+                    dxResearchBean bean = new dxResearchBean(   db.getString(rs,"description"), 
+                                                            db.getString(rs,"dxresearch_no"),
+                                                            db.getString(rs,codingSystem),
+                                                            db.getString(rs,"update_date"),
+                                                            db.getString(rs,"start_date"),
+                                                            db.getString(rs,"status"),
                                                             codingSystem);
                     dxResearchBeanVector.add(bean);
-                    //System.out.println("ichppcode obtained: " + rs.getString("ichppccode") + " " + rs.getString("description"));                
+                    //System.out.println("ichppcode obtained: " + db.getString(rs,"ichppccode") + " " + db.getString(rs,"description"));                
                 }
                 rs.close();
             }

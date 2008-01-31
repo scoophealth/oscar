@@ -47,8 +47,8 @@ public class RptConsultReportData {
               rs = db.GetSQL(sql);
               while (rs.next()) {
                  ArrayList a = new ArrayList (); 
-                 a.add( rs.getString("provider_no") );
-                 a.add( rs.getString("last_name") +", "+ rs.getString("first_name") );
+                 a.add( db.getString(rs,"provider_no") );
+                 a.add( db.getString(rs,"last_name") +", "+ db.getString(rs,"first_name") );
                  arrayList.add(a);
               }
               rs.close();
@@ -89,7 +89,7 @@ public class RptConsultReportData {
               DemoConsultDataStruct d;
               while (rs.next()) {
                 d = new DemoConsultDataStruct();
-                d.demoNo = rs.getString("demographicNo");
+                d.demoNo = db.getString(rs,"demographicNo");
                 demoList.add(d);
               }
 
@@ -120,11 +120,11 @@ public class DemoConsultDataStruct{
           consultList = new ArrayList();
           while (rs.next()){
              con = new Consult(); 
-             con.requestId   = rs.getString("requestId");
-             con.referalDate = rs.getString("referalDate");
-             con.serviceId   = rs.getString("serviceId");
-             con.specialist  = rs.getString("specId");
-             con.appDate     = rs.getString("appointmentDate");
+             con.requestId   = db.getString(rs,"requestId");
+             con.referalDate = db.getString(rs,"referalDate");
+             con.serviceId   = db.getString(rs,"serviceId");
+             con.specialist  = db.getString(rs,"specId");
+             con.appDate     = db.getString(rs,"appointmentDate");
              consultList.add(con);
           }
           rs.close();
@@ -143,11 +143,11 @@ public class DemoConsultDataStruct{
           conReplyList = new ArrayList();
           while( rs.next()){
              conLetter = new ConLetter();
-             conLetter.document_no = rs.getString("document_no"); 
-             conLetter.docdesc     = rs.getString("docdesc");
-             conLetter.docfileName = rs.getString("docfilename");
+             conLetter.document_no = db.getString(rs,"document_no"); 
+             conLetter.docdesc     = db.getString(rs,"docdesc");
+             conLetter.docfileName = db.getString(rs,"docfilename");
              conLetter.docDate     = rs.getDate("updatedatetime");     
-             conLetter.docStatus   = rs.getString("status");
+             conLetter.docStatus   = db.getString(rs,"status");
              conReplyList.add(conLetter);
           }         
           rs.close();
@@ -164,7 +164,7 @@ public class DemoConsultDataStruct{
            String sql = "Select last_name, first_name from demographic where demographic_no = '"+demoNo+"' ";
            rs = db.GetSQL(sql);
            if (rs.next()){
-              retval = rs.getString("last_name")+", "+rs.getString("first_name");
+              retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
            }
            rs.close();
            db.CloseConn();
@@ -180,7 +180,7 @@ public class DemoConsultDataStruct{
            String sql = "Select serviceDesc from consultationServices where serviceId = '"+serId+"' ";
            rs = db.GetSQL(sql);
            if (rs.next()){
-              retval = rs.getString("last_name")+", "+rs.getString("first_name");
+              retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
            }
            rs.close();
            db.CloseConn();
@@ -196,7 +196,7 @@ public class DemoConsultDataStruct{
            String sql = "Select lname, fname from professionalSpecialists where specId = '"+specId+"' ";
            rs = db.GetSQL(sql);
            if (rs.next()){
-              retval = rs.getString("lname")+", "+rs.getString("fname");
+              retval = db.getString(rs,"lname")+", "+db.getString(rs,"fname");
            }
            rs.close();
            db.CloseConn();
@@ -220,7 +220,7 @@ public class DemoConsultDataStruct{
            String sql = "Select serviceDesc from consultationServices where serviceId = '"+serId+"' ";
            rs = db.GetSQL(sql);
            if (rs.next()){
-              retval = rs.getString("serviceDesc");
+              retval = db.getString(rs,"serviceDesc");
            }
            rs.close();
            db.CloseConn();
@@ -236,7 +236,7 @@ public class DemoConsultDataStruct{
            String sql = "Select lname, fname from professionalSpecialists where specId = '"+specId+"' ";
            rs = db.GetSQL(sql);
            if (rs.next()){
-              retval = rs.getString("lname")+", "+rs.getString("fname");
+              retval = db.getString(rs,"lname")+", "+db.getString(rs,"fname");
            }
            rs.close();
            db.CloseConn();

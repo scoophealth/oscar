@@ -342,7 +342,7 @@ public class RptDemographicQueryBuilder {
 
                 java.util.ArrayList tempArr  = new java.util.ArrayList();
                 for (int i = 0; i < select.length ; i++){
-                   tempArr.add( rs.getString(select[i]) );
+                   tempArr.add( db.getString(rs,select[i]) );
                 }
                 searchedArray.add(tempArr);
 

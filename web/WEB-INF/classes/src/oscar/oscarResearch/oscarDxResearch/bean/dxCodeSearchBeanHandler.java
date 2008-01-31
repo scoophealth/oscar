@@ -62,10 +62,10 @@ public class dxCodeSearchBeanHandler {
             //System.out.println("Sql Statement: " + sql);  
             rs = db.GetSQL(sql);
             while(rs.next()){
-                dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),                                                                 
-                                                             rs.getString(codingSystem));
+                dxCodeSearchBean bean = new dxCodeSearchBean(db.getString(rs,"description"),                                                                 
+                                                             db.getString(rs,codingSystem));
                 for(int i=0; i<keywords.length; i++){
-                    if(keywords[i].equals(rs.getString(codingSystem)))
+                    if(keywords[i].equals(db.getString(rs,codingSystem)))
                         bean.setExactMatch("checked");                    
                 }
                 

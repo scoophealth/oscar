@@ -61,16 +61,16 @@ public class RptDemographicQueryLoader {
                   rs = db.GetSQL("select * from demographicQueryFavourites where favId = '"+qId+"'");                  
                   //System.out.println("select * from demographicQueryFavourites where favId = '"+qId+"'");                  
                   if (rs.next()){
-                        mSelect         = rs.getString("selects");
-                        mAge            = rs.getString("age");
-                        mStartYear      = rs.getString("startYear");
-                        mEndYear        = rs.getString("endYear");
-                        mFirstName      = rs.getString("firstName");
-                        mLastName       = rs.getString("lastName");
-                        mRosterStatus   = rs.getString("rosterStatus");
-                        mSex            = rs.getString("sex");
-                        mProviderNo     = rs.getString("providerNo");
-                        mPatientStatus  = rs.getString("patientStatus");
+                        mSelect         = db.getString(rs,"selects");
+                        mAge            = db.getString(rs,"age");
+                        mStartYear      = db.getString(rs,"startYear");
+                        mEndYear        = db.getString(rs,"endYear");
+                        mFirstName      = db.getString(rs,"firstName");
+                        mLastName       = db.getString(rs,"lastName");
+                        mRosterStatus   = db.getString(rs,"rosterStatus");
+                        mSex            = db.getString(rs,"sex");
+                        mProviderNo     = db.getString(rs,"providerNo");
+                        mPatientStatus  = db.getString(rs,"patientStatus");
                   }
                   //System.out.println("selects = "+mSelect);
 

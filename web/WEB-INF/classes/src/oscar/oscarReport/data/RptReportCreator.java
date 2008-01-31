@@ -27,10 +27,10 @@ public final class RptReportCreator {
         String sql = "select * from reportConfig where report_id = " + recordId + " order by order_no";
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
-            String caption = rs.getString("caption");
-            ret.append( (ret.length() < 8 ? " " : ", ") + rs.getString("table_name") + "." + rs.getString("name") );
+            String caption = dbObj.getString(rs,"caption");
+            ret.append( (ret.length() < 8 ? " " : ", ") + dbObj.getString(rs,"table_name") + "." + dbObj.getString(rs,"name") );
             if(caption != null && caption.length() > 0){
-               ret.append(" as '" + StringEscapeUtils.escapeSql(rs.getString("caption")) + "'");
+               ret.append(" as '" + StringEscapeUtils.escapeSql(dbObj.getString(rs,"caption")) + "'");
             }
         }
         rs.close();
@@ -44,7 +44,7 @@ public final class RptReportCreator {
                 + " order by table_name desc";
         ResultSet rs = dbObj.searchDBRecord(sql);
         if (rs.next()) {
-            ret = rs.getString("table_name");
+            ret = dbObj.getString(rs,"table_name");
         }
         rs.close();
         return ret;
@@ -58,7 +58,7 @@ public final class RptReportCreator {
                 + " order by table_name desc";
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
-            vec.add(rs.getString("table_name"));
+            vec.add(dbObj.getString(rs,"table_name"));
         }
         rs.close();
         for (int i = 0; i < vec.size(); i++) {
@@ -158,7 +158,7 @@ public final class RptReportCreator {
                     //System.out.println("(String) vecFieldName.get(i): " + (String)
                     // vecFieldName.get(i));
                     prop.setProperty((String) vecFieldName.get(i),
-                            rs.getString((String) vecFieldName.get(i)) == null ? "" : rs
+                            dbObj.getString(rs,(String) vecFieldName.get(i)) == null ? "" : rs
                                     .getString((String) vecFieldName.get(i)));
                 } catch (SQLException e) {
                     prop.setProperty((String) vecFieldName.get(i), "" + rs.getInt((String) vecFieldName.get(i)));

@@ -32,8 +32,8 @@ public class DoctorList {
 
             while(rs.next()){
                 ProviderNameBean pb = new ProviderNameBean();
-                pb.setProviderID(rs.getString(3));
-                pb.setProviderName(rs.getString(2)+ " " +rs.getString(1));
+                pb.setProviderID(db.getString(rs,3));
+                pb.setProviderName(db.getString(rs,2)+ " " +db.getString(rs,1));
                 dnl.add(pb);
                 
             }

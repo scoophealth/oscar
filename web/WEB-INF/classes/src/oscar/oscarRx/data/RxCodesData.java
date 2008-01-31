@@ -45,7 +45,7 @@ public class RxCodesData {
             rs = db.GetSQL(sql);
             
             while (rs.next()) {
-                lst.add(new FrequencyCode(rs.getInt("freqid"), rs.getString("freqcode"), rs.getString("dailymin"), rs.getString("dailymax")));
+                lst.add(new FrequencyCode(rs.getInt("freqid"), db.getString(rs,"freqcode"), db.getString(rs,"dailymin"), db.getString(rs,"dailymax")));
             }
             
             rs.close();
@@ -72,7 +72,7 @@ public class RxCodesData {
             rs = db.GetSQL(sql);
             
             while (rs.next()) {
-                lst.add(rs.getString("description"));
+                lst.add(db.getString(rs,"description"));
             }
             
             rs.close();

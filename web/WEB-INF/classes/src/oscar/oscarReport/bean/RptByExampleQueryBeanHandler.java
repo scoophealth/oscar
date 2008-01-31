@@ -63,14 +63,14 @@ public class RptByExampleQueryBeanHandler {
             {
             
                     StringEscapeUtils strEscUtils = new StringEscapeUtils();                                                   
-                    String queryWithEscapeChar = strEscUtils.escapeJava(rs.getString("query"));                   
+                    String queryWithEscapeChar = strEscUtils.escapeJava(db.getString(rs,"query"));                   
                     //oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
                     //queryWithEscapeChar = exampleData.replaceSQLString (";","",queryWithEscapeChar);
                     //queryWithEscapeChar = exampleData.replaceSQLString("\"", "\'", queryWithEscapeChar);            
 
                     //System.out.println("queryWithEscapeChar" + queryWithEscapeChar);
-                    String queryNameWithEscapeChar = strEscUtils.escapeJava(rs.getString("name"));
-                    RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getInt("id"), rs.getString("query"), rs.getString("name"));
+                    String queryNameWithEscapeChar = strEscUtils.escapeJava(db.getString(rs,"name"));
+                    RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getInt("id"), db.getString(rs,"query"), db.getString(rs,"name"));
                     favoriteVector.add(query);                             
             }
 
@@ -96,8 +96,8 @@ public class RptByExampleQueryBeanHandler {
             for(rs = db.GetSQL(sql); rs.next(); )
             {
                 //StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-                //String queryWithEscapeChar = strEscUtils.escapeJava(rs.getString("query"));
-                RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getString("last_name"), rs.getString("first_name"), rs.getString("query"), rs.getString("date"));
+                //String queryWithEscapeChar = strEscUtils.escapeJava(db.getString(rs,"query"));
+                RptByExampleQueryBean query = new RptByExampleQueryBean(db.getString(rs,"last_name"), db.getString(rs,"first_name"), db.getString(rs,"query"), db.getString(rs,"date"));
                 allQueryVector.add(query);
             }
 
@@ -122,8 +122,8 @@ public class RptByExampleQueryBeanHandler {
             {
 
                 StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-                String queryWithEscapeChar = strEscUtils.escapeJava(rs.getString("query"));
-                RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getString("last_name"), rs.getString("first_name"), rs.getString("query"), rs.getString("date"));
+                String queryWithEscapeChar = strEscUtils.escapeJava(db.getString(rs,"query"));
+                RptByExampleQueryBean query = new RptByExampleQueryBean(db.getString(rs,"last_name"), db.getString(rs,"first_name"), db.getString(rs,"query"), db.getString(rs,"date"));
                 queryVector.add(query);
             }
 

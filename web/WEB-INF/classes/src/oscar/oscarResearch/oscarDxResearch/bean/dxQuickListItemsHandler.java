@@ -80,8 +80,8 @@ public class dxQuickListItemsHandler {
             
                 rs = db.GetSQL(sql);            
                 while(rs.next()){                
-                    dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),
-                                                             rs.getString("dxResearchCode"));
+                    dxCodeSearchBean bean = new dxCodeSearchBean(db.getString(rs,"description"),
+                                                             db.getString(rs,"dxResearchCode"));
                     bean.setType(codingSystem);
                     dxQuickListItemsVector.add(bean);
                 }
@@ -112,8 +112,8 @@ public class dxQuickListItemsHandler {
                 //System.out.println("when does this get called "+sql);
                 ResultSet rs = db.GetSQL(sql);            
                 while(rs.next()){                
-                    dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),
-                                                             rs.getString("dxResearchCode")); 
+                    dxCodeSearchBean bean = new dxCodeSearchBean(db.getString(rs,"description"),
+                                                             db.getString(rs,"dxResearchCode")); 
                     bean.setType(codingSystem);
                     dxQuickListItemsVector.add(bean);
                 }
