@@ -100,7 +100,7 @@ public class MsgDisplayMessagesBean {
               rs = db.GetSQL("select locationId from oscarcommlocations where current1 = '1'");
 
               if (rs.next()) {
-                currentLocationId = rs.getString("locationId");
+                currentLocationId = db.getString(rs,"locationId");
               }
               rs.close();
               db.CloseConn();
@@ -273,8 +273,8 @@ public class MsgDisplayMessagesBean {
 
         while (rs.next()) {
            messagePosition.add(Integer.toString(index));
-           messageid.add( rs.getString("message")  );
-           status.add( rs.getString("status")  );
+           messageid.add( db.getString(rs,"message")  );
+           status.add( db.getString(rs,"status")  );
            index++;
         }
 

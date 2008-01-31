@@ -104,7 +104,7 @@ public class ProviderData {
 
                 rs = db.GetSQL(sql);
                 while  (rs.next()) {
-                   list.add(rs.getString("provider_no"));
+                   list.add(db.getString(rs,"provider_no"));
                 }
 
                 rs.close();
@@ -127,23 +127,23 @@ public class ProviderData {
                 rs = db.GetSQL(sql);
 
                 if (rs.next()) {
-                   this.provider_no = rs.getString("provider_no");
-                   this.last_name = rs.getString("last_name");
-                   this.first_name = rs.getString("first_name");
-                   this.provider_type = rs.getString("provider_type"); 
-                   this.specialty = rs.getString("specialty");
-                   this.team = rs.getString("team");   String sex;
-                   this.dob= rs.getString("dob");
-                   this.address= rs.getString("address");
-                   this.phone= rs.getString("phone");
-                   this.work_phone= rs.getString("work_phone");
-                   this.ohip_no= rs.getString("ohip_no");
-                   this.rma_no= rs.getString("rma_no");
-                   this.billing_no= rs.getString("billing_no");
-                   this.hso_no= rs.getString("hso_no");
-                   this.status= rs.getString("status");
-                   this.comments= rs.getString("comments");
-                   this.provider_activity= rs.getString("provider_activity");
+                   this.provider_no = db.getString(rs,"provider_no");
+                   this.last_name = db.getString(rs,"last_name");
+                   this.first_name = db.getString(rs,"first_name");
+                   this.provider_type = db.getString(rs,"provider_type"); 
+                   this.specialty = db.getString(rs,"specialty");
+                   this.team = db.getString(rs,"team");   String sex;
+                   this.dob= db.getString(rs,"dob");
+                   this.address= db.getString(rs,"address");
+                   this.phone= db.getString(rs,"phone");
+                   this.work_phone= db.getString(rs,"work_phone");
+                   this.ohip_no= db.getString(rs,"ohip_no");
+                   this.rma_no= db.getString(rs,"rma_no");
+                   this.billing_no= db.getString(rs,"billing_no");
+                   this.hso_no= db.getString(rs,"hso_no");
+                   this.status= db.getString(rs,"status");
+                   this.comments= db.getString(rs,"comments");
+                   this.provider_activity= db.getString(rs,"provider_activity");
                 }
 
                 rs.close();
@@ -457,9 +457,9 @@ public class ProviderData {
             ResultSet rs = db.GetSQL(sql);            
             while ( rs.next() ) {
                 Hashtable provider = new Hashtable();
-                provider.put("providerNo",rs.getString("provider_no"));
-                provider.put("firstName",rs.getString("first_name"));
-                provider.put("lastName",rs.getString("last_name"));
+                provider.put("providerNo",db.getString(rs,"provider_no"));
+                provider.put("firstName",db.getString(rs,"first_name"));
+                provider.put("lastName",db.getString(rs,"last_name"));
                 result.add(provider);
             }
             db.CloseConn();            
@@ -484,7 +484,7 @@ public class ProviderData {
             ResultSet rs = db.GetSQL(sql);            
             db.CloseConn();            
             if ( rs.next() ) {            
-                return ( rs.getString("first_name") + " " + rs.getString("last_name") );            
+                return ( db.getString(rs,"first_name") + " " + db.getString(rs,"last_name") );            
             } else {                            
                 return "";
             }
@@ -511,8 +511,8 @@ public class ProviderData {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "select default_servicetype from preference where provider_no='" + providerNo + "'";
             ResultSet rs = db.GetSQL(sql);   
-               if (rs.next() && rs.getString("default_servicetype")!=null) {
-		   defaultView = rs.getString("default_servicetype");
+               if (rs.next() && db.getString(rs,"default_servicetype")!=null) {
+		   defaultView = db.getString(rs,"default_servicetype");
                } 
          }catch (Exception e){
              e.printStackTrace();
@@ -549,7 +549,7 @@ public class ProviderData {
 	String sql = "select max(provider_no) from provider where provider_no like 'E%'";
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	ResultSet rs = db.GetSQL(sql);
-	if (rs.next()) providerNo = rs.getString(1);
+	if (rs.next()) providerNo = db.getString(rs,1);
 	rs.close();
 	db.CloseConn();
 	
@@ -568,7 +568,7 @@ public class ProviderData {
 	    String sql = "select provider_no from provider where ohip_no = '" + OhipNO + "'";
 	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	    ResultSet rs = db.GetSQL(sql);
-	    if (rs.next()) providerNo = rs.getString("provider_no");
+	    if (rs.next()) providerNo = db.getString(rs,"provider_no");
 	    rs.close();
 	}
 	return providerNo;

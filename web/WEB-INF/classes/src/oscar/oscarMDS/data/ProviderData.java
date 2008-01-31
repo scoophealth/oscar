@@ -73,9 +73,9 @@ public class ProviderData {
             ResultSet rs = db.GetSQL(sql);            
             while ( rs.next() ) {
                 ArrayList provider = new ArrayList();
-                provider.add(rs.getString("provider_no"));
-                provider.add(rs.getString("first_name"));
-                provider.add(rs.getString("last_name"));
+                provider.add(db.getString(rs,"provider_no"));
+                provider.add(db.getString(rs,"first_name"));
+                provider.add(db.getString(rs,"last_name"));
                 result.add(provider);
             }
             db.CloseConn();            
@@ -96,9 +96,9 @@ public class ProviderData {
             ResultSet rs = db.GetSQL(sql);            
             while ( rs.next() ) {
                 ArrayList provider = new ArrayList();
-                provider.add(rs.getString("provider_no"));
-                provider.add(rs.getString("first_name"));
-                provider.add(rs.getString("last_name"));
+                provider.add(db.getString(rs,"provider_no"));
+                provider.add(db.getString(rs,"first_name"));
+                provider.add(db.getString(rs,"last_name"));
                 result.add(provider);
             }
             db.CloseConn();            
@@ -118,7 +118,7 @@ public class ProviderData {
             ResultSet rs = db.GetSQL(sql);            
             db.CloseConn();            
             if ( rs.next() ) {            
-                return ( rs.getString("first_name") + " " + rs.getString("last_name") );            
+                return ( db.getString(rs,"first_name") + " " + db.getString(rs,"last_name") );            
             } else {                            
                 return "";
             }

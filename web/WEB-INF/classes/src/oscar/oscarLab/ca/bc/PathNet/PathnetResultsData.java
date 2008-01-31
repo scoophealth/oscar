@@ -67,7 +67,7 @@ public class PathnetResultsData {
             ResultSet rs = db.GetSQL(attachQuery);
             while(rs.next()) {
                 LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
-                lbData.labPatientId = rs.getString("document_no");
+                lbData.labPatientId = db.getString(rs,"document_no");
                 attachedLabs.add(lbData);
             }
             rs.close();
@@ -79,8 +79,8 @@ public class PathnetResultsData {
             while(rs.next()){
                 
                 lbData.labType = LabResultData.EXCELLERIS;
-                lbData.segmentID = rs.getString("message_id");
-                lbData.labPatientId = rs.getString("id");
+                lbData.segmentID = db.getString(rs,"message_id");
+                lbData.labPatientId = db.getString(rs,"id");
                 lbData.dateTime = findPathnetObservationDate(lbData.segmentID);
                 lbData.discipline = findPathnetDisipline(lbData.segmentID);
                 
@@ -136,10 +136,10 @@ public class PathnetResultsData {
             while(rs.next()){
                 LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
                 lbData.labType = LabResultData.EXCELLERIS;
-                lbData.segmentID = rs.getString("message_id");
+                lbData.segmentID = db.getString(rs,"message_id");
                 
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    lbData.acknowledgedStatus = rs.getString("status");
+                    lbData.acknowledgedStatus = db.getString(rs,"status");
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }
@@ -148,23 +148,23 @@ public class PathnetResultsData {
                 ///   lbData.abn= true;
                 ///}
                 
-                lbData.accessionNumber = justGetAccessionNumber(rs.getString("accessionNum"));
+                lbData.accessionNumber = justGetAccessionNumber(db.getString(rs,"accessionNum"));
                 
-                lbData.healthNumber = rs.getString("patient_health_num");
-                lbData.patientName = rs.getString("patientName");
+                lbData.healthNumber = db.getString(rs,"patient_health_num");
+                lbData.patientName = db.getString(rs,"patientName");
                 if(lbData.patientName != null){
                     lbData.patientName = lbData.patientName.replaceAll("\\^", " ");
                 }
-                lbData.sex = rs.getString("patient_sex");
+                lbData.sex = db.getString(rs,"patient_sex");
                 lbData.resultStatus = "0"; //TODO
-                // solve lbData.resultStatus.add(rs.getString("abnormalFlag"));
+                // solve lbData.resultStatus.add(db.getString(rs,"abnormalFlag"));
                 
-                lbData.dateTime = rs.getString("date");
+                lbData.dateTime = db.getString(rs,"date");
                 
                 //priority
                 lbData.priority = "----";
-                lbData.requestingClient = justGetDocName(rs.getString("ordering_provider"));
-                lbData.reportStatus =  rs.getString("stat");
+                lbData.requestingClient = justGetDocName(db.getString(rs,"ordering_provider"));
+                lbData.reportStatus =  db.getString(rs,"stat");
                 
                 if (lbData.reportStatus != null && lbData.reportStatus.equals("F")){
                     lbData.finalRes = true;
@@ -192,7 +192,7 @@ public class PathnetResultsData {
             String sql = "select max(obr.results_report_status_change) as d from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                ret = rs.getString("d");
+                ret = db.getString(rs,"d");
             }
             rs.close();
             db.CloseConn();
@@ -227,7 +227,7 @@ public class PathnetResultsData {
             String sql = "select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type  = 'BCP' ";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()){
-                String demo =  rs.getString("demographic_no");
+                String demo =  db.getString(rs,"demographic_no");
                 if(demo != null && !demo.trim().equals("0") ){
                     ret = true;
                 }
@@ -263,15 +263,15 @@ public class PathnetResultsData {
             String sql = "select orc.filler_order_number, max(results_report_status_change) as date from hl7_orc orc, hl7_pid pid, hl7_obr obr where obr.pid_id=pid.pid_id and orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"' GROUP BY pid.message_id";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()){
-                accessionNum = justGetAccessionNumber(rs.getString("filler_order_number"));
-                labDate = rs.getString("date");
+                accessionNum = justGetAccessionNumber(db.getString(rs,"filler_order_number"));
+                labDate = db.getString(rs,"date");
             }
             
             //String sql = "select filler_order_number from hl7_orc orc, hl7_pid pid where orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             sql = "SELECT DISTINCT pid.message_id, max(results_report_status_change) as date FROM  hl7_pid pid, hl7_orc orc, hl7_obr obr WHERE orc.filler_order_number like '%"+accessionNum+"%' AND orc.pid_id = pid.pid_id AND obr.pid_id = pid.pid_id GROUP BY pid.message_id ORDER BY obr.results_report_status_change";
             rs = db.GetSQL(sql);
             while (rs.next()){
-                Date dateA = UtilDateUtilities.StringToDate(rs.getString("date"), "yyyy-MM-dd HH:mm:ss");
+                Date dateA = UtilDateUtilities.StringToDate(db.getString(rs,"date"), "yyyy-MM-dd HH:mm:ss");
                 Date dateB = UtilDateUtilities.StringToDate(labDate, "yyyy-MM-dd HH:mm:ss");
                 if (dateA.before(dateB)){
                     monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
@@ -282,9 +282,9 @@ public class PathnetResultsData {
                 if (monthsBetween < 4){
                     
                     if (ret.equals(""))
-                        ret = rs.getString("message_id");
+                        ret = db.getString(rs,"message_id");
                     else
-                        ret = ret+","+rs.getString("message_id");
+                        ret = ret+","+db.getString(rs,"message_id");
                     
                 }
             }
@@ -314,7 +314,7 @@ public class PathnetResultsData {
             String sql = "select ordering_provider from hl7_orc orc, hl7_pid pid where orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                ret = justGetDocName(rs.getString("ordering_provider"));
+                ret = justGetDocName(db.getString(rs,"ordering_provider"));
             }
             rs.close();
             db.CloseConn();
@@ -330,7 +330,7 @@ public class PathnetResultsData {
             String sql = "select min(obr.result_status) as stat from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and pid.message_id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                ret = rs.getString("stat");
+                ret = db.getString(rs,"stat");
             }
             rs.close();
             db.CloseConn();
@@ -350,7 +350,7 @@ public class PathnetResultsData {
             boolean first = true;
             while(rs.next()){
                 if (!first){ ret.append("/"); }
-                ret.append(rs.getString("diagnostic_service_sect_id"));
+                ret.append(db.getString(rs,"diagnostic_service_sect_id"));
                 first = false;
             }
             rs.close();

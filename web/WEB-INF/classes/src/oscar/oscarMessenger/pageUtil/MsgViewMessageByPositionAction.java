@@ -87,7 +87,7 @@ public class MsgViewMessageByPositionAction extends Action {
                 System.out.println("this ="+sql);
                 rs = db.GetSQL(sql);
                 if (rs.next()) {                                                                   
-                    actionforward.addParameter("messageID", rs.getString("messageid"));
+                    actionforward.addParameter("messageID", db.getString(rs,"messageid"));
                     actionforward.addParameter("from", "encounter");     
                     actionforward.addParameter("demographic_no", demographic_no);
                     actionforward.addParameter("messagePostion", messagePosition);

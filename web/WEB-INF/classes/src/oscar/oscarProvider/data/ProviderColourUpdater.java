@@ -61,7 +61,7 @@ public class ProviderColourUpdater {
         rs = db.GetSQL(sql);
             
         if( rs.next() ) {
-            colour = rs.getString("value");
+            colour = db.getString(rs,"value");
         }
                 
         

@@ -108,7 +108,7 @@ public class MsgGenerate {
                     String fldData = "";
                     try {
                         
-                        fldData = rs.getString(i);
+                        fldData = db.getString(rs,i);
                         
                         if(fldData==null) fldData = "";
                         
@@ -135,7 +135,7 @@ public class MsgGenerate {
             }
             
             {
-                String value = rs.getString("fldItem");
+                String value = db.getString(rs,"fldItem");
                 if(value==null) value="";
                 item.setAttribute("value", value);
             }
@@ -146,7 +146,7 @@ public class MsgGenerate {
                 
                 fld.setAttribute("name", cfgFld.getAttribute("name"));
                 fld.setAttribute("sql", cfgFld.getAttribute("sql"));
-                String value = rs.getString("fld" + i);
+                String value = db.getString(rs,"fld" + i);
                 if(value==null) value="";
                 fld.setAttribute("value", value);
             }

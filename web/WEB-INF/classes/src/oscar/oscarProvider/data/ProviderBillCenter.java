@@ -76,7 +76,7 @@ public class ProviderBillCenter {
             String sql = "select billcenter_code from providerbillcenter where provider_no = '"+provider_no+"' ";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next())
-                billCenterCode = rs.getString("billcenter_code");
+                billCenterCode = db.getString(rs,"billcenter_code");
             rs.close();
             db.CloseConn();
         } catch(SQLException e){
@@ -108,7 +108,7 @@ public class ProviderBillCenter {
             String sql = "select * from billcenter" ;
             ResultSet rs = db.GetSQL(sql);
             while(rs.next())
-                allBillCenter.setProperty(rs.getString("billcenter_code"),rs.getString("billcenter_desc")) ;
+                allBillCenter.setProperty(db.getString(rs,"billcenter_code"),db.getString(rs,"billcenter_desc")) ;
             rs.close();
             db.CloseConn();
         } catch(SQLException e){

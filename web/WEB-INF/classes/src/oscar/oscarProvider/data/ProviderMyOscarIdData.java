@@ -63,7 +63,7 @@ public class ProviderMyOscarIdData {
         rs = db.GetSQL(sql);
             
         if( rs.next() ) {
-            myOscarId = rs.getString("value");
+            myOscarId = db.getString(rs,"value");
         }
                 
         
@@ -130,7 +130,7 @@ public class ProviderMyOscarIdData {
           rs = db.GetSQL(sql);
           
           if( rs.next() ) {
-              providerNo = rs.getString("provider_no");
+              providerNo = db.getString(rs,"provider_no");
           }
       } catch( SQLException ex ) {
           System.out.println(ex.getMessage());

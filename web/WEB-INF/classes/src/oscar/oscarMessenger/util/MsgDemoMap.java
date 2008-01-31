@@ -59,7 +59,7 @@ public class MsgDemoMap {
                                 
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                demoMap.put(rs.getString("d.demographic_no"), rs.getString("last_name")+", "+rs.getString("first_name") );
+                demoMap.put(db.getString(rs,"d.demographic_no"), db.getString(rs,"last_name")+", "+db.getString(rs,"first_name") );
             }
             db.CloseConn();
         }
@@ -81,7 +81,7 @@ public class MsgDemoMap {
             
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                msgVector.add(rs.getString("messageID"));
+                msgVector.add(db.getString(rs,"messageID"));
             }
             db.CloseConn();
         }

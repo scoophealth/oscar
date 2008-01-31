@@ -74,7 +74,7 @@ public class MDSResultsData {
             while(rs.next()) {
                 LabResultData lbData = new LabResultData(LabResultData.CML);
                 lbData.labType = LabResultData.CML;
-                lbData.labPatientId = rs.getString("document_no");
+                lbData.labPatientId = db.getString(rs,"document_no");
                 attachedLabs.add(lbData);
             }
             rs.close();
@@ -86,9 +86,9 @@ public class MDSResultsData {
             while(rs.next()){
                 
                 lbData.labType = LabResultData.CML;
-                lbData.labPatientId = rs.getString("labId");
-                lbData.segmentID = rs.getString("id");
-                lbData.dateTime = rs.getString("collection_date");
+                lbData.labPatientId = db.getString(rs,"labId");
+                lbData.segmentID = db.getString(rs,"id");
+                lbData.dateTime = db.getString(rs,"collection_date");
                 lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") );
                 
                 if( attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0 )
@@ -154,32 +154,32 @@ public class MDSResultsData {
                 
                 lbData.labType = LabResultData.CML;
                 
-                lbData.segmentID = rs.getString("id");
+                lbData.segmentID = db.getString(rs,"id");
                 
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    lbData.acknowledgedStatus = rs.getString("status");
+                    lbData.acknowledgedStatus = db.getString(rs,"status");
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }
                 
                 
-                lbData.healthNumber = rs.getString("patient_health_num");
-                lbData.patientName = rs.getString("patientName");
-                lbData.sex = rs.getString("patient_sex");
+                lbData.healthNumber = db.getString(rs,"patient_health_num");
+                lbData.patientName = db.getString(rs,"patientName");
+                lbData.sex = db.getString(rs,"patient_sex");
                 
                 
                 lbData.resultStatus = "0"; //TODO
-                // solve lbData.resultStatus.add(rs.getString("abnormalFlag"));
+                // solve lbData.resultStatus.add(db.getString(rs,"abnormalFlag"));
                 
-                lbData.dateTime = rs.getString("collection_date");
+                lbData.dateTime = db.getString(rs,"collection_date");
                 lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") );
                 
                 //priority
                 lbData.priority = "----";
                 
-                lbData.requestingClient = rs.getString("doc_name");
-                lbData.reportStatus =  rs.getString("lab_status");
-                lbData.accessionNumber = rs.getString("accession_num");
+                lbData.requestingClient = db.getString(rs,"doc_name");
+                lbData.reportStatus =  db.getString(rs,"lab_status");
+                lbData.accessionNumber = db.getString(rs,"accession_num");
                 
                 if (lbData.reportStatus != null && lbData.reportStatus.equals("F")){
                     lbData.finalRes = true;
@@ -187,9 +187,9 @@ public class MDSResultsData {
                     lbData.finalRes = false;
                 }
                 
-                //if ( rs.getString("reportGroupDesc").startsWith("MICRO") ) {
+                //if ( db.getString(rs,"reportGroupDesc").startsWith("MICRO") ) {
                 //   discipline.add("Microbiology");
-                //} else if ( rs.getString("reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
+                //} else if ( db.getString(rs,"reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
                 //   discipline.add("Diagnostic Imaging");
                 //} else {
                 lbData.discipline = "Hem/Chem/Other";
@@ -278,22 +278,22 @@ public class MDSResultsData {
             while(rs.next()){
                 segmentID.add(Integer.toString(rs.getInt("segmentID")));
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    acknowledgedStatus.add(rs.getString("status"));
+                    acknowledgedStatus.add(db.getString(rs,"status"));
                 } else {
                     acknowledgedStatus.add("U");
                 }
                 
-                healthNumber.add(rs.getString("healthNumber"));
-                patientName.add(beautifyName(rs.getString("patientName")));
-                sex.add(rs.getString("sex"));
-                resultStatus.add(rs.getString("abnormalFlag"));
-                dateTime.add(rs.getString("dateTime"));
+                healthNumber.add(db.getString(rs,"healthNumber"));
+                patientName.add(beautifyName(db.getString(rs,"patientName")));
+                sex.add(db.getString(rs,"sex"));
+                resultStatus.add(db.getString(rs,"abnormalFlag"));
+                dateTime.add(db.getString(rs,"dateTime"));
                 
-                switch ( rs.getString("quantityTiming").charAt(0) ) {
+                switch ( db.getString(rs,"quantityTiming").charAt(0) ) {
                     case 'C' : priority.add("Critical"); break;
                     case 'S' : priority.add("Stat\\Urgent"); break;
                     case 'U' : priority.add("Unclaimed"); break;
-                    case 'A' : if ( rs.getString("quantityTiming").startsWith("AL") ) {
+                    case 'A' : if ( db.getString(rs,"quantityTiming").startsWith("AL") ) {
                         priority.add("Alert");
                     } else {
                         priority.add("ASAP");
@@ -302,12 +302,12 @@ public class MDSResultsData {
                     default: priority.add("Routine"); break;
                 }
                 
-                requestingClient.add(ProviderData.beautifyProviderName(rs.getString("refDoctor")));
-                reportStatus.add(rs.getString("reportFormStatus"));
+                requestingClient.add(ProviderData.beautifyProviderName(db.getString(rs,"refDoctor")));
+                reportStatus.add(db.getString(rs,"reportFormStatus"));
                 
-                if ( rs.getString("reportGroupDesc").startsWith("MICRO") ) {
+                if ( db.getString(rs,"reportGroupDesc").startsWith("MICRO") ) {
                     discipline.add("Microbiology");
-                } else if ( rs.getString("reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
+                } else if ( db.getString(rs,"reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
                     discipline.add("Diagnostic Imaging");
                 } else {
                     discipline.add("Hem/Chem/Other");
@@ -341,7 +341,7 @@ public class MDSResultsData {
             ResultSet rs = db.GetSQL(attachQuery);
             while(rs.next()) {
                 LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
-                lbData.labPatientId = rs.getString("document_no");
+                lbData.labPatientId = db.getString(rs,"document_no");
                 attachedLabs.add(lbData);
             }
             rs.close();
@@ -353,12 +353,12 @@ public class MDSResultsData {
             while(rs.next()) {
                 lData = new LabResultData(LabResultData.MDS);
                 lData.segmentID = Integer.toString(rs.getInt("segmentID"));
-                lData.labPatientId = rs.getString("id");
+                lData.labPatientId = db.getString(rs,"id");
                 
-                lData.dateTime = rs.getString("dateTime");
+                lData.dateTime = db.getString(rs,"dateTime");
                 lData.setDateObj(UtilDateUtilities.getDateFromString(lData.dateTime, "yyyy-MM-dd HH:mm:ss"));
                 
-                String reportGroupDesc = rs.getString("reportGroupDesc");
+                String reportGroupDesc = db.getString(rs,"reportGroupDesc");
                 if ( reportGroupDesc != null && reportGroupDesc.startsWith("MICRO") ) {
                     lData.discipline = "Microbiology";
                 } else if ( reportGroupDesc != null && reportGroupDesc.startsWith("DIAGNOSTIC IMAGING") ) {
@@ -441,22 +441,22 @@ public class MDSResultsData {
                 seqId = lData.segmentID;
                 
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    lData.acknowledgedStatus = rs.getString("status");
+                    lData.acknowledgedStatus = db.getString(rs,"status");
                 } else {
                     lData.acknowledgedStatus = "U";
                 }
                 
-                lData.healthNumber = rs.getString("healthNumber");
-                lData.patientName = beautifyName(rs.getString("patientName"));
-                lData.sex = rs.getString("sex");
-                lData.resultStatus = rs.getString("abnormalFlag");
+                lData.healthNumber = db.getString(rs,"healthNumber");
+                lData.patientName = beautifyName(db.getString(rs,"patientName"));
+                lData.sex = db.getString(rs,"sex");
+                lData.resultStatus = db.getString(rs,"abnormalFlag");
                 if(lData.resultStatus == null){
                     lData.resultStatus = "0";
                 }
-                lData.dateTime = rs.getString("dateTime");
+                lData.dateTime = db.getString(rs,"dateTime");
                 lData.setDateObj(UtilDateUtilities.getDateFromString(lData.dateTime, "yyyy-MM-dd HH:mm:ss"));
                 
-                String quantityTimimg = rs.getString("quantityTiming");
+                String quantityTimimg = db.getString(rs,"quantityTiming");
                 if(quantityTimimg != null){
                     switch ( quantityTimimg.charAt(0) ) {
                         case 'C' : lData.priority = "Critical"; break;
@@ -474,8 +474,8 @@ public class MDSResultsData {
                     lData.priority = "Routine";
                 }
                 
-                lData.requestingClient = ProviderData.beautifyProviderName(rs.getString("refDoctor"));
-                lData.reportStatus = rs.getString("reportFormStatus");
+                lData.requestingClient = ProviderData.beautifyProviderName(db.getString(rs,"refDoctor"));
+                lData.reportStatus = db.getString(rs,"reportFormStatus");
                 
                 if (lData.reportStatus != null && lData.reportStatus.equals("0")){
                     lData.finalRes = false;
@@ -487,7 +487,7 @@ public class MDSResultsData {
                 if (  !lData.resultStatus.equals("0") ){
                     lData.abn = true;
                 }
-                String reportGroupDesc = rs.getString("reportGroupDesc");
+                String reportGroupDesc = db.getString(rs,"reportGroupDesc");
                 
                 if ( reportGroupDesc != null && reportGroupDesc.startsWith("MICRO") ) {
                     lData.discipline = "Microbiology";
@@ -498,7 +498,7 @@ public class MDSResultsData {
                 }
                 
                 //lData.accessionNumber = findMDSAccessionNumber(lData.segmentID);
-                String accessionNum = rs.getString("accessionNum");
+                String accessionNum = db.getString(rs,"accessionNum");
                 lData.accessionNumber = justGetAccessionNumber(accessionNum);
                 
                 // must reverse the order of the labs based on the final result count when
@@ -530,7 +530,7 @@ public class MDSResultsData {
             String sql ="select messageConID from mdsMSH where segmentID = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                ret = justGetAccessionNumber(rs.getString("messageConID"));
+                ret = justGetAccessionNumber(db.getString(rs,"messageConID"));
             }
             rs.close();
             db.CloseConn();
@@ -547,7 +547,7 @@ public class MDSResultsData {
             String sql ="select accession_num from labPatientPhysicianInfo where id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                ret = rs.getString("accession_num");
+                ret = db.getString(rs,"accession_num");
             }
             rs.close();
             db.CloseConn();
@@ -568,8 +568,8 @@ public class MDSResultsData {
             ResultSet rs = db.GetSQL(sql);
             
             while (rs.next()){
-                Date dateA = UtilDateUtilities.StringToDate(rs.getString("service_date"), "yyyyMMdd");
-                Date dateB = UtilDateUtilities.StringToDate(rs.getString("labDate"), "yyyyMMdd");
+                Date dateA = UtilDateUtilities.StringToDate(db.getString(rs,"service_date"), "yyyyMMdd");
+                Date dateB = UtilDateUtilities.StringToDate(db.getString(rs,"labDate"), "yyyyMMdd");
                 if (dateA.before(dateB)){
                     monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
                 }else{
@@ -579,9 +579,9 @@ public class MDSResultsData {
                 if (monthsBetween < 4){
 
                         if (ret.equals(""))
-                            ret = rs.getString("id");
+                            ret = db.getString(rs,"id");
                         else
-                            ret = ret+","+rs.getString("id");
+                            ret = ret+","+db.getString(rs,"id");
                     
                 }
             }
@@ -611,8 +611,8 @@ public class MDSResultsData {
                 //MDS labs recycle accessoin numbers every two years, accession
                 //numbers for a lab should have lab dates within a year of eachother
                 //even this is a large timespan
-                Date dateA = UtilDateUtilities.StringToDate(rs.getString("dateTime"), "yyyy-MM-dd hh:mm:ss");
-                Date dateB = UtilDateUtilities.StringToDate(rs.getString("labDate"), "yyyy-MM-dd hh:mm:ss");
+                Date dateA = UtilDateUtilities.StringToDate(db.getString(rs,"dateTime"), "yyyy-MM-dd hh:mm:ss");
+                Date dateB = UtilDateUtilities.StringToDate(db.getString(rs,"labDate"), "yyyy-MM-dd hh:mm:ss");
                 if (dateA.before(dateB)){
                     monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
                 }else{
@@ -621,9 +621,9 @@ public class MDSResultsData {
                 
                 if (monthsBetween < 4){
                     if (ret.equals(""))
-                        ret = rs.getString("segmentID");
+                        ret = db.getString(rs,"segmentID");
                     else
-                        ret = ret+","+rs.getString("segmentID");
+                        ret = ret+","+db.getString(rs,"segmentID");
                 }
             }
             rs.close();
@@ -717,7 +717,7 @@ public class MDSResultsData {
             ResultSet rs = db.GetSQL(sql);
             db.CloseConn();
             rs.next();
-            return rs.getString("demographic_no");
+            return db.getString(rs,"demographic_no");
         }catch(Exception e){
             Logger l = Logger.getLogger(MDSResultsData.class);
             l.error("exception in MDSResultsData.searchPatient()", e);

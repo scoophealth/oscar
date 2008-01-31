@@ -34,9 +34,9 @@ public class ForwardingRules {
             ResultSet rs = db.GetSQL(sql);            
             while (rs.next()){
                 ArrayList info = new ArrayList();
-                info.add(rs.getString("provider_no"));
-                info.add(rs.getString("first_name"));
-                info.add(rs.getString("last_name"));
+                info.add(db.getString(rs,"provider_no"));
+                info.add(db.getString(rs,"first_name"));
+                info.add(db.getString(rs,"last_name"));
                 ret.add(info);
             }
         }catch(Exception e){
@@ -52,7 +52,7 @@ public class ForwardingRules {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);            
             if (rs.next()){
-                ret = rs.getString("status");
+                ret = db.getString(rs,"status");
             }
         }catch(Exception e){
             logger.error("Could not retrieve forwarding rules", e);

@@ -141,7 +141,7 @@ public class Message {
                     //OLD CODE AT BOTTOM                   
                     ArrayList listOfProviderNo = new ArrayList();
                     // route lab first to admitting doctor
-                    subStrings = rs.getString("ordering_provider").split("\\^");
+                    subStrings = db.getString(rs,"ordering_provider").split("\\^");
                     providerMinistryNo = subStrings[0]; //StringUtils.returnStringToFirst(subStrings[0].substring(1, subStrings[0].length())," ");
                     // check that this is a legal provider
                     System.out.println("looking for "+providerMinistryNo);
@@ -151,8 +151,8 @@ public class Message {
                     }  // provider not found                                         
                     
                     // next route to consulting doctor(s)
-                    if ( ! rs.getString("result_copies_to").equals("") ) {
-                        conDoctors = rs.getString("result_copies_to").split("~");
+                    if ( ! db.getString(rs,"result_copies_to").equals("") ) {
+                        conDoctors = db.getString(rs,"result_copies_to").split("~");
                         for (int i = 1; i <= conDoctors.length; i++) {
                             subStrings = conDoctors[i-1].split("\\^");
                             providerMinistryNo = subStrings[0];//StringUtils.returnStringToFirst(subStrings[0].substring(1, subStrings[0].length())," ");
@@ -245,11 +245,11 @@ public class Message {
             sql = "select external_id as healthNumber, patient_name as patientName, date_of_birth as dOB, sex from hl7_pid where message_id = '"+segmentID+"'";               
             ResultSet rs = db.GetSQL(sql);                                                
             if ( rs.next() ) {
-               String lastName = rs.getString("patientName").split("\\^")[0].toUpperCase();
-               String firstName = rs.getString("patientName").split("\\^")[1].toUpperCase();
-               //String dobYear = rs.getString("dOB").substring(0,4);
-               //String dobMonth = rs.getString("dOB").substring(4,6);
-               //String dobDay = rs.getString("dOB").substring(6,8);
+               String lastName = db.getString(rs,"patientName").split("\\^")[0].toUpperCase();
+               String firstName = db.getString(rs,"patientName").split("\\^")[1].toUpperCase();
+               //String dobYear = db.getString(rs,"dOB").substring(0,4);
+               //String dobMonth = db.getString(rs,"dOB").substring(4,6);
+               //String dobDay = db.getString(rs,"dOB").substring(6,8);
                Date d = rs.getDate("dOB");     
                
                Format formatter;
@@ -261,12 +261,12 @@ public class Message {
                String dobDay = formatter.format(d);
                    
                String demoNo = null;
-               if ( !rs.getString("healthNumber").trim().equals("") ) {
+               if ( !db.getString(rs,"healthNumber").trim().equals("") ) {
                   // patient's health number is known - check initials, DOB match
-                  sql = "select demographic_no from demographic where hin='"+rs.getString("healthNumber")+"' and " +
+                  sql = "select demographic_no from demographic where hin='"+db.getString(rs,"healthNumber")+"' and " +
                         "last_name like '"+StringEscapeUtils.escapeSql(lastName.substring(0,1))+"%' and " +
                         "first_name like '"+StringEscapeUtils.escapeSql(firstName.substring(0,1))+"%' and year_of_birth='"+dobYear+"' and " +
-                        "month_of_birth='"+dobMonth+"' and date_of_birth='"+dobDay+"' and sex like '"+rs.getString("sex").toUpperCase()+"%' and " +
+                        "month_of_birth='"+dobMonth+"' and date_of_birth='"+dobDay+"' and sex like '"+db.getString(rs,"sex").toUpperCase()+"%' and " +
                         "patient_status='AC'";
                   ResultSet rs2 = db.GetSQL(sql);                  
                   if ( rs2.next() ) {
@@ -280,7 +280,7 @@ public class Message {
                   // patient's health number is unknown - search by name, DOB, sex
                   sql = "select demographic_no from demographic where last_name='"+StringEscapeUtils.escapeSql(lastName)+"' and " +
                         "first_name like '"+StringEscapeUtils.escapeSql(firstName)+"%' and year_of_birth='"+dobYear+"' and " +
-                        "month_of_birth='"+dobMonth+"' and date_of_birth='"+dobDay+"' and sex like '"+rs.getString("sex").toUpperCase()+"%' and " +
+                        "month_of_birth='"+dobMonth+"' and date_of_birth='"+dobDay+"' and sex like '"+db.getString(rs,"sex").toUpperCase()+"%' and " +
                         "patient_status='AC'";
                   System.out.println(sql);
                   ResultSet rs3 = db.GetSQL(sql);
@@ -322,7 +322,7 @@ public class Message {
           ResultSet rs = db.GetSQL(sql);
                                                 
           if ( rs.next() ) {
-             String prov_no  = rs.getString("provider_no");                                        
+             String prov_no  = db.getString(rs,"provider_no");                                        
              if ( prov_no != null && !prov_no.trim().equals("")){
                 sql = "select status from providerLabRouting where lab_type = 'BCP' and provider_no ='"+prov_no+"' and lab_no = '"+lab_no+"'";                               
                 System.out.println(sql);
@@ -349,7 +349,7 @@ public class Message {
    
    /*UNUSED CODE FROM ABOVE
     // route lab first to admitting doctor
-                    subStrings = rs.getString("ordering_provider").split("\\^");
+                    subStrings = db.getString(rs,"ordering_provider").split("\\^");
                     providerMinistryNo = StringUtils.returnStringToFirst(subStrings[0].substring(1, subStrings[0].length())," ");
                     // check that this is a legal provider
                     providerNo = getProviderNoFromOhipNo(providerMinistryNo);                    
@@ -360,8 +360,8 @@ public class Message {
                     }  // provider not found                                         
                     
                     // next route to consulting doctor(s)
-                    if ( ! rs.getString("result_copies_to").equals("") ) {
-                        conDoctors = rs.getString("result_copies_to").split("~");
+                    if ( ! db.getString(rs,"result_copies_to").equals("") ) {
+                        conDoctors = db.getString(rs,"result_copies_to").split("~");
                         for (int i = 1; i <= conDoctors.length; i++) {
                             subStrings = conDoctors[i-1].split("\\^");
                             providerMinistryNo = StringUtils.returnStringToFirst(subStrings[0].substring(1, subStrings[0].length())," ");

@@ -114,7 +114,7 @@ public class CMLLabTest {
             ResultSet rs = db.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");
             log.debug("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");
             if (rs.next()){
-                String d = rs.getString("demographic_no");
+                String d = db.getString(rs,"demographic_no");
                 log.debug("dd "+d);
                 if ( !"0".equals(d)){
                     this.demographicNo = d;
@@ -142,28 +142,28 @@ public class CMLLabTest {
             
             
             if (rs.next()){
-                this.labReportInfoId = rs.getString("labReportInfo_id");
-                this.accessionNum = rs.getString("accession_num");
-                this.physicianAccountNum = rs.getString("physician_account_num");
-                this.serviceDate = rs.getString("service_date");
-                this.pFirstName = rs.getString("patient_first_name");
-                this.pLastName = rs.getString("patient_last_name");
-                this.pSex = rs.getString("patient_sex");
-                this.pHealthNum = rs.getString("patient_health_num");
-                this.pDOB = rs.getString("patient_dob");
-                this.status = rs.getString("lab_status");
-                this.docNum = rs.getString("doc_num");
-                this.docName = rs.getString("doc_name");
-                this.docAddr1 = rs.getString("doc_addr1");
-                this.docAddr2 = rs.getString("doc_addr2");
-                this.docAddr3 = rs.getString("doc_addr3");
-                this.docPostal = rs.getString("doc_postal");
-                this.docRoute = rs.getString("doc_route");
-                this.comment1 = rs.getString("comment1");
-                this.comment2 = rs.getString("comment2");
-                this.pPhone = rs.getString("patient_phone");
-                this.docPhone = rs.getString("doc_phone");
-                this.collectionDate = rs.getString("collection_date");
+                this.labReportInfoId = db.getString(rs,"labReportInfo_id");
+                this.accessionNum = db.getString(rs,"accession_num");
+                this.physicianAccountNum = db.getString(rs,"physician_account_num");
+                this.serviceDate = db.getString(rs,"service_date");
+                this.pFirstName = db.getString(rs,"patient_first_name");
+                this.pLastName = db.getString(rs,"patient_last_name");
+                this.pSex = db.getString(rs,"patient_sex");
+                this.pHealthNum = db.getString(rs,"patient_health_num");
+                this.pDOB = db.getString(rs,"patient_dob");
+                this.status = db.getString(rs,"lab_status");
+                this.docNum = db.getString(rs,"doc_num");
+                this.docName = db.getString(rs,"doc_name");
+                this.docAddr1 = db.getString(rs,"doc_addr1");
+                this.docAddr2 = db.getString(rs,"doc_addr2");
+                this.docAddr3 = db.getString(rs,"doc_addr3");
+                this.docPostal = db.getString(rs,"doc_postal");
+                this.docRoute = db.getString(rs,"doc_route");
+                this.comment1 = db.getString(rs,"comment1");
+                this.comment2 = db.getString(rs,"comment2");
+                this.pPhone = db.getString(rs,"patient_phone");
+                this.docPhone = db.getString(rs,"doc_phone");
+                this.collectionDate = db.getString(rs,"collection_date");
                 log.debug(" lab id "+labReportInfoId);
             }
             
@@ -200,7 +200,7 @@ public class CMLLabTest {
             ArrayList alist = new ArrayList();
             int count = 0;
             while (rs.next()){
-                String title = rs.getString("title");
+                String title = db.getString(rs,"title");
                 count += title.length();
                 alist.add(title);
                 log.debug("line "+title);
@@ -253,12 +253,12 @@ public class CMLLabTest {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL("select * from labReportInformation where id = '"+labid+"'");
             if (rs.next()){
-                this.locationId = rs.getString("location_id");
-                this.printDate = rs.getString("print_date");
-                this.printTime = rs.getString("print_time");
-                this.totalBType = rs.getString("total_BType");
-                this.totalCType = rs.getString("total_CType");
-                this.totalDType = rs.getString("total_DType");
+                this.locationId = db.getString(rs,"location_id");
+                this.printDate = db.getString(rs,"print_date");
+                this.printTime = db.getString(rs,"print_time");
+                this.totalBType = db.getString(rs,"total_BType");
+                this.totalCType = db.getString(rs,"total_CType");
+                this.totalDType = db.getString(rs,"total_DType");
             }
             rs.close();
             db.CloseConn();
@@ -275,30 +275,30 @@ public class CMLLabTest {
             ResultSet rs = db.GetSQL("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");
             log.debug("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");
             while (rs.next()){
-                String lineType = rs.getString("line_type");
+                String lineType = db.getString(rs,"line_type");
                 log.debug("line "+lineType);
                 if (lineType != null){
                     LabResult labRes = new LabResult();
                     
-                    labRes.title = rs.getString("title");
+                    labRes.title = db.getString(rs,"title");
                     if (labRes.title == null){ labRes.title = "" ;}
-                    labRes.notUsed1 = rs.getString("notUsed1");
-                    labRes.locationId = rs.getString("location_id");
-                    labRes.last = rs.getString("last");
+                    labRes.notUsed1 = db.getString(rs,"notUsed1");
+                    labRes.locationId = db.getString(rs,"location_id");
+                    labRes.last = db.getString(rs,"last");
                     
                     if(lineType.equals("C")){
-                        labRes.notUsed2 = rs.getString("notUsed2");
-                        labRes.testName = rs.getString("test_name");
-                        labRes.abn = rs.getString("abn");
+                        labRes.notUsed2 = db.getString(rs,"notUsed2");
+                        labRes.testName = db.getString(rs,"test_name");
+                        labRes.abn = db.getString(rs,"abn");
                         if(labRes.abn != null && labRes.abn.equals("N")){
                             labRes.abn = "";
                         }
-                        labRes.minimum = rs.getString("minimum");
-                        labRes.maximum = rs.getString("maximum");
-                        labRes.units = rs.getString("units");
-                        labRes.result = rs.getString("result");
+                        labRes.minimum = db.getString(rs,"minimum");
+                        labRes.maximum = db.getString(rs,"maximum");
+                        labRes.units = db.getString(rs,"units");
+                        labRes.result = db.getString(rs,"result");
                     }else if (lineType.equals("D")){
-                        labRes.description = rs.getString("description");
+                        labRes.description = db.getString(rs,"description");
                         labRes.labResult = false;
                     }
                     alist.add(labRes);

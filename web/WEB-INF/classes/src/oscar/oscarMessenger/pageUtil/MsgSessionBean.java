@@ -65,7 +65,7 @@ public class MsgSessionBean
                 String sql = new String("select first_name, last_name from provider where provider_no = '"+providerNo+"'");
                 rs = db.GetSQL(sql);
                 if (rs.next()){
-                   userName =  rs.getString("first_name")+" "+rs.getString("last_name");
+                   userName =  db.getString(rs,"first_name")+" "+db.getString(rs,"last_name");
                 }
                 rs.close();
                 db.CloseConn();

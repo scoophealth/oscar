@@ -157,7 +157,7 @@ public class ABCDParser {
             ResultSet rs = pstmt.executeQuery();            
             while(rs.next()){
                count ++;  
-               demo = rs.getString("demographic_no");
+               demo = oscar.Misc.getString(rs,"demographic_no");
             }   
             rs.close();
             pstmt.close();
@@ -192,8 +192,8 @@ public class ABCDParser {
          ResultSet rs = pstmt.executeQuery();
             
          while(rs.next()){
-            String key = rs.getString("ohip_no");
-            String value = rs.getString("provider_no");
+            String key = oscar.Misc.getString(rs,"ohip_no");
+            String value = oscar.Misc.getString(rs,"provider_no");
             logger.info("Possible provider hashtable key "+key+" lab "+value);
             if ( key != null && value != null && !key.equals("null") && !value.equals("null")){
                htable.put(key, value);
@@ -290,7 +290,7 @@ public class ABCDParser {
             ResultSet rs = pstmt.getGeneratedKeys();
             
             if(rs.next()){
-               insertID = rs.getString(1);       
+               insertID = oscar.Misc.getString(rs,1);       
             }
             pstmt.close();        
          return insertID;
@@ -383,7 +383,7 @@ public class ABCDParser {
             ResultSet rs = pstmt.getGeneratedKeys();
             
             if(rs.next()){
-               insertID = rs.getString(1);       
+               insertID = oscar.Misc.getString(rs,1);       
             }
                      
          return insertID;
@@ -474,7 +474,7 @@ public class ABCDParser {
             ResultSet rs = pstmt.getGeneratedKeys();
             
             if(rs.next()){
-               insertID = rs.getString(1);       
+               insertID = oscar.Misc.getString(rs,1);       
             }
                      
          return insertID;
@@ -532,7 +532,7 @@ public class ABCDParser {
             ResultSet rs = pstmt.getGeneratedKeys();
             
             if(rs.next()){
-               insertID = rs.getString(1);       
+               insertID = oscar.Misc.getString(rs,1);       
             }
          pstmt.close();             
          return insertID;

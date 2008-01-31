@@ -70,8 +70,8 @@ public class MsgAddressBook {
             String sql = new String("select locationDesc, addressBook from oscarcommlocations where current1 = 1");
             rs = db.GetSQL(sql);
             if (rs.next()){
-               retval = rs.getString("addressBook");
-               CurrentLocationName = rs.getString("locationDesc");
+               retval = db.getString(rs,"addressBook");
+               CurrentLocationName = db.getString(rs,"locationDesc");
             }
             rs.close();
             db.CloseConn();
@@ -97,9 +97,9 @@ public class MsgAddressBook {
             String sql = new String("select locationDesc, locationId, addressBook from oscarcommlocations where current1 = 0");
             rs = db.GetSQL(sql);
             while (rs.next()){
-               vector.add(rs.getString("addressBook"));
-               remoteLocationDesc.add(rs.getString("locationDesc"));
-               remoteLocationId.add(rs.getString("locationId"));
+               vector.add(db.getString(rs,"addressBook"));
+               remoteLocationDesc.add(db.getString(rs,"locationDesc"));
+               remoteLocationId.add(db.getString(rs,"locationId"));
             }
             rs.close();
             db.CloseConn();

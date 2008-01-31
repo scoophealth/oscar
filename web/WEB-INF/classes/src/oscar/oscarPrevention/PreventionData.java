@@ -133,8 +133,8 @@ public class PreventionData {
          log.debug(sql);            
          rs = db.GetSQL(sql);                                                
          while(rs.next()){
-            String key = rs.getString("keyval");
-            String val = rs.getString("val");
+            String key = oscar.Misc.getString(rs,"keyval");
+            String val = oscar.Misc.getString(rs,"val");
             if (key != null && val != null){
                h.put(key,val);
             }
@@ -211,7 +211,7 @@ public class PreventionData {
          log.debug(sql); 
          rs = db.GetSQL(sql);
          while (rs.next()){     
-           Hashtable hash = getPreventionById(rs.getString("prevention_id"));
+           Hashtable hash = getPreventionById(oscar.Misc.getString(rs,"prevention_id"));
            if(hash.get("deleted") != null && ( (String) hash.get("deleted")).equals("0")   ){
               list.add(hash);    
            }    
@@ -254,8 +254,8 @@ public class PreventionData {
          
             while (rs.next()){
                 Hashtable h = new Hashtable();
-                 h.put("demographic_no", rs.getString("demographic_no"));
-                 h.put("val",rs.getString("val"));
+                 h.put("demographic_no", oscar.Misc.getString(rs,"demographic_no"));
+                 h.put("val",oscar.Misc.getString(rs,"val"));
                  h.put("prevention_date",rs.getDate("prevention_date"));
                 list.add(h);
             }
@@ -287,13 +287,13 @@ public class PreventionData {
             rs = db.GetSQL(sql);
             while (rs.next()){
                Hashtable h = new Hashtable();
-               h.put("id", rs.getString("id"));               
-               h.put("refused",rs.getString("refused"));
-               h.put("type",rs.getString("prevention_type"));
-               log.debug("id set to "+rs.getString("id"));
-               h.put("provider_no",rs.getString("provider_no")); 
-               h.put("provider_name",rs.getString("provider_name"));          
-               h.put("prevention_date",blankIfNull(rs.getString("prevention_date")));
+               h.put("id", oscar.Misc.getString(rs,"id"));               
+               h.put("refused",oscar.Misc.getString(rs,"refused"));
+               h.put("type",oscar.Misc.getString(rs,"prevention_type"));
+               log.debug("id set to "+oscar.Misc.getString(rs,"id"));
+               h.put("provider_no",oscar.Misc.getString(rs,"provider_no")); 
+               h.put("provider_name",oscar.Misc.getString(rs,"provider_name"));          
+               h.put("prevention_date",blankIfNull(oscar.Misc.getString(rs,"prevention_date")));
                java.util.Date date = null;
                
                try{               
@@ -334,7 +334,7 @@ public class PreventionData {
             log.debug(sql);            
             rs = db.GetSQL(sql);
             if (rs.next()){
-               comment = rs.getString("val");
+               comment = oscar.Misc.getString(rs,"val");
                if ( comment != null && comment.trim().length() == 0){
                   comment = null;
                }
@@ -361,8 +361,8 @@ public class PreventionData {
             log.debug(sql);            
             rs = db.GetSQL(sql);
             while (rs.next()){
-               PreventionItem pi = new PreventionItem( rs.getString("prevention_type"),rs.getDate("prevention_date"),rs.getString("never"), rs.getDate("next_date") ) ;
-               p.addPreventionItem(pi,rs.getString("prevention_type"));
+               PreventionItem pi = new PreventionItem( oscar.Misc.getString(rs,"prevention_type"),rs.getDate("prevention_date"),oscar.Misc.getString(rs,"never"), rs.getDate("next_date") ) ;
+               p.addPreventionItem(pi,oscar.Misc.getString(rs,"prevention_type"));
             }
             db.CloseConn();            
         } catch (SQLException e) {
@@ -383,29 +383,29 @@ public class PreventionData {
             rs = db.GetSQL(sql);
             if (rs.next()){
                h = new Hashtable();
-               log.debug("preventionType"+rs.getString("prevention_type"));
-               addToHashIfNotNull(h,"id", rs.getString("id"));
-               addToHashIfNotNull(h,"provider_no",rs.getString("provider_no"));
-               addToHashIfNotNull(h,"demographicNo", rs.getString("demographic_no"));
-               addToHashIfNotNull(h,"creationDate", rs.getString("creation_date"));
-               addToHashIfNotNull(h,"preventionDate", rs.getString("prevention_date"));
+               log.debug("preventionType"+oscar.Misc.getString(rs,"prevention_type"));
+               addToHashIfNotNull(h,"id", oscar.Misc.getString(rs,"id"));
+               addToHashIfNotNull(h,"provider_no",oscar.Misc.getString(rs,"provider_no"));
+               addToHashIfNotNull(h,"demographicNo", oscar.Misc.getString(rs,"demographic_no"));
+               addToHashIfNotNull(h,"creationDate", oscar.Misc.getString(rs,"creation_date"));
+               addToHashIfNotNull(h,"preventionDate", oscar.Misc.getString(rs,"prevention_date"));
                addToHashIfNotNull(h,"prevention_date_asDate",rs.getDate("prevention_date"));
                //log.debug(rs.getDate("prevention_date"));
-               addToHashIfNotNull(h,"providerName", rs.getString("provider_name"));
-               addToHashIfNotNull(h,"preventionType", rs.getString("prevention_type"));
-               addToHashIfNotNull(h,"deleted", rs.getString("deleted"));
-               addToHashIfNotNull(h,"refused", rs.getString("refused"));  
-               addToHashIfNotNull(h,"next_date", rs.getString("next_date"));
-               addToHashIfNotNull(h,"never",rs.getString("never"));
+               addToHashIfNotNull(h,"providerName", oscar.Misc.getString(rs,"provider_name"));
+               addToHashIfNotNull(h,"preventionType", oscar.Misc.getString(rs,"prevention_type"));
+               addToHashIfNotNull(h,"deleted", oscar.Misc.getString(rs,"deleted"));
+               addToHashIfNotNull(h,"refused", oscar.Misc.getString(rs,"refused"));  
+               addToHashIfNotNull(h,"next_date", oscar.Misc.getString(rs,"next_date"));
+               addToHashIfNotNull(h,"never",oscar.Misc.getString(rs,"never"));
                
 	       String refused = " completed";
-	       switch (Integer.parseInt(rs.getString("refused"))) {
+	       switch (Integer.parseInt(oscar.Misc.getString(rs,"refused"))) {
 		   case 1: refused = " refused"; break;
 		   case 2: refused = " ineligible"; break;
 	       }
-	       String provider = ProviderData.getProviderName(rs.getString("provider_no"));
-	       String summary = "Prevention " + rs.getString("prevention_type") + " provided by " + provider + " on " + rs.getString("prevention_date") +"\n";
-	       Hashtable ext = getPreventionKeyValues(rs.getString("id"));
+	       String provider = ProviderData.getProviderName(oscar.Misc.getString(rs,"provider_no"));
+	       String summary = "Prevention " + oscar.Misc.getString(rs,"prevention_type") + " provided by " + provider + " on " + oscar.Misc.getString(rs,"prevention_date") +"\n";
+	       Hashtable ext = getPreventionKeyValues(oscar.Misc.getString(rs,"id"));
     	       if (ext.containsKey("result")) {
 		   summary += "Result: " + ext.get("result");
 		   if (ext.containsKey("reason") && !ext.get("reason").equals("")) {

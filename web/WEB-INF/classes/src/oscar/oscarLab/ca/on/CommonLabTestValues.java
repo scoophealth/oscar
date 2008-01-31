@@ -118,9 +118,9 @@ public class CommonLabTestValues {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                String testNam = rs.getString("test_name");
-                String labType = rs.getString("lab_type");
-                String title = rs.getString("title");
+                String testNam = db.getString(rs,"test_name");
+                String labType = db.getString(rs,"lab_type");
+                String title = db.getString(rs,"title");
                 Hashtable h = new Hashtable();
                 h.put("testName", testNam);
                 h.put("labType",labType);
@@ -158,19 +158,19 @@ public class CommonLabTestValues {
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
                 
-                String status = rs.getString("observationResultStatus");
+                String status = db.getString(rs,"observationResultStatus");
                 if (status.equals("D") || status.equals("I") || status.equals("X") || status.equals("W"))
                     continue;
                 
-                String testNam = "Unknown";rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));
-                String labType = rs.getString("lab_type");
-                String title = "";//TODO:rs.getString("title");
+                String testNam = "Unknown";db.getString(rs,"observationIden").substring(1,db.getString(rs,"observationIden").indexOf('^'));
+                String labType = db.getString(rs,"lab_type");
+                String title = "";//TODO:db.getString(rs,"title");
                 
                 try{
-                    String obserIden = rs.getString("observationIden");//.substring(rs.getString("observationIden").indexOf('^'),rs.getString("observationIden").indexOf('^',rs.getString("observationIden").indexOf('^')));  //reportname or observationIden
-                    int first = rs.getString("observationIden").indexOf('^');
-                    int second = rs.getString("observationIden").indexOf('^',first+1);
-                    testNam = rs.getString("observationIden").substring(first+1,second);
+                    String obserIden = db.getString(rs,"observationIden");//.substring(db.getString(rs,"observationIden").indexOf('^'),db.getString(rs,"observationIden").indexOf('^',db.getString(rs,"observationIden").indexOf('^')));  //reportname or observationIden
+                    int first = db.getString(rs,"observationIden").indexOf('^');
+                    int second = db.getString(rs,"observationIden").indexOf('^',first+1);
+                    testNam = db.getString(rs,"observationIden").substring(first+1,second);
                 }catch(Exception e){
                     logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
                 }
@@ -207,9 +207,9 @@ public class CommonLabTestValues {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                String testNam = rs.getString("observation_identifier").substring(1+rs.getString("observation_identifier").indexOf('^'));
-                String labType = rs.getString("lab_type");
-                String title = "";//TODO:rs.getString("title");
+                String testNam = db.getString(rs,"observation_identifier").substring(1+db.getString(rs,"observation_identifier").indexOf('^'));
+                String labType = db.getString(rs,"lab_type");
+                String title = "";//TODO:db.getString(rs,"title");
                 Hashtable h = new Hashtable();
                 h.put("testName", testNam);
                 h.put("labType",labType);
@@ -234,7 +234,7 @@ public class CommonLabTestValues {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                MessageHandler h = f.getHandler(rs.getString("lab_no"));
+                MessageHandler h = f.getHandler(db.getString(rs,"lab_no"));
                 for (int i=0; i < h.getOBRCount(); i++){
                     for (int j=0; j < h.getOBXCount(i); j++){
                         
@@ -287,10 +287,10 @@ public class CommonLabTestValues {
             
             while(rs.next()){
                 Hashtable h = new Hashtable();
-                h.put("lab_no", rs.getString("lab_no"));
-                h.put("result", rs.getString("dataField"));
-                h.put("date", rs.getString("dateObserved"));
-                h.put("abn", rs.getString("abnormal"));
+                h.put("lab_no", oscar.Misc.getString(rs,"lab_no"));
+                h.put("result", oscar.Misc.getString(rs,"dataField"));
+                h.put("date", oscar.Misc.getString(rs,"dateObserved"));
+                h.put("abn", oscar.Misc.getString(rs,"abnormal"));
                 labList.add(h);
             }
             rs.close();
@@ -337,14 +337,14 @@ public class CommonLabTestValues {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
-                    String testNam = rs.getString("test_name");
-                    String abn = rs.getString("abn");
-                    String result = rs.getString("result");
-                    String range = getReferenceRange(rs.getString("minimum"),rs.getString("maximum"));
-                    String units = rs.getString("units");
-                    String collDate = rs.getString("collection_date");
-                    String lab_no = rs.getString("lab_no");
-                    String accessionNum = rs.getString("accession_num");
+                    String testNam = db.getString(rs,"test_name");
+                    String abn = db.getString(rs,"abn");
+                    String result = db.getString(rs,"result");
+                    String range = getReferenceRange(db.getString(rs,"minimum"),db.getString(rs,"maximum"));
+                    String units = db.getString(rs,"units");
+                    String collDate = db.getString(rs,"collection_date");
+                    String lab_no = db.getString(rs,"lab_no");
+                    String accessionNum = db.getString(rs,"accession_num");
                     
                     Date dateA = (Date) accessionMap.get(accessionNum);
                     Date dateB = UtilDateUtilities.getDateFromString(collDate, "dd-MMM-yy");
@@ -388,18 +388,18 @@ public class CommonLabTestValues {
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
                     
-                    String testNam = rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));  //reportname or observationIden
+                    String testNam = db.getString(rs,"observationIden").substring(1,db.getString(rs,"observationIden").indexOf('^'));  //reportname or observationIden
                     
-                    String abn = rs.getString("abnormalFlags");            //abnormalFlags from mdsOBX
-                    String result = rs.getString("observationValue");     //mdsOBX observationValue
-                    String segId = rs.getString("segmentID");
+                    String abn = db.getString(rs,"abnormalFlags");            //abnormalFlags from mdsOBX
+                    String result = db.getString(rs,"observationValue");     //mdsOBX observationValue
+                    String segId = db.getString(rs,"segmentID");
                     String range = "";
                     String units = "";
-                    String collDate = rs.getString("dateTime"); //mdsOBX dateTime
-                    String messageConID = rs.getString("messageConID");
+                    String collDate = db.getString(rs,"dateTime"); //mdsOBX dateTime
+                    String messageConID = db.getString(rs,"messageConID");
                     String accessionNum = messageConID.substring(0, messageConID.lastIndexOf("-"));
                     String version = messageConID.substring(messageConID.lastIndexOf("-")+1);
-                    String status = rs.getString("observationResultStatus");
+                    String status = db.getString(rs,"observationResultStatus");
                     
                     // Skip the result if it is not supposed to be displayed
                     if (status.equals("I") || status.equals("W") || status.equals("X") || status.equals("D"))
@@ -463,15 +463,15 @@ public class CommonLabTestValues {
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
                     // |   |  |
-                    String testNam = rs.getString("observation_identifier").substring(rs.getString("observation_identifier").indexOf('^')+1);
+                    String testNam = db.getString(rs,"observation_identifier").substring(db.getString(rs,"observation_identifier").indexOf('^')+1);
                     
-                    String abn = rs.getString("abnormal_flags");            //abnormalFlags from mdsOBX
-                    String result = rs.getString("observation_results");     //mdsOBX observationValue
-                    String segId = rs.getString("lab_no");
-                    String range = rs.getString("reference_range");
-                    String units = rs.getString("units");
-                    String collDate = rs.getString("observation_date_time");
-                    String accessionNum = rs.getString("filler_order_number");
+                    String abn = db.getString(rs,"abnormal_flags");            //abnormalFlags from mdsOBX
+                    String result = db.getString(rs,"observation_results");     //mdsOBX observationValue
+                    String segId = db.getString(rs,"lab_no");
+                    String range = db.getString(rs,"reference_range");
+                    String units = db.getString(rs,"units");
+                    String collDate = db.getString(rs,"observation_date_time");
+                    String accessionNum = db.getString(rs,"filler_order_number");
                     
                     // get just the accession number
                     String[] ss = accessionNum.split("-");
@@ -523,7 +523,7 @@ public class CommonLabTestValues {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
-                    String lab_no = rs.getString("lab_no");
+                    String lab_no = db.getString(rs,"lab_no");
                     
                     Factory f = new Factory();
                     MessageHandler handler = f.getHandler(lab_no);
@@ -590,19 +590,19 @@ public class CommonLabTestValues {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                String testNam = rs.getString("test_name")==null ? "" : rs.getString("test_name");
-                String abn = rs.getString("abn")==null ? "" : rs.getString("abn");
-                String result = rs.getString("result")==null ? "" : rs.getString("result");
-                String range = getReferenceRange(rs.getString("minimum"),rs.getString("maximum"));
-		String min = rs.getString("minimum");
-		String max = rs.getString("maximum");
-                String units = rs.getString("units")==null ? "" : rs.getString("units");
-		String location = rs.getString("location_id")==null ? "" : rs.getString("location_id");
-		String description = rs.getString("description")==null ? "" : rs.getString("description");
-		String accession = rs.getString("accession_num")==null ? "" : rs.getString("accession_num");
+                String testNam = db.getString(rs,"test_name")==null ? "" : db.getString(rs,"test_name");
+                String abn = db.getString(rs,"abn")==null ? "" : db.getString(rs,"abn");
+                String result = db.getString(rs,"result")==null ? "" : db.getString(rs,"result");
+                String range = getReferenceRange(db.getString(rs,"minimum"),db.getString(rs,"maximum"));
+		String min = db.getString(rs,"minimum");
+		String max = db.getString(rs,"maximum");
+                String units = db.getString(rs,"units")==null ? "" : db.getString(rs,"units");
+		String location = db.getString(rs,"location_id")==null ? "" : db.getString(rs,"location_id");
+		String description = db.getString(rs,"description")==null ? "" : db.getString(rs,"description");
+		String accession = db.getString(rs,"accession_num")==null ? "" : db.getString(rs,"accession_num");
 		
-                String collDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(rs.getString("collection_date"),"dd-MMM-yy"),"yyyy-MM-dd");
-                logger.info("This went in "+rs.getString("collection_date")+" this came out "+UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(rs.getString("collection_date"),"dd-MMM-yy"),"yyyy-MM-dd"));
+                String collDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(db.getString(rs,"collection_date"),"dd-MMM-yy"),"yyyy-MM-dd");
+                logger.info("This went in "+db.getString(rs,"collection_date")+" this came out "+UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(db.getString(rs,"collection_date"),"dd-MMM-yy"),"yyyy-MM-dd"));
 		
 		Hashtable h = new Hashtable();
                 h.put("testName", testNam);
@@ -635,21 +635,21 @@ public class CommonLabTestValues {
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
                 
-                //String testNam = rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));  //reportname or observationIden
+                //String testNam = db.getString(rs,"observationIden").substring(1,db.getString(rs,"observationIden").indexOf('^'));  //reportname or observationIden
                 
-                String obserIden = rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));  //reportname or observationIden
-                int first = rs.getString("observationIden").indexOf('^');
-                int second = rs.getString("observationIden").substring(first+1).indexOf('^');
-                String testNam = rs.getString("observationIden").substring(first+1,second+first+1);
+                String obserIden = db.getString(rs,"observationIden").substring(1,db.getString(rs,"observationIden").indexOf('^'));  //reportname or observationIden
+                int first = db.getString(rs,"observationIden").indexOf('^');
+                int second = db.getString(rs,"observationIden").substring(first+1).indexOf('^');
+                String testNam = db.getString(rs,"observationIden").substring(first+1,second+first+1);
                 
-                String abn = rs.getString("abnormalFlags");            //abnormalFlags from mdsOBX
-                String result = rs.getString("observationValue");     //mdsOBX observationValue
-                String segId = rs.getString("segmentID");
+                String abn = db.getString(rs,"abnormalFlags");            //abnormalFlags from mdsOBX
+                String result = db.getString(rs,"observationValue");     //mdsOBX observationValue
+                String segId = db.getString(rs,"segmentID");
                 String range = "";
                 String units = "";
-                //String collDate = rs.getString("dateTime");
+                //String collDate = db.getString(rs,"dateTime");
                 
-                String collDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(rs.getString("dateTime"),"yyyy-MM-dd hh:mm:ss"),"yyyy-MM-dd");
+                String collDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(db.getString(rs,"dateTime"),"yyyy-MM-dd hh:mm:ss"),"yyyy-MM-dd");
                 
                 //<LabResults testDate="2004-11-17 16:26:18
                 

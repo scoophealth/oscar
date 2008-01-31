@@ -55,10 +55,10 @@ public class ProviderNameBeanHandler {
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
-                ProviderData pData = new ProviderData(rs.getString("provider_no"));
-                ProviderNameBean pNameBean = new ProviderNameBean(pData.getLast_name() + ", " + pData.getFirst_name(), rs.getString("provider_no"));
+                ProviderData pData = new ProviderData(db.getString(rs,"provider_no"));
+                ProviderNameBean pNameBean = new ProviderNameBean(pData.getLast_name() + ", " + pData.getFirst_name(), db.getString(rs,"provider_no"));
                 providerNameVector.add(pNameBean);
-                if(rs.getString("provider_type").equalsIgnoreCase("doctor")){
+                if(db.getString(rs,"provider_type").equalsIgnoreCase("doctor")){
                     doctorNameVector.add(pNameBean);
                     //System.out.println("doctor name added");
                 }
@@ -90,7 +90,7 @@ public class ProviderNameBeanHandler {
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {                
-                ProviderNameBean pNameBean = new ProviderNameBean(rs.getString("last_name") + ", " + rs.getString("first_name"), rs.getString("provider_no"));
+                ProviderNameBean pNameBean = new ProviderNameBean(db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name"), db.getString(rs,"provider_no"));
                 thisGroupProviderVector.add(pNameBean);
             }
         }

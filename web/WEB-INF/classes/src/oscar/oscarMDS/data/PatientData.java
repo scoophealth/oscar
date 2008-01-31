@@ -46,9 +46,9 @@ public class PatientData
 
             if(rs.next())
             {
-                p = new Patient(rs.getString("patientName"), rs.getString("dOB"),
-                    rs.getString("healthNumber"), rs.getString("sex"),
-                    rs.getString("homePhone"), rs.getString("altPatientID"));
+                p = new Patient(db.getString(rs,"patientName"), db.getString(rs,"dOB"),
+                    db.getString(rs,"healthNumber"), db.getString(rs,"sex"),
+                    db.getString(rs,"homePhone"), db.getString(rs,"altPatientID"));
             }
 
             rs.close();

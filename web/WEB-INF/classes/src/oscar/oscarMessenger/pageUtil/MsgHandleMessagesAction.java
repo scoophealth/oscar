@@ -136,10 +136,10 @@ public  class MsgHandleMessagesAction extends Action {
              rs = db.GetSQL(sql);
 
              if ( rs.next()){
-                vector.add(rs.getString("sentbyNo"));
-                subject.append(rs.getString("thesubject"));
-                themessage= rs.getString("themessage");
-                sentByLocation = rs.getString("sentByLocation");
+                vector.add(db.getString(rs,"sentbyNo"));
+                subject.append(db.getString(rs,"thesubject"));
+                themessage= db.getString(rs,"themessage");
+                sentByLocation = db.getString(rs,"sentByLocation");
                 themessage = themessage.replace('\n','>');        //puts > at the beginning
                 theSendMessage = new StringBuffer(themessage);    //of each line
                 theSendMessage.insert(0,"\n\n\n>");
@@ -153,9 +153,9 @@ public  class MsgHandleMessagesAction extends Action {
               if(replyAll.compareToIgnoreCase("reply All") == 0){  // add every one that got the message
                  rs = db.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = '"+messageNo+"'");
                  while (rs.next()){
-                     System.out.println("LOOK4ME pro no "+rs.getString("provider_no")+" remo Loco "+rs.getString("remoteLocation"));
-                     vector.add(rs.getString("provider_no"));
-                     replyMessageData.add(rs.getString("provider_no"),rs.getString("remoteLocation"));
+                     System.out.println("LOOK4ME pro no "+db.getString(rs,"provider_no")+" remo Loco "+db.getString(rs,"remoteLocation"));
+                     vector.add(db.getString(rs,"provider_no"));
+                     replyMessageData.add(db.getString(rs,"provider_no"),db.getString(rs,"remoteLocation"));
                  }
                  replyval = new String[vector.size()];  //no need for the old replyval
                  for (int k =0; k < vector.size(); k++){
@@ -188,10 +188,10 @@ public  class MsgHandleMessagesAction extends Action {
               rs = db.GetSQL(sql);
 
               if ( rs.next()){
-//                 vector.add(rs.getString("sentbyNo"));
-                 subject.append(rs.getString("thesubject"));
-                 themessage= rs.getString("themessage");
-//                 sentByLocation = rs.getString("sentByLocation");
+//                 vector.add(db.getString(rs,"sentbyNo"));
+                 subject.append(db.getString(rs,"thesubject"));
+                 themessage= db.getString(rs,"themessage");
+//                 sentByLocation = db.getString(rs,"sentByLocation");
                  themessage = themessage.replace('\n','>');        //puts > at the beginning
                  theSendMessage = new StringBuffer(themessage);    //of each line
                  theSendMessage.insert(0,"\n\n\n>");

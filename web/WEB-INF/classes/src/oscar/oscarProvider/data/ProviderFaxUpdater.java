@@ -61,7 +61,7 @@ public class ProviderFaxUpdater {
         rs = db.GetSQL(sql);
             
         if( rs.next() ) {
-            faxNum = rs.getString("value");
+            faxNum = db.getString(rs,"value");
         }
         
         if( faxNum.equals("") ) {
@@ -69,7 +69,7 @@ public class ProviderFaxUpdater {
             rs = db.GetSQL(sql);
             
             if( rs.next() ) {
-                faxNum = rs.getString("clinic_fax");
+                faxNum = db.getString(rs,"clinic_fax");
             }
         }
         

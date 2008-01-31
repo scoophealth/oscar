@@ -62,7 +62,7 @@ public class MsgViewAttachmentAction extends Action {
         String sql = new String("select attachment from messagetbl where messageid ="+attachId);
         rs = db.GetSQL(sql);
         while (rs.next()) {
-              att = rs.getString("attachment");
+              att = db.getString(rs,"attachment");
         }//while
         rs.close();
         db.CloseConn();

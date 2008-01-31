@@ -134,9 +134,9 @@ public class CommonLabResultData {
             ResultSet rs = db.queryResults(sql);
             
             if(rs.next()){  //
-                String id = rs.getString("id");
+                String id = db.getString(rs,"id");
                 sql = "update providerLabRouting set status='"+status+"', comment=? where id = '"+id+"'";
-                if (!rs.getString("status").equals("A"))
+                if (!db.getString(rs,"status").equals("A"))
                     db.queryExecute(sql, new String[] { comment });
             }else{
                 sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment,lab_type) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?,'"+labType+"')";
@@ -172,8 +172,8 @@ public class CommonLabResultData {
             ResultSet rs = db.GetSQL(sql);
             logger.info(sql);
             while(rs.next()){
-                statusArray.add( new ReportStatus(rs.getString("first_name")+" "+rs.getString("last_name"), rs.getString("provider_no"), descriptiveStatus(rs.getString("status")), rs.getString("comment"), rs.getString("timestamp"), labId ) );
-                //statusArray.add( new ReportStatus(rs.getString("first_name")+" "+rs.getString("last_name"), rs.getString("provider_no"), descriptiveStatus(rs.getString("status")), rs.getString("comment"), rs.getTimestamp("timestamp").getTime(), labId ) );
+                statusArray.add( new ReportStatus(db.getString(rs,"first_name")+" "+db.getString(rs,"last_name"), db.getString(rs,"provider_no"), descriptiveStatus(db.getString(rs,"status")), db.getString(rs,"comment"), db.getString(rs,"timestamp"), labId ) );
+                //statusArray.add( new ReportStatus(db.getString(rs,"first_name")+" "+db.getString(rs,"last_name"), db.getString(rs,"provider_no"), descriptiveStatus(db.getString(rs,"status")), db.getString(rs,"comment"), rs.getTimestamp("timestamp").getTime(), labId ) );
             }
             rs.close();
             db.CloseConn();
@@ -201,7 +201,7 @@ public class CommonLabResultData {
             ResultSet rs = db.GetSQL(sql);
             db.CloseConn();
             if(rs.next()){
-                retval = rs.getString("demographic_no");
+                retval = db.getString(rs,"demographic_no");
             }
         }catch(Exception e){
             Logger l = Logger.getLogger(CommonLabResultData.class);
@@ -350,7 +350,7 @@ public class CommonLabResultData {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = '"+labType+"'");
             if (rs.next()){
-                String d = rs.getString("demographic_no");
+                String d = db.getString(rs,"demographic_no");
                 if ( !"0".equals(d)){
                     demoNo = d;
                 }
@@ -371,7 +371,7 @@ public class CommonLabResultData {
             String sql = "select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type  = '"+labType+"' ";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()){
-                String demo =  rs.getString("demographic_no");
+                String demo =  db.getString(rs,"demographic_no");
                 if(demo != null && !demo.trim().equals("0") ){
                     ret = true;
                 }

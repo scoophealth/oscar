@@ -130,10 +130,10 @@ public class MsgSendMessageAction extends Action {
 
               rs = db.GetSQL(sql);
               while (rs.next()) {
-              // System.out.println(rs.getString("first_name"));
-              sentToWho.append(" "+rs.getString("first_name") +" " +rs.getString("last_name")+". ");
-              //providerFirstName.add(rs.getString("first_name"));
-              //providerLastName.add(rs.getString("last_name"));
+              // System.out.println(db.getString(rs,"first_name"));
+              sentToWho.append(" "+db.getString(rs,"first_name") +" " +db.getString(rs,"last_name")+". ");
+              //providerFirstName.add(db.getString(rs,"first_name"));
+              //providerLastName.add(db.getString(rs,"last_name"));
               }
         rs.close();
         db.CloseConn();
@@ -162,8 +162,8 @@ public class MsgSendMessageAction extends Action {
 		rs = db.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
 	      } else
 	      throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
-              // System.out.println(rs.getString(1));
-              String messageid = rs.getString(1);
+              // System.out.println(db.getString(rs,1));
+              String messageid = db.getString(rs,1);
 
               for (int i =0 ; i < providers.length ; i++)
               {
