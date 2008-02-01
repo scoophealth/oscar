@@ -121,8 +121,8 @@ public class EDocUtil extends SqlUtilBaseS {
         String document_no = runSQLinsert(documentSql);
         System.out.println("addDoc: " + documentSql);
        */
-         String document_no= runPreparedSqlInsert(preparedSQL, param);
-        
+         runPreparedSql(preparedSQL, param);
+         String document_no = getLastDocumentNo();
         String ctlDocumentSql = "INSERT INTO ctl_document VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "')";
        System.out.println("add ctl_document: " +ctlDocumentSql);
         runSQL(ctlDocumentSql); 
@@ -168,7 +168,7 @@ public class EDocUtil extends SqlUtilBaseS {
        java.sql.Date od2 = MyDateFormat.getSysDate(newDocument.getObservationDate());
        param[1] = new DBPreparedHandlerParam(od2);
        System.out.println("doceditSQL: " + editDocSql);
-       runPreparedSqlUpdate(editDocSql,param);       
+       runPreparedSql(editDocSql,param);       
        
        
     }
@@ -418,9 +418,17 @@ public class EDocUtil extends SqlUtilBaseS {
         
     
     public static void deleteDocument(String documentNo) {
-        String nowDate = getDmsDateTime();
-        String sql = "UPDATE document SET status='D', updatedatetime='" + nowDate + "' WHERE document_no=" + documentNo;
-        runSQL(sql);
+        //String nowDate = getDmsDateTime();        
+        //String sql = "UPDATE document SET status='D', updatedatetime='" + nowDate + "' WHERE document_no=" + documentNo;
+        //runSQL(sql);
+        
+        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[1];       
+        java.sql.Date od1 = MyDateFormat.getSysDate(getDmsDateTime());
+        param[0] = new DBPreparedHandlerParam(od1);
+        
+        String updateSql = "UPDATE document SET status='D', updatedatetime=? WHERE document_no=" + documentNo;
+        
+        runPreparedSql(updateSql,param);   
     }
 
     public static String getDmsDateTime() {
