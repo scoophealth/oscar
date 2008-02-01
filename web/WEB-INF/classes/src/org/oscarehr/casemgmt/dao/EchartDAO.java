@@ -93,14 +93,14 @@ public class EchartDAO extends HibernateDaoSupport {
         if (dupliString.lastIndexOf("[[") >= 0) {
             dupliString = dupliString.substring(0, dupliString.lastIndexOf("[["));
         }
-        if (etext.lastIndexOf(dupliString) >= 0) return rtStr;
+        if (etext!=null && etext.lastIndexOf(dupliString) >= 0) return rtStr;
         //if old ecounter text>6000, auto split
-        if (etext.length() > 6000) {
+        if (etext!=null && etext.length() > 6000) {
             etext = etext.substring(etext.length() - 5120) + "\n------------------------------------\n$$CAISI AUTO SPLIT CHART$$\n";
             ec.setSubject("SPLIT CHART");
         }
         /*remove the duplicate String from save button*/
-        if (lastStr != null && etext.lastIndexOf(lastStr) >= 0) {
+        if (etext!=null && lastStr != null && etext.lastIndexOf(lastStr) >= 0) {
             String begetext = etext.substring(0, etext.lastIndexOf(lastStr));
             String endetext = etext.substring(etext.lastIndexOf(lastStr) + lastStr.length());
             etext = begetext + endetext;
