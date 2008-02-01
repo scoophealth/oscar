@@ -68,7 +68,7 @@ public class SqlUtilBaseS {
        return "";
    }
    
-   protected static void runPreparedSqlUpdate(String preparedSql,DBPreparedHandlerParam[] params) {
+   protected static void runPreparedSql(String preparedSql,DBPreparedHandlerParam[] params) {
 	   try {
 		   DBPreparedHandler dbPre = new DBPreparedHandler();
 		   dbPre.queryExecuteUpdate(preparedSql, params);
