@@ -24,6 +24,7 @@ public class QuatroReportRunnerAction extends Action {
         String loginId = "999998";
 
         ArrayList lstExportFormat = myForm.getExportFormatList();
+
 //        KeyValueBean obj1= new KeyValueBean(String.valueOf(ReportExportFormat._crystalReports),"Crystal Report");
 //        lstExportFormat.add(obj1);
 //        KeyValueBean obj2= new KeyValueBean(String.valueOf(ReportExportFormat._MSExcel),"Excel (.xls)");
@@ -88,7 +89,8 @@ public class QuatroReportRunnerAction extends Action {
     
 	public void OnCriteriaTextChangedHandler(int reportNo, QuatroReportRunnerForm myForm, HttpServletRequest request)
 	{
-        ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
+/*
+		ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
         ReportTempValue rptTemp = rptVal.getReportTemp();
         if (rptTemp == null)
         {
@@ -166,6 +168,7 @@ public class QuatroReportRunnerAction extends Action {
 				break;
 		}
 		request.getSession().setAttribute(DataViews.REPORT_CRI, cris);
+*/
 	}
 
     public void btnInsertTplCri_Click(int reportNo, QuatroReportRunnerForm myForm, HttpServletRequest request)
@@ -196,12 +199,12 @@ public class QuatroReportRunnerAction extends Action {
             rptVal.setPrint2Pdf(false); // this property is kept only for the customized prints 
 
             int optionIdx = Integer.parseInt(myForm.getReportOption());
-            ReportOptionValue option = (ReportOptionValue)rptVal.getOptions().get(optionIdx-1);
+            ReportOptionValue option = new ReportOptionValue(); // (ReportOptionValue)rptVal.getOptions();
 
             String path = DataViews.RptFiles;
             String rptFilePath = path + "/" + option.getRptFileName();
 
-            ReportService reportManager = new ReportService(rptVal.getReportNo());
+//            ReportService reportManager = new ReportService(rptVal.getReportNo());
 
     		request.getSession().setAttribute(DataViews.REPORTTPL, rptTempVal);
     		request.getSession().setAttribute(DataViews.REPORT_OPTION, option);
@@ -224,8 +227,10 @@ public class QuatroReportRunnerAction extends Action {
 	{
 		if(request.getSession()!=null) request.getSession().removeAttribute(DataViews.REPORT_CRI);
 		
-		QuatroReportManager reportManager = (QuatroReportManager) WebApplicationContextUtils.getWebApplicationContext(
- 	       		pageContext.getServletContext()).getBean("quatroReportManagerTarget");
+//		QuatroReportManager reportManager = (QuatroReportManager) WebApplicationContextUtils.getWebApplicationContext(
+// 	       		pageContext.getServletContext()).getBean("quatroReportManagerTarget");
+		QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
+        		getServlet().getServletContext()).getBean("quatroReportManager");
 		ReportValue rptVal = reportManager.GetReport(reportNo, loginId);
 
 		request.getSession().setAttribute(DataViews.REPORT, rptVal);
@@ -332,11 +337,11 @@ public class QuatroReportRunnerAction extends Action {
 		}
 		myForm.setOrgSelectionProperty(obj5);
 
-		ArrayList rptOptions = rptVal.getOptions();
+		ArrayList rptOptions = new ArrayList(); // rptVal.getOptions();
 		myForm.setReportOptionList(rptOptions);
        	for (Iterator it = rptOptions.iterator(); it.hasNext();){
         	ReportOptionValue rv = (ReportOptionValue)it.next();
-        	if(rv.isBdefault()){
+        	if(rv.isDefault()){
     		  myForm.setReportOption(String.valueOf(rv.getOptionNo()));
         	  break;
         	} 
@@ -347,8 +352,10 @@ public class QuatroReportRunnerAction extends Action {
 
 	private void RefreshCriteria(QuatroReportRunnerForm myForm, int reportNo)
 	{
+/*
 		ReportService reportManager = new ReportService(reportNo);
 		myForm.setFilterFields((ArrayList<ReportFilterValue>)reportManager.GetCriteriaFieldList());
+*/
 	}
 	
 	private ReportTempValue BuildTemplate(QuatroReportRunnerForm myForm, HttpServletRequest request) throws Exception
@@ -413,6 +420,7 @@ public class QuatroReportRunnerAction extends Action {
 	
     public void ChangeTplCriTable(int operationType, QuatroReportRunnerForm myForm, HttpServletRequest request)
     {
+/*
     	ArrayList<ReportTempCriValue> obj= new ArrayList<ReportTempCriValue>();
 		Map map=request.getParameterMap();
 		String[] obj2= (String[])map.get("lineno");
@@ -544,6 +552,7 @@ public class QuatroReportRunnerAction extends Action {
 			break;
 		}
 		myForm.setTemplateCriteriaList(obj);
+*/		
     }
 	
 }

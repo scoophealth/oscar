@@ -2,8 +2,8 @@ package com.quatro.web.report;
 
 import java.util.ArrayList;
 import org.apache.struts.action.ActionForm;
-import com.quatro.web.util.*;
-import com.quatro.web.model.*;
+import com.quatro.util.*;
+import com.quatro.model.*;
 
 public class QuatroReportRunnerForm extends ActionForm {
 

@@ -2,9 +2,9 @@ package com.quatro.web.report;
 
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
-import com.quatro.web.model.*;
-import com.quatro.web.service.*;
-import com.quatro.web.util.*;
+import com.quatro.model.*;
+import com.quatro.service.*;
+import com.quatro.util.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,7 +19,7 @@ import com.crystaldecisions.sdk.occa.report.data.*;
 import com.crystaldecisions.sdk.occa.report.lib.*;
 import com.crystaldecisions.report.web.viewer.*;
 
-public class ReportViewerAction extends Action {
+public class QuatroReportViewerAction extends Action {
 //	private String [] relationList = {"(","AND","OR",")",") AND",") OR","AND (","OR (",") AND (",") OR ("};
 	ReportValue _rptValue;
     ReportOptionValue _rptOption;
@@ -62,7 +62,7 @@ public class ReportViewerAction extends Action {
 
 			int templateNo = 0;//rptTemp.getTemplateNo();
 			//prepare to run the report
-            ReportService reportService = ReportService.GetInstance();
+            // ReportService reportService = ReportService.GetInstance();
 
             //1. get he report Value bean and date filter
             Date startDate = rptTemp.getStartDate();
@@ -147,7 +147,7 @@ public class ReportViewerAction extends Action {
         if (criterias.size() == 0) return null;
 
         ReportTempCriValue rptCri = (ReportTempCriValue)criterias.get(0);
-        ReportService rpt = new ReportService(rptTemp.getReportNo());
+        // ReportService rpt = new ReportService(rptTemp.getReportNo());
 
         String criteriaSQL = "(";
         r_criteriaDis="(\n";
@@ -196,7 +196,7 @@ public class ReportViewerAction extends Action {
                 {
                     err += "Missing Values at line " + String.valueOf(i + 1) + "<br>";
                 }
-                ReportFilterValue filter = rpt.GetFilterField(fieldNo);
+                ReportFilterValue filter = new ReportFilterValue(); // rpt.GetFilterField(fieldNo);
                 String FieldType = filter.getFieldType();
                 criteriaSQL += "{" + tableName + filter.getFieldSQL() + "}";
                 r_criteriaDis += filter.getFieldName();

@@ -1,4 +1,4 @@
-package com.quatro.qs.util;
+package com.quatro.util;
 
 public class HTMLPropertyBean {
 	String readOnly;

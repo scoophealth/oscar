@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.ReportOptionValue" table="REPORT_OPTION">
+		<id name="optionNo" column="REPORTOPTIONID" unsaved-value="0">
+			<generator class="native" />
+		</id>
+        <property name="reportNo" column="REPORTNO" /> 
+        <property name="optionTitle" column="SHORTDESC" /> 
+        <property name="optionDescription" column="LONGDESC" /> 
+        <property name="active" column="ACTIVEYN" /> 
+        <property name="default" column="DEFAULTYN" /> 
+        <property name="dateFieldName" column="DATEFIELD" /> 
+        <property name="dateFieldDesc" column="DATEFIELDDESC" /> 
+        <property name="dateFieldType" column="DATEFIELDTYPE" /> 
+        <property name="dbsqlWhere" column="SQLWHERE" /> 
+        <property name="dbsqlOrderBy" column="SQLORDERBY" /> 
+        <property name="rptFileName" column="RPTFILENAME" /> 
+        <property name="rptFileNo" column="RPTFILENO" /> 
+        <property name="rptVersion" column="RPTVERSION" type="java.util.Date" /> 
+	</class>
+</hibernate-mapping>

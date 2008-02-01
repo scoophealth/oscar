@@ -1,4 +1,4 @@
-package com.quatro.qs.util;
+package com.quatro.util;
 
 import java.util.Calendar;
 import java.util.Date;
