@@ -68,7 +68,7 @@
 	                </c:choose>
                 </select>
             </display:column>
-            <display:column title="Room Occupancy">
+            <display:column title="Room Capacity">
 				<select name="rooms[<c:out value="${room_rowNum - 1}" />].occupancy">
        
 					<c:forEach var="num" begin="1" end="20" step="1">
