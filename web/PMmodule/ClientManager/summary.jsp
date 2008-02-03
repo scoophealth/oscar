@@ -259,37 +259,62 @@ function openSurvey() {
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th>Bed Reservation</th>
+			<th>Bed/Room Reservation</th>
 		</tr>
 	</table>
 </div>
 
 <table class="simple" cellspacing="2" cellpadding="3">
 	<c:choose>
-		<c:when test="${empty bedDemographic}">
-			<tr>
-				<td>
-					<span style="color:red">No bed reserved</span>
-				</td>
-			</tr>
+		<c:when test="${bedDemographic == null}">
+			<c:choose>
+				<c:when test="${roomDemographic != null}">
+					<tr>
+						<th width="20%">Assigned Room:</th>
+						<td><c:out value="${roomDemographic.room.name}" /></td>
+					</tr>
+					<tr>
+						<th width="20%">Assigned Bed:</th>
+						<td>N/A</td>
+					</tr>
+					<tr>
+						<th width="20%">Until</th>
+						<td><fmt:formatDate value="${roomDemographic.assignEnd}" pattern="yyyy-MM-dd" /></td>
+					</tr>
+					
+				</c:when>	
+				<c:otherwise>
+					<tr>
+						<td>
+							<span style="color:red">No bed or room reserved</span>
+						</td>
+					</tr>
+				</c:otherwise>	
+			</c:choose>
 		</c:when>
-		<c:otherwise>
-			<tr>
-				<th width="20%">Assigned</th>
-				<td><c:out value="${bedDemographic.roomName}" /> - <c:out value="${bedDemographic.bedName}" /> (<c:out value="${bedDemographic.programName}" />)</td>
-			</tr>
-			<tr>
-				<th width="20%">Status</th>
-				<td><c:out value="${bedDemographic.statusName}" /></td>
-			</tr>
-			<tr>
-				<th width="20%">Late Pass</th>
-				<td><c:out value="${bedDemographic.latePass}" /></td>
-			</tr>
-			<tr>
-				<th width="20%">Until</th>
-				<td><fmt:formatDate value="${bedDemographic.reservationEnd}" pattern="yyyy-MM-dd" /></td>
-			</tr>
+		<c:when test="${bedDemographic != null}">
+				<tr>
+					<th width="20%">Assigned Room:</th>
+					<td><c:out value="${bedDemographic.roomName}" /> (<c:out value="${bedDemographic.programName}" />)</td>
+				</tr>
+				<tr>
+					<th width="20%">Assigned Bed:</th>
+					<td><c:out value="${bedDemographic.bedName}" /> (<c:out value="${bedDemographic.programName}" />)</td>
+				</tr>
+				<tr>
+					<th width="20%">Status</th>
+					<td><c:out value="${bedDemographic.statusName}" /></td>
+				</tr>
+				<tr>
+					<th width="20%">Late Pass</th>
+					<td><c:out value="${bedDemographic.latePass}" /></td>
+				</tr>
+				<tr>
+					<th width="20%">Until</th>
+					<td><fmt:formatDate value="${bedDemographic.reservationEnd}" pattern="yyyy-MM-dd" /></td>
+				</tr>
+		</c:when>
+		<c:otherwise>		
 		</c:otherwise>
 	</c:choose>
 </table>

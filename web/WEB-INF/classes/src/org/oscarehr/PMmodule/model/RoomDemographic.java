@@ -155,6 +155,10 @@ public class RoomDemographic implements Auditable, Serializable {
 		System.out.println("RoomDemographic.setProviderName()");
 	}
 
+	public Room getRoom() {
+		return room;
+	}
+
 	public String getRoomName() {
 		return room != null ? room.getName() : null;
 	}

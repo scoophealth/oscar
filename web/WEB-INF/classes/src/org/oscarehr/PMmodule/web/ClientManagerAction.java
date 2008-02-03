@@ -1048,6 +1048,21 @@ public class ClientManagerAction extends BaseAction {
         /* bed reservation view */
         BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(Integer.valueOf(demographicNo));
         request.setAttribute("bedDemographic", bedDemographic);
+        
+        RoomDemographic roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(Integer.valueOf(demographicNo));
+
+		if(roomDemographic != null){
+			Integer roomIdInt = roomDemographic.getId().getRoomId();
+			Room room = null;
+			if(roomIdInt != null){
+				room = getRoomManager().getRoom(roomIdInt);
+			}
+			if(room != null){
+				roomDemographic.setRoom(room);
+			}
+		}
+		request.setAttribute("roomDemographic", roomDemographic);
+		
         if (tabBean.getTab().equals("Bed/Room Reservation")) {
 
             boolean isRefreshRoomDropDown = false;
@@ -1059,7 +1074,6 @@ public class ClientManagerAction extends BaseAction {
             }
 
             String roomId = request.getParameter("roomId");
-            RoomDemographic roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(Integer.valueOf(demographicNo));
             if (roomDemographic != null && roomId == null) {
                 roomId = roomDemographic.getId().getRoomId().toString();
             }
