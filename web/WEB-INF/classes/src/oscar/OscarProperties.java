@@ -28,6 +28,8 @@ import java.util.Properties;
 import java.io.*;
 import java.util.Date;
 
+import com.ibm.io.file.exception.FileNotFoundException;
+
 /*
  * This class is an interface with the file WEB-INF/classes
  * It is a singleton class. Do not instaciate it, use the method getInstance().
@@ -45,7 +47,6 @@ public class OscarProperties extends Properties {
 	static OscarProperties oscarProperties = new OscarProperties();
 	static boolean loaded = false;
 
-	/* Do not use this constructor. Use getInstance instead */
 	/* If cant find the file, inform and continue */
 	/*
 	 * private OscarProperties() {
@@ -56,6 +57,7 @@ public class OscarProperties extends Properties {
 	 * 
 	 * 
 	 */
+	/* Do not use this constructor. Use getInstance instead */
 	private OscarProperties() {
 		System.out.println("OSCAR PROPS CONSTRUCTOR");
 	}
@@ -78,19 +80,18 @@ public class OscarProperties extends Properties {
 		return prop;
 	}
 
-	public void loader(String propFileName) {
+	public void loader(String propFileName) throws java.io.FileNotFoundException {
 		if (!loaded) {
+			FileInputStream fis2 = new FileInputStream(propFileName);
 			try {
-				FileInputStream fis2 = new FileInputStream(propFileName);
 				load(fis2);
 				fis2.close();
 				loaded = true;
-			} catch (Exception e) {
-				System.out.println("Error, file oscar_mcmaster.properties not found.");
-				System.out.println("This file must be placed at WEB-INF/classes.");
-				e.printStackTrace();
 			}
-
+			catch (IOException ex) 
+			{
+				System.err.println("IO Error: " + ex.getMessage());
+			}
 		}
 	}
         
