@@ -28,6 +28,7 @@
 package oscar.login;
 
 import java.util.*;
+import java.io.*;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import oscar.oscarDB.*;
@@ -68,18 +69,40 @@ public class Startup implements ServletContextListener {
 		String propName = contextPath + ".properties";
 
 		char sep = System.getProperty("file.separator").toCharArray()[0];
-		
+		propFileName = System.getProperty("user.home") + sep + propName;
+        log.info("looking up " + propFileName);
+        oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		try {
 			// This has been used to look in the users home directory that started tomcat
-			propFileName = System.getProperty("user.home") + sep + propName;
-                        log.info("looking up " + propFileName);
-			oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 			p.loader(propFileName);
-
+	        log.info("loading properties from " + propFileName);
+		}
+		catch (java.io.FileNotFoundException ex)
+		{
+	        log.info( propFileName + " not found");
+		}
+		if (p.isEmpty()) {
+			/* if the file not found in the user root, look in the WEB-INF directory */
+			try { 
+				propFileName = sc.getServletContext().getResource("/WEB-INF").getPath() + propName;
+		        log.info("looking up " + propFileName);
+				p.loader(propFileName);
+		        log.info("loading properties from " + propFileName);
+			}
+			catch(java.io.FileNotFoundException e)
+			{
+				System.err.println(propFileName + " cannot be found, it should be put either in the User's home or in WEB-INF ");
+				return;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				return;
+			}
+		}
+		try {
 			if (!DBHandler.isInit())
 				DBHandler.init(p.getProperty("db_name"), p.getProperty("db_driver"), p.getProperty("db_uri"), p.getProperty("db_username"), p.getProperty("db_password"));
-
-                        
                         //Specify who will see new casemanagement screen
                         ArrayList<String> listUsers;
                         String casemgmtscreen = p.getProperty("CASEMANAGEMENT");
