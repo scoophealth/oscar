@@ -1080,7 +1080,10 @@ public class ClientManagerAction extends BaseAction {
 
             // set bed program id
             Admission bedProgramAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(demographicNo));
-            Integer bedProgramId = (bedProgramAdmission != null) ? bedProgramAdmission.getProgramId() : null;
+            Integer bedProgramId = null;
+            if(bedProgramAdmission != null){
+            	bedProgramId = (bedProgramAdmission != null) ? bedProgramAdmission.getProgramId() : null;
+            }
             request.setAttribute("bedProgramId", bedProgramId);
 
             Bed reservedBed = null;

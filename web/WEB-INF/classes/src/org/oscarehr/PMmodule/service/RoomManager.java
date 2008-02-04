@@ -409,6 +409,10 @@ public class RoomManager {
     }
 
     void setAttributes(Room room) {
+    	
+    	if(room == null){
+    		return;
+    	}
         Integer roomTypeId = room.getRoomTypeId();
         room.setRoomType(roomDAO.getRoomType(roomTypeId));
         room.setFacility(facilityDAO.getFacility(room.getFacilityId()));

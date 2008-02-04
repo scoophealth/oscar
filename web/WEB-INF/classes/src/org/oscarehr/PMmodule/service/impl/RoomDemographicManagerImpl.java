@@ -141,11 +141,14 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		if(!isNoRoomAssigned){
 			validate(roomDemographic);
 		}
+		
 		RoomDemographic roomDemographicPrevious = getRoomDemographicByDemographic(roomDemographic.getId().getDemographicNo()); 
 		if(roomDemographicPrevious != null){
 			deleteRoomDemographic(roomDemographicPrevious);
 		}
-		roomDemographicDAO.saveRoomDemographic(roomDemographic);
+		if(!isNoRoomAssigned){
+			roomDemographicDAO.saveRoomDemographic(roomDemographic);
+		}
 	}
 
 	public void cleanUpBedTables(RoomDemographic roomDemographic){
