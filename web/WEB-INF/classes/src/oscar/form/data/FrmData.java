@@ -52,7 +52,7 @@ public class FrmData {
         String sql = "SELECT * from encounterForm";
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
-            Form frm = new Form(rs.getString("form_name"), rs.getString("form_value"), rs.getString("form_table"));
+            Form frm = new Form(db.getString(rs,"form_name"), db.getString(rs,"form_value"), db.getString(rs,"form_table"));
             forms.add(frm);
         }
 
@@ -91,7 +91,7 @@ public class FrmData {
                     + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
-            PatientForm frm = new PatientForm(rs.getString("ID"), rs.getString("demographic_no"),
+            PatientForm frm = new PatientForm(db.getString(rs,"ID"), db.getString(rs,"demographic_no"),
                                 UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getDate("formEdited"), "yy/MM/dd"));
             forms.add(frm);
         }
@@ -112,14 +112,14 @@ public class FrmData {
         String table = "";
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
-            table = rs.getString("form_table");
+            table = db.getString(rs,"form_table");
         }
         rs = null;
 
         sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC limit 0,1";
         rs = db.GetSQL(sql);
         while(rs.next()) {
-            frm = new PatientForm(rs.getString("ID"), rs.getString("demographic_no"),
+            frm = new PatientForm(db.getString(rs,"ID"), db.getString(rs,"demographic_no"),
                                 UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getDate("formEdited"), "yy/MM/dd"));
         }
 
@@ -136,8 +136,8 @@ public class FrmData {
         String sql = "SELECT study_name, study_link FROM study WHERE study_no=" + studyNo;
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
-            ret[0] = rs.getString("study_name");
-            ret[1] = rs.getString("study_link");
+            ret[0] = db.getString(rs,"study_name");
+            ret[1] = db.getString(rs,"study_link");
         }
 
         rs.close();
@@ -155,8 +155,8 @@ public class FrmData {
         System.out.println(sql);
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
-            ret[0] = rs.getString("form_value");
-            table = rs.getString("form_table");
+            ret[0] = db.getString(rs,"form_value");
+            table = db.getString(rs,"form_table");
         }
 
 	ret[1] = "0";
@@ -167,7 +167,7 @@ public class FrmData {
             sql = "SELECT form_no FROM " + table + " WHERE demographic_no=" + demoNo +" AND form_name='" + searchFormName + "' order by form_no desc limit 0,1";
             rs = db.GetSQL(sql);
             while(rs.next()) {
-                ret[1] = rs.getString("form_no");
+                ret[1] = db.getString(rs,"form_no");
             }
             String[] xmlForm = (String[]) ret.clone();
              
@@ -248,7 +248,7 @@ public class FrmData {
             sql = "SELECT ID FROM " + table + " WHERE demographic_no=" + demoNo +" order by formEdited desc limit 0,1";
             rs = db.GetSQL(sql);
             while(rs.next()) {
-                ret[1] = rs.getString("ID");
+                ret[1] = db.getString(rs,"ID");
             }
         }
 
@@ -265,7 +265,7 @@ public class FrmData {
         String sql = "SELECT value FROM property WHERE name='resource'";
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
-            ret = rs.getString("value");
+            ret = db.getString(rs,"value");
         }
 
         rs.close();
@@ -283,7 +283,7 @@ public class FrmData {
         String sql = "SELECT value FROM property WHERE name='" + name + "'";
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
-            ret = rs.getString("value");
+            ret = db.getString(rs,"value");
         }
 
         rs.close();

@@ -47,7 +47,7 @@ public class FrmCESDRecord extends FrmRecord {
                               + demographicNo;
 			rs = db.GetSQL(sql);
 			if (rs.next()) {                                
-				props.setProperty("demographic_no",rs.getString("demographic_no"));
+				props.setProperty("demographic_no",db.getString(rs,"demographic_no"));
 				props.setProperty("formCreated",UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
 			}
 			rs.close();
