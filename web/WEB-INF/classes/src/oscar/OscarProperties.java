@@ -28,7 +28,7 @@ import java.util.Properties;
 import java.io.*;
 import java.util.Date;
 
-import com.ibm.io.file.exception.FileNotFoundException;
+//import com.ibm.io.file.exception.FileNotFoundException;
 
 /*
  * This class is an interface with the file WEB-INF/classes
