@@ -171,7 +171,7 @@ if ((k/2)*2==k){ %>
 	<!-- open CME in current window
         <a href="#" onclick="location.href='../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>'" title="<bean:message key="global.encounter"/>">  
         --> 
-	<a href=# onClick="popupPage(710, 980,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
+	<a href=# onClick="popupPage(710, 1048,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
 	 |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
     <% } %>    
     
