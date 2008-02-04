@@ -84,7 +84,8 @@ public class Startup implements ServletContextListener {
 		if (p.isEmpty()) {
 			/* if the file not found in the user root, look in the WEB-INF directory */
 			try { 
-				propFileName = sc.getServletContext().getResource("/WEB-INF").getPath() + "/" + propName;
+				java.net.URL url = sc.getServletContext().getResource("/WEB-INF/" + propName);
+				propFileName = new File(url.getFile()).getAbsolutePath();
 		        log.info("looking up " + propFileName);
 				p.loader(propFileName);
 		        log.info("loading properties from " + propFileName);
