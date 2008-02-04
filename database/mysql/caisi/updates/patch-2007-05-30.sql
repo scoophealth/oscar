@@ -1,1 +1,1 @@
-update admission set clientstatus_id=0;
+update admission set clientstatus_id=0 where clientstatus_id="";
