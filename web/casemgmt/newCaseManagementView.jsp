@@ -1651,7 +1651,7 @@ Version version = (Version) ctx.getBean("version");
             <html:textarea styleId="cpp.reminders" property="cpp.reminders" tabindex="5" styleClass="rowTwo"  rows="4" cols="44"/>
         </div> 
     
-        <div style="float:left; height:70%; width:100%; margin-left:2px; margin-right:-4px; background-color:#FFFFFF;">
+        <div id="notCPP" style="float:left; height:70%; width:100%; margin-left:2px; margin-right:-4px; background-color:#FFFFFF;">
         <div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white; padding-left:2px;"><jsp:include page="rightColumn.jsp" /></div>
         <div style="float:left; width:75%; margin-right:-4px; padding-bottom:15px; background-color:#CCCCFF; font-size:10px;">
             <span style="cursor:pointer; text-decoration:underline;" onclick="showFilter();">View Filter</span>
