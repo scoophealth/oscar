@@ -79,7 +79,7 @@ public class FrmSelectAction extends Action {
                         ResultSet rs = db.GetSQL(sql);
                         int i=1;
                         while(rs.next()){
-                            sql = "UPDATE encounterForm SET hidden='"+i+"' WHERE hidden='"+rs.getString("hidden")+"'";
+                            sql = "UPDATE encounterForm SET hidden='"+i+"' WHERE hidden='"+db.getString(rs,"hidden")+"'";
                             db.RunSQL(sql);
                             i++;
                         }
@@ -110,7 +110,7 @@ public class FrmSelectAction extends Action {
                                             rs = db.GetSQL(sql);
                                         }
                                     }                                    
-                                        String upperItem = rs.getString("form_name");
+                                        String upperItem = db.getString(rs,"form_name");
                                         sql = "UPDATE encounterForm SET hidden ='" + form_order + "' WHERE form_name='" + upperItem + "'";
                                         db.RunSQL(sql);
                                         sql = "UPDATE encounterForm SET hidden ='" + upperOrder + "' WHERE form_name='" + selectedMoveUpTypes[i] + "'";
@@ -144,7 +144,7 @@ public class FrmSelectAction extends Action {
                                     sql = "Select form_name from encounterForm where hidden ='"+ lowerOrder + "'";
                                     rs = db.GetSQL(sql);
                                     if(rs.next()){
-                                        String lowerItem = rs.getString("form_name");
+                                        String lowerItem = db.getString(rs,"form_name");
                                         sql = "UPDATE encounterForm SET hidden ='" + form_order + "' WHERE form_name='" + lowerItem + "'";
                                         db.RunSQL(sql);
                                         sql = "UPDATE encounterForm SET hidden ='" + lowerOrder + "' WHERE form_name='" + selectedMoveDownTypes[i] + "'";

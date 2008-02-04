@@ -293,7 +293,7 @@ public final class FrmSetupFormAction extends Action {
                 ResultSet rs = dbhandler.GetSQL(s1);
                 //System.out.println("flushot: " + s1);
                 if (rs.next())
-                        s = rs.getString("billing_date");
+                        s = dbhandler.getString(rs,"billing_date");
                 rs.close();
                 dbhandler.CloseConn();
             } catch (SQLException sqlexception) {
@@ -315,7 +315,7 @@ public final class FrmSetupFormAction extends Action {
                         ResultSetMetaData md = rs.getMetaData();
                         for(int i = 1; i <= md.getColumnCount(); i++)  {
                                 String name = md.getColumnName(i);
-                                String value = rs.getString(i);
+                                String value = db.getString(rs,i);
                                 if(value != null)	
                                     props.setProperty(name, value);
                         }
@@ -419,8 +419,8 @@ public final class FrmSetupFormAction extends Action {
 
             ResultSet rs = db.GetSQL(sqlData);
             if(rs.next()){
-                mt.setLastData(rs.getString("dataField"));
-                mt.setLastDateEntered(rs.getString("dateEntered"));                
+                mt.setLastData(db.getString(rs,"dataField"));
+                mt.setLastDateEntered(db.getString(rs,"dateEntered"));                
             }
                             
             rs.close();                                                               
