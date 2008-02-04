@@ -51,6 +51,9 @@ public class IntegratorUpdateTask extends TimerTask {
             integratorManager.publishPrograms();
             integratorManager.publishClients();
         }
+        catch (Exception e){
+            log.error("unexpected error occurred", e);
+        }
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
 
