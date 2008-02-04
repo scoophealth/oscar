@@ -40,6 +40,9 @@
 	}
 
 	function deleteProvider(id) {
+		if(!confirm("Are you sure you want to delete the staff?")) {
+			return false;
+		}
 		document.programManagerForm.elements['provider.id'].value=id;
 		document.programManagerForm.method.value='delete_provider';
 		document.programManagerForm.submit();

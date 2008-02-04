@@ -3,7 +3,7 @@
 <%@ page import="org.oscarehr.PMmodule.model.Provider" %>
 <!--
 /*
-*
+ *
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
 * This software is published under the GPL GNU General Public License.
 * This program is free software; you can redistribute it and/or
@@ -100,7 +100,7 @@ Please define the following parameters control the behaviour of new service rest
         <%
             String demographicNo = "" + ((ProgramClientRestriction)pageContext.getAttribute("restriction")).getDemographicNo();
         %>
-        <caisirole:SecurityAccess accessName="Disable service restriction" accessType="access" providerNo="<%=((Provider)request.getSession().getAttribute("provider")).getProvider_no()%>" demoNo="<%=demographicNo%>" programId="<%=request.getParameter("id")%>">
+        <caisirole:SecurityAccess accessName="Disable service restriction" accessType="access" providerNo='<%=((Provider)request.getSession().getAttribute("provider")).getProvider_no()%>' demoNo="<%=demographicNo%>" programId='<%=request.getParameter("id")%>'>
             <a onclick="disableRestriction('<c:out value="${restriction.id}"/>');" href="javascript:void(0);"> Disable </a>
         </caisirole:SecurityAccess>
     </display-el:column>
@@ -129,7 +129,7 @@ Please define the following parameters control the behaviour of new service rest
         <%
             String demographicNo = "" + ((ProgramClientRestriction)pageContext.getAttribute("restriction")).getDemographicNo();
         %>
-        <caisirole:SecurityAccess accessName="Create service restriction" accessType="access" providerNo="<%=((Provider)request.getSession().getAttribute("provider")).getProvider_no()%>" demoNo="<%=demographicNo%>" programId="<%=request.getParameter("id")%>">
+        <caisirole:SecurityAccess accessName="Create service restriction" accessType="access" providerNo='<%=((Provider)request.getSession().getAttribute("provider")).getProvider_no()%>' demoNo="<%=demographicNo%>" programId='<%=request.getParameter("id")%>'>
             <a onclick="enableRestriction('<c:out value="${restriction.id}"/>');" href="javascript:void(0);"> Enable </a>
         </caisirole:SecurityAccess>
     </display-el:column>
