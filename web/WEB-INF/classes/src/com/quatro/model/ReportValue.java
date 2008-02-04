@@ -5,7 +5,7 @@ import java.util.*;
 public class ReportValue{
 
 	private ReportTempValue reportTemp;
-    private ArrayList sections;
+    private List sections;
     private Set options;
     private Date runTime;
 
@@ -45,7 +45,7 @@ public class ReportValue{
 		this.options = options;
 	}
 
-	public ArrayList getSections() {
+	public List getSections() {
 		return sections;
 	}
 

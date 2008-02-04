@@ -7,10 +7,10 @@ import com.quatro.model.*;
 
 public class QuatroReportRunnerForm extends ActionForm {
 
-    private ArrayList<KeyValueBean> exportFormatList;
-    private ArrayList<KeyValueBean> reportOptionList;
-    private ArrayList<KeyValueBean> orgSelectionList;
-    private ArrayList<ReportTempCriValue> templateCriteriaList;
+    private ArrayList<KeyValueBean> exportFormatList= new ArrayList();
+    private ArrayList<KeyValueBean> reportOptionList=new ArrayList();
+    private ArrayList<KeyValueBean> orgSelectionList=new ArrayList();
+    private ArrayList<ReportTempCriValue> templateCriteriaList=new ArrayList();
 	private String reportNo;
 	private String startDate;
 	private String endDate;
@@ -26,8 +26,8 @@ public class QuatroReportRunnerForm extends ActionForm {
 	private String reportOption;
 	private String strClientJavascript;
 	private String [] relations = new String [] {"", "AND", "OR", "(", ")" ,")AND", ") OR",")AND(", ")OR(","AND(", "OR("};
-	private ArrayList<ReportFilterValue> filterFields;
-	private ArrayList<KeyValueBean> operatorList;
+	private ArrayList<ReportFilterValue> filterFields= new ArrayList();
+	private ArrayList<KeyValueBean> operatorList= new ArrayList();
 
 	private String reportTitle;
 	private ReportValue rptVal;

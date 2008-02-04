@@ -19,9 +19,9 @@
         <property name="orgApplicable" /> 
         <property name="reportType" /> 
         <property name="providerNo" column="PROVIDER_NO" /> 
-        <set name="options">
-        <key column="reportNo" not-null="true" />
-        <one-to-many class="com.quatro.model.ReportOptionValue"></one-to-many>
+        <set name="options" lazy="false" order-by="optionTitle">
+          <key column="reportNo" not-null="true" />
+          <one-to-many class="com.quatro.model.ReportOptionValue"></one-to-many>
         </set>
 	</class>
 </hibernate-mapping>

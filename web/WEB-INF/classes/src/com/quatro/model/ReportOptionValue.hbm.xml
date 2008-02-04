@@ -8,7 +8,7 @@
 			<generator class="native" />
 		</id>
         <property name="reportNo" column="REPORTNO" /> 
-        <property name="optionTitle" column="SHORTDESC" /> 
+        <property name="optionTitle" /> 
         <property name="optionDescription" column="LONGDESC" /> 
         <property name="active" column="ACTIVEYN" /> 
         <property name="default" column="DEFAULTYN" /> 

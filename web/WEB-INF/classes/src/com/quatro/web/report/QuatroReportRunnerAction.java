@@ -337,15 +337,15 @@ public class QuatroReportRunnerAction extends Action {
 		}
 		myForm.setOrgSelectionProperty(obj5);
 
-		ArrayList rptOptions = new ArrayList(); // rptVal.getOptions();
-		myForm.setReportOptionList(rptOptions);
-       	for (Iterator it = rptOptions.iterator(); it.hasNext();){
+		ArrayList rptOptions = new ArrayList(); 
+       	for (Iterator it = rptVal.getOptions().iterator(); it.hasNext();){
         	ReportOptionValue rv = (ReportOptionValue)it.next();
+       		rptOptions.add(rv);
         	if(rv.isDefault()){
     		  myForm.setReportOption(String.valueOf(rv.getOptionNo()));
-        	  break;
         	} 
        	}
+		myForm.setReportOptionList(rptOptions);
 
 		RefreshCriteria(myForm, reportNo);
 	}

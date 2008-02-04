@@ -1,8 +1,6 @@
 package com.quatro.service;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import com.quatro.dao.QuatroReportDao;
 import com.quatro.model.*;
 
@@ -20,7 +18,8 @@ public class QuatroReportManager {
 
 		ReportValue reportValue = new ReportValue(); 
 		reportValue =(ReportValue)quatroReportDao.GetReport(rptNo, loginId);
-		ArrayList options= (ArrayList)quatroReportDao.GetReportOptionList(rptNo);
+		
+//		ArrayList options= (ArrayList)quatroReportDao.GetReportOptionList(rptNo);
 //		reportValue.setOptions(options);
 		reportValue.setRunTime(new Date());
 		
