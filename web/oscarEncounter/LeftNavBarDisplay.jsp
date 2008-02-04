@@ -114,7 +114,7 @@
                         <%--      
                         }
                         --%>
-                        <span style="overflow:hidden; width:36%; height:1.2em; white-space:nowrap; float:right; text-align:right;">
+                        <span style="overflow:hidden; width:38%; height:1.2em; white-space:nowrap; float:right; text-align:right;">
                         <% if( item.getDate() != null ) { 
                                 showEllipsis = true;
                         %>
@@ -128,7 +128,7 @@
                         <%   } 
                         %>
                         </span>                        
-                        <span style="overflow:hidden; width:55%; height:1.2em; white-space:nowrap; float:right; text-align:left;">
+                        <span style="overflow:hidden; width:53%; height:1.2em; white-space:nowrap; float:right; text-align:left;">
                             <a class="links" style="<%=colour%>" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="#" onclick="<%=item.getURL()%>" title="<%=item.getLinkTitle()%>">
                                 <%=item.getTitle()%>
                             </a>     
