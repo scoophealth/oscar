@@ -283,6 +283,11 @@
         <form-bean name="clientListsReportForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean" />
         </form-bean>
+
+        <form-bean name="quatroReportForm" type="com.quatro.web.report.QuatroReportListForm" />
+        <form-bean name="quatroReportRunnerForm" type="com.quatro.web.report.QuatroReportRunnerForm" />
+        <form-bean name="quatroReportViewerForm" type="com.quatro.web.report.QuatroReportViewerForm" />
+        
 <!--
         <form-bean name="customReportForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.CustomReportFormBean" />
@@ -1488,6 +1493,23 @@
             <forward name="rlist" path="/PMmodule/Admin/DefaultRoleAccess.do?method=list" redirect="true" />
         </action>
         <!-- REPORTS -->
+        <action path="/PMmodule/Reports/QuatroReportList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="quatroReportForm" scope="request" validate="false">
+            <forward name="reportlist" path="page.report.quatroreportlist" />
+        </action>
+<!-- 
+        <action path="/PMmodule/Reports/QuatroReportRunner" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="quatroReportRunnerForm" scope="request" validate="false">
+            <forward name="reportrunner" path="page.report.quatroreportrunner" />
+        </action>
+ -->                
+        <action path="/PMmodule/Reports/QuatroReportRunner" type="com.quatro.web.report.QuatroReportRunnerAction"
+              name="quatroReportRunnerForm" validate="false" scope="request">
+            <forward name="success" path="page.report.quatroreportrunner" />
+        </action>
+        <action path="/PMmodule/Reports/QuatroReportViewer" type="com.quatro.web.report.QuatroReportViewerAction"
+              name="quatroReportRunnerForm" validate="false" scope="request">
+           <forward name="success" path="/report/reportViewer.jsp"/>
+        </action>
+
         <action path="/PMmodule/Reports/ProgramActivityReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="activityReportForm" scope="request" validate="false">
             <forward name="form" path="page.report.activityform" />
             <forward name="report" path="page.report.activityreport" />

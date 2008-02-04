@@ -231,6 +231,10 @@
     <bean name="/PopulationReport" class="org.oscarehr.common.web.PopulationReportAction" singleton="false">
         <property name="populationReportManager" ref="populationReportManager"/>
     </bean>
+
+    <!-- Quatro Shelter Report -->
+    <bean name="/PMmodule/Reports/QuatroReportList" class="com.quatro.web.report.QuatroReportListAction" singleton="false">
+    </bean>
     
     <!-- Provider Property -->
     <bean name="/setProviderStaleDate" class="org.oscarehr.provider.web.ProviderPropertyAction" singleton="false">

@@ -32,7 +32,7 @@ function CriteriaChanged(obj){
 
 function showLookupx(lineNo) {
     var obj= document.getElementsByName("tplCriteria[" + lineNo + "].lookupTable")[0];
-    var lookupURL="/JQSReport4/lookup/lookup2.jsp?tid=" +  obj.value + "&lid=" + lineNo;
+    var lookupURL="/PMmodule/Reports/lookup2.jsp?tid=" +  obj.value + "&lid=" + lineNo;
 	top.childWin = window.open(lookupURL,"_blank","resizable=yes,scrollbars=yes,width=600,height=450,top=120, left=200");
 	top.childWin.focus();
 }
@@ -41,15 +41,15 @@ function showLookupx(lineNo) {
 
 <html:form action="/PMmodule/Reports/QuatroReportRunner.do">
 <table width="100%">
-<tr><td style="color: white;font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px; font-weight: bold" background="../@Images/TitleBar2.png" align="center">
+<tr><td style="color: white;font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px; font-weight: bold" background="../images/TitleBar2.png" align="center">
 <bean:write name="reportTitle"/>
 </td></tr>
 
-<tr><td style="font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px;" background="../@Images/ButtonBar2.png"  align="left">
-<img src="../@Images/Print16x16.gif"/>
+<tr><td style="font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px;" background="../images/ButtonBar2.png"  align="left">
+<img src="../images/Print16x16.gif"/>
 <html:submit property="Run"
 				style="margin-left: 0px; margin-right: 0px; background-color: transparent; margin-bottom: 0px; margin-top: 0px">Run Report</html:submit>&nbsp;|&nbsp;
-<img src="../@Images/Back16.png"/>&nbsp;<a href="reportSelector.shtml">Go to Report Menu</a>
+<img src="../images/Back16.png"/>&nbsp;<html:link action="/PMmodule/Reports/QuatroReportList.do">QuatroShelter Reports</html:link>
 </td></tr>
 
 <tr><td valign="top">
