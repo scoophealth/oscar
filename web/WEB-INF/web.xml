@@ -24,6 +24,15 @@
 -->
 <web-app id="WebApp_ID">
 	<display-name>oscar_mcmaster</display-name>
+	<context-param>
+		<param-name>crystal_image_uri</param-name>
+		<param-value>crystalreportviewers</param-value>
+	</context-param>
+	<context-param>
+		<param-name>crystal_image_use_relative</param-name>
+		<param-value>webapp</param-value>
+	</context-param>
+
    <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/applicationContext*.xml</param-value>           

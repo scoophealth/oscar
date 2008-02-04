@@ -199,8 +199,14 @@ public class QuatroReportRunnerAction extends Action {
             rptVal.setPrint2Pdf(false); // this property is kept only for the customized prints 
 
             int optionIdx = Integer.parseInt(myForm.getReportOption());
-            ReportOptionValue option = new ReportOptionValue(); // (ReportOptionValue)rptVal.getOptions();
-
+//            ReportOptionValue option = (ReportOptionValue)rptVal.getOptions().get(optionIdx-1);
+            Iterator iObj=rptVal.getOptions().iterator();
+            ReportOptionValue option= new ReportOptionValue();
+            while(iObj.hasNext()){
+              option = (ReportOptionValue)iObj.next();
+              break;
+            }
+            
             String path = DataViews.RptFiles;
             String rptFilePath = path + "/" + option.getRptFileName();
 
@@ -208,8 +214,7 @@ public class QuatroReportRunnerAction extends Action {
 
     		request.getSession().setAttribute(DataViews.REPORTTPL, rptTempVal);
     		request.getSession().setAttribute(DataViews.REPORT_OPTION, option);
-
-   		    myForm.setStrClientJavascript("showReport();");
+   		    myForm.setStrClientJavascript("showReport");//('" + request.getContextPath() + "/PMmodule/Reports/quatroReportViewer.do');");
         }
         catch (Exception ex)
         {

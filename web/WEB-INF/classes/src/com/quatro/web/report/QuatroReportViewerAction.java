@@ -677,7 +677,7 @@ public class QuatroReportViewerAction extends Action {
 
         ReportClientDocument reportDocument1 = new ReportClientDocument();
 //        String path=DataViews.RptFiles + "\\" + _rptOption.getRptFileName();
-        String path="report\\RptFiles\\" +  _rptOption.getRptFileName();
+        String path="PMmodule\\reports\\RptFiles\\" +  _rptOption.getRptFileName();
         try{
              reportDocument1.open(path,0);
              if (!Utility.IsEmpty(criteriaString))
