@@ -454,7 +454,7 @@ public class TicklerAction extends DispatchAction {
                 String sep = System.getProperty("file.separator");
                 String propFileName = System.getProperty("user.home") + sep  + propFile;
                 OscarProperties proper = OscarProperties.getInstance();
-                proper.loader(propFileName);
+ //               proper.loader(propFileName);
 
 		if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes") || proper.getProperty(moduleName, "").equalsIgnoreCase("true") ||  proper.getProperty(moduleName, "").equalsIgnoreCase("on")) {
 			return true;
