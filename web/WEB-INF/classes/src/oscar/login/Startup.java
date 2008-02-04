@@ -53,14 +53,17 @@ public class Startup implements ServletContextListener {
 		
 		try {
 			// Anyone know a better way to do this?
-			String url = sc.getServletContext().getResource("/index.jsp").getPath();
+			String url = sc.getServletContext().getResource("/").getPath();
                         log.info(url);
-            int idx = url.lastIndexOf('/') + 1;
-			url = url.substring(1,idx-1);
+            int idx = url.lastIndexOf('/');
+			url = url.substring(0,idx);
 
-			idx = url.lastIndexOf('/') + 1;
-			url = url.substring(idx);
-			
+			idx = url.lastIndexOf('/');
+			url = url.substring(idx+1);
+
+			idx = url.lastIndexOf('.');
+			if (idx > 0) url = url.substring(0,idx);
+
 			contextPath = url;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -84,15 +87,14 @@ public class Startup implements ServletContextListener {
 		if (p.isEmpty()) {
 			/* if the file not found in the user root, look in the WEB-INF directory */
 			try { 
-				
+		        log.info("looking up  /WEB-INF/" + propName);
 				InputStream pf = sc.getServletContext().getResource("/WEB-INF/" + propName).openStream();
-		        log.info("looking up " + propFileName);
 				p.loader(pf);
-		        log.info("loading properties from " + propFileName);
+		        log.info("loading properties from /WEB-INF/" + propName);
 			}
 			catch(java.io.FileNotFoundException e)
 			{
-				System.err.println(propFileName + " cannot be found, it should be put either in the User's home or in WEB-INF ");
+				System.err.println("Configuration file: " + propName + " cannot be found, it should be put either in the User's home or in WEB-INF ");
 				return;
 			}
 			catch(Exception e)
