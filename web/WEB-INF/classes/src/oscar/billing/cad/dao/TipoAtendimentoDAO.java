@@ -64,7 +64,7 @@ public class TipoAtendimentoDAO extends DAO {
             while (rs.next()) {
                 CadTiposAtendimento tpAtend = new CadTiposAtendimento();
                 tpAtend.setCoTipoatendimento(rs.getLong(1));
-                tpAtend.setDsTipoatendimento(rs.getString(2));                
+                tpAtend.setDsTipoatendimento(db.getString(rs,2));                
                 list.add(tpAtend);
             }
         } finally {

@@ -91,8 +91,8 @@ public class CidDAO extends DAO {
 
 			while (rs.next()) {
 				CadCid bean = new CadCid();
-				bean.setCoCid(rs.getString("co_cid"));
-				bean.setDsCid(rs.getString("ds_cid"));
+				bean.setCoCid(db.getString(rs,"co_cid"));
+				bean.setDsCid(db.getString(rs,"ds_cid"));
 				beans.add(bean);
 			}
 		} catch (Exception err) {
