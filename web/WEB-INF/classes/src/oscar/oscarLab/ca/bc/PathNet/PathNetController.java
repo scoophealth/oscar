@@ -44,8 +44,13 @@ public class PathNetController {
          e.printStackTrace();
          System.exit(1);
       }                 
+      try {
       OscarProperties.getInstance().loader(args[0]);
-         
+      }
+      catch(FileNotFoundException e)
+      {
+    	  System.err.println(args[0] + " file cannot be found");
+      }
       //
       //String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
       ////
