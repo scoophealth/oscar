@@ -56,8 +56,8 @@ public class DiagnosticoDAO extends DAO {
 
             while (rs.next()) {
                 Diagnostico diagnostico = new Diagnostico();
-                diagnostico.getCadCid().setCoCid(rs.getString(1));
-                diagnostico.getCadCid().setDsCid(rs.getString(2));
+                diagnostico.getCadCid().setCoCid(db.getString(rs,1));
+                diagnostico.getCadCid().setDsCid(db.getString(rs,2));
                 diagnostico.getAppointment().setAppointmentNo(Long.parseLong(id));
 				diagnostico.setSave(true);
 

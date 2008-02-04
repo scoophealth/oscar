@@ -194,14 +194,14 @@ public class AppointmentDAO extends DAO {
 
             if (rs.next()) {
                 appointment.setAppointmentNo(rs.getLong(1));
-                appointment.getProvider().setProviderNo(rs.getString(2));
-                appointment.getProvider().setFirstName(rs.getString(3));
-                appointment.getProvider().setLastName(rs.getString(4));
+                appointment.getProvider().setProviderNo(db.getString(rs,2));
+                appointment.getProvider().setFirstName(db.getString(rs,3));
+                appointment.getProvider().setLastName(db.getString(rs,4));
                 appointment.getDemographic().setDemographicNo(rs.getLong(5));
-                appointment.getDemographic().setFirstName(rs.getString(6));
-                appointment.getDemographic().setLastName(rs.getString(7));
-                appointment.setName(rs.getString(8));
-                appointment.setReason(rs.getString(9));
+                appointment.getDemographic().setFirstName(db.getString(rs,6));
+                appointment.getDemographic().setLastName(db.getString(rs,7));
+                appointment.setName(db.getString(rs,8));
+                appointment.setReason(db.getString(rs,9));
 				appointment.setAppointmentDate(rs.getDate(10));
             }
         } finally {
@@ -244,12 +244,12 @@ public class AppointmentDAO extends DAO {
             	Appointment app = new Appointment();
             	app.setAppointmentNo(rs.getLong(1));
             	app.setAppointmentDate(rs.getDate(2));
-            	app.getProvider().setProviderNo(rs.getString(3));
-            	app.getProvider().setLastName(rs.getString(4));
-            	app.getProvider().setFirstName(rs.getString(5));
+            	app.getProvider().setProviderNo(db.getString(rs,3));
+            	app.getProvider().setLastName(db.getString(rs,4));
+            	app.getProvider().setFirstName(db.getString(rs,5));
 				app.getDemographic().setDemographicNo(rs.getLong(6));
-				app.getDemographic().setLastName(rs.getString(7));
-				app.getDemographic().setFirstName(rs.getString(8));
+				app.getDemographic().setLastName(db.getString(rs,7));
+				app.getDemographic().setFirstName(db.getString(rs,8));
 				
 				list.add(app);            	
             }
@@ -282,10 +282,10 @@ public class AppointmentDAO extends DAO {
 				Appointment app = new Appointment();
 				app.setAppointmentNo(rs.getLong(1));
 				app.setAppointmentDate(rs.getDate(2));
-				app.getProvider().setProviderNo(rs.getString(3));
-				app.getProvider().setLastName(rs.getString(4));
-				app.getProvider().setFirstName(rs.getString(5));
-				app.setBilling(rs.getString(6));
+				app.getProvider().setProviderNo(db.getString(rs,3));
+				app.getProvider().setLastName(db.getString(rs,4));
+				app.getProvider().setFirstName(db.getString(rs,5));
+				app.setBilling(db.getString(rs,6));
 				
 				list.add(app);            	
 			}
