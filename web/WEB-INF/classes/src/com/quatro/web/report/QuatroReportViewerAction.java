@@ -3,7 +3,6 @@ package com.quatro.web.report;
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import com.quatro.model.*;
-import com.quatro.service.*;
 import com.quatro.util.*;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.Iterator;
 
 import com.crystaldecisions.sdk.occa.report.exportoptions.ReportExportFormat;
 import java.util.*;
-import java.io.ByteArrayInputStream;
+//import java.io.ByteArrayInputStream;
 
 import com.crystaldecisions.reports.sdk.*;
 import com.crystaldecisions.sdk.occa.report.reportsource.*;

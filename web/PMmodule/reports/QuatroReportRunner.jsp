@@ -4,6 +4,7 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
 <bean:define id="lstExportFormat" name="quatroReportRunnerForm" property="exportFormatList"/>
 <bean:define id="lstReportOption" name="quatroReportRunnerForm" property="reportOptionList"/>
@@ -22,9 +23,15 @@
 <bean:define id="endTxtProperty" name="quatroReportRunnerForm" property="endTxtProperty" type="com.quatro.util.HTMLPropertyBean" />
 <bean:define id="orgSelectionProperty" name="quatroReportRunnerForm" property="orgSelectionProperty" type="com.quatro.util.HTMLPropertyBean" />
 
-
+<html:html>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<script type="text/javascript" src='<c:out value="${ctx}"/>/js/quatroReport.js'></script>
+<logic:equal name="quatroReportRunnerForm" property="strClientJavascript" value="showReport">
 <script language="JavaScript">
-<bean:write name="quatroReportRunnerForm" property="strClientJavascript"/>
+showReport('<c:out value="${ctx}"/>/PMmodule/Reports/QuatroReportViewer.do');
+</script>
+</logic:equal>
+<script language="JavaScript">
 function CriteriaChanged(obj){
   reportRunnerForm.onCriteriaChange.value=obj.name;
   reportRunnerForm.submit();
@@ -225,3 +232,4 @@ function showLookupx(lineNo) {
 </td></tr>
 </table>
 </html:form>
+</html:html>
