@@ -154,7 +154,7 @@ function showLookupx(lineNo) {
       	<TH align="left">Operator</TH>
 		<TH align="left">Value(s)</TH></TR>    	
 
-	<logic:iterate id="tplCriteria" name="reportRunnerForm" property="templateCriteriaList" indexId="rIndex">
+	<logic:iterate id="tplCriteria" name="quatroReportRunnerForm" property="templateCriteriaList" indexId="rIndex">
 	<TR><TD align="center">
         <logic:equal name="tplCriteria" property="required" value="true">
      	  <input type="checkbox" disabled="disabled" name="p<%=String.valueOf(rIndex)%>" value="<%=String.valueOf(rIndex)%>" /> 
@@ -189,7 +189,7 @@ function showLookupx(lineNo) {
         <logic:equal name="tplCriteria" property="required" value="true">
 		<html:select name="tplCriteria" disabled="true" property="op" indexed="true" onchange="CriteriaChanged(this);">
            <option value=""></option>
-           <logic:iterate id="ops" name="tplCriteria" property="operatorList" type="com.quatro.qs.util.KeyValueBean">
+           <logic:iterate id="ops" name="tplCriteria" property="operatorList" type="com.quatro.util.KeyValueBean">
               <html:option value="<%=(String)ops.getKey()%>"><bean:write name="ops" property="value" /></html:option>
            </logic:iterate>
 		</html:select>
@@ -197,7 +197,7 @@ function showLookupx(lineNo) {
         <logic:notEqual name="tplCriteria" property="required" value="true">
 		<html:select name="tplCriteria" property="op" indexed="true" onchange="CriteriaChanged(this);">
            <option value=""></option>
-           <logic:iterate id="ops" name="tplCriteria" property="operatorList" type="com.quatro.qs.util.KeyValueBean">
+           <logic:iterate id="ops" name="tplCriteria" property="operatorList" type="com.quatro.util.KeyValueBean">
               <html:option value="<%=(String)ops.getKey()%>"><bean:write name="ops" property="value" /></html:option>
            </logic:iterate>
 		</html:select>
