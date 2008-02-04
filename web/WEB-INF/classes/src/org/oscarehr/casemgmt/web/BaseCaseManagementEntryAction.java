@@ -279,8 +279,10 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 
 		if (caseManagementMgr.greaterEqualLevel(3, providerNo))	{
 			String mHis = cpp.getMedicalHistory();
-			mHis = mHis.replaceAll("\r\n", "\n");
-			mHis = mHis.replaceAll("\r", "\n");
+			if(mHis!=null) {
+				mHis = mHis.replaceAll("\r\n", "\n");
+				mHis = mHis.replaceAll("\r", "\n");
+			}
 			//List allIssues = caseManagementMgr.getIssues(providerNo, cpp.getDemographic_no(),accessRight);
 			List allIssues = caseManagementMgr.getIssues(providerNo, cpp.getDemographic_no());
 			
@@ -289,16 +291,18 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 				CaseManagementIssue cis = (CaseManagementIssue) itr.next();
 				String issustring = cis.getIssue().getDescription();
 				if (cis.isMajor() && cis.isResolved()) {
-					if (mHis.indexOf(issustring) < 0)
+					if (mHis!=null && mHis.indexOf(issustring) < 0)
 						mHis = mHis + issustring + ";\n";
 				} else {
 
-					if (mHis.indexOf(issustring) >= 0)
+					if (mHis!=null && mHis.indexOf(issustring) >= 0)
 						mHis = mHis.replaceAll(issustring + ";\n", "");
 				}
 			}
-			mHis = mHis.replaceAll("\r\n", "\n");
-			mHis = mHis.replaceAll("\r", "\n");
+			if(mHis!=null) {
+				mHis = mHis.replaceAll("\r\n", "\n");
+				mHis = mHis.replaceAll("\r", "\n");
+			}
 			cpp.setMedicalHistory(mHis);
 		}
 	}
