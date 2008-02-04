@@ -79,6 +79,19 @@ public class OscarProperties extends Properties {
 		}
 		return prop;
 	}
+	public void loader(InputStream propertyStream) {
+		if (!loaded) {
+			try {
+				load(propertyStream);
+				propertyStream.close();
+				loaded = true;
+			}
+			catch (IOException ex) 
+			{
+				System.err.println("IO Error: " + ex.getMessage());
+			}
+		}
+	}
 
 	public void loader(String propFileName) throws java.io.FileNotFoundException {
 		if (!loaded) {
