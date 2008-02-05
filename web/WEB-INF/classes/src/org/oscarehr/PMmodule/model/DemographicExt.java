@@ -49,7 +49,7 @@ public class DemographicExt implements Serializable {
 
     // constructors
     public DemographicExt () {
-        initialize();
+        // do nothing
     }
 
     /**
@@ -57,11 +57,7 @@ public class DemographicExt implements Serializable {
      */
     public DemographicExt (Integer id) {
         this.setId(id);
-        initialize();
     }
-
-    /* [CONSTRUCTOR MARKER END] */
-    protected void initialize () {}
 
     /**
      * Return the unique identifier of this class
