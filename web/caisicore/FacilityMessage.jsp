@@ -28,10 +28,10 @@
 
 <c:if test="${not empty messages}">
 	<table width="100%">
-		<c:forEach var="message" items="${messages}">
+		<c:forEach var="message" items="${FacilityMessages}">
 			<c:if test="${message.active eq 'true'}">
 				<tr>
-					<td><font color="red" size="+1"><c:out value="${message.message}" escapeXml="false" /></font></td>
+					<td><font color="red" size="+1"><c:out value="${message.facilityName}" escapeXml="false"/>&nbsp;Message - <c:out value="${message.message}" escapeXml="false" /></font></td>
 				</tr>
 			</c:if>
 		</c:forEach>		
