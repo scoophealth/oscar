@@ -22,21 +22,6 @@ public class QuatroReportManager {
 //		ArrayList options= (ArrayList)quatroReportDao.GetReportOptionList(rptNo);
 //		reportValue.setOptions(options);
 		reportValue.setRunTime(new Date());
-		
-
-//		if (reportValue == null)  return null;
-		
-//		reportValue.Author = uv.FirstName + " " + uv.LastName;
-//		reportValue.RunTime = DateTime.Now;
-//		reportValue.Options = (ArrayList) GetReportOptionList();
-//		reportValue.setAuthor(uv.getFirstName() + " " + uv.getLastName());
-
-		//should set in prpgram, dawson 2008/01/31
-//		reportValue.setRunTime(new Date());
-
-		//should get from GetReportOptionList(rptNo)), dawson 2008/01/31
-//		reportValue.setOptions((ArrayList) GetReportOptionList(rptNo));
-
 		return reportValue;
 	}
 

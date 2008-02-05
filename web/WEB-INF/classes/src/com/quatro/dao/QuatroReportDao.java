@@ -39,7 +39,7 @@ public class QuatroReportDao extends HibernateDaoSupport {
 	  {
 //	      return queryForList("GetFilterFieldList", rptNo);
           ArrayList paramList = new ArrayList();
-		  String sSQL="FROM ReportFilterValue s WHERE s.reportNo=?";		
+		  String sSQL="FROM ReportFilterValue s WHERE s.reportNo=? order by s.fieldName";		
 	      paramList.add(rptNo);
 	      Object params[] = paramList.toArray(new Object[paramList.size()]);
 	      return getHibernateTemplate().find(sSQL ,params);
@@ -58,7 +58,14 @@ public class QuatroReportDao extends HibernateDaoSupport {
 	      paramList.add(rptNo);
 	      paramList.add(fieldNo);
 	      Object params[] = paramList.toArray(new Object[paramList.size()]);
-	      return (ReportFilterValue)getHibernateTemplate().find(sSQL ,params).get(0);
+	      List lst=getHibernateTemplate().find(sSQL ,params);
+	      if(lst.size()==0){
+	    	 return null; 
+	      }
+	      else
+	      {
+	         return (ReportFilterValue)lst.get(0);
+	      }
 	  }
 
 }

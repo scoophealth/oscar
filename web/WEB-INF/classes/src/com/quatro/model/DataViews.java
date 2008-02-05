@@ -2,7 +2,7 @@ package com.quatro.model;
 
 public class DataViews {
     public static final String REPORTTPL = "reporttemplate";
-    public static final String RptFiles="E:\\JQSReport4\\WebContent\\report\\RptFiles";
+    public static final String RptFiles="E:\\workspace2\\QuatroShelter\\web\\PMmodule\\reports\\RptFiles";
 	public static final String ADMIN = "ADMIN";
     public static final String APPEAL_CONFIRMATION = "APPEALCONFIRMATION";
     public static final String APPEAL_DECISION = "APPEALDECISION";

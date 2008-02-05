@@ -23,9 +23,10 @@
 <bean:define id="endTxtProperty" name="quatroReportRunnerForm" property="endTxtProperty" type="com.quatro.util.HTMLPropertyBean" />
 <bean:define id="orgSelectionProperty" name="quatroReportRunnerForm" property="orgSelectionProperty" type="com.quatro.util.HTMLPropertyBean" />
 
-<html:html>
+<link rel="stylesheet" href="../style/style.css" type="text/css" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <script type="text/javascript" src='<c:out value="${ctx}"/>/js/quatroReport.js'></script>
+
 <logic:equal name="quatroReportRunnerForm" property="strClientJavascript" value="showReport">
 <script language="JavaScript">
 showReport('<c:out value="${ctx}"/>/PMmodule/Reports/QuatroReportViewer.do');
@@ -37,9 +38,9 @@ function CriteriaChanged(obj){
   reportRunnerForm.submit();
 }
 
-function showLookupx(lineNo) {
+function showLookup(lineNo) {
     var obj= document.getElementsByName("tplCriteria[" + lineNo + "].lookupTable")[0];
-    var lookupURL="/PMmodule/Reports/lookup2.jsp?tid=" +  obj.value + "&lid=" + lineNo;
+    var lookupURL="/PMmodule/Reports/lookup.jsp?tid=" +  obj.value + "&lid=" + lineNo;
 	top.childWin = window.open(lookupURL,"_blank","resizable=yes,scrollbars=yes,width=600,height=450,top=120, left=200");
 	top.childWin.focus();
 }
@@ -99,7 +100,7 @@ function showLookupx(lineNo) {
     </td>
   </tr>  
   <tr>
-    <td class="clsTdBackGround" width="50%">
+    <td width="50%">
       <table width="100%" >
         <tr>
            <td class="clsMenuLables" valign="top" width="50%">ORGANIZATION</td>
@@ -119,7 +120,7 @@ function showLookupx(lineNo) {
         </tr>
       </table>
     </td>
-    <td class="clsTdBackGround" width="50%">
+    <td width="50%">
       <table width="100%" >
         <tr>
           <td class="clsMenuLables" valign="top">REPORT OPTIONS</td>
@@ -138,7 +139,7 @@ function showLookupx(lineNo) {
         </td>
     </tr> 
     <tr>
-        <td class="clsTdBackGround" colspan="2" width="100%">
+        <td colspan="2" width="100%">
            <table width="100%">
              <tr>
                <td class="clsNameLabels" width="100%">ADDITIONAL CRITERIA</td></tr>   	
@@ -148,21 +149,22 @@ function showLookupx(lineNo) {
 	         </tr>
 	         <tr>
                 <td class="clsButtonBarText" width="100%">
-                    &nbsp;&nbsp;<html:submit property="AddTplCri" style="margin-left: 0px; margin-right: 0px; background-color: transparent; margin-bottom: 0px; margin-top: 0px">Add</html:submit>&nbsp;&nbsp;&nbsp;|
-                        &nbsp;&nbsp;<html:submit style="margin-left: 0px; margin-right: 0px; background-color: transparent; margin-bottom: 0px; margin-top: 0px" property="InsertTplCri">Insert</html:submit>&nbsp;&nbsp;&nbsp;|
-                        &nbsp;&nbsp;<html:submit style="margin-left: 0px; margin-right: 0px; background-color: transparent; margin-bottom: 0px; margin-top: 0px" property="RemoveTplCri">Remove</html:submit>
+                    &nbsp;&nbsp;<html:submit property="AddTplCri">Add</html:submit>&nbsp;&nbsp;&nbsp;|
+                        &nbsp;&nbsp;<html:submit property="InsertTplCri">Insert</html:submit>&nbsp;&nbsp;&nbsp;|
+                        &nbsp;&nbsp;<html:submit property="RemoveTplCri">Remove</html:submit>
 	                </td>     
 	            </tr>
 <tr><td>
-<TABLE class="clsListTable" align="center" width="722px">
-   	<TR class="clsListTableColumnHeaders"><th>Select</th>
-    	<th align="left">Relation<input type="hidden" id="onCriteriaChange" name="onCriteriaChange" value=""  /></TH>
-		<TH align="left">Field Name</TH>
-      	<TH align="left">Operator</TH>
-		<TH align="left">Value(s)</TH></TR>    	
+<TABLE align="center" class="simple" width="100%"><!--  722px-->
+<thead>
+   	<TR><th class="sortable">Select</th>
+    	<th class="sortable">Relation<input type="hidden" id="onCriteriaChange" name="onCriteriaChange" value=""  /></TH>
+		<TH class="sortable">Field Name</TH>
+      	<TH class="sortable">Operator</TH>
+		<TH class="sortable">Value(s)</TH></TR></thead>
 
 	<logic:iterate id="tplCriteria" name="quatroReportRunnerForm" property="templateCriteriaList" indexId="rIndex">
-	<TR><TD align="center">
+	<tbody><TR><TD align="center">
         <logic:equal name="tplCriteria" property="required" value="true">
      	  <input type="checkbox" disabled="disabled" name="p<%=String.valueOf(rIndex)%>" value="<%=String.valueOf(rIndex)%>" /> 
         </logic:equal>
@@ -218,7 +220,7 @@ function showLookupx(lineNo) {
 		  <img src="microsoftsearch.gif" onclick="showLookupx(<%=String.valueOf(rIndex)%>);">
         </logic:notEqual>
 	</TD>  
-   	</TR>
+   	</TR><tbody>
    	</logic:iterate>
 </TABLE>
 </td></tr>
@@ -232,4 +234,3 @@ function showLookupx(lineNo) {
 </td></tr>
 </table>
 </html:form>
-</html:html>

@@ -425,13 +425,17 @@ public class QuatroReportRunnerAction extends Action {
 	
     public void ChangeTplCriTable(int operationType, QuatroReportRunnerForm myForm, HttpServletRequest request)
     {
-/*
     	ArrayList<ReportTempCriValue> obj= new ArrayList<ReportTempCriValue>();
 		Map map=request.getParameterMap();
 		String[] obj2= (String[])map.get("lineno");
 		int lineno=0;
 		if(obj2!=null) lineno=obj2.length;
-		ReportService reportManager = new ReportService(Integer.parseInt(myForm.getReportNo()));
+		
+		int iReportNo = Integer.parseInt(myForm.getReportNo());
+
+//		ReportService reportManager = new ReportService(Integer.parseInt(myForm.getReportNo()));
+		QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
+        		getServlet().getServletContext()).getBean("quatroReportManager");
 
 		switch(operationType)
 		{
@@ -447,7 +451,7 @@ public class QuatroReportRunnerAction extends Action {
 	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
 		      if(arFieldNo!=null){
 				int iFieldNo = Integer.parseInt(arFieldNo[0]);
-				ReportFilterValue rptFilterVal = reportManager.GetFilterField(iFieldNo);
+				ReportFilterValue rptFilterVal = reportManager.GetFilterField(iReportNo, iFieldNo);
 				if(rptFilterVal!=null) criNew.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
 				criNew.setFieldNo(iFieldNo);
 			  }
@@ -469,7 +473,7 @@ public class QuatroReportRunnerAction extends Action {
 	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
 		      if(arFieldNo!=null){
 				int iFieldNo = Integer.parseInt(arFieldNo[0]);
-				ReportFilterValue rptFilterVal = reportManager.GetFilterField(iFieldNo);
+				ReportFilterValue rptFilterVal = reportManager.GetFilterField(iReportNo, iFieldNo);
 				if(rptFilterVal!=null) criNew.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
 				criNew.setFieldNo(iFieldNo);
 			  }
@@ -494,7 +498,7 @@ public class QuatroReportRunnerAction extends Action {
 	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
 		      if(arFieldNo!=null){
 				int iFieldNo = Integer.parseInt(arFieldNo[0]);
-				ReportFilterValue rptFilterVal = reportManager.GetFilterField(iFieldNo);
+				ReportFilterValue rptFilterVal = reportManager.GetFilterField(iReportNo, iFieldNo);
 				if(rptFilterVal!=null) criNew.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
 				criNew.setFieldNo(iFieldNo);
 			  }
@@ -516,7 +520,7 @@ public class QuatroReportRunnerAction extends Action {
 			}
 			break;
 		  case 4:  //OnCriteriaTextChanged
-			ArrayList<ReportFilterValue> filterFields=(ArrayList<ReportFilterValue>)reportManager.GetCriteriaFieldList();
+			ArrayList<ReportFilterValue> filterFields=(ArrayList<ReportFilterValue>)reportManager.GetCriteriaFieldList(iReportNo);
 			myForm.setFilterFields(filterFields);
 
 			String sTemp1=(String)request.getParameter("onCriteriaChange");
@@ -533,7 +537,7 @@ public class QuatroReportRunnerAction extends Action {
 			  String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
 		      if(arFieldNo!=null){
 				int iFieldNo = Integer.parseInt(arFieldNo[0]);
-			    ReportFilterValue rptFilterVal = reportManager.GetFilterField(iFieldNo);
+			    ReportFilterValue rptFilterVal = reportManager.GetFilterField(iReportNo, iFieldNo);
 				if(rptFilterVal!=null) criNew.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
 				criNew.setFieldNo(iFieldNo);
 		      }
@@ -557,7 +561,6 @@ public class QuatroReportRunnerAction extends Action {
 			break;
 		}
 		myForm.setTemplateCriteriaList(obj);
-*/		
     }
 	
 }
