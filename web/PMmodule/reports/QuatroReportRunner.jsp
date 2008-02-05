@@ -38,13 +38,12 @@ function CriteriaChanged(obj){
   reportRunnerForm.submit();
 }
 
-function showLookup(lineNo) {
-    var obj= document.getElementsByName("tplCriteria[" + lineNo + "].lookupTable")[0];
-    var lookupURL="/PMmodule/Reports/lookup.jsp?tid=" +  obj.value + "&lid=" + lineNo;
+function showLookup(tId) {
+    var queryString = "?tId=" + tId;
+    var lookupURL="<c:out value="${ctx}"/>/PMmodule/reports/Lookup.jsp" + queryString;
 	top.childWin = window.open(lookupURL,"_blank","resizable=yes,scrollbars=yes,width=600,height=450,top=120, left=200");
 	top.childWin.focus();
 }
-
 </script>
 
 <html:form action="/PMmodule/Reports/QuatroReportRunner.do">
