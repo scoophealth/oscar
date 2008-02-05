@@ -34,8 +34,8 @@ showReport('<c:out value="${ctx}"/>/PMmodule/Reports/QuatroReportViewer.do');
 </logic:equal>
 <script language="JavaScript">
 function CriteriaChanged(obj){
-  reportRunnerForm.onCriteriaChange.value=obj.name;
-  reportRunnerForm.submit();
+  quatroReportRunnerForm.onCriteriaChange.value=obj.name;
+  quatroReportRunnerForm.submit();
 }
 
 function showLookup(tId) {
