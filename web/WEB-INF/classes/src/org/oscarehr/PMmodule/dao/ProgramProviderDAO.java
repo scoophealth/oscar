@@ -186,4 +186,15 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
         return results;
     }
+    
+    @SuppressWarnings("unchecked")
+    public List<Facility> getFacilityMessagesInProgramDomain(String providerNo) {
+        if (providerNo == null || Long.valueOf(providerNo) == null) {
+            throw new IllegalArgumentException();
+        }
+        List results = this.getHibernateTemplate().find("select distinct fm from FacilityMessage fm, Room r, ProgramProvider pp where pp.ProgramId = r.programId and fm.facilityId = r.facilityId and pp.ProviderNo = ?", providerNo);
+
+        return results;
+    }
+    
 }

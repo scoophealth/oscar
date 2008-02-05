@@ -77,7 +77,6 @@ public class FacilityMessageAction extends DispatchAction {
 		String messageId = request.getParameter("id");
 		
 		String providerNo = (String)request.getSession().getAttribute("user");
-		System.out.println("user id = " + providerNo);
 		
 		List facilities = programProviderDAO.getFacilitiesInProgramDomain(providerNo);
 		request.getSession().setAttribute("facilities", facilities);
@@ -115,9 +114,11 @@ public class FacilityMessageAction extends DispatchAction {
 	}
 	
 	public ActionForward view(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		List messages = mgr.getMessages();
+		//List messages = mgr.getMessages();
+		String providerNo = (String)request.getSession().getAttribute("user");
+		List messages = programProviderDAO.getFacilityMessagesInProgramDomain(providerNo);
 		if(messages.size()>0) {
-			request.setAttribute("messages",messages);
+			request.setAttribute("FacilityMessages",messages);
 		}
 		return mapping.findForward("view");
 	}
