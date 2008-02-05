@@ -1515,7 +1515,7 @@
         </action>
         <action path="/PMmodule/Reports/QuatroReportViewer" type="com.quatro.web.report.QuatroReportViewerAction"
               name="quatroReportRunnerForm" validate="false" scope="request">
-           <forward name="success" path="/report/reportViewer.jsp"/>
+           <forward name="success" path="/PMmodule/Reports/QuatroReportViewer.jsp"/>
         </action>
 
         <action path="/PMmodule/Reports/ProgramActivityReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="activityReportForm" scope="request" validate="false">
