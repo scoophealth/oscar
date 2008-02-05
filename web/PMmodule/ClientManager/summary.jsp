@@ -145,20 +145,6 @@ function openSurvey() {
 		<th width="20%">EMPI</th>
 		<td><span id='empi_links'>Loading...</span></td>
 	</tr>
-	<tr>
-		<th width="20%">Opt-In to share data</th>
-		<td>
-			<%
-				if (!UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external))
-				{
-					%>
-						<input name="consentCheckBox" type="checkbox" <c:out value="${consentCheckBoxState}" /> onclick="updateSharingOpting(this.checked);"> &nbsp;&nbsp;&nbsp;&nbsp; 
-					<%
-				}
-			%>
-			(current circle-of-care consent status : <c:out value="${consentStatus}" />, <c:out value="${consentMethod}" />)
-		</td>
-	</tr>
 </table>
 
 

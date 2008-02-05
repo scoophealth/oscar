@@ -29,6 +29,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
+<%@page import="org.oscarehr.PMmodule.model.Demographic"%>
 <html>
 <head>
 	<title>Consent Form</title>
@@ -66,7 +67,7 @@
 			//warning about incompetence
 			if(answer1 != 1 || answer2 != 1 || answer3 != 1) {
 				if(confirm('Not all questions were answered correctly. \nSubmitting this form will result in the inability to obtain informed consent')) {
-					form.elements['consent.status'].value = 'unable to obtain informed consent';					
+					form.elements['consent.status'].value = '<%=Demographic.ConsentGiven.NONE.name()%>';					
 				} else {
 					return;
 				}
@@ -174,7 +175,6 @@
 			<input type="hidden" name="id"
 				value="<c:out value="${requestScope.id}"/>">
 			<input type="hidden" name="method" value="saveConsent" />
-			<input type="hidden" name="consent.status" value="consent given">
 			<input type="hidden" name="consent.formName" value="formA">
 			<input type="hidden" name="consent.formVersion" value="1.0">			 
 			</td>
@@ -217,30 +217,38 @@
 	<tr>
 		<td>
 		<p>
-		<html:radio property="consent.exclusionString" value=""/>
+		<html:radio property="consent.status" value="<%=Demographic.ConsentGiven.ALL.name()%>"/>
 		&nbsp&nbsp&nbsp I, <b><c:out value="${clientName}"/></b>,
-		permit <b><c:out value="${agency.name}"/></b>
-		and any other CAISI partner agencies to record, send and use my
+		permit all CAISI partner agencies to record, send and use my
 		personal information for the purposes above.</p>
 		</td>
 	</tr>
 	<tr>
 		<td>
 		<p>
-		<html:radio property="consent.exclusionString" value="non-hic"/>
+		<html:radio property="consent.status" value="<%=Demographic.ConsentGiven.CIRCLE_OF_CARE.name()%>"/>
 		&nbsp&nbsp&nbsp I, <b><c:out value="${clientName}"/></b>,
-		permit only health care providers to record, send and use my
-		personal information for the purposes above.</p>
+		permit only health care providers to record, send and use
+		my personal information for the purposes above.</p>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<p>
+		<html:radio property="consent.status" value="<%=Demographic.ConsentGiven.EMPI.name()%>"/>
+		&nbsp&nbsp&nbsp I, <b><c:out value="${clientName}"/></b>,
+		permit all CAISI partner agencies to record, send and
+		use only my demographic information for the purposes above.</p>
 		</td>
 	</tr>	
 	<tr>
 		<td>
 		<p>
-		<html:radio property="consent.exclusionString" value="all"/>
+		<html:radio property="consent.status" value="<%=Demographic.ConsentGiven.NONE.name()%>"/>
 		&nbsp&nbsp&nbsp I, <b><c:out value="${clientName}"/></b>,
-		do <b>not</b> permit <b><c:out value="${agency.name}"/></b>
-		or any other CAISI partner agencies to record, send and use my
-		personal information for the purposes above.</p>
+		do <b>not</b> permit do not permit City of Toronto or any other CAISI partner
+		agencies to record, send and use my personal information for the purposes above.
+		</p>
 		</td>
 	</tr>
 

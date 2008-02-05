@@ -78,9 +78,6 @@ public class ConsentAction extends BaseAction {
 				BeanUtils.copyProperties(newConsent,consent);
 				newConsent.setId(null);
 			}catch(Exception e) {log.warn(e);}
-			if(consent.getStatus().equals("consent not given")) {
-				consent.setExclusionString("all");
-			}
 			consentForm.set("consent", consent);
 			formMapping = consent.getFormName();
 		}
@@ -95,8 +92,8 @@ public class ConsentAction extends BaseAction {
 			return mapping.findForward("form" + formName.toUpperCase());
 		}
 		
-		
-		return mapping.findForward(formMapping);
+//        return mapping.findForward(formMapping);
+		return mapping.findForward("formA");
 	}
 	
 	
@@ -119,15 +116,7 @@ public class ConsentAction extends BaseAction {
 		consent.setHardcopy(true);
 		
 		if(consent.getOptout() != null && consent.getOptout().equalsIgnoreCase("yes")) {
-			consent.setStatus("consent not given");
-		}
-		
-		if(consent.getExclusionString().equals("all")) {
-			consent.setStatus("consent not given");
-			consent.setExclusionString("");
-		}
-		if(consent.getExclusionString().equals("non-hic")) {
-			consent.setStatus("consent given");
+			consent.setStatus(Demographic.ConsentGiven.NONE.name());
 		}
 		
 		consentManager.saveConsent(consent);	
@@ -181,7 +170,8 @@ public class ConsentAction extends BaseAction {
 		if(d == 0) {
 			return "formA";
 		}
-		return "formB";
+//		return "formB";
+        return "formA";
 	}
 }
 
