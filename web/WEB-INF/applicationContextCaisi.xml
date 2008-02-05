@@ -49,7 +49,7 @@
     <bean id="surveyTestDAO" class="org.oscarehr.survey.dao.hibernate.SurveyTestDAOHibernate" autowire="byName"/>
     <bean id="oscarFormDAO" class="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate" autowire="byName"/>
     <bean id="populationReportDAO" class="org.oscarehr.common.dao.PopulationReportDAO" autowire="byName"/>
-    <bean id="facilityDAO" class="org.oscarehr.PMmodule.dao.FacilityDAO" autowire="byName"/>
+    
 
     <!-- managers  -->
     <bean id="caisiEditorManager" parent="baseTransactionProxy" lazy-init="default"
@@ -84,12 +84,7 @@
     </bean>
     <bean id="caisiRoleManagerTarget" class="org.caisi.service.CaisiRoleManager" autowire="byName"/>
 
-    <bean id="facilityManager" parent="baseTransactionProxy" lazy-init="default"
-          dependency-check="default">
-        <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.FacilityManager" autowire="byName"/>
-        </property>
-    </bean>
+    
     <bean id="bedCheckTimeManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">

@@ -1,0 +1,39 @@
+<!-- 
+/*
+* 
+* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+* This software is published under the GPL GNU General Public License. 
+* This program is free software; you can redistribute it and/or 
+* modify it under the terms of the GNU General Public License 
+* as published by the Free Software Foundation; either version 2 
+* of the License, or (at your option) any later version. * 
+* This program is distributed in the hope that it will be useful, 
+* but WITHOUT ANY WARRANTY; without even the implied warranty of 
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+* along with this program; if not, write to the Free Software 
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+* 
+* <OSCAR TEAM>
+* 
+* This software was written for 
+* Centre for Research on Inner City Health, St. Michael's Hospital, 
+* Toronto, Ontario, Canada 
+*/
+ -->
+
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+
+<c:if test="${not empty messages}">
+	<table width="100%">
+		<c:forEach var="message" items="${messages}">
+			<c:if test="${message.active eq 'true'}">
+				<tr>
+					<td><font color="red" size="+1"><c:out value="${message.message}" escapeXml="false" /></font></td>
+				</tr>
+			</c:if>
+		</c:forEach>		
+	</table>
+</c:if>

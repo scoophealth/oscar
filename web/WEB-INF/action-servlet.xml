@@ -21,6 +21,11 @@
     <bean name="/SystemMessage" class="org.caisi.core.web.SystemMessageAction" singleton="false">
         <property name="systemMessageManager" ref="systemMessageManager"/>
     </bean>
+    <bean name="/FacilityMessage" class="org.caisi.core.web.FacilityMessageAction" singleton="false">
+        <property name="facilityMessageManager" ref="facilityMessageManager"/>
+        <property name="facilityManager" ref="facilityManager"/>
+        <property name="programProviderDAO" ref="programProviderDAO"/>
+    </bean>
     <bean name="/issueAdmin" class="org.caisi.core.web.IssueAdminAction" singleton="false">
         <property name="issueAdminManager" ref="issueAdminManager"/>
         <property name="caisiRoleManager" ref="caisiRoleManager"/>

@@ -165,7 +165,8 @@
     <bean id="programClientRestrictionDAO" class="org.oscarehr.PMmodule.dao.ProgramClientRestrictionDAO" autowire="byName"/>
     <bean id="EncounterWindowDAO" class="org.oscarehr.casemgmt.dao.EncounterWindowDAO" autowire="byName" />
     <bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
-
+	<bean id="facilityDAO" class="org.oscarehr.PMmodule.dao.FacilityDAO" autowire="byName"/>
+	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName"/>
 
     <!-- configure the available measurement flow sheets -->
     <bean id="measurementTemplateFlowSheet" class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
@@ -179,6 +180,13 @@
     </bean>
 
     <!-- managers  -->
+    <bean id="facilityManager" parent="baseTransactionProxy" lazy-init="default"
+          dependency-check="default">
+        <property name="target">
+            <bean class="org.oscarehr.PMmodule.service.FacilityManager" autowire="byName"/>
+        </property>
+    </bean>
+    
     <bean id="agencyManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">
@@ -205,7 +213,22 @@
         <property name="systemMessageDAO" ref="systemMessageDAO"/>
     </bean>
    
-
+	<bean id="facilityMessageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+          lazy-init="default"  dependency-check="default">
+        <property name="transactionManager" ref="transactionManager"/>       
+        <property name="target" ref="facilityMessageManagerTarget"/>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="save*">PROPAGATION_REQUIRED</prop>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="facilityMessageManagerTarget" class="org.caisi.service.FacilityMessageManager" lazy-init="default"
+          autowire="default" dependency-check="default">
+        <property name="facilityMessageDAO" ref="facilityMessageDAO"/>
+    </bean>
 
     <!-- Manager classes -->
     <bean id="programQueueManager" parent="baseTransactionProxy">
