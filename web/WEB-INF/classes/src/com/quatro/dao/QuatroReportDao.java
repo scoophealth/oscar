@@ -70,7 +70,7 @@ public class QuatroReportDao extends HibernateDaoSupport {
 	  public List GetReportList(String providerNo)
 	  {
           ArrayList paramList = new ArrayList();
-		  String sSQL="FROM ReportValue s where s.providerNo=? ORDER BY s.TITLE";
+		  String sSQL="FROM ReportValue s where s.providerNo=? ORDER BY s.title";
 	      paramList.add(providerNo);
 	      Object params[] = paramList.toArray(new Object[paramList.size()]);
 	      return getHibernateTemplate().find(sSQL ,params);

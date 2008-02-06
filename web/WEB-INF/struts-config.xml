@@ -287,7 +287,7 @@
             <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean" />
         </form-bean>
 
-        <form-bean name="quatroReportForm" type="com.quatro.web.report.QuatroReportListForm" />
+        <form-bean name="quatroReportListForm" type="com.quatro.web.report.QuatroReportListForm" />
         <form-bean name="quatroReportRunnerForm" type="com.quatro.web.report.QuatroReportRunnerForm" />
         <form-bean name="quatroReportViewerForm" type="com.quatro.web.report.QuatroReportViewerForm" />
         
@@ -1501,7 +1501,7 @@
             <forward name="rlist" path="/PMmodule/Admin/DefaultRoleAccess.do?method=list" redirect="true" />
         </action>
         <!-- REPORTS -->
-        <action path="/PMmodule/Reports/QuatroReportList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="quatroReportForm" scope="request" validate="false">
+        <action path="/PMmodule/Reports/QuatroReportList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="quatroReportListForm" scope="request" validate="false">
             <forward name="reportlist" path="page.report.quatroreportlist" />
         </action>
 <!-- 
@@ -1675,4 +1675,8 @@
     <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
         <set-property property="pathnames" value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
     </plug-in>
+	<plug-in className="net.sf.navigator.menu.MenuPlugIn">
+  	<set-property property="menuConfig"
+    	value="/WEB-INF/struts-menu.xml"/>
+	</plug-in>
 </struts-config>
