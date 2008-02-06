@@ -238,7 +238,7 @@
     </bean>
 
     <!-- Quatro Shelter Report -->
-    <bean name="/PMmodule/Reports/QuatroReportList" class="com.quatro.web.report.QuatroReportListAction" singleton="false">
+    <bean name="/QuatroReport/ReportList" class="com.quatro.web.report.QuatroReportListAction" singleton="false">
     </bean>
     
     <!-- Provider Property -->

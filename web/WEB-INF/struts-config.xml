@@ -1501,7 +1501,7 @@
             <forward name="rlist" path="/PMmodule/Admin/DefaultRoleAccess.do?method=list" redirect="true" />
         </action>
         <!-- REPORTS -->
-        <action path="/PMmodule/Reports/QuatroReportList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="quatroReportListForm" scope="request" validate="false">
+        <action path="/QuatroReport/ReportList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="quatroReportListForm" scope="request" validate="false">
             <forward name="reportlist" path="page.report.quatroreportlist" />
         </action>
 <!-- 
@@ -1509,11 +1509,11 @@
             <forward name="reportrunner" path="page.report.quatroreportrunner" />
         </action>
  -->                
-        <action path="/PMmodule/Reports/QuatroReportRunner" type="com.quatro.web.report.QuatroReportRunnerAction"
+        <action path="/QuatroReport/ReportRunner" type="com.quatro.web.report.QuatroReportRunnerAction"
               name="quatroReportRunnerForm" validate="false" scope="request">
             <forward name="success" path="page.report.quatroreportrunner" />
         </action>
-        <action path="/PMmodule/Reports/QuatroReportViewer" type="com.quatro.web.report.QuatroReportViewerAction"
+        <action path="/QuatroReport/ReportViewer" type="com.quatro.web.report.QuatroReportViewerAction"
               name="quatroReportRunnerForm" validate="false" scope="request">
            <forward name="success" path="/PMmodule/Reports/QuatroReportViewer.jsp"/>
         </action>
@@ -1675,8 +1675,4 @@
     <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
         <set-property property="pathnames" value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
     </plug-in>
-	<plug-in className="net.sf.navigator.menu.MenuPlugIn">
-  	<set-property property="menuConfig"
-    	value="/WEB-INF/struts-menu.xml"/>
-	</plug-in>
 </struts-config>
