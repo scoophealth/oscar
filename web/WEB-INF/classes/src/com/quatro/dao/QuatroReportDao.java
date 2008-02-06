@@ -67,5 +67,14 @@ public class QuatroReportDao extends HibernateDaoSupport {
 	         return (ReportFilterValue)lst.get(0);
 	      }
 	  }
+	  public List GetReportList(String providerNo)
+	  {
+          ArrayList paramList = new ArrayList();
+		  String sSQL="FROM ReportValue s where s.providerNo=? ORDER BY s.TITLE";
+	      paramList.add(providerNo);
+	      Object params[] = paramList.toArray(new Object[paramList.size()]);
+	      return getHibernateTemplate().find(sSQL ,params);
+	  }
+
 
 }
