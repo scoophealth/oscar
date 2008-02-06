@@ -29,7 +29,7 @@
 
 <logic:equal name="quatroReportRunnerForm" property="strClientJavascript" value="showReport">
 <script language="JavaScript">
-showReport('<c:out value="${ctx}"/>/PMmodule/Reports/QuatroReportViewer.do');
+showReport('<c:out value="${ctx}"/>/QuatroReport/ReportViewer.do');
 </script>
 </logic:equal>
 <script language="JavaScript">
@@ -46,7 +46,7 @@ function showLookup(tId) {
 }
 </script>
 
-<html:form action="/PMmodule/Reports/QuatroReportRunner.do">
+<html:form action="/QuatroReport/ReportRunner.do">
 <table width="100%">
 <tr><td style="color: white;font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px; font-weight: bold" background="../images/TitleBar2.png" align="center">
 <bean:write name="reportTitle"/>
@@ -56,7 +56,7 @@ function showLookup(tId) {
 <img src="../images/Print16x16.gif"/>
 <html:submit property="Run"
 				style="margin-left: 0px; margin-right: 0px; background-color: transparent; margin-bottom: 0px; margin-top: 0px">Run Report</html:submit>&nbsp;|&nbsp;
-<img src="../images/Back16.png"/>&nbsp;<html:link action="/PMmodule/Reports/QuatroReportList.do">QuatroShelter Reports</html:link>
+<img src="../images/Back16.png"/>&nbsp;<html:link action="/QuatroReport/ReportList.do">QuatroShelter Reports</html:link>
 </td></tr>
 
 <tr><td valign="top">

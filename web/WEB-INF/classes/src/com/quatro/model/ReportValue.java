@@ -5,7 +5,7 @@ import java.util.*;
 public class ReportValue{
 
 	private ReportTempValue reportTemp;
-    private List sections;
+    private List filters;
     private Set options;
     private Date runTime;
 
@@ -43,14 +43,6 @@ public class ReportValue{
 
 	public void setOptions(Set options) {
 		this.options = options;
-	}
-
-	public List getSections() {
-		return sections;
-	}
-
-	public void setSections(ArrayList sections) {
-		this.sections = sections;
 	}
 
 	public int getExportFormatType() {
@@ -195,6 +187,14 @@ public class ReportValue{
 
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+
+	public List getFilters() {
+		return filters;
+	}
+
+	public void setFilters(List filters) {
+		this.filters = filters;
 	}
 	
 }

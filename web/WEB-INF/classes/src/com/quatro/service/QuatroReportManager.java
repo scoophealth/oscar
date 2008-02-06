@@ -22,6 +22,9 @@ public class QuatroReportManager {
 //		ArrayList options= (ArrayList)quatroReportDao.GetReportOptionList(rptNo);
 //		reportValue.setOptions(options);
 		reportValue.setRunTime(new Date());
+
+		ArrayList filters= (ArrayList)quatroReportDao.GetFilterFieldList(rptNo);
+		reportValue.setFilters(filters);
 		return reportValue;
 	}
 

@@ -26,7 +26,7 @@ Bed Reports</td></tr>
     <display:setProperty name="basic.msg.empty_list" value="No reports found." />
 
     <display:column sortable="false" title="Title">
-        <a href="<html:rewrite action="/PMmodule/Reports/QuatroReportRunner.do"/>?id=<c:out value="${report.reportNo}" />"> <c:out value="${report.title}"/> - <c:out value="${report.description}"/> </a>
+        <a href="<html:rewrite action="/QuatroReport/ReportRunner.do"/>?id=<c:out value="${report.reportNo}" />"> <c:out value="${report.title}"/> - <c:out value="${report.description}"/> </a>
     </display:column>
 
 </display:table>
