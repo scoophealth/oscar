@@ -69,8 +69,8 @@
 
     function onsub() {
       if(document.searchprovider.user_name.value=="" ||
-		 document.searchprovider.password.value==""
-		 ||document.searchprovider.provider_no.value==""
+		 document.searchprovider.password.value==""||
+		 document.searchprovider.provider_no.value==""		
 		) {
         alert('<bean:message key="global.msgInputKeyword"/>');
         return false;
@@ -86,10 +86,14 @@
       } else if(document.forms[0].pin.value != document.forms[0].conPin.value) {
         alert('You have not confirmed your pin. Please input your pin again.');
         return false;
-      } else return true;
+      } else if(document.forms[0].pin.value == "") {
+        alert('Please input your pin.');
+        return false;
+      } else 
+      	return true;
       // do nothing at the moment
       // check input data in the future
-     
+     }
     //-->
     </script>
 </head>
