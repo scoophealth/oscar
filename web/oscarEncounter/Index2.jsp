@@ -26,6 +26,8 @@
 --%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <%
     long startTime = System.currentTimeMillis();
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -782,14 +784,17 @@ function loader(){
       window.setTimeout("popupPage(700,900,'<%=popUrl%>')", 2);
     <%}%>
 
-    for( var idx in URLs ) {        
+    <%-- Old navbar loader
+     for( var idx in URLs ) {        
         var div = document.createElement("div");
         div.id = idx;
         div.className = "leftBox";
         $("leftNavbar").appendChild(div);
         popLeftColumn(URLs[idx],idx,idx);
-    }
-    
+    }--%>
+    //new navbar loader
+    var navBars = new navBarLoader();
+    navBars.load(); 
 }
 
 var updateNeeded = false;
@@ -848,48 +853,229 @@ function popLeftColumn(url,div,params) {
                   );
 }
 
-function listDisplay(Id) {
-    var eqIdx = Id.indexOf("=");    
-    var numId = Id.substr(eqIdx+1) + "num";
-    
-    if( $(numId).value > 5 ) {
-        var btnName = Id.substr(eqIdx+1) + "topimg";
-        var topImage = $(btnName);
-        btnName = Id.substr(eqIdx+1) + "midimg";
-        var midImage = $(btnName);
-        var expand;
-        var expandPath = "graphics/expand.gif";
-        var collapsePath = "../oscarMessenger/img/collapse.gif";
-        var listId = Id.substr(eqIdx+1) + "list";
-        var list = $(listId);
-        var items = list.getElementsByTagName('li');
-        items = $A(items);
-        for( var idx = 5; idx < items.length; ++idx ) {
-            if( items[idx].style.display == 'block' ) {
-                items[idx].style.display = 'none';
-                expand = true;
+   /*
+    *Set expand and collapse images for navbar divs and show/hide lines above threshold
+    *Store function event listeners so we start/stop listening
+    */
+   var imgfunc = new Object();
+   function listDisplay(Id, threshold) {
+            if( threshold == 0 )
+                return;
+                
+            var listId = Id + "list";            
+            var list = $(listId);
+            var items = list.getElementsByTagName('li');
+            items = $A(items);
+            var obj = {};
+            
+            var topName = "img"+Id+"0";
+            var midName = "img"+Id+(threshold-1);
+            var lastName = "img"+Id+(items.length-1);
+            var topImage = $(topName);            
+            var midImage = $(midName);
+            var lastImage = $(lastName);
+            var expand;
+            var expandPath = "<c:out value="${ctx}"/>/oscarEncounter/graphics/expand.gif";
+            var collapsePath = "<c:out value="${ctx}"/>/oscarMessenger/img/collapse.gif";
+            var transparentPath = "<c:out value="${ctx}"/>/images/clear.gif";
+            
+            for( var idx = threshold; idx < items.length; ++idx ) {
+                if( items[idx].style.display == 'block' ) {
+                    items[idx].style.display = 'none';
+                    expand = true;
+                }
+                else {
+                    items[idx].style.display = 'block';
+                    expand = false;
+                }
+            }
+
+            if( expand ) {
+                topImage.src = transparentPath;
+                lastImage.src = transparentPath;
+                midImage.src = expandPath;
+                midImage.title = (items.length - threshold) + " items more";
+
+                Element.stopObserving(topImage, "click", imgfunc[topName]);
+                Element.stopObserving(lastImage, "click", imgfunc[lastName]);
+                
+                imgfunc[midName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
+                Element.observe(midImage, "click", imgfunc[midName]);
             }
             else {
-                items[idx].style.display = 'block';
-                expand = false;
-            }
-        }
-        
-        if( expand ) {
-            topImage.style.display = 'none';
-            midImage.style.display = 'inline';
-        }
-        else {
-            topImage.style.display = 'inline';
-            midImage.style.display = 'none';
-        }
-            
+                topImage.src = collapsePath;
+                lastImage.src = collapsePath;
+                midImage.src = transparentPath;
+                midImage.title = "";
+
+                Element.stopObserving(midImage, "click", imgfunc[midName]);
+                
+                imgfunc[topName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
+                Element.observe(topImage, "click", imgfunc[topName]);
+                
+                imgfunc[lastName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
+                Element.observe(lastImage, "click", imgfunc[lastName]);                
+            }        
+    
+    }  
+function navBarLoader() {
+    //$("leftNavbar").style.height = $("content").getHeight();
+    
+    /*
+     *is right navbar present?
+     *if so work with it
+     *if not, set max lines to 0
+     */
+    if( $("rightNavBar") != undefined ) {
+        $("rightNavBar").style.height = $("notCPP").getHeight();
+        this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 12);        
     }
+    else
+        this.rightNumLines = 0;
+        
+    this.maxLeftNumLines = Math.floor($("leftNavbar").getHeight() / 12);    
+    this.arrLeftDivs = new Array();
+    this.arrRightDivs = new Array();
+    this.rightTotal = 0;
+    this.leftTotal = 0;
+    this.leftDivs = 10;
+    this.rightDivs = 3;
+    this.leftReported = 0;
+    this.rightReported = 0;
+    
+    //init ajax calls for all sections of the navbars and create a div for each ajax request
+    this.load = function() {
+             
+            var leftNavbar = { 
+                  preventions:  "<c:out value="${ctx}"/>/oscarEncounter/displayPrevention.do?hC=009999",
+                  tickler:      "<c:out value="${ctx}"/>/oscarEncounter/displayTickler.do?hC=FF6600",
+                  Dx:           "<c:out value="${ctx}"/>/oscarEncounter/displayDisease.do?hC=5A5A5A",
+                  forms:        "<c:out value="${ctx}"/>/oscarEncounter/displayForms.do?hC=917611",
+                  eforms:       "<c:out value="${ctx}"/>/oscarEncounter/displayEForms.do?hC=11CC00",<%/*  88E900 */%> 
+                  docs:         "<c:out value="${ctx}"/>/oscarEncounter/displayDocuments.do?hC=476BB3",
+                  labs:         "<c:out value="${ctx}"/>/oscarEncounter/displayLabs.do?hC=A0509C", <%/* 550066   */%>                         
+                  msgs:         "<c:out value="${ctx}"/>/oscarEncounter/displayMessages.do?hC=DDDD00", <% /* FF33CC */ %>
+                  measurements: "<c:out value="${ctx}"/>/oscarEncounter/displayMeasurements.do?hC=344887",
+                  consultation: "<c:out value="${ctx}"/>/oscarEncounter/displayConsultation.do"
+              };
+                          
+          var URLs = new Array();
+          URLs.push(leftNavbar);
+          
+              
+        for( var j = 0; j < URLs.length; ++j ) {                                    
+            
+            var navbar;
+            if( j == 0 )                
+                navbar = "leftNavbar";            
+            else if( j == 1)                            
+                navbar = "rightNavBar";            
+            
+            for( idx in URLs[j] ) {                                
+                var div = document.createElement("div");            
+                div.className = "leftBox";
+                div.style.display = "block";
+                div.id = idx;
+                $(navbar).appendChild(div); 
+                
+                if( navbar == "leftNavbar" )
+                    this.arrLeftDivs.push(div);
+                if( navbar == "rightNavBar" )
+                    this.arrRightDivs.push(div); 
+                    
+                this.popColumn(URLs[j][idx],idx,idx, navbar, this);
+            }
+            
+        }
     
     
+    };
+    
+    //update each ajax div with info from request
+    this.popColumn = function (url,div,params, navBar, navBarObj) {    
+        params = "cmd=" + params;
+        
+        var objAjax = new Ajax.Request (                        
+                            url,
+                            {
+                                method: 'post', 
+                                postBody: params,
+                                evalScripts: true,
+                                /*onLoading: function() {                            
+                                                $(div).update("<p>Loading ...<\/p>");
+                                            }, */                            
+                                onSuccess: function(request) {                            
+                                                while( $(div).firstChild )
+                                                    $(div).removeChild($(div).firstChild);
+                                                
+                                                $(div).update(request.responseText);  
+
+                                                //track ajax completions and display divs when last ajax call completes                                                
+                                                navBarObj.display(navBar,div);
+                                           }, 
+                                onFailure: function(request) {
+                                                $(div).innerHTML = "<h3>Error:<\/h3>" + request.status;
+                                            }
+                            }
+
+                      );
+        };
+        
+        //format display and show divs in navbars
+        this.display = function(navBar,div) {          
+             
+            //add number of items plus header to total
+            var reported = 0;
+            var numDivs = 0;
+            var arrDivs;
+            if( navBar == "leftNavbar" ) {
+                this.leftTotal += parseInt($F(div+"num")) + 1;                                
+                reported = ++this.leftReported;
+                numDivs = this.leftDivs;
+                arrDivs = this.arrLeftDivs;
+            }
+            else if( navBar == "rightNavBar" ) {
+                this.rightTotal += parseInt($F(div+"num")) + 1;
+                reported = ++this.rightReported;
+                numDivs = this.rightDivs;
+                arrDivs = this.arrRightDivs;
+            }
+            
+            if( reported == numDivs ) {
+                                
+                /*
+                 * do we have more lines than permitted?
+                 * if so we need to reduce display
+                 */
+                var overflow = this.leftTotal - this.maxLeftNumLines;                
+                if( navBar == "leftNavbar" && overflow > 0 )                    
+                    this.adjust(this.arrLeftDivs, this.leftTotal, overflow);                                    
+                    
+                overflow = this.rightTotal - this.maxRightNumLines;                
+                if( navBar == "rightNavBar" && overflow > 0 )
+                    this.adjust(this.arrRightDivs, this.rightTotal, overflow);
+            
+            } //end if
+        };
+        
+        this.adjust = function(divs, total, overflow) {
+            //spread reduction across all divs weighted according to number of lines each div has            
+            var num2reduce;
+            var numLines;
+            var threshold;
+            for( var idx = 0; idx < divs.length; ++idx ) {
+                numLines = parseInt($F(divs[idx].id + "num"));
+                num2reduce = Math.ceil(overflow * (numLines/total));
+                if( num2reduce == numLines && num2reduce > 0 ) 
+                    --num2reduce;
+                
+                threshold = numLines - num2reduce;
+                console.log(idx + " threshold " + threshold);
+                listDisplay(divs[idx].id, threshold);                
+            }        
+        };
+
 }
-
-
 </script>
 <script language="javascript">
 
@@ -1069,7 +1255,7 @@ border-right: 2px solid #cfcfcf;
             </td>
     </tr>
     <tr style="height:100%">
-        <td style="border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
+        <td style="width:22%; border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
             <div id="leftNavbar" style="height:100%; width:100%;">
                     <caisi:isModuleLoad moduleName="caisi">
                             <%String hrefurl2=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;%>
@@ -1077,13 +1263,13 @@ border-right: 2px solid #cfcfcf;
                     </caisi:isModuleLoad>
             </div>
         </td>
-        <td valign="top">                
+        <td style="background-color:#CCCCFF;" width="78%" valign="top">                
         <form name="encForm" action="SaveEncounter2.do" method="POST">
             <input type="hidden" id="reloadDiv" name="reloadDiv" value="none" onchange="updateDiv();">
             <caisi:isModuleLoad moduleName="caisi">
                         <input type="hidden" name="casetoEncounter" value="true">
 		</caisi:isModuleLoad>
-            <table  name="encounterTableRightCol" >
+            <table width="100%" name="encounterTableRightCol" >
     <!-- social history row --><!-- start new rows here -->
                 <tr>
                     <td>
