@@ -35,7 +35,7 @@
                  <div style="width:99%; background-color:#EFEFEF; font-size:12px; border-left: thin groove #000000; border-bottom: thin groove #000000; border-right: thin groove #000000;">
                      <pre><nested:write name="note" property="note" /></pre>
                      <div style="color:#0000FF;">
-                         Observation Date: <nested:write name="note" property="observation_date" format="dd-MMM-yyyy H:mm" /><br>                         
+                         Documentation Date: <nested:write name="note" property="observation_date" format="dd-MMM-yyyy H:mm" /><br>                         
                          <nested:equal name="note" property="signed" value="true"> 
                              Signed by 
                              <nested:write name="note" property="signing_provider_no"/>:
