@@ -210,7 +210,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                         prov.setProviderNo(providerNo);
                         note.setProvider(prov);
                         note.setDemographic_no(demono); 
-                        this.insertReason(request,note);
+                        
+                        this.insertReason(request,note);                        
                                                 
                         resetTemp(providerNo, demono, programId);
 
@@ -252,13 +253,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                     if((note = getLastSaved(request,demono,providerNo)) == null) {
                         request.getSession().setAttribute("newNote","true");
                         request.getSession().setAttribute("issueStatusChanged","false");
-                        note = new CaseManagementNote();
-                        // note.setNote("test");
+                        note = new CaseManagementNote();                        
                         note.setProvider_no(providerNo);
                         Provider prov = new Provider();
                         prov.setProviderNo(providerNo);
                         note.setProvider(prov);
-                        note.setDemographic_no(demono);                         
+                        note.setDemographic_no(demono);                                                 
                         
                         this.insertReason(request,note);
                     }                    
@@ -272,7 +272,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 			}
 			
 		}*/
-                
+                log.debug("Set Encounter Type: " + note.getEncounter_type());
                 log.debug("Fetched Note " + String.valueOf(note.getId()));
                 this.caseManagementMgr.getEditors(note);
 		cform.setCaseNote(note);
@@ -1332,20 +1332,22 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
             if(bean.eChartTimeStamp==null){
                   encounterText ="\n["+UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy H:mm",request.getLocale())+" .: "+bean.reason+"] \n";
                   //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
-            }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
+            }else { //if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
                    //System.out.println("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
                   //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                    encounterText ="\n["+("".equals(bean.appointmentDate)?UtilDateUtilities.getToday("dd-MMM-yyyy H:mm"):apptDate)+" .: "+bean.reason+"]\n";
-            }else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
+            } /*else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
                    //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                    encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n";
-            }
+            }*/
            //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
            if(!bean.oscarMsg.equals("")){
               encounterText +="\n\n"+bean.oscarMsg;
            }
 
-           note.setNote(encounterText);
+           note.setNote(encounterText);   
+           note.setEncounter_type(bean.encType);
+           
         }
         
     }
