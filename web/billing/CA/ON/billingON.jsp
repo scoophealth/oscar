@@ -25,13 +25,14 @@
 <%@ page import="java.util.*,java.net.*,java.sql.*,oscar.*,oscar.util.*,oscar.appt.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%--<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />--%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%//
 			if (session.getAttribute("user") == null) {
 				response.sendRedirect("../../../logout.jsp");
 			}
-
+                        oscar.OscarProperties oscarVariables = oscar.OscarProperties.getInstance();
+                        
 			String user_no = (String) session.getAttribute("user");
 			String providerview = request.getParameter("providerview") == null ? "" : request
 					.getParameter("providerview");
@@ -47,6 +48,7 @@
 			String clinicview = bHospitalBilling ? oscarVariables.getProperty("clinic_hospital", "") : oscarVariables.getProperty("clinic_view", "");
 			String clinicNo = oscarVariables.getProperty("clinic_no", "").trim();
 			String visitType = bHospitalBilling ? "02" : oscarVariables.getProperty("visit_type", "");
+
 			if (visitType.startsWith("00") || visitType.equals(""))	clinicview = "0000";
 			String appt_no = request.getParameter("appointment_no");
 			String demoname = request.getParameter("demographic_name");
@@ -209,14 +211,16 @@
 
 			//visitType
 			paraName = request.getParameter("xml_visittype");
-			String xml_visittype = getDefaultValue(paraName, vecHist, "visitType");
-			xml_visittype = paraName != null && !"".equals(paraName)? paraName : "00" ;
+                        
+			String xml_visittype = getDefaultValue(paraName, vecHist, "visitType");                         
+			//xml_visittype = paraName != null && !"".equals(paraName)? paraName : "00" ;
+                        
 			if (!"".equals(xml_visittype)) {
 				visitType = xml_visittype;
 			} else {
 				visitType = visitType == null ? "" : visitType;
 			}
-
+                        
 			paraName = request.getParameter("xml_location");
 			String xml_location = getDefaultValue(paraName, vecHist, "clinic_ref_code");
 			xml_location = paraName != null && !"".equals(paraName)? paraName : "0000";                   
