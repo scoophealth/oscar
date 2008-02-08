@@ -119,9 +119,7 @@
 
    
 <script type="text/javascript">            
-       
-    //This object stores the key -> cmd value passed to action class and the id of the created div
-    // and the value -> URL of the action class
+           
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>    
                   
 </script>

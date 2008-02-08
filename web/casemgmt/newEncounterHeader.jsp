@@ -68,7 +68,7 @@
     java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
     %>
     
-<div style="text-align:center; font-size: 12px; width:100%; color:#<%=inverseUserColour%>; background-color:<%=userColour%>">
+<div style="padding-left:2px; text-align:left; font-size: 12px; color:#<%=inverseUserColour%>; background-color:<%=userColour%>">
     <span style="border-bottom: medium solid <%=famDocColour%>"><bean:message key="oscarEncounter.Index.msgMRP"/>&nbsp;&nbsp;
     <%=famDocName%>&nbsp;<%=famDocSurname%>&nbsp;&nbsp;</span>
     
@@ -86,7 +86,6 @@
 
                
          </span>
-  </form>
 </div>
 
 

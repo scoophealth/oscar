@@ -73,6 +73,9 @@
   
   <!-- js window size utility funcs since prototype's funcs are buggy in ie6 -->
   <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
+  
+  <!-- scriptaculous based select box -->
+  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/select.js"/>"></script>
     
     <style type="text/css">
         
@@ -113,7 +116,7 @@
             background-color:#CCCCFF;
             color: #000000;  
             width:100%;
-            font-size:0.8em;
+            font-size:9px;
         }                
         
         .txtArea {
@@ -122,7 +125,7 @@
             width:99%; 
             rows:10; 
             overflow:hidden; 
-            border-style:none; 
+            border:none; 
             font-family:arial,sans-serif;             
             margin: 0px 3px 0px 3px;
         }
@@ -191,16 +194,62 @@
         /* CPP textareas */
         .rowOne {
             height: <nested:write name="rowOneSize"/>px;
-            width: 98%;
+            width: 97%;
             overflow:auto;
         }
         
         .rowTwo {
             height: <nested:write name="rowTwoSize"/>px;
-            width:98%;
+            width:97%;
+            margin-left:4px;            
             overflow:auto;
         }
         
+        /* Encounter type select box */
+        div.autocomplete {
+          position:absolute;
+          width:400px;
+          background-color:white;
+          border:1px solid #ccc;
+          margin:0px;
+          padding:0px;
+          font-size:9px;
+          text-align:left;
+          max-height:200px;
+          overflow:auto;
+        }
+        div.autocomplete ul {
+          list-style-type:none;
+          margin:0px;
+          padding:0px;
+        }
+        div.autocomplete ul li.selected { 
+          background-color: #EAF2FB;
+        }
+        div.autocomplete ul li {
+          list-style-type:none;
+          display:block;
+          margin:0;
+          padding:2px;
+          cursor:pointer;
+        }
+        
+        .encTypeCombo /* look&feel of scriptaculous select box*/
+        {
+          margin: 0px;/* 5px 10px 0px;*/
+          font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+          font-size:9px;
+          width: 200px;          
+          text-align:left; 
+          vertical-align: middle;
+          background: #FFFFFF url('<c:out value="${ctx}"/>/images/downarrow_inv.gif') no-repeat right;
+          height:18px;
+          cursor: pointer;
+          border:1px solid #ccc;
+          color: #000000;
+          
+        }
+
     </style>
 
     <html:base />
@@ -369,34 +418,44 @@ if(!NiftyCheck())
     $(caseNote).focus();
     
 }
-
-function monitorNavBars() {        
-    var minMain = 1009;
-    var minWin = 1009;
-    var main = $("main").getWidth();
+var minDelta =  0.93;
+var minMain;
+var minWin;
+function monitorNavBars(e) {            
     var win = pageWidth();
+    var main = Element.getWidth("main");    
     
+    if( e == null ) {
+        minMain = Math.round(main * minDelta);
+        minWin = Math.round(win * minDelta);
+    }
+
     if( main < minMain ) {        
         $("main").style.width = minMain + "px";                
     }
     else if( win >= minWin &&  main == minMain ) {
         $("main").style.width = "100%";       
     }
+    
+    var ht = $("mainContent").getHeight() + $("topContent").getHeight();
+    $("rightNavBar").style.height = ht + "px";  //make sure navbar covers complete height regardless of content
 }
 
-function init() {    
-    monitorNavBars();
+function init() {        
     var navBars = new navBarLoader();
-    navBars.load();
+    navBars.load();  
+    monitorNavBars(null);
     Element.observe(window, "resize", monitorNavBars);
 }
 
 function navBarLoader() {
     $("leftNavBar").style.height = $("content").getHeight();
     
-    //is right navbar present?
-    //if so work with it
-    //if not, set max lines to 0
+    /*
+     *is right navbar present?
+     *if so work with it
+     *if not, set max lines to 0
+     */
     if( $("rightNavBar") != undefined ) {
         $("rightNavBar").style.height = $("notCPP").getHeight();
         this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 12);        
@@ -555,9 +614,9 @@ function navBarLoader() {
 
 </script>
   </head> 
-  <body style="margin:0px;" onload="init()" onunload="onClosing()">
+  <body id="body" style="margin:0px;" onload="init()" onunload="onClosing()">
       <div id="main">
-          <div id="header" style="display:block;">
+          <div id="header">
               <tiles:insert attribute="header" />
           </div>
           
