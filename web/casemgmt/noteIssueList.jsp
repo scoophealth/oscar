@@ -31,17 +31,21 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<% String noteIndex = ""; %>
 <nested:empty name="caseManagementEntryForm" property="caseNote.id">
     <nested:notEmpty name="newNoteIdx">
+        <% noteIndex = request.getParameter("newNoteIdx"); %>
         <div class="sig" id="sumary<nested:write name="newNoteIdx"/>">
         <div id="observation<nested:write name="newNoteIdx"/>" style="float:right;margin-right:3px;">
     </nested:notEmpty>
     <nested:empty name="newNoteIdx">
+        <% noteIndex = "0";%>
         <div class="sig" id="sumary0">
         <div id="observation0" style="float:right;margin-right:3px;">
     </nested:empty>
 </nested:empty>
 <nested:notEmpty name="caseManagementEntryForm" property="caseNote.id">   
+    <% noteIndex = String.valueOf(((CaseManagementEntryFormBean)session.getAttribute("caseManagementEntryForm")).getCaseNote().getId());%>
     <div class="sig" id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
     <div id="observation<nested:write name="caseManagementEntryForm" property="caseNote.id" />" style="float:right;margin-right:3px;">
 </nested:notEmpty>
@@ -69,14 +73,24 @@
             </nested:iterate> 
             <c:if test="${eIdx % 2 == 0}"></li></c:if>
             </ul>
-        </nested:equal>
+        </nested:equal>        
+
         <nested:equal name="newNote" value="true">
             <div style="margin:0px;">&nbsp;</div>
-        </nested:equal>
-        
+        </nested:equal>  
     </div>
-    
+    <div style="clear:right;margin-right:3px; margin:0px; float:right;">Enc Type:&nbsp;<span id="encType<%=noteIndex%>">
+                <html:select styleId="encType" styleClass="encTypeCombo" name="caseManagementEntryForm" property="caseNote.encounter_type">
+                    <html:option value=""></html:option>
+                    <html:option value="face to face encounter with client">face to face encounter with client</html:option>
+                    <html:option value="telephone encounter with client">telephone encounter with client</html:option>
+                    <html:option value="encounter without client">encounter without client</html:option>
+                </html:select>
+    </span></div>
     <nested:size id="numIssues" name="caseManagementEntryForm" property="caseNote.issues" />
+    <nested:equal name="numIssues" value="0">
+        <div>&nbsp;</div>
+    </nested:equal>
     <nested:greaterThan name="numIssues" value="0">
         Assigned Issues
         <ul style="list-style: circle outside none; margin:0px;">
@@ -174,8 +188,32 @@
         $("noteIssues").show();
         for( var idx = 0; idx < expandedIssues.length; ++idx )            
             displayIssue(expandedIssues[idx]);                   
-   }
+   }           
+   
+   //do we have a custom encounter type?  if so add an option to the encounter type select
+   var encounterType = '<nested:write name="caseManagementEntryForm" property="caseNote.encounter_type"/>';
+   
+   if( $F("encType") == "" && encounterType != "" ) {
+        var select = document.getElementById("encType");
+        var newOption =document.createElement('option');        
+        newOption.text = encounterType;
+        newOption.value = encounterType;
+  
+        try
+        {
+            select.add(newOption,null); // standards compliant            
+        }
+        catch(ex)
+        {
+            select.add(newOption); // IE only            
+        }  
         
+        select.selectedIndex = select.options.length - 1;
+   
+   }
+   
+   new Autocompleter.SelectBox('encType');
+   
    function displayIssue(id) {
         //if issue has been changed/deleted remove it from array and return
         if( $(id) == null ) {
