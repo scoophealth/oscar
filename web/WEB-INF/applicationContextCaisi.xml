@@ -263,13 +263,6 @@
 
 
 <!--   from Quatro start -->
-    <bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
-    <bean id="scratchPadManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
-        <property name="target" ref="scratchPadManagerTarget"/>
-    </bean>
-    <bean id="scratchPadManagerTarget" class="com.quatro.service.ScratchPadManager">
-       <property name="scratchPadDao" ref="scratchPadDao"/>
-    </bean>
 
     <bean id="quatroReportDao" class="com.quatro.dao.QuatroReportDao" autowire="byName" />
     <bean id="quatroReportManager" parent="baseTransactionProxy">

@@ -167,6 +167,14 @@
     <bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
 	<bean id="facilityDAO" class="org.oscarehr.PMmodule.dao.FacilityDAO" autowire="byName"/>
 	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName"/>
+	<!--  configure the scratch pad -->
+    <bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
+    <bean id="scratchPadManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
+        <property name="target" ref="scratchPadManagerTarget"/>
+    </bean>
+    <bean id="scratchPadManagerTarget" class="com.quatro.service.ScratchPadManager">
+       <property name="scratchPadDao" ref="scratchPadDao"/>
+    </bean>
 
     <!-- configure the available measurement flow sheets -->
     <bean id="measurementTemplateFlowSheet" class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
