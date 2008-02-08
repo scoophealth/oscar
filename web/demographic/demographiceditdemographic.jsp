@@ -69,6 +69,11 @@ You have no rights to access the data!
    DemographicExt ext = new DemographicExt();
    ArrayList arr = ext.getListOfValuesForDemo(demographic_no);
    Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
+   
+    GregorianCalendar now=new GregorianCalendar();
+    int curYear = now.get(Calendar.YEAR);
+    int curMonth = (now.get(Calendar.MONTH)+1);
+    int curDay = now.get(Calendar.DAY_OF_MONTH);
 %>
 
 
@@ -96,6 +101,10 @@ You have no rights to access the data!
         
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
+
+<!--popup menu for encounter type -->
+<script src="<c:out value="${ctx}"/>/share/javascript/popupmenu.js" type="text/javascript"></script>
+<script src="<c:out value="${ctx}"/>/share/javascript/menutility.js" type="text/javascript"></script>
 
 <script language="JavaScript" type="text/javascript">
 
@@ -131,6 +140,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     if (popup.opener == null) {
       popup.opener = self;
     }
+    popup.focus();
   }
 }
 
@@ -142,7 +152,8 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
-    }
+    }    
+    popup.focus();
   }
 }
 function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
@@ -153,6 +164,7 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
     if (popup.opener == null) {
       popup.opener = self;
     }
+    popup.focus();
   }
 }
 function popupS(varpage) {
@@ -400,8 +412,59 @@ function hideItem(id){
         document.getElementById(id).style.display = 'none';
 }
 
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=false%>" >
+var numMenus = 1;
+var encURL = "<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&encType=<%=URLEncoder.encode("telephone encounter with client")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=";
+function showMenu(menuNumber, eventObj) {        
+    var menuId = 'menu' + menuNumber;
+    return showPopup(menuId, eventObj);
+}
 
+function add2url(txt) {
+    var reasonLabel = "reason=";
+    var encTypeLabel = "encType=";
+    var beg = encURL.indexOf(reasonLabel);
+    beg+= reasonLabel.length;
+    var end = encURL.indexOf("&", beg);
+    var part1 = encURL.substring(0,beg);
+    var part2 = encURL.substr(end);
+    encURL = part1 + encodeURI(txt) + part2;
+    beg = encURL.indexOf(encTypeLabel);
+    beg += encTypeLabel.length;
+    end = encURL.indexOf("&", beg);
+    part1 = encURL.substring(0,beg);
+    part2 = encURL.substr(end);
+    encURL = part1 + encodeURI(txt) + part2;    
+    popupEChart(710, 1024,encURL);
+    return false;
+}
 
+function customReason() {
+    var txtInput;
+    var list = document.getElementById("listCustom");
+    if( list.style.display == "block" )        
+        list.style.display = "none";
+    else {
+        list.style.display = "block";
+        txtInput = document.getElementById("txtCustom");
+        txtInput.focus();
+    }
+        
+    return false;
+}
+
+function grabEnterCustomReason(event){
+
+  var txtInput = document.getElementById("txtCustom");
+  if(window.event && window.event.keyCode == 13){          
+      add2url(txtInput.value);
+  }else if (event && event.which == 13){     
+      add2url(txtInput.value);
+  }
+  
+  return true;
+}
+</security:oscarSec>
 </script>
 
 <style type="text/css">
@@ -454,6 +517,28 @@ div.demographicWrapper {
   margin-left:1px;
   margin-right:1px;
 }
+
+/* popup menu style for encounter reason */
+.menu { 
+    position: absolute; 
+    visibility: hidden; 
+    background-color: #6699cc; 
+    layer-background-color: #6699cc; 
+    color: white; 
+    border-left: 1px solid black; 
+    border-top: 1px solid black; 
+    border-bottom: 3px solid black; 
+    border-right: 3px solid black; 
+    padding: 3px; 
+    z-index: 10;    
+    font-size: 9px;
+    width: 25em;
+}   
+
+.menu a {
+    text-decoration: none;
+    color:white;
+}
 </style>
 
 </head>
@@ -484,11 +569,7 @@ div.demographicWrapper {
                                         notes = notes==null?"":notes;
                                 }
                                 rs.close();
-
-                                GregorianCalendar now=new GregorianCalendar();
-                                int curYear = now.get(Calendar.YEAR);
-                                int curMonth = (now.get(Calendar.MONTH)+1);
-                                int curDay = now.get(Calendar.DAY_OF_MONTH);
+                                
                                 String dateString = curYear+"-"+curMonth+"-"+curDay;
                                 int age=0, dob_year=0, dob_month=0, dob_date=0;
 
@@ -604,9 +685,19 @@ div.demographicWrapper {
                 <% } %>
                 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=false%>" >
                     <tr><td>
-                            <!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
-                            <a href="javascript: function myFunction() {return false; }" onClick="popupEChart(710, 1048,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;" title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
-                            <bean:message key="demographic.demographiceditdemographic.btnEChart"/></a>
+                            <!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("telephone encounter with client")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
+                            <a href="javascript: function myFunction() {return false; }" onClick="popupEChart(710, 1024,encURL);return false;" title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
+                            <bean:message key="demographic.demographiceditdemographic.btnEChart"/></a>&nbsp;<a style="text-decoration:none;" href="#" onmouseover="return !showMenu('1', event);">+</a>
+                            <div id='menu1' class='menu' onclick='event.cancelBubble = true;'>
+                                <h3 style='text-align:center'>Encounter Type</h3><br> 
+                                <ul>
+                                    <li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('face to face encounter with client');">face to face encounter with client</a><br></li>
+                                    <li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('telephone encounter with client');">telephone encounter with client</a><br></li>
+                                    <li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('encounter without client');">encounter without client</a><br></li>
+                                    <li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return customReason();">Custom</a></li>
+                                    <li id="listCustom" style="display:none;"><input id="txtCustom" type="text" size="16" maxlength="32" onkeypress="return grabEnterCustomReason(event);"></li>
+                                </ul>
+                            </div>    
                     </td></tr>
                     <tr><td>
                             <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,960,'<c:out value="${ctx}"/>/oscarPrevention/index.jsp?demographic_no=<%=demographic_no%>');return false;" >
