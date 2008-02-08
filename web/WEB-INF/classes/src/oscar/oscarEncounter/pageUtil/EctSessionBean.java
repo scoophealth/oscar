@@ -33,6 +33,7 @@ public class EctSessionBean {
     public String appointmentNo;
     public String curProviderNo;
     public String reason;
+    public String encType;
     public String appointmentDate;
     public String startTime;
     public String status;
@@ -252,6 +253,8 @@ public class EctSessionBean {
                 demographicNo = db.getString(rs,"demographic_no");
                 this.appointmentNo = appointmentNo;
                 reason = db.getString(rs,"reason");
+                encType = new String("face to face encounter with client");
+                System.out.println("SETTING FACE TO FACE");
                 appointmentDate = db.getString(rs,"appointment_date");
                 startTime = db.getString(rs,"start_time");
                 status = db.getString(rs,"status");

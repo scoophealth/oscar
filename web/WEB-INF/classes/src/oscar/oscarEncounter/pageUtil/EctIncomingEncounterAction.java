@@ -35,9 +35,15 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctIncomingEncounterAction extends Action {
+    
+  private static Log log = LogFactory.getLog(EctIncomingEncounterAction.class);
+    
   public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
 				 HttpServletRequest request,
@@ -89,6 +95,7 @@ public class EctIncomingEncounterAction extends Action {
                 bean.appointmentNo=request.getParameter("appointmentNo");
                 bean.curProviderNo=request.getParameter("curProviderNo");
                 bean.reason=request.getParameter("reason");
+                bean.encType=request.getParameter("encType");
                 bean.userName=request.getParameter("userName");
                 if (bean.userName == null){
                      bean.userName =  ( (String) request.getSession().getAttribute("userfirstname") ) + " " + ( (String) request.getSession().getAttribute("userlastname") );
@@ -108,6 +115,7 @@ public class EctIncomingEncounterAction extends Action {
         else{
             return (mapping.findForward("failure"));
         }
+        
         ArrayList newDocArr = (ArrayList) request.getSession().getServletContext().getAttribute("newDocArr");
         Boolean useNewEchart = (Boolean) request.getSession().getServletContext().getAttribute("useNewEchart");
         
