@@ -52,7 +52,7 @@
                 
                 
 	</class>
-	<!-- 
+	 
          <sql-query name="mostRecent">
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
                 select casemgmt_note.note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
@@ -79,7 +79,7 @@
                     left join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? and observation_date >= ? group by uuid) recent
                     using(note_id) where recent.note_id = casemgmt_note.note_id order by {cmn.observation_date} asc
         </sql-query>
--->
+
 <!-- generated sql
 select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, observation_date as observat3_82_0_, demographic_no as demograp4_82_0_, provider_no as provider5_82_0_, note as note82_0_,
                     signed as signed82_0_, include_issue_innote as include8_82_0_, signing_provider_no as signing9_82_0_,
@@ -91,7 +91,7 @@ select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, obser
                     from casemgmt_note where casemgmt_note.uuid = uuid82_0_) as formula19_0_ from casemgmt_note
                     left join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? group by uuid) recent
                     using(note_id) where recent.note_id = casemgmt_note.note_id order by observat3_82_0_ asc
- -->
+
         <sql-query name="mostRecent">
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
                     select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
@@ -118,4 +118,5 @@ select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, obser
                     inner join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? and observation_date >= ? group by uuid) recent
                     using(note_id) order by {cmn.observation_date} asc
         </sql-query>      
+-->        
 </hibernate-mapping>
