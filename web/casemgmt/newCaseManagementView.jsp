@@ -417,7 +417,7 @@ function changeToView(id) {
         var observationId = "observation" + nId;
         
         var html = $(observationId).innerHTML;
-        (html);
+        
         html = html.substr(0,html.indexOf(":")+1) + " <span id='obs" + nId + "'>" + observationDate + "<\/span>" + html.substr(html.indexOf(":")+1);
         
         $(observationId).update(html);
@@ -428,8 +428,19 @@ function changeToView(id) {
         Element.remove("autosaveTime");
     
     if( $("noteIssues") != null )
-        Element.remove("noteIssues");        
+        Element.remove("noteIssues"); 
         
+    if( $("encType") != null ) {
+        var encTypeId = "encType" + nId;
+        var content = $F("encType");
+        var encType;
+        if( content.length > 0 )
+            encType = "&quot;" + content + "&quot;";
+        else
+            encType = "";
+        Element.remove("encType");
+        $(encTypeId).update(encType);        
+    }    
     //we can stop listening for add issue here
     Element.stopObserving('asgnIssues', 'click', addIssueFunc);
     if( tmp.length == 0 ) 
@@ -1030,10 +1041,7 @@ function ajaxUpdateIssues(method, div) {
     return false;
 }
 
-function onIssueUpdate() {
-    
-    //update issue list in right hand column
-    popColumn(rightURLs["issues"], "issues", "issues");
+function onIssueUpdate() {        
 
     //this request succeeded so we reset issues
     $("issueAutocomplete").value = "";
@@ -1555,105 +1563,108 @@ Version version = (Version) ctx.getBean("version");
 <jsp:include page='<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>'/>
 --%>
 
-    <html:form action="/CaseManagementView" method="post">        
-        <html:hidden property="demographicNo"/>
-        <html:hidden property="providerNo" value="<%=provNo%>" />
-        <html:hidden property="tab" value="Current Issues"/>
-        <html:hidden property="hideActiveIssue"/>
-        <html:hidden property="ectWin.rowOneSize" styleId="rowOneSize"/>
-        <html:hidden property="ectWin.rowTwoSize" styleId="rowTwoSize"/>
-        <input type="hidden" name="chain" value="list" /> 
-        <input type="hidden" name="method" value="view"/>
-        <input type="hidden" id="check_issue" name="check_issue">
-    <!--Row One Headers -->
-    
-        <div style="float:left; width:34%; border-width:0px; margin-left:2px; background-color:#CCCCFF;" class="RowTop" ><bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
-        <div style="float:left; width:33%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >
-            <% if(oscarVariables.getProperty("otherMedications", "").length() > 1) {
-            out.print(oscarVariables.getProperty("otherMedications", ""));
-            %>
-            <% } else { %>
-            <bean:message key="oscarEncounter.Index.otherMed"/>:
-            <% } %>
-        </div>
-        <div style="float:left; width:20%; border-width:0px; margin-right:-5px; background-color:#CCCCFF;" class="RowTop" >
-            <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) {
-            out.print(oscarVariables.getProperty("medicalHistory", ""));
-            %>
-            <% } else { %>
-            <bean:message key="oscarEncounter.Index.medHist"/>:
-            <% } %>
-        </div>   
+        <html:form action="/CaseManagementView" method="post">        
+            <html:hidden property="demographicNo"/>
+            <html:hidden property="providerNo" value="<%=provNo%>" />
+            <html:hidden property="tab" value="Current Issues"/>
+            <html:hidden property="hideActiveIssue"/>
+            <html:hidden property="ectWin.rowOneSize" styleId="rowOneSize"/>
+            <html:hidden property="ectWin.rowTwoSize" styleId="rowTwoSize"/>
+            <input type="hidden" name="chain" value="list" /> 
+            <input type="hidden" name="method" value="view"/>
+            <input type="hidden" id="check_issue" name="check_issue">
+            <!--Row One Headers -->
+            
+                <div style="float:left; width:34%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >&nbsp;<bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
+                <div style="float:left; width:33%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >
+                    <% if(oscarVariables.getProperty("otherMedications", "").length() > 1) {
+                    out.print(oscarVariables.getProperty("otherMedications", ""));
+                    %>
+                    <% } else { %>
+                    <bean:message key="oscarEncounter.Index.otherMed"/>:
+                    <% } %>
+                </div>
+                <div style="float:left; width:18%; margin-right:-4px; border-width:0px; background-color:#CCCCFF;" class="RowTop" >
+                    <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) {
+                    out.print(oscarVariables.getProperty("medicalHistory", ""));
+                    %>
+                    <% } else { %>
+                    <bean:message key="oscarEncounter.Index.medHist"/>:
+                    <% } %>
+                </div>   
+                
+                <div class="RowTop" style="clear:right; float:right; width:15%; text-align:right;vertical-align:bottom; background-color:#CCCCFF;">
+                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
+                    <bean:message key="oscarEncounter.Index.x"/></a> |
+                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowOneSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
+                    <bean:message key="oscarEncounter.Index.s"/></a> |
+                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowOneNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
+                    <bean:message key="oscarEncounter.Index.n"/></a> |
+                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowOneLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
+                    <bean:message key="oscarEncounter.Index.l"/></a> |
+                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowOneFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
+                    <bean:message key="oscarEncounter.Index.f"/></a> |
+                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
+                    <bean:message key="oscarEncounter.Index.r"/></a>
+                </div>
+            
+            <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
+            <div id="divR1" style="float:left; width:34%; border-width:0px; background-color:#CCCCFF;">
+                &nbsp;<html:textarea styleId="cpp.socialHistory" property="cpp.socialHistory" tabindex="1" styleClass="rowOne" rows="4" cols="28"/>
+            </div>
+                
+            <!-- This is the Family History cell ...fh...-->
+            <div style="float:left; width:33%; border-width:0px; background-color:#CCCCFF;">
+                <html:textarea styleId="cpp.familyHistory" property="cpp.familyHistory" tabindex="2" styleClass="rowOne"  rows="4" cols="28"/>
+            </div>
+            
+            <!-- This is the Medical History cell ...mh...-->
+            <div style="clear:right; float:left; width:33%;  margin-right:-4px; border-width:0px; background-color:#CCCCFF;">
+                <html:textarea styleId="cpp.medicalHistory" property="cpp.medicalHistory" tabindex="3" styleClass="rowOne"  rows="4" cols="28"/>
+            </div>
         
-         <div style="clear:right; float:right; width:13%; font-size:8pt;text-align:right;vertical-align:bottom; background-color:#CCCCFF;">
-        <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
-        <bean:message key="oscarEncounter.Index.x"/></a> |
-        <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowOneSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
-        <bean:message key="oscarEncounter.Index.s"/></a> |
-        <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowOneNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
-        <bean:message key="oscarEncounter.Index.n"/></a> |
-        <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowOneLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
-        <bean:message key="oscarEncounter.Index.l"/></a> |
-        <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowOneFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
-        <bean:message key="oscarEncounter.Index.f"/></a> |
-        <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
-        <bean:message key="oscarEncounter.Index.r"/></a>
-    </div>
-        <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
-        <div id="divR1" style="float:left; width:34%; border-width:0px; margin-left:2px; background-color:#CCCCFF;"><%-- <textarea name="shTextarea" tabindex="1" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>--%>
-            <html:textarea styleId="cpp.socialHistory" property="cpp.socialHistory" tabindex="1" styleClass="rowOne" rows="4" cols="28"/>
-        </div>
+            <!--2nd row headers -->
+            <div style="float:left; width:50%; background-color:#CCCCFF;" class="RowTop" >
+                &nbsp;
+                <% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) {
+                out.print(oscarVariables.getProperty("ongoingConcerns", ""));
+                %>
+                <% } else { %>
+                <bean:message key="oscarEncounter.Index.msgConcerns"/>:
+                <% } %>
+            </div><input type="hidden" name="ocInput"/>
+            
+            <div style="float:left; width:35%; margin-right:-4px; background-color:#CCCCFF;" class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>   
+            
+            <div class="RowTop" style="clear:right; float:right; width:15%; text-align:right; vertical-align:bottom; background-color:#CCCCFF;">
+                <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowTwoX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
+                <bean:message key="oscarEncounter.Index.x"/></a> |
+                <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowTwoSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
+                <bean:message key="oscarEncounter.Index.s"/></a> |
+                <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowTwoNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
+                <bean:message key="oscarEncounter.Index.n"/></a> |
+                <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowTwoLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
+                <bean:message key="oscarEncounter.Index.l"/></a> |
+                <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowTwoFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
+                <bean:message key="oscarEncounter.Index.f"/></a> |
+                <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
+                <bean:message key="oscarEncounter.Index.r"/></a>
+            </div>
+            
+            <!--Ongoing Concerns cell -->
+            <div style="float:left; width:50%; background-color:#CCCCFF;">
+                
+                <html:textarea styleId="cpp.ongoingConcerns" property="cpp.ongoingConcerns" tabindex="4" styleClass="rowTwo"  rows="4" cols="44"/>
+            </div>     
+            
+            <!--Reminders cell -->
+            <div style="clear:right; float:left; width:50%; margin-right:-4px; background-color:#CCCCFF;">
+                <html:textarea styleId="cpp.reminders" property="cpp.reminders" tabindex="5" styleClass="rowTwo"  rows="4" cols="44"/>
+            </div> 
         
-        <!-- This is the Family History cell ...fh...-->
-        <div style="float:left; width:33%; border-width:0px; background-color:#CCCCFF;"><%-- <textarea name="fhTextarea" tabindex="2" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>--%>
-            <html:textarea styleId="cpp.familyHistory" property="cpp.familyHistory" tabindex="2" styleClass="rowOne"  rows="4" cols="28"/>
-        </div>
-        
-        <!-- This is the Medical History cell ...mh...-->
-        <div style="clear:right; float:left; width:33%; border-width:0px; margin-right:-5px; background-color:#CCCCFF;"><%-- <textarea name="mhTextarea" tabindex="3" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>--%>
-            <html:textarea styleId="cpp.medicalHistory" property="cpp.medicalHistory" tabindex="3" styleClass="rowOne"  rows="4" cols="28"/>
-        </div>
-        
-        <!--2nd row headers -->
-        <div style="float:left; width:50%; margin-left:2px; background-color:#CCCCFF;" class="RowTop" >
-            <% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) {
-            out.print(oscarVariables.getProperty("ongoingConcerns", ""));
-            %>
-            <% } else { %>
-            <bean:message key="oscarEncounter.Index.msgConcerns"/>:
-            <% } %>
-        </div><input type="hidden" name="ocInput"/>
-        
-        <div style="float:left; width:37%; margin-right:-5px; background-color:#CCCCFF;" class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>   
-        
-        <div style="clear:right; float:right; width:13%; font-size:8pt;text-align:right;vertical-align:bottom; background-color:#CCCCFF;">
-        <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowTwoX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
-            <bean:message key="oscarEncounter.Index.x"/></a> |
-        <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowTwoSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
-            <bean:message key="oscarEncounter.Index.s"/></a> |
-        <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowTwoNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
-            <bean:message key="oscarEncounter.Index.n"/></a> |
-        <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowTwoLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
-            <bean:message key="oscarEncounter.Index.l"/></a> |
-        <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowTwoFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
-            <bean:message key="oscarEncounter.Index.f"/></a> |
-        <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
-            <bean:message key="oscarEncounter.Index.r"/></a>
-     </div>
-    
-        <!--Ongoing Concerns cell -->
-        <div style="float:left; width:50%; margin-left:2px; background-color:#CCCCFF;"><%-- <textarea id="ocTextarea" name='ocTextarea' tabindex="4" wrap="hard"  cols= "44" style="height:<%=windowSizes.getProperty("rowTwoSize")%>"><%=bean.ongoingConcerns%></textarea>--%>
-            <html:textarea styleId="cpp.ongoingConcerns" property="cpp.ongoingConcerns" tabindex="4" styleClass="rowTwo"  rows="4" cols="44"/>
-        </div>     
-        
-        <!--Reminders cell -->
-        <div style="clear:right; float:left; width:50%; margin-right:-5px; background-color:#CCCCFF;"><%-- <textarea name='reTextarea' tabindex="5" wrap="hard" cols="44" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.reminders%></textarea>--%>
-            <html:textarea styleId="cpp.reminders" property="cpp.reminders" tabindex="5" styleClass="rowTwo"  rows="4" cols="44"/>
-        </div> 
-    
-        <div id="notCPP" style="float:left; height:70%; width:100%; margin-left:2px; margin-right:-4px; background-color:#FFFFFF;">
-        <div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white; padding-left:2px;"><jsp:include page="rightColumn.jsp" /></div>
-        <div style="float:left; width:75%; margin-right:-4px; padding-bottom:15px; background-color:#CCCCFF; font-size:10px;">
+        <div id="notCPP" style="height:70%; margin-left:2px; background-color:#FFFFFF;">
+        <div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white;"><jsp:include page="rightColumn.jsp" /></div>
+        <div id="topContent" style="float:left; width:75%; margin-right:-2px; padding-bottom:15px; background-color:#CCCCFF; font-size:10px;">
             <span style="cursor:pointer; text-decoration:underline;" onclick="showFilter();">View Filter</span>
             <div id="filter" style="display:none;">
                 <div style="height:150px; width:auto; overflow:auto; float:left; position:relative; left:10%;">
@@ -1681,10 +1692,7 @@ Version version = (Version) ctx.getBean("version");
                         %>
                     </ul>
                 </div>
-                <%--<html:select property="filter_provider" onchange="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.submit();">
-                    <html:option value="">All</html:option>
-                    <html:options collection="providers" property="provider_no" labelProperty="formattedName"/>
-                </html:select>--%>
+                
                 <div style="height:150px; width:auto; overflow:auto; float:left; position:relative; left:20%;">
                     Role:
                     <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
@@ -1700,10 +1708,7 @@ Version version = (Version) ctx.getBean("version");
                         %>
                     </ul>
                 </div>
-                <%--<html:select property="filter_role" onchange="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.submit();">
-                            <html:option value="">All</html:option>
-                            <html:options collection="roles" property="id" labelProperty="name"/>
-                </html:select> --%>
+                
                 <div style="float:left; position:relative; left:30%;">
                     Sort:
                     <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
@@ -1714,13 +1719,7 @@ Version version = (Version) ctx.getBean("version");
                         <li><html:radio property="note_sort" value="roleName">Role</html:radio></li>                        
                     </ul>
                 </div>
-                <%--<html:select property="note_sort" onchange="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.submit()">                
-                        <html:option value="update_date_asc">Date Asc</html:option>
-                        <html:option value="update_date">Date Desc</html:option>
-                        <html:option value="providerName">Provider</html:option>
-                        <html:option value="programName">Program</html:option>
-                        <html:option value="roleName">Role</html:option>
-                </html:select> --%>
+                
                 <div style="float:left; clear:both; cursor:pointer; text-decoration:underline;" onclick="return filter();">
                     Show View
                 </div>
@@ -1743,7 +1742,7 @@ Version version = (Version) ctx.getBean("version");
         </div>
     </html:form>          
     
-    <nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0; margin-right:-5px;">
+    <nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0;">
         <html:hidden property="demographicNo"/>
         <html:hidden property="providerNo"/>
         <html:hidden property="includeIssue" value="off"/>
@@ -1765,7 +1764,7 @@ Version version = (Version) ctx.getBean("version");
         <input type="hidden" name="forceNote" value="false">
         <input type="hidden" name="newNoteIdx" value="">
         <input type="hidden" name="notes2print" id="notes2print" value="">
-        <div id="mainContent" style="background-color:#FFFFFF; width:75%; display:inline; float:left; margin-right:-5px;"> 
+        <div id="mainContent" style="background-color:#FFFFFF; width:75%; margin-right:-2px; display:inline; float:left;"> 
             <span id="issueList" style="background-color:#FFFFFF; height:440px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
                 <table id="issueTable" class="enTemplate_name_auto_complete" style="position:relative; left:0px; display:none;">
                     <tr>
@@ -1775,7 +1774,7 @@ Version version = (Version) ctx.getBean("version");
                     </tr>
                 </table> 
             </span>
-            <div id="encMainDiv" style="width:99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; margin-right:-5px; background-color:#FFFFFF; height:440px; overflow:auto; margin-left:2px;">
+            <div id="encMainDiv" style="width:99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color:#FFFFFF; height:420px; overflow:auto; margin-left:2px;">
                 
                 
                 <c:if test="${not empty Notes}">                        
@@ -1865,10 +1864,18 @@ Version version = (Version) ctx.getBean("version");
                                             out.print("</li>");
                                             %>
                                             
-                                        </ul>
+                                        </ul>                                        
+                                    </div>
+                                    <div style="clear:right;margin-right:3px;float:right;">
+                                        Enc Type:&nbsp;<span id="encType<%=note.getId()%>"><%=note.getEncounter_type().equals("")?"":"&quot;"+note.getEncounter_type()+"&quot;"%></span>
                                     </div>
                                     <%
                                     Set issSet = note.getIssues();
+                                    if( issSet.isEmpty() ) {
+                                    %>
+                                    <div>&nbsp;</div>
+                                    <%
+                                    }
                                     if( issSet.size() > 0 ) {
                                     %>
                                     
@@ -2039,7 +2046,7 @@ Version version = (Version) ctx.getBean("version");
    <% if( found != true ) { %>
         document.forms["caseManagementEntryForm"].newNoteIdx.value = <%=savedId%>;
    <%}%>
-                   
+                       
     
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
    </script>
@@ -2057,14 +2064,14 @@ Version version = (Version) ctx.getBean("version");
             if(bean.eChartTimeStamp==null){
                   encounterText ="\n["+oscar.util.UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy",request.getLocale())+" .: "+bean.reason+"] \n";
                   //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
-            }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
+            }else { //if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
                    //System.out.println("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
                   //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                    encounterText ="\n["+("".equals(bean.appointmentDate)?oscar.util.UtilDateUtilities.getToday("dd-MMM-yyyy"):apptDate)+" .: "+bean.reason+"]\n";
-            }else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
+            }/*else {//if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
                    //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                    encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n";
-            }
+            }*/
            //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
            if(!bean.oscarMsg.equals("")){
               encounterText +="\n\n"+bean.oscarMsg;
