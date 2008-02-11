@@ -68,12 +68,28 @@
 	  
 	param[6]=new DBPreparedHandlerParam(request.getParameter("b_LocalLockSet")==null?"0":request.getParameter("b_LocalLockSet"));
 	param[7]=new DBPreparedHandlerParam(request.getParameter("b_RemoteLockSet")==null?"0":request.getParameter("b_RemoteLockSet"));
-
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
+	int rowsAffected=0;
+	boolean duplicateError=false;
+	
+	try
+	{
+  		rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
+	}
+	catch (Exception e)
+	{
+		if (e.getMessage().toLowerCase().contains("duplicate")) duplicateError=true;
+		else e.printStackTrace();
+	}
+  
+  
   if (rowsAffected ==1) {
   //System.out.println("********************");}
 %>
   <h1><bean:message key="admin.securityaddsecurity.msgAdditionSuccess"/></h1>
+<%
+  } else if (duplicateError) {
+%>
+  <h1><bean:message key="admin.securityaddsecurity.msgAdditionFailureDuplicate"/></h1>
 <%
   } else {
 %>
