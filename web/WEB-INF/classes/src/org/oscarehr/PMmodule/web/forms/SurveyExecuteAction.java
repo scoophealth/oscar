@@ -135,6 +135,20 @@ public class SurveyExecuteAction extends DispatchAction {
     }
 
     public ActionForward survey(ActionMapping mapping, ActionForm af, HttpServletRequest request, HttpServletResponse response) {
+    	DynaActionForm form = (DynaActionForm) af;
+    	String clientId = request.getParameter("clientId");
+    	String forwardString = survey_view(mapping, af, request, response);
+    	if("close".equals(forwardString))  {
+        	return mapping.findForward("close");	
+        }else if("clientManager".equals(forwardString)) {
+        	return forwardToClientManager(request, mapping, form, clientId);
+        } else {
+        	return refresh(mapping, form, request, response);
+        }
+        
+    }
+    
+    private String survey_view(ActionMapping mapping, ActionForm af, HttpServletRequest request, HttpServletResponse response) {
         DynaActionForm form = (DynaActionForm) af;
         SurveyExecuteFormBean formBean = (SurveyExecuteFormBean) form.get("view");
         SurveyExecuteDataBean data = (SurveyExecuteDataBean) form.get("data");
@@ -154,9 +168,11 @@ public class SurveyExecuteAction extends DispatchAction {
             if (surveyId == null || surveyId.equals("0")) {
                 postMessage(request, "survey.missing");
                 if (type != null && type.equals("provider")) {
-                    return mapping.findForward("close");
+                    //return mapping.findForward("close");
+                	return "close";
                 }
-                return forwardToClientManager(request, mapping, form, clientId);
+                //return forwardToClientManager(request, mapping, form, clientId);
+                return "clientManager";
             }
         }
         if (clientId == null) {
@@ -169,9 +185,11 @@ public class SurveyExecuteAction extends DispatchAction {
         if (surveyObj == null) {
             postMessage(request, "survey.missing");
             if (type != null && type.equals("provider")) {
-                return mapping.findForward("close");
+                //return mapping.findForward("close");
+            	return "close";
             }
-            return forwardToClientManager(request, mapping, form, clientId);
+            //return forwardToClientManager(request, mapping, form, clientId);
+            return "clientManager";
         }
 
         formBean.setDescription(surveyObj.getDescription());
@@ -198,9 +216,11 @@ public class SurveyExecuteAction extends DispatchAction {
             log.error(e);
             postMessage(request, "");
             if (type != null && type.equals("provider")) {
-                return mapping.findForward("close");
+                //return mapping.findForward("close");
+            	return "close";
             }
-            return forwardToClientManager(request, mapping, form, clientId);
+            //return forwardToClientManager(request, mapping, form, clientId);
+            return "clientManager";
         }
 
         /* load test/tmpsave data - if exists */
@@ -313,10 +333,16 @@ public class SurveyExecuteAction extends DispatchAction {
                 }
             }
         }
-        return refresh(mapping, form, request, response);
+        //return refresh(mapping, form, request, response);
+        return "success";
     }
-
+    
     public ActionForward refresh(ActionMapping mapping, ActionForm af, HttpServletRequest request, HttpServletResponse response) {
+    	refresh_survey(mapping,  af, request, response);
+    	return mapping.findForward("execute");
+    }
+    
+    public void refresh_survey(ActionMapping mapping, ActionForm af, HttpServletRequest request, HttpServletResponse response) {
         DynaActionForm form = (DynaActionForm) af;
         SurveyExecuteFormBean formBean = (SurveyExecuteFormBean) form.get("view");
         SurveyExecuteDataBean data = (SurveyExecuteDataBean) form.get("data");
@@ -430,7 +456,7 @@ public class SurveyExecuteAction extends DispatchAction {
             request.setAttribute("admissions", admissions);
         }
 
-        return mapping.findForward("execute");
+        //return mapping.findForward("execute");
     }
 
     public ActionForward save_survey(ActionMapping mapping, ActionForm af, HttpServletRequest request, HttpServletResponse response) {
@@ -661,7 +687,6 @@ public class SurveyExecuteAction extends DispatchAction {
         String type = request.getParameter("type");
         String formInstanceId = (String)request.getSession().getAttribute("formInstanceId");
         
-System.out.println("auto save now......");
         if (this.isCancelled(request)) {
             if (type != null && type.equals("provider")) {
                 return mapping.findForward("close");
@@ -789,4 +814,23 @@ System.out.println("auto save now......");
         return refresh(mapping, form, request, response);
     }
 
+    public ActionForward printPreview_survey(ActionMapping mapping, ActionForm af, HttpServletRequest request, HttpServletResponse response) {
+        
+    	DynaActionForm form = (DynaActionForm) af;
+    	String clientId = request.getParameter("clientId");
+    	String forwardString = survey_view(mapping, af, request, response);
+    	if("close".equals(forwardString))  {
+        	return mapping.findForward("close");	
+        }else if("clientManager".equals(forwardString)) {
+        	return forwardToClientManager(request, mapping, form, clientId);
+        } else {
+        	refresh_survey(mapping,  af, request, response);        	
+        	return mapping.findForward("printPreview");
+        }
+    }
+    
+    public ActionForward printPreview_refresh(ActionMapping mapping, ActionForm af, HttpServletRequest request, HttpServletResponse response) {
+    	refresh_survey(mapping,  af, request, response);
+    	return mapping.findForward("printPreview");
+    }
 }

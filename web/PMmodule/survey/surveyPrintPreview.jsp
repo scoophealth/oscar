@@ -35,7 +35,7 @@
                                         return;
                                 }
 				document.surveyExecuteForm.elements['view.tab'].value=name;
-				document.surveyExecuteForm.method.value='refresh';
+				document.surveyExecuteForm.method.value='printPreview_refresh';
 				document.surveyExecuteForm.submit();
 			}
 			function init() {
@@ -79,14 +79,14 @@
 		        
  	</head>	
 	
-	<body onload="init()">
+	<body>
 	
 		<%@ include file="/common/messages.jsp"%>
 		<html:form action="/PMmodule/Forms/SurveyExecute" onsubmit="return validateForm(this,document.surveyExecuteForm.elements['view.tab'].value,true);">
 		<html:hidden property="view.tab"/>
 		<html:hidden property="view.id"/>
 		<html:hidden property="view.admissionId"/>
-		<input type="hidden" name="method" value="save_survey"/>
+		<input type="hidden" name="method" value="printPreview_survey"/>
 		<input type="hidden" name="type" value="<c:out value="${type}"/>"/>
 		
 		<br/>
@@ -125,11 +125,11 @@
 					<c:when test="${qcontainer.question != null}">
 						<c:set var="sectionId" value="0" scope="request"/>		
 						<c:set var="question" value="${qcontainer.question}" scope="request"/>
-						<jsp:include page="question.jsp"/>
+						<jsp:include page="questionPrintPreview.jsp"/>
 					</c:when>
 					<c:otherwise>
 						<c:set var="section" value="${qcontainer.section}" scope="request"/>
-						<jsp:include page="section.jsp"/>
+						<jsp:include page="sectionPrintPreview.jsp"/>
 					</c:otherwise>
 				</c:choose>
 			</tr>
@@ -145,12 +145,14 @@
 	</c:if>	
 	<br/>
 	<table width="50%">
-			<tr>
-				<td colspan="2">
-					<input type="submit" value="Temporary Save" onclick="this.form.method.value='tmpsave_survey'; return true;"/>
-					<html:submit value="Save"/>
-					<html:cancel value="Cancel"/>					
+		<tr>
+				<td>
+					<input type="button" value="Print" onclick="window.print()">
 				</td>
+				<td align="right">
+					<input type="button" value="Close" onclick="history.go(-1)" />
+				</td>
+			
 			</tr>
 		</table>
 		

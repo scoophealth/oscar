@@ -1491,6 +1491,7 @@
         <action path="/PMmodule/Forms/SurveyExecute" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="surveyExecuteForm" scope="session">
             <forward name="view" path="/PMmodule/survey/surveyView.jsp" />
             <forward name="execute" path="/PMmodule/survey/surveyExecute.jsp" />
+            <forward name="printPreview" path="/PMmodule/survey/surveyPrintPreview.jsp"/>
             <forward name="client_manager" path="/PMmodule/ClientManager.do?method=save_survey" redirect="false" />
             <forward name="success" path="/PMmodule/ClientManager.do?method=edit" />
             <forward name="close" path="/PMmodule/survey/close.jsp" />

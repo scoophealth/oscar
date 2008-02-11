@@ -44,13 +44,18 @@ function printProgramIntake(clientId, programId) {
 	window.open(url, 'programIntakePrint', 'width=1024,height=768,scrollbars=1');
 }
 
-function openSurvey() {
+function openSurvey(methodId) {
 	var selectBox = getElement('form.formId');	
 	var formId = selectBox.options[selectBox.selectedIndex].value;	
 	document.clientManagerForm.clientId.value='<c:out value="${client.demographicNo}"/>'; 
 	document.clientManagerForm.formId.value=formId;		
 	var id = document.getElementById('formInstanceId').value;	
-	location.href = '<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>' + "?method=survey&formId=" + formId + "&formInstanceId=" + id + "&clientId=" + '<c:out value="${client.demographicNo}"/>';
+	if(methodId == 0) 
+		methodName = "survey";
+	else	
+	 	methodName = "printPreview_survey";
+		
+	location.href = '<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>' + "?method="+ methodName + "&formId=" + formId + "&formInstanceId=" + id + "&clientId=" + '<c:out value="${client.demographicNo}"/>';
 }
 </script>
 
@@ -174,7 +179,9 @@ function openSurvey() {
 			<td><c:out value="${form.description}" /></td>
 			<td><c:out value="${form.dateCreated}" /></td>
 			<td><c:out value="${form.username}" /></td>
-			<td><input type="button" value="update" onclick="document.clientManagerForm.elements['form.formId'].value='<c:out value="${form.formId}"/>';document.clientManagerForm.elements['formInstanceId'].value='<c:out value="${form.id}"/>';openSurvey();" /></td>
+			<td><input type="button" value="Update" onclick="document.clientManagerForm.elements['form.formId'].value='<c:out value="${form.formId}"/>';document.clientManagerForm.elements['formInstanceId'].value='<c:out value="${form.id}"/>';openSurvey(0);" />
+			<input type="button" value="Print Preview" onclick="document.clientManagerForm.elements['form.formId'].value='<c:out value="${form.formId}"/>';document.clientManagerForm.elements['formInstanceId'].value='<c:out value="${form.id}"/>';openSurvey(1);" /></td>
+		
 		</tr>
 	</c:forEach>
 </table>
@@ -182,7 +189,7 @@ function openSurvey() {
 <br />
 
 New User Created Form:&nbsp;
-<html:select property="form.formId" onchange="openSurvey()">
+<html:select property="form.formId" onchange="openSurvey(0)">
 	<html:option value="0">&nbsp;</html:option>
 	<html:options collection="survey_list" property="formId" labelProperty="description" />
 </html:select>
