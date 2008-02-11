@@ -13,6 +13,12 @@
 			return false;
 		}
 		
+		if(document.programManagerForm.elements['program.name'].value==null || document.programManagerForm.elements['program.name'].value.length <= 0) {
+			alert('The program name can not be blank.');
+			return false;
+		}
+		
+		
 		document.programManagerForm.method.value='save';
 		document.programManagerForm.submit()
 	}
