@@ -97,17 +97,26 @@ public class FacilityManagerAction extends BaseAction {
             return list(mapping, form, request, response);
         }
 
-        facilityManager.saveFacility(facility);
+        try {
+            facilityManager.saveFacility(facility);
 
-        ActionMessages messages = new ActionMessages();
-        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("facility.saved", facility.getName()));
-        saveMessages(request, messages);
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("facility.saved", facility.getName()));
+            saveMessages(request, messages);
 
-        request.setAttribute("id", facility.getId());
+            request.setAttribute("id", facility.getId());
 
-        logManager.log("write", "facility", facility.getId().toString(), request);
+            logManager.log("write", "facility", facility.getId().toString(), request);
 
-        return list(mapping, form, request, response);
+            return list(mapping, form, request, response);
+        }
+        catch (Exception e) {
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("duplicateKey", "The name "+facility.getName()));
+            saveMessages(request, messages);
+            
+            return mapping.findForward(FORWARD_EDIT);
+        }
     }
 
     public FacilityManager getFacilityManager() {
