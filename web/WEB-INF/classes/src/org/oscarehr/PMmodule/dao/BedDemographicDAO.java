@@ -104,6 +104,14 @@ public class BedDemographicDAO extends HibernateDaoSupport {
         return bedDemographic;
     }
 
+    public int getBedsCountByRoom(Integer roomId) {
+		Long count = (Long)getHibernateTemplate().find("select count(*) from BedDemographic bd where bd.id.roomId = ?", roomId).get(0);
+        if(count != null){
+        	log.debug("getRoomDemographicByRoom: roomOccupancy = " + count.intValue());
+        }
+        return count.intValue();
+    }
+    
     /**
      * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicStatus(java.lang.Integer)
      */
@@ -142,7 +150,7 @@ public class BedDemographicDAO extends HibernateDaoSupport {
     public void saveBedDemographic(BedDemographic bedDemographic) {
         updateHistory(bedDemographic);
 
-        bedDemographic = (BedDemographic)getHibernateTemplate().merge(bedDemographic);
+        getHibernateTemplate().saveOrUpdate(bedDemographic);
         getHibernateTemplate().flush();
 
         log.debug("saveBedDemographic: " + bedDemographic);

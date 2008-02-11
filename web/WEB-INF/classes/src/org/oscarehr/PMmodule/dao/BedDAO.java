@@ -97,22 +97,6 @@ public class BedDAO extends HibernateDaoSupport {
         return (Bed[]) beds.toArray(new Bed[beds.size()]);
     }
 
-    /**
-     * All beds for a given room
-     * @param roomId the room id to look up
-     * @param active activity flag
-     * @return an array of beds
-     */
-    @SuppressWarnings("unchecked")
-    public Bed[] getUnreservedBedsByRoom(Integer roomId, Boolean active) {
-        String query = getBedsQuery(null, roomId, active);
-        Object[] values = getBedsValues(null, roomId, active);
-        List beds = getBeds(query, values);
-        log.debug("getBedsByRoom: size " + beds.size());
-
-        return (Bed[]) beds.toArray(new Bed[beds.size()]);
-    }
-    
     @SuppressWarnings("unchecked")
     public List<Bed> getBedsByFacility(Integer facilityId, Boolean active) {
         String query = getBedsQuery(facilityId, null, active);

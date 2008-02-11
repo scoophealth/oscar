@@ -188,7 +188,6 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 		if (bedDemographic == null) {
 			handleException(new IllegalArgumentException("bedDemographic must not be null"));
 		}
-
 		validate(bedDemographic);
 		bedDemographicDAO.saveBedDemographic(bedDemographic);
 	}

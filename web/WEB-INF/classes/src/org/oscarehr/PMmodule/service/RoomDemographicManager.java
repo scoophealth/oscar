@@ -35,7 +35,16 @@ public interface RoomDemographicManager {
 	 *            given roomId
 	 * @return true, if demographic exists
 	 */
-	public boolean demographicExists(Integer roomId);
+	public boolean roomDemographicExists(Integer roomId);
+
+	/**
+	 * Get room occupancy integer with given room identifier
+	 * 
+	 * @param roomId
+	 *            room identifier
+	 * @return int
+	 */
+	public int getRoomOccupanyByRoom(Integer roomId);
 
 	/**
 	 * Get RoomDemographic relationship object with given room identifier

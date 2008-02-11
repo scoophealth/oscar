@@ -109,7 +109,10 @@ public class RoomDAO extends HibernateDaoSupport {
 		String queryString = getRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
 		List rooms = (facilityId != null || programId != null || active != null) ? getHibernateTemplate().find(queryString, values) : getHibernateTemplate().find(queryString);
-		log.debug("getRooms: size: " + rooms.size());
+		
+		if(rooms != null){		
+				log.debug("RoomDAO.getRooms(): rooms.size() = " + rooms.size());
+		}		
 		return (Room[]) rooms.toArray(new Room[rooms.size()]);
 	}
 

@@ -242,6 +242,14 @@ public class BedManager {
         return beds;
     }
     
+    /*
+     * 
+     * (e.g. used in BedManagerAction.saveBeds() )
+     * 
+     * @param rooms
+     * @param beds
+     * @return array of beds
+     */
     public Bed[] getBedsForUnfilledRooms(Room[] rooms, Bed[] beds){
     	
     	if(rooms == null  ||  beds == null){
@@ -261,6 +269,25 @@ public class BedManager {
     	}
     	return (Bed[])bedList.toArray(new Bed[bedList.size()]);
     }
+    /**
+     * Get unreserved beds by roomId and clientBedId
+     * @param roomId
+     * @param clientBedId
+     * @return array of beds
+     */
+    public Bed[] getReservedBedsByRoom(Integer roomId, boolean reserved) {
+        Bed[] beds = bedDAO.getBedsByRoom(roomId, Boolean.TRUE);
+        List<Bed> bedList = new ArrayList<Bed>();
+        for (Bed bed : beds) {
+            setAttributes(bed);
+            
+            // filter for unreserved beds for roomId only
+            if (!filterBed(bed, reserved)) {
+            	bedList.add(bed);
+            }
+        }
+        return bedList.toArray(new Bed[bedList.size()]);
+    }
     
     /**
      * Get unreserved beds by roomId and clientBedId
@@ -268,8 +295,8 @@ public class BedManager {
      * @param clientBedId
      * @return array of beds
      */
-    public Bed[] getUnreservedBedsByRoom(Integer roomId, Integer clientBedId, boolean reserved) {
-        Bed[] beds = bedDAO.getUnreservedBedsByRoom(roomId, Boolean.TRUE);
+    public Bed[] getCurrentPlusUnreservedBedsByRoom(Integer roomId, Integer clientBedId, boolean reserved) {
+        Bed[] beds = bedDAO.getBedsByRoom(roomId, Boolean.TRUE);
         List<Bed> bedList = new ArrayList<Bed>();
         
         for (Bed bed : beds) {
@@ -283,11 +310,11 @@ public class BedManager {
             if(bed.getId().intValue() == clientBedId  &&  bed.getRoomId().intValue() == roomId){
             	bedList.add(bed);
             }
-            
         }
         return bedList.toArray(new Bed[bedList.size()]);
     }
-    
+ 
+
     /**
 	 * Used by AdmissionManager during processDischarge()  to  delete discharged 
 	 * program-related room/bed reservation records

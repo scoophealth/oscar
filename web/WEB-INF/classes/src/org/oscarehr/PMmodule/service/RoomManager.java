@@ -297,6 +297,7 @@ public class RoomManager {
     	return roomsOccupancy;
     }
     
+    
     public boolean isAssignedBed( String roomId, Room[] rooms ){
     	
     	if(roomId == null  ||  rooms == null){
@@ -312,6 +313,22 @@ public class RoomManager {
 			}catch(NumberFormatException nfex){
 				return false;
 			}
+    	}
+    	return false;
+    }
+    
+    /**
+	 * Test to see whether room is assigned with beds - return true or
+	 * assigned with no beds yet - return false
+     * @param roomId
+     */
+    public boolean isRoomAssignedWithBeds(Integer roomId){
+    	if(roomId == null){
+    		return false;
+    	}
+    	Bed[] beds = bedDAO.getBedsByRoom(roomId, true);
+    	if(beds != null  &&  beds.length > 0){
+    		return true;
     	}
     	return false;
     }
