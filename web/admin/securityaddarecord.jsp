@@ -86,9 +86,6 @@
       } else if(document.forms[0].pin.value != document.forms[0].conPin.value) {
         alert('You have not confirmed your pin. Please input your pin again.');
         return false;
-      } else if(document.forms[0].pin.value == "") {
-        alert('Please input your pin.');
-        return false;
       } else 
       	return true;
       // do nothing at the moment
