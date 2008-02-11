@@ -638,15 +638,17 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
   </td>
   
   <form method="post" name="findprovider" onSubmit="findProvider(<%=year%>,<%=month%>,<%=day%>);return false;" target="apptReception" action="receptionistfindprovider.jsp">
-  <td align="right" valign="bottom">
-   <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+  <td align="right" valign="bottom">   
+  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
    <INPUT TYPE="text" NAME="providername" VALUE="" WIDTH="2" HEIGHT="10" border="0" size="10" maxlength="10">-
    <INPUT TYPE="SUBMIT" NAME="Go" VALUE='<bean:message key="receptionist.appointmentreceptionistadminday.btnGo"/>' onClick="findProvider(<%=year%>,<%=month%>,<%=day%>);return false;">
-</caisi:isModuleLoad>
+
    <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')"><bean:message key="global.help"/></a>
    &nbsp;&nbsp;
+   </caisi:isModuleLoad>
 	  <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')"><span id="oscar_scratch"></span></a>&nbsp;
-  </td></form>
+  </td>
+  </form>
 
 </tr>
 </table>
