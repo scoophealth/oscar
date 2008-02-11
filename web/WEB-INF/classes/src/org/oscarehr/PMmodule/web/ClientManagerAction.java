@@ -579,7 +579,7 @@ public class ClientManagerAction extends BaseAction {
         request.setAttribute("isRefreshRoomDropDown", "Y");
 
         // retrieve an array of beds associated with this roomId
-        Bed[] unreservedBeds = bedManager.getUnreservedBedsByRoom(Integer.valueOf(roomId), bedDemographic.getId().getBedId(), false);
+        Bed[] unreservedBeds = bedManager.getCurrentPlusUnreservedBedsByRoom(Integer.valueOf(roomId), bedDemographic.getId().getBedId(), false);
 
         request.setAttribute("unreservedBeds", unreservedBeds);
 
@@ -591,40 +591,306 @@ public class ClientManagerAction extends BaseAction {
     }
 
     public ActionForward saveBedReservation(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        DynaActionForm clientForm = (DynaActionForm) form;
+		//When room has beds assigned to it --> should not let client select room only.
+		//When room has no beds assigned to it --> allow clients to select room only.
 
+    	ActionMessages messages = new ActionMessages();
+        DynaActionForm clientForm = (DynaActionForm) form;
         BedDemographic bedDemographic = (BedDemographic) clientForm.get("bedDemographic");
         Date today = DateTimeFormatUtils.getToday();
         String roomId = request.getParameter("roomId");
         bedDemographic.setReservationStart(today);
         bedDemographic.setRoomId(Integer.valueOf(roomId));
         
-        RoomDemographic roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(bedDemographic.getId().getDemographicNo());
+        Integer bedId = bedDemographic.getBedId();
+        Integer demographicNo = bedDemographic.getId().getDemographicNo();
+        boolean isBedSelected = (bedDemographic.getBedId() != null && bedDemographic.getBedId().intValue() != 0);
+	   
+		boolean isFamilyHead = false; 
+		boolean isFamilyDependent = false;
+		int familySize = 0; 
+		RoomDemographic roomDemographic = null;
+		
+		//if room has bed --> must be assigned as room/bed combo or 
+		//if room has no bed --> must be assigned as room only.
+		boolean isRoomAssignedWithBeds = roomManager.isRoomAssignedWithBeds(bedDemographic.getRoomId());
+		
+		if(isRoomAssignedWithBeds  &&  (bedId == null  ||  bedId.intValue() == 0) ){//if assignedBed==1 && no bed assigned --> display error
+		    messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.room_bed"));
+		    saveMessages(request, messages);
+		    return edit(mapping, clientForm, request, response);
+		}
+		
+		//get dependents to be saved, removed from  'room_demographic'  &  'bed_demographic'  tables.
+		List<JointAdmission> dependentList = clientManager.getDependents(new Long(demographicNo));
+		JointAdmission clientsJadm = clientManager.getJointAdmission(new Long(demographicNo));
+		
+		if(dependentList != null  &&  dependentList.size() > 0){
+			//condition met then demographicNo must be familyHead
+			familySize = dependentList.size() + 1;
+			isFamilyHead = true;
+		}
+			
+		if (clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
+			isFamilyDependent = true;
+		}
+		System.out.println("ClientManagerAction.saveBedReservation(): isFamilyHead = " + isFamilyHead); 
+		System.out.println("ClientManagerAction.saveBedReservation(): isFamilyDependent = " + isFamilyDependent);  
+		
+		if(!isFamilyHead  &&  isFamilyDependent){//when client is dependent of a family -> do not attempt to assign.
+			//Display message notifying that the client cannot be saved (assign or unassign)  a room or a bed
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.dependent_disallowed"));
+			saveMessages(request, messages);
+			return edit(mapping, clientForm, request, response);
 
-        if (roomDemographic != null) {
-            roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
-        }
-        else {
-            roomDemographic = RoomDemographic.create(bedDemographic.getId().getDemographicNo(), bedDemographic.getProviderNo());
-            roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
-        }
+		}else {//check whether client is familyHead or independent client
+			//create roomDemographic from bedDemographic
+			roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(demographicNo);
+			if(roomDemographic == null) {//demographicNo (familyHead or independent) has no record in 'room_demographic'
+				roomDemographic = RoomDemographic.create(demographicNo, bedDemographic.getProviderNo());
+			}
+			roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
+			// detect check box false
+			if (request.getParameter("bedDemographic.latePass") == null) {
+				bedDemographic.setLatePass(false);
+			}
+			//when client is familyHead, all family + dependents must be assigned or unassigned together
+			if(isFamilyHead  &&  !isFamilyDependent){
+					// Conditions: 
+					//(1)Check whether the familySize is less than or equal to the (roomCapacity - roomOccupancy) currently.
+					//   (i.e.) [roomCapacity] - [roomOccupancy] - [familySize] >= 0
+					//(1.1)roomCapacity is either max number of clients a room can accomodate or number of beds assigned to this room
+				    //    with the beds taking precedence!
+					//   >> if familyHead choose room with bed, then  roomCapacity = [total number of unreserved beds]
+					//   >> if familyHead choose room only,     then  roomCapacity = Capacity set for that particular room
+					//(1.2)roomOccupancy = [number of all reserved beds] - [number of family members if occupying beds] or
+					//     roomOccupancy = [number of all assigned clients] - [number of family members if amongst assigned]
+					//(2)If less than --> display message to notify that there is not enough space in room.
+					//(3)If greater or equal :
+					//(3.1)for room/bed --> Delete all records in 'bed_demographic' & 'room_demographic' if any --> 
+					//                      then save room/bed for all family members one at a time.
+					//(3.2)for room only --> Delete all records in 'room_demographic' if any --> then save room for all family
+					//                       members one at a time.
+
+					int roomCapacity = 0;
+					int roomOccupancy = 0;
+					Room room = getRoomManager().getRoom(bedDemographic.getRoomId());
+					Integer[] dependentIds = new Integer[dependentList.size()];
+					List<Integer> unreservedBedIdList = new ArrayList<Integer>();
+					List<Integer> dependentsBedIdList = new ArrayList<Integer>();
+					List<Integer> availableBedIdList = new ArrayList<Integer>();
+					List<Integer> correctedAvailableBedIdList = new ArrayList<Integer>();
+					int numberOfFamilyMembersAssignedRoomBed = 0;
+					Bed[] bedReservedInRoom = null;
+					Bed[] bedUnReservedInRoom = null;
+					List rdsByRoom = null;
+					
+					if(familySize > 1){
+						for(int i=0; i < dependentList.size(); i++ ){
+							dependentIds[i] = new Integer(((JointAdmission)dependentList.get(i)).getClientId().intValue());
+						}
+					}
+					
+					if(bedId == null  ||  bedId.intValue()==0){//assign room only
+						if(room != null){
+							roomCapacity = room.getOccupancy().intValue();
+						}
+					}else{//roomCapacity = total number of beds assigned to room
+						Bed[] bedAssignedToRoom = bedManager.getBedsByRoom(bedDemographic.getRoomId());
+						if(bedAssignedToRoom != null  &&   bedAssignedToRoom.length > 0){
+							roomCapacity = bedAssignedToRoom.length;
+						}
+					}
+
+					//roomOccupancy = [number of all assigned clients] - [number of family members if amongst room assigned]  or
+					//roomOccupancy = [number of all reserved beds] - [number of family members if occupying beds]	   
+					//bedIdList     = [id of all unreserved beds] + [id beds previously occupied by family members]
+					if(bedId == null  ||  bedId.intValue()==0){//assign room only
+						int numberOfFamilyMembersAssignedRoom = 0;
+						
+						rdsByRoom = roomDemographicManager.getRoomDemographicByRoom(bedDemographic.getRoomId());
+						
+						if(rdsByRoom != null  &&  !rdsByRoom.isEmpty()){
+							for(int i=0; i < rdsByRoom.size(); i++){
+								int rdsClientId = ((RoomDemographic)(rdsByRoom.get(i))).getId().getDemographicNo().intValue();
+								if(demographicNo.intValue() ==  rdsClientId){
+									numberOfFamilyMembersAssignedRoom++;
+								}
+								for(int j=0; j < dependentIds.length; j++){
+									
+									if(dependentIds[j].intValue() == rdsClientId ){
+										numberOfFamilyMembersAssignedRoom++;
+									}
+								}
+							}
+							roomOccupancy = rdsByRoom.size() - numberOfFamilyMembersAssignedRoom;
+						}
+					}else{//assign room/bed combination
+						
+						BedDemographic bd = null;
+						
+						//unreservedBedIdList = [id of all unreserved beds] + [id beds previously occupied by family members]
+						bedUnReservedInRoom = bedManager.getReservedBedsByRoom(bedDemographic.getRoomId(), false);
+						if(bedUnReservedInRoom != null  &&  bedUnReservedInRoom.length > 0){
+							for(int i=0; i < bedUnReservedInRoom.length; i++){
+								unreservedBedIdList.add( ((Bed)bedUnReservedInRoom[i]).getId() );
+							}
+						}
+					
+						bedReservedInRoom = bedManager.getReservedBedsByRoom(bedDemographic.getRoomId(), true);
+						if(bedReservedInRoom != null  &&  bedReservedInRoom.length > 0){
+							
+							for(int i=0; i < bedReservedInRoom.length; i++){
+								
+								int bedReservedInRoomId = ((Bed)(bedReservedInRoom[i])).getId().intValue();
+								bd = bedDemographicManager.getBedDemographicByBed(bedReservedInRoomId);
+								int bdClientId = bd.getId().getDemographicNo().intValue();
+								
+								if(demographicNo.intValue() ==  bdClientId){
+									dependentsBedIdList.add(bd.getId().getBedId());
+									numberOfFamilyMembersAssignedRoomBed++;
+								}else{
+									for(int j=0; j < dependentIds.length; j++){
+										if(dependentIds[j].intValue() == bdClientId ){
+											dependentsBedIdList.add(bd.getId().getBedId());
+											numberOfFamilyMembersAssignedRoomBed++;
+										}
+									}
+								}
+							}//end for loop
+							roomOccupancy = bedReservedInRoom.length - numberOfFamilyMembersAssignedRoomBed;
+						}
+						
+						if(!unreservedBedIdList.isEmpty()){
+							availableBedIdList.addAll(unreservedBedIdList);
+						}
+						if(!dependentsBedIdList.isEmpty()){
+							availableBedIdList.addAll(dependentsBedIdList);
+						}
+					}//end of assign room/bed combination
+
+					//Check whether the familySize is less than or equal to the (roomCapacity - roomOccupancy) currently
+					if( roomCapacity > 0  &&  roomOccupancy >= 0  &&  familySize > 0  &&  
+					    (roomCapacity - roomOccupancy - familySize >= 0 ) ) {
+						Integer clientId = null;
+						
+						//assigning for familyHead only
+						getRoomDemographicManager().saveRoomDemographic(roomDemographic);
+
+						if(isBedSelected) {
+							BedDemographic bdHeadDelete = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo());
+							if(bdHeadDelete != null){
+								bedDemographicManager.deleteBedDemographic(bdHeadDelete);
+							}
+							for(int i=0; i < availableBedIdList.size(); i++){
+								if( ((Integer)bedDemographic.getId().getBedId()).intValue()  !=  ((Integer)availableBedIdList.get(i)).intValue() ){
+									correctedAvailableBedIdList.add(availableBedIdList.get(i));
+								}
+							}
+							bedDemographicManager.saveBedDemographic(bedDemographic);
+						}
+						else {
+							// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
+							getRoomDemographicManager().cleanUpBedTables(roomDemographic);
+						}
+						//Assign for each dependent member of family
+						for(int i=0; i < dependentList.size(); i++){
+							//clienId is each dependent
+							clientId = new Integer(((JointAdmission)dependentList.get(i)).getClientId().intValue());
+							
+							if( clientId != null ){
+								roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic( clientId  );
+								bedDemographic.getId().setDemographicNo(clientId); //change to dependent member
+							
+								//assigning both room & bed for all dependents
+								if( isBedSelected  &&  correctedAvailableBedIdList.size() >= dependentList.size()){
+
+									BedDemographic bdDependent = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo());
+									bedDemographic.getId().setBedId(correctedAvailableBedIdList.get(i));
+									
+									if (roomDemographic == null) {
+										roomDemographic = RoomDemographic.create( clientId, bedDemographic.getProviderNo());
+									}
+									roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
+									// detect check box false
+									if (request.getParameter("bedDemographic.latePass") == null) {
+										bedDemographic.setLatePass(false);
+									}
+
+									getRoomDemographicManager().saveRoomDemographic(roomDemographic);
+									if(bdDependent != null){
+										bedDemographicManager.deleteBedDemographic(bdDependent);
+									}
+									bedDemographicManager.saveBedDemographic(bedDemographic);
+	
+								}else if(!isBedSelected){//assigning room only for all dependents
+									
+									if (roomDemographic != null) {
+										roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
+									}
+									else {
+										roomDemographic = RoomDemographic.create( clientId, bedDemographic.getProviderNo());
+										roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
+									}
+									// detect check box false
+									if (request.getParameter("bedDemographic.latePass") == null) {
+										bedDemographic.setLatePass(false);
+									}
+									getRoomDemographicManager().saveRoomDemographic(roomDemographic);
+									
+									// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
+									getRoomDemographicManager().cleanUpBedTables(roomDemographic);
+								}
+							
+							}//end of if( clientId != null )
+
+						}//end for loop
+						
+					}else{//not enough room to accomodate family
+						String occupancy = "0";
+						String available = "0";
+						//Display message notifying that the roomCapacity is deficient ...
+						if( isBedSelected ){
+							if(bedReservedInRoom != null){
+								occupancy = String.valueOf(bedReservedInRoom.length);
+							}
+							if(availableBedIdList != null){
+								available = String.valueOf(availableBedIdList.size());
+							}
+					        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.bedsCapacity_exceeded", occupancy, available ));
+					        saveMessages(request, messages);
+
+						}else{
+							if(rdsByRoom != null){
+								occupancy = String.valueOf(rdsByRoom.size());
+							}
+							if(roomCapacity > 0){
+								available = "" + (roomCapacity - rdsByRoom.size());
+							}
+							
+					        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.roomCapacity_exceeded", occupancy, available ));
+					        saveMessages(request, messages);
+						}
+				        return edit(mapping, clientForm, request, response);
+					}//end of if(roomCapacity - roomOccupancy - familySize < 0 )
+
+			}else{ //when client is independent -> just assign either room/bed or room only.
+
+				getRoomDemographicManager().saveRoomDemographic(roomDemographic);
+
+				if(isBedSelected) {
+					bedDemographicManager.saveBedDemographic(bedDemographic);
+				}
+				else {
+					// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
+					getRoomDemographicManager().cleanUpBedTables(roomDemographic);
+				}
+			}//end of isIndependentClient
+			
+		}//end of  isFamilyHead  ||  isIndependentClient
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
-        // detect check box false
-        if (request.getParameter("bedDemographic.latePass") == null) {
-            bedDemographic.setLatePass(false);
-        }
-
-        getRoomDemographicManager().saveRoomDemographic(roomDemographic);
-
-        if (bedDemographic != null && bedDemographic.getBedId() != null && bedDemographic.getBedId().intValue() != 0) {
-            bedDemographicManager.saveBedDemographic(bedDemographic);
-        }
-        else {
-            // if only select room without bed, delete previous selected bedId 'bed_demographic' table
-            getRoomDemographicManager().cleanUpBedTables(roomDemographic);
-        }
-
-        ActionMessages messages = new ActionMessages();
         messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.success"));
         saveMessages(request, messages);
 
@@ -1135,7 +1401,7 @@ public class ClientManagerAction extends BaseAction {
             else if (reservedBed != null) {
 
                 // unreservedBeds = bedManager.getBedsByRoomProgram(availableRooms, bedProgramId, false);
-                unreservedBeds = bedManager.getUnreservedBedsByRoom(reservedBed.getRoomId(), bedDemographic.getId().getBedId(), false);
+                unreservedBeds = bedManager.getCurrentPlusUnreservedBedsByRoom(reservedBed.getRoomId(), bedDemographic.getId().getBedId(), false);
             }
 
             clientForm.set("unreservedBeds", unreservedBeds);
