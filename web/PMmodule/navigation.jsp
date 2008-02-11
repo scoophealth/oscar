@@ -201,7 +201,7 @@
     
     <c:if test="${sessionScope.userrole ne 'er_clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
         <div>
-            <span><a href='<c:out value="${ctx}"/>/provider/providercontrol.jsp'>Oscar Medical</a></span>
+            <span><a href='<c:out value="${ctx}"/>/provider/providercontrol.jsp'>Case Management</a></span>
         </div>
     </c:if>
     <div>
