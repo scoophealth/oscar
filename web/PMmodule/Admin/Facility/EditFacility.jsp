@@ -1,6 +1,9 @@
 <%@ include file="/taglibs.jsp"%>
 
 <%@ include file="/common/messages.jsp"%>
+
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/validation.js"><%-- don't close in 1 statement, will break IE7 --%></script>
+
 <div class="tabs" id="tabs">
     <table cellpadding="3" cellspacing="0" border="0">
         <tr>
@@ -9,7 +12,7 @@
     </table>
 </div>
 
-<html:form action="/PMmodule/FacilityManager.do">
+<html:form action="/PMmodule/FacilityManager.do" onsubmit="return validateRequiredField('facilityName', 'Name', 32)">
     <html:hidden property="agencyId"/>
     <input type="hidden" name="method" value="save" />
     <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -18,8 +21,8 @@
             <td><c:out value="${requestScope.id}" /></td>
         </tr>
         <tr class="b">
-            <td width="20%">Name:</td>
-            <td><html:text property="facility.name" size="32" maxlength="32"/></td>
+            <td width="20%">Name: *</td>
+            <td><html:text property="facility.name" size="32" maxlength="32" styleId="facilityName" /></td>
         </tr>
         <tr class="b">
             <td width="20%">Description:</td>
