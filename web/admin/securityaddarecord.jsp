@@ -80,7 +80,10 @@
       } else if(document.forms[0].b_RemoteLockSet.checked && document.forms[0].pin.value.length<3) {
         alert('<bean:message key="global.msgInputKeyword"/>');
         return false;
-      } else if(document.forms[0].password.value != document.forms[0].conPassword.value) {
+      } else if(document.forms[0].b_LocalLockSet.checked && document.forms[0].pin.value.length<3) {
+        alert('<bean:message key="global.msgInputKeyword"/>');
+        return false;
+      }else if(document.forms[0].password.value != document.forms[0].conPassword.value) {
         alert('You have not confirmed your password. Please input your password again.');
         return false;
       } else if(document.forms[0].pin.value != document.forms[0].conPin.value) {

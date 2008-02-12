@@ -59,7 +59,34 @@
   <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
-    <!--
+ <!--
+
+   function onsub() {alert("dddddddddd");
+      if(document.updatearecord.user_name.value=="" ||
+		 document.updatearecord.password.value==""||
+		 document.updatearecord.provider_no.value==""		
+		) {
+        alert('<bean:message key="global.msgInputKeyword"/>');
+        return false;
+      } else if(document.forms[0].b_ExpireSet.checked && document.forms[0].date_ExpireDate.value.length<10) {
+        alert('<bean:message key="global.msgInputKeyword"/>');
+        return false;
+      } else if(document.forms[0].b_RemoteLockSet.checked && document.forms[0].pin.value.length<3) {
+        alert('<bean:message key="global.msgInputKeyword"/>');
+        return false;
+      } else if(document.forms[0].b_LocalLockSet.checked && document.forms[0].pin.value.length<3) {
+        alert('<bean:message key="global.msgInputKeyword"/>');
+        return false;
+      }else if(document.forms[0].password.value != document.forms[0].conPassword.value) {
+        alert('You have not confirmed your password. Please input your password again.');
+        return false;
+      } else if(document.forms[0].pin.value != document.forms[0].conPin.value) {
+        alert('You have not confirmed your pin. Please input your pin again.');
+        return false;
+      } else 
+      	return true;
+     }
+       
 		function setfocus() {
 		  document.updatearecord.user_name.focus();
 		  document.updatearecord.user_name.select();
@@ -80,7 +107,7 @@
       </tr>
     </table>
   <table cellspacing="0" cellpadding="2" width="100%" border="0">
-    <form method="post" action="admincontrol.jsp" name="updatearecord" >
+    <form method="post" action="admincontrol.jsp" name="updatearecord" onsubmit="return onsub()">
       <%
   ResultSet rs = apptMainBean.queryResults(request.getParameter("keyword"), request.getParameter("dboperation"));
   if(rs==null) {%>
