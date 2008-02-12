@@ -42,29 +42,22 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
     private static final Log log = LogFactory.getLog(RoomDemographicDAO.class);
 
     /**
+     * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#demographicExists(java.lang.Integer)
+     */
+    public boolean demographicExists(Integer roomId) {
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic rd where rd.id.roomId = " + roomId).next()) == 1);
+        log.debug("clientExists: " + exists);
+        return exists;
+    }
+
+    /**
      * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#roomExists(java.lang.Integer)
      */
-    public boolean roomDemographicExists(Integer demographicNo) {
+    public boolean roomExists(Integer demographicNo) {
         boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic rd where rd.id.demographicNo = " + demographicNo).next()) == 1);
         log.debug("roomExists: " + exists);
 
         return exists;
-    }
-
-    boolean roomDemographicExists(RoomDemographicPK id) {
-        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic rd where rd.id.roomId = " + id.getRoomId() + " and rd.id.demographicNo = " + id.getDemographicNo()).next()) == 1);
-        log.debug("roomDemographicExists: " + exists);
-
-        return exists;
-    }
-
-
-    public int getRoomOccupanyByRoom(Integer roomId) {
-		Long count = (Long)getHibernateTemplate().find("select count(*) from RoomDemographic rd where rd.id.roomId = ?", roomId).get(0);
-        if(count != null){
-        	log.debug("getRoomDemographicByRoom: roomOccupancy = " + count.intValue());
-        }
-        return count.intValue();
     }
 
     /**
@@ -115,4 +108,10 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
         getHibernateTemplate().flush();
     }
 
+    boolean roomDemographicExists(RoomDemographicPK id) {
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic rd where rd.id.roomId = " + id.getRoomId() + " and rd.id.demographicNo = " + id.getDemographicNo()).next()) == 1);
+        log.debug("roomDemographicExists: " + exists);
+
+        return exists;
+    }
 }
