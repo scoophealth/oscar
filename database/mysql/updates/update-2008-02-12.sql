@@ -1,0 +1,1 @@
+alter table scheduletemplate set timecode text;

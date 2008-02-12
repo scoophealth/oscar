@@ -6652,7 +6652,7 @@ CREATE TABLE scheduletemplate (
   provider_no varchar(6) NOT NULL default '',
   name varchar(20) NOT NULL default '',
   summary varchar(80) default NULL,
-  timecode varchar(255) default NULL,
+  timecode text,
   PRIMARY KEY  (provider_no,name)
 ) TYPE=MyISAM;
 
