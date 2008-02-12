@@ -91,12 +91,16 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 	}
 
 	/**
-	 * @see org.oscarehr.PMmodule.service.RoomDemographicManager#demographicExists(java.lang.Integer)
+	 * @see org.oscarehr.PMmodule.service.RoomDemographicManager#roomDemographicExists(java.lang.Integer)
 	 */
-	public boolean demographicExists(Integer roomId) {
-		return roomDemographicDAO.demographicExists(roomId);
+	public boolean roomDemographicExists(Integer roomId) {
+		return roomDemographicDAO.roomDemographicExists(roomId);
 	}
 
+	public int getRoomOccupanyByRoom(Integer roomId){
+		return roomDemographicDAO.getRoomOccupanyByRoom(roomId);
+	}
+	
 	/**
 	 * @see org.oscarehr.PMmodule.service.RoomDemographicManager#getRoomDemographicByRoom(java.lang.Integer)
 	 */
