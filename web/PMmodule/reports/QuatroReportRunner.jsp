@@ -14,10 +14,6 @@
 <bean:define id="filterFields" name="quatroReportRunnerForm" property="filterFields"/>
 <bean:define id="operatorList" name="quatroReportRunnerForm" property="operatorList"/>
 
-<bean:define id="reportTitle" name="quatroReportRunnerForm" property="reportTitle"/>
-<bean:define id="lblDateRange" name="quatroReportRunnerForm" property="lblDateRange"/>
-<bean:define id="lblStartDate" name="quatroReportRunnerForm" property="lblStartDate"/>
-<bean:define id="lblEndDate" name="quatroReportRunnerForm" property="lblEndDate"/>
 <bean:define id="startDateProperty" name="quatroReportRunnerForm" property="startDateProperty" type="com.quatro.util.HTMLPropertyBean" />
 <bean:define id="endDateProperty" name="quatroReportRunnerForm" property="endDateProperty" type="com.quatro.util.HTMLPropertyBean" />
 <bean:define id="startTxtProperty" name="quatroReportRunnerForm" property="startTxtProperty" type="com.quatro.util.HTMLPropertyBean" />
@@ -51,13 +47,15 @@ function showOrgLookup(tId) {
 <html:form action="/QuatroReport/ReportRunner.do">
 <table width="100%">
 <tr><td style="color: white;font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px; font-weight: bold" background="../images/TitleBar2.png" align="center">
-<bean:write name="reportTitle"/>
+<c:out value="${quatroReportRunnerForm.reportTitle}" />
 </td></tr>
 
 <tr><td style="font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px;" background="../images/ButtonBar2.png"  align="left">
 <img src="../images/Print16x16.gif"/>
-<html:submit property="Run"
-				style="margin-left: 0px; margin-right: 0px; background-color: transparent; margin-bottom: 0px; margin-top: 0px">Run Report</html:submit>&nbsp;|&nbsp;
+<html:submit property="Run"	style="width:1px;height:1px;">Run Report</html:submit>
+
+<a href="javascript:quatroReportRunnerForm.Run.click();">Run Report</a>
+				&nbsp;|&nbsp;
 <img src="../images/Back16.png"/>&nbsp;<html:link action="/QuatroReport/ReportList.do">QuatroShelter Reports</html:link>
 </td></tr>
 
@@ -69,30 +67,32 @@ function showOrgLookup(tId) {
       <html:hidden property="reportNo" />
       <table width="100%">
         <tr>
-           <td class="clsNameLabels"  colspan="3" width="100%"><bean:write name="lblDateRange"/></td>
+           <td class="clsNameLabels"  colspan="3" width="100%"><c:out value="${quatroReportRunnerForm.lblDateRange}" /></td>
         </tr>
 
         <tr>
            <td width="10%">&nbsp;</td>
-           <td class="clsNameLabels" width="20%"><bean:write name="lblStartDate"/></td>
+           <td class="clsNameLabels" width="20%"><c:out value="${quatroReportRunnerForm.lblStartDate}"/></td>
            <td width="70%">
            <logic:equal name="quatroReportRunnerForm" property="startDateProperty.visible" value="visibility:visible;">
              <quatro:datePickerTag property="startDate" width="70%" style="<%=startDateProperty.getVisible()%>" openerForm="quatroReportRunnerForm"></quatro:datePickerTag>
            </logic:equal>
            <logic:equal name="quatroReportRunnerForm" property="startTxtProperty.visible" value="visibility:visible;">
-             <html:text property="startTxt" style="<%=startTxtProperty.getVisible()%>"/></td>
+             <html:text property="startTxt" style="<%=startTxtProperty.getVisible()%>"/>
            </logic:equal>
+           </td>
         </tr>
         <tr>
            <td width="10%">&nbsp;</td>
-           <td class="clsNameLabels" width="20%"><bean:write name="lblEndDate"/></td>
+           <td class="clsNameLabels" width="20%"><c:out value="${quatroReportRunnerForm.lblEndDate}"/></td>
            <td width="70%">
            <logic:equal name="quatroReportRunnerForm" property="endDateProperty.visible" value="visibility:visible;">
              <quatro:datePickerTag property="endDate" width="70%" style="<%=endDateProperty.getVisible()%>" openerForm="quatroReportRunnerForm"></quatro:datePickerTag>
            </logic:equal>
            <logic:equal name="quatroReportRunnerForm" property="endTxtProperty.visible" value="visibility:visible;">
-             <html:text property="endTxt" style="<%=endTxtProperty.getVisible()%>"></html:text></td>
+             <html:text property="endTxt" style="<%=endTxtProperty.getVisible()%>"></html:text>
            </logic:equal>
+        </td>
         </tr>
 
       </table>
