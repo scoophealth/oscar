@@ -5,7 +5,6 @@
         window.open(url + topic,'help','width=450, height=200');
     }
 </script>
-Welcome <b><c:out value="${requestScope.provider.formattedName}" /></b>
 <br />
 <br />
 <br />
