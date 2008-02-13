@@ -1,4 +1,4 @@
-/* $Id: tigris.css,v 1.1 2006-12-16 04:33:16 hexbinary Exp $
+/* $Id: tigris.css,v 1.2 2008-02-13 05:52:38 tonywzt1 Exp $
 	
 	This file defines basic default formatting for HTML conforming to Tigris application style. To extend or override these rules for your instance, edit inst.css instead of this file. */
 
@@ -17,7 +17,7 @@ dd {
 }
 
 #banner {
-	border-top: 1px solid #369;
+	border-bottom: 1px solid #369;
 }
 
 .app h3, .app h4, .tabs td, .tabs th, .functnbar {
