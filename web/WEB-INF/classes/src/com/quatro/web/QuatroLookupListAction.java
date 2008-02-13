@@ -29,8 +29,8 @@ public class QuatroLookupListAction extends DispatchAction {
 	}
 	
 	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-
-		List lst = lookupManager.LoadCodeList("BED", false, null, null);
+        String tableId=request.getParameter("tableId");
+		List lst = lookupManager.LoadCodeList(tableId, false, null, null);
 		QuatroLookupListForm qform = (QuatroLookupListForm) form;
 		qform.setLookups(lst);
 		qform.setOpenerFormName(request.getParameter("openerForm"));
