@@ -32,7 +32,8 @@
     String tab = request.getParameter("id");
     
     if (tab.equals("oscar_new_lab")) { %>
-	<oscar:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscar:newLab>
+	<%@page import="oscar.OscarProperties"%>
+<oscar:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscar:newLab>
 <%  }
     if (tab.equals("oscar_new_msg")) { %>
         <oscar:newMessage providerNo="<%=curUser_no%>">Msg</oscar:newMessage>
@@ -40,6 +41,7 @@
     if (tab.equals("oscar_new_tickler")) { %>
         <oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.tickler"/></oscar:newTickler>
 <%  }
-    if (tab.equals("oscar_scratch")) { %>
+
+    if (!OscarProperties.getInstance().isTorontoRFQ() && tab.equals("oscar_scratch") ) { %>
 	<img src='<oscar:filledScratch providerNo="<%=curUser_no%>"></oscar:filledScratch>' border='0' align="absbottom" title='Scratch Pad'>
 <%  } %>
