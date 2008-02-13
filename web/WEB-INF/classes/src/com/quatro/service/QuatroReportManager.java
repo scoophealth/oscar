@@ -77,6 +77,13 @@ public class QuatroReportManager {
        ReportFilterValue rfv = quatroReportDao.GetFilterField(rptNo, fieldNo);
        return rfv;
     }
+	public List GetReportList(String providerNo, int groupId) 
+	{
+		List lst=quatroReportDao.GetReportList(providerNo, groupId);
+		return lst;
+//		return quatroReportDao.GetReportList(providerNo);
+	}
+
 	public List GetReportGroupList(String providerNo) 
 	{
 		List rgs = quatroReportDao.GetReportGroupList(providerNo);

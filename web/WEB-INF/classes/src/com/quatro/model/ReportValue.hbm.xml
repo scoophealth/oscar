@@ -19,7 +19,7 @@
         <property name="orgApplicable" /> 
         <property name="reportType" /> 
         <property name="providerNo" column="PROVIDER_NO"/> 
-        <set name="options" lazy="true" order-by="optionTitle">
+        <set name="options" lazy="false" order-by="optionTitle">
           <key column="reportNo" not-null="true" />
           <one-to-many class="com.quatro.model.ReportOptionValue"></one-to-many>
         </set>

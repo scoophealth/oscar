@@ -1,0 +1,326 @@
+package com.quatro.common;
+/*
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.TagSupport;
+import org.apache.struts.taglib.html.*;
+*/
+import org.apache.struts.taglib.html.*;
+import org.apache.struts.taglib.TagUtils;
+import javax.servlet.jsp.JspException;
+import oscar.Misc;
+
+
+public class LookupTag extends BaseInputTag {
+	private String name=null;
+	private String formProperty=null;
+	private String codeProperty=null;
+	private String bodyProperty=null;
+
+	private String codeValue=null;
+	private String bodyValue=null;
+
+	private String bodyStyle=null;
+	private String bodyStyleClass=null;
+	
+	private boolean indexed = false;
+	private boolean showCode = true;
+	private boolean showBody = true;
+
+	private String width="100%";
+	private String codeWidth="30%";
+	private String codeMaxlength=null;
+	private String bodyMaxlength=null;
+	private String tableName=null;
+	
+    protected String accept = null;
+	
+/*
+	public int doStartTag() throws JspException {
+		try {
+//			HttpSession se = ((HttpServletRequest) pc.getRequest()).getSession();
+//			String p = (String) se.getAttribute("OscarPageURL");
+			
+		    String temps = "<div><html:text property='" + name + "' indexed='false' size='" + codeWidth + "' value='1234567890'></html:text>1234567</div>";
+				pageContext.getOut().print(temps);
+
+		} catch (Exception e) {
+			throw new JspTagException("An IOException occurred.");
+		}
+		
+		return SKIP_BODY;
+
+		if (reverse)
+			return EVAL_BODY_INCLUDE;
+		else
+			return SKIP_BODY;
+
+	}
+*/
+    public int doStartTag() throws JspException {
+        TagUtils.getInstance().write(this.pageContext, this.renderInputElement());
+        return (EVAL_BODY_AGAIN);
+    }
+
+    protected String renderInputElement() throws JspException {
+        String sRootPath="";
+        try{
+        	sRootPath=Misc.getApplicationName(pageContext.getServletContext().getResource("/").getPath());
+	    } catch (Exception e) {}
+
+    	StringBuffer results = new StringBuffer("<table");
+        prepareAttribute(results, "cellpadding", "0");
+        prepareAttribute(results, "style", "border:0px;");
+        prepareAttribute(results, "cellspacing", "0");
+       	prepareAttribute(results, "width", getWidth());
+        results.append(this.getElementClose());
+        results.append("<tr>");
+
+        results.append("<td");
+        prepareAttribute(results, "style", "border:0px;");
+        results.append(this.getElementClose());
+        results.append("<input");
+        if(showCode==true){
+          prepareAttribute(results, "style", "width:100%;");
+          prepareAttribute(results, "width", getCodeWidth());
+        }else{
+            prepareAttribute(results, "style", "width:1px;");
+        }
+        prepareAttribute(results, "type", "text");
+        prepareAttribute(results, "name", prepareName(codeProperty, name));
+        prepareAttribute(results, "accesskey", getAccesskey());
+        prepareAttribute(results, "accept", getAccept());
+        prepareAttribute(results, "maxlength", getCodeMaxlength());
+        prepareAttribute(results, "tabindex", getTabindex());
+        prepareValue(results, codeValue);
+        results.append(this.prepareEventHandlers());
+        results.append(this.prepareStyles());
+        prepareOtherAttributes(results);
+        results.append(this.getElementClose());
+        results.append("</td>");
+        
+        results.append("<td");
+        prepareAttribute(results, "style", "border:0px;");
+        results.append(this.getElementClose());
+        results.append("<input");
+        if(showBody==true){
+          prepareAttribute(results, "style", "width:100%;");
+        }else{
+            prepareAttribute(results, "style", "width:1px;");
+        }
+        prepareAttribute(results, "type", "text");
+        prepareAttribute(results, "name", prepareName(bodyProperty, name));
+        prepareAttribute(results, "maxlength", getBodyMaxlength());
+        prepareValue(results, bodyValue);
+        results.append(this.prepareBodyStyles());
+        results.append(this.getElementClose());
+        results.append("</td>");
+        
+        results.append("<td");
+        prepareAttribute(results, "style", "border:0px;");
+        prepareAttribute(results, "width", "35px");
+        results.append(this.getElementClose());
+        results.append("<a ");
+        prepareAttribute(results, "onclick", "showLookup('" + tableName + "', '', '', " +
+           "'" + formProperty  + "','" +  
+           prepareName(codeProperty, name) + "','" + prepareName(bodyProperty, name) + "', true, '" + sRootPath + "');");        
+        results.append(this.getElementClose());
+        results.append("<img");
+       	prepareAttribute(results, "src", "/" + sRootPath + "/images/microsoftsearch.gif");
+        results.append(this.getElementClose());
+        results.append("</a>");
+        results.append("<img");
+        prepareAttribute(results, "src", "/" + sRootPath + "/images/Reset16.gif");
+        results.append(this.getElementClose());
+        results.append("</td></tr></table>");
+
+        return results.toString();
+    }
+    
+    protected String prepareBodyStyles() throws JspException {
+       StringBuffer styles = new StringBuffer();
+       prepareAttribute(styles, "style", bodyStyle);
+       prepareAttribute(styles, "class", bodyStyleClass);
+       return styles.toString();
+    }
+
+    protected void prepareValue(StringBuffer results, String value) throws JspException {
+       results.append(" value=\"");
+       if (value != null) results.append(value);
+       results.append('"');
+    }
+    
+    protected String prepareName(String property, String pre_name) throws JspException {
+       if (property == null) return null;
+
+       if (indexed) {
+          StringBuffer results = new StringBuffer();
+          prepareIndex(results, pre_name);
+          results.append(property);
+          return results.toString();
+       }
+       return property;
+    }
+    
+/*	
+	public int doEndTag() throws JspException {
+		return EVAL_PAGE;
+	}
+*/
+	public void release() {
+	  name=null;
+	  codeProperty=null;
+	  bodyProperty=null;
+	  codeValue=null;
+	  bodyValue=null;
+	  bodyStyle=null;
+	  bodyStyleClass=null;
+	  indexed = false;
+	  showCode = true;
+	  showBody = true;
+	  codeWidth=null;
+	  codeMaxlength=null;
+	  width=null;
+	  bodyMaxlength=null;
+	  tableName=null;
+	}
+
+	public boolean isShowCode() {
+		return showCode;
+	}
+
+	public void setShowCode(boolean showCode) {
+		this.showCode = showCode;
+	}
+
+	public boolean isShowBody() {
+		return showBody;
+	}
+
+	public void setShowBody(boolean showBody) {
+		this.showBody = showBody;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getBodyProperty() {
+		return bodyProperty;
+	}
+
+	public void setBodyProperty(String bodyProperty) {
+		this.bodyProperty = bodyProperty;
+	}
+
+	public String getCodeProperty() {
+		return codeProperty;
+	}
+
+	public void setCodeProperty(String codeProperty) {
+		this.codeProperty = codeProperty;
+	}
+
+	public String getBodyMaxlength() {
+		return bodyMaxlength;
+	}
+
+	public void setBodyMaxlength(String bodyMaxlength) {
+		this.bodyMaxlength = bodyMaxlength;
+	}
+
+	public String getWidth() {
+		return width;
+	}
+
+	public void setWidth(String width) {
+		this.width = width;
+	}
+
+	public String getCodeMaxlength() {
+		return codeMaxlength;
+	}
+
+	public void setCodeMaxlength(String codeMaxlength) {
+		this.codeMaxlength = codeMaxlength;
+	}
+
+	public String getCodeWidth() {
+		return codeWidth;
+	}
+
+	public void setCodeWidth(String codeWidth) {
+		this.codeWidth = codeWidth;
+	}
+
+	public String getBodyValue() {
+		return bodyValue;
+	}
+
+	public void setBodyValue(String bodyValue) {
+		this.bodyValue = bodyValue;
+	}
+
+	public String getCodeValue() {
+		return codeValue;
+	}
+
+	public void setCodeValue(String codeValue) {
+		this.codeValue = codeValue;
+	}
+
+	public boolean isIndexed() {
+		return indexed;
+	}
+
+	public void setIndexed(boolean indexed) {
+		this.indexed = indexed;
+	}
+
+	public String getBodyStyleClass() {
+		return bodyStyleClass;
+	}
+
+	public void setBodyStyleClass(String bodyStyleClass) {
+		this.bodyStyleClass = bodyStyleClass;
+	}
+
+	public String getBodyStyle() {
+		return bodyStyle;
+	}
+
+	public void setBodyStyle(String bodyStyle) {
+		this.bodyStyle = bodyStyle;
+	}
+
+	public String getAccept() {
+		return accept;
+	}
+
+	public void setAccept(String accept) {
+		this.accept = accept;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	public String getFormProperty() {
+		return formProperty;
+	}
+
+	public void setFormProperty(String formProperty) {
+		this.formProperty = formProperty;
+	}
+	
+}

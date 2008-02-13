@@ -4,6 +4,7 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import com.quatro.model.*;
 import com.quatro.util.*;
+import oscar.OscarProperties;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -327,16 +328,9 @@ public class QuatroReportViewerAction extends Action {
     private void PaintReport(HttpServletRequest request, HttpServletResponse response, Date startDate, 
     		Date endDate, String orgs, String criteriaString, String dateRangeDis, 
     		String orgDis, String criteriaDis)
-//	private void PaintReport(DateTime startDate, DateTime endDate, string orgs, string criteriaString, 
-//		string dateRangeDis, string orgDis, string criteriaDis)
 	{
     	String loginId = "mespina";
         String userName = _rptValue.getAuthor();
-        
-//		string path = Server.MapPath("");
-//        string file = path + "\\RptFiles\\" + _rptOption.RptFileName;
-//		reportDocument1.FileName = file;
-//        SetLogonInfo();
 
         String sStartDate = Utility.FormatDate(startDate);
 		String sEndDate = Utility.FormatDate(endDate);
@@ -344,6 +338,7 @@ public class QuatroReportViewerAction extends Action {
         String sDateFieldDesc = _rptOption.getDateFieldDesc();
         String sDateRange = "";
         String sDateSQL = "";
+        
 //        boolean  isDateFieldString = "S".equals(_rptOption.getDateFieldType());
         boolean  isDateFieldString = false;//"S".equals(_rptOption.getDateFieldType());
 
@@ -401,7 +396,16 @@ public class QuatroReportViewerAction extends Action {
 
       ReportClientDocument reportDocument1 = new ReportClientDocument();
 //      String path=DataViews.RptFiles + "\\" + _rptOption.getRptFileName();
-      String path="report\\RptFiles\\" +  _rptOption.getRptFileName();
+//      String path="reports\\RptFiles\\" +  _rptOption.getRptFileName();
+      String jspPath="";
+      try{
+         jspPath = getServlet().getServletContext().getResource("/").getPath();
+      }
+      catch(Exception ex){
+    	  ;
+      }
+//      jspPath= OscarProperties.getInstance().getProperty("RPT_PATH");      
+      String path=jspPath  + "\\PMmodule\\reports\\RptFiles\\" + _rptOption.getRptFileName();
       try{
            reportDocument1.open(path,0);
            if (!Utility.IsEmpty(criteriaString))
@@ -676,7 +680,18 @@ public class QuatroReportViewerAction extends Action {
 
         ReportClientDocument reportDocument1 = new ReportClientDocument();
 //        String path=DataViews.RptFiles + "\\" + _rptOption.getRptFileName();
-        String path="PMmodule\\reports\\RptFiles\\" +  _rptOption.getRptFileName();
+//        String path="PMmodule\\reports\\RptFiles\\" +  _rptOption.getRptFileName();
+        String jspPath="";
+        try{
+           jspPath = getServlet().getServletContext().getResource("/").getPath();
+        }
+        catch(Exception ex){
+      	  ;
+        }
+//        jspPath= OscarProperties.getInstance().getProperty("RPT_PATH");      
+        String path=jspPath  + "\\PMmodule\\reports\\RptFiles\\" + _rptOption.getRptFileName();
+        
+//        String path=request.getServletPath() + "\\" +  "PMmodule\\reports\\RptFiles\\" +  _rptOption.getRptFileName();
         try{
              reportDocument1.open(path,0);
              if (!Utility.IsEmpty(criteriaString))

@@ -327,6 +327,7 @@ public class QuatroReportRunnerAction extends Action {
                 myForm.setLblEndDate("");
                 break;
         }
+
         myForm.setStartDateProperty(obj1);
         myForm.setEndDateProperty(obj2);
         myForm.setStartTxtProperty(obj3);

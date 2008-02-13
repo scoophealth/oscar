@@ -240,6 +240,9 @@
     <!-- Quatro Shelter Report -->
     <bean name="/QuatroReport/ReportList" class="com.quatro.web.report.QuatroReportListAction" singleton="false">
     </bean>
+    <bean name="/QuatroLookup/LookupList" class="com.quatro.web.QuatroLookupListAction" singleton="false">
+        <property name="lookupManager" ref="lookupManager"/>
+    </bean>
     
     <!-- Provider Property -->
     <bean name="/setProviderStaleDate" class="org.oscarehr.provider.web.ProviderPropertyAction" singleton="false">

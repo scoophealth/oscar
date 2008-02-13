@@ -46,6 +46,16 @@ public static String [] lookupHash(String [] names, Hashtable H){
   return R;
 }
 
+public static String getApplicationName(String sAppRootPath){
+   int idx = sAppRootPath.lastIndexOf('/');
+   sAppRootPath = sAppRootPath.substring(0,idx);
+   idx = sAppRootPath.lastIndexOf('/');
+   sAppRootPath = sAppRootPath.substring(idx+1);
+   idx = sAppRootPath.lastIndexOf('.');
+   if (idx > 0) sAppRootPath = sAppRootPath.substring(0,idx);
+   return sAppRootPath;
+}
+
 public static String htmlEscape(String S){
   if(null==S)return S;
   int N=S.length();
