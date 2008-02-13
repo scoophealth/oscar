@@ -1,0 +1,92 @@
+body {
+  background: #fff;
+  font: 12px/1.5em Georgia,Serif;
+}
+
+ul.glassList {
+    list-style: url(../images/aquadot.jpg) disc outside;
+    margin-right: 50px;
+}
+
+div#content {
+    margin:0;
+    padding: 1em;
+    clear:both;
+	width: 400px;
+}
+
+div#header {
+    margin-bottom: 0px;
+}
+
+div#source {
+    padding: 3px;
+    text-align: right;
+    font-weight: bold;
+    padding-right: 10px;
+    position: absolute;
+    width: 120px;
+    top: 0px;
+    right: 0px;
+    z-index: 1000;
+    border-left: 1px solid silver;
+    border-bottom: 1px solid silver;
+    background: #eee;
+}
+
+div#pageSource {
+	position: absolute;
+	top: 0px;
+	right: 133px;
+	width: 200px;
+	border: 1px solid silver;
+	border-top: 0;
+	background: #ffd;
+	padding: 3px;
+	z-index: 1000;
+}
+
+img.download {
+	vertical-align: middle;
+	border: 0;
+}
+
+body#index div#source {
+    background: none;
+    border: none;
+}
+
+div#source a {
+    color: green;
+}
+
+div#footer {
+    border-top: 1px solid #eee;
+    padding: 3px;
+    text-align: center;
+    font-size: 11px;
+}
+
+div#footer a {
+    font-family: tahoma, arial, sans-serif;
+    text-decoration: none;
+    color: #999;
+}
+
+pre {
+    background: #ffffdd;
+    border: 1px solid #999999;
+    color: #000000;
+    padding: 5px 5px 5px 7px;
+    font-size: 12px;
+    line-height: normal;
+}
+
+div.dynamicMenu {
+    position: relative;
+    left: 0;
+}
+
+div.tree {
+    padding: 10px;
+}
