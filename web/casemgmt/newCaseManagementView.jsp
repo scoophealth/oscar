@@ -1328,6 +1328,22 @@ function autoCompleteShowMenu(element, update){
         } 
     }
     
+    function printInfo(img,item) {
+        var selected = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printerGreen.png";
+        var unselected = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png";
+        
+        if( $F(item) == "true" ) {
+            $(img).src = unselected;
+            $(item).value = "false";
+        }
+        else {
+            $(img).src = selected;
+            $(item).value = "true";                
+        }
+            
+        return false;
+    }
+    
     function noteIsQeued(noteId) {    
         var foundIdx = -1;
         var curpos = 0;
@@ -1399,12 +1415,20 @@ function autoCompleteShowMenu(element, update){
     
     function printNotes() {
         <c:url value="/CaseManagementEntry.do" var="printURL" />
+        var empty = true;
         
         if( $F("notes2print").length == 0 ) {
-            if( confirm("No notes are selected.  Do you wish to print all of them?") )
+            if( confirm("No notes are selected.  Do you wish to print all of them?") ) {
                 printAll();
-            else
-                return false;
+                empty = false;
+            }
+        }
+        else
+            empty = false;
+            
+        if( empty && $F("printCPP") == "false" && $F("printRx") == "false" ) {
+            alert("Nothing selected to print");
+            return false;
         }
         
         var url = "<c:out value="${printURL}" />";
@@ -1664,7 +1688,7 @@ Version version = (Version) ctx.getBean("version");
         
         <div id="notCPP" style="height:70%; margin-left:2px; background-color:#FFFFFF;">
         <div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white;"><jsp:include page="rightColumn.jsp" /></div>
-        <div id="topContent" style="float:left; width:75%; margin-right:-2px; padding-bottom:15px; background-color:#CCCCFF; font-size:10px;">
+        <div id="topContent" style="float:left; width:75%; margin-right:-2px; padding-bottom:10px; background-color:#CCCCFF; font-size:10px;">
             <span style="cursor:pointer; text-decoration:underline;" onclick="showFilter();">View Filter</span>
             <div id="filter" style="display:none;">
                 <div style="height:150px; width:auto; overflow:auto; float:left; position:relative; left:10%;">
@@ -1722,8 +1746,8 @@ Version version = (Version) ctx.getBean("version");
                 
                 <div style="float:left; clear:both; cursor:pointer; text-decoration:underline;" onclick="return filter();">
                     Show View
-                </div>
-            </div>  
+                </div>                
+            </div>            
             <div style="float:left; clear:both; margin-bottom:5px; width:100%; text-align:center;">                
                 <input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
                 <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index:1; display:none"></div>  
@@ -1738,6 +1762,12 @@ Version version = (Version) ctx.getBean("version");
                 <input type="text" id="keyword" name="keyword"  value=""  onkeypress="return grabEnter('searchButton',event)"/>
                 <input type="button" id="searchButton" name="button"  value="Search" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">       
                 
+            </div>
+            <div style="text-align:right">
+                <img title="Print" id='imgPrintCPP' alt="Toggle Print CPP" onclick="return printInfo(this,'printCPP');"  src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>&nbsp;CPP
+                &nbsp;&nbsp;
+                <img title="Print" id='imgPrintRx' alt="Toggle Print Rx" onclick="return printInfo(this, 'printRx');"  src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>&nbsp;Rx
+                &nbsp;&nbsp;
             </div>
         </div>
     </html:form>          
@@ -1764,6 +1794,8 @@ Version version = (Version) ctx.getBean("version");
         <input type="hidden" name="forceNote" value="false">
         <input type="hidden" name="newNoteIdx" value="">
         <input type="hidden" name="notes2print" id="notes2print" value="">
+        <input type="hidden" name="printCPP" id="printCPP" value="false">
+        <input type="hidden" name="printRx" id="printRx" value="false">
         <div id="mainContent" style="background-color:#FFFFFF; width:75%; margin-right:-2px; display:inline; float:left;"> 
             <span id="issueList" style="background-color:#FFFFFF; height:440px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
                 <table id="issueTable" class="enTemplate_name_auto_complete" style="position:relative; left:0px; display:none;">
@@ -2020,6 +2052,7 @@ Version version = (Version) ctx.getBean("version");
     for(int j=0; j<bean.templateNames.size(); j++) {
      String encounterTmp = (String)bean.templateNames.get(j);
      encounterTmp = oscar.util.StringUtils.maxLenString(encounterTmp, MaxLen, TruncLen, ellipses);
+     encounterTmp = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(encounterTmp);
    %>
      autoCompleted["<%=encounterTmp%>"] = "ajaxInsertTemplate('<%=encounterTmp%>')";
      autoCompList.push("<%=encounterTmp%>");
