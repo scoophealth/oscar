@@ -80,11 +80,15 @@ public class LookupTag extends BaseInputTag {
 
         results.append("<td");
         prepareAttribute(results, "style", "border:0px;");
+        if(showCode==true){
+           prepareAttribute(results, "width", getCodeWidth());
+        }else{
+           prepareAttribute(results, "width", "1px");
+        }	
         results.append(this.getElementClose());
         results.append("<input");
         if(showCode==true){
           prepareAttribute(results, "style", "width:100%;");
-          prepareAttribute(results, "width", getCodeWidth());
         }else{
             prepareAttribute(results, "style", "width:1px;");
         }
@@ -115,6 +119,7 @@ public class LookupTag extends BaseInputTag {
         prepareAttribute(results, "maxlength", getBodyMaxlength());
         prepareValue(results, bodyValue);
         results.append(this.prepareBodyStyles());
+        results.append(" readonly ");
         results.append(this.getElementClose());
         results.append("</td>");
         
