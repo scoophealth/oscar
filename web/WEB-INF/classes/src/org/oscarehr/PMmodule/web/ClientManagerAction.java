@@ -914,12 +914,13 @@ public class ClientManagerAction extends BaseAction {
 			}//end of isIndependentClient
 			
 		}//end of  isFamilyHead  ||  isIndependentClient
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
-        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.success"));
+		if(bedDemographic.getRoomId().intValue() == 0){
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.unreserved"));
+		}else{
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.success"));
+		}
         saveMessages(request, messages);
-
         return edit(mapping, clientForm, request, response);
     }
 

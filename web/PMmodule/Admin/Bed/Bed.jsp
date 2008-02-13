@@ -72,38 +72,23 @@
 				<select name="rooms[<c:out value="${room_rowNum - 1}" />].occupancy">
        
 					<c:forEach var="num" begin="1" end="20" step="1">
-                        <c:choose>
-			            	<c:when test="${room.assignedBed != 1}">
-                        			<c:choose>
-	                        			<c:when test="${room.occupancy == num}">
-											<option value="<c:out value='${num}' />" selected="selected"> 
-												<c:out value="${num}" />                                   
-						                    </option>
-					                    </c:when>
-				                        <c:otherwise>
-											<option value="<c:out value='${num}' />">
-												<c:out value="${num}" />                                   
-						                    </option>
-			                            </c:otherwise>
-	                            	</c:choose>
-		                    </c:when>       
-                            <c:otherwise>
-                        			<c:choose>
-	                        			<c:when test="${num == 1}">
-											<option value="<c:out value='${room.occupancy}' />" selected="selected"> 
-												N/A                                   
-						                    </option>
-					                    </c:when>
-	                            	</c:choose>
-		                    </c:otherwise>
-                        </c:choose>
+               			<c:choose>
+                   			<c:when test="${room.occupancy == num}">
+								<option value="<c:out value='${num}' />" selected="selected"> 
+									<c:out value="${num}" />                                   
+			                    </option>
+		                    </c:when>
+	                        <c:otherwise>
+								<option value="<c:out value='${num}' />">
+									<c:out value="${num}" />                                   
+			                    </option>
+                            </c:otherwise>
+                      	</c:choose>
                     </c:forEach>
-              </select>
-                 
+              	</select>
             </display:column>
 
 <!-- end of Room Occupancy -->
-            
             
             <display:column title="Program">
                 <select name="rooms[<c:out value="${room_rowNum - 1}" />].programId">
