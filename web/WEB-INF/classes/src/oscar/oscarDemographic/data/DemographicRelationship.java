@@ -118,6 +118,31 @@ public class DemographicRelationship {
    }
    
    
+   public ArrayList getDemographicRelationshipsByID(String id){
+      ArrayList list = new ArrayList();
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         ResultSet rs;
+         String sql = "select * from relationships where id = '"+id+"' and deleted != '1'";
+         rs = db.GetSQL(sql);
+         while(rs.next()){
+            Hashtable h = new Hashtable();
+            h.put("demographic_no", db.getString(rs,"demographic_no"));
+            h.put("relation_demographic_no", db.getString(rs,"relation_demographic_no"));
+            h.put("relation", db.getString(rs,"relation"));
+            h.put("sub_decision_maker", db.getString(rs,"sub_decision_maker"));
+	    h.put("emergency_contact", db.getString(rs,"emergency_contact"));
+            h.put("notes", db.getString(rs,"notes"));
+            list.add(h);
+         }
+         db.CloseConn();            
+      } catch (SQLException e) {
+         System.out.println(e.getMessage());
+      }       
+      return list; 
+   }
+   
+
    public String getSDM(String demographic){
       String sdm = null;
       try {
