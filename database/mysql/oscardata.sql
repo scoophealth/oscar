@@ -1317,7 +1317,7 @@ insert into `secObjectName` values ('_admin.encounter');
 insert into `secObjectName` values ('_admin.misc');
 insert into `secObjectName` values ('_masterLink');
 insert into `secObjectName` values ('_rx');
- 
+insert into `secObjectName` values ('_merge');
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', '|*|', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', '|*|', 0, '999998');
