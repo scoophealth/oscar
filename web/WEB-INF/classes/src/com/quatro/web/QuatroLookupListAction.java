@@ -30,16 +30,12 @@ public class QuatroLookupListAction extends DispatchAction {
 	
 	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
-//		QuatroLookupManager lookupManager = (QuatroLookupManager)WebApplicationContextUtils.getWebApplicationContext(
-//        		getServlet().getServletContext()).getBean("lookupManager");
 		List lst = lookupManager.LoadCodeList("BED", false, null, null);
 		QuatroLookupListForm qform = (QuatroLookupListForm) form;
 		qform.setLookups(lst);
 		qform.setOpenerFormName(request.getParameter("openerForm"));
 		qform.setOpenerCodeElementName(request.getParameter("codeName"));
 		qform.setOpenerDescElementName(request.getParameter("descName"));
-//		qform.setReports(reports);
-//		qform.setProvider(providerNo);
 		return mapping.findForward("list");
 	}
 }
