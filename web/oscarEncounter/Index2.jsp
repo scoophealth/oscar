@@ -307,6 +307,7 @@ if (request.getParameter("casetoEncounter")==null)
   for(int j=0; j<bean.templateNames.size(); j++) {
      String encounterTmp = (String)bean.templateNames.get(j);
      encounterTmp = StringUtils.maxLenString(encounterTmp, MaxLen, TruncLen, ellipses);
+     encounterTmp = StringEscapeUtils.escapeJavaScript(encounterTmp);
    %>
      autoCompleted["<%=encounterTmp%>"] = "ajaxInsertTemplate('<%=encounterTmp%>')";
      autoCompList.push("<%=encounterTmp%>");
