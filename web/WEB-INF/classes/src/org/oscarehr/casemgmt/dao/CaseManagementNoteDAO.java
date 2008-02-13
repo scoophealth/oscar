@@ -41,6 +41,8 @@ import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.PMmodule.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import oscar.OscarProperties;
+
 public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	
 	private static Log log = LogFactory.getLog(CaseManagementNoteDAO.class);                
@@ -90,12 +92,24 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
         }
         
         public List getNotesByDemographic(String demographic_no, String staleDate) {
-             return this.getHibernateTemplate().findByNamedQuery("mostRecentTime", new Object[] {demographic_no, staleDate});
+        	if (OscarProperties.getInstance().getDbType().equals("oracle")) {
+        		return this.getHibernateTemplate().findByNamedQuery("mostRecentTimeOra", new Object[] {demographic_no, staleDate});
+        	}
+        	else
+        	{
+                return this.getHibernateTemplate().findByNamedQuery("mostRecentTime", new Object[] {demographic_no, staleDate});
+        	}
         }
 	
 	//This was created by OSCAR. if all notes' UUID are same like null, it will only get one note.
 	 public List getNotesByDemographic(String demographic_no) {            
-           return this.getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] {demographic_no});
+     	if (OscarProperties.getInstance().getDbType().equals("oracle")) {
+           return this.getHibernateTemplate().findByNamedQuery("mostRecentOra", new Object[] {demographic_no});
+     	}
+     	else
+     	{
+            return this.getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] {demographic_no});
+     	}
 	}
 	
 	 //This is the original method. It was created by CAISI, to get all notes for each client.
