@@ -1,8 +1,7 @@
 package com.quatro.dao;
 
 import java.util.ArrayList;
-import java.util.List;
-
+import java.util.*;
 import com.quatro.model.*;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -67,13 +66,20 @@ public class QuatroReportDao extends HibernateDaoSupport {
 	         return (ReportFilterValue)lst.get(0);
 	      }
 	  }
-	  public List GetReportList(String providerNo)
+	  public List GetReportGroupList(String providerNo)
 	  {
           ArrayList paramList = new ArrayList();
-		  String sSQL="FROM ReportValue s where s.providerNo=? ORDER BY s.title";
+		  String sSQL="FROM ReportGroupValue s  ORDER BY s.reportGroupDesc";
+	      return  getHibernateTemplate().find(sSQL);
+	  }
+	  public List GetReportList(String providerNo, int reportGroupId)
+	  {
+          ArrayList paramList = new ArrayList();
 	      paramList.add(providerNo);
-	      Object params[] = paramList.toArray(new Object[paramList.size()]);
-	      return getHibernateTemplate().find(sSQL ,params);
+	      paramList.add(reportGroupId);
+	      Object params[] = paramList.toArray(new Object[paramList.size()]);          
+		  String sSQL="FROM ReportValue s WHERE s.providerNo=? AND s.reportGroupId=? ORDER BY s.reportGroupDesc";
+	      return  getHibernateTemplate().find(sSQL,params);
 	  }
 
 

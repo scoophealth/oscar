@@ -19,7 +19,7 @@ public class ReportValue{
     private String accessType;
     private Boolean orgApplicable;
     private String reportType;
-    private String reportGroup;
+    private int reportGroupId;
     private String reportGroupDesc;
     private String dateOption;
     private String datePart;
@@ -133,12 +133,12 @@ public class ReportValue{
 		this.providerNo = providerNo;
 	}
 
-	public String getReportGroup() {
-		return reportGroup;
+	public int getReportGroupId() {
+		return reportGroupId;
 	}
 
-	public void setReportGroup(String reportGroup) {
-		this.reportGroup = reportGroup;
+	public void setReportGroupId(int reportGroup) {
+		this.reportGroupId = reportGroup;
 	}
 
 	public String getReportGroupDesc() {

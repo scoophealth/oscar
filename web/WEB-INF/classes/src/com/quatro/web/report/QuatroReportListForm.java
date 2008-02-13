@@ -6,15 +6,15 @@ import com.quatro.util.*;
 import com.quatro.model.*;
 
 public class QuatroReportListForm extends ActionForm{
-	List reports;
+	List reportGroups;
 	String provider;
 	
-	public List getReports() {
-		return reports;
+	public List getReportGroups() {
+		return reportGroups;
 	}
 
-	public void setReports(List reports) {
-		this.reports = reports;
+	public void setReportGroups(List reportGroups) {
+		this.reportGroups = reportGroups;
 	}
 
 	public String getProvider() {

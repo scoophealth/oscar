@@ -26,9 +26,9 @@ public class QuatroReportListAction extends DispatchAction {
 		String providerNo = (String)request.getSession().getAttribute("user");
 		QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
         		getServlet().getServletContext()).getBean("quatroReportManager");
-		List reports = reportManager.GetReportList(providerNo);
+		List reports = reportManager.GetReportGroupList(providerNo);
 		QuatroReportListForm qform = (QuatroReportListForm) form;
-		qform.setReports(reports);
+		qform.setReportGroups(reports);
 		qform.setProvider(providerNo);
 		return mapping.findForward("reportlist");
 	}
