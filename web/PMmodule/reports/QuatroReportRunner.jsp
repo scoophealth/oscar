@@ -5,6 +5,7 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/quatro-tag.tld" prefix="quatro" %>
 
 <bean:define id="lstExportFormat" name="quatroReportRunnerForm" property="exportFormatList"/>
 <bean:define id="lstReportOption" name="quatroReportRunnerForm" property="reportOptionList"/>
@@ -26,6 +27,7 @@
 <link rel="stylesheet" href="../style/style.css" type="text/css" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <script type="text/javascript" src='<c:out value="${ctx}"/>/js/quatroReport.js'></script>
+<script type="text/javascript" src='<c:out value="${ctx}"/>/js/quatroLookup.js'></script>
 
 <logic:equal name="quatroReportRunnerForm" property="strClientJavascript" value="showReport">
 <script language="JavaScript">
@@ -38,7 +40,7 @@ function CriteriaChanged(obj){
   quatroReportRunnerForm.submit();
 }
 
-function showLookup(tId) {
+function showOrgLookup(tId) {
     var queryString = "?tId=" + tId;
     var lookupURL="<c:out value="${ctx}"/>/PMmodule/reports/Lookup.jsp" + queryString;
 	top.childWin = window.open(lookupURL,"_blank","resizable=yes,scrollbars=yes,width=600,height=450,top=120, left=200");
@@ -73,14 +75,24 @@ function showLookup(tId) {
         <tr>
            <td width="10%">&nbsp;</td>
            <td class="clsNameLabels" width="20%"><bean:write name="lblStartDate"/></td>
-           <td width="70%" nowrap><html:text property="startDate" style="<%=startDateProperty.getVisible()%>"></html:text>
-           <html:text property="startTxt" style="<%=startTxtProperty.getVisible()%>"/>(dd/mm/yyyy)</td>
+           <td width="70%">
+           <logic:equal name="quatroReportRunnerForm" property="startDateProperty.visible" value="visibility:visible;">
+             <quatro:datePickerTag property="startDate" width="70%" style="<%=startDateProperty.getVisible()%>" openerForm="quatroReportRunnerForm"></quatro:datePickerTag>
+           </logic:equal>
+           <logic:equal name="quatroReportRunnerForm" property="startTxtProperty.visible" value="visibility:visible;">
+             <html:text property="startTxt" style="<%=startTxtProperty.getVisible()%>"/></td>
+           </logic:equal>
         </tr>
         <tr>
            <td width="10%">&nbsp;</td>
            <td class="clsNameLabels" width="20%"><bean:write name="lblEndDate"/></td>
-           <td width="70%" nowrap><html:text property="endDate" style="<%=endDateProperty.getVisible()%>"></html:text>
-           <html:text property="endTxt" style="<%=endTxtProperty.getVisible()%>"></html:text>(dd/mm/yyyy)</td>
+           <td width="70%">
+           <logic:equal name="quatroReportRunnerForm" property="endDateProperty.visible" value="visibility:visible;">
+             <quatro:datePickerTag property="endDate" width="70%" style="<%=endDateProperty.getVisible()%>" openerForm="quatroReportRunnerForm"></quatro:datePickerTag>
+           </logic:equal>
+           <logic:equal name="quatroReportRunnerForm" property="endTxtProperty.visible" value="visibility:visible;">
+             <html:text property="endTxt" style="<%=endTxtProperty.getVisible()%>"></html:text></td>
+           </logic:equal>
         </tr>
 
       </table>
@@ -112,7 +124,7 @@ function showLookup(tId) {
         <tr>
            <td class="clsButtonBarText">
                <div style="<%=orgSelectionProperty.getVisible()%>">
-               &nbsp;&nbsp;<a id="orgAdd" href="javascript:showLookup('ORG')">Add</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+               &nbsp;&nbsp;<a id="orgAdd" href="javascript:showOrgLookup('ORG')">Add</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
                     <a href="javascript:removeSel('lstOrg')">Remove</a>
                 </div>
            </td>
@@ -163,7 +175,7 @@ function showLookup(tId) {
 		<TH class="sortable">Value(s)</TH></TR></thead>
 
 	<logic:iterate id="tplCriteria" name="quatroReportRunnerForm" property="templateCriteriaList" indexId="rIndex">
-	<tbody><TR><TD align="center">
+	<TR><TD align="center">
         <logic:equal name="tplCriteria" property="required" value="true">
      	  <input type="checkbox" disabled="disabled" name="p<%=String.valueOf(rIndex)%>" value="<%=String.valueOf(rIndex)%>" /> 
         </logic:equal>
@@ -212,14 +224,13 @@ function showLookup(tId) {
         </logic:notEqual>
 	</TD>  
 	<TD>
-		<html:text name="tplCriteria" property="val" indexed="true">
-		</html:text>
 		<html:hidden name="tplCriteria" property="lookupTable" indexed="true" />
+        <quatro:lookupTag name="tplCriteria" tableName="BED" indexed="true" formProperty="quatroReportRunnerForm" codeProperty ="val" bodyProperty="valdesc" codeValue="123456" bodyValue="asdfgh"></quatro:lookupTag>
         <logic:notEqual name="tplCriteria" property="lookupTable" value="">
 		  <img src="microsoftsearch.gif" onclick="showLookupx(<%=String.valueOf(rIndex)%>);">
         </logic:notEqual>
 	</TD>  
-   	</TR><tbody>
+   	</TR>
    	</logic:iterate>
 </TABLE>
 </td></tr>

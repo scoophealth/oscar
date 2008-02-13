@@ -52,7 +52,7 @@
 		<div class="composite">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
-				<td colspan="3" width="100%">
+				<td colspan="2" width="100%">
 					<tiles:insert name="Header.jsp">
 					</tiles:insert>
 				</td></tr>
@@ -60,8 +60,7 @@
 					<td id="leftcol" width="20%">
 						<tiles:insert attribute="navigation" />
 					</td>
-					<td width="18px">&nbsp;</td>
-					<td>
+					<td width="80%">
 						<div class="body">
 							<tiles:insert attribute="body" />
 						</div>
