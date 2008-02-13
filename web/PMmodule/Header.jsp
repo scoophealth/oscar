@@ -32,11 +32,14 @@
 	        <img src="<html:rewrite page="/images/caisi_1.jpg" />" alt="Caisi" id="caisilogo"  border="0"/>
 	    <%}%>
         </td>
-        <td width="100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome <b><c:out value="${requestScope.provider.formattedName}" /></b>
+        <td width="100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome <b><c:out value="${sessionScope.provider.formattedName}" /></b>
         </td>
         <td align="right"><html:link action="/PMmodule/ProviderInfo.do">Home</html:link></td>
         <td>&nbsp;</td>
-        <td align="right">
+        <td>&nbsp;
+               <a target="_blank" href='<%=request.getContextPath()%>/help/index.heml'>Help</a>
+        &nbsp;</td>
+        <td align="right">&nbsp;
                <a href='<%=request.getContextPath()%>/logout.jsp'>Logout</a>
         </td>
 	</tr>
