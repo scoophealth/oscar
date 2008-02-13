@@ -157,11 +157,12 @@ public final class LoginAction
       if(where.equals("provider") && default_pmm!=null && "enabled".equals(default_pmm) ){
     	  where = "caisiPMM" ;
       }
-
+/*
       if (OscarProperties.getInstance().isTorontoRFQ())
       {
     	where = "caisiPMM";
       }
+ */
       //Lazy Loads AlertTimer instance only once, will run as daemon for duration of server runtime
       if (pvar.getProperty("billregion").equals("BC")) {
        String alertFreq = pvar.getProperty("ALERT_POLL_FREQUENCY");
