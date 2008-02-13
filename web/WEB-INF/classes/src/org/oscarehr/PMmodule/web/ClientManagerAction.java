@@ -691,8 +691,6 @@ public class ClientManagerAction extends BaseAction {
 							dependentIds[i] = new Integer(((JointAdmission)dependentList.get(i)).getClientId().intValue());
 						}
 					}
-					
-					
 					if(bedDemographic.getRoomId().intValue() == 0){//unassigning whole family
 						//unassign family head first 
 						getRoomDemographicManager().saveRoomDemographic(roomDemographic);
@@ -703,7 +701,7 @@ public class ClientManagerAction extends BaseAction {
 							// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
 							getRoomDemographicManager().cleanUpBedTables(roomDemographic);
 						}
-
+						//unassigning all dependents
 						for(int i=0; dependentIds != null  &&  i < dependentIds.length; i++){
 							roomDemographic.getId().setDemographicNo(dependentIds[i]);
 							bedDemographic.getId().setDemographicNo(dependentIds[i]);
@@ -716,10 +714,7 @@ public class ClientManagerAction extends BaseAction {
 								getRoomDemographicManager().cleanUpBedTables(roomDemographic);
 							}
 						}
-						
 					}else{
-					
-					
 						if(bedId == null  ||  bedId.intValue()==0){//assign room only
 							if(room != null){
 								roomCapacity = room.getOccupancy().intValue();
@@ -736,7 +731,6 @@ public class ClientManagerAction extends BaseAction {
 						//bedIdList     = [id of all unreserved beds] + [id beds previously occupied by family members]
 						if(bedId == null  ||  bedId.intValue()==0){//assign room only
 							int numberOfFamilyMembersAssignedRoom = 0;
-							
 							rdsByRoom = roomDemographicManager.getRoomDemographicByRoom(bedDemographic.getRoomId());
 							
 							if(rdsByRoom != null  &&  !rdsByRoom.isEmpty()){
