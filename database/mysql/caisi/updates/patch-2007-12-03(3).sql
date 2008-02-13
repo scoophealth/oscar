@@ -3,7 +3,7 @@ insert into secObjectName values ('_merge');
 insert into access_type (name, type) values("Sex restriction override on referral","access");
 insert into access_type (name, type) values("Sex restriction override on admission","access");
 insert into access_type (name, type) values("Gender restriction override on referral","access");
-insert into access_type (name, type) values("Gender restriction override on referral","access");
+insert into access_type (name, type) values("Gender restriction override on admission","access");
 insert into access_type (name, type) values("Age restriction override on referral","access");
 insert into access_type (name, type) values("Age restriction override on admission","access");
 insert into access_type (name, type) values("Allow duplicate client merge","access");

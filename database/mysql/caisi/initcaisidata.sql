@@ -8,6 +8,24 @@ INSERT INTO `access_type` VALUES (1,'write doctor issues','access'),(2,'read doc
 -- access types
 INSERT INTO `access_type` (name,type) VALUES ('Write Ticklers','Action'),('prescription Write','access'),('billing','access'),('medical encounter','access'),('immunization','access'),('prevention','access'),('oscarcomm','access'),('disease registry','access'),('medical form','access'),('measurements','access'),('eform','access'),('lab','access'),('prescription Read','access'),('read ticklers','access'),('master file','access'),('Service restriction override on referral','access'),('Service restriction override on admission','access'),('Create service restriction','access'),('Disable service restriction','access');
 
+-- access types for quatro shelter
+insert into access_type (name, type) values("Sex restriction override on referral","access");
+insert into access_type (name, type) values("Sex restriction override on admission","access");
+insert into access_type (name, type) values("Gender restriction override on referral","access");
+insert into access_type (name, type) values("Gender restriction override on admission","access");
+insert into access_type (name, type) values("Age restriction override on referral","access");
+insert into access_type (name, type) values("Age restriction override on admission","access");
+insert into access_type (name, type) values("Allow duplicate client merge","access");
+insert into access_type (name, type) values("Perform program registration intake","access");
+insert into access_type (name, type) values("can make program admissions","access");
+insert into access_type (name, type) values("can make program discharge","access");
+insert into access_type (name, type) values("can make bed assignments","access");
+insert into access_type (name, type) values("perform registration intake","access");
+insert into access_type (name, type) values("perform admissions","access");
+insert into access_type (name, type) values("perform discharges","access");
+insert into access_type (name, type) values("perform bed assignments","access");
+insert into access_type (name, type) values("print bed rosters and reports","access");
+
 -- default role access (global) (doctor gets all)
 insert into default_role_access (role_id,access_id) values ((select role_id from caisi_role where name='doctor'),(select access_id from access_type where name='Write Ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_id from caisi_role where name='doctor'),(select access_id from access_type where name='prescription Write'));
