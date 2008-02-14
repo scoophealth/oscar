@@ -130,11 +130,13 @@ public class QuatroReportRunnerAction extends Action {
           String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
           String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
           String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
+          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
           String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
 
 //	      if(arRelation!=null) criNew.setRelation(arRelation[0]);
 //	      if(arOp!=null) criNew.setOp(arOp[0]);
 	      if(arVal!=null) criNew.setVal(arVal[0]);
+	      if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
 //	      if(arLookupTable!=null) criNew.setLookupTable(arLookupTable[0]);
 	    }
 
@@ -183,8 +185,21 @@ public class QuatroReportRunnerAction extends Action {
 			    }
                 break;
 			case 4: //val
-				break;
+ 				break;
 		}
+        String[] arVal=(String[])map.get("tplCriteria[" + row + "].val");
+		if(arVal!=null){
+		  rptCri.setVal(arVal[0]);
+		}else{
+		  rptCri.setVal("");
+		}
+		String[] arValDesc=(String[])map.get("tplCriteria[" + row + "].valdesc");
+		if(arValDesc!=null){
+		  rptCri.setValDesc(arValDesc[0]);
+		}else{
+		  rptCri.setValDesc("");
+		}
+		
 		request.getSession().setAttribute(DataViews.REPORT_CRI, cris);
 		myForm.setTemplateCriteriaList(cris);
 	}
@@ -332,7 +347,8 @@ public class QuatroReportRunnerAction extends Action {
         myForm.setEndDateProperty(obj2);
         myForm.setStartTxtProperty(obj3);
         myForm.setEndTxtProperty(obj4);
-        
+
+		  
         String sYMD = "";
        	if ("M".equals(rptVal.getDatePart()))
 		{
@@ -349,6 +365,17 @@ public class QuatroReportRunnerAction extends Action {
 		if (rptVal.isOrgApplicable()) 
 		{
 			obj5.setVisible("visibility:visible;");
+			ArrayList<KeyValueBean> lst= new ArrayList<KeyValueBean>();
+			String sOrgKey=myForm.getTxtOrgKey();
+			String sOrgValue=myForm.getTxtOrgValue();
+			if(sOrgKey!=null){
+		      String[] sArray1=sOrgKey.split(":");
+		      String[] sArray2=sOrgValue.split(":");
+              for(int i=0;i<sArray1.length;i++){		      
+			    lst.add(new KeyValueBean(sArray1[i], sArray2[i]));
+              }  
+			  myForm.setOrgSelectionList(lst);
+			}  
 		}
 		else
 		{
@@ -384,8 +411,8 @@ public class QuatroReportRunnerAction extends Action {
         int reportNo = rptVal.getReportNo();
 
         ReportTempValue repTemp = new ReportTempValue();
-        repTemp.setStartDate(Utility.GetSysDate(myForm.getStartDate()));
-        repTemp.setEndDate(Utility.GetSysDate(myForm.getEndDate()));
+        repTemp.setStartDate(Utility.GetSysDate(myForm.getStartField()));
+        repTemp.setEndDate(Utility.GetSysDate(myForm.getEndField()));
         repTemp.setReportNo(reportNo);
         return repTemp;
     }
@@ -463,6 +490,7 @@ public class QuatroReportRunnerAction extends Action {
 	          String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
 	          String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
 	          String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
+	          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
 	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
 		      if(arFieldNo!=null){
 				int iFieldNo = Integer.parseInt(arFieldNo[0]);
@@ -473,6 +501,7 @@ public class QuatroReportRunnerAction extends Action {
 		      if(arRelation!=null) criNew.setRelation(arRelation[0]);
 		      if(arOp!=null) criNew.setOp(arOp[0]);
 		      if(arVal!=null) criNew.setVal(arVal[0]);
+		      if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
 		      if(arLookupTable!=null) criNew.setLookupTable(arLookupTable[0]);
 		      obj.add(criNew);
 		    }
@@ -485,6 +514,7 @@ public class QuatroReportRunnerAction extends Action {
 			  String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
 			  String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
 			  String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
+	          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
 	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
 		      if(arFieldNo!=null){
 				int iFieldNo = Integer.parseInt(arFieldNo[0]);
@@ -495,6 +525,7 @@ public class QuatroReportRunnerAction extends Action {
 			  if(arRelation!=null) criNew.setRelation(arRelation[0]);
 			  if(arOp!=null) criNew.setOp(arOp[0]);
 			  if(arVal!=null) criNew.setVal(arVal[0]);
+		      if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
 		      if(arLookupTable!=null) criNew.setLookupTable(arLookupTable[0]);
 			  obj.add(criNew);
 			}
@@ -510,6 +541,7 @@ public class QuatroReportRunnerAction extends Action {
 			  String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
 			  String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
 			  String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
+	          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
 	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
 		      if(arFieldNo!=null){
 				int iFieldNo = Integer.parseInt(arFieldNo[0]);
@@ -520,6 +552,7 @@ public class QuatroReportRunnerAction extends Action {
 			  if(arRelation!=null) criNew.setRelation(arRelation[0]);
 			  if(arOp!=null) criNew.setOp(arOp[0]);
 			  if(arVal!=null) criNew.setVal(arVal[0]);
+		      if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
 		      if(arLookupTable!=null) criNew.setLookupTable(arLookupTable[0]);
 			  obj.add(criNew);
 	          if(map.get("p" + i)!=null){
@@ -550,6 +583,7 @@ public class QuatroReportRunnerAction extends Action {
 			  String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
 			  String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
 			  String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
+	          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
 		      if(arFieldNo!=null){
 				int iFieldNo = Integer.parseInt(arFieldNo[0]);
 			    ReportFilterValue rptFilterVal = reportManager.GetFilterField(iReportNo, iFieldNo);
@@ -571,6 +605,7 @@ public class QuatroReportRunnerAction extends Action {
 			  if(arRelation!=null) criNew.setRelation(arRelation[0]);
 			  if(arOp!=null) criNew.setOp(arOp[0]);
 			  if(arVal!=null) criNew.setVal(arVal[0]);
+		      if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
 			  obj.add(criNew);
 			}
 			break;

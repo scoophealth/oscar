@@ -12,10 +12,8 @@ public class QuatroReportRunnerForm extends ActionForm {
     private ArrayList<KeyValueBean> orgSelectionList=new ArrayList();
     private ArrayList<ReportTempCriValue> templateCriteriaList=new ArrayList();
 	private String reportNo;
-	private String startDate;
-	private String endDate;
-	private String startTxt;
-	private String endTxt;
+	private String startField;
+	private String endField;
 	private HTMLPropertyBean startDateProperty;
 	private HTMLPropertyBean endDateProperty;
 	private HTMLPropertyBean startTxtProperty;
@@ -23,6 +21,8 @@ public class QuatroReportRunnerForm extends ActionForm {
 	private HTMLPropertyBean orgSelectionProperty;
 	private String exportFormat;
 	private String lstOrg;
+	private String txtOrgKey;
+	private String txtOrgValue;
 	private String reportOption;
 	private String strClientJavascript;
 	private String [] relations = new String [] {"", "AND", "OR", "(", ")" ,")AND", ") OR",")AND(", ")OR(","AND(", "OR("};
@@ -51,14 +51,6 @@ public class QuatroReportRunnerForm extends ActionForm {
 		this.reportTitle = reportTitle;
 	}
 
-	public String getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
-
 	public String getExportFormat() {
 		return exportFormat;
 	}
@@ -81,14 +73,6 @@ public class QuatroReportRunnerForm extends ActionForm {
 
 	public void setLstOrg(String lstOrg) {
 		this.lstOrg = lstOrg;
-	}
-
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
 	}
 
 	public String getReportNo() {
@@ -179,22 +163,6 @@ public class QuatroReportRunnerForm extends ActionForm {
 		this.lblStartDate = lblStartDate;
 	}
 
-	public String getEndTxt() {
-		return endTxt;
-	}
-
-	public void setEndTxt(String endTxt) {
-		this.endTxt = endTxt;
-	}
-
-	public String getStartTxt() {
-		return startTxt;
-	}
-
-	public void setStartTxt(String startTxt) {
-		this.startTxt = startTxt;
-	}
-
 	public HTMLPropertyBean getEndDateProperty() {
 		return endDateProperty;
 	}
@@ -242,6 +210,44 @@ public class QuatroReportRunnerForm extends ActionForm {
 
 	public void setOrgSelectionList(ArrayList<KeyValueBean> orgSelectionList) {
 		this.orgSelectionList = orgSelectionList;
+	}
+
+	public String getTxtOrgKey() {
+		return txtOrgKey;
+	}
+
+	public void setTxtOrgKey(String txtOrgKey) {
+		this.txtOrgKey = txtOrgKey;
+	}
+
+	public String getTxtOrgValue() {
+		return txtOrgValue;
+	}
+
+	public void setTxtOrgValue(String txtOrgValue) {
+		this.txtOrgValue = txtOrgValue;
+	}
+
+	public String getEndField() {
+		if(endField==null)
+		   return "";
+		else
+  		   return endField;
+	}
+
+	public void setEndField(String endField) {
+		this.endField = endField;
+	}
+
+	public String getStartField() {
+		if(startField==null)
+			return "";
+		else
+		  return startField;
+	}
+
+	public void setStartField(String startField) {
+		this.startField = startField;
 	}
 
 }
