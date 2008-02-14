@@ -1,1 +1,1 @@
-alter table scheduletemplate set timecode text;
+alter table scheduletemplate modify timecode text;
