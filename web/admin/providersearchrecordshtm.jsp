@@ -53,8 +53,8 @@
       // check input data in the future 
       
       // make keyword lower case
-      var keyword = document.searchprovider.keyword.value; alert("keyword = " + keyword);
-      var keywordLowerCase = keyword.toLowerCase();alert("keyword = " + keywordLowerCase);
+      var keyword = document.searchprovider.keyword.value; 
+      var keywordLowerCase = keyword.toLowerCase();
       document.searchprovider.keyword.value = keywordLowerCase;
     }
 	function upCaseCtrl(ctrl) {

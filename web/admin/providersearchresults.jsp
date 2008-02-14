@@ -47,8 +47,8 @@
 		  document.searchprovider.keyword.select();
 		}
     function onsub() {
-    	var keyword = document.searchprovider.keyword.value; alert("keyword = " + keyword);
-      var keywordLowerCase = keyword.toLowerCase();alert("keyword = " + keywordLowerCase);
+    	var keyword = document.searchprovider.keyword.value; 
+      var keywordLowerCase = keyword.toLowerCase();
       document.searchprovider.keyword.value = keywordLowerCase;
     
       //if(document.searchprovider.keyword.value=="") {
