@@ -405,7 +405,7 @@ public class QuatroReportViewerAction extends Action {
     	  ;
       }
 //      jspPath= OscarProperties.getInstance().getProperty("RPT_PATH");      
-      String path=jspPath  + "\\PMmodule\\reports\\RptFiles\\" + _rptOption.getRptFileName();
+      String path=jspPath  + "/PMmodule/reports/RptFiles/" + _rptOption.getRptFileName();
       try{
            reportDocument1.open(path,0);
            if (!Utility.IsEmpty(criteriaString))
@@ -689,7 +689,7 @@ public class QuatroReportViewerAction extends Action {
       	  ;
         }
 //        jspPath= OscarProperties.getInstance().getProperty("RPT_PATH");      
-        String path=jspPath  + "\\PMmodule\\reports\\RptFiles\\" + _rptOption.getRptFileName();
+        String path=jspPath  + "/PMmodule/reports/RptFiles/" + _rptOption.getRptFileName();
         
 //        String path=request.getServletPath() + "\\" +  "PMmodule\\reports\\RptFiles\\" +  _rptOption.getRptFileName();
         try{
