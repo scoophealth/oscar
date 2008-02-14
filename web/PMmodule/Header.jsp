@@ -25,21 +25,20 @@
 <div id="banner">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr>
-		<td align="left">
+		<td align="left" width="200px">
 		<%if (oscar.OscarProperties.getInstance().isTorontoRFQ()){%>
  	        <img src="<html:rewrite page="/images/QuatroShelterLogo.gif"  />" alt="QuatroShelter" id="caisilogo"  border="0"/>
  	    <%} else {%>
 	        <img src="<html:rewrite page="/images/caisi_1.jpg" />" alt="Caisi" id="caisilogo"  border="0"/>
 	    <%}%>
         </td>
-        <td width="100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome <b><c:out value="${sessionScope.provider.formattedName}" /></b>
+        <td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome <b><c:out value="${sessionScope.provider.formattedName}" /></b>
         </td>
-        <td align="right"><html:link action="/PMmodule/ProviderInfo.do">Home</html:link></td>
-        <td>&nbsp;</td>
-        <td>&nbsp;
+        <td align="center" width="50px"><html:link action="/PMmodule/ProviderInfo.do">Home</html:link></td>
+        <td width="50px" align="center">
                <a target="_blank" href='<%=request.getContextPath()%>/help/index.html'>Help</a>
-        &nbsp;</td>
-        <td align="right">&nbsp;
+        </td>
+        <td align="center" width="50px">
                <a href='<%=request.getContextPath()%>/logout.jsp'>Logout</a>
         </td>
 	</tr>
