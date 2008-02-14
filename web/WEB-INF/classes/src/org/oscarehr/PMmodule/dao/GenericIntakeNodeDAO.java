@@ -25,6 +25,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.IntakeNode;
+import org.oscarehr.PMmodule.model.IntakeNodeLabel;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -50,6 +51,38 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
         return intakeNode;
     }
 
+    /**
+     *Returns a list of Intake Nodes of type "intake".
+     */
+    public List<IntakeNode> getIntakeNodes(){
+        //List l = getHibernateTemplate().find("from IntakeNode i, IntakeNodeType iType, IntakeNodeTemplate iTemplate  where iType.type = 'intake'  and iType.intake_node_type_id = iTemplate.intake_node_type_id and i.intake_node_template_id = iTemplate.intake_node_template_id"); 
+        List<IntakeNode> l = getHibernateTemplate().find("select i from IntakeNode i, IntakeNodeType iType, IntakeNodeTemplate iTemplate  where iType.type = 'intake'  and iType.id = iTemplate.type and i.nodeTemplate = iTemplate.id"); 
+
+                //from IntakeNode i where i.type = 'intake'");
+        return l;
+    }
+    
+    public void saveNodeLabel(IntakeNodeLabel intakeNodeLabel){
+        getHibernateTemplate().save(intakeNodeLabel);   
+    }
+    
+    public void updateNodeLabel(IntakeNodeLabel intakeNodeLabel){
+        getHibernateTemplate().update(intakeNodeLabel);   
+    }
+    
+    public IntakeNodeLabel getIntakeNodeLabel(Integer intakeNodeLabelId){
+        if (intakeNodeLabelId == null || intakeNodeLabelId < 1) {
+            throw new IllegalArgumentException("intakeNodeId must be non-null and greater than 0");
+        }
+        IntakeNodeLabel intakeNodeLabel = (IntakeNodeLabel)getHibernateTemplate().get(IntakeNodeLabel.class, intakeNodeLabelId);
+        return intakeNodeLabel;
+    }
+    
+    
+    public void saveIntakeNode(IntakeNode intakeNode){
+        getHibernateTemplate().save(intakeNode);
+    }
+    
     private void getChildren(IntakeNode intakeNode) {
         HashSet<Integer> nodeIds = new HashSet<Integer>();
         nodeIds.add(intakeNode.getId());
