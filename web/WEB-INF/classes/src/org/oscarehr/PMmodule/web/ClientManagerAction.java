@@ -691,6 +691,24 @@ public class ClientManagerAction extends BaseAction {
 							dependentIds[i] = new Integer(((JointAdmission)dependentList.get(i)).getClientId().intValue());
 						}
 					}
+					
+					//Check whether all family members are under same bed program -> if not, display error message.
+					Integer headProgramId = ((Admission)getAdmissionManager().getCurrentBedProgramAdmission(demographicNo)).getProgramId();
+					Integer dependentProgramId = null;
+System.out.println("ClientManagerAction.saveBedReservation(): headProgramId = " + headProgramId);//Louis-debug						
+					
+					for(int i=0; i < dependentIds.length; i++ ){
+						
+						dependentProgramId = ((Admission)getAdmissionManager().getCurrentBedProgramAdmission(dependentIds[i])).getProgramId();
+System.out.println("ClientManagerAction.saveBedReservation(): dependentProgramId = " + dependentProgramId);//Louis-debug						
+						if(headProgramId.intValue() != dependentProgramId.intValue()){
+							//Display message notifying that the dependent is under different bed program than family head -> cannot assign room/bed
+							messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.programId_different"));
+							saveMessages(request, messages);
+							return edit(mapping, clientForm, request, response);
+						}
+					}
+					
 					if(bedDemographic.getRoomId().intValue() == 0){//unassigning whole family
 						//unassign family head first 
 						getRoomDemographicManager().saveRoomDemographic(roomDemographic);
