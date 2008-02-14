@@ -22,6 +22,7 @@
 
 package org.oscarehr.casemgmt.web;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -1234,10 +1235,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 	}
         
         public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-             String ids = request.getParameter("notes2print");
-             if( ids == null || ids.equals("") ) {
-                 response.sendError(response.SC_BAD_REQUEST, "No Notes specified");
-             }  
+             String ids = request.getParameter("notes2print");              
              
              String demono = getDemographicNo(request);             
              request.setAttribute("demoName", getDemoName(demono));
@@ -1247,8 +1245,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
              dob = convertDateFmt(dob);
              request.setAttribute("demoDOB", dob);
              
+             String[] noteIds;
+             if( ids.length() > 0 )
+                noteIds = ids.split(",");
+             else
+                noteIds = (String[])Array.newInstance(String.class, 0);
              
-             String[] noteIds = ids.split(",");
              ArrayList<CaseManagementNote>notes = new ArrayList<CaseManagementNote>();
              for( int idx = 0; idx < noteIds.length; ++idx )
                  notes.add(this.caseManagementMgr.getNote(noteIds[idx]));
@@ -1256,11 +1258,25 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
              //we're not guaranteed any ordering of notes given to us, so sort by observation date
              Collections.sort(notes, CaseManagementNote.getObservationComparator());
              
+             CaseManagementCPP cpp = null;
+             if( request.getParameter("printCPP").equalsIgnoreCase("true") ) {
+                 cpp = this.caseManagementMgr.getCPP(demono);
+             }
+             
+             String demoNo = null;
+             if( request.getParameter("printRx").equalsIgnoreCase("true") ) {
+                 demoNo = demono;
+             }
+             
              response.setContentType("application/pdf");  //octet-stream
              response.setHeader("Content-Disposition", "attachment; filename=\"Encounter-"+UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf\"");
             
              CaseManagementPrintPdf printer = new CaseManagementPrintPdf(request, response);
-             printer.printPdf(notes);
+             printer.printDocHeaderFooter();
+             printer.printCPP(cpp);
+             printer.printRx(demoNo);
+             printer.printNotes(notes);             
+             printer.finish();
              
              return null;
         }
