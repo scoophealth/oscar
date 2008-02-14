@@ -90,8 +90,10 @@ public class RoomManager {
      */
     public Room[] getRooms(Integer facilityId) {
         Room[] rooms = roomDAO.getRooms(facilityId, null, null);
-        for (Room room : rooms) {
+        if(rooms!=null){
+          for (Room room : rooms) {
             setAttributes(room);
+          }
         }
         return rooms;
     }
@@ -120,10 +122,11 @@ public class RoomManager {
      */
     public Room[] getAssignedBedRooms(Integer facilityId, Integer programId, Boolean active) {
         Room[] rooms = roomDAO.getAssignedBedRooms(facilityId, programId, active);
-
-        for (Room room : rooms) {
+        if(rooms!=null){
+          for (Room room : rooms) {
             setAttributes(room);
-        }
+          }
+        }  
         return rooms;
     }
    
@@ -133,9 +136,10 @@ public class RoomManager {
      */
     public Room[] getAssignedBedRooms(Integer facilityId) {
         Room[] rooms = roomDAO.getAssignedBedRooms(facilityId, null, null);
-
-        for (Room room : rooms) {
+        if(rooms!=null){
+          for (Room room : rooms) {
             setAttributes(room);
+          }
         }
         return rooms;
     }
@@ -154,11 +158,10 @@ public class RoomManager {
 			return null;
 		}
     	Room[] rooms = getRooms(roomIdAndOccupancy); 
-
-    	//rooms subject to condition: roomCapacity - occupancy > 0
-    	for(int i=0; rooms != null  &&  i < rooms.length; i++){
+  	    //rooms subject to condition: roomCapacity - occupancy > 0
+        for(int i=0; rooms != null  &&  i < rooms.length; i++){
     		
-    		for(int j=0; j < roomIdAndOccupancy.length; j++){
+    	  for(int j=0; j < roomIdAndOccupancy.length; j++){
     			
     			if(  rooms[i].getId().intValue() == roomIdAndOccupancy[j][0].intValue() ){
    			
