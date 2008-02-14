@@ -137,20 +137,20 @@ public class ClientDao extends HibernateDaoSupport {
 
 		if (!bean.isSearchUsingSoundex()) {
 			if (firstName.length() > 0) {
-				criteria.add(Expression.like("FirstName", firstName + "%"));
+				criteria.add(Expression.ilike("FirstName", firstName + "%"));
 			}
 			if (lastName.length() > 0) {
-				criteria.add(Expression.like("LastName", lastName + "%"));
+				criteria.add(Expression.ilike("LastName", lastName + "%"));
 			}
 		}
 		else { // soundex variation
 			
 			if (firstName.length() > 0) {
-				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name like '" + firstName + "%'))";
+				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name ilike '" + firstName + "%'))";
 				criteria.add(Restrictions.sqlRestriction(sql));
 			}
 			if (lastName.length() > 0) {
-				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '" + lastName + "%'))";
+				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name ilike '" + lastName + "%'))";
 				criteria.add(Restrictions.sqlRestriction(sql));
 			}
 		}

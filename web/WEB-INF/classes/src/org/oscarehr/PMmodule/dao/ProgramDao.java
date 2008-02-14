@@ -284,7 +284,7 @@ public class ProgramDao extends HibernateDaoSupport {
 
         if (program.getName() != null && program.getName().length() > 0) {
             String programName = StringEscapeUtils.escapeSql(program.getName());
-            String sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4))" + " " + "OR (name like '" + "%" + programName + "%'))";
+            String sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4))" + " " + "OR (name ilike '" + "%" + programName + "%'))";
             criteria.add(Restrictions.sqlRestriction(sql));
         }
 

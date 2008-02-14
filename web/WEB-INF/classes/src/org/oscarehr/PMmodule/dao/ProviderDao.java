@@ -103,7 +103,7 @@ public class ProviderDao extends HibernateDaoSupport {
     
 	public List<Provider> search(String name) {
 		Criteria c = this.getSession().createCriteria(Provider.class);
-		c.add(Restrictions.or(Expression.like("FirstName", name + "%"), Expression.like("LastName", name + "%")));
+		c.add(Restrictions.or(Expression.ilike("FirstName", name + "%"), Expression.ilike("LastName", name + "%")));
 		c.addOrder(Order.asc("ProviderNo"));
 
 		@SuppressWarnings("unchecked")
