@@ -27,7 +27,9 @@
 		<id name="id" type="integer" column="intake_node_id">
 			<generator class="native" />
 		</id>
-
+                
+                <property name="pos" column="pos" type="integer"  />
+                
 		<many-to-one name="nodeTemplate"
 			class="IntakeNodeTemplate" column="intake_node_template_id"
 			not-null="true" lazy="false" />
@@ -38,7 +40,7 @@
 			
 		<many-to-one name="parent" class="IntakeNode"
 			column="parent_intake_node_id" not-null="false"
-			insert="false" update="false" />
+			insert="true" update="false" />
 
 		<list name="children" cascade="save-update" inverse="false">
 			<key column="parent_intake_node_id" not-null="false" />
