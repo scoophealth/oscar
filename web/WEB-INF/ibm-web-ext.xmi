@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <com.ibm.ejs.models.base.extensions.webappext:WebAppExtension xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:com.ibm.ejs.models.base.extensions.webappext="webappext.xmi" xmi:id="WebApp_ID_Ext" reloadInterval="3" reloadingEnabled="true" fileServingEnabled="false" directoryBrowsingEnabled="false" serveServletsByClassnameEnabled="true" preCompileJSPs="false" autoRequestEncoding="false" autoResponseEncoding="false">
   <webApp href="WEB-INF/web.xml#WebApp_ID"/>
-  <jspAttributes xmi:id="JSPAttribute_1203030740668" name="reloadEnabled" value="true"/>
-  <jspAttributes xmi:id="JSPAttribute_1203030740669" name="reloadInterval" value="10"/>
-  <jspAttributes xmi:id="JSPAttribute_10001" name="keepgenerated" value="true"/>
-  <jspAttributes xmi:id="JSPAttribute_10002" name="jdkSourceLevel" value="15"/>
+  <jspAttributes xmi:id="JSPAttribute_10001" name="reloadEnabled" value="true"/>
+  <jspAttributes xmi:id="JSPAttribute_10002" name="reloadInterval" value="10"/>
+  <jspAttributes xmi:id="JSPAttribute_10003" name="keepgenerated" value="true"/>
+  <jspAttributes xmi:id="JSPAttribute_10004" name="jdkSourceLevel" value="15"/>
 </com.ibm.ejs.models.base.extensions.webappext:WebAppExtension>
