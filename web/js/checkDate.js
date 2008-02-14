@@ -143,3 +143,17 @@ function calculateAge(year, month, date) {
 	 return(theYear);
 }
 
+/* input in numbers according to iso number format */
+function validateDate(year, month, day)
+{
+	var date=new Date();
+	date.setFullYear(year);
+	date.setMonth(month-1);
+	date.setDate(day);
+
+	if (year!=date.getFullYear()) return(false);
+	if (month!=date.getMonth()+1) return(false);
+	if (day!=date.getDate()) return(false);
+	
+	return(true);
+}

@@ -108,6 +108,11 @@ function validateEdit() {
 		{
 			return error(year, "This client does not meet the age range requirements for this program.");
 		}
+
+		if (!validateDate(year.value, month.value, day.value))
+		{
+			return error(year, "The birth date you entered is not a valid date.");
+		}
 		
 	<%
 		
