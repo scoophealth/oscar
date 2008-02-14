@@ -106,17 +106,20 @@ public class RoomDAO extends HibernateDaoSupport {
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getRooms(Integer facilityId, Integer programId, Boolean active) {
-    	if(programId == null  ||  active == null){
-    		return null;
-    	}
+    	//get rooms for facility, whose programid is null and active is null.
+    	//if(programId == null  ||  active == null){
+    	//	return null;
+    	//}
 		String queryString = getRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
 		List rooms = (facilityId != null || programId != null || active != null) ? getHibernateTemplate().find(queryString, values) : getHibernateTemplate().find(queryString);
 
 		if(rooms != null){		
 				log.debug("RoomDAO.getRooms(): rooms.size() = " + rooms.size());
-		}		
-		return (Room[]) rooms.toArray(new Room[rooms.size()]);
+			
+				return (Room[]) rooms.toArray(new Room[rooms.size()]);
+		} else
+			return null;
 	}
 
 	/**
@@ -129,16 +132,19 @@ public class RoomDAO extends HibernateDaoSupport {
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getAssignedBedRooms(Integer facilityId, Integer programId, Boolean active) {
-    	if(programId == null  ||  active == null){
-    		return null;
-    	}
+    	//if(programId == null  ||  active == null){
+    	//	return null;
+    	//}
 		String queryString = getAssignedBedRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
 		List rooms = (facilityId != null || programId != null || active != null) ? 
 				getHibernateTemplate().find(queryString, values) : getHibernateTemplate().find(queryString);
-				
-		log.debug("getRooms: size: " + rooms.size());
-		return (Room[]) rooms.toArray(new Room[rooms.size()]);
+		if(rooms!=null) {		
+			log.debug("getRooms: size: " + rooms.size());
+			return (Room[]) rooms.toArray(new Room[rooms.size()]);
+		} else {
+			return null;
+		}
 	}
 
 	/**
