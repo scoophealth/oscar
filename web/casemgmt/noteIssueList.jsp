@@ -78,14 +78,19 @@
         <nested:equal name="newNote" value="true">
             <div style="margin:0px;">&nbsp;</div>
         </nested:equal>  
-    </div>
+    </div>    
     <div style="clear:right;margin-right:3px; margin:0px; float:right;">Enc Type:&nbsp;<span id="encType<%=noteIndex%>">
+        <nested:empty name="ajaxsave">
                 <html:select styleId="encType" styleClass="encTypeCombo" name="caseManagementEntryForm" property="caseNote.encounter_type">
                     <html:option value=""></html:option>
                     <html:option value="face to face encounter with client">face to face encounter with client</html:option>
                     <html:option value="telephone encounter with client">telephone encounter with client</html:option>
                     <html:option value="encounter without client">encounter without client</html:option>
                 </html:select>
+         </nested:empty>
+         <nested:notEmpty name="ajaxsave">
+            &quot;<nested:write name="caseManagementEntryForm" property="caseNote.encounter_type"/>&quot;
+         </nested:notEmpty>
     </span></div>
     <nested:size id="numIssues" name="caseManagementEntryForm" property="caseNote.issues" />
     <nested:equal name="numIssues" value="0">
@@ -172,12 +177,13 @@
         var newId = "<nested:write name="ajaxsave" />";  
         var oldDiv;
         var newDiv;
-        var prequel = ["n","sig"];
+        var prequel = ["n","sig","signed"];
 
         for( var idx = 0; idx < prequel.length; ++idx ) {
             oldDiv = prequel[idx] + origId;
-            newDiv = prequel[idx] + newId;
-            $(oldDiv).id = newDiv;            
+            newDiv = prequel[idx] + newId;            
+            $(oldDiv).id = newDiv;        
+            console.log(oldDiv + " -> " + newDiv);
         }  
     </nested:notEmpty>
     
@@ -193,26 +199,28 @@
    //do we have a custom encounter type?  if so add an option to the encounter type select
    var encounterType = '<nested:write name="caseManagementEntryForm" property="caseNote.encounter_type"/>';
    
-   if( $F("encType") == "" && encounterType != "" ) {
-        var select = document.getElementById("encType");
-        var newOption =document.createElement('option');        
-        newOption.text = encounterType;
-        newOption.value = encounterType;
-  
-        try
-        {
-            select.add(newOption,null); // standards compliant            
+   if( $("encType") != null ) {
+   
+        if( $F("encType") == "" && encounterType != "" ) {
+            var select = document.getElementById("encType");
+            var newOption =document.createElement('option');        
+            newOption.text = encounterType;
+            newOption.value = encounterType;
+
+            try
+            {
+                select.add(newOption,null); // standards compliant            
+            }
+            catch(ex)
+            {
+                select.add(newOption); // IE only            
+            }  
+
+            select.selectedIndex = select.options.length - 1;
         }
-        catch(ex)
-        {
-            select.add(newOption); // IE only            
-        }  
         
-        select.selectedIndex = select.options.length - 1;
-   
-   }
-   
-   new Autocompleter.SelectBox('encType');
+        new Autocompleter.SelectBox('encType');
+   }     
    
    function displayIssue(id) {
         //if issue has been changed/deleted remove it from array and return
