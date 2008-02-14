@@ -61,7 +61,7 @@
 <script LANGUAGE="JavaScript">
  <!--
 
-   function onsub() {alert("dddddddddd");
+   function onsub() {
       if(document.updatearecord.user_name.value=="" ||
 		 document.updatearecord.password.value==""||
 		 document.updatearecord.provider_no.value==""		
