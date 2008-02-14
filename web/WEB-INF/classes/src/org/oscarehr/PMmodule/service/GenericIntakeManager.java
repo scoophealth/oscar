@@ -41,6 +41,7 @@ import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeNode;
+import org.oscarehr.PMmodule.model.IntakeNodeLabel;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.ReportStatistic;
 
@@ -321,7 +322,30 @@ public class GenericIntakeManager {
 		return getIntakeNode(programIntakeNodeId);
 	}
 
-	private IntakeNode getIntakeNode(Integer nodeId) {
+        public List<IntakeNode> getIntakeNodes(){
+            return genericIntakeNodeDAO.getIntakeNodes();
+        }
+        
+        public void saveNodeLabel(IntakeNodeLabel intakeNodeLabel){
+            genericIntakeNodeDAO.saveNodeLabel(intakeNodeLabel);
+        }
+        
+        public void saveIntakeNode(IntakeNode intakeNode){
+            genericIntakeNodeDAO.saveIntakeNode(intakeNode);
+        }
+        
+        
+        ///
+        public void updateNodeLabel(IntakeNodeLabel intakeNodeLabel){
+            genericIntakeNodeDAO.updateNodeLabel(intakeNodeLabel);   
+        }
+    
+        public IntakeNodeLabel getIntakeNodeLabel(Integer intakeNodeLabelId){
+            return genericIntakeNodeDAO.getIntakeNodeLabel(intakeNodeLabelId);
+        }
+        
+        
+	public IntakeNode getIntakeNode(Integer nodeId) {
 		if (nodeId == null) {
 			throw new IllegalArgumentException("Parameter nodeId must be non-null");
 		}
