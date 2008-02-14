@@ -125,13 +125,13 @@ public class ClientDao extends HibernateDaoSupport {
 		String sql = "";
 		
 		if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
-			firstName = bean.getFirstName();
+			firstName = bean.getFirstName().toLowerCase();
 			firstName = StringEscapeUtils.escapeSql(firstName);
 		}
 		
 		
 		if (bean.getLastName() != null && bean.getLastName().length() > 0) {
-			lastName = bean.getLastName();
+			lastName = bean.getLastName().toLowerCase();
 			lastName = StringEscapeUtils.escapeSql(lastName);
 		}
 
@@ -146,12 +146,12 @@ public class ClientDao extends HibernateDaoSupport {
 		else { // soundex variation
 			
 			if (firstName.length() > 0) {
-				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name ilike '" + firstName + "%'))";
-				criteria.add(Restrictions.sqlRestriction(sql));
+				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4)))";
+				criteria.add(Restrictions.or(Expression.ilike("FirstName",firstName), Restrictions.sqlRestriction(sql)));
 			}
 			if (lastName.length() > 0) {
-				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name ilike '" + lastName + "%'))";
-				criteria.add(Restrictions.sqlRestriction(sql));
+				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4)))";
+				criteria.add(Restrictions.or(Expression.ilike("LastName",lastName),Restrictions.sqlRestriction(sql)));
 			}
 		}
 		
