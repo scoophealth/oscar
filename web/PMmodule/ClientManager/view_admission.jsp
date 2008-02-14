@@ -101,7 +101,7 @@
                         	dischargeReason="0";
                         DischargeReason reason = DischargeReason.values()[Integer.valueOf(dischargeReason)];
                     %>
-                    <bean:message bundle="pmm" key="<%="discharge.reason." + reason.toString()%>"/></td>
+                    <bean:message bundle="pmm" key='<%="discharge.reason." + reason.toString()%>'/></td>
             </tr>
             <tr class="b">
                 <td width="20%">Discharge notes:</td>
