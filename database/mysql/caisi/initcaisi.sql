@@ -1963,7 +1963,7 @@ CREATE TABLE `system_message` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
-DROP TABLE IF EXISTS `system_message`;
+DROP TABLE IF EXISTS `facility_message`;
 CREATE TABLE `facility_message` (
   `id` int(10) NOT NULL auto_increment,
   `message` text NOT NULL,
