@@ -41,6 +41,7 @@ public class IntakeNode implements Serializable {
     private Integer id;// many to one
     private IntakeNodeTemplate nodeTemplate;
     private IntakeNodeLabel label;
+    private Integer pos;
     private IntakeNode parent;// collections
     private List<IntakeNode> children;
     private Set<Intake> intakes;
@@ -345,6 +346,21 @@ public class IntakeNode implements Serializable {
             setAnswers(new TreeSet<IntakeAnswer>());
         getAnswers().add(intakeAnswer);
     }
+    
+    
+    
+    public Integer getPos() {
+        return pos;
+    }
+
+   
+    public void setPos(Integer pos) {
+        this.pos = pos;
+    }
+    
+    
+    
+    
 
     public boolean equals(Object obj) {
         if (null == obj)
