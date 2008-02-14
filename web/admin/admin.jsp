@@ -237,7 +237,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   </security:oscarSec>
 
 <% if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled()){%>
-<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+
   <div class="adminBox">
       <h3>&nbsp;2 Factor Authentication</h3>
       <ul>
@@ -250,7 +250,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <li><a href=# onClick ="popupPage(500,700,'../gatekeeper/matrixadmin/show');return false;">Generate matrix cards</a></li>
       </ul>
    </div>
-</caisi:isModuleLoad>
+
 <% } %>
 
 <%-- -add by caisi--%>
