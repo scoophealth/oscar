@@ -47,10 +47,14 @@
 		  document.searchprovider.keyword.select();
 		}
     function onsub() {
-      if(document.searchprovider.keyword.value=="") {
-        alert("<bean:message key="global.msgInputKeyword"/>");
-        return false;
-      } else return true;
+    	var keyword = document.searchprovider.keyword.value; alert("keyword = " + keyword);
+      var keywordLowerCase = keyword.toLowerCase();alert("keyword = " + keywordLowerCase);
+      document.searchprovider.keyword.value = keywordLowerCase;
+    
+      //if(document.searchprovider.keyword.value=="") {
+       // alert("<bean:message key="global.msgInputKeyword"/>");
+      //  return false;
+      //} else return true;
       // do nothing at the moment
       // check input data in the future 
     }
@@ -63,7 +67,7 @@
       <tr bgcolor="<%=deepcolor%>"><th><bean:message key="admin.providersearchresults.description"/></th></tr>
     </table>
   <table cellspacing="0" cellpadding="0" width="100%" border="0" BGCOLOR="<%=weakcolor%>">
-  <form method="post" action="admincontrol.jsp" name="searchprovider">
+  <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
   	<tr valign="top">
       <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="admin.search.formSearchCriteria"/></i></b></font></td>
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
