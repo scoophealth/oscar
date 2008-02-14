@@ -106,10 +106,13 @@ public class RoomDAO extends HibernateDaoSupport {
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getRooms(Integer facilityId, Integer programId, Boolean active) {
+    	if(programId == null  ||  active == null){
+    		return null;
+    	}
 		String queryString = getRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
 		List rooms = (facilityId != null || programId != null || active != null) ? getHibernateTemplate().find(queryString, values) : getHibernateTemplate().find(queryString);
-		
+
 		if(rooms != null){		
 				log.debug("RoomDAO.getRooms(): rooms.size() = " + rooms.size());
 		}		
@@ -126,10 +129,14 @@ public class RoomDAO extends HibernateDaoSupport {
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getAssignedBedRooms(Integer facilityId, Integer programId, Boolean active) {
+    	if(programId == null  ||  active == null){
+    		return null;
+    	}
 		String queryString = getAssignedBedRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
 		List rooms = (facilityId != null || programId != null || active != null) ? 
 				getHibernateTemplate().find(queryString, values) : getHibernateTemplate().find(queryString);
+				
 		log.debug("getRooms: size: " + rooms.size());
 		return (Room[]) rooms.toArray(new Room[rooms.size()]);
 	}
@@ -144,6 +151,9 @@ public class RoomDAO extends HibernateDaoSupport {
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getUnAssignedBedRooms(Integer facilityId, Integer programId, Boolean active) {
+    	if(programId == null  ||  active == null){
+    		return null;
+    	}
 		String queryString = getUnAssignedBedRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
 		List rooms = (facilityId != null || programId != null || active != null) ? 
@@ -173,7 +183,7 @@ public class RoomDAO extends HibernateDaoSupport {
 	 *            room to save
 	 */
     public void saveRoom(Room room) {
-		updateHistory(room);
+		//updateHistory(room);
 		getHibernateTemplate().saveOrUpdate(room);
 		getHibernateTemplate().flush();
 		getHibernateTemplate().refresh(room);
@@ -248,9 +258,7 @@ public class RoomDAO extends HibernateDaoSupport {
 	
 	String getUnAssignedBedRoomsQueryString(Integer facilityId, Integer programId, Boolean active) {
 		StringBuilder queryBuilder = new StringBuilder("from Room r");
-
         queryBuilder.append(" where ");
-
         boolean andClause = false;
         if (facilityId != null) {
             queryBuilder.append("r.facilityId = ?");
