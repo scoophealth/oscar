@@ -319,7 +319,7 @@ function toggleView(form) {
                                 <tr>
                                     <td width=10px></td>
                                     <td>
-                                        <span><input type=button value="Print & Paste into EMR" class="ControlPushButton" style="width:200px" onClick="javascript:printPaste2Parent();" /></span>
+                                        <span><input type=button <%=reprint.equals("true")?"disabled='true'":""%>" value="Print & Paste into EMR" class="ControlPushButton" style="width:200px" onClick="javascript:printPaste2Parent();" /></span>
                                     </td>
                                 </tr>
                                 <tr>
