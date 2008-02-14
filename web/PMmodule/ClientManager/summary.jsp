@@ -7,6 +7,7 @@
 <%@page import="java.util.Date"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
+<%@page import="oscar.OscarProperties"%>
 <input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
@@ -135,7 +136,9 @@ function openSurvey() {
 			Integer demographicNo = ((Demographic) request.getAttribute("client")).getDemographicNo();
 			pageContext.setAttribute("demographicNo", demographicNo);
 		%>
+		<% if (!OscarProperties.getInstance().isTorontoRFQ()) {%>
 			<a href="javascript:void(0);" onclick="window.open('<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=<c:out value="${demographicNo}"/>','master_file');return false;">OSCAR Master File</a>
+		<%}%>
 		<%
  		}
 		%>
