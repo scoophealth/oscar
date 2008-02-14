@@ -252,11 +252,9 @@ Program p = (Program)request.getAttribute("oldProgram");
 	</tr>
 	<tr class="b">		
 		<td>
-			<logic:notEmpty property="programFirstSignature.providerName">
 				<a href="javascript:void(0)" onClick="getProgramSignatures('<c:out value="${id}"/>')">
 					<img alt="View details" src="<c:out value='${ctx}' />/images/details.gif" border="0"/>
 				</a>
-			</logic:notEmpty> &nbsp;
 		</td>		
 		<td><c:out value="${programFirstSignature.providerName}"/></td>
 		<td><c:out value="${programFirstSignature.caisiRoleName}" /></td>
