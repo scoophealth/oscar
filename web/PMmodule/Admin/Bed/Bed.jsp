@@ -87,9 +87,6 @@
                     </c:forEach>
               	</select>
             </display:column>
-
-<!-- end of Room Occupancy -->
-            
             <display:column title="Program">
                 <select name="rooms[<c:out value="${room_rowNum - 1}" />].programId">
                     <c:forEach var="program" items="${bedManagerForm.programs}">
@@ -146,6 +143,7 @@
             </table>
         </div>
         <display:table class="simple" name="sessionScope.bedManagerForm.beds" uid="bed" requestURI="/PMmodule/BedManager.do" summary="Edit beds">
+
             <display:column title="Name" sortable="true">
                 <input type="text" name="beds[<c:out value="${bed_rowNum - 1}" />].name" value="<c:out value="${bed.name}" />" />
             </display:column>
@@ -196,6 +194,10 @@
                     </c:otherwise>
                 </c:choose>
             </display:column>
+            
+            
+                            
+            
         </display:table>
     </td>
     <td width="20%">
