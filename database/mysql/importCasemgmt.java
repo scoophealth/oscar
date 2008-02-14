@@ -80,6 +80,11 @@ public class importCasemgmt {
                         String programId = rs.getString(1);
                         rs.close();
                         System.out.println("INSERT into program " + programId);
+                        
+                        System.out.println("Creating dummy provider to sign imported notes");
+                        stmt.executeUpdate("INSERT INTO provider VALUES ('000000','doe','doctor','doctor','','','','0001-01-01','','','','','','','','1','','')");
+                        stmt.executeUpdate("insert into `secUserRole` values('000000', 'doctor')");
+                        
                         System.out.println("Importing OSCAR Providers to CAISI");
                         
                         //we have to make sure we only grant perms to entitled providers
@@ -193,8 +198,8 @@ public class importCasemgmt {
                                 "mx using(eChartId) where e.eChartId = mx.eChartId and e.subject != 'SPLIT CHART'";
                         
                         rs = stmt.executeQuery(sql);
-                        insert = con.prepareStatement("insert into casemgmt_note (update_date, demographic_no, provider_no, note,  signed, include_issue_innote, program_no, agency_no, " +
-                                "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,false," +
+                        insert = con.prepareStatement("insert into casemgmt_note (update_date, demographic_no, provider_no, note,  signed, signing_provider_no, include_issue_innote, program_no, agency_no, " +
+                                "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,true,'doctor doe'," +
                                 "false,'" + programId + "','0','1','0',?,'','0',?,?)");
                         PreparedStatement cppInsert = con.prepareStatement("insert into casemgmt_cpp (demographic_no,provider_no,socialHistory,familyHistory,medicalHistory,ongoingConcerns," +
                                 "reminders,update_date) Values(?,?,?,?,?,?,?,?)");
