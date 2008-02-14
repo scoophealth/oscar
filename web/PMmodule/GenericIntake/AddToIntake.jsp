@@ -19,16 +19,8 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     if (intNodeLabel != null && !intNodeLabel.equals("")){
         genericIntakeManager.saveNodeLabel(intakeNodeLabel);
         lblId = intakeNodeLabel.getId();
-        
-        System.out.println("LABEL ID == "+lblId);
-        //oscar.oscarDB.DBPreparedHandler dbH = new oscar.oscarDB.DBPreparedHandler();
-        //String sqllbl = "insert into intake_node_label (lbl) values (?)";
-        //DBPreparedHandlerParam[] param=new DBPreparedHandlerParam[1];
-        //param[0] = new DBPreparedHandlerParam(intNodeLabel);
-        //lblId = dbH.queryExecuteInsertReturnId(sqllbl,param);
     }
-    oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
-    
+        
     IntakeNode intakeNode = new IntakeNode();
     IntakeNodeTemplate intakeNodeTemplate = new IntakeNodeTemplate();
     intakeNodeTemplate.setId(Integer.parseInt(eleType));
@@ -42,13 +34,6 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     intakeNode.setParent(parentNode);
     
     genericIntakeManager.saveIntakeNode(intakeNode);
-    
-   
-    //String sql ="insert into intake_node (intake_node_template_id,intake_node_label_id,pos,parent_intake_node_id) values ('"+eleType+"','"+intNodeLabel+"','"+npos+"','"+parent_intake_node_id+"')";
-    //String sql ="insert into intake_node (intake_node_template_id,intake_node_label_id,pos,parent_intake_node_id) values ('"+eleType+"','"+lblId+"','"+npos+"','"+parent_intake_node_id+"')";
-    
-    //System.out.println(sql);
-    //db.RunSQL(sql);
     
     response.sendRedirect("close.jsp");
     return;
@@ -74,32 +59,6 @@ String pSize        = request.getParameter("pSize");
         <title>Add To Intake</title>
     </head>
     <body>
-        <%--
-        <h1>JSP Page <%=id%> + <%=nodeTemplate%> + <%=parentId%> + <%=pos%> + <%=pSize%></h1>
-        
-        <pre>
-| intake_node_template_id |intake_node_type_id | intake_node_label_id | lbl                  | type                 |
-+-------------------------+--------------------+----------------------+----------------------+----------------------+
-|                       1 |                  1 |                    2 | Registration Intake2 | intake               |
-|                       3 |                  2 |                    4 | Page                 | page                 |
-|                       4 |                  3 |                    5 | Section              | section              |
-|                       5 |                  4 |                    6 | Question             | question             |
-|                       6 |                  5 |                    7 | Compound Answer      | answer compound      |        
-    
-
-| intake               | + section + question
-| section              | + question + answer compound + answer scalar choice + answer scalar text + answer scalar note
-| question             | + answer compound + answer scalar choice + answer scalar text + answer scalar note
-| answer compound      | + answer scalar choice + answer scalar text + answer scalar note 
-
-
-
-NEED to INSERT INTO INTAKE_NODE
-
-insert into intake_node (intake_node_template_id,intake_node_label_id,pos,parent_intake_node_id) values (selected value below,selected from a list of lbls,<%=pSize%>,<%=id%>);  
-
-        </pre>
-        --%>
         <form method="post" action="AddToIntake.jsp">
             
             <input type="hidden" name="newpos"                value="<%=pSize%>"/>
@@ -115,22 +74,22 @@ insert into intake_node (intake_node_template_id,intake_node_label_id,pos,parent
             <%}else if(nodeTemplate.equals("3") ){%>
             NADA
             <%}else if(nodeTemplate.equals("4") ){%>
-            +<input type="radio" name="elementType" value="5">question</input>
-            +<input type="radio" name="elementType" value="6"> answer compound</input> 
-            +<input type="radio" name="elementType" value="7"> answer scalar choice</input> 
-            +<input type="radio" name="elementType" value="8"> answer scalar text</input> 
-            +<input type="radio" name="elementType" value="13"> answer scalar note</input>
+            +<input type="radio" name="elementType" value="5">question</input><br/>
+            +<input type="radio" name="elementType" value="6"> answer compound</input> <br/>
+            +<input type="radio" name="elementType" value="7"> answer scalar choice</input> <br/>
+            +<input type="radio" name="elementType" value="8"> answer scalar text</input> <br/>
+            +<input type="radio" name="elementType" value="13"> answer scalar note</input><br/>
             
             <%}else if(nodeTemplate.equals("5") ){%>
-            +<input type="radio" name="elementType" value="5"> question</input>
-            +<input type="radio" name="elementType" value="6"> answer compound</input> 
-            +<input type="radio" name="elementType" value="7"> answer scalar choice</input> 
-            +<input type="radio" name="elementType" value="8"> answer scalar text</input> 
-            +<input type="radio" name="elementType" value="13"> answer scalar note</input>
+            +<input type="radio" name="elementType" value="5"> question</input><br/>
+            +<input type="radio" name="elementType" value="6"> answer compound</input> <br/>
+            +<input type="radio" name="elementType" value="7"> answer scalar choice</input> <br/>
+            +<input type="radio" name="elementType" value="8"> answer scalar text</input> <br/>
+            +<input type="radio" name="elementType" value="13"> answer scalar note</input><br/>
             <%}else if(nodeTemplate.equals("6") ){%>
-            +<input type="radio" name="elementType" value="7"> answer scalar choice</input> 
-            +<input type="radio" name="elementType" value="8"> answer scalar text</input> 
-            +<input type="radio" name="elementType" value="13"> answer scalar note</input>
+            +<input type="radio" name="elementType" value="7"> answer scalar choice</input> <br/>
+            +<input type="radio" name="elementType" value="8"> answer scalar text</input> <br/>
+            +<input type="radio" name="elementType" value="13"> answer scalar note</input><br/>
             <%}else{%>
             
             <%}%>

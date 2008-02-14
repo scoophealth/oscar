@@ -38,19 +38,7 @@ select intake_node.intake_node_id, intake_node.intake_node_label_id, intake_node
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Reorder Childer</title>
     </head>
-    <body>
-
-    
-    <%--
-    This example uses JSTL, uncomment the taglib directive above.
-    To test, display the page like this: index.jsp?sayHello=true&name=Murphy
-    --%>
-    <%--
-    <c:if test="${param.sayHello}">
-        <!-- Let's welcome the user ${param.name} -->
-        Hello ${param.name}!
-    </c:if>
-    --%>
+    <body>  
     <select>
     <%
     oscar.oscarDB.DBPreparedHandler dbH = new oscar.oscarDB.DBPreparedHandler();
@@ -58,17 +46,6 @@ select intake_node.intake_node_id, intake_node.intake_node_label_id, intake_node
     String lblEdit = request.getParameter("lbledit");
     String id = request.getParameter("id");
     
-    /*
-    if (lblEdit != null){
-        System.out.println("Entering update");
-        String sqllbledit = "update intake_node_label set lbl = ? where intake_node_label_id = ?";
-        DBPreparedHandlerParam[] param=new DBPreparedHandlerParam[2];
-        param[0] = new DBPreparedHandlerParam(lblEdit);
-        param[1] = new DBPreparedHandlerParam(id);
-        dbH.queryExecuteUpdate(sqllbledit,param);
-        
-    }
-    */
     
     String val = "";
     if(id !=null){
