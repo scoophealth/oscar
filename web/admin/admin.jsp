@@ -205,29 +205,33 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       </ul>
   </div>
 
-  <div class="adminBox">
-      <h3>&nbsp;<bean:message key="admin.admin.groupNo"/></h3>
-      <ul>
-         <li><a href="#" onclick ="popupPage(360,600,'admincontrol.jsp?displaymode=newgroup&amp;submit=blank')"><bean:message key="admin.admin.btnAddGroupNoRecord"/></a></li>
-         <li><a href="#" onclick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&amp;dboperation=searchmygroupall')"><bean:message key="admin.admin.btnSearchGroupNoRecords"/></a></li>
-      </ul>
-  </div>
+  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+      <div class="adminBox">
+	  <h3>&nbsp;<bean:message key="admin.admin.groupNo"/></h3>
+	  <ul>
+	      <li><a href="#" onclick ="popupPage(360,600,'admincontrol.jsp?displaymode=newgroup&amp;submit=blank')"><bean:message key="admin.admin.btnAddGroupNoRecord"/></a></li>
+	      <li><a href="#" onclick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&amp;dboperation=searchmygroupall')"><bean:message key="admin.admin.btnSearchGroupNoRecords"/></a></li>
+	  </ul>
+      </div>
 
-  <div class="adminBox">
-      <h3>&nbsp;<bean:message key="admin.admin.preference"/></h3>
-      <ul>
-         <li><a href="admincontrol.jsp?displaymode=Preference_Add_Record_Pre"><bean:message key="admin.admin.btnAddPreference"/></a></li>
-         <li><a href="preferencesearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchPreference"/></a></li>
-      </ul>
-  </div>
-
+      <div class="adminBox">
+	  <h3>&nbsp;<bean:message key="admin.admin.preference"/></h3>
+	  <ul>
+	     <li><a href="admincontrol.jsp?displaymode=Preference_Add_Record_Pre"><bean:message key="admin.admin.btnAddPreference"/></a></li>
+	     <li><a href="preferencesearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchPreference"/></a></li>
+	  </ul>
+      </div>
+  </caisi:isModuleLoad>
+ 
 
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.security"/></h3>
       <ul>
          <li><a href="securityaddarecord.jsp"><bean:message key="admin.admin.btnAddLogin"/></a></li>
          <li><a href="securitysearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchLogin"/></a></li>
-         <li><a href="#" onclick ="popupPage(300,600,'providerAddRole.jsp');return false;">Add A Role</a></li>
+     <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">	 
+	 <li><a href="#" onclick ="popupPage(300,600,'providerAddRole.jsp');return false;">Add A Role</a></li>
+     </caisi:isModuleLoad>
          <li><a href="#" onclick ="popupPage(500,700,'providerRole.jsp');return false;">Assign Role to Provider</a></li>
          <li><a href="#" onclick ="popupPage(500,800,'providerPrivilege.jsp');return false;">Assign Role/Rights to Object</a></li>
          <li><a href="#" onclick ="popupPage(500,800,'logReport.jsp?keyword=admin');return false;">Security Log Report</a></li>
@@ -377,15 +381,17 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 </caisi:isModuleLoad>
 
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.backup" rights="r" reverse="<%=false%>" >
-  <%-- This links doesnt make sense on Brazil. Hide then --%>
-  <% if (!country.equals("BR")) { %>
-  <div class="adminBox">
-      <h3>&nbsp;<bean:message key="admin.admin.oscarBackup"/></h3>
-      <ul>
-         <li><a href="#" onclick ="popupPage(500,600,'adminbackupdownload.jsp'); return false;"><bean:message key="admin.admin.btnAdminBackupDownload"/></a></li>
-      </ul>
-  </div>
-  <% } %>
+  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+      <%-- This links doesnt make sense on Brazil. Hide then --%>
+      <% if (!country.equals("BR")) { %>
+      <div class="adminBox">
+	  <h3>&nbsp;<bean:message key="admin.admin.oscarBackup"/></h3>
+	  <ul>
+	      <li><a href="#" onclick ="popupPage(500,600,'adminbackupdownload.jsp'); return false;"><bean:message key="admin.admin.btnAdminBackupDownload"/></a></li>
+	  </ul>
+      </div>
+      <% } %>
+  </caisi:isModuleLoad>
   </security:oscarSec>
 
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.messenger" rights="r" reverse="<%=false%>" >
@@ -431,29 +437,30 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <h3>&nbsp;<bean:message key="admin.admin.misc"/></h3>
       <ul>
         <li><a href="#" onClick="popupPage(550,800,'../demographic/demographicExport.jsp');return false;">Demographic Export <!-- I18N --></a></li>
-                <li><a href="#" onClick="popupPage(550,800,'demographicmergerecord.jsp');return false;">Demographic Merge Records</a></li>
-        <li><a href="#" onclick ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></li>
-        <li><a href="#" onclick ="popupPage(550,800,'providertemplate.jsp');return false;" ><bean:message key="admin.admin.btnInsertTemplate"/></a></li>
-        <% if (!country.equals("BR")) { %>
-        <li><a href="#" onclick ="popupPage(550,810,'demographicstudysearchresults.jsp');return false;" ><bean:message key="admin.admin.btnStudy"/></a></li>
+    <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+	<li><a href="#" onClick="popupPage(550,800,'demographicmergerecord.jsp');return false;">Demographic Merge Records</a></li>
+	<li><a href="#" onclick ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></li>
+	<li><a href="#" onclick ="popupPage(550,800,'providertemplate.jsp');return false;" ><bean:message key="admin.admin.btnInsertTemplate"/></a></li>
+	<% if (!country.equals("BR")) { %>
+	<li><a href="#" onclick ="popupPage(550,810,'demographicstudysearchresults.jsp');return false;" ><bean:message key="admin.admin.btnStudy"/></a></li>
 	<%   if (oscarVariables.getProperty("billregion","").equals("ON")){  %>
-        <li><a href="#" onclick ="popupPage(660,1000,'../report/reportonbilledphcp.jsp');return false;">PHCP</a>
-            <span style="font-size: x-small;">
-               (Setting: <a href="#" onclick ="popupPage(660,1000,'../report/reportonbilledvisitprovider.jsp');return false;">provider</a>, <a href="#" onclick ="popupPage(660,1000,'../report/reportonbilleddxgrp.jsp');return false;">dx category</a>)
-            </span>
-        </li>
-        <% } } %>
-         <oscar:oscarPropertiesCheck property="OLD_LAB_UPLOAD" value="yes" defaultVal="false">
-            <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/BC/LabUpload.jsp');return false;">Lab Upload</a></li>
-        </oscar:oscarPropertiesCheck>
-        <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/ALL/testUploader.jsp');return false;">HL7 Lab Upload</a></li>
-        <li><a href="#" onclick ="popupPage(800,1000,'../oscarKeys/keyGen.jsp');return false;">Key Pair Generator</a></li>
-        <li><a href="#" onclick ="popupPage(800,1000,'labforwardingrules.jsp');return false;">Lab Forwarding Rules</a></li>
-        <%if (oscarVariables.getProperty("hsfo.loginSiteCode","")!=null && 
-        		!"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode",""))){  %>
-        <li><a href="#" onclick ="popupPage(400,600,'../admin/RecommitHSFO.do?method=showSchedule');return false;">schedule HSFO XML resubmit</a></li>
-        <%} %>
-        
+	<li><a href="#" onclick ="popupPage(660,1000,'../report/reportonbilledphcp.jsp');return false;">PHCP</a>
+	    <span style="font-size: x-small;">
+		(Setting: <a href="#" onclick ="popupPage(660,1000,'../report/reportonbilledvisitprovider.jsp');return false;">provider</a>, <a href="#" onclick ="popupPage(660,1000,'../report/reportonbilleddxgrp.jsp');return false;">dx category</a>)
+	    </span>
+	</li>
+	<% } } %>
+	<oscar:oscarPropertiesCheck property="OLD_LAB_UPLOAD" value="yes" defaultVal="false">
+	    <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/BC/LabUpload.jsp');return false;">Lab Upload</a></li>
+	</oscar:oscarPropertiesCheck>
+	<li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/ALL/testUploader.jsp');return false;">HL7 Lab Upload</a></li>
+	<li><a href="#" onclick ="popupPage(800,1000,'../oscarKeys/keyGen.jsp');return false;">Key Pair Generator</a></li>
+	<li><a href="#" onclick ="popupPage(800,1000,'labforwardingrules.jsp');return false;">Lab Forwarding Rules</a></li>
+	<%if (oscarVariables.getProperty("hsfo.loginSiteCode","")!=null && 
+	!"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode",""))){  %>
+	<li><a href="#" onclick ="popupPage(400,600,'../admin/RecommitHSFO.do?method=showSchedule');return false;">schedule HSFO XML resubmit</a></li>
+	<%} %>
+    </caisi:isModuleLoad>
       </ul>
   </div>
   </security:oscarSec>
