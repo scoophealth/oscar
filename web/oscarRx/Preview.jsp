@@ -67,16 +67,35 @@
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
 <%
-oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+Date rxDate;
+String rePrint = request.getParameter("rePrint");
+oscar.oscarRx.pageUtil.RxSessionBean bean;
+oscar.oscarRx.data.RxProviderData.Provider provider;
+String signingProvider;
+if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {   
+    bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");    
+    rxDate = bean.getStashItem(0).getRxDate();
+    signingProvider = bean.getStashItem(0).getProviderNo();
+    provider = new oscar.oscarRx.data.RxProviderData().getProvider(signingProvider);
+    session.setAttribute("tmpBeanRX", null);
+}
+else {
+    rxDate = oscar.oscarRx.util.RxUtil.Today();
+    rePrint = "";
+    bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+    signingProvider = bean.getProviderNo();
+    provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
+}
+
 oscar.oscarRx.data.RxPatientData.Patient patient = new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
-oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
+
 oscar.oscarRx.data.RxPrescriptionData.Prescription rx = null;
 int i;
 ProSignatureData sig = new ProSignatureData();
-boolean hasSig = sig.hasSignature(bean.getProviderNo());
+boolean hasSig = sig.hasSignature(signingProvider);
 String doctorName = "";
 if (hasSig){
-   doctorName = sig.getSignature(bean.getProviderNo());
+   doctorName = sig.getSignature(signingProvider);
 }else{
    doctorName = (provider.getFirstName() + ' ' + provider.getSurname());
 }
@@ -84,18 +103,6 @@ if (hasSig){
 doctorName = doctorName.replaceAll("\\d{6}","");
 doctorName = doctorName.replaceAll("\\-","");
 OscarProperties props = OscarProperties.getInstance();
-
-Date rxDate;
-String rePrint = request.getParameter("rePrint");
-if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {   
-    bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");    
-    rxDate = bean.getStashItem(0).getRxDate();
-    session.setAttribute("tmpBeanRX", null);
-}
-else {
-    rxDate = oscar.oscarRx.util.RxUtil.Today();
-    rePrint = "";
-}
 %>
 <html:form action="/form/formname">
 
