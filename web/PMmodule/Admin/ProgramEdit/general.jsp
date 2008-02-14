@@ -24,9 +24,9 @@
 	}
 	
 	function getProgramSignatures(id) {
+	    if (id==null || id == "") return;
 		var url = '<html:rewrite action="/PMmodule/ProgramManager.do"/>?method=programSignatures&programId=';
 		window.open(url + id, 'signature', 'width=600,height=600,scrollbars=1');
-		
 	}
 </script>
 <html:hidden property="program.numOfMembers" />
