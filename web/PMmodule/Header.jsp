@@ -37,7 +37,7 @@
         <td align="right"><html:link action="/PMmodule/ProviderInfo.do">Home</html:link></td>
         <td>&nbsp;</td>
         <td>&nbsp;
-               <a target="_blank" href='<%=request.getContextPath()%>/help/index.heml'>Help</a>
+               <a target="_blank" href='<%=request.getContextPath()%>/help/index.html'>Help</a>
         &nbsp;</td>
         <td align="right">&nbsp;
                <a href='<%=request.getContextPath()%>/logout.jsp'>Logout</a>
