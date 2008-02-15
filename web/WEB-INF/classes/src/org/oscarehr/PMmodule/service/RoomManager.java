@@ -368,29 +368,38 @@ public class RoomManager {
     
     public boolean isDependentClientInDifferentProgramFromHead(AdmissionManager admissionManager, Integer demographicNo, List<JointAdmission> dependentList){
         if(admissionManager == null  ||  demographicNo == null  ||  dependentList == null  ||  dependentList.isEmpty()){
-            return false;
+        	return false;
         }
         Integer[] dependentIds = new Integer[dependentList.size()];
         for(int i=0; i < dependentList.size(); i++ ){
             dependentIds[i] = new Integer(((JointAdmission)dependentList.get(i)).getClientId().intValue());
         }
+        
         //Check whether all family members are under same bed program -> if not, display error message.
         Integer headProgramId = null;
         Integer dependentProgramId = null;
         Admission headAdmission = admissionManager.getCurrentBedProgramAdmission(demographicNo);
         if(headAdmission != null){
             headProgramId = headAdmission.getProgramId();
+        }else{
+        	headProgramId = null;
         }
         for(int i=0; dependentIds != null  &&  i < dependentIds.length; i++ ){
             Admission dependentAdmission = admissionManager.getCurrentBedProgramAdmission(dependentIds[i]);
             if(dependentAdmission != null){
                 dependentProgramId = dependentAdmission.getProgramId();
+            }else{
+            	dependentProgramId = null;
             }
             if( headProgramId != null  &&  dependentProgramId != null ){
                 if( headProgramId.intValue() != dependentProgramId.intValue() ){
                     //Display message notifying that the dependent is under different bed program than family head -> cannot assign room/bed
                     return true;
                 }
+            }else if(headProgramId != null  &&  dependentProgramId == null){
+            	return true;
+            }else if(headProgramId == null){
+            	return true;
             }
         }
         return false;
