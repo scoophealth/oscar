@@ -192,7 +192,7 @@ public class RoomManager {
     @SuppressWarnings("unchecked")
     public Room[] getAvailableRooms(Integer facilityId, Integer programId, Boolean active, String demographicNo) {
     	//rooms of particular facilityId, programId, active=1, (assignedBed=1 or assignedBed=0) 
-    	Room[] rooms = roomDAO.getRooms(facilityId, programId, active);
+    	Room[] rooms = roomDAO.getAvailableRooms(facilityId, programId, active);
     	
     	List<RoomDemographic> roomDemograhics = null;
     	List<Room> availableRooms = new ArrayList<Room>();
