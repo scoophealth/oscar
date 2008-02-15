@@ -235,17 +235,17 @@ public class ProgramManagerViewAction extends BaseAction {
             formBean.setReservedBeds(bedManager.getBedsByProgram(Integer.valueOf(programId), true));
             request.setAttribute("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
 
-			List<JointAdmission> dependentList = null;
-			if(clientManager != null  &&  demographicNo != null){
-				dependentList = clientManager.getDependents(Long.valueOf(demographicNo));
-			}
-            boolean isProgramDifferent = false;
+    		boolean isFamilyDependent = false;
+    		JointAdmission clientsJadm = null;
             
-            if(roomManager != null  &&  admissionManager != null  &&  demographicNo != null){
-            	isProgramDifferent = roomManager.isDependentClientInDifferentProgramFromHead(admissionManager, Integer.valueOf(demographicNo), dependentList);//Louis-debug
-            }
-            Program[] communityPrograms = null;
-            if(isProgramDifferent){
+    		if(clientManager != null  &&  demographicNo != null){
+    			clientsJadm = clientManager.getJointAdmission(new Long(demographicNo));
+    		}
+    		if (clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
+    			isFamilyDependent = true;
+    		}
+    		Program[] communityPrograms = null;
+            if(isFamilyDependent){
             	communityPrograms = null;
             }else{
             	communityPrograms = programManager.getCommunityPrograms();
