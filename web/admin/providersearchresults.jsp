@@ -71,7 +71,7 @@
   	<tr valign="top">
       <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="admin.search.formSearchCriteria"/></i></b></font></td>
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-      <input type="radio" <%=request.getParameter("search_mode").equals("search_name")?"checked":""%>  name="search_mode" value="search_name" onclick="document.forms['searchprovider'].keyword.focus();"><bean:message key="admin.providersearch.formName"/></font></td>
+      <input type="radio" <%=request.getParameter("search_mode").equals("search_name")?"checked":""%>  name="search_mode" value="search_name" onclick="document.forms['searchprovider'].keyword.focus();"><bean:message key="admin.providersearch.formLastName"/></font></td>
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
           <input type="radio" <%=request.getParameter("search_mode").equals("search_providerno")?"checked":""%> name="search_mode" value="search_providerno" onclick="document.forms['searchprovider'].keyword.focus();"><bean:message key="admin.provider.formProviderNo"/></font></td>
           <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
