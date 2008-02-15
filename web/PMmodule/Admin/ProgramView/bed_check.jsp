@@ -25,7 +25,12 @@
 		window.open(url + programId, 'bedCheckReport', 'width=1000,height=600,scrollbars=1');
 	}
 </script>
-
+<%
+Boolean[] isFamilyDependents = null;
+if(request.getAttribute("isFamilyDependents") != null){
+	isFamilyDependents = (Boolean[])request.getAttribute("isFamilyDependents");
+}
+%>
 <table width="100%" summary="View program reserved beds">
 	<tr>
 		<td>
@@ -96,12 +101,18 @@
 					</script>
 				</display:column>
 				<!-- communityProgramId is editable -->
+				
 				<display:column title="Discharge To">
 					<select name="reservedBeds[<c:out value="${reservedBed_rowNum - 1}" />].communityProgramId">
 						<option value="0"></option>
+						<%
+							if( isFamilyDependents != null  &&  isFamilyDependents.length > 0  &&
+								!isFamilyDependents[reservedBed_rowNum - 1].booleanValue() ){
+						%>
 						<c:forEach var="communityProgram" items="${communityPrograms}">
 							<option value="<c:out value="${communityProgram.id}"/>"><c:out value="${communityProgram.name}" /></option>
 						</c:forEach>
+						<%	} %>
 					</select>
 				</display:column>
 			</display:table>
