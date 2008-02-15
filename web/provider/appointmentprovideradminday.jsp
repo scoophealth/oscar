@@ -573,12 +573,12 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	     </security:oscarSec>
 	     
 	 </caisi:isModuleLoad>
-	 
-        <li>
-            <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
-		<span id="oscar_new_msg">Msg</span></a>
-        </li>
-        
+         <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true"> 
+             <li>
+                 <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
+                 <span id="oscar_new_msg">Msg</span></a>
+             </li>
+         </caisi:isModuleLoad>
      <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">     
         <li>
          <a HREF="#" ONCLICK ="popupOscarRx(625,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>"><bean:message key="global.con"/></a>
@@ -593,9 +593,11 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 		<a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a>
             </caisi:isModuleLoad>
         </li>
+         <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
         <li>
            <a HREF="#" onclick="popup('700', '1000', '../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>'><bean:message key="global.edoc"/></a>
         </li>
+         </caisi:isModuleLoad>
         <li>
            <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
 	    <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'>
