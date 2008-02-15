@@ -393,18 +393,18 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <% } %>
   </caisi:isModuleLoad>
   </security:oscarSec>
-
-  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.messenger" rights="r" reverse="<%=false%>" >
-  <!--oscarMessenger Code block -->
-  <div class="adminBox">
-      <h3>&nbsp;<bean:message key="admin.admin.oscarMessenger"/></h3>
-      <ul>
-         <li><a href="#" onclick ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&amp;userName=<%=userfirstname%>%20<%=userlastname%>');return false;"><bean:message key="admin.admin.messages"/></a></li>
-         <li><a href="#" onclick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a></li>
-      </ul>
-  </div>
-  </security:oscarSec>
-
+  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.messenger" rights="r" reverse="<%=false%>" >
+          <!--oscarMessenger Code block -->
+          <div class="adminBox">
+              <h3>&nbsp;<bean:message key="admin.admin.oscarMessenger"/></h3>
+              <ul>
+                  <li><a href="#" onclick ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&amp;userName=<%=userfirstname%>%20<%=userlastname%>');return false;"><bean:message key="admin.admin.messages"/></a></li>
+                  <li><a href="#" onclick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a></li>
+              </ul>
+          </div>
+      </security:oscarSec>
+  </caisi:isModuleLoad>
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
   <!--e forms block -->
@@ -418,7 +418,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   </div>
   </security:oscarSec>
 </caisi:isModuleLoad>
-
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.encounter" rights="r" reverse="<%=false%>" >
   <!--// start oscarEncounter block-->
   <div class="adminBox">
@@ -431,13 +431,13 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       </ul>
   </div>
   </security:oscarSec>
-
+</caisi:isModuleLoad>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r" reverse="<%=false%>" >
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.misc"/></h3>
       <ul>
         <li><a href="#" onClick="popupPage(550,800,'../demographic/demographicExport.jsp');return false;">Demographic Export <!-- I18N --></a></li>
-    <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 	<li><a href="#" onClick="popupPage(550,800,'demographicmergerecord.jsp');return false;">Demographic Merge Records</a></li>
 	<li><a href="#" onclick ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></li>
 	<li><a href="#" onclick ="popupPage(550,800,'providertemplate.jsp');return false;" ><bean:message key="admin.admin.btnInsertTemplate"/></a></li>
@@ -460,11 +460,11 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 	!"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode",""))){  %>
 	<li><a href="#" onclick ="popupPage(400,600,'../admin/RecommitHSFO.do?method=showSchedule');return false;">schedule HSFO XML resubmit</a></li>
 	<%} %>
-    </caisi:isModuleLoad>
+    
       </ul>
   </div>
   </security:oscarSec>
-
+</caisi:isModuleLoad>
   <hr style=" color: black;"/>
   <div class="logoutBox">
      <% if(roleName$.equals("admin"+ "," +curProvider_no)) {%><a href="../logout.jsp"><bean:message key="global.btnLogout"/></a>&nbsp;<% }%>
