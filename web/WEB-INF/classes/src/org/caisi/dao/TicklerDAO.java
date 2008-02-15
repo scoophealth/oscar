@@ -98,7 +98,7 @@ public class TicklerDAO extends HibernateDaoSupport {
     
     public int getActiveTicklerCount(String providerNo){
         ArrayList paramList = new ArrayList();
-        String query = "select count(*) from Tickler t where t.status = 'A' and t.service_date <= ? and t.task_assigned_to  = "+ providerNo;
+        String query = "select count(*) from Tickler t where t.status = 'A' and t.service_date <= ? and (t.task_assigned_to  = '"+ providerNo + "' or t.task_assigned_to='All Providers')";
         GregorianCalendar currentDate = new GregorianCalendar();
         currentDate.setTime(new Date());
         paramList.add(currentDate.getTime());
