@@ -37,8 +37,10 @@ import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
+import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.RoomType;
@@ -363,6 +365,37 @@ public class RoomManager {
     	}
     	return false;
     }
+    
+    public boolean isDependentClientInDifferentProgramThanHead(AdmissionManager admissionManager, Integer demographicNo, List<JointAdmission> dependentList){
+        if(admissionManager == null  ||  demographicNo == null  ||  dependentList == null  ||  dependentList.isEmpty()){
+            return false;
+        }
+        Integer[] dependentIds = new Integer[dependentList.size()];
+        for(int i=0; i < dependentList.size(); i++ ){
+            dependentIds[i] = new Integer(((JointAdmission)dependentList.get(i)).getClientId().intValue());
+        }
+        //Check whether all family members are under same bed program -> if not, display error message.
+        Integer headProgramId = null;
+        Integer dependentProgramId = null;
+        Admission headAdmission = admissionManager.getCurrentBedProgramAdmission(demographicNo);
+        if(headAdmission != null){
+            headProgramId = headAdmission.getProgramId();
+        }
+        for(int i=0; dependentIds != null  &&  i < dependentIds.length; i++ ){
+            Admission dependentAdmission = admissionManager.getCurrentBedProgramAdmission(dependentIds[i]);
+            if(dependentAdmission != null){
+                dependentProgramId = dependentAdmission.getProgramId();
+            }
+            if( headProgramId != null  &&  dependentProgramId != null ){
+                if( headProgramId.intValue() != dependentProgramId.intValue() ){
+                    //Display message notifying that the dependent is under different bed program than family head -> cannot assign room/bed
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     
     /**
      * Get room types
