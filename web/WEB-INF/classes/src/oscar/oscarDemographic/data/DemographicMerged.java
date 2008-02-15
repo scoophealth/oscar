@@ -87,13 +87,14 @@ public class DemographicMerged {
             pstmt.close();
             sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
             sql += "'" + curUser_no + "',";
-            sql += "null,"; // '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "',";
+            sql += "?,";
             sql += "'" + "secObjPrivilege" + "',";
             sql += "'_all|_eChart$"+ demographic_no + "',";
             sql += "'" + "<roleUserGroup>_all</roleUserGroup>" + "<objectName>_eChart$" + demographic_no + "</objectName>";
             sql += "<privilege>" + privilege + "</privilege>" + "<priority>" + priority + "</priority>";
             sql += "<provider_no>" + provider_no + "</provider_no>" + "')";
             pstmt = conn.prepareStatement(sql);
+            pstmt.setDate(1, oscar.MyDateFormat.getSysDate(UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")));
             pstmt.executeUpdate();
         }
         
