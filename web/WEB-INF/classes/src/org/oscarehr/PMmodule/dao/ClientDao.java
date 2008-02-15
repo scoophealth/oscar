@@ -125,33 +125,33 @@ public class ClientDao extends HibernateDaoSupport {
 		String sql = "";
 		
 		if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
-			firstName = bean.getFirstName().toLowerCase();
+			firstName = bean.getFirstName();
 			firstName = StringEscapeUtils.escapeSql(firstName);
 		}
 		
 		
 		if (bean.getLastName() != null && bean.getLastName().length() > 0) {
-			lastName = bean.getLastName().toLowerCase();
+			lastName = bean.getLastName();
 			lastName = StringEscapeUtils.escapeSql(lastName);
 		}
 
 		if (!bean.isSearchUsingSoundex()) {
 			if (firstName.length() > 0) {
-				criteria.add(Expression.ilike("FirstName", firstName + "%"));
+				criteria.add(Restrictions.sqlRestriction(SqlUtils.getCaseInsensitiveLike("first_name", firstName + '%')));
 			}
 			if (lastName.length() > 0) {
-				criteria.add(Expression.ilike("LastName", lastName + "%"));
+                criteria.add(Restrictions.sqlRestriction(SqlUtils.getCaseInsensitiveLike("last_name", lastName + '%')));
 			}
 		}
 		else { // soundex variation
 			
 			if (firstName.length() > 0) {
-				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4)))";
-				criteria.add(Restrictions.or(Expression.ilike("FirstName",firstName), Restrictions.sqlRestriction(sql)));
+				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR ("+SqlUtils.getCaseInsensitiveLike("first_name", firstName + '%')+"))";
+				criteria.add(Restrictions.sqlRestriction(sql));
 			}
 			if (lastName.length() > 0) {
-				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4)))";
-				criteria.add(Restrictions.or(Expression.ilike("LastName",lastName),Restrictions.sqlRestriction(sql)));
+				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR ("+SqlUtils.getCaseInsensitiveLike("last_name", lastName + '%')+"))";
+				criteria.add(Restrictions.sqlRestriction(sql));
 			}
 		}
 		

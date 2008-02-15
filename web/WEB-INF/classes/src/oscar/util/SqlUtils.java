@@ -47,17 +47,27 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
+import org.hibernate.cfg.Environment;
+import org.hibernate.dialect.MySQLDialect;
+import org.hibernate.dialect.PostgreSQLDialect;
+import org.oscarehr.util.SpringUtils;
+import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 
 import oscar.oscarDB.DBHandler;
 
 public class SqlUtils {
     private static Log logger = LogFactory.getLog(SqlUtils.class);
 
-
+    private enum DatabaseTypes
+    {
+        MYSQL, ORACLE, POSTGRESQL
+    }
+    
     private static java.sql.Date createAppropriateDate(Object value) {
         if (value == null) {
             return null;
@@ -647,4 +657,30 @@ public class SqlUtils {
         return(oracleFormat.format(date1));
     }
     
+    private static DatabaseTypes getDatabaseType()
+    {
+        BasicDataSource basicDataSource=(BasicDataSource)SpringUtils.beanFactory.getBean("dataSource");
+        String driverName=basicDataSource.getDriverClassName();
+        
+        if (driverName.startsWith("com.mysql.")) return(DatabaseTypes.MYSQL);
+        if (driverName.startsWith("org.postgresql.")) return(DatabaseTypes.POSTGRESQL);
+        if (driverName.startsWith("oracle.")) return(DatabaseTypes.ORACLE);
+        else throw(new IllegalArgumentException("Need a new database driver type added : "+driverName));
+    }
+    
+    /**
+     * This method will return the like condition for the appropriate database.
+     * As an example on mysql it will return "name like 'bob'"
+     * on postgres it would be "name ilike 'bob'"
+     * on oracle "regexp_like(name, 'bob', 'i')"
+     */
+    public static String getCaseInsensitiveLike(String column, String pattern)
+    {
+        DatabaseTypes databaseType=getDatabaseType();
+        
+        if (databaseType==DatabaseTypes.MYSQL) return(column+" like '"+pattern+'\'');
+        if (databaseType==DatabaseTypes.POSTGRESQL) return(column+" ilike '"+pattern+'\'');
+        if (databaseType==DatabaseTypes.ORACLE) return("regexp_like("+column+",'"+pattern+"','i')");
+        else throw(new IllegalArgumentException("Need a new databaseType added : "+databaseType));
+    }
 }
