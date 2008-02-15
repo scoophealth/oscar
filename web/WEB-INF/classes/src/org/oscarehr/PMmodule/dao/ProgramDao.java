@@ -35,8 +35,6 @@ import org.hibernate.criterion.Restrictions;
 import org.oscarehr.PMmodule.model.Program;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import oscar.util.SqlUtils;
-
 public class ProgramDao extends HibernateDaoSupport {
 
     private static final Log log = LogFactory.getLog(ProgramDao.class);
@@ -286,7 +284,7 @@ public class ProgramDao extends HibernateDaoSupport {
 
         if (program.getName() != null && program.getName().length() > 0) {
             String programName = StringEscapeUtils.escapeSql(program.getName());
-            String sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4))" + " " + "OR ("+SqlUtils.getCaseInsensitiveLike("name", "%" + programName + '%')+')';
+            String sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4))" + " " + "OR (name like '" + "%" + programName + "%'))";
             criteria.add(Restrictions.sqlRestriction(sql));
         }
 
