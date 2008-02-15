@@ -137,20 +137,20 @@ public class ClientDao extends HibernateDaoSupport {
 
 		if (!bean.isSearchUsingSoundex()) {
 			if (firstName.length() > 0) {
-				criteria.add(Restrictions.sqlRestriction(SqlUtils.getCaseInsensitiveLike("first_name", firstName + '%')));
+				criteria.add(Expression.like("FirstName", firstName + "%"));
 			}
 			if (lastName.length() > 0) {
-                criteria.add(Restrictions.sqlRestriction(SqlUtils.getCaseInsensitiveLike("last_name", lastName + '%')));
+				criteria.add(Expression.like("LastName", lastName + "%"));
 			}
 		}
 		else { // soundex variation
 			
 			if (firstName.length() > 0) {
-				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR ("+SqlUtils.getCaseInsensitiveLike("first_name", firstName + '%')+"))";
+				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name like '" + firstName + "%'))";
 				criteria.add(Restrictions.sqlRestriction(sql));
 			}
 			if (lastName.length() > 0) {
-				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR ("+SqlUtils.getCaseInsensitiveLike("last_name", lastName + '%')+"))";
+				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '" + lastName + "%'))";
 				criteria.add(Restrictions.sqlRestriction(sql));
 			}
 		}
