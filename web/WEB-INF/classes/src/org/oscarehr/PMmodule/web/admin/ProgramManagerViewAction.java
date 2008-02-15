@@ -232,26 +232,46 @@ public class ProgramManagerViewAction extends BaseAction {
         }
 
         if (formBean.getTab().equals("Bed Check")) {
-            formBean.setReservedBeds(bedManager.getBedsByProgram(Integer.valueOf(programId), true));
+        	
+        	Integer[] bedClientIds = null;
+        	Boolean[] isFamilyDependents = null;
+        	JointAdmission clientsJadm = null;
+        	Bed[] beds = bedManager.getBedsByProgram(Integer.valueOf(programId), true);
+            formBean.setReservedBeds(beds);
             request.setAttribute("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
-
-    		boolean isFamilyDependent = false;
-    		JointAdmission clientsJadm = null;
             
-    		if(clientManager != null  &&  demographicNo != null){
-    			clientsJadm = clientManager.getJointAdmission(new Long(demographicNo));
-    		}
-    		if (clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
-    			isFamilyDependent = true;
-    		}
-    		Program[] communityPrograms = null;
-            if(isFamilyDependent){
-            	communityPrograms = null;
-            }else{
-            	communityPrograms = programManager.getCommunityPrograms();
+            if(beds != null  &&  beds.length > 0){
+            	BedDemographic bd = null;
+            	bedClientIds = new Integer[beds.length];
+            	for(int i=0; i < beds.length; i++){
+            		bd = bedDemographicManager.getBedDemographicByBed(beds[i].getId());
+            		if(bd != null){
+            			bedClientIds[i] = bd.getId().getDemographicNo();
+            		}else{
+            			bedClientIds[i] = null;
+            		}
+            	}
             }
-            
-            request.setAttribute("communityPrograms", communityPrograms);
+    		
+    		if(clientManager != null  &&  bedClientIds != null  &&  bedClientIds.length > 0){
+    			isFamilyDependents = new Boolean[beds.length];
+    			for(int i=0; i < bedClientIds.length; i++){
+    				clientsJadm = clientManager.getJointAdmission(Long.valueOf(bedClientIds[i].toString()));
+    				
+    	    		if(clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
+    	    			isFamilyDependents[i] = new Boolean(true);
+System.out.println("ProgramManagerView.view(): isFamilyDependents["+i+"] = " + isFamilyDependents[i]);//Louis-debug    		
+    	    			
+    	    		}else{
+    	    			isFamilyDependents[i] = new Boolean(false);
+System.out.println("ProgramManagerView.view(): isFamilyDependents["+i+"] = " + isFamilyDependents[i]);//Louis-debug    		
+    	    			
+    	    		}
+    			}
+    		}
+    		
+    		request.setAttribute("isFamilyDependents", isFamilyDependents);
+            request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
             request.setAttribute("expiredReservations", bedDemographicManager.getExpiredReservations());
         }
 
