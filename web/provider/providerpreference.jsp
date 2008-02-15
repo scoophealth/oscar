@@ -7,6 +7,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.OscarProperties" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -271,9 +272,11 @@ function showHideBillPref() {
 </TABLE>
 
 <table width="100%" BGCOLOR="eeeeee">
+     <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no" defaultVal="true">
 	<tr> 
     <TD align="center"><a href=# onClick ="popupPage(230,600,'../casemgmt/newCaseManagementEnable.jsp');return false;">Enable OSCAR CME UI</a> &nbsp;&nbsp;&nbsp; 
   </tr>
+   </oscar:oscarPropertiesCheck>
   <tr> 
     <TD align="center"><a href=# onClick ="popupPage(230,600,'providerchangepassword.jsp');return false;"><bean:message key="provider.btnChangePassword"/></a> &nbsp;&nbsp;&nbsp; <!--| a href=# onClick ="popupPage(350,500,'providercontrol.jsp?displaymode=savedeletetemplate');return false;"><bean:message key="provider.btnAddDeleteTemplate"/></a> | <a href=# onClick ="popupPage(200,500,'providercontrol.jsp?displaymode=savedeleteform');return false;"><bean:message key="provider.btnAddDeleteForm"/></a></td>
   </tr>
@@ -290,7 +293,7 @@ function showHideBillPref() {
     <td align="center"><a href=# onClick ="popupPage(230,860,'providerSignature.jsp');return false;"><bean:message key="provider.btnEditSignature"/></a>
     </td>
   </tr>
-  
+  <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no" defaultVal="true">
   <tr>
     <td align="center">
 <% String br = OscarProperties.getInstance().getProperty("billregion");
@@ -321,16 +324,17 @@ function showHideBillPref() {
 	  </div>
       </td>
   </tr>
-  <tr>
-    <td align="center"><a href=# onClick ="popupPage(230,860,'providerFax.jsp');return false;"><bean:message key="provider.btnEditFaxNumber"/></a>
-  </tr>
-  <tr>
-    <td align="center"><a href=# onClick ="popupPage(230,860,'providerColourPicker.jsp');return false;"><bean:message key="provider.btnEditColour"/></a>
-  </tr>
-  <tr>
-    <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=view&provider_no=<%=request.getParameter("provider_no")%>');return false;"><bean:message key="provider.btnEditStaleDate"/></a>
-  </tr>
   
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'providerFax.jsp');return false;"><bean:message key="provider.btnEditFaxNumber"/></a>
+      </tr>
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'providerColourPicker.jsp');return false;"><bean:message key="provider.btnEditColour"/></a>
+      </tr>
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=view&provider_no=<%=request.getParameter("provider_no")%>');return false;"><bean:message key="provider.btnEditStaleDate"/></a>
+      </tr>
+  </oscar:oscarPropertiesCheck>
   <%
     if( OscarProperties.getInstance().getProperty("MY_OSCAR", "").equalsIgnoreCase("yes") ) {
   %>
