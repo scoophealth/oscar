@@ -50,6 +50,12 @@
              document.titlesearch.search_mode[4].checked = true;             
           }
 
+			if(document.titlesearch.search_mode[0].checked) {
+				var keyword = document.titlesearch.keyword.value; 
+      			var keywordLowerCase = keyword.toLowerCase();
+      			document.titlesearch.keyword.value = keywordLowerCase;		alert("keyword + "+	keywordLowerCase);
+			}
+			
           if(document.titlesearch.search_mode[2].checked) {
             if(dob.value.length==8) {
               dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
