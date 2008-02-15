@@ -91,9 +91,11 @@ public class DeleteDemographicRelationshipAction extends Action {
 	    if (demo_r.trim().equalsIgnoreCase(demoRel.trim())) {
 		String rel = (String) h.get("relation");
 		boolean matched = false;
-		for (int j=0; j<rel_of.length; j++) {
+		if(rel_of!=null){
+		  for (int j=0; j<rel_of.length; j++) {
 		    if (rel.trim().equalsIgnoreCase(rel_of[j])) matched = true;
-		}
+		  }
+		}  
 		if (matched) {
 		    relationshipID = (String) h.get("id");
 		    i = dr.size();
