@@ -693,15 +693,30 @@ public class ClientManagerAction extends BaseAction {
 					}
 					
 					//Check whether all family members are under same bed program -> if not, display error message.
-					Integer headProgramId = ((Admission)getAdmissionManager().getCurrentBedProgramAdmission(demographicNo)).getProgramId();
+					Integer headProgramId = null;
 					Integer dependentProgramId = null;
-					for(int i=0; i < dependentIds.length; i++ ){
-						dependentProgramId = ((Admission)getAdmissionManager().getCurrentBedProgramAdmission(dependentIds[i])).getProgramId();
-						if(headProgramId.intValue() != dependentProgramId.intValue()){
-							//Display message notifying that the dependent is under different bed program than family head -> cannot assign room/bed
-							messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.programId_different"));
-							saveMessages(request, messages);
-							return edit(mapping, clientForm, request, response);
+					Admission headAdmission = getAdmissionManager().getCurrentBedProgramAdmission(demographicNo);
+					
+					if(headAdmission != null){
+						headProgramId = headAdmission.getProgramId();
+					}
+					
+					
+					for(int i=0; dependentIds != null  &&  i < dependentIds.length; i++ ){
+						Admission dependentAdmission = getAdmissionManager().getCurrentBedProgramAdmission(dependentIds[i]);
+						
+						if(dependentAdmission != null){
+							dependentProgramId = dependentAdmission.getProgramId();
+						}
+						 
+						if( headProgramId != null  &&  dependentProgramId != null ){
+							
+							if( headProgramId.intValue() != dependentProgramId.intValue() ){
+								//Display message notifying that the dependent is under different bed program than family head -> cannot assign room/bed
+								messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.programId_different"));
+								saveMessages(request, messages);
+								return edit(mapping, clientForm, request, response);
+							}
 						}
 					}
 					
