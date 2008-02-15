@@ -694,8 +694,9 @@ public class ClientManagerAction extends BaseAction {
 					}
 					
 					//Check whether all family members are under same bed program -> if not, display error message.
-					boolean isDependentClientInDifferentProgramFromHead = roomManager.isDependentClientInDifferentProgramFromHead(getAdmissionManager(), demographicNo, dependentList);
-					if( isDependentClientInDifferentProgramFromHead ){
+					boolean isProgramDifferent = admissionManager.isDependentInDifferentProgramFromHead(demographicNo, dependentList);
+
+					if( isProgramDifferent ){
 						//Display message notifying that the dependent is under different bed program than family head -> cannot assign room/bed
 						messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.programId_different"));
 						saveMessages(request, messages);
