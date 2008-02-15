@@ -341,7 +341,7 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
     </td>
 </tr>
 
-
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <tr style="background-color:#BBBBBB;"><td>oscarMessenger</td></tr>
 <!-- select message -->
 <tr><td>
@@ -357,6 +357,7 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 <tr><td>
     <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMessenger/DisplayDemographicMessages.do?orderby=date&boxType=3&demographic_no=<%=bean.demographicNo%>&providerNo=<%=bean.providerNo%>&userName=<%=bean.userName%>'); return false;" >-All Messages-</a>
 </td></tr>
+</caisi:isModuleLoad>
 <%
 	dxResearchBeanHandler dxRes;
 	ArrayList<String> flowsheets;
@@ -429,12 +430,12 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 <tr><td>
     <a href="javascript:void(0)" ONCLICK ="popupPage('http://resource.oscarmcmaster.org/oscarResource/');return false;">resource</a><br>
 </td></tr>
-</caisi:isModuleLoad>
+
 
 <tr><td>
     <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;">documents</a><br>
 </td></tr>
-
+</caisi:isModuleLoad>
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <caisirole:SecurityAccess accessName="eform" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <!-- eform -->
