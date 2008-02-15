@@ -106,10 +106,11 @@ public class RoomDAO extends HibernateDaoSupport {
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getRooms(Integer facilityId, Integer programId, Boolean active) {
-    	//get rooms for facility, whose programid is null and active is null.
-    	//if(programId == null  ||  active == null){
-    	//	return null;
-    	//}
+    	//condition placed here on purpose to disallow rooms to display in dropdown list
+    	//when clients don't belong to any bed program -- to fix a bug
+    	if(programId == null  ||  active == null){
+    		return null;
+    	}
 		String queryString = getRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
 		List rooms = (facilityId != null || programId != null || active != null) ? getHibernateTemplate().find(queryString, values) : getHibernateTemplate().find(queryString);
@@ -132,9 +133,11 @@ public class RoomDAO extends HibernateDaoSupport {
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getAssignedBedRooms(Integer facilityId, Integer programId, Boolean active) {
-    	//if(programId == null  ||  active == null){
-    	//	return null;
-    	//}
+    	//condition placed here on purpose to disallow rooms to display in dropdown list
+    	//when clients don't belong to any bed program -- to fix a bug
+    	if(programId == null  ||  active == null){
+    		return null;
+    	}
 		String queryString = getAssignedBedRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
 		List rooms = (facilityId != null || programId != null || active != null) ? 
