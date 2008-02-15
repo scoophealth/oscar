@@ -48,9 +48,11 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
@@ -232,8 +234,24 @@ public class ProgramManagerViewAction extends BaseAction {
         if (formBean.getTab().equals("Bed Check")) {
             formBean.setReservedBeds(bedManager.getBedsByProgram(Integer.valueOf(programId), true));
             request.setAttribute("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
-            request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
 
+			List<JointAdmission> dependentList = null;
+			if(clientManager != null  &&  demographicNo != null){
+				dependentList = clientManager.getDependents(Long.valueOf(demographicNo));
+			}
+            boolean isProgramDifferent = false;
+            
+            if(roomManager != null  &&  admissionManager != null  &&  demographicNo != null){
+            	isProgramDifferent = roomManager.isDependentClientInDifferentProgramThanHead(admissionManager, Integer.valueOf(demographicNo), dependentList);//Louis-debug
+            }
+            Program[] communityPrograms = null;
+            if(isProgramDifferent){
+            	communityPrograms = null;
+            }else{
+            	communityPrograms = programManager.getCommunityPrograms();
+            }
+            
+            request.setAttribute("communityPrograms", communityPrograms);
             request.setAttribute("expiredReservations", bedDemographicManager.getExpiredReservations());
         }
 
