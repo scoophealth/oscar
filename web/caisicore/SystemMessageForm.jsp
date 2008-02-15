@@ -34,6 +34,7 @@
 		</style>
 		
 		<title>System Messages</title>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/validation.js"></script>
 	</head>
 	<script>
 function openBrWindow(theURL,winName,features) { 
@@ -51,7 +52,7 @@ function openBrWindow(theURL,winName,features) {
 </table>
 
 <br/>
-		<html:form action="/SystemMessage">
+		<html:form action="/SystemMessage" onsubmit="return validateRequiredFieldByName('system_message.message', 'Message', 4000);">
 			<input type="hidden" name="method" value="save"/>
 			<html:hidden property="system_message.id"/>
 			<table width="60%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">

@@ -17,3 +17,23 @@ function validateRequiredField(fieldId, fieldName, maxLength)
 	
 	return(true);
 }
+
+//for html tag on pages, added by Dawson
+function validateRequiredFieldByName(fieldName, fieldNameDisplayed, maxLength)
+{
+	var field=document.getElementsByName(fieldName)[0];
+
+	if (field.value==null || field.value=='')
+	{
+		alert('The field '+fieldName+' is required.');
+		return(false);
+	}
+	
+	if (field.value.length > maxLength)
+	{
+		alert('The value you entered for '+fieldNameDisplayed+' is too long, maximum length allowed is '+maxLength+' characters.');
+		return(false);
+	}
+	
+	return(true);
+}
