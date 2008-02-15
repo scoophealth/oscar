@@ -457,28 +457,33 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         	throw new AdmissionException("you cannot admit a dependent family/group member, you must remove the dependent status or admit the family head");
         
         }else if(isFamilyHead &&  dependentIds != null  &&  dependentIds.length >= 1){
+        	Integer[] familyIds = new Integer[dependentIds.length + 1];
+        	familyIds[0] = clientId;
         	for(int i=0; i < dependentIds.length; i++ ){
-        		Integer dependentId = dependentIds[i];
+        		familyIds[i+1] = dependentIds[i];
+        	}
+        	for(int i=0; i < familyIds.length; i++ ){
+        		Integer familyId = familyIds[i];
 		        if (bedCommunityProgram != null) {
 		            if (currentBedCommunityProgramId == null) {
-		                admissionManager.processAdmission(dependentId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+		                admissionManager.processAdmission(familyId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
 		            }
 		            else if (!currentBedCommunityProgramId.equals(bedCommunityProgramId)) {
 		                if (programManager.getProgram(currentBedCommunityProgramId).isBed()) {
 		                    if (bedCommunityProgram.isBed()) {
-		                        admissionManager.processAdmission(dependentId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+		                        admissionManager.processAdmission(familyId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
 		                    }
 		                    else {
-		                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, dependentId, providerNo, "intake discharge", "0");
+		                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, familyId, providerNo, "intake discharge", "0");
 		                    }
 		                }
 		                else {
 		                    if (bedCommunityProgram.isCommunity()) {
-		                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, dependentId, providerNo, "intake discharge", "0");
+		                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, familyId, providerNo, "intake discharge", "0");
 		                    }
 		                    else {
-		                        admissionManager.processDischarge(currentBedCommunityProgramId, dependentId, "intake discharge", "0");
-		                        admissionManager.processAdmission(dependentId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+		                        admissionManager.processDischarge(currentBedCommunityProgramId, familyId, "intake discharge", "0");
+		                        admissionManager.processAdmission(familyId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
 		                    }
 		                }
 		            }
