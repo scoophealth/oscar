@@ -171,6 +171,7 @@ public class ClientSearchFormBean {
 			calendar.setTime(d);
 			String value = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
 			if(value.length()==1) {value= "0" + value;}
+			return value;
 		}catch(Exception e) {
 			log.error(e);
 		}

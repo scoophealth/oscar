@@ -92,7 +92,6 @@ public class OscarProperties extends Properties {
 			}
 		}
 	}
-
 	public void loader(String propFileName) throws java.io.FileNotFoundException {
 		if (!loaded) {
 			FileInputStream fis2 = new FileInputStream(propFileName);
@@ -107,8 +106,6 @@ public class OscarProperties extends Properties {
 			}
 		}
 	}
-        
-        
         /**
          * Comma delimited spring configuration modules
          * Options:  Caisi,Indivo
