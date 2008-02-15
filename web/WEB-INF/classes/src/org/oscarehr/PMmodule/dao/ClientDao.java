@@ -60,6 +60,7 @@ import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.MyDateFormat;
+import oscar.OscarProperties;
 import oscar.util.SqlUtils;
 
 public class ClientDao extends HibernateDaoSupport {
@@ -123,7 +124,7 @@ public class ClientDao extends HibernateDaoSupport {
 		String AND = " and ";
 		String WHERE = " where ";
 		String sql = "";
-		
+		boolean isOracle = OscarProperties.getInstance().getDbType().equals("oracle");
 		if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
 			firstName = bean.getFirstName();
 			firstName = StringEscapeUtils.escapeSql(firstName);
@@ -137,21 +138,47 @@ public class ClientDao extends HibernateDaoSupport {
 
 		if (!bean.isSearchUsingSoundex()) {
 			if (firstName.length() > 0) {
-				criteria.add(Expression.like("FirstName", firstName + "%"));
+				if (isOracle) {
+					criteria.add(Expression.ilike("FirstName", firstName + "%"));
+				}
+				else
+				{
+					criteria.add(Expression.like("FirstName", firstName + "%"));
+				}
 			}
 			if (lastName.length() > 0) {
-				criteria.add(Expression.like("LastName", lastName + "%"));
+				if(isOracle){
+					criteria.add(Expression.ilike("LastName", lastName + "%"));
+				}
+				else
+				{
+					criteria.add(Expression.like("LastName", lastName + "%"));
+				}
 			}
 		}
 		else { // soundex variation
 			
 			if (firstName.length() > 0) {
-				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name like '" + firstName + "%'))";
-				criteria.add(Restrictions.sqlRestriction(sql));
+				if (isOracle) {
+					sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4)))";
+					criteria.add(Restrictions.or(Restrictions.ilike("FirstName", firstName + "%"), Restrictions.sqlRestriction(sql)));
+				}
+				else
+				{
+					sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name like '" + firstName + "%'))";
+					criteria.add(Restrictions.sqlRestriction(sql));
+				}
 			}
 			if (lastName.length() > 0) {
-				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '" + lastName + "%'))";
-				criteria.add(Restrictions.sqlRestriction(sql));
+				if(isOracle) {
+					sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4)))";
+					criteria.add(Restrictions.or(Restrictions.ilike("LastName",lastName + "%" ), Restrictions.sqlRestriction(sql)));
+				}
+				else
+				{
+					sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '" + lastName + "%'))";
+					criteria.add(Restrictions.sqlRestriction(sql));
+				}
 			}
 		}
 		
