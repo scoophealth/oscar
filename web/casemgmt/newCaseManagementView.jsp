@@ -193,14 +193,13 @@
 		inpu.setSelectionRange(pos,pos);                
          
                 var ev;
-                var firefox = false;
                 try {
                     ev = document.createEvent('KeyEvents');
-                    ev.initKeyEvent('keypress', true, true, window,false, false, false, false, 0,inpu.value.charCodeAt(pos-1));
-                    firefox = true;
+                    ev.initKeyEvent('keypress', true, true, window,false, false, false, false, 0,0);                   
                 }
                 catch(e) {                
                     ev = document.createEvent("UIEvents");                    
+
                     /*
                     Safari doesn't support these funcs but seems to scroll without them
                     ev.initUIEvent( 'keypress', true, true, window, 1 );                    
@@ -209,16 +208,10 @@
                     
                 }
                 
-                inpu.dispatchEvent(ev); // causes the scrolling                      
-                //firefox actually inserts char at pos!  so we need to remove it
-                if( firefox ) {
-                    var txt = inpu.value;
-                    var end = pos + 1 < txt.length ? txt.substr(pos+1) : "";
-                    inpu.value = txt.substring(0,pos) + end;
-                
-                }
+                inpu.dispatchEvent(ev); // causes the scrolling                                      
                 
 	}else if (inpu.createTextRange) {
+                console.log("createTextRange");
 		var range = inpu.createTextRange();
 		range.collapse(true);
 		range.moveEnd('character', pos);
