@@ -22,23 +22,23 @@
         </tr>
         <tr class="b">
             <td width="20%">Description:</td>
-            <td><c:out value="${requestScope.facilityManagerForm.facility.description}" /></td>
+            <td><c:out value="${facilityManagerForm.facility.description}" /></td>
         </tr>
         <tr class="b">
             <td width="20%">HIC:</td>
-            <td><c:out value="${requestScope.facilityManagerForm.facility.hic}" /></td>
+            <td><c:out value="${facilityManagerForm.facility.hic}" /></td>
         </tr>
         <tr class="b">
             <td width="20%">Primary Contact Name:</td>
-            <td><c:out value="${requestScope.facilityManagerForm.facility.contactName}" /></td>
+            <td><c:out value="${facilityManagerForm.facility.contactName}" /></td>
         </tr>
         <tr class="b">
             <td width="20%">Primary Contact Email:</td>
-            <td><c:out value="${requestScope.facilityManagerForm.facility.contactEmail}" /></td>
+            <td><c:out value="${facilityManagerForm.facility.contactEmail}" /></td>
         </tr>
         <tr class="b">
             <td width="20%">Primary Contact Phone:</td>
-            <td><c:out value="${requestScope.facilityManagerForm.facility.contactPhone}" /></td>
+            <td><c:out value="${facilityManagerForm.facility.contactPhone}" /></td>
         </tr>
 
 
