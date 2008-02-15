@@ -260,12 +260,8 @@ public class ProgramManagerViewAction extends BaseAction {
     				
     	    		if(clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
     	    			isFamilyDependents[i] = new Boolean(true);
-System.out.println("ProgramManagerView.view(): isFamilyDependents["+i+"] = " + isFamilyDependents[i]);//Louis-debug    		
-    	    			
     	    		}else{
     	    			isFamilyDependents[i] = new Boolean(false);
-System.out.println("ProgramManagerView.view(): isFamilyDependents["+i+"] = " + isFamilyDependents[i]);//Louis-debug    		
-    	    			
     	    		}
     			}
     		}
