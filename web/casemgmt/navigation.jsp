@@ -431,11 +431,11 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
     <a href="javascript:void(0)" ONCLICK ="popupPage('http://resource.oscarmcmaster.org/oscarResource/');return false;">resource</a><br>
 </td></tr>
 
-
+</caisi:isModuleLoad>
 <tr><td>
     <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;">documents</a><br>
 </td></tr>
-</caisi:isModuleLoad>
+
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <caisirole:SecurityAccess accessName="eform" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <!-- eform -->
