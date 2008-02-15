@@ -135,7 +135,7 @@ public class JdbcBillingReviewImpl {
 		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
 
 		String sql = "select id,pay_program,demographic_no,demographic_name,billing_date,billing_time,status,"
-				+ "provider_no,provider_ohip_no,apptProvider_no,timestamp,total,paid" + " from billing_on_cheader1 where " + temp
+				+ "provider_no,provider_ohip_no,apptProvider_no,timestamp1,total,paid" + " from billing_on_cheader1 where " + temp
 				+ " order by billing_date, billing_time";
 
 		_logger.info("getBill(sql = " + sql + ")");
@@ -158,7 +158,7 @@ public class JdbcBillingReviewImpl {
 					ch1Obj.setProvider_no(rs.getString("provider_no"));
 					ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
 					ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
-					ch1Obj.setUpdate_datetime(rs.getString("timestamp"));
+					ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
 					// ch1Obj.setTotal(rs.getString("total"));
 					ch1Obj.setPay_program(rs.getString("pay_program"));
 					ch1Obj.setPaid(rs.getString("paid"));
@@ -212,7 +212,7 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setStatus(rs.getString("status"));
 				ch1Obj.setProvider_no(rs.getString("provider_no"));
 				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
-				ch1Obj.setUpdate_datetime(rs.getString("timestamp"));
+				ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
 
 				ch1Obj.setPay_program(rs.getString("pay_program"));
 				ch1Obj.setVisittype(rs.getString("visittype"));
