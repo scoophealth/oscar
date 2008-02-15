@@ -151,9 +151,9 @@ public class InfirmAction extends BaseAction
 		//if (memo!=null) memo.clear();
 		List demographicBeans = getInfirmBedProgramManager().getDemographicByBedProgramIdBeans(programId,dt,archiveView);
 		List filteredDemographicBeans = new ArrayList();
-		if(request.getParameter("infirmaryView_clientStatusId") != null) {		
+		if(se.getAttribute("infirmaryView_clientStatusId") != null) {		
 			//int statusId = new Integer(request.getParameter("infirmaryView_clientStatusId")).intValue();
-			String statusId = request.getParameter("infirmaryView_clientStatusId");
+			String statusId = (String) se.getAttribute("infirmaryView_clientStatusId");
 			if(statusId.equals("0")){
 				filteredDemographicBeans = demographicBeans;
 			}
@@ -183,12 +183,15 @@ public class InfirmAction extends BaseAction
 				}
 				else {
 					admission = getAdmissionManager().getCurrentAdmission(String.valueOf(programId), new Integer(demographicNo));
-					csi = admission.getClientStatusId();
-					if(csi==null)
-						csi=0; 				
-					if(statusId!=null && statusId.equals(csi.toString())){
-						filteredDemographicBeans.add(bean);
-					}				
+					if (admission != null)
+					{
+						csi = admission.getClientStatusId();
+						if(csi==null)
+							csi=0; 				
+						if(statusId!=null && statusId.equals(csi.toString())){
+							filteredDemographicBeans.add(bean);
+						}				
+					}
 				}
 			}
 			request.setAttribute("infirmaryView_clientStatusId",statusId );
