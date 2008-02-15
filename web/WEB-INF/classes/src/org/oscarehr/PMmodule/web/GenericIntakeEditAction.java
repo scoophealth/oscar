@@ -47,6 +47,7 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 
@@ -428,30 +429,90 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         else if (bedCommunityProgramId != null) {
             bedCommunityProgram = programManager.getProgram(bedCommunityProgramId);
         }
+        
+		boolean isFamilyHead = false; 
+		boolean isFamilyDependent = false;
+		JointAdmission clientsJadm = null;
+		List<JointAdmission> dependentList = null;
+		Integer[] dependentIds = null;
 
-        if (bedCommunityProgram != null) {
-            if (currentBedCommunityProgramId == null) {
-                admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
-            }
-            else if (!currentBedCommunityProgramId.equals(bedCommunityProgramId)) {
-                if (programManager.getProgram(currentBedCommunityProgramId).isBed()) {
-                    if (bedCommunityProgram.isBed()) {
-                        admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
-                    }
-                    else {
-                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, clientId, providerNo, "intake discharge", "0");
-                    }
-                }
-                else {
-                    if (bedCommunityProgram.isCommunity()) {
-                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, clientId, providerNo, "intake discharge", "0");
-                    }
-                    else {
-                        admissionManager.processDischarge(currentBedCommunityProgramId, clientId, "intake discharge", "0");
-                        admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
-                    }
-                }
-            }
+		if(clientManager != null  &&  clientId != null){
+			dependentList = clientManager.getDependents(Long.valueOf(clientId));
+			clientsJadm = clientManager.getJointAdmission(Long.valueOf(clientId));
+		}
+		if (clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
+			isFamilyDependent = true;
+		}
+		if(dependentList != null  &&  dependentList.size() > 0){
+			isFamilyHead = true;
+		}
+        if(dependentList != null){
+        	dependentIds = new Integer[dependentList.size()];
+			for(int i=0; i < dependentList.size(); i++ ){
+				dependentIds[i] = new Integer(((JointAdmission)dependentList.get(i)).getClientId().intValue());
+			}
+        }
+        
+        if(isFamilyDependent){
+        	throw new AdmissionException("you cannot admit a dependent family/group member, you must remove the dependent status or admit the family head");
+        
+        }else if(isFamilyHead &&  dependentIds != null  &&  dependentIds.length >= 1){
+        	for(int i=0; i < dependentIds.length; i++ ){
+        		Integer dependentId = dependentIds[i];
+		        if (bedCommunityProgram != null) {
+		            if (currentBedCommunityProgramId == null) {
+		                admissionManager.processAdmission(dependentId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+		            }
+		            else if (!currentBedCommunityProgramId.equals(bedCommunityProgramId)) {
+		                if (programManager.getProgram(currentBedCommunityProgramId).isBed()) {
+		                    if (bedCommunityProgram.isBed()) {
+		                        admissionManager.processAdmission(dependentId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+		                    }
+		                    else {
+		                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, dependentId, providerNo, "intake discharge", "0");
+		                    }
+		                }
+		                else {
+		                    if (bedCommunityProgram.isCommunity()) {
+		                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, dependentId, providerNo, "intake discharge", "0");
+		                    }
+		                    else {
+		                        admissionManager.processDischarge(currentBedCommunityProgramId, dependentId, "intake discharge", "0");
+		                        admissionManager.processAdmission(dependentId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+		                    }
+		                }
+		            }
+		        }
+        	}
+        	
+        	//throw new AdmissionException("If you admit the family head, all dependents will also be admitted to this program and discharged from their current programs. Are you sure you wish to proceed?");
+        
+        }else{
+        
+	        if (bedCommunityProgram != null) {
+	            if (currentBedCommunityProgramId == null) {
+	                admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+	            }
+	            else if (!currentBedCommunityProgramId.equals(bedCommunityProgramId)) {
+	                if (programManager.getProgram(currentBedCommunityProgramId).isBed()) {
+	                    if (bedCommunityProgram.isBed()) {
+	                        admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+	                    }
+	                    else {
+	                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, clientId, providerNo, "intake discharge", "0");
+	                    }
+	                }
+	                else {
+	                    if (bedCommunityProgram.isCommunity()) {
+	                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, clientId, providerNo, "intake discharge", "0");
+	                    }
+	                    else {
+	                        admissionManager.processDischarge(currentBedCommunityProgramId, clientId, "intake discharge", "0");
+	                        admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+	                    }
+	                }
+	            }
+	        }
         }
     }
 
