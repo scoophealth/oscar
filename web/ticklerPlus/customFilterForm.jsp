@@ -1,17 +1,20 @@
 <%@ include file="/ticklerPlus/header.jsp" %>
 
 <%@ page import="java.util.*" %>
+<%@ page import="org.springframework.web.context.WebApplicationContext" %>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
 <%
  	Calendar rightNow = Calendar.getInstance();              
  	int year = rightNow.get(Calendar.YEAR);
  	int month = rightNow.get(Calendar.MONTH)+1;
  	int day = rightNow.get(Calendar.DAY_OF_MONTH);
- 	String formattedDate = year + "-" + month + "-" + day;
+ 	String formattedDate = year + "-" + month + "-" + day; 	
+ 
 %>
 <script type="text/javascript" src="../js/checkDate.js"></script>
 	<script>	
 		function search_demographic() {
-			window.open('demographicSearch.jsp?form=customFilterForm&elementName=filter.demographic_webName&elementId=filter.demographic_no&query=' + document.customFilterForm.elements['filter.demographic_webName'].value,'demographic_search');
+			window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch.jsp?form=customFilterForm&elementName=filter.demographic_webName&elementId=filter.demographic_no&query=' + document.customFilterForm.elements['filter.demographic_webName'].value,'demographic_search');
 		}
 		
 		function check_custom_filter_date() {
