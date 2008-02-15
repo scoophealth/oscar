@@ -187,14 +187,14 @@ public class JdbcBillingCorrection {
 				ch1Obj.setTotal(rs.getString("total"));
 				ch1Obj.setPaid(rs.getString("paid"));
 				ch1Obj.setStatus(rs.getString("status"));
-				ch1Obj.setComment(rs.getString("comment"));
+				ch1Obj.setComment(rs.getString("comment1"));
 				ch1Obj.setVisittype(rs.getString("visittype"));
 				ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
 				ch1Obj.setProvider_rma_no(rs.getString("provider_rma_no"));
 				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
 				ch1Obj.setAsstProvider_no(rs.getString("asstProvider_no"));
 				ch1Obj.setCreator(rs.getString("creator"));
-				ch1Obj.setUpdate_datetime(rs.getString("timestamp"));
+				ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
 				obj.add(ch1Obj);
 			}
 
