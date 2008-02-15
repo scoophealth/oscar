@@ -262,7 +262,7 @@
         </div>
         <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
             <security:oscarSec roleName="<%=roleName$%>"
-                               objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc"
+                               objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc,_admin.torontoRfq"
                                rights="r">
                 <div>
                     <span>System Administration</span>
