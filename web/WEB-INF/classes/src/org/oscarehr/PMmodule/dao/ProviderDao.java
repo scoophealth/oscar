@@ -34,6 +34,8 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import oscar.OscarProperties;
+
 public class ProviderDao extends HibernateDaoSupport {
 	private Log log = LogFactory.getLog(ProviderDao.class);
 	
@@ -102,8 +104,15 @@ public class ProviderDao extends HibernateDaoSupport {
 	}
     
 	public List<Provider> search(String name) {
+		boolean isOracle = OscarProperties.getInstance().getDbType().equals("oracle");
 		Criteria c = this.getSession().createCriteria(Provider.class);
-		c.add(Restrictions.or(Expression.ilike("FirstName", name + "%"), Expression.ilike("LastName", name + "%")));
+		if (isOracle) {
+			c.add(Restrictions.or(Expression.ilike("FirstName", name + "%"), Expression.ilike("LastName", name + "%")));
+		}
+		else
+		{
+			c.add(Restrictions.or(Expression.like("FirstName", name + "%"), Expression.like("LastName", name + "%")));
+		}
 		c.addOrder(Order.asc("ProviderNo"));
 
 		@SuppressWarnings("unchecked")

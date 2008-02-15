@@ -35,6 +35,8 @@ import org.hibernate.criterion.Restrictions;
 import org.oscarehr.PMmodule.model.Program;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import oscar.OscarProperties;
+
 public class ProgramDao extends HibernateDaoSupport {
 
     private static final Log log = LogFactory.getLog(ProgramDao.class);
@@ -279,12 +281,20 @@ public class ProgramDao extends HibernateDaoSupport {
         if (program == null) {
             throw new IllegalArgumentException();
         }
-
+        boolean isOracle = OscarProperties.getInstance().getDbType().equals("oracle");
         Criteria criteria = getSession().createCriteria(Program.class);
 
         if (program.getName() != null && program.getName().length() > 0) {
             String programName = StringEscapeUtils.escapeSql(program.getName());
-            String sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4))" + " " + "OR (name like '" + "%" + programName + "%'))";
+            String sql = "";
+            if (isOracle) {
+            	sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4)))";
+            	criteria.add(Restrictions.or(Restrictions.ilike("name", "%" + programName + "%"), Restrictions.sqlRestriction(sql)));
+            }
+            else
+            {
+            	sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4))" + " " + "OR (name like '" + "%" + programName + "%'))";
+            }
             criteria.add(Restrictions.sqlRestriction(sql));
         }
 
