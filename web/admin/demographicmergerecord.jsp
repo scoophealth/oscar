@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <!--  
 /*
  * 
@@ -275,7 +276,11 @@ if(rs==null) {
        <%}%>
   
     <%}%>    
-    <td width="15%" align="center" height="25"> <a href="javascript:popupWindow('admincontrol.jsp?demographic_no=<%= head %>&displaymode=Demographic_Edit2&dboperation=<%= dbop %>')"><%=apptMainBean.getString(rs,"demographic_no")%></a></td>
+    <td width="15%" align="center" height="25">
+        <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+        <a href="javascript:popupWindow('admincontrol.jsp?demographic_no=<%= head %>&displaymode=Demographic_Edit2&dboperation=<%= dbop %>')"><%=apptMainBean.getString(rs,"demographic_no")%></a>
+        </caisi:isModuleLoad>
+    </td>
     <td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"last_name")%></td>
     <td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"first_name")%></td>
     <td align="center" width="10%" height="25"><%=age%></td>
