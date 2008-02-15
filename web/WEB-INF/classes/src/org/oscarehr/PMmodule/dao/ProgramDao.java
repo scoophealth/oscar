@@ -294,8 +294,8 @@ public class ProgramDao extends HibernateDaoSupport {
             else
             {
             	sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4))" + " " + "OR (name like '" + "%" + programName + "%'))";
+                criteria.add(Restrictions.sqlRestriction(sql));
             }
-            criteria.add(Restrictions.sqlRestriction(sql));
         }
 
         if (program.getType() != null && program.getType().length() > 0) {
