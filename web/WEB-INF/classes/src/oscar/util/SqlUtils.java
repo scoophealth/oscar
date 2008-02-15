@@ -52,11 +52,7 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
-import org.hibernate.cfg.Environment;
-import org.hibernate.dialect.MySQLDialect;
-import org.hibernate.dialect.PostgreSQLDialect;
 import org.oscarehr.util.SpringUtils;
-import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 
 import oscar.oscarDB.DBHandler;
 
