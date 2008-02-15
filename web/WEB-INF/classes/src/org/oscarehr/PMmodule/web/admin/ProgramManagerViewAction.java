@@ -242,7 +242,7 @@ public class ProgramManagerViewAction extends BaseAction {
             boolean isProgramDifferent = false;
             
             if(roomManager != null  &&  admissionManager != null  &&  demographicNo != null){
-            	isProgramDifferent = roomManager.isDependentClientInDifferentProgramThanHead(admissionManager, Integer.valueOf(demographicNo), dependentList);//Louis-debug
+            	isProgramDifferent = roomManager.isDependentClientInDifferentProgramFromHead(admissionManager, Integer.valueOf(demographicNo), dependentList);//Louis-debug
             }
             Program[] communityPrograms = null;
             if(isProgramDifferent){

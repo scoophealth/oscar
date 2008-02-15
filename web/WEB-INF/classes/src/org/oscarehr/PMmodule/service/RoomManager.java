@@ -366,7 +366,7 @@ public class RoomManager {
     	return false;
     }
     
-    public boolean isDependentClientInDifferentProgramThanHead(AdmissionManager admissionManager, Integer demographicNo, List<JointAdmission> dependentList){
+    public boolean isDependentClientInDifferentProgramFromHead(AdmissionManager admissionManager, Integer demographicNo, List<JointAdmission> dependentList){
         if(admissionManager == null  ||  demographicNo == null  ||  dependentList == null  ||  dependentList.isEmpty()){
             return false;
         }

@@ -71,6 +71,7 @@ import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.Demographic.ConsentGiven;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
@@ -693,32 +694,14 @@ public class ClientManagerAction extends BaseAction {
 					}
 					
 					//Check whether all family members are under same bed program -> if not, display error message.
-					Integer headProgramId = null;
-					Integer dependentProgramId = null;
-					Admission headAdmission = getAdmissionManager().getCurrentBedProgramAdmission(demographicNo);
-					
-					if(headAdmission != null){
-						headProgramId = headAdmission.getProgramId();
+					boolean isDependentClientInDifferentProgramFromHead = roomManager.isDependentClientInDifferentProgramFromHead(getAdmissionManager(), demographicNo, dependentList);
+					if( isDependentClientInDifferentProgramFromHead ){
+						//Display message notifying that the dependent is under different bed program than family head -> cannot assign room/bed
+						messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.programId_different"));
+						saveMessages(request, messages);
+						return edit(mapping, clientForm, request, response);
 					}
 					
-					
-					for(int i=0; dependentIds != null  &&  i < dependentIds.length; i++ ){
-						Admission dependentAdmission = getAdmissionManager().getCurrentBedProgramAdmission(dependentIds[i]);
-						
-						if(dependentAdmission != null){
-							dependentProgramId = dependentAdmission.getProgramId();
-						}
-						 
-						if( headProgramId != null  &&  dependentProgramId != null ){
-							
-							if( headProgramId.intValue() != dependentProgramId.intValue() ){
-								//Display message notifying that the dependent is under different bed program than family head -> cannot assign room/bed
-								messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.programId_different"));
-								saveMessages(request, messages);
-								return edit(mapping, clientForm, request, response);
-							}
-						}
-					}
 					
 					if(bedDemographic.getRoomId().intValue() == 0){//unassigning whole family
 						//unassign family head first 
