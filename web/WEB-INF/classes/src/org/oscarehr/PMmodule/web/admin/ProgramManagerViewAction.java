@@ -614,11 +614,16 @@ public class ProgramManagerViewAction extends BaseAction {
     }
 
     public ActionForward saveReservedBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	
         ProgramManagerViewFormBean programManagerViewFormBean = (ProgramManagerViewFormBean) form;
 
+        ActionMessages messages = new ActionMessages();
         Bed[] reservedBeds = programManagerViewFormBean.getReservedBeds();
+        List<Integer> familyList = new ArrayList<Integer>();
+        boolean isClientDependent = false; 
+        boolean isClientFamilyHead = false; 
 
-        for (int i = 0; i < reservedBeds.length; i++) {
+        for (int i=0; reservedBeds != null  &&  i < reservedBeds.length; i++) {
             Bed reservedBed = reservedBeds[i];
 
             // detect check box false
@@ -628,36 +633,83 @@ public class ProgramManagerViewAction extends BaseAction {
 
             // save bed
             try {
-                bedManager.saveBed(reservedBed);
-
                 BedDemographic bedDemographic = reservedBed.getBedDemographic();
-
+                //Since bed_check.jsp blocked dependents to have Community programs displayed in dropdown, 
+                //  so reservedBed for dependents have communityProgramId == 0
+                //When changed to Community program --> how about room_demographic update???
                 if (bedDemographic != null) {
-                    // save bed demographic
-                    bedDemographicManager.saveBedDemographic(bedDemographic);
+                	Integer clientId = bedDemographic.getId().getDemographicNo();
+                	
+					if(clientId != null){
+						isClientDependent = clientManager.isClientDependentOfFamily(clientId);
+					}
+					isClientFamilyHead = clientManager.isClientFamilyHead(clientId);
+					
+                	if(clientId == null  ||  isClientDependent){//Forbid saving of this particular bedDemographic record when client is dependent of family
+                                        		
+                	}else{//client can be family head or independent
+                		
+                		if(isClientFamilyHead){
+                			List<JointAdmission> dependentList = clientManager.getDependents(Long.valueOf(clientId.toString()));
+							familyList.add(Integer.valueOf( clientId));
+							for(int j=0; dependentList != null  &&  j < dependentList.size(); j++){
+								familyList.add(Integer.valueOf( dependentList.get(j).getClientId().toString()));
+							}
 
-                    Integer communityProgramId = reservedBed.getCommunityProgramId();
-
-                    if (communityProgramId > 0) {
-                        try {
-                            // discharge to community program
-                            admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request),
-                                    "bed reservation ended - manually discharged", "0");
-                        }
-                        catch (AdmissionException e) {
-                            ActionMessages messages = new ActionMessages();
-                            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
-                            saveMessages(request, messages);
-                        }
-                    }
+                			for(int k=0; familyList != null  &&  k < familyList.size(); k++){
+                				bedDemographic.getId().setDemographicNo(familyList.get(k));
+                			
+		                		bedManager.saveBed(reservedBed); //????? Is it really needed  
+		                		
+			                    // save bed demographic
+			                    bedDemographicManager.saveBedDemographic(bedDemographic);
+			
+			                    Integer communityProgramId = reservedBed.getCommunityProgramId();
+			
+			                    if (communityProgramId > 0) {
+			                        try {
+			                            // discharge to community program
+			                            admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request),
+			                                    "bed reservation ended - manually discharged", "0");
+			                        }
+			                        catch (AdmissionException e) {
+			                            
+			                            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
+			                            saveMessages(request, messages);
+			                        }
+			                    }
+                			}
+                			
+                		}else{//client is indpendent
+	                		bedManager.saveBed(reservedBed); //????? Is it really needed  
+	                		
+		                    // save bed demographic
+		                    bedDemographicManager.saveBedDemographic(bedDemographic);
+		
+		                    Integer communityProgramId = reservedBed.getCommunityProgramId();
+		
+		                    if (communityProgramId > 0) {
+		                        try {
+		                            // discharge to community program
+		                            admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request),
+		                                    "bed reservation ended - manually discharged", "0");
+		                        }
+		                        catch (AdmissionException e) {
+		                            
+		                            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
+		                            saveMessages(request, messages);
+		                        }
+		                    }
+                		}
+                	}
                 }
             }
             catch (BedReservedException e) {
-                ActionMessages messages = new ActionMessages();
+                
                 messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
                 saveMessages(request, messages);
             }
-        }
+        }//end of for (int i=0; i < reservedBeds.length; i++)
 
         return view(mapping, form, request, response);
     }

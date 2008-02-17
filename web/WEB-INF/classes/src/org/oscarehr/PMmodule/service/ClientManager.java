@@ -185,6 +185,28 @@ public class ClientManager {
         return jointAdmissionDAO.getJointAdmission(clientId);
     }
 
+    public boolean isClientDependentOfFamily(Integer clientId){//Louis-debug
+		
+		JointAdmission clientsJadm = null;
+		if(clientId != null){
+			clientsJadm = getJointAdmission(Long.valueOf(clientId.toString()));
+		}
+		if (clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
+			return true;
+		}
+		return false;
+    }
+    
+    
+    public boolean isClientFamilyHead(Integer clientId){//Louis-debug
+		
+		List<JointAdmission> dependentList = getDependents(Long.valueOf(clientId.toString()));
+		if(dependentList != null  &&  dependentList.size() > 0){
+			return true;
+		}
+		return false;
+    }
+    
     public void removeJointAdmission(Long clientId, String providerNo) {
         jointAdmissionDAO.removeJointAdmission(clientId, providerNo);
     }
