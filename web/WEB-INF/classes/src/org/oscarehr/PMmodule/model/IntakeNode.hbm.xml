@@ -40,7 +40,7 @@
 			
 		<many-to-one name="parent" class="IntakeNode"
 			column="parent_intake_node_id" not-null="false"
-			insert="true" update="false" />
+			insert="false" update="false" />
 
 		<list name="children" cascade="save-update" inverse="false">
 			<key column="parent_intake_node_id" not-null="false" />
