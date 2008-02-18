@@ -637,13 +637,13 @@ public class ProgramManagerViewAction extends BaseAction {
                 //Since bed_check.jsp blocked dependents to have Community programs displayed in dropdown, 
                 //  so reservedBed for dependents have communityProgramId == 0
                 //When changed to Community program --> how about room_demographic update???
-                if (bedDemographic != null) {
+                if(bedDemographic != null) {
                 	Integer clientId = bedDemographic.getId().getDemographicNo();
                 	
 					if(clientId != null){
 						isClientDependent = clientManager.isClientDependentOfFamily(clientId);
+						isClientFamilyHead = clientManager.isClientFamilyHead(clientId);
 					}
-					isClientFamilyHead = clientManager.isClientFamilyHead(clientId);
 					
                 	if(clientId == null  ||  isClientDependent){//Forbid saving of this particular bedDemographic record when client is dependent of family
                                         		
@@ -651,7 +651,7 @@ public class ProgramManagerViewAction extends BaseAction {
                 		
                 		if(isClientFamilyHead){
                 			List<JointAdmission> dependentList = clientManager.getDependents(Long.valueOf(clientId.toString()));
-							familyList.add(Integer.valueOf( clientId));
+							familyList.add(clientId);
 							for(int j=0; dependentList != null  &&  j < dependentList.size(); j++){
 								familyList.add(Integer.valueOf( dependentList.get(j).getClientId().toString()));
 							}
@@ -659,7 +659,7 @@ public class ProgramManagerViewAction extends BaseAction {
                 			for(int k=0; familyList != null  &&  k < familyList.size(); k++){
                 				bedDemographic.getId().setDemographicNo(familyList.get(k));
                 			
-		                		bedManager.saveBed(reservedBed); //????? Is it really needed  
+		                		bedManager.saveBed(reservedBed);  
 		                		
 			                    // save bed demographic
 			                    bedDemographicManager.saveBedDemographic(bedDemographic);
@@ -681,7 +681,7 @@ public class ProgramManagerViewAction extends BaseAction {
                 			}
                 			
                 		}else{//client is indpendent
-	                		bedManager.saveBed(reservedBed); //????? Is it really needed  
+	                		bedManager.saveBed(reservedBed);   
 	                		
 		                    // save bed demographic
 		                    bedDemographicManager.saveBedDemographic(bedDemographic);
