@@ -545,8 +545,8 @@ if(statusType.equals("_")) { %>
 	    	   amountPaid = raData.getAmountPaid(raList);
 	    	   errorCode = raData.getErrorCodes(raList);
 	       } else if(raList.size() > 0) {
-	    	   amountPaid = (String)((Hashtable) raList.get(0)).get("amountpay");
-	    	   errorCode = (String)((Hashtable) raList.get(0)).get("error_code");
+	    	   amountPaid = raData.getAmountPaid(raList,ch1Obj.getId(),ch1Obj.getTransc_id());
+	    	   errorCode = raData.getErrorCodes(raList); 
 	       }
 	       // 3rd party billing
 	       if(ch1Obj.getPay_program().matches("PAT|OCF|ODS|CPP|STD|IFH")) {

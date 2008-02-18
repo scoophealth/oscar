@@ -140,7 +140,8 @@ public class JdbcBillingReviewImpl {
 
 		_logger.info("getBill(sql = " + sql + ")");
 		ResultSet rs = dbObj.searchDBRecord(sql);
-
+                boolean bSameBillCh1 = false;
+                
 		try {
 			while (rs.next()) {
 
@@ -161,12 +162,16 @@ public class JdbcBillingReviewImpl {
 					ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
 					// ch1Obj.setTotal(rs.getString("total"));
 					ch1Obj.setPay_program(rs.getString("pay_program"));
-					ch1Obj.setPaid(rs.getString("paid"));
+					if (!bSameBillCh1) 
+                                            ch1Obj.setPaid(rs.getString("paid")); 
+                                        else 
+                                            ch1Obj.setPaid("0.00"); 
 
 					ch1Obj.setTotal(rs1.getString("fee"));
 					ch1Obj.setRec_id(rs1.getString("dx"));
 					ch1Obj.setTransc_id(rs1.getString("service_code"));
 					retval.add(ch1Obj);
+                                        bSameBillCh1 = true; 
 				}
 				rs1.close();
 			}
