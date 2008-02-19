@@ -103,7 +103,8 @@ public class CaseManagementPrintPdf {
         String gender = "Gender: " + (String)request.getAttribute("demoSex") + "\n";
         String dob = "Date of Birth: " + (String)request.getAttribute("demoDOB") + "\n";
         String age = "Age: " + (String)request.getAttribute("demoAge") + "\n";
-        String[] info = new String[] { title, gender, dob, age };
+        String mrp = "MRP: " + (String)request.getAttribute("mrp") + "\n";
+        String[] info = new String[] { title, gender, dob, age, mrp };
         
         ClinicData clinicData = new ClinicData();
         clinicData.refreshClinicData();
@@ -331,10 +332,10 @@ public class CaseManagementPrintPdf {
                 ++column;
             }
             
-            if( column % 2 == 0 )
-                lworkingYcoord -= (ct.getLinesWritten() * phrase.leading() + (phrase.leading() * 2f));
+            if( column % 2 == 0 ) 
+                lworkingYcoord -= (ct.getLinesWritten() * ct.getLeading() + (ct.getLeading() * 2f));
             else
-                rworkingYcoord -= (ct.getLinesWritten() * phrase.leading() + (phrase.leading() * 2f));
+                rworkingYcoord -= (ct.getLinesWritten() * ct.getLeading() + (ct.getLeading() * 2f));                            
         }
         cb.endText();
     }
