@@ -210,8 +210,7 @@
                 
                 inpu.dispatchEvent(ev); // causes the scrolling                                      
                 
-	}else if (inpu.createTextRange) {
-                console.log("createTextRange");
+	}else if (inpu.createTextRange) {                
 		var range = inpu.createTextRange();
 		range.collapse(true);
 		range.moveEnd('character', pos);
