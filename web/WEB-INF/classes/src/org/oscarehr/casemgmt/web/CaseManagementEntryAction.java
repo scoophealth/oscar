@@ -1241,6 +1241,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
              request.setAttribute("demoName", getDemoName(demono));
              request.setAttribute("demoSex", getDemoSex(demono));
              request.setAttribute("demoAge", getDemoAge(demono));
+             request.setAttribute("mrp", getMRP(request));
              String dob = getDemoDOB(demono);
              dob = convertDateFmt(dob);
              request.setAttribute("demoDOB", dob);
@@ -1336,7 +1337,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		return notes;
 	}
         
-/*
+    /*
+     *Grab family physician or MRP for demo
+     */
+   protected String getMRP(HttpServletRequest request) {
+       oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("casemgmt_oscar_bean");
+       if( bean == null)
+           return new String("");
+       
+        if(bean.familyDoctorNo.equals(""))
+            return new String("");
+       
+        oscar.oscarEncounter.data.EctProviderData.Provider prov = new oscar.oscarEncounter.data.EctProviderData().getProvider(bean.familyDoctorNo);
+        String name = prov.getFirstName() + " " + prov.getSurname();
+        return name;
+   }
+        
+    /*
      *Insert encounter reason for new note
      */
     protected void insertReason(HttpServletRequest request, CaseManagementNote note) {
