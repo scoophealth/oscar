@@ -34,19 +34,8 @@
     String isOscar = request.getParameter("infirmaryView_isOscar");
     if (session.getAttribute("infirmaryView_isOscar")==null) isOscar="false";
     if (isOscar!=null) session.setAttribute("infirmaryView_isOscar", isOscar);
-    String progId = request.getParameter("infirmaryView_programId");
-    String clientStatusId = request.getParameter("infirmaryView_clientStatusId");
-    if (progId != null) {
-    	session.setAttribute("infirmaryView_programId",request.getParameter("infirmaryView_programId"));
-    	session.setAttribute("infirmaryView_clientStatusId", clientStatusId);
-    }
-    else
-    {
-    	if (clientStatusId != null) {
-    		session.setAttribute("infirmaryView_clientStatusId", clientStatusId);
-    	}
-    }
-	session.setAttribute("infirmaryView_OscarURL",request.getRequestURL());
+    session.setAttribute("infirmaryView_programId",request.getParameter("infirmaryView_programId"));
+    session.setAttribute("infirmaryView_OscarURL",request.getRequestURL());
 
 %><c:import url="/infirm.do?action=getSig" />
 </caisi:isModuleLoad>

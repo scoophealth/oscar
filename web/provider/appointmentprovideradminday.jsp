@@ -31,9 +31,20 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 	{
 		session.setAttribute("infirmaryView_date",null);
 	}
-session.setAttribute("infirmaryView_OscarQue",request.getQueryString()); 
-String absurl="/infirm.do?action=showProgram";
-
+	String reqstr =request.getQueryString(); 
+	if (reqstr == null) 
+	{
+		//Hack:: an unknown bug of struts or JSP causing the queryString to be null
+		String year_q = request.getParameter("year");
+	    String month_q =request.getParameter("month");
+	    String day_q = request.getParameter("day");
+	    String view_q = request.getParameter("view");
+	    String displayMode_q = request.getParameter("displaymode");
+	    reqstr = "year=" + year_q + "&month=" + month_q 
+           + "&day="+ day_q + "&view=" + view_q + "&displaymode=" + displayMode_q;
+	}
+	session.setAttribute("infirmaryView_OscarQue",reqstr); 
+	String absurl="/infirm.do?action=showProgram";
 %>
 <c:import url="/infirm.do?action=showProgram" />
 </caisi:isModuleLoad>

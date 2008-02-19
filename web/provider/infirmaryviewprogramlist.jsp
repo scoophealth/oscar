@@ -71,13 +71,13 @@ function submitStatus(ctrl) {
   &nbsp;
   <select id="program_clientstatus" name="program_clientstatus" onchange="submitStatus(this)">
   	<c:choose>
-  		<c:when test="${empty requestScope.infirmaryView_clientStatusId or requestScope.infirmaryView_clientStatusId == 0}"><option value="0" selected>&nbsp;</option></c:when>
+  		<c:when test="${empty infirmaryView_clientStatusId or infirmaryView_clientStatusId == 0}"><option value="0" selected>&nbsp;</option></c:when>
   		<c:otherwise><option value="0">&nbsp;</option></c:otherwise>
   	</c:choose>
   	
   	<c:forEach var="status" items="${program_client_statuses}">
   		<c:choose>
-  			<c:when test="${requestScope.infirmaryView_clientStatusId == status.id}">
+  			<c:when test="${infirmaryView_clientStatusId == status.id}">
 	  			<option selected value="<c:out value="${status.id}"/>"><c:out value="${status.name}"/></option>
   			</c:when>
   			<c:otherwise>
