@@ -412,7 +412,7 @@ pop up description layer
     </tr>
     <tr align="center">
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.msgDate"/></a></td>
-        <td colspan="3"><input readonly type="text" id="p1_date1w" name="p1_date1w" size="10" ondblclick="resetDate(this)" "value="<%=UtilMisc.htmlEscape(props.getProperty("p1_date1w", ""))%>" /> <img src="../images/cal.gif" id="p1_date1w_cal"></td>
+        <td colspan="3"><input readonly type="text" id="p1_date1w" name="p1_date1w" size="10" ondblclick="resetDate(this)" value="<%=UtilMisc.htmlEscape(props.getProperty("p1_date1w", ""))%>" /> <img src="../images/cal.gif" id="p1_date1w_cal"></td>
         <td colspan="3"><input readonly type="text" id="p1_date2w" name="p1_date2w" size="10" ondblclick="resetDate(this)" value="<%=UtilMisc.htmlEscape(props.getProperty("p1_date2w", ""))%>" /> <img src="../images/cal.gif" id="p1_date2w_cal"></td>
         <td colspan="3"><input readonly type="text" id="p1_date1m" name="p1_date1m" size="10" ondblclick="resetDate(this)" value="<%=UtilMisc.htmlEscape(props.getProperty("p1_date1m", ""))%>" /> <img src="../images/cal.gif" id="p1_date1m_cal"></td>
     </tr>
