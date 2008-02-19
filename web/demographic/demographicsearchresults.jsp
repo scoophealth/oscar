@@ -282,6 +282,9 @@ function popup(vheight,vwidth,varpage) {
 %> 
 
 </table>
+<sup>*</sup>Sorts by demographic number<br>
+<sup>1</sup>Sorts by last name<br>
+
 <br>
 <%
   int nLastPage=0,nNextPage=0;
