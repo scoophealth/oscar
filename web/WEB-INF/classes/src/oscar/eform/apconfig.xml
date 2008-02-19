@@ -46,10 +46,19 @@
 		<ap-output>${province}</ap-output>
 	</databaseap>
 	<databaseap>
+                <ap-name>city</ap-name>
+                <ap-sql>SELECT city FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+                <ap-output>${city}</ap-output>
+        </databaseap>
+	<databaseap>
+                <ap-name>postal</ap-name>
+                <ap-sql>SELECT postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+                <ap-output>${postal}</ap-output>
+        </databaseap>
+
+	<databaseap>
 		<ap-name>doctor</ap-name>
-		<ap-sql>SELECT provider.last_name, provider.first_name 
-			FROM provider, demographic 
-			WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+		<ap-sql>SELECT provider.last_name, provider.first_name FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
 		<ap-output>${last_name}, ${first_name}</ap-output>
 	</databaseap>
 	<databaseap>
@@ -62,6 +71,12 @@
 		<ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${date_of_birth}/${month_of_birth}/${year_of_birth}</ap-output>
 	</databaseap>
+	<databaseap>
+                <ap-name>dobc2</ap-name>
+		<ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+                <ap-output>${year_of_birth}/${month_of_birth}/${date_of_birth}</ap-output>
+        </databaseap>
+
 	<databaseap>
 		<ap-name>NameAddress</ap-name>
 		<ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
@@ -132,6 +147,25 @@
 		<ap-sql>SELECT * FROM clinic</ap-sql>
 		<ap-output>${clinic_address}\n${clinic_city},${clinic_postal}\n${clinic_province},Canada</ap-output>
 	</databaseap>
+	<databaseap>
+                <ap-name>clinic_city</ap-name>
+                <ap-sql>SELECT * FROM clinic</ap-sql>
+                <ap-output>${clinic_city}</ap-output>
+	</databaseap>
+	<databaseap>
+                <ap-name>clinic_province</ap-name>
+                <ap-sql>SELECT * FROM clinic</ap-sql>
+                <ap-output>${clinic_province}</ap-output>
+	</databaseap>
+
+	 <databaseap>
+                <ap-name>clinic_postal</ap-name>
+                <ap-sql>SELECT * FROM clinic</ap-sql>
+                <ap-output>${clinic_postal}</ap-output>
+        </databaseap>
+
+
+
 	<databaseap>
 		<ap-name>social_family_history</ap-name>
 		<ap-sql>SELECT socialHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
