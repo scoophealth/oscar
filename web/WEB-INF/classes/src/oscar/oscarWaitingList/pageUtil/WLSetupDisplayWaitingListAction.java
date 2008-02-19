@@ -29,22 +29,18 @@ package oscar.oscarWaitingList.pageUtil;
 import java.io.*;
 import java.util.*;
 import java.lang.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
 
 import org.apache.struts.action.*;
 import org.apache.struts.validator.LazyValidatorForm;
 
-import oscar.oscarDB.DBHandler;
-import oscar.OscarProperties;
 import oscar.oscarWaitingList.bean.*;
 import oscar.oscarWaitingList.util.WLWaitingListUtil;
 import oscar.oscarProvider.bean.*;
+import oscar.oscarProvider.bean.ProviderNameBean;
 import oscar.util.*;
+import oscar.oscarProvider.data.*;
 
 public final class WLSetupDisplayWaitingListAction extends Action {
 
@@ -162,9 +158,16 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         if(groupNo != null){
         	phd.setThisGroupProviderVector(groupNo);
         	allProviders = phd.getThisGroupProviderVector();
-        
         	System.out.println("WLSetupDisplayWaitingListAction/execute(): allProviders.size() = "+ allProviders.size());
-        
+                if (allProviders.size()<=0){
+                    ProviderData proData = new ProviderData();
+                    proData.getProvider(groupNo);
+                    if (!proData.getLast_name().equals("") && proData.getLast_name() != null && !proData.getFirst_name().equals("") && proData.getFirst_name() != null) {
+                        ProviderNameBean proNameBean = new ProviderNameBean(proData.getLast_name() + ", " + proData.getFirst_name(), groupNo);
+                        allProviders.add(proNameBean);
+                    }
+                }
+                    
         	if(hd != null){
         		nbPatients = Integer.toString(hd.getWaitingListArrayList().size());
         	}else{
