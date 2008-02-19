@@ -151,9 +151,9 @@ public class InfirmAction extends BaseAction
 		//if (memo!=null) memo.clear();
 		List demographicBeans = getInfirmBedProgramManager().getDemographicByBedProgramIdBeans(programId,dt,archiveView);
 		List filteredDemographicBeans = new ArrayList();
-		if(se.getAttribute("infirmaryView_clientStatusId") != null) {		
+		if( request.getParameter("infirmaryView_clientStatusId") != null) {		
 			//int statusId = new Integer(request.getParameter("infirmaryView_clientStatusId")).intValue();
-			String statusId = (String) se.getAttribute("infirmaryView_clientStatusId");
+			String statusId = (String) request.getParameter("infirmaryView_clientStatusId");
 			if(statusId.equals("0")){
 				filteredDemographicBeans = demographicBeans;
 			}
