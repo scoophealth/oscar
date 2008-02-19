@@ -1,5 +1,12 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%
+        long loadPage = System.currentTimeMillis();
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+
 
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, oscar.oscarDemographic.data.DemographicMerged" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -80,6 +87,20 @@ function checkTypeIn() {
   }
 }
 
+function popup(vheight,vwidth,varpage) {
+  var page = varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+  var popup=window.open(varpage, "<bean:message key="global.oscarRx"/>_appt", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self;
+    }
+    popup.focus();
+  }
+}
+
+
+
 </SCRIPT>
 </head>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -99,21 +120,28 @@ function checkTypeIn() {
 <CENTER>
 <table width="100%" border="0" bgcolor="#ffffff" cellspacing="2" cellpadding="2" > 
 <tr bgcolor="#CCCCFF">
-<TH width="10%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnDemoNo"/></a></b></TH>
+<% if ( fromMessenger ) {%>
+	<! -- leave blank -->
+<%} else {%>
 
+<TH width="10%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>">Quick Links<sup>*</sup></a></b></font></TH>
 
+<%}%>
 
+<TH width="20%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit2%>">Name<sup>1</sup></a> </b></font></TH>
 
-
-<TH width="20%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnLastName"/></a> </b></TH>
-<TH width="20%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=first_name&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnFirstName"/></a> </b></TH>
 <TH width="10%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=chart_no&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnChart"/></a></b></TH>
-<!--TH width="10%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=year_of_birth,month_of_birth,date_of_birth&limit1=0&limit2=<%=strLimit2%>">AGE</a></b></font></TH-->
+
 <TH width="2%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=sex&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnSex"/></a></B></TH>
+
 <TH width="10%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=year_of_birth,month_of_birth,date_of_birth&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnDOB"/></a></B></TH>
+
 <TH width="20%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=provider_no&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnDoctor"/></a></b></TH>
+
 <TH width="5%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit2%>"><font size='-1'><bean:message key="demographic.demographicsearchresults.btnRosSta"/></font></a></b></TH>
+
 <TH width="3%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=patient_status&limit1=0&limit2=<%=strLimit2%>"><font size='-1'><bean:message key="demographic.demographicsearchresults.btnPatSta"/></font></a></b></TH>
+
 <TH width="10%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=phone&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnPhone"/></a></b></TH>
 </tr>
 <%
@@ -226,17 +254,19 @@ function checkTypeIn() {
 			<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name")+", "+apptMainBean.getString(rs,"first_name"))%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=apptMainBean.getString(rs,"demographic_no")%></a>	        
             <!-- Link to Oscar Message with display mode = edit ( default) -->
             <%}else{%>
-			<a href="demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail"><%=dem_no%></a>	        
-
-
-
-
-
-
+			<a title="Master Demo File" href="#" onclick="popup(600,900,'demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail')">M</a>
+                        <!-- Rights -->
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
+	
+                        <a title="Encounter" href="#" onclick="popup(600,900,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=dem_no%>&curProviderNo=<%=rs.getString("provider_no")%>')">E</a>
+		</security:oscarSec>
+                        <!-- Rights -->
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r">
+                        <a title="Prescriptions" href="#" onclick="popup(600,900,'../oscarRx/choosePatient.do?providerNo=<%=rs.getString("provider_no")%>&demographicNo=<%=dem_no%>')">Rx</a>
+		</security:oscarSec>
 	    <%}%>
       </td>
-      <td><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name"))%></td>
-      <td><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"first_name"))%></td>
+      <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%>, <%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
       <td align="center"><%=apptMainBean.getString(rs,"chart_no")==null||apptMainBean.getString(rs,"chart_no").equals("")?"&nbsp;":apptMainBean.getString(rs,"chart_no")%></td>
       <td align="center"><%=apptMainBean.getString(rs,"sex")%></td>
       <td align="center" nowrap><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></td>
