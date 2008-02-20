@@ -8,9 +8,11 @@ import com.quatro.model.*;
 import com.quatro.service.*;
 import com.quatro.util.*;
 
-import java.util.ArrayList;
 import com.crystaldecisions.sdk.occa.report.exportoptions.ReportExportFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Iterator;
+import oscar.MyDateFormat;;
 
 public class QuatroReportRunnerAction extends Action {
 	
@@ -21,7 +23,8 @@ public class QuatroReportRunnerAction extends Action {
 		String param=(String)request.getParameter("id");
 		QuatroReportRunnerForm myForm = (QuatroReportRunnerForm)form;
 		int rptNo;
-        String loginId = "999998";
+//        String loginId = "999998";
+		String loginId = (String)request.getSession().getAttribute("user");
 
         ArrayList lstExportFormat = myForm.getExportFormatList();
 
@@ -407,7 +410,119 @@ public class QuatroReportRunnerAction extends Action {
 	
 	private ReportTempValue BuildTemplate(QuatroReportRunnerForm myForm, HttpServletRequest request) throws Exception
     {
-        ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
+		String loginId = (String)request.getSession().getAttribute("user");
+	    ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
+        int reportNo = rptVal.getReportNo();
+
+        ReportOptionValue option = null;
+		ReportTempValue repTemp = new ReportTempValue();
+        repTemp.setReportNo(reportNo);
+//        repTemp.setStartDate(Utility.GetSysDate(myForm.getStartField()));
+//        repTemp.setEndDate(Utility.GetSysDate(myForm.getEndField()));
+	    repTemp.setErrMsg("");
+	    String errMsg = "";
+		boolean noDateRange = false;
+		boolean noOrgs = false;
+		boolean noCriteria = false;
+
+		if (rptVal.getReportTemp() != null){
+		  repTemp.setTemplateNo(rptVal.getReportTemp().getTemplateNo());
+		  repTemp.setDesc(rptVal.getReportTemp().getDesc());
+		  repTemp.setPrivate(rptVal.getReportTemp().isPrivate());
+		  errMsg = rptVal.getReportTemp().ErrMsg;
+		}
+		
+		  repTemp.setLoginId(loginId);
+		  boolean hasAnyCriteria = false;
+		  if ("D".equals(rptVal.getDatePart())){
+		    if ("N".equals(rptVal.getDateOption())){
+		      repTemp.setStartDate(MyDateFormat.getSysDate("1900-01-01"));
+		      repTemp.setEndDate(MyDateFormat.getSysDate("2999-12-31"));
+		    }else{
+		      if (Utility.IsEmpty(myForm.getStartField()) && Utility.IsEmpty(myForm.getEndField())){
+		        noDateRange = true;
+		      }else if (Utility.IsEmpty(myForm.getStartField())){
+		        repTemp.setStartDate(MyDateFormat.getCurrentDate());
+			    repTemp.setEndDate(MyDateFormat.getSysDate(myForm.getEndField()));
+		      }else if (Utility.IsEmpty(myForm.getStartField())){
+	            repTemp.setStartDate(MyDateFormat.getSysDate(myForm.getStartField()));
+		        repTemp.setEndDate(MyDateFormat.getCurrentDate());
+		      }else{
+		        repTemp.setStartDate(MyDateFormat.getSysDate(myForm.getStartField()));
+			    repTemp.setEndDate(MyDateFormat.getSysDate(myForm.getEndField()));
+		        if (repTemp.getStartDate().after(repTemp.getEndDate()))
+		          errMsg = " Start Date Must Be Less or Equal to the End Date";
+		      }
+		    }
+		  }else{
+		    if ("N".equals(rptVal.getDateOption())){
+		      repTemp.setStartPayPeriod(null);
+		      repTemp.setEndPayPeriod(null);
+		    }else{
+		      repTemp.setStartPayPeriod(myForm.getStartField().trim());
+		      repTemp.setEndPayPeriod(myForm.getEndField().trim());
+		      if ("".equals(repTemp.getStartPayPeriod()) && "".equals(repTemp.getEndPayPeriod())){
+		        noDateRange = true;
+		      }else if ("".equals(repTemp.getStartPayPeriod())){
+		        repTemp.setStartPayPeriod(repTemp.getEndPayPeriod());
+		      }else if ("".equals(repTemp.getEndPayPeriod())){
+		        repTemp.setEndPayPeriod(repTemp.getStartPayPeriod());
+		      }else{
+		        if (repTemp.getStartPayPeriod().compareTo(repTemp.getEndPayPeriod()) > 0)
+		           errMsg = " Start Date Must Be Less or Equal to the End Date";
+		      }
+		    }
+		  }
+
+		  if (rptVal.isOrgApplicable()){
+		    ArrayList orgCodes = new ArrayList();
+		    if(myForm.getTxtOrgKey()!=null){
+		      String[] sOrgKey=myForm.getTxtOrgKey().split(":");
+		      String[] sOrgValue=myForm.getTxtOrgValue().split(":");
+		      for (int i = 0; i < sOrgKey.length; i++){
+			    LookupCodeValue org = new LookupCodeValue();
+			    org.setCode(sOrgKey[i]);
+			    org.setDescription(sOrgValue[i]);
+			    orgCodes.add(org);
+		      }
+		    }
+		    repTemp.setOrgCodes(orgCodes);
+		    noOrgs = (orgCodes.size() == 0);
+		  }else{
+		    repTemp.setOrgCodes(null);
+		  }
+
+//		  if (this.lstOptions.SelectedIndex < 0) this.lstOptions.SelectedIndex = 0;
+//		  int optionIdx = this.lstOptions.SelectedIndex;
+
+		  if (myForm.getReportOption() == null){
+			 repTemp.setReportOptionID(0);
+//   		    errMsg = "Report Designer: Please define at least one active option and make one option default";
+		  }else{
+		    repTemp.setReportOptionID(Integer.parseInt("0"));
+		  }
+		  
+		  noCriteria = true;
+//		  ArrayList tempCris = (ArrayList)this.Singleton.CurrentReport[DataViews.REPORT_CRI];
+		  ArrayList tempCris = (ArrayList)request.getSession().getAttribute(DataViews.REPORT_CRI);
+		  if (tempCris != null){
+		    noCriteria = (tempCris.size() == 0);
+//		    if (!noCriteria) ValidateCriteriaString(reportNo, tempCris);
+		  }
+		 
+		  repTemp.setTemplateCriteria(tempCris);
+		  hasAnyCriteria = !(noDateRange && noOrgs && noCriteria);
+
+		  if (!hasAnyCriteria) errMsg = "Please specify criteria for the report";
+		  repTemp.setErrMsg("");
+
+		  if (!Utility.IsEmpty(errMsg))
+		    throw new Exception(errMsg);
+		  else
+		    return repTemp;
+		
+/*
+		ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
         int reportNo = rptVal.getReportNo();
 
         ReportTempValue repTemp = new ReportTempValue();
@@ -415,6 +530,7 @@ public class QuatroReportRunnerAction extends Action {
         repTemp.setEndDate(Utility.GetSysDate(myForm.getEndField()));
         repTemp.setReportNo(reportNo);
         return repTemp;
+*/        
     }
 
 	private ArrayList GetOperatorList(String ops)

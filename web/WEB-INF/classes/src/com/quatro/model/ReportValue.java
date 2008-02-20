@@ -29,6 +29,8 @@ public class ReportValue{
     private Date updatedDate;
     private String providerNo;
     
+    private String sptorun;
+    
 	public ReportTempValue getReportTemp() {
 		return reportTemp;
 	}
@@ -195,6 +197,14 @@ public class ReportValue{
 
 	public void setFilters(List filters) {
 		this.filters = filters;
+	}
+
+	public String getSptorun() {
+		return sptorun;
+	}
+
+	public void setSptorun(String sptorun) {
+		this.sptorun = sptorun;
 	}
 	
 }

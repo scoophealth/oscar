@@ -1,21 +1,20 @@
 package com.quatro.dao;
 
-import java.util.ArrayList;
 import java.util.*;
+
 import com.quatro.model.*;
+
+import org.caisi.model.CaisiEditor;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.SessionFactory;
+import org.hibernate.Hibernate;
 
 public class QuatroReportDao extends HibernateDaoSupport {
 
 	  public ReportValue GetReport(int rptNo, String providerNo)
 	  {
-/*
-		  Hashtable<String, Object> param = new Hashtable<String, Object>(); 
-	      param.put("ReportNo", rptNo);
-	      param.put("UserId", userId);
-	      return (ReportValue)queryForObject("GetReport", param);
-*/	      
-//		return (CaisiRole)this.getHibernateTemplate().find("from CaisiRole cr where cr.provider_no = ?",new Object[] {provider_no}).get(0);
           ArrayList paramList = new ArrayList();
 		  String sSQL="FROM ReportValue s where s.reportNo=? AND s.providerNo=? ORDER BY s.accessType DESC";		
 	      paramList.add(rptNo);
@@ -46,12 +45,6 @@ public class QuatroReportDao extends HibernateDaoSupport {
 	  
 	  public ReportFilterValue GetFilterField(int rptNo, int fieldNo)
 	  {
-/*
-		  Hashtable param = new Hashtable();
-	      param.put("ReportNo",rptNo);
-	      param.put("FieldNo",fieldNo);
-	      return (ReportFilterValue)queryForObject("GetFilterField", param);
-*/
           ArrayList paramList = new ArrayList();
 		  String sSQL="FROM ReportFilterValue s where s.reportNo=? AND s.fieldNo = ?";		
 	      paramList.add(rptNo);
@@ -66,12 +59,14 @@ public class QuatroReportDao extends HibernateDaoSupport {
 	         return (ReportFilterValue)lst.get(0);
 	      }
 	  }
+
 	  public List GetReportGroupList(String providerNo)
 	  {
           ArrayList paramList = new ArrayList();
 		  String sSQL="FROM ReportGroupValue s  ORDER BY s.reportGroupDesc";
 	      return  getHibernateTemplate().find(sSQL);
 	  }
+
 	  public List GetReportList(String providerNo, int reportGroupId)
 	  {
           ArrayList paramList = new ArrayList();
@@ -82,5 +77,41 @@ public class QuatroReportDao extends HibernateDaoSupport {
 	      return  getHibernateTemplate().find(sSQL,params);
 	  }
 
+      public void SetReportDate(String sessionId, Date startDate, Date endDate){
+    	  ReportDateValue rdv= new ReportDateValue();
+    	  rdv.setSessionId(sessionId);
+    	  rdv.setStartDate(startDate);
+    	  rdv.setEndDate(endDate);
+          getHibernateTemplate().saveOrUpdate(rdv);
+      }
+      
+      public void SetReportDate(String sessionId, String startPayPeriod, String endPayPeriod){
+    	  ReportDateValue rdv= new ReportDateValue();
+    	  rdv.setSessionId(sessionId);
+    	  rdv.setStartDate_S(startPayPeriod);
+    	  rdv.setEndDate_S(endPayPeriod);
+          getHibernateTemplate().saveOrUpdate(rdv);
+      }
+      
+  	  public void SetReportDateSp(int reportNo, Date startDate, Date endDate, String spToRun){
+
+//        String sql="insert into ReportDateSPValue (reportNo, startDate, endDate, spToRun) VALUES (?, ?, ?,?)";
+/*
+          // this update record works
+  		  String sql="update ReportDateSPValue rv set startDate=?,endDate=?,spToRun=? where reportNo=?";
+          Query query = getSession().createQuery(sql);
+		  query.setParameter(0, startDate, Hibernate.DATE);
+		  query.setParameter(1, endDate, Hibernate.DATE);
+		  query.setParameter(2, spToRun, Hibernate.STRING);
+		  query.setParameter(3, reportNo);
+		  int rowx = query.executeUpdate();
+*/		  
+    	  ReportDateSPValue rdsv= new ReportDateSPValue();
+    	  rdsv.setReportNo(reportNo);
+    	  rdsv.setStartDate(startDate);
+    	  rdsv.setEndDate(endDate);
+    	  rdsv.setSpToRun(spToRun);
+          getHibernateTemplate().saveOrUpdate(rdsv);
+  	  }
 
 }

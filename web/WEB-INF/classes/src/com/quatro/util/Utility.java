@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 public class Utility {
     public static boolean IsEmpty(String pStr)
     {
-        if (pStr == null || pStr.trim() == "")
+        if (pStr == null || pStr.trim().equals(""))
         {
             return true;
         }

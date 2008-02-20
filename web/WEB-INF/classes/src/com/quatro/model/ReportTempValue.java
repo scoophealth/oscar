@@ -1,7 +1,7 @@
 package com.quatro.model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 public class ReportTempValue {
     private int templateNo = 0;

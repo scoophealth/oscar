@@ -157,6 +157,12 @@ public class MyDateFormat {
         }
     }
 
+    public static java.sql.Date getCurrentDate()
+    {
+      GregorianCalendar cal = new GregorianCalendar();
+      return new java.sql.Date(cal.getTime().getTime());
+    }
+    
 	//from  20:20:00to 08:20pm,  09:09:00 to 09:09am, or 20:20 to 08:20pm
 	public static String getTimeXX_XXampm(String aXX_XX_XX) {
 		String temp=null; //mySQL = null

@@ -1,8 +1,10 @@
 package com.quatro.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import com.quatro.dao.QuatroReportDao;
 import com.quatro.model.*;
+import java.util.Date;
 
 public class QuatroReportManager {
 
@@ -21,7 +23,7 @@ public class QuatroReportManager {
 		
 //		ArrayList options= (ArrayList)quatroReportDao.GetReportOptionList(rptNo);
 //		reportValue.setOptions(options);
-		reportValue.setRunTime(new Date());
+		reportValue.setRunTime(new java.util.Date());
 
 		ArrayList filters= (ArrayList)quatroReportDao.GetFilterFieldList(rptNo);
 		reportValue.setFilters(filters);
@@ -95,4 +97,15 @@ public class QuatroReportManager {
 		return rgs;
 	}
 
+	public void SetReportDate(String sessionid,Date startDate, Date endDate){
+		quatroReportDao.SetReportDate(sessionid, startDate, endDate);
+	}
+
+	public void SetReportDate(String sessionid, String startPayPeriod, String endPayPeriod){
+		quatroReportDao.SetReportDate(sessionid, startPayPeriod, endPayPeriod);
+	}
+	
+	public void SetReportDateSp(int reportNo, Date startDate, Date endDate, String spToRun){
+		quatroReportDao.SetReportDateSp(reportNo, startDate, endDate, spToRun);
+	}
 }

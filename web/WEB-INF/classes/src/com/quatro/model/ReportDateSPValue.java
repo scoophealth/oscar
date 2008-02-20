@@ -1,0 +1,68 @@
+package com.quatro.model;
+
+import java.util.Date;
+
+import org.caisi.model.BaseObject;
+
+public class ReportDateSPValue extends BaseObject{
+	private int  reportNo;
+	private Date startDate;
+	private Date endDate;
+	private Date asOfDate;
+	private String startDate_S;
+	private String endDate_S;
+	private String asOfDate_S;
+	private String spToRun;
+
+	public ReportDateSPValue() {		
+	}
+
+	public Date getAsOfDate() {
+		return asOfDate;
+	}
+	public void setAsOfDate(Date asOfDate) {
+		this.asOfDate = asOfDate;
+	}
+	public String getAsOfDate_S() {
+		return asOfDate_S;
+	}
+	public void setAsOfDate_S(String asOfDate_S) {
+		this.asOfDate_S = asOfDate_S;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	public String getEndDate_S() {
+		return endDate_S;
+	}
+	public void setEndDate_S(String endDate_S) {
+		this.endDate_S = endDate_S;
+	}
+	public int getReportNo() {
+		return reportNo;
+	}
+	public void setReportNo(int reportNo) {
+		this.reportNo = reportNo;
+	}
+	public String getSpToRun() {
+		return spToRun;
+	}
+	public void setSpToRun(String spToRun) {
+		this.spToRun = spToRun;
+	}
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public String getStartDate_S() {
+		return startDate_S;
+	}
+	public void setStartDate_S(String startDate_S) {
+		this.startDate_S = startDate_S;
+	}
+}

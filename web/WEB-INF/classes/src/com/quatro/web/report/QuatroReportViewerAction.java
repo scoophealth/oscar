@@ -2,7 +2,10 @@ package com.quatro.web.report;
 
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import com.quatro.model.*;
+import com.quatro.service.QuatroReportManager;
 import com.quatro.util.*;
 import oscar.OscarProperties;
 
@@ -20,117 +23,93 @@ import com.crystaldecisions.sdk.occa.report.lib.*;
 import com.crystaldecisions.report.web.viewer.*;
 
 public class QuatroReportViewerAction extends Action {
-//	private String [] relationList = {"(","AND","OR",")",") AND",") OR","AND (","OR (",") AND (",") OR ("};
 	ReportValue _rptValue;
     ReportOptionValue _rptOption;
 //	protected CrystalDecisions.CrystalReports.Engine.ReportDocument reportDocument1;
 
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		QuatroReportRunnerForm myForm = (QuatroReportRunnerForm)form;
 		Refresh(myForm, request, response);		
-
 		ActionForward forward = mapping.findForward("donothing");
 		return forward;
-
 	}
 	
-	public void Refresh(QuatroReportRunnerForm myForm, HttpServletRequest request, HttpServletResponse response)
-	{
+	public void Refresh(QuatroReportRunnerForm myForm, HttpServletRequest request, HttpServletResponse response){
 		
 	    _rptValue = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
 	    _rptOption = (ReportOptionValue)request.getSession().getAttribute(DataViews.REPORT_OPTION);
 	    try{
-
 //			ReportTempValue rptTemp = _rptValue.getReportTemp();
 			ReportTempValue rptTemp = (ReportTempValue)request.getSession().getAttribute(DataViews.REPORTTPL);
 	        int reportNo = rptTemp.getReportNo();
-//	        string loginId = this.Singleton.CurrentUser.UserId;
-	        String loginId = "999998";//mespina";
+//	        String loginId = "999998";//mespina";
+			String loginId = (String)request.getSession().getAttribute("user");
 	        String datepartDis = "Date ";
 	        if ("M".equals(_rptValue.getDatePart()))
-	        {
 	           datepartDis = "Month ";
-	        }
 	        else if ("Y".equals(_rptValue.getDatePart()))
-	        {
 	           datepartDis = "Year ";
-	        }
 
 			int templateNo = 0;//rptTemp.getTemplateNo();
 			//prepare to run the report
-            // ReportService reportService = ReportService.GetInstance();
-
+ 
             //1. get he report Value bean and date filter
             Date startDate = rptTemp.getStartDate();
             Date endDate = rptTemp.getEndDate();
             String dateRangeDis = "";
             if (!Utility.IsEmpty(_rptValue.getDateOption()))
-            {
                 dateRangeDis = Utility.FormatDate(startDate);
-            }
             else
-            {
                 dateRangeDis = Utility.FormatDate(startDate) + " - " + Utility.FormatDate(endDate);
-            }
+
             if (!"".equals(dateRangeDis)) dateRangeDis = datepartDis + dateRangeDis;
-			String startPayPeriod = rptTemp.getStartPayPeriod();
+
+            String startPayPeriod = rptTemp.getStartPayPeriod();
 			String endPayPeriod = rptTemp.getEndPayPeriod();
 			String sPP = "";	
-			if (!Utility.IsEmpty(startPayPeriod)  || !Utility.IsEmpty(endPayPeriod)) 
-			{
+
+			if (!Utility.IsEmpty(startPayPeriod)  || !Utility.IsEmpty(endPayPeriod)){ 
 				sPP = startPayPeriod + " - " + endPayPeriod;
-			}
-			else if (Utility.IsEmpty(startPayPeriod) && Utility.IsEmpty(endPayPeriod)) 
-			{
+			}else if (Utility.IsEmpty(startPayPeriod) && Utility.IsEmpty(endPayPeriod)){ 
 				// do nothing
-			}
-			else if (Utility.IsEmpty(startPayPeriod) )
-			{
+			}else if (Utility.IsEmpty(startPayPeriod)){
 				sPP =  " - " + endPayPeriod;
-			}		
-			else if (Utility.IsEmpty(endPayPeriod)) 
-			{
+			}else if (Utility.IsEmpty(endPayPeriod)){ 
 				sPP = startPayPeriod + " - ";
 			}
-            if (!Utility.IsEmpty(sPP)) dateRangeDis = datepartDis + sPP;
+			
+			if (!Utility.IsEmpty(sPP)) dateRangeDis = datepartDis + sPP;
 			
 			String optionId = String.valueOf(rptTemp.getReportOptionID());
 
 			//2. get the org list (not include the users limitations)
 	        String orgDis = "";
             String orgs = "";
-            if (_rptValue.isOrgApplicable())
-            {
-            	orgs = ""; //ConstructOrgStringCrysatal(out orgDis);
-            }
+            if (_rptValue.isOrgApplicable()) orgs = ""; //ConstructOrgStringCrysatal(out orgDis);
 	                
             //3. Construct Criteria String
 			String criteriaDis="";
-//			Vector v1 = ConstructCriteriaStringCrystal(criteriaDis);
 			String criteria = ConstructCriteriaStringCrystal(criteriaDis);
-//			ConstructCriteriaStringCrystal(criteriaDis);
-//			String criteria = "";
 			criteriaDis="";
-			if ("D".equals(_rptValue.getDatePart()))
-            {
-//               reportService.SetReportDate(Session.SessionID,startDate, endDate);
-               PaintReport(request, response, startDate, endDate, orgs, criteria, dateRangeDis, orgDis, criteriaDis);
-            }
-            else
-            {
-//               reportService.SetReportDate(Session.SessionID, startPayPeriod, endPayPeriod);
+
+			QuatroReportManager qrManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
+	        		getServlet().getServletContext()).getBean("quatroReportManager");
+			if ("D".equals(_rptValue.getDatePart())){
+				qrManager.SetReportDate(request.getSession().getId(), startDate, endDate);
+                if (!Utility.IsEmpty(_rptValue.getSptorun()))
+                	qrManager.SetReportDateSp(_rptValue.getReportNo(), startDate, endDate, _rptValue.getSptorun());
+				PaintReport(request, response, startDate, endDate, orgs, criteria, dateRangeDis, orgDis, criteriaDis);
+            }else{
+				qrManager.SetReportDate(request.getSession().getId(), startPayPeriod, endPayPeriod);
+                if (!Utility.IsEmpty(_rptValue.getSptorun()))
+                	qrManager.SetReportDateSp(_rptValue.getReportNo(), startDate, endDate, _rptValue.getSptorun());
                PaintReport(request, response, startPayPeriod, endPayPeriod, orgs, criteria, dateRangeDis, orgDis, criteriaDis);
             }
-		} 
-		catch(Exception e) 
-		{
-			System.out.println(e.toString());
-//			response.Write("Validation Error Detected:<BR>" + e.Message);
-//			response.End();
+		}catch(Exception e){
+			System.out.println("Validation Error Detected:<BR>" + e.toString());
 		}
 
 	}
@@ -314,7 +293,7 @@ public class QuatroReportViewerAction extends Action {
         String sDt;
         if (isDateFieldString)
         {
-            sDt = "'" + Utility.FormatDate(dt, "yyyyMMdd") + "'";
+            sDt = "'" + Utility.FormatDate(dt, "yyyy-mm-dd") + "'";
         }
         else
         {
@@ -326,9 +305,8 @@ public class QuatroReportViewerAction extends Action {
     }
     
     private void PaintReport(HttpServletRequest request, HttpServletResponse response, Date startDate, 
-    		Date endDate, String orgs, String criteriaString, String dateRangeDis, 
-    		String orgDis, String criteriaDis)
-	{
+    		Date endDate, String orgs, String criteriaString, String dateRangeDis, String orgDis, String criteriaDis){
+
     	String loginId = "mespina";
         String userName = _rptValue.getAuthor();
 
@@ -356,79 +334,63 @@ public class QuatroReportViewerAction extends Action {
            sDateSQL = sDateField + " <= " + CRDate(startDate,isDateFieldString);
         }
         else if(sDateOption.equals("B")){
-           sDateRange = sDateFieldDesc + " Range : " + sStartDate + " - " + sEndDate;
-           sDateSQL = sDateField + " IN " + CRDate(startDate,isDateFieldString);
-           sDateSQL = sDateSQL + " TO " + CRDate(endDate,isDateFieldString);
+           if(startDate!=null && endDate!=null){
+        	 sDateRange = sDateFieldDesc + " Range : " + sStartDate + " - " + sEndDate;
+             sDateSQL = sDateField + " IN " + CRDate(startDate,isDateFieldString);
+             sDateSQL = sDateSQL + " TO " + CRDate(endDate,isDateFieldString);
+           }
         }
         
         if (!"".equals(sDateSQL)) {
-            if (Utility.IsEmpty(criteriaString)) {
-                criteriaString = sDateSQL;
-            }
-            else
-            {
-                criteriaString = sDateSQL + " AND " + criteriaString;
-            }
+           if (Utility.IsEmpty(criteriaString))
+             criteriaString = sDateSQL;
+           else
+             criteriaString = sDateSQL + " AND " + criteriaString;
         }
 
-        if (!Utility.IsEmpty(_rptOption.getDbsqlWhere()))
-        {
-            if (Utility.IsEmpty(criteriaString))
-            {
-                criteriaString = _rptOption.getDbsqlWhere();
-            }
-            else
-            {
-                criteriaString = "(" + _rptOption.getDbsqlWhere() + ")" + " AND " + criteriaString;
-            }
+        if (!Utility.IsEmpty(_rptOption.getDbsqlWhere())){
+           if (Utility.IsEmpty(criteriaString))
+             criteriaString = _rptOption.getDbsqlWhere();
+           else
+             criteriaString = "(" + _rptOption.getDbsqlWhere() + ")" + " AND " + criteriaString;
         }
-        if (!Utility.IsEmpty(orgs))
-        {
-            if (Utility.IsEmpty(criteriaString))
-            {
-                criteriaString = orgs;
-            }
-            else
-            {
-                criteriaString = "(" + orgs + ")" + " AND " + criteriaString;
-            }
+        
+        if (!Utility.IsEmpty(orgs)){
+           if (Utility.IsEmpty(criteriaString))
+             criteriaString = orgs;
+           else
+             criteriaString = "(" + orgs + ")" + " AND " + criteriaString;
         }
 
       ReportClientDocument reportDocument1 = new ReportClientDocument();
-//      String path=DataViews.RptFiles + "\\" + _rptOption.getRptFileName();
-//      String path="reports\\RptFiles\\" +  _rptOption.getRptFileName();
       String jspPath="";
       try{
          jspPath = getServlet().getServletContext().getResource("/").getPath();
-      }
-      catch(Exception ex){
+      }catch(Exception ex){
     	  ;
       }
 //      jspPath= OscarProperties.getInstance().getProperty("RPT_PATH");      
       String path=jspPath  + "/PMmodule/reports/RptFiles/" + _rptOption.getRptFileName();
       try{
-           reportDocument1.open(path,0);
-           if (!Utility.IsEmpty(criteriaString))
-             reportDocument1.setRecordSelectionFormula(criteriaString);
-      }
-      catch(ReportSDKException ex)
-      {
-	        ReportSDKException ss=ex;
+          reportDocument1.open(path,0);
+          if (!Utility.IsEmpty(criteriaString))  reportDocument1.setRecordSelectionFormula(criteriaString);
+      }catch(ReportSDKException ex){
+	      ReportSDKException ss=ex;
       }
       
       IReportSource reportSource = (IReportSource)reportDocument1.getReportSource();
   	  CrystalReportViewer crystalReportViewer = new CrystalReportViewer();
   	
-  try{
-  	crystalReportViewer.setReportSource(reportSource);
+      try{
+  	      crystalReportViewer.setReportSource(reportSource);
   	
-  	Fields fields = crystalReportViewer.getParameterFields();
-  	Fields fields2 = new Fields();
+  	      Fields fields = crystalReportViewer.getParameterFields();
+  	      Fields fields2 = new Fields();
 
-     	for (Iterator it = fields.iterator(); it.hasNext();){
+     	  for (Iterator it = fields.iterator(); it.hasNext();){
      		ParameterField pfield = (ParameterField)it.next();
-      	String fieldName=pfield.getName().toLowerCase();
-      	String fieldName2=pfield.getName();
+      	    String fieldName=pfield.getName().toLowerCase();
+      	    String fieldName2=pfield.getName();
      		if(fieldName.equals("daterange")){
          	    ParameterFieldDiscreteValue pfieldDV1 = new ParameterFieldDiscreteValue();
         	    pfieldDV1.setValue(sDateRange);
@@ -438,8 +400,7 @@ public class QuatroReportViewerAction extends Action {
          	    pfield1.setName(fieldName2);
          	    pfield1.setCurrentValues(vals1);
          	    fields2.add(pfield1);
-      	} 
-      	else if(fieldName.equals("organization")){
+      	    }else if(fieldName.equals("organization")){
          	    ParameterFieldDiscreteValue pfieldDV2 = new ParameterFieldDiscreteValue();
         	    pfieldDV2.setValue(orgDis);
          	    Values vals2 = new Values();
@@ -448,8 +409,7 @@ public class QuatroReportViewerAction extends Action {
          	    pfield2.setName(fieldName2);
          	    pfield2.setCurrentValues(vals2);
          	    fields2.add(pfield2);
-      	} 
-      	else if(fieldName.equals("criteria")){
+      	    }else if(fieldName.equals("criteria")){
          	    ParameterFieldDiscreteValue pfieldDV3 = new ParameterFieldDiscreteValue();
         	    pfieldDV3.setValue(criteriaDis);
          	    Values vals3 = new Values();
@@ -458,8 +418,7 @@ public class QuatroReportViewerAction extends Action {
          	    pfield3.setName(fieldName2);
          	    pfield3.setCurrentValues(vals3);
          	    fields2.add(pfield3);
-      	} 
-      	else if(fieldName.equals("username")){
+      	    }else if(fieldName.equals("username")){
          	    ParameterFieldDiscreteValue pfieldDV4 = new ParameterFieldDiscreteValue();
         	    pfieldDV4.setValue(userName);
          	    Values vals4 = new Values();
@@ -468,8 +427,7 @@ public class QuatroReportViewerAction extends Action {
          	    pfield4.setName(fieldName2);
          	    pfield4.setCurrentValues(vals4);
          	    fields2.add(pfield4);
-      	} 
-      	else if(fieldName.equals("userid")){
+      	    }else if(fieldName.equals("userid")){
          	    ParameterFieldDiscreteValue pfieldDV5 = new ParameterFieldDiscreteValue();
         	    pfieldDV5.setValue(loginId);
          	    Values vals5 = new Values();
@@ -478,8 +436,7 @@ public class QuatroReportViewerAction extends Action {
          	    pfield5.setName(fieldName2);
          	    pfield5.setCurrentValues(vals5);
          	    fields2.add(pfield5);
-      	} 
-      	else if(fieldName.equals("reporttitle")){
+      	    }else if(fieldName.equals("reporttitle")){
          	    ParameterFieldDiscreteValue pfieldDV6 = new ParameterFieldDiscreteValue();
         	    pfieldDV6.setValue(_rptValue.getTitle());
          	    Values vals6 = new Values();
@@ -488,8 +445,7 @@ public class QuatroReportViewerAction extends Action {
          	    pfield6.setName(fieldName2);
          	    pfield6.setCurrentValues(vals6);
          	    fields2.add(pfield6);
-      	} 
-      	else if(fieldName.equals("reporttitle2")){
+      	    }else if(fieldName.equals("reporttitle2")){
          	    ParameterFieldDiscreteValue pfieldDV7 = new ParameterFieldDiscreteValue();
         	    pfieldDV7.setValue(_rptOption.getOptionTitle());
          	    Values vals7 = new Values();
@@ -498,9 +454,8 @@ public class QuatroReportViewerAction extends Action {
          	    pfield7.setName(fieldName2);
          	    pfield7.setCurrentValues(vals7);
          	    fields2.add(pfield7);
-      	} 
-      	else if(fieldName.equals("reporttitle3")){
-      		ParameterFieldDiscreteValue pfieldDV8 = new ParameterFieldDiscreteValue();
+      	    }else if(fieldName.equals("reporttitle3")){
+      		    ParameterFieldDiscreteValue pfieldDV8 = new ParameterFieldDiscreteValue();
          	    if(_rptValue.getReportTemp()!=null){
         	       pfieldDV8.setValue(_rptValue.getReportTemp().getDesc());
          	    }else{
@@ -512,8 +467,7 @@ public class QuatroReportViewerAction extends Action {
          	    pfield8.setName(fieldName2);
          	    pfield8.setCurrentValues(vals8);
          	    fields2.add(pfield8);
-      	} 
-      	else if(fieldName.equals("sessionid")){
+      	    }else if(fieldName.equals("sessionid")){
          	    ParameterFieldDiscreteValue pfieldDV9 = new ParameterFieldDiscreteValue();
         	    pfieldDV9.setValue(criteriaDis);
          	    Values vals9 = new Values();
@@ -522,8 +476,7 @@ public class QuatroReportViewerAction extends Action {
          	    pfield9.setName(fieldName2);
          	    pfield9.setCurrentValues(vals9);
          	    fields2.add(pfield9);
-      	} 
-      	else if(fieldName.equals("p_userid")){
+      	    }else if(fieldName.equals("p_userid")){
          	    ParameterFieldDiscreteValue pfieldDV10 = new ParameterFieldDiscreteValue();
         	    pfieldDV10.setValue(criteriaDis);
          	    Values vals10 = new Values();
@@ -532,8 +485,7 @@ public class QuatroReportViewerAction extends Action {
          	    pfield10.setName(fieldName2);
          	    pfield10.setCurrentValues(vals10);
          	    fields2.add(pfield10);
-      	} 
-      	else if(fieldName.equals("p_orgs")){
+      	    }else if(fieldName.equals("p_orgs")){
          	    ParameterFieldDiscreteValue pfieldDV11 = new ParameterFieldDiscreteValue();
         	    pfieldDV11.setValue(criteriaDis);
          	    Values vals11 = new Values();
@@ -542,88 +494,75 @@ public class QuatroReportViewerAction extends Action {
          	    pfield11.setName(fieldName2);
          	    pfield11.setCurrentValues(vals11);
          	    fields2.add(pfield11);
-      	} 
-      	else{
+      	    }else{
          	    if(fieldName2!=null){
-      		   ParameterFieldDiscreteValue pfieldDV12 = new ParameterFieldDiscreteValue();
+      		       ParameterFieldDiscreteValue pfieldDV12 = new ParameterFieldDiscreteValue();
         	       pfieldDV12.setValue("");
          	       Values vals12 = new Values();
          	       vals12.add(pfieldDV12);
-           	   ParameterField pfield12 = new ParameterField();
+           	       ParameterField pfield12 = new ParameterField();
          	       pfield12.setName(fieldName2);
          	       pfield12.setCurrentValues(vals12);
          	       fields2.add(pfield12);
          	    }
-      	} 
-     	}
+      	    } 
+     	  }
      	
-      crystalReportViewer.setParameterFields(fields2);
+          crystalReportViewer.setParameterFields(fields2);
 
-   	  crystalReportViewer.setPrintMode(CrPrintMode.PDF);
-  	  crystalReportViewer.setOwnPage(true);
-  	  crystalReportViewer.setOwnForm(true);
-  	  crystalReportViewer.setDisplayGroupTree(false);
-  	  crystalReportViewer.setHasExportButton(false);
-  	  crystalReportViewer.setHasSearchButton(false);
-  	  crystalReportViewer.setHasPageBottomToolbar(false);
-  	  crystalReportViewer.setHasRefreshButton(false);
-  	  crystalReportViewer.setHasToggleGroupTreeButton(false);
-  	  crystalReportViewer.setHasZoomFactorList(false);
-  	  crystalReportViewer.setHasLogo(false);
-  	  crystalReportViewer.setEnableDrillDown(false);
+   	      crystalReportViewer.setPrintMode(CrPrintMode.PDF);
+  	      crystalReportViewer.setOwnPage(true);
+  	      crystalReportViewer.setOwnForm(true);
+  	      crystalReportViewer.setDisplayGroupTree(false);
+  	      crystalReportViewer.setHasExportButton(false);
+  	      crystalReportViewer.setHasSearchButton(false);
+  	      crystalReportViewer.setHasPageBottomToolbar(false);
+  	      crystalReportViewer.setHasRefreshButton(false);
+  	      crystalReportViewer.setHasToggleGroupTreeButton(false);
+  	      crystalReportViewer.setHasZoomFactorList(false);
+  	      crystalReportViewer.setHasLogo(false);
+  	      crystalReportViewer.setEnableDrillDown(false);
 
-      switch (_rptValue.getExportFormatType())
-      {
-         case ReportExportFormat._PDF:
-          	crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
-            break;
-         case ReportExportFormat._MSExcel:
-          	crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
-            break;
-         case ReportExportFormat._MSWord:
-          	crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
-            break;
-         case ReportExportFormat._text:
-          	crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
-            break;
-         default:
-          	crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
-            break;
-      }
-      crystalReportViewer.dispose(); 
+          switch (_rptValue.getExportFormatType()){
+            case ReportExportFormat._PDF:
+               crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
+               break;
+            case ReportExportFormat._MSExcel:
+          	   crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
+               break;
+            case ReportExportFormat._MSWord:
+          	   crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
+               break;
+            case ReportExportFormat._text:
+          	   crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
+               break;
+            default:
+          	   crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
+               break;
+          }
+          crystalReportViewer.dispose(); 
 
-  }
-  catch(Exception ex2) {
-     System.out.println(ex2.toString());
-  }    
+      }catch(Exception ex2) {
+         System.out.println(ex2.toString());
+      }    
         
    }
         
     private void PaintReport(HttpServletRequest request, HttpServletResponse response, String startPeriod, 
-    		String endPeriod, String orgs, String criteriaString, String dateRangeDis, 
-    		String orgDis, String criteriaDis)
-    {
+    		String endPeriod, String orgs, String criteriaString, String dateRangeDis, String orgDis, String criteriaDis){
+
     	String loginId = "mespina";
         String userName = _rptValue.getAuthor();
-//        String path = Server.MapPath("");
-//        String file = path + "\\RptFiles\\" + _rptOption.RptFileName;
-//        reportDocument1.FileName = file;
 
 //        SetLogonInfo();
-
         
 		String sDateField = "{" + _rptValue.getTableName() + "." + _rptOption.getDateFieldName() + "}";
         String sDateFieldDesc = _rptOption.getDateFieldDesc();
-        if ("D".equals(_rptOption.getDateFieldType()))
-        {
-            if ("M".equals(_rptValue.getDatePart()))
-            {
-                sDateField = "CSTR(" + sDateField + ",\"yyyyMM\")";
-            }
-            else if ("Y".equals(_rptValue.getDatePart()))
-            {
-                sDateField = "CSTR(" + sDateField + ",\"yyyy\")";
-            }
+        if ("D".equals(_rptOption.getDateFieldType())){
+          if ("M".equals(_rptValue.getDatePart()))
+            sDateField = "CSTR(" + sDateField + ",\"yyyyMM\")";
+          else if ("Y".equals(_rptValue.getDatePart()))
+            sDateField = "CSTR(" + sDateField + ",\"yyyy\")";
         }
         String sDateRange = "";
         String sDateSQL = "";
@@ -643,39 +582,25 @@ public class QuatroReportViewerAction extends Action {
            sDateSQL = sDateSQL + " TO " + "\"" + endPeriod + "\"";
         }
         
-        if (!"".equals(sDateSQL))
-        {
-            if (Utility.IsEmpty(criteriaString))
-            {
-                criteriaString = sDateSQL;
-            }
-            else
-            {
-                criteriaString = sDateSQL + " AND " + criteriaString;
-            }
+        if(!"".equals(sDateSQL)){
+          if(Utility.IsEmpty(criteriaString))
+            criteriaString = sDateSQL;
+          else
+            criteriaString = sDateSQL + " AND " + criteriaString;
         }
 
-        if (!Utility.IsEmpty(_rptOption.getDbsqlWhere()))
-        {
-            if (Utility.IsEmpty(criteriaString))
-            {
-                criteriaString = _rptOption.getDbsqlWhere();
-            }
-            else
-            {
-                criteriaString = "(" + _rptOption.getDbsqlWhere() + ")" + " AND " + criteriaString;
-            }
+        if(!Utility.IsEmpty(_rptOption.getDbsqlWhere())){
+          if(Utility.IsEmpty(criteriaString))
+            criteriaString = _rptOption.getDbsqlWhere();
+         else
+            criteriaString = "(" + _rptOption.getDbsqlWhere() + ")" + " AND " + criteriaString;
         }
-        if (!Utility.IsEmpty(orgs))
-        {
-            if (Utility.IsEmpty(criteriaString))
-            {
-                criteriaString = orgs;
-            }
-            else
-            {
-                criteriaString = "(" + orgs + ")" + " AND " + criteriaString;
-            }
+
+        if(!Utility.IsEmpty(orgs)){
+          if(Utility.IsEmpty(criteriaString))
+            criteriaString = orgs;
+          else
+            criteriaString = "(" + orgs + ")" + " AND " + criteriaString;
         }
 
         ReportClientDocument reportDocument1 = new ReportClientDocument();
@@ -684,223 +609,136 @@ public class QuatroReportViewerAction extends Action {
         String jspPath="";
         try{
            jspPath = getServlet().getServletContext().getResource("/").getPath();
-        }
-        catch(Exception ex){
+        }catch(Exception ex){
       	  ;
         }
 //        jspPath= OscarProperties.getInstance().getProperty("RPT_PATH");      
         String path=jspPath  + "/PMmodule/reports/RptFiles/" + _rptOption.getRptFileName();
         
-//        String path=request.getServletPath() + "\\" +  "PMmodule\\reports\\RptFiles\\" +  _rptOption.getRptFileName();
         try{
              reportDocument1.open(path,0);
-             if (!Utility.IsEmpty(criteriaString))
-               reportDocument1.setRecordSelectionFormula(criteriaString);
-        }
-        catch(ReportSDKException ex)
-        {
+             if (!Utility.IsEmpty(criteriaString)) reportDocument1.setRecordSelectionFormula(criteriaString);
+        }catch(ReportSDKException ex){
 	        ReportSDKException ss=ex;
         }
         
         IReportSource reportSource = (IReportSource)reportDocument1.getReportSource();
     	CrystalReportViewer crystalReportViewer = new CrystalReportViewer();
     	
-    try{
-    	crystalReportViewer.setReportSource(reportSource);
-    	
-/*
-    	Fields fields = new Fields();
+        try{
+    	    crystalReportViewer.setReportSource(reportSource);
+    	    Fields fields = crystalReportViewer.getParameterFields();
+    	    Fields fields2 = new Fields();
 
-   	    ParameterFieldDiscreteValue pfieldDV1 = new ParameterFieldDiscreteValue();
-  	    pfieldDV1.setValue("");
-   	    Values vals1 = new Values();
-   	    vals1.add(pfieldDV1);
-  	    ParameterField pfield1 = new ParameterField();
-   	    pfield1.setName("Daterange");
-   	    pfield1.setCurrentValues(vals1);
-   	    fields.add(pfield1);
-   	    
-   	    ParameterFieldDiscreteValue pfieldDV2 = new ParameterFieldDiscreteValue();
-  	    pfieldDV2.setValue("");
-   	    Values vals2 = new Values();
-   	    vals2.add(pfieldDV2);
-  	    ParameterField pfield2 = new ParameterField();
-   	    pfield2.setName("Organization");
-   	    pfield2.setCurrentValues(vals2);
-   	    fields.add(pfield2);
-
-   	    ParameterFieldDiscreteValue pfieldDV3 = new ParameterFieldDiscreteValue();
-  	    pfieldDV3.setValue("");
-   	    Values vals3 = new Values();
-   	    vals3.add(pfieldDV3);
-  	    ParameterField pfield3 = new ParameterField();
-   	    pfield3.setName("Criteria");
-   	    pfield3.setCurrentValues(vals3);
-   	    fields.add(pfield3);
-
-   	    ParameterFieldDiscreteValue pfieldDV4 = new ParameterFieldDiscreteValue();
-  	    pfieldDV4.setValue("mespina");
-   	    Values vals4 = new Values();
-   	    vals4.add(pfieldDV4);
-  	    ParameterField pfield4 = new ParameterField();
-   	    pfield4.setName("UserName");
-   	    pfield4.setCurrentValues(vals4);
-   	    fields.add(pfield4);
-
-   	    ParameterFieldDiscreteValue pfieldDV5 = new ParameterFieldDiscreteValue();
-  	    pfieldDV5.setValue("dawson1");
-   	    Values vals5 = new Values();
-   	    vals5.add(pfieldDV5);
-  	    ParameterField pfield5 = new ParameterField();
-   	    pfield5.setName("ReportTitle");
-   	    pfield5.setCurrentValues(vals5);
-   	    fields.add(pfield5);
-
-   	    ParameterFieldDiscreteValue pfieldDV6 = new ParameterFieldDiscreteValue();
-  	    pfieldDV6.setValue("dawson2");
-   	    Values vals6 = new Values();
-   	    vals6.add(pfieldDV6);
-  	    ParameterField pfield6 = new ParameterField();
-   	    pfield6.setName("ReportTitle2");
-   	    pfield6.setCurrentValues(vals6);
-   	    fields.add(pfield6);
-
-   	    ParameterFieldDiscreteValue pfieldDV7 = new ParameterFieldDiscreteValue();
-  	    pfieldDV7.setValue("dawson3");
-   	    Values vals7 = new Values();
-   	    vals7.add(pfieldDV7);
-  	    ParameterField pfield7 = new ParameterField();
-   	    pfield7.setName("ReportTitle3");
-   	    pfield7.setCurrentValues(vals7);
-   	    fields.add(pfield7);
-   	    
-   	    crystalReportViewer.setParameterFields(fields);
-   	    crystalReportViewer.setEnableParameterPrompt(false);
-*/
-
-    	Fields fields = crystalReportViewer.getParameterFields();
-    	Fields fields2 = new Fields();
-
-       	for (Iterator it = fields.iterator(); it.hasNext();){
-       		ParameterField pfield = (ParameterField)it.next();
-        	String fieldName=pfield.getName().toLowerCase();
-        	String fieldName2=pfield.getName();
-       		if(fieldName.equals("daterange")){
-           	    ParameterFieldDiscreteValue pfieldDV1 = new ParameterFieldDiscreteValue();
-          	    pfieldDV1.setValue(sDateRange);
-           	    Values vals1 = new Values();
-           	    vals1.add(pfieldDV1);
-          	    ParameterField pfield1 = new ParameterField();
-           	    pfield1.setName(fieldName2);
-           	    pfield1.setCurrentValues(vals1);
-           	    fields2.add(pfield1);
-        	} 
-        	else if(fieldName.equals("organization")){
-           	    ParameterFieldDiscreteValue pfieldDV2 = new ParameterFieldDiscreteValue();
-          	    pfieldDV2.setValue(orgDis);
-           	    Values vals2 = new Values();
-           	    vals2.add(pfieldDV2);
-          	    ParameterField pfield2 = new ParameterField();
-           	    pfield2.setName(fieldName2);
-           	    pfield2.setCurrentValues(vals2);
-           	    fields2.add(pfield2);
-        	} 
-        	else if(fieldName.equals("criteria")){
-           	    ParameterFieldDiscreteValue pfieldDV3 = new ParameterFieldDiscreteValue();
-          	    pfieldDV3.setValue(criteriaDis);
-           	    Values vals3 = new Values();
-           	    vals3.add(pfieldDV3);
-          	    ParameterField pfield3 = new ParameterField();
-           	    pfield3.setName(fieldName2);
-           	    pfield3.setCurrentValues(vals3);
-           	    fields2.add(pfield3);
-        	} 
-        	else if(fieldName.equals("username")){
-           	    ParameterFieldDiscreteValue pfieldDV4 = new ParameterFieldDiscreteValue();
-          	    pfieldDV4.setValue(userName);
-           	    Values vals4 = new Values();
-           	    vals4.add(pfieldDV4);
-          	    ParameterField pfield4 = new ParameterField();
-           	    pfield4.setName(fieldName2);
-           	    pfield4.setCurrentValues(vals4);
-           	    fields2.add(pfield4);
-        	} 
-        	else if(fieldName.equals("userid")){
-           	    ParameterFieldDiscreteValue pfieldDV5 = new ParameterFieldDiscreteValue();
-          	    pfieldDV5.setValue(loginId);
-           	    Values vals5 = new Values();
-           	    vals5.add(pfieldDV5);
-          	    ParameterField pfield5 = new ParameterField();
-           	    pfield5.setName(fieldName2);
-           	    pfield5.setCurrentValues(vals5);
-           	    fields2.add(pfield5);
-        	} 
-        	else if(fieldName.equals("reporttitle")){
-           	    ParameterFieldDiscreteValue pfieldDV6 = new ParameterFieldDiscreteValue();
-          	    pfieldDV6.setValue(_rptValue.getTitle());
-           	    Values vals6 = new Values();
-           	    vals6.add(pfieldDV6);
-          	    ParameterField pfield6 = new ParameterField();
-           	    pfield6.setName(fieldName2);
-           	    pfield6.setCurrentValues(vals6);
-           	    fields2.add(pfield6);
-        	} 
-        	else if(fieldName.equals("reporttitle2")){
-           	    ParameterFieldDiscreteValue pfieldDV7 = new ParameterFieldDiscreteValue();
-          	    pfieldDV7.setValue(_rptOption.getOptionTitle());
-           	    Values vals7 = new Values();
-           	    vals7.add(pfieldDV7);
-          	    ParameterField pfield7 = new ParameterField();
-           	    pfield7.setName(fieldName2);
-           	    pfield7.setCurrentValues(vals7);
-           	    fields2.add(pfield7);
-        	} 
-        	else if(fieldName.equals("reporttitle3")){
-        		ParameterFieldDiscreteValue pfieldDV8 = new ParameterFieldDiscreteValue();
-           	    if(_rptValue.getReportTemp()!=null){
+       	    for (Iterator it = fields.iterator(); it.hasNext();){
+       		  ParameterField pfield = (ParameterField)it.next();
+        	  String fieldName=pfield.getName().toLowerCase();
+        	  String fieldName2=pfield.getName();
+       		  if(fieldName.equals("daterange")){
+           	     ParameterFieldDiscreteValue pfieldDV1 = new ParameterFieldDiscreteValue();
+          	     pfieldDV1.setValue(sDateRange);
+           	     Values vals1 = new Values();
+           	     vals1.add(pfieldDV1);
+          	     ParameterField pfield1 = new ParameterField();
+           	     pfield1.setName(fieldName2);
+           	     pfield1.setCurrentValues(vals1);
+           	     fields2.add(pfield1);
+        	  }else if(fieldName.equals("organization")){
+           	     ParameterFieldDiscreteValue pfieldDV2 = new ParameterFieldDiscreteValue();
+          	     pfieldDV2.setValue(orgDis);
+           	     Values vals2 = new Values();
+           	     vals2.add(pfieldDV2);
+          	     ParameterField pfield2 = new ParameterField();
+           	     pfield2.setName(fieldName2);
+           	     pfield2.setCurrentValues(vals2);
+           	     fields2.add(pfield2);
+        	  }else if(fieldName.equals("criteria")){
+           	     ParameterFieldDiscreteValue pfieldDV3 = new ParameterFieldDiscreteValue();
+          	     pfieldDV3.setValue(criteriaDis);
+           	     Values vals3 = new Values();
+           	     vals3.add(pfieldDV3);
+          	     ParameterField pfield3 = new ParameterField();
+           	     pfield3.setName(fieldName2);
+           	     pfield3.setCurrentValues(vals3);
+           	     fields2.add(pfield3);
+        	  }else if(fieldName.equals("username")){
+           	     ParameterFieldDiscreteValue pfieldDV4 = new ParameterFieldDiscreteValue();
+          	     pfieldDV4.setValue(userName);
+           	     Values vals4 = new Values();
+           	     vals4.add(pfieldDV4);
+          	     ParameterField pfield4 = new ParameterField();
+           	     pfield4.setName(fieldName2);
+           	     pfield4.setCurrentValues(vals4);
+           	     fields2.add(pfield4);
+        	  }else if(fieldName.equals("userid")){
+           	     ParameterFieldDiscreteValue pfieldDV5 = new ParameterFieldDiscreteValue();
+          	     pfieldDV5.setValue(loginId);
+           	     Values vals5 = new Values();
+           	     vals5.add(pfieldDV5);
+          	     ParameterField pfield5 = new ParameterField();
+           	     pfield5.setName(fieldName2);
+           	     pfield5.setCurrentValues(vals5);
+           	     fields2.add(pfield5);
+        	  }else if(fieldName.equals("reporttitle")){
+           	     ParameterFieldDiscreteValue pfieldDV6 = new ParameterFieldDiscreteValue();
+          	     pfieldDV6.setValue(_rptValue.getTitle());
+           	     Values vals6 = new Values();
+           	     vals6.add(pfieldDV6);
+          	     ParameterField pfield6 = new ParameterField();
+           	     pfield6.setName(fieldName2);
+           	     pfield6.setCurrentValues(vals6);
+           	     fields2.add(pfield6);
+        	  }else if(fieldName.equals("reporttitle2")){
+           	     ParameterFieldDiscreteValue pfieldDV7 = new ParameterFieldDiscreteValue();
+          	     pfieldDV7.setValue(_rptOption.getOptionTitle());
+           	     Values vals7 = new Values();
+           	     vals7.add(pfieldDV7);
+          	     ParameterField pfield7 = new ParameterField();
+           	     pfield7.setName(fieldName2);
+           	     pfield7.setCurrentValues(vals7);
+           	     fields2.add(pfield7);
+        	  }else if(fieldName.equals("reporttitle3")){
+        		 ParameterFieldDiscreteValue pfieldDV8 = new ParameterFieldDiscreteValue();
+           	     if(_rptValue.getReportTemp()!=null){
           	       pfieldDV8.setValue(_rptValue.getReportTemp().getDesc());
-           	    }else{
+           	     }else{
            	       pfieldDV8.setValue("");
-           	    }
-           	    Values vals8 = new Values();
-           	    vals8.add(pfieldDV8);
-          	    ParameterField pfield8 = new ParameterField();
-           	    pfield8.setName(fieldName2);
-           	    pfield8.setCurrentValues(vals8);
-           	    fields2.add(pfield8);
-        	} 
-        	else if(fieldName.equals("sessionid")){
-           	    ParameterFieldDiscreteValue pfieldDV9 = new ParameterFieldDiscreteValue();
-          	    pfieldDV9.setValue(criteriaDis);
-           	    Values vals9 = new Values();
-           	    vals9.add(pfieldDV9);
-          	    ParameterField pfield9 = new ParameterField();
-           	    pfield9.setName(fieldName2);
-           	    pfield9.setCurrentValues(vals9);
-           	    fields2.add(pfield9);
-        	} 
-        	else if(fieldName.equals("p_userid")){
-           	    ParameterFieldDiscreteValue pfieldDV10 = new ParameterFieldDiscreteValue();
-          	    pfieldDV10.setValue(criteriaDis);
-           	    Values vals10 = new Values();
-           	    vals10.add(pfieldDV10);
-          	    ParameterField pfield10 = new ParameterField();
-           	    pfield10.setName(fieldName2);
-           	    pfield10.setCurrentValues(vals10);
-           	    fields2.add(pfield10);
-        	} 
-        	else if(fieldName.equals("p_orgs")){
-           	    ParameterFieldDiscreteValue pfieldDV11 = new ParameterFieldDiscreteValue();
-          	    pfieldDV11.setValue(criteriaDis);
-           	    Values vals11 = new Values();
-           	    vals11.add(pfieldDV11);
-          	    ParameterField pfield11 = new ParameterField();
-           	    pfield11.setName(fieldName2);
-           	    pfield11.setCurrentValues(vals11);
-           	    fields2.add(pfield11);
-        	} 
-        	else{
-           	    if(fieldName2!=null){
+           	     }
+           	     Values vals8 = new Values();
+           	     vals8.add(pfieldDV8);
+          	     ParameterField pfield8 = new ParameterField();
+           	     pfield8.setName(fieldName2);
+           	     pfield8.setCurrentValues(vals8);
+           	     fields2.add(pfield8);
+        	  }else if(fieldName.equals("sessionid")){
+           	     ParameterFieldDiscreteValue pfieldDV9 = new ParameterFieldDiscreteValue();
+          	     pfieldDV9.setValue(criteriaDis);
+           	     Values vals9 = new Values();
+           	     vals9.add(pfieldDV9);
+          	     ParameterField pfield9 = new ParameterField();
+           	     pfield9.setName(fieldName2);
+           	     pfield9.setCurrentValues(vals9);
+           	     fields2.add(pfield9);
+        	  }else if(fieldName.equals("p_userid")){
+           	     ParameterFieldDiscreteValue pfieldDV10 = new ParameterFieldDiscreteValue();
+          	     pfieldDV10.setValue(criteriaDis);
+           	     Values vals10 = new Values();
+           	     vals10.add(pfieldDV10);
+          	     ParameterField pfield10 = new ParameterField();
+           	     pfield10.setName(fieldName2);
+           	     pfield10.setCurrentValues(vals10);
+           	     fields2.add(pfield10);
+        	  }else if(fieldName.equals("p_orgs")){
+           	     ParameterFieldDiscreteValue pfieldDV11 = new ParameterFieldDiscreteValue();
+          	     pfieldDV11.setValue(criteriaDis);
+           	     Values vals11 = new Values();
+           	     vals11.add(pfieldDV11);
+          	     ParameterField pfield11 = new ParameterField();
+           	     pfield11.setName(fieldName2);
+           	     pfield11.setCurrentValues(vals11);
+           	     fields2.add(pfield11);
+        	  }else{
+           	     if(fieldName2!=null){
         		   ParameterFieldDiscreteValue pfieldDV12 = new ParameterFieldDiscreteValue();
           	       pfieldDV12.setValue("");
            	       Values vals12 = new Values();
@@ -909,24 +747,23 @@ public class QuatroReportViewerAction extends Action {
            	       pfield12.setName(fieldName2);
            	       pfield12.setCurrentValues(vals12);
            	       fields2.add(pfield12);
-           	    }
-        	} 
-       	}
+           	     }
+        	  } 
+       	  }
        	
-        crystalReportViewer.setParameterFields(fields2);
-
-    	crystalReportViewer.setPrintMode(CrPrintMode.PDF);
-    	crystalReportViewer.setOwnPage(true);
-    	crystalReportViewer.setOwnForm(true);
-    	crystalReportViewer.setDisplayGroupTree(false);
-    	crystalReportViewer.setHasExportButton(false);
-    	crystalReportViewer.setHasSearchButton(false);
-    	crystalReportViewer.setHasPageBottomToolbar(false);
-    	crystalReportViewer.setHasRefreshButton(false);
-    	crystalReportViewer.setHasToggleGroupTreeButton(false);
-    	crystalReportViewer.setHasZoomFactorList(false);
-    	crystalReportViewer.setHasLogo(false);
-    	crystalReportViewer.setEnableDrillDown(false);
+          crystalReportViewer.setParameterFields(fields2);
+     	  crystalReportViewer.setPrintMode(CrPrintMode.PDF);
+    	  crystalReportViewer.setOwnPage(true);
+    	  crystalReportViewer.setOwnForm(true);
+    	  crystalReportViewer.setDisplayGroupTree(false);
+    	  crystalReportViewer.setHasExportButton(false);
+    	  crystalReportViewer.setHasSearchButton(false);
+    	  crystalReportViewer.setHasPageBottomToolbar(false);
+    	  crystalReportViewer.setHasRefreshButton(false);
+    	  crystalReportViewer.setHasToggleGroupTreeButton(false);
+    	  crystalReportViewer.setHasZoomFactorList(false);
+    	  crystalReportViewer.setHasLogo(false);
+    	  crystalReportViewer.setEnableDrillDown(false);
 
 /*
     	ByteArrayInputStream bais = (ByteArrayInputStream) reportDocument1.getPrintOutputController().export(ReportExportFormat.PDF);
@@ -941,35 +778,33 @@ public class QuatroReportViewerAction extends Action {
 //    	faces.responseComplete();
 */
     	
-        switch (_rptValue.getExportFormatType())
-        {
-                case ReportExportFormat._PDF:
-//                    reportDocument1.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, false, "");
-                	crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
-                    break;
-                case ReportExportFormat._MSExcel:
-//                    reportDocument1.ExportToHttpResponse(ExportFormatType.Excel, Response, false, "");
-                	crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
-                    break;
-                case ReportExportFormat._MSWord:
-//                    reportDocument1.ExportToHttpResponse(ExportFormatType.WordForWindows, Response, false, "");
-                	crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
-                    break;
-                case ReportExportFormat._text:
-//                    reportDocument1.ExportToHttpResponse(ExportFormatType.Text, Response, false, "");
-                	crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
-                    break;
-                default:
-//                    CrystalReportViewer1.ReportSource = reportDocument1;
-                	crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
-                    break;
-        }
-        crystalReportViewer.dispose(); 
+          switch (_rptValue.getExportFormatType()){
+            case ReportExportFormat._PDF:
+//            reportDocument1.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, false, "");
+          	  crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
+              break;
+            case ReportExportFormat._MSExcel:
+//            reportDocument1.ExportToHttpResponse(ExportFormatType.Excel, Response, false, "");
+           	  crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
+              break;
+            case ReportExportFormat._MSWord:
+//            reportDocument1.ExportToHttpResponse(ExportFormatType.WordForWindows, Response, false, "");
+           	  crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
+              break;
+            case ReportExportFormat._text:
+//            reportDocument1.ExportToHttpResponse(ExportFormatType.Text, Response, false, "");
+          	  crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
+              break;
+            default:
+//            CrystalReportViewer1.ReportSource = reportDocument1;
+           	  crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
+              break;
+          }
+          crystalReportViewer.dispose(); 
 
-    }
-    catch(Exception ex2) {
-       System.out.println(ex2.toString());
-    }    
+      }catch(Exception ex2) {
+         System.out.println(ex2.toString());
+      }    
 
    }
 	
