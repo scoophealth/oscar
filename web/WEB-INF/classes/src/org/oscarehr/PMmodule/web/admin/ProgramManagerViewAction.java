@@ -630,7 +630,6 @@ public class ProgramManagerViewAction extends BaseAction {
             if (request.getParameter("reservedBeds[" + i + "].latePass") == null) {
                 reservedBed.setLatePass(false);
             }
-
             // save bed
             try {
                 BedDemographic bedDemographic = reservedBed.getBedDemographic();
@@ -650,6 +649,7 @@ public class ProgramManagerViewAction extends BaseAction {
                 	}else{//client can be family head or independent
                 		
                 		if(isClientFamilyHead){
+                			familyList.clear();
                 			List<JointAdmission> dependentList = clientManager.getDependents(Long.valueOf(clientId.toString()));
 							familyList.add(clientId);
 							for(int j=0; dependentList != null  &&  j < dependentList.size(); j++){
