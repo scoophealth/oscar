@@ -53,7 +53,7 @@ public class QuatroReportViewerAction extends Action {
 	        else if ("Y".equals(_rptValue.getDatePart()))
 	           datepartDis = "Year ";
 
-			int templateNo = 0;//rptTemp.getTemplateNo();
+			int templateNo = rptTemp.getTemplateNo();
 			//prepare to run the report
  
             //1. get he report Value bean and date filter

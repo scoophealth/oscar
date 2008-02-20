@@ -234,19 +234,26 @@ public class QuatroReportRunnerAction extends Action {
             rptVal.setExportFormatType(Integer.parseInt(myForm.getExportFormat()));
             rptVal.setPrint2Pdf(false); // this property is kept only for the customized prints 
 
-            int optionIdx = Integer.parseInt(myForm.getReportOption());
-//            ReportOptionValue option = (ReportOptionValue)rptVal.getOptions().get(optionIdx-1);
-            Iterator iObj=rptVal.getOptions().iterator();
             ReportOptionValue option= new ReportOptionValue();
-            while(iObj.hasNext()){
-              option = (ReportOptionValue)iObj.next();
-              break;
+            if(myForm.getReportOption()==null){
+               Iterator iObj=rptVal.getOptions().iterator();
+               while(iObj.hasNext()){
+                 option = (ReportOptionValue)iObj.next();
+                 break;
+               }
+            }else{
+              int optionNo = Integer.parseInt(myForm.getReportOption());
+              Iterator iObj=rptVal.getOptions().iterator();
+              while(iObj.hasNext()){
+                option = (ReportOptionValue)iObj.next();
+                if(optionNo==option.getOptionNo()) break;
+              }
             }
-            
-            String path = DataViews.RptFiles;
-            String rptFilePath = path + "/" + option.getRptFileName();
 
+//            String path = DataViews.RptFiles;
+//            String rptFilePath = path + "/" + option.getRptFileName();
 //            ReportService reportManager = new ReportService(rptVal.getReportNo());
+//            reportManager.DwonloadRptFile(rptFilePath, option.RptFileNo);
 
     		request.getSession().setAttribute(DataViews.REPORTTPL, rptTempVal);
     		request.getSession().setAttribute(DataViews.REPORT_OPTION, option);
@@ -417,8 +424,6 @@ public class QuatroReportRunnerAction extends Action {
         ReportOptionValue option = null;
 		ReportTempValue repTemp = new ReportTempValue();
         repTemp.setReportNo(reportNo);
-//        repTemp.setStartDate(Utility.GetSysDate(myForm.getStartField()));
-//        repTemp.setEndDate(Utility.GetSysDate(myForm.getEndField()));
 	    repTemp.setErrMsg("");
 	    String errMsg = "";
 		boolean noDateRange = false;
@@ -444,7 +449,7 @@ public class QuatroReportRunnerAction extends Action {
 		      }else if (Utility.IsEmpty(myForm.getStartField())){
 		        repTemp.setStartDate(MyDateFormat.getCurrentDate());
 			    repTemp.setEndDate(MyDateFormat.getSysDate(myForm.getEndField()));
-		      }else if (Utility.IsEmpty(myForm.getStartField())){
+		      }else if (Utility.IsEmpty(myForm.getEndField())){
 	            repTemp.setStartDate(MyDateFormat.getSysDate(myForm.getStartField()));
 		        repTemp.setEndDate(MyDateFormat.getCurrentDate());
 		      }else{
@@ -492,15 +497,22 @@ public class QuatroReportRunnerAction extends Action {
 		    repTemp.setOrgCodes(null);
 		  }
 
-//		  if (this.lstOptions.SelectedIndex < 0) this.lstOptions.SelectedIndex = 0;
-//		  int optionIdx = this.lstOptions.SelectedIndex;
-
-		  if (myForm.getReportOption() == null){
-			 repTemp.setReportOptionID(0);
-//   		    errMsg = "Report Designer: Please define at least one active option and make one option default";
-		  }else{
-		    repTemp.setReportOptionID(Integer.parseInt("0"));
-		  }
+          if(myForm.getReportOption()==null){
+             Iterator iObj=rptVal.getOptions().iterator();
+             while(iObj.hasNext()){
+               option = (ReportOptionValue)iObj.next();
+               break;
+             }
+          }else{
+            int optionNo = Integer.parseInt(myForm.getReportOption());
+            Iterator iObj=rptVal.getOptions().iterator();
+            while(iObj.hasNext()){
+              option = (ReportOptionValue)iObj.next();
+              if(optionNo==option.getOptionNo()) break;
+            }
+          }
+	      repTemp.setReportOptionID(option.getOptionNo());
+		  
 		  
 		  noCriteria = true;
 //		  ArrayList tempCris = (ArrayList)this.Singleton.CurrentReport[DataViews.REPORT_CRI];
