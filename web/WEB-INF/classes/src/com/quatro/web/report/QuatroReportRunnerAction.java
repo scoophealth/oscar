@@ -121,8 +121,6 @@ public class QuatroReportRunnerAction extends Action {
 		}
 		
 		ArrayList cris = (ArrayList) request.getSession().getAttribute(DataViews.REPORT_CRI);
-//		if(request.getSession()!=null) request.getSession().removeAttribute(DataViews.REPORT_CRI);
-//    	ArrayList<ReportTempCriValue> cris= new ArrayList<ReportTempCriValue>();
 		Map map=request.getParameterMap();
 		QuatroReportManager rpt = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
         		getServlet().getServletContext()).getBean("quatroReportManager");
@@ -148,14 +146,6 @@ public class QuatroReportRunnerAction extends Action {
 
 		ReportFilterValue rptFilterVal = null;
 		
-/*        
-		LookupService lk = new LookupService();
-        try{
-          LookupCodeValue lkv = lk.GetCode("REPT", "");
-        }catch(Exception ex){
-        	;
-        }
-*/	
         switch (col)
 		{
 			case 1: //relation
@@ -218,7 +208,6 @@ public class QuatroReportRunnerAction extends Action {
 
 	public void btnAddTplCri_Click(int reportNo, QuatroReportRunnerForm myForm, HttpServletRequest request)
 	{
-//		myForm.setFilterFields(filterFields);
 		ChangeTplCriTable(2, myForm, request);
     }
 

@@ -43,9 +43,7 @@ public class QuatroReportViewerAction extends Action {
 	    _rptOption = (ReportOptionValue)request.getSession().getAttribute(DataViews.REPORT_OPTION);
 	    try{
 			ReportTempValue rptTemp = _rptValue.getReportTemp();
-//			ReportTempValue rptTemp = (ReportTempValue)request.getSession().getAttribute(DataViews.REPORTTPL);
 	        int reportNo = rptTemp.getReportNo();
-//	        String loginId = "999998";//mespina";
 			String loginId = (String)request.getSession().getAttribute("user");
 	        String datepartDis = "Date ";
 	        if ("M".equals(_rptValue.getDatePart()))
@@ -210,8 +208,6 @@ public class QuatroReportViewerAction extends Action {
                         {
                         dateValue = Utility.GetSysDate(val);
                         }
-//                        criteriaSQL += CRDate(dateValue,false);
-//                        criteriaSQL += "CDATE(" + String.valueOf(dateValue.getYear()) + "," + String.valueOf(dateValue.getMonth()) + "," + String.valueOf(dateValue.getDay()) + ")";
                     	Calendar c1 = Calendar.getInstance();
                     	c1.setTime(dateValue);
                     	criteriaSQL += "CDATE(" + String.valueOf(c1.get(Calendar.YEAR)) + "," + String.valueOf(c1.get(Calendar.MONTH)+1) + "," + c1.get(Calendar.DAY_OF_MONTH) + ")";
@@ -264,7 +260,7 @@ public class QuatroReportViewerAction extends Action {
         ArrayList lst= new ArrayList();
         lst.add(criteriaSQL);
         lst.add(r_criteriaDis);
-        return lst;//criteriaSQL;
+        return lst;
     }
 	
     public String GetValueListCrystal(String sValue, String sFieldType)
@@ -314,7 +310,7 @@ public class QuatroReportViewerAction extends Action {
     private void PaintReport(HttpServletRequest request, HttpServletResponse response, Date startDate, 
     		Date endDate, String orgs, String criteriaString, String dateRangeDis, String orgDis, String criteriaDis){
 
-    	String loginId = "mespina";
+    	String loginId = (String)request.getSession().getAttribute("user");
         String userName = _rptValue.getAuthor();
 
         String sStartDate = Utility.FormatDate(startDate);
@@ -324,8 +320,7 @@ public class QuatroReportViewerAction extends Action {
         String sDateRange = "";
         String sDateSQL = "";
         
-//        boolean  isDateFieldString = "S".equals(_rptOption.getDateFieldType());
-        boolean  isDateFieldString = false;//"S".equals(_rptOption.getDateFieldType());
+        boolean  isDateFieldString = "S".equals(_rptOption.getDateFieldType());
 
         String sDateOption=_rptValue.getDateOption();
         if(sDateOption.equals("A")){
@@ -479,7 +474,7 @@ public class QuatroReportViewerAction extends Action {
          	    fields2.add(pfield8);
       	    }else if(fieldName.equals("sessionid")){
          	    ParameterFieldDiscreteValue pfieldDV9 = new ParameterFieldDiscreteValue();
-        	    pfieldDV9.setValue(criteriaDis);
+        	    pfieldDV9.setValue(request.getSession().getId());
          	    Values vals9 = new Values();
          	    vals9.add(pfieldDV9);
         	    ParameterField pfield9 = new ParameterField();
@@ -488,7 +483,7 @@ public class QuatroReportViewerAction extends Action {
          	    fields2.add(pfield9);
       	    }else if(fieldName.equals("p_userid")){
          	    ParameterFieldDiscreteValue pfieldDV10 = new ParameterFieldDiscreteValue();
-        	    pfieldDV10.setValue(criteriaDis);
+        	    pfieldDV10.setValue(loginId);
          	    Values vals10 = new Values();
          	    vals10.add(pfieldDV10);
         	    ParameterField pfield10 = new ParameterField();
@@ -497,7 +492,7 @@ public class QuatroReportViewerAction extends Action {
          	    fields2.add(pfield10);
       	    }else if(fieldName.equals("p_orgs")){
          	    ParameterFieldDiscreteValue pfieldDV11 = new ParameterFieldDiscreteValue();
-        	    pfieldDV11.setValue(criteriaDis);
+        	    pfieldDV11.setValue(orgs);
          	    Values vals11 = new Values();
          	    vals11.add(pfieldDV11);
         	    ParameterField pfield11 = new ParameterField();
@@ -561,7 +556,7 @@ public class QuatroReportViewerAction extends Action {
     private void PaintReport(HttpServletRequest request, HttpServletResponse response, String startPeriod, 
     		String endPeriod, String orgs, String criteriaString, String dateRangeDis, String orgDis, String criteriaDis){
 
-    	String loginId = "mespina";
+    	String loginId = (String)request.getSession().getAttribute("user");
         String userName = _rptValue.getAuthor();
 
 //        SetLogonInfo();
@@ -614,8 +609,6 @@ public class QuatroReportViewerAction extends Action {
         }
 
         ReportClientDocument reportDocument1 = new ReportClientDocument();
-//        String path=DataViews.RptFiles + "\\" + _rptOption.getRptFileName();
-//        String path="PMmodule\\reports\\RptFiles\\" +  _rptOption.getRptFileName();
         String jspPath="";
         try{
            jspPath = getServlet().getServletContext().getResource("/").getPath();
@@ -709,11 +702,14 @@ public class QuatroReportViewerAction extends Action {
            	     fields2.add(pfield7);
         	  }else if(fieldName.equals("reporttitle3")){
         		 ParameterFieldDiscreteValue pfieldDV8 = new ParameterFieldDiscreteValue();
-           	     if(_rptValue.getReportTemp()!=null){
-          	       pfieldDV8.setValue(_rptValue.getReportTemp().getDesc());
-           	     }else{
-           	       pfieldDV8.setValue("");
-           	     }
+          	     if(_rptValue.getReportTemp()!=null){
+         	       if(_rptValue.getReportTemp().getDesc()!=null)
+          	    	 pfieldDV8.setValue(_rptValue.getReportTemp().getDesc());
+         	       else
+            	     pfieldDV8.setValue("");
+          	     }else{
+          	       pfieldDV8.setValue("");
+          	     }
            	     Values vals8 = new Values();
            	     vals8.add(pfieldDV8);
           	     ParameterField pfield8 = new ParameterField();
@@ -722,7 +718,7 @@ public class QuatroReportViewerAction extends Action {
            	     fields2.add(pfield8);
         	  }else if(fieldName.equals("sessionid")){
            	     ParameterFieldDiscreteValue pfieldDV9 = new ParameterFieldDiscreteValue();
-          	     pfieldDV9.setValue(criteriaDis);
+          	     pfieldDV9.setValue(request.getSession().getId());
            	     Values vals9 = new Values();
            	     vals9.add(pfieldDV9);
           	     ParameterField pfield9 = new ParameterField();
@@ -731,7 +727,7 @@ public class QuatroReportViewerAction extends Action {
            	     fields2.add(pfield9);
         	  }else if(fieldName.equals("p_userid")){
            	     ParameterFieldDiscreteValue pfieldDV10 = new ParameterFieldDiscreteValue();
-          	     pfieldDV10.setValue(criteriaDis);
+          	     pfieldDV10.setValue(loginId);
            	     Values vals10 = new Values();
            	     vals10.add(pfieldDV10);
           	     ParameterField pfield10 = new ParameterField();
@@ -740,7 +736,7 @@ public class QuatroReportViewerAction extends Action {
            	     fields2.add(pfield10);
         	  }else if(fieldName.equals("p_orgs")){
            	     ParameterFieldDiscreteValue pfieldDV11 = new ParameterFieldDiscreteValue();
-          	     pfieldDV11.setValue(criteriaDis);
+          	     pfieldDV11.setValue(orgs);
            	     Values vals11 = new Values();
            	     vals11.add(pfieldDV11);
           	     ParameterField pfield11 = new ParameterField();
@@ -790,23 +786,18 @@ public class QuatroReportViewerAction extends Action {
     	
           switch (_rptValue.getExportFormatType()){
             case ReportExportFormat._PDF:
-//            reportDocument1.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, false, "");
           	  crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
               break;
             case ReportExportFormat._MSExcel:
-//            reportDocument1.ExportToHttpResponse(ExportFormatType.Excel, Response, false, "");
            	  crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
               break;
             case ReportExportFormat._MSWord:
-//            reportDocument1.ExportToHttpResponse(ExportFormatType.WordForWindows, Response, false, "");
            	  crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
               break;
             case ReportExportFormat._text:
-//            reportDocument1.ExportToHttpResponse(ExportFormatType.Text, Response, false, "");
           	  crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
               break;
             default:
-//            CrystalReportViewer1.ReportSource = reportDocument1;
            	  crystalReportViewer.processHttpRequest(request, response, getServlet().getServletContext(), null);
               break;
           }
