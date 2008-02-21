@@ -242,12 +242,14 @@ public class QuatroReportRunnerAction extends Action {
 	          String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
 	          String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
 	          String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
-		      if(arFieldNo!=null){
+	          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
+	          if(arFieldNo!=null){
 			    int iFieldNo = Integer.parseInt(arFieldNo[0]);
   			    criNew.setFieldNo(iFieldNo);
 		        if(arRelation!=null) criNew.setRelation(arRelation[0]);
 			    if(arOp!=null) criNew.setOp(arOp[0]);
 			    if(arVal!=null) criNew.setVal(arVal[0]);
+			    if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
 			    tempCris.add(criNew);
 			  }
             }
@@ -434,9 +436,9 @@ public class QuatroReportRunnerAction extends Action {
        	for (Iterator it = rptVal.getOptions().iterator(); it.hasNext();){
         	ReportOptionValue rv = (ReportOptionValue)it.next();
        		rptOptions.add(rv);
-        	if(rv.isDefault()){
-    		  myForm.setReportOption(String.valueOf(rv.getOptionNo()));
-        	} 
+        	if(myForm.getReportOption()==null){
+       		  if(rv.isDefault())  myForm.setReportOption(String.valueOf(rv.getOptionNo()));
+        	}
        	}
 		myForm.setReportOptionList(rptOptions);
 
@@ -571,12 +573,14 @@ public class QuatroReportRunnerAction extends Action {
 	        String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
 	        String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
 	        String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
+            String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
 		    if(arFieldNo!=null){
 			  int iFieldNo = Integer.parseInt(arFieldNo[0]);
 			  criNew.setFieldNo(iFieldNo);
 		      if(arRelation!=null) criNew.setRelation(arRelation[0]);
 			  if(arOp!=null) criNew.setOp(arOp[0]);
 			  if(arVal!=null) criNew.setVal(arVal[0]);
+			  if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
 			  tempCris.add(criNew);
 			}
           }
