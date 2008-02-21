@@ -204,6 +204,10 @@ public class QuatroReportRunnerAction extends Action {
 		}
 		
 		request.getSession().setAttribute(DataViews.REPORT_CRI, cris);
+		if(rptVal.getReportTemp()!=null){
+		  rptVal.getReportTemp().setTemplateCriteria(cris);
+  		  request.getSession().setAttribute(DataViews.REPORT, rptVal);
+		}
 		myForm.setTemplateCriteriaList(cris);
 	}
 
@@ -278,9 +282,9 @@ public class QuatroReportRunnerAction extends Action {
 		
 		ReportValue rptVal=null;
 		
+	    QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
+	        		getServlet().getServletContext()).getBean("quatroReportManager");
 		if(refreshFromDB==true){
-		   QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
-        		getServlet().getServletContext()).getBean("quatroReportManager");
 		   rptVal = reportManager.GetReport(reportNo, loginId);
 		}else{
 		   rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
@@ -414,8 +418,15 @@ public class QuatroReportRunnerAction extends Action {
 		myForm.setReportOptionList(rptOptions);
 
 		if(refreshFromDB==false){
-		  if(rptVal.getReportTemp()!=null)	
-		    myForm.setTemplateCriteriaList(rptVal.getReportTemp().getTemplateCriteria());
+		  if(rptVal.getReportTemp()!=null){	
+              ArrayList lst=rptVal.getReportTemp().getTemplateCriteria();
+              for(int i=0;i<lst.size();i++){
+                ReportTempCriValue obj=(ReportTempCriValue)lst.get(i);
+				ReportFilterValue rptFilterVal = reportManager.GetFilterField(reportNo, obj.getFieldNo());
+				if(rptFilterVal!=null) obj.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
+              }
+              myForm.setTemplateCriteriaList(lst);
+		  }  
 		}
 		
 		RefreshCriteria(myForm, request);
@@ -774,6 +785,11 @@ public class QuatroReportRunnerAction extends Action {
 		}
 		myForm.setTemplateCriteriaList(obj);
 		request.getSession().setAttribute(DataViews.REPORT_CRI, obj);
+		ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
+		if(rptVal.getReportTemp()!=null){
+		  rptVal.getReportTemp().setTemplateCriteria(obj);
+  		  request.getSession().setAttribute(DataViews.REPORT, rptVal);
+		}
     }
 	
 }

@@ -92,9 +92,13 @@ public class QuatroReportViewerAction extends Action {
 	                
             //3. Construct Criteria String
 			String criteriaDis="";
-			String criteria = ConstructCriteriaStringCrystal(reportNo, criteriaDis);
-			criteriaDis="";
-
+			ArrayList lst=ConstructCriteriaStringCrystal(reportNo, criteriaDis);
+			String criteria="";
+			if(lst!=null){
+			   criteria =(String)lst.get(0); 
+			   criteriaDis=(String)lst.get(1);
+			}
+			
 			QuatroReportManager qrManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
 	        		getServlet().getServletContext()).getBean("quatroReportManager");
 			if ("D".equals(_rptValue.getDatePart())){
@@ -114,12 +118,12 @@ public class QuatroReportViewerAction extends Action {
 
 	}
 
-    public String ConstructCriteriaStringCrystal(int reportNo, String criteriaDis)
+    public ArrayList ConstructCriteriaStringCrystal(int reportNo,  String criteriaDis)
     {
         ReportTempValue rptTemp = _rptValue.getReportTemp();
-        if(rptTemp==null) return "";
+        if(rptTemp==null) return null;
         ArrayList criterias = rptTemp.getTemplateCriteria();
-        if (criterias.size() == 0) return "";
+        if (criterias.size() == 0) return null;
 
         String tableName = _rptValue.getTableName() + ".";
         String r_criteriaDis = "";
@@ -236,7 +240,7 @@ public class QuatroReportViewerAction extends Action {
         int nLeft = 0;
         for (int i = 0; i < criteriaSQL.length(); i++)
         {
-            String c = criteriaSQL.substring(i, 1);
+            String c = criteriaSQL.substring(i, i+1);
             if ("(".equals(c)) nLeft++;
             if (")".equals(c)) nLeft--;
             if (nLeft < 0)
@@ -257,7 +261,10 @@ public class QuatroReportViewerAction extends Action {
         if (r_criteriaDis.equals("()")) r_criteriaDis = "None";
         if (criteriaSQL.equals("()")) criteriaSQL = "";
 
-        return criteriaSQL;
+        ArrayList lst= new ArrayList();
+        lst.add(criteriaSQL);
+        lst.add(r_criteriaDis);
+        return lst;//criteriaSQL;
     }
 	
     public String GetValueListCrystal(String sValue, String sFieldType)
