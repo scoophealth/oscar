@@ -6,7 +6,7 @@
 	<class name="com.quatro.model.LookupCodeValue" table="V_Lookup_Table">
 		<id name="lineId" />
 		<property name="prefix" />
-        <property name="code" column="id" /> 
+        <property name="code" column="code" /> 
         <property name="description" /> 
 	</class>
 </hibernate-mapping>

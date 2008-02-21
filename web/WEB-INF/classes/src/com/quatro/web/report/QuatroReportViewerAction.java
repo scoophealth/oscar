@@ -42,8 +42,8 @@ public class QuatroReportViewerAction extends Action {
 	    _rptValue = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
 	    _rptOption = (ReportOptionValue)request.getSession().getAttribute(DataViews.REPORT_OPTION);
 	    try{
-//			ReportTempValue rptTemp = _rptValue.getReportTemp();
-			ReportTempValue rptTemp = (ReportTempValue)request.getSession().getAttribute(DataViews.REPORTTPL);
+			ReportTempValue rptTemp = _rptValue.getReportTemp();
+//			ReportTempValue rptTemp = (ReportTempValue)request.getSession().getAttribute(DataViews.REPORTTPL);
 	        int reportNo = rptTemp.getReportNo();
 //	        String loginId = "999998";//mespina";
 			String loginId = (String)request.getSession().getAttribute("user");
@@ -92,7 +92,7 @@ public class QuatroReportViewerAction extends Action {
 	                
             //3. Construct Criteria String
 			String criteriaDis="";
-			String criteria = ConstructCriteriaStringCrystal(criteriaDis);
+			String criteria = ConstructCriteriaStringCrystal(reportNo, criteriaDis);
 			criteriaDis="";
 
 			QuatroReportManager qrManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
@@ -114,19 +114,19 @@ public class QuatroReportViewerAction extends Action {
 
 	}
 
-    public String ConstructCriteriaStringCrystal(String criteriaDis)
+    public String ConstructCriteriaStringCrystal(int reportNo, String criteriaDis)
     {
         ReportTempValue rptTemp = _rptValue.getReportTemp();
         if(rptTemp==null) return "";
+        ArrayList criterias = rptTemp.getTemplateCriteria();
+        if (criterias.size() == 0) return "";
+
         String tableName = _rptValue.getTableName() + ".";
         String r_criteriaDis = "";
-        ArrayList criterias = new ArrayList();  
-        if(rptTemp.getTemplateCriteria()!=null) criterias=rptTemp.getTemplateCriteria();
-
-        if (criterias.size() == 0) return null;
-
+        
         ReportTempCriValue rptCri = (ReportTempCriValue)criterias.get(0);
-        // ReportService rpt = new ReportService(rptTemp.getReportNo());
+		QuatroReportManager qrManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
+        		getServlet().getServletContext()).getBean("quatroReportManager");
 
         String criteriaSQL = "(";
         r_criteriaDis="(\n";
@@ -175,7 +175,7 @@ public class QuatroReportViewerAction extends Action {
                 {
                     err += "Missing Values at line " + String.valueOf(i + 1) + "<br>";
                 }
-                ReportFilterValue filter = new ReportFilterValue(); // rpt.GetFilterField(fieldNo);
+                ReportFilterValue filter = qrManager.GetFilterField(reportNo, fieldNo);
                 String FieldType = filter.getFieldType();
                 criteriaSQL += "{" + tableName + filter.getFieldSQL() + "}";
                 r_criteriaDis += filter.getFieldName();
@@ -457,7 +457,10 @@ public class QuatroReportViewerAction extends Action {
       	    }else if(fieldName.equals("reporttitle3")){
       		    ParameterFieldDiscreteValue pfieldDV8 = new ParameterFieldDiscreteValue();
          	    if(_rptValue.getReportTemp()!=null){
-        	       pfieldDV8.setValue(_rptValue.getReportTemp().getDesc());
+        	       if(_rptValue.getReportTemp().getDesc()!=null)
+         	    	 pfieldDV8.setValue(_rptValue.getReportTemp().getDesc());
+        	       else
+           	         pfieldDV8.setValue("");
          	    }else{
          	       pfieldDV8.setValue("");
          	    }

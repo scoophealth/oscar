@@ -53,7 +53,7 @@ public class QuatroReportRunnerAction extends Action {
 	        }
 	        else
 	        {
-	            Refresh(myForm, loginId, rptNo, request);
+	            Refresh(myForm, loginId, rptNo, request, true);
 	        }
 			ActionForward forward = mapping.findForward("success");
 			return forward;
@@ -83,7 +83,7 @@ public class QuatroReportRunnerAction extends Action {
 			{
 				OnCriteriaTextChangedHandler(rptNo, myForm, request);
 			}
-		    Refresh(myForm, loginId, rptNo, request);
+		    Refresh(myForm, loginId, rptNo, request, false);
             ActionForward forward = mapping.findForward("success");
      	    return forward;
 		}
@@ -255,7 +255,8 @@ public class QuatroReportRunnerAction extends Action {
 //            ReportService reportManager = new ReportService(rptVal.getReportNo());
 //            reportManager.DwonloadRptFile(rptFilePath, option.RptFileNo);
 
-    		request.getSession().setAttribute(DataViews.REPORTTPL, rptTempVal);
+//    		request.getSession().setAttribute(DataViews.REPORTTPL, rptTempVal);
+    		request.getSession().setAttribute(DataViews.REPORT, rptVal);
     		request.getSession().setAttribute(DataViews.REPORT_OPTION, option);
    		    myForm.setStrClientJavascript("showReport");//('" + request.getContextPath() + "/PMmodule/Reports/quatroReportViewer.do');");
         }
@@ -271,14 +272,20 @@ public class QuatroReportRunnerAction extends Action {
 		
 	}
 	
-	public void Refresh(QuatroReportRunnerForm myForm, String loginId,int reportNo, HttpServletRequest request)
+	public void Refresh(QuatroReportRunnerForm myForm, String loginId,int reportNo, HttpServletRequest request, boolean refreshFromDB)
 	{
 //		if(request.getSession()!=null) request.getSession().removeAttribute(DataViews.REPORT_CRI);
 		
-		QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
+		ReportValue rptVal=null;
+		
+		if(refreshFromDB==true){
+		   QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
         		getServlet().getServletContext()).getBean("quatroReportManager");
-		ReportValue rptVal = reportManager.GetReport(reportNo, loginId);
-
+		   rptVal = reportManager.GetReport(reportNo, loginId);
+		}else{
+		   rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
+		}
+		
 		request.getSession().setAttribute(DataViews.REPORT, rptVal);
         
         if (rptVal == null) return;
@@ -406,6 +413,11 @@ public class QuatroReportRunnerAction extends Action {
        	}
 		myForm.setReportOptionList(rptOptions);
 
+		if(refreshFromDB==false){
+		  if(rptVal.getReportTemp()!=null)	
+		    myForm.setTemplateCriteriaList(rptVal.getReportTemp().getTemplateCriteria());
+		}
+		
 		RefreshCriteria(myForm, request);
 	}
 
@@ -516,8 +528,30 @@ public class QuatroReportRunnerAction extends Action {
 		  
 		  noCriteria = true;
 //		  ArrayList tempCris = (ArrayList)this.Singleton.CurrentReport[DataViews.REPORT_CRI];
-		  ArrayList tempCris = (ArrayList)request.getSession().getAttribute(DataViews.REPORT_CRI);
-		  if (tempCris != null){
+
+//		  ArrayList tempCris = (ArrayList)request.getSession().getAttribute(DataViews.REPORT_CRI);
+	      ArrayList<ReportTempCriValue> tempCris= new ArrayList<ReportTempCriValue>();
+		  Map map=request.getParameterMap();
+		  String[] obj2= (String[])map.get("lineno");
+		  int lineno=0;
+		  if(obj2!=null) lineno=obj2.length;
+	      for(int i=0;i<lineno;i++){
+		    ReportTempCriValue criNew = new ReportTempCriValue();
+	        String[] arRelation=(String[])map.get("tplCriteria[" + i + "].relation");
+	        String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
+	        String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
+	        String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
+		    if(arFieldNo!=null){
+			  int iFieldNo = Integer.parseInt(arFieldNo[0]);
+			  criNew.setFieldNo(iFieldNo);
+		      if(arRelation!=null) criNew.setRelation(arRelation[0]);
+			  if(arOp!=null) criNew.setOp(arOp[0]);
+			  if(arVal!=null) criNew.setVal(arVal[0]);
+			  tempCris.add(criNew);
+			}
+          }
+
+		  if (tempCris.size()>0){
 		    noCriteria = (tempCris.size() == 0);
 //		    if (!noCriteria) ValidateCriteriaString(reportNo, tempCris);
 		  }
