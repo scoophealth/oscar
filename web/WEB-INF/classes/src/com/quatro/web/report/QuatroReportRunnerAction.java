@@ -12,6 +12,7 @@ import com.crystaldecisions.sdk.occa.report.exportoptions.ReportExportFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Iterator;
+import java.util.Date;
 import oscar.MyDateFormat;;
 
 public class QuatroReportRunnerAction extends Action {
@@ -171,19 +172,13 @@ public class QuatroReportRunnerAction extends Action {
 				if (fieldNo == 0)  return;
 
 				rptFilterVal = rpt.GetFilterField(reportNo, rptCri.getFieldNo());
-				
 				rptCri.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
-
-//                ArrayList ops=;
-				
 				break;
 			case 3:  //operator
   			    String[] arOp=(String[])map.get("tplCriteria[" + row + "].op");
 			    if(arOp!=null){
 			    	rptCri.setOp(arOp[0]);
-			    }
-			    else
-			    {
+			    }else{
 			    	rptCri.setOp("");
 			    }
                 break;
@@ -230,10 +225,40 @@ public class QuatroReportRunnerAction extends Action {
 	public void btnRun_Click(int reportNo, QuatroReportRunnerForm myForm, HttpServletRequest request)
 	{
         ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
+        ReportTempValue rptTempVal=null;
         try
         {
-        	ReportTempValue rptTempVal= BuildTemplate(myForm, request); 
-            rptVal.setReportTemp(rptTempVal);
+        	rptTempVal= BuildTemplate(myForm, request); 
+        }catch (Exception ex){
+    		ReportTempValue repTemp = new ReportTempValue();
+  	        ArrayList<ReportTempCriValue> tempCris= new ArrayList<ReportTempCriValue>();
+  		    Map map=request.getParameterMap();
+		    String[] obj2= (String[])map.get("lineno");
+		    int lineno=0;
+		    if(obj2!=null) lineno=obj2.length;
+	        for(int i=0;i<lineno;i++){
+		      ReportTempCriValue criNew = new ReportTempCriValue();
+	          String[] arRelation=(String[])map.get("tplCriteria[" + i + "].relation");
+	          String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
+	          String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
+	          String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
+		      if(arFieldNo!=null){
+			    int iFieldNo = Integer.parseInt(arFieldNo[0]);
+  			    criNew.setFieldNo(iFieldNo);
+		        if(arRelation!=null) criNew.setRelation(arRelation[0]);
+			    if(arOp!=null) criNew.setOp(arOp[0]);
+			    if(arVal!=null) criNew.setVal(arVal[0]);
+			    tempCris.add(criNew);
+			  }
+            }
+	        repTemp.setTemplateCriteria(tempCris);
+	        rptVal.setReportTemp(repTemp);
+  		    request.getSession().setAttribute(DataViews.REPORT, rptVal);
+            return;        
+	    }
+        
+        try{
+        	rptVal.setReportTemp(rptTempVal);
             
             rptVal.setExportFormatType(Integer.parseInt(myForm.getExportFormat()));
             rptVal.setPrint2Pdf(false); // this property is kept only for the customized prints 
@@ -278,8 +303,6 @@ public class QuatroReportRunnerAction extends Action {
 	
 	public void Refresh(QuatroReportRunnerForm myForm, String loginId,int reportNo, HttpServletRequest request, boolean refreshFromDB)
 	{
-//		if(request.getSession()!=null) request.getSession().removeAttribute(DataViews.REPORT_CRI);
-		
 		ReportValue rptVal=null;
 		
 	    QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
@@ -536,11 +559,7 @@ public class QuatroReportRunnerAction extends Action {
           }
 	      repTemp.setReportOptionID(option.getOptionNo());
 		  
-		  
 		  noCriteria = true;
-//		  ArrayList tempCris = (ArrayList)this.Singleton.CurrentReport[DataViews.REPORT_CRI];
-
-//		  ArrayList tempCris = (ArrayList)request.getSession().getAttribute(DataViews.REPORT_CRI);
 	      ArrayList<ReportTempCriValue> tempCris= new ArrayList<ReportTempCriValue>();
 		  Map map=request.getParameterMap();
 		  String[] obj2= (String[])map.get("lineno");
@@ -562,15 +581,23 @@ public class QuatroReportRunnerAction extends Action {
 			}
           }
 
+	      String sError="";
 		  if (tempCris.size()>0){
 		    noCriteria = (tempCris.size() == 0);
-//		    if (!noCriteria) ValidateCriteriaString(reportNo, tempCris);
+		    if (!noCriteria){
+		      sError=ValidateCriteriaString(reportNo, tempCris);
+		      if("".equals(sError)){
+		    	myForm.setLblError("");
+		      }else{
+		    	myForm.setLblError("Error: " + sError);
+		      }
+		    }
 		  }
 		 
 		  repTemp.setTemplateCriteria(tempCris);
 		  hasAnyCriteria = !(noDateRange && noOrgs && noCriteria);
 
-		  if (!hasAnyCriteria) errMsg = "Please specify criteria for the report";
+		  if (!hasAnyCriteria || !("".equals(sError))) errMsg = "Please specify criteria for the report<br>" + sError;
 		  repTemp.setErrMsg("");
 
 		  if (!Utility.IsEmpty(errMsg))
@@ -588,6 +615,111 @@ public class QuatroReportRunnerAction extends Action {
         repTemp.setReportNo(reportNo);
         return repTemp;
 */        
+    }
+	
+    public String ValidateCriteriaString(int reportNo, ArrayList criterias){
+        String tableName = "";
+        String criteriaDis = "";
+
+        if (criterias == null || criterias.size() == 0) return "";
+
+        ReportTempCriValue rptCri = (ReportTempCriValue)criterias.get(0);
+	    QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
+        		getServlet().getServletContext()).getBean("quatroReportManager");
+
+        String criteriaSQL = "(";
+        criteriaDis = "(\n";
+
+        String err = "";
+        for (int i = 0; i < criterias.size(); i++){
+          rptCri = (ReportTempCriValue)criterias.get(i);
+          String relation = rptCri.getRelation();
+          int fieldNo = rptCri.getFieldNo();
+          String op = rptCri.getOp();
+          String val = rptCri.getVal();
+          String valDesc = rptCri.getValDesc();
+          if (Utility.IsEmpty(valDesc)) valDesc = val;
+
+          if (!Utility.IsEmpty(relation)){
+            if ("(".equals(criteriaSQL)){
+              if (relation.equals("(")){
+                criteriaSQL += " " + relation + " ";
+              }else{
+                err += "Syntax Error detected, wrong relation at line " + String.valueOf(i + 1) + "<br>";
+              }
+            }else{
+              criteriaSQL += " " + relation + " ";
+            }
+            criteriaDis += " " + relation + " ";
+          }
+
+          if (fieldNo > 0){
+            if (Utility.IsEmpty(relation) && !"(".equals(criteriaSQL))
+              err += "Missing relations at line " + String.valueOf(i + 1) + "<br>";
+                
+            if (Utility.IsEmpty(op)) err += "Missing Operator at line " + String.valueOf(i + 1) + "<br>";
+
+            if (Utility.IsEmpty(val)) err += "Missing Values at line " + String.valueOf(i + 1) + "<br>";
+
+            ReportFilterValue filter = reportManager.GetFilterField(reportNo, fieldNo);
+            String FieldType = filter.getFieldType();
+            criteriaSQL += "{" + tableName + filter.getFieldSQL() + "}";
+            criteriaDis += filter.getFieldName();
+
+            criteriaSQL += " " + op + " ";
+            criteriaDis += " " + op + " ";
+
+            if ("IN".equals(op)){
+              criteriaSQL += val;
+              criteriaDis += "(" + val + ")";
+            }else if ("LIKE".equals(op)){
+              criteriaSQL += "\"" + val + "\"";
+              criteriaDis += val;
+            }else{
+              if ("D".equals(FieldType)){
+                Date dateValue;
+                if ("TODAY".equals(val)){
+                  dateValue = MyDateFormat.getCurrentDate();
+                }else{
+                  dateValue = MyDateFormat.getSysDate(val);
+                }
+                criteriaSQL += dateValue.toString();
+                criteriaDis += dateValue.toString();
+              }else if ("S".equals(FieldType)){
+                criteriaSQL += "\"" + val + "\"";
+                criteriaDis += "\"" + valDesc + "\"";
+              }else{
+                criteriaSQL += val;
+                criteriaDis += val;
+              }
+            }
+            criteriaDis += "\n";      // end of line
+          }
+        }
+
+        criteriaSQL += ")";
+        criteriaDis += ")";
+
+        //are parenthes paired correctly?
+        int nLeft = 0;
+        for (int i = 0; i < criteriaSQL.length(); i++){
+          String c = criteriaSQL.substring(i, i+1);
+          if ("(".equals(c)) nLeft++;
+          if (")".equals(c)) nLeft--;
+          if (nLeft < 0) break;
+        }
+
+        if (nLeft != 0) err += "Syntax Error detected, right parenthes not match left parenthes";
+
+        if (criteriaDis.equals("()")) criteriaDis = "None";
+        if (criteriaSQL.equals("()")) criteriaSQL = "";
+
+        if (!"".equals(err)){
+//        	throw new Exception(err);
+          criteriaDis = "";
+          criteriaSQL = "";
+        }
+        return err;
     }
 
 	private ArrayList GetOperatorList(String ops)

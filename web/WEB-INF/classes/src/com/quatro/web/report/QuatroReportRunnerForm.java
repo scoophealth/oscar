@@ -31,6 +31,7 @@ public class QuatroReportRunnerForm extends ActionForm {
 
 	private String reportTitle;
 	private ReportValue rptVal;
+	private String lblError;
 	private String lblDateRange;
 	private String lblStartDate;
 	private String lblEndDate;
@@ -137,6 +138,14 @@ public class QuatroReportRunnerForm extends ActionForm {
 
 	public void setOperatorList(ArrayList<KeyValueBean> operatorList) {
 		this.operatorList = operatorList;
+	}
+
+	public String getLblError() {
+		return lblError;
+	}
+
+	public void setLblError(String lblError) {
+		this.lblError = lblError;
 	}
 
 	public String getLblDateRange() {

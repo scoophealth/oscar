@@ -85,6 +85,9 @@ function getOrgList(){
       <html:hidden property="reportNo" />
       <table width="100%">
         <tr>
+           <td class="clsNameLabels"  colspan="3" width="100%" style="color: #ff0000;"><c:out value="${quatroReportRunnerForm.lblError}" /></td>
+        </tr>
+        <tr>
            <td class="clsNameLabels"  colspan="3" width="100%"><c:out value="${quatroReportRunnerForm.lblDateRange}" /></td>
         </tr>
 
