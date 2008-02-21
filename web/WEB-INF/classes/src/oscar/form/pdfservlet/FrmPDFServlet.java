@@ -33,6 +33,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
@@ -217,9 +219,17 @@ public class FrmPDFServlet extends HttpServlet {
                 }
             }
             
-            //for page 1 picture only
+            //specify the page of the picture using __graphicPage, it may be used multiple times to specify multiple pages
+            //however the same graphic will be applied to all pages
+            //ie. __graphicPage=2&__graphicPage=3
             String[] cfgGraphicFile = req.getParameterValues("__cfgGraphicFile");
             int cfgGraphicFileNo = cfgGraphicFile == null ? 0 : cfgGraphicFile.length;
+
+            String[] graphicPage = req.getParameterValues("__graphicPage");
+            ArrayList graphicPageArray = new ArrayList();
+            if (graphicPage != null){
+                graphicPageArray = new ArrayList(Arrays.asList(graphicPage));
+            }    
             
             Properties[] graphicCfg = null;
             if (cfgGraphicFileNo > 0) {
@@ -363,7 +373,8 @@ public class FrmPDFServlet extends HttpServlet {
                                     Element.ALIGN_LEFT: (cfgVal[0].trim().equals("right") ? Element.ALIGN_RIGHT :
                                         Element.ALIGN_CENTER)));
                         
-                        ct.addText(new Phrase(12, props.getProperty(tempName.toString(), ""), font)); // page
+                        //ct.addText(new Phrase(12, props.getProperty(tempName.toString(), ""), font)); // page
+                        ct.setText(new Phrase(12, props.getProperty(tempName.toString(), ""), font));
                         // size
                         // leading
                         // space between two
@@ -447,7 +458,7 @@ public class FrmPDFServlet extends HttpServlet {
                 
                 
                 //graphic
-                if (i == 1 && cfgGraphicFileNo > 0) {
+                if ((graphicPageArray.contains(Integer.toString(i)) || i == 1 && graphicPageArray.size() == 0 ) && cfgGraphicFileNo > 0) {
                     boolean bFormAR = false;
                     int origX = 0;
                     int origY = 0;

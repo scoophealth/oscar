@@ -1,0 +1,260 @@
+c_hospital	: left, 40, 59, 0, BaseFont.HELVETICA, 6, _, 100, 40, 6
+pg1_priCare	: left, 126, 55, 0, BaseFont.HELVETICA, 8 
+pg1_famPhy	: left, 240, 55, 0, BaseFont.HELVETICA, 8 
+
+pg1_moName	: left, 50, 79, 0, BaseFont.HELVETICA, 8 
+pg1_dateOfBirth	: left, 230, 79, 0, BaseFont.HELVETICA, 8 
+pg1_ageAtEDD	: left, 310, 79, 0, BaseFont.HELVETICA, 8 
+
+pg1_maidenName	: left, 50, 106, 0, BaseFont.HELVETICA, 8 
+pg1_ethOrig	: left, 190, 106, 0, BaseFont.HELVETICA, 8 
+pg1_langPref	: left, 280, 106, 0, BaseFont.HELVETICA, 8 
+
+pg1_work	: left, 50, 130, 0, BaseFont.HELVETICA, 8 
+pg1_workHourDay	: left, 205, 130, 0, BaseFont.HELVETICA, 8 
+pg1_schYear	: left, 290, 130, 0, BaseFont.HELVETICA, 8 
+
+pg1_partnerName	: left, 50, 158, 0, BaseFont.HELVETICA, 8 
+pg1_partnerAge	: left, 161, 158, 0, BaseFont.HELVETICA, 8 
+pg1_faEthOrig	: left, 185, 158, 0, BaseFont.HELVETICA, 8 
+pg1_ptWork	: left, 268, 158, 0, BaseFont.HELVETICA, 8
+
+c_surname	: left, 355, 55, 0, BaseFont.HELVETICA, 8 
+c_givenName	: left, 480, 55, 0, BaseFont.HELVETICA, 8 
+c_address	: left, 355, 80, 0, BaseFont.HELVETICA, 8 
+c_city          : left, 355, 108, 0, BaseFont.HELVETICA, 8 
+c_province	: left, 430, 108, 0, BaseFont.HELVETICA, 8 
+c_postal	: left, 510, 108, 0, BaseFont.HELVETICA, 8 
+c_phone		: left, 355, 132, 0, BaseFont.HELVETICA, 8 
+c_phn		: left, 480, 132, 0, BaseFont.HELVETICA, 8 
+
+pg1_allergyN	: left, 120, 171, 0, BaseFont.HELVETICA, 8 , X
+pg1_allergyY	: left, 44, 179, 0, BaseFont.HELVETICA, 8 , X
+pg1_allergy	: left, 50, 192, 0, BaseFont.HELVETICA, 8 
+pg1_curMedic	: left, 225, 192, 0, BaseFont.HELVETICA, 7, _, 430, 170, 7
+pg1_beliPract	: left, 445, 180, 0, BaseFont.HELVETICA, 8 
+
+pg1_gravida	: left, 138, 209, 0, BaseFont.HELVETICA, 8 
+pg1_term	: left, 183, 209, 0, BaseFont.HELVETICA, 8 
+pg1_preterm	: left, 236, 209, 0, BaseFont.HELVETICA, 8 
+pg1_abortion	: left, 291, 209, 0, BaseFont.HELVETICA, 8 
+pg1_induced     : left, 346, 209, 0, BaseFont.HELVETICA, 8 
+pg1_spontaneous : left, 407, 209, 0, BaseFont.HELVETICA, 8 
+pg1_living	: left, 446, 209, 0, BaseFont.HELVETICA, 8 
+
+
+pg1_obHistDate1	: left, 33, 240, 0, BaseFont.HELVETICA, 8 
+pg1_birthOrAbort1	: center, 96, 240, 0, BaseFont.HELVETICA, 7 
+pg1_deliWeek1	: left, 156, 240, 0, BaseFont.HELVETICA, 8 
+pg1_laboHr1	: center, 130, 240, 0, BaseFont.HELVETICA, 8 
+pg1_deliType1	: center, 169, 243, 0, BaseFont.HELVETICA, 7, _, 225, 226, 8
+pg1_periComp1	: center, 342, 240, 0, BaseFont.HELVETICA, 8 
+pg1_obHistSex1	: center, 480, 240, 0, BaseFont.HELVETICA, 8 
+pg1_birthWeit1	: left, 500, 240, 0, BaseFont.HELVETICA, 8 
+pg1_birthWeitUnits1 : left, 530, 240, 0, BaseFont.HELVETICA, 8 
+pg1_presHealth1	: left, 558, 240, 0, BaseFont.HELVETICA, 8 
+
+pg1_obHistDate2	: left, 33, 259, 0, BaseFont.HELVETICA, 8 
+pg1_birthOrAbort2	: center, 96, 259, 0, BaseFont.HELVETICA, 7 
+pg1_deliWeek2	: left, 156, 259, 0, BaseFont.HELVETICA, 8 
+pg1_laboHr2	: center, 130, 259, 0, BaseFont.HELVETICA, 8 
+pg1_deliType2	: center, 169, 262, 0, BaseFont.HELVETICA, 7, _, 225, 244, 8
+pg1_periComp2	: center, 342, 259, 0, BaseFont.HELVETICA, 8 
+pg1_obHistSex2	: center, 480, 259, 0, BaseFont.HELVETICA, 8 
+pg1_birthWeit2	: left, 500, 259, 0, BaseFont.HELVETICA, 8
+pg1_birthWeitUnits2	: left, 530, 259, 0, BaseFont.HELVETICA, 8  
+pg1_presHealth2	: left, 558, 259, 0, BaseFont.HELVETICA, 8 
+
+pg1_obHistDate3	: left, 33, 277, 0, BaseFont.HELVETICA, 8 
+pg1_birthOrAbort3	: center, 96, 277, 0, BaseFont.HELVETICA, 7
+pg1_deliWeek3	: left, 156, 277, 0, BaseFont.HELVETICA, 8 
+pg1_laboHr3	: center, 130, 277, 0, BaseFont.HELVETICA, 8 
+pg1_deliType3	: center, 169, 281, 0, BaseFont.HELVETICA, 7, _, 225, 263, 8
+pg1_periComp3	: center, 342, 277, 0, BaseFont.HELVETICA, 8 
+pg1_obHistSex3	: center, 480, 277, 0, BaseFont.HELVETICA, 8 
+pg1_birthWeit3	: left, 500, 277, 0, BaseFont.HELVETICA, 8 
+pg1_birthWeitUnits3	: left, 530, 277, 0, BaseFont.HELVETICA, 8 
+pg1_presHealth3	: left, 558, 277, 0, BaseFont.HELVETICA, 8 
+
+pg1_obHistDate4	: left, 33, 296, 0, BaseFont.HELVETICA, 8 
+pg1_birthOrAbort4	: center, 96, 296, 0, BaseFont.HELVETICA, 7 
+pg1_deliWeek4	: left, 156, 296, 0, BaseFont.HELVETICA, 8 
+pg1_laboHr4	: center, 130, 296, 0, BaseFont.HELVETICA, 8 
+pg1_deliType4	: center, 169, 299, 0, BaseFont.HELVETICA, 7, _, 225, 282, 8
+pg1_periComp4	: center, 342, 296, 0, BaseFont.HELVETICA, 8 
+pg1_obHistSex4	: center, 480, 296, 0, BaseFont.HELVETICA, 8 
+pg1_birthWeit4	: left, 500, 296, 0, BaseFont.HELVETICA, 8 
+pg1_birthWeitUnits4	: left, 530, 296, 0, BaseFont.HELVETICA, 8 
+pg1_presHealth4	: left, 558, 296, 0, BaseFont.HELVETICA, 8 
+
+pg1_obHistDate5	: left, 33, 315, 0, BaseFont.HELVETICA, 8 
+pg1_birthOrAbort5	: center, 96, 315, 0, BaseFont.HELVETICA, 7 
+pg1_deliWeek5	: left, 156, 315, 0, BaseFont.HELVETICA, 8 
+pg1_laboHr5	: center, 130, 315, 0, BaseFont.HELVETICA, 8 
+pg1_deliType5	: center, 169, 318, 0, BaseFont.HELVETICA, 7, _, 225, 300, 8
+pg1_periComp5	: center, 342, 315, 0, BaseFont.HELVETICA, 8 
+pg1_obHistSex5	: center, 480, 315, 0, BaseFont.HELVETICA, 8 
+pg1_birthWeit5	: left, 500, 315, 0, BaseFont.HELVETICA, 8 
+pg1_birthWeitUnits5	: left, 530, 315, 0, BaseFont.HELVETICA, 8 
+pg1_presHealth5	: left, 558, 315, 0, BaseFont.HELVETICA, 8 
+
+pg1_lmp		: left, 40, 337, 0, BaseFont.HELVETICA, 8 
+pg1_mensCycle	: left, 95, 337, 0, BaseFont.HELVETICA, 8 
+pg1_contrMethod	: left, 155, 337, 0, BaseFont.HELVETICA, 8 
+pg1_stopDate	: left, 225, 337, 0, BaseFont.HELVETICA, 8 
+pg1_eddByDate	: left, 300, 337, 0, BaseFont.HELVETICA, 8 
+pg1_eddByUs	: left, 378, 337, 0, BaseFont.HELVETICA, 8 
+pg1_eddByUsPerf : left, 449, 334, 0, BaseFont.HELVETICA, 8  , X
+pg1_eddByUsGestWks  : left, 510, 333, 0, BaseFont.HELVETICA, 8 
+pg1_eddByUsGestDays : left, 565, 333, 0, BaseFont.HELVETICA, 8 
+
+pg1_IVFpregnancy    : left, 36, 366, 0, BaseFont.HELVETICA, 8  , X
+pg1_IVFpregnancySpec    : left, 95, 364, 0, BaseFont.HELVETICA, 8
+pg1_bleeding	: left, 36, 379, 0, BaseFont.HELVETICA, 8  , X
+pg1_bleedingSpec	: left, 77, 377, 0, BaseFont.HELVETICA, 8 
+pg1_nausea	: left, 36, 394, 0, BaseFont.HELVETICA, 8 , X
+pg1_nauseaSpec	: left, 75, 391, 0, BaseFont.HELVETICA, 8 
+pg1_infect	: left, 36, 407, 0, BaseFont.HELVETICA, 8  , X
+pg1_infectSpec	: left, 105, 405, 0, BaseFont.HELVETICA, 7
+pg1_prePregOther	: left, 36, 420, 0, BaseFont.HELVETICA, 8  , X
+pg1_prePregOtherSpec	: left, 70, 418, 0, BaseFont.HELVETICA, 8 
+
+pg1_heartDise	: left, 36, 454, 0, BaseFont.HELVETICA, 8  , X
+pg1_heartDiseSpec	: left, 96, 453, 0, BaseFont.HELVETICA, 8 
+pg1_hyperts	: left, 36, 467, 0, BaseFont.HELVETICA, 8  , X
+pg1_hypertsSpec	: left, 93, 466, 0, BaseFont.HELVETICA, 8 
+pg1_diabete	: left, 36, 481, 0, BaseFont.HELVETICA, 8  , X
+pg1_diabeteSpec	: left, 79, 480, 0, BaseFont.HELVETICA, 8 
+pg1_deprPsychiat	: left, 36, 492, 0, BaseFont.HELVETICA, 8  , X
+pg1_deprPsychiatSpec	: left, 88, 499, 0, BaseFont.HELVETICA, 8 
+pg1_alcohDrug	: left, 36, 512, 0, BaseFont.HELVETICA, 8  , X
+pg1_alcohDrugSpec	: left, 78, 518, 0, BaseFont.HELVETICA, 8 
+pg1_thromCoag	: left, 36, 535, 0, BaseFont.HELVETICA, 8  , X
+pg1_thromCoagSpec	: left, 123, 533, 0, BaseFont.HELVETICA, 6 
+pg1_inherDisease	: left, 36, 554, 0, BaseFont.HELVETICA, 8  , X
+pg1_inherDiseaseSpec	: left, 102, 559, 0, BaseFont.HELVETICA, 8 
+pg1_ethnic	: left, 36, 573, 0, BaseFont.HELVETICA, 8  , X
+pg1_ethnicSpec	: left, 106, 579, 0, BaseFont.HELVETICA, 7 
+pg1_famHistOther	: left, 36, 596, 0, BaseFont.HELVETICA, 8  , X
+pg1_famHistOtherSpec	: left, 70, 596, 0, BaseFont.HELVETICA, 8 
+
+pg1_operation	: left, 212, 366, 0, BaseFont.HELVETICA, 8  , X
+pg1_operationSpec	: left, 223, 380, 0, BaseFont.HELVETICA, 7, _, 399, 366, 7
+pg1_anesthetic	: left, 212, 395, 0, BaseFont.HELVETICA, 8  , X
+pg1_anestheticSpec	: left, 263, 394, 0, BaseFont.HELVETICA, 8 
+pg1_uterineCxProc   : left, 212, 409, 0, BaseFont.HELVETICA, 8  , X
+pg1_uterineCxProcSpec   : left, 294, 406, 0, BaseFont.HELVETICA, 8
+pg1_cvOrResp	: left, 212, 422, 0, BaseFont.HELVETICA, 8  , X
+pg1_cvOrRespSpec	: left, 267, 421, 0, BaseFont.HELVETICA, 8 
+pg1_infectStd	: left, 212, 436, 0, BaseFont.HELVETICA, 8  , X
+pg1_infectStdSpec	: left, 277, 434, 0, BaseFont.HELVETICA, 8 
+pg1_susChiPox	: left, 212, 449, 0, BaseFont.HELVETICA, 8  , X
+pg1_susChiPoxSpec	: left, 306, 449, 0, BaseFont.HELVETICA, 6 
+pg1_thrCoag	: left, 212, 463, 0, BaseFont.HELVETICA, 8  , X
+pg1_thrCoagSpec	: left, 299, 462, 0, BaseFont.HELVETICA, 6 
+pg1_hyper	: left, 212, 477, 0, BaseFont.HELVETICA, 8  , X
+pg1_hyperSpec	: left, 268, 476, 0, BaseFont.HELVETICA, 8 
+pg1_piGi	: left, 212, 490, 0, BaseFont.HELVETICA, 8  , X
+pg1_piGiSpec	: left, 235, 489, 0, BaseFont.HELVETICA, 8 
+pg1_piUrin	: left, 212, 504, 0, BaseFont.HELVETICA, 8  , X
+pg1_piUrinSpec	: left, 248, 502, 0, BaseFont.HELVETICA, 8 
+pg1_dbEndoc	: left, 212, 518, 0, BaseFont.HELVETICA, 8  , X
+pg1_dbEndocSpec	: left, 285, 516, 0, BaseFont.HELVETICA, 7 
+pg1_seizNeur	: left, 212, 531, 0, BaseFont.HELVETICA, 8  , X
+pg1_seizNeurSpec	: left, 258, 529, 0, BaseFont.HELVETICA, 8 
+pg1_deprPsy	: left, 212, 544, 0, BaseFont.HELVETICA, 8  , X
+pg1_deprPsySpec : left, 222, 559, 0, BaseFont.HELVETICA, 7, _, 400, 545, 7 
+pg1_piOther	: left, 212, 596, 0, BaseFont.HELVETICA, 8  , X
+pg1_piOtherSpec	: left, 243, 596, 0, BaseFont.HELVETICA, 8 
+
+pg1_hxAnxiety	: left, 222, 569, 0, BaseFont.HELVETICA, 8  , X
+pg1_hxDepr	: left, 288, 569, 0, BaseFont.HELVETICA, 8  , X
+pg1_hxBipolar	: left, 348, 569, 0, BaseFont.HELVETICA, 8  , X
+pg1_hxPPDepr	: left, 222, 580, 0, BaseFont.HELVETICA, 8  , X
+pg1_hxUnknown	: left, 288, 580, 0, BaseFont.HELVETICA, 8  , X
+pg1_hxOther	: left, 348, 580, 0, BaseFont.HELVETICA, 8  , X
+
+pg1_nutrition	: left, 408, 372, 0, BaseFont.HELVETICA, 8  , X
+pg1_nutritionSpec   : left, 436, 369, 0, BaseFont.HELVETICA, 8 
+pg1_nutritionRef    : left, 575, 372, 0, BaseFont.HELVETICA, 8  , X
+pg1_foliAcid	: left, 408, 384, 0, BaseFont.HELVETICA, 8  , X
+pg1_foliAcidSpec    : left, 454, 382, 0, BaseFont.HELVETICA, 8 
+pg1_foliAcidRef : left, 575, 384, 0, BaseFont.HELVETICA, 8  , X
+pg1_stpWrkDate  : left, 408, 397, 0, BaseFont.HELVETICA, 8  , X
+pg1_stpWrkDateSpec  : left, 485, 402, 0, BaseFont.HELVETICA, 7 
+pg1_stpWrkDateRef   : left, 575, 405, 0, BaseFont.HELVETICA, 8  , X
+pg1_drug	: left, 408, 419, 0, BaseFont.HELVETICA, 8  , X
+pg1_drugSpec	: left, 484, 416, 0, BaseFont.HELVETICA, 7 
+pg1_drugRef	: left, 575, 419, 0, BaseFont.HELVETICA, 8  , X
+pg1_alco	: left, 408, 432, 0, BaseFont.HELVETICA, 8  , X
+pg1_alcoNever   : left, 450, 432, 0, BaseFont.HELVETICA, 8  , X
+pg1_alcoQuit    : left, 491, 432, 0, BaseFont.HELVETICA, 8  , X
+pg1_alcoQuitDate    : left, 520, 429, 0, BaseFont.HELVETICA, 8
+pg1_alcoBef     : left, 511, 443, 0, BaseFont.HELVETICA, 8
+pg1_alcoCurr    : left, 567, 443, 0, BaseFont.HELVETICA, 8
+pg1_alcoBingeNo : left, 467, 458, 0, BaseFont.HELVETICA, 8  , X
+pg1_alcoBingeYes    : left, 491, 458, 0, BaseFont.HELVETICA, 8  , X
+pg1_tweak   : left, 408, 471, 0, BaseFont.HELVETICA, 8  , X
+pg1_tweakScore  : left, 465, 469, 0, BaseFont.HELVETICA, 8
+pg1_subUse	: left, 408, 484, 0, BaseFont.HELVETICA, 8  , X
+pg1_subUseNo    : left, 474, 484, 0, BaseFont.HELVETICA, 8  , X
+pg1_subUseYes   : left, 506, 484, 0, BaseFont.HELVETICA, 8  , X
+pg1_subUseSpec	: left, 420, 494, 0, BaseFont.HELVETICA, 8 
+pg1_heroin  : left, 422, 507, 0, BaseFont.HELVETICA, 8  , X
+pg1_cocaine : left, 478, 507, 0, BaseFont.HELVETICA, 8  , X
+pg1_marijuana   : left, 536, 507, 0, BaseFont.HELVETICA, 8  , X
+pg1_methadone   : left, 422, 516, 0, BaseFont.HELVETICA, 8  , X
+pg1_solvents    : left, 479, 516, 0, BaseFont.HELVETICA, 8  , X
+pg1_subUseOther : left, 536, 516, 0, BaseFont.HELVETICA, 8  , X
+pg1_prescription    : left, 422, 524, 0, BaseFont.HELVETICA, 8  , X
+pg1_subUseUnknown   : left, 479, 524, 0, BaseFont.HELVETICA, 8  , X
+pg1_smokeCur    : left, 408, 539, 0, BaseFont.HELVETICA, 8  , X
+pg1_smokeNever  : left, 449, 539, 0, BaseFont.HELVETICA, 8  , X
+pg1_smokeQuit   : left, 490, 539, 0, BaseFont.HELVETICA, 8  , X
+pg1_smokeQuitDate   : left, 520, 536, 0, BaseFont.HELVETICA, 8 
+pg1_smokeBefSpec    : left, 503, 550, 0, BaseFont.HELVETICA, 8 
+pg1_smokeCurSpec    : left, 564, 550, 0, BaseFont.HELVETICA, 8 
+pg1_secSmoke	: left, 408, 564, 0, BaseFont.HELVETICA, 8  , X
+pg1_secSmokeNo	: left, 504, 564, 0, BaseFont.HELVETICA, 8  , X
+pg1_secSmokeYes	: left, 528, 564, 0, BaseFont.HELVETICA, 8  , X
+pg1_secSmokeSpec    : left, 552, 562, 0, BaseFont.HELVETICA, 7
+pg1_finaHouse	: left, 408, 577, 0, BaseFont.HELVETICA, 8  , X
+pg1_finaHouseSpec   : left, 480, 575, 0, BaseFont.HELVETICA, 7 
+pg1_finaHouseRef    : left, 575, 577, 0, BaseFont.HELVETICA, 8  , X
+pg1_supSys	: left, 408, 590, 0, BaseFont.HELVETICA, 8  , X
+pg1_supSysSpec	: left, 467, 588, 0, BaseFont.HELVETICA, 7 
+pg1_supSysRef	: left, 575, 590, 0, BaseFont.HELVETICA, 8  , X
+pg1_ipv     : left, 408, 603, 0, BaseFont.HELVETICA, 8  , X
+pg1_ipvSpec : left, 433, 604, 0, BaseFont.HELVETICA, 7 
+pg1_ipvRef  : left, 575, 603, 0, BaseFont.HELVETICA, 8  , X
+
+pg1_examination	: left, 42, 632, 0, BaseFont.HELVETICA, 8 
+pg1_bp	: left, 112, 632, 0, BaseFont.HELVETICA, 8 
+c_ppHt  : left, 154, 632, 0, BaseFont.HELVETICA, 8
+c_ppWt  : left, 206, 632, 0, BaseFont.HELVETICA, 8
+c_ppBMI : left, 263, 632, 0, BaseFont.HELVETICA, 8
+pg1_headNeck	: left, 42, 672, 0, BaseFont.HELVETICA, 7, _, 155, 653, 7 
+pg1_muscSpine	: left, 164, 672, 0, BaseFont.HELVETICA, 7, _, 277, 653, 7 
+pg1_breaNipp	: left, 42, 702, 0, BaseFont.HELVETICA, 7, _, 155, 683, 7
+pg1_variSkin	: left, 164, 702, 0, BaseFont.HELVETICA, 7, _, 277, 683, 7
+pg1_heartLung	: left, 42, 732, 0, BaseFont.HELVETICA, 7, _, 155, 713, 7 
+pg1_pelvic	: left, 164, 732, 0, BaseFont.HELVETICA, 7, _, 277, 713, 7
+pg1_abdomen	: left, 42, 757, 0, BaseFont.HELVETICA, 7, _, 155, 740, 7 
+pg1_swabsCerv	: left, 164, 757, 0, BaseFont.HELVETICA, 7, _, 277, 740, 7
+
+pg1_disMSS	: left, 301, 628, 0, BaseFont.HELVETICA, 8  , X
+pg1_disGenCouns	: left, 379, 628, 0, BaseFont.HELVETICA, 8  , X
+pg1_disHIV	: left, 477, 628, 0, BaseFont.HELVETICA, 8  , X
+pg1_disBfY	: left, 554, 626, 0, BaseFont.HELVETICA, 8  , X
+pg1_disBestCh	: left, 301, 638, 0, BaseFont.HELVETICA, 8  , X
+pg1_disPreEdu	: left, 379, 638, 0, BaseFont.HELVETICA, 8  , X
+pg1_disMatPat	: left, 477, 638, 0, BaseFont.HELVETICA, 8  , X
+pg1_disBfN	: left, 554, 636, 0, BaseFont.HELVETICA, 8  , X
+pg1_disBeltUse	: left, 301, 648, 0, BaseFont.HELVETICA, 8  , X
+pg1_disSexu	: left, 379, 648, 0, BaseFont.HELVETICA, 8  , X
+pg1_disBfM	: left, 554, 644, 0, BaseFont.HELVETICA, 8  , X
+
+pg1_summary	: left, 305, 745, 0, BaseFont.HELVETICA, 8  , _, 480, 665, 9
+pg1_signature	: left, 395, 755, 0, BaseFont.HELVETICA, 7 
+
+forms_promotext : center, 305, 782, 0, BaseFont.HELVETICA, 6
