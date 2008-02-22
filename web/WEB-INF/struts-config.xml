@@ -1549,7 +1549,7 @@
             <forward name="question_editor" path="/survey/surveyManager/questionForm.jsp" />
             <forward name="execute" path="/SurveyTest.do" redirect="false" />
             <forward name="import" path=".view.survey.import" />
-            <forward name="redirect" path="/SurveyManager.do" redirect="true" />
+            <forward name="redirect" path="/SurveyManager.do" redirect="true" />            
         </action>
         <action path="/SurveyTest" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="surveyTestForm" scope="session">
             <forward name="view" path="/survey/surveyTest/surveyView.jsp" />
