@@ -114,4 +114,17 @@ public class QuatroReportDao extends HibernateDaoSupport {
           getHibernateTemplate().saveOrUpdate(rdsv);
   	  }
 
+  	  public List GetReportTemplates(int reportNo, String userId){
+          ArrayList paramList = new ArrayList();
+	      paramList.add(Integer.valueOf(reportNo));
+	      paramList.add(userId);
+	      Object params[] = paramList.toArray(new Object[paramList.size()]);          
+		  String sSQL="FROM ReportTempValue s WHERE s.reportNo=? AND (s.loginId=? or s.privateTemplate=true)";
+	      return  getHibernateTemplate().find(sSQL,params);
+  	  }
+ 
+  	  public void SaveReportTemplate(ReportTempValue rtv){
+          getHibernateTemplate().saveOrUpdate(rtv);
+  	  }
+  	  
 }

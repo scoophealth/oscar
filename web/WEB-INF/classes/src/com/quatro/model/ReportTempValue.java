@@ -14,7 +14,7 @@ public class ReportTempValue {
     private String endPayPeriod;
     private Date updateDate;
     private String loginId;
-    private boolean isPrivate;
+    private boolean privateTemplate;
     private ArrayList templateCriteria;
     private String criteriaDis;
     private ArrayList orgCodes;
@@ -58,11 +58,11 @@ public class ReportTempValue {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	public boolean isPrivate() {
-		return isPrivate;
+	public boolean isPrivateTemplate() {
+		return privateTemplate;
 	}
-	public void setPrivate(boolean isPrivate) {
-		this.isPrivate = isPrivate;
+	public void setPrivateTemplate(boolean privateTemplate) {
+		this.privateTemplate = privateTemplate;
 	}
 	public String getLoginId() {
 		return loginId;

@@ -22,6 +22,7 @@ public class QuatroReportRunnerAction extends Action {
 			throws Exception {
 
 		String param=(String)request.getParameter("id");
+		
 		QuatroReportRunnerForm myForm = (QuatroReportRunnerForm)form;
 		int rptNo;
 		String loginId = (String)request.getSession().getAttribute("user");
@@ -66,6 +67,10 @@ public class QuatroReportRunnerAction extends Action {
 			if((String)request.getParameter("Run")!=null)
 			{
 				btnRun_Click(rptNo, myForm, request);
+			}
+			if((String)request.getParameter("Save")!=null)
+			{
+				btnSave_Click(rptNo, myForm, request);
 			}
 			else if((String)request.getParameter("AddTplCri")!=null)
 			{
@@ -193,12 +198,22 @@ public class QuatroReportRunnerAction extends Action {
 		ChangeTplCriTable(2, myForm, request);
     }
 
+	public void btnSave_Click(int reportNo, QuatroReportRunnerForm myForm, HttpServletRequest request)
+	{
+        try
+        {
+        	BuildTemplate(myForm, request); 
+        }catch (Exception ex){
+            return;        
+	    }
+		myForm.setStrClientJavascript("saveTemplate");
+	}
+	
 	public void btnRun_Click(int reportNo, QuatroReportRunnerForm myForm, HttpServletRequest request)
 	{
         ReportTempValue rptTempVal=null;
         try
         {
-//        	rptTempVal= BuildTemplate(myForm, request); 
         	BuildTemplate(myForm, request); 
         }catch (Exception ex){
             return;        
@@ -206,7 +221,6 @@ public class QuatroReportRunnerAction extends Action {
         
         try{
             ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
-//        	rptVal.setReportTemp(rptTempVal);
             
             rptVal.setExportFormatType(Integer.parseInt(myForm.getExportFormat()));
             rptVal.setPrint2Pdf(false); // this property is kept only for the customized prints 
@@ -427,7 +441,7 @@ public class QuatroReportRunnerAction extends Action {
 		if (rptVal.getReportTemp() != null){
 		  repTemp.setTemplateNo(rptVal.getReportTemp().getTemplateNo());
 		  repTemp.setDesc(rptVal.getReportTemp().getDesc());
-		  repTemp.setPrivate(rptVal.getReportTemp().isPrivate());
+		  repTemp.setPrivateTemplate(rptVal.getReportTemp().isPrivateTemplate());
 		  errMsg = rptVal.getReportTemp().ErrMsg;
 		}
 		
@@ -704,21 +718,6 @@ public class QuatroReportRunnerAction extends Action {
 		return operators;
 	}
 
-	private String GetLookupTable(int fieldNo, ArrayList filterFields)
-	{
-		String lk = "";
-		for (int i=0; i<filterFields.size(); i++) 
-		{
-			ReportFilterValue rptFilter = (ReportFilterValue) filterFields.get(i);
-			if (rptFilter.getFieldNo() == fieldNo) 
-			{					
-				lk = rptFilter.getLookupTable();
-                break;
-            }
-		}
-		return lk;
-	}
-	
     public void ChangeTplCriTable(int operationType, QuatroReportRunnerForm myForm, HttpServletRequest request)
     {
     	ArrayList<ReportTempCriValue> obj= new ArrayList<ReportTempCriValue>();

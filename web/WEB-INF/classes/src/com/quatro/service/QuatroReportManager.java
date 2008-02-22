@@ -108,4 +108,12 @@ public class QuatroReportManager {
 	public void SetReportDateSp(int reportNo, Date startDate, Date endDate, String spToRun){
 		quatroReportDao.SetReportDateSp(reportNo, startDate, endDate, spToRun);
 	}
+	
+	public List GetReportTemplates(int reportNo, String userId){
+		return quatroReportDao.GetReportTemplates(reportNo, userId);
+	}
+	
+	public void SaveReportTemplate(ReportTempValue rtv){
+		quatroReportDao.SaveReportTemplate(rtv);
+	}
 }

@@ -291,6 +291,7 @@
         <form-bean name="quatroReportListForm" type="com.quatro.web.report.QuatroReportListForm" />
         <form-bean name="quatroReportRunnerForm" type="com.quatro.web.report.QuatroReportRunnerForm" />
         <form-bean name="quatroReportViewerForm" type="com.quatro.web.report.QuatroReportViewerForm" />
+        <form-bean name="quatroReportSaveTemplateForm" type="com.quatro.web.report.QuatroReportSaveTemplateForm" />
         
 <!--
         <form-bean name="customReportForm" type="org.apache.struts.validator.DynaValidatorForm">
@@ -1512,7 +1513,11 @@
         </action>
         <action path="/QuatroReport/ReportViewer" type="com.quatro.web.report.QuatroReportViewerAction"
               name="quatroReportRunnerForm" validate="false" scope="request">
-           <forward name="success" path="/PMmodule/Reports/QuatroReportViewer.jsp"/>
+           <forward name="success" path="/PMmodule/reports/QuatroReportViewer.jsp"/>
+        </action>
+        <action path="/QuatroReport/SaveReportTemplate" type="com.quatro.web.report.QuatroReportTemplateAction"
+              name="quatroReportSaveTemplateForm" validate="false" scope="request">
+           <forward name="success" path="/PMmodule/reports/QuatroReportTemplateTitle.jsp"/>
         </action>
         <action path="/QuatroLookup/LookupList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" 
               name="quatroLookupListForm" scope="request" validate="false">

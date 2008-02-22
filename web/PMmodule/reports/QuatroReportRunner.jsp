@@ -33,6 +33,16 @@
 showReport('<c:out value="${ctx}"/>/QuatroReport/ReportViewer.do');
 </script>
 </logic:equal>
+<logic:equal name="quatroReportRunnerForm" property="strClientJavascript" value="saveTemplate">
+<script language="JavaScript">
+saveTemplate('<c:out value="${ctx}"/>/QuatroReport/SaveReportTemplate.do');
+
+function saveTemplate(url){
+  top.childWin = window.open(url,"_blank","toolbar=yes,menubar= yes,resizable=yes,scrollbars=yes,status=yes,width=650,height=400,top=50, left=50");
+  top.childWin.focus();
+}
+</script>
+</logic:equal>
 <script language="JavaScript">
 function CriteriaChanged(obj){
   quatroReportRunnerForm.onCriteriaChange.value=obj.name;
@@ -70,6 +80,9 @@ function getOrgList(){
 </td></tr>
 
 <tr><td style="font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px;" background="../images/ButtonBar2.png"  align="left">
+<img src="../images/Save16.png"/>
+<a href="javascript:quatroReportRunnerForm.Save.click();">Save Template</a>&nbsp;|&nbsp;
+<html:submit property="Save" style="width:1px;height:1px;">Save Template</html:submit>
 <img src="../images/Print16x16.gif"/>
 <html:submit property="Run"	style="width:1px;height:1px;">Run Report</html:submit>
 
