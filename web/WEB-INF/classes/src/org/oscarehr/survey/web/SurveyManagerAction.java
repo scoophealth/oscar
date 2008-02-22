@@ -112,6 +112,11 @@ public class SurveyManagerAction extends AbstractSurveyAction {
         return mapping.findForward("list");
     }
     
+    public ActionForward reportForm(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	        
+        return mapping.findForward("reportForm");
+    }
+    
     
     public ActionForward test(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	if(!userManager.isAdmin(request)) {
