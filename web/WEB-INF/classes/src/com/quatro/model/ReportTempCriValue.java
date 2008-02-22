@@ -14,7 +14,7 @@ public class ReportTempCriValue {
 //    private String ops;
     private Boolean required = false;
     private String fieldName;
-    private String lookupTable;
+    private ReportFilterValue filter;
     private ArrayList<KeyValueBean> operatorList;
     
     public int getCounter() {
@@ -80,18 +80,18 @@ public class ReportTempCriValue {
 	public void setValDesc(String valDesc) {
 		this.valDesc = valDesc;
 	}
-	public String getLookupTable() {
-		return lookupTable;
-	}
-	public void setLookupTable(String lookupTable) {
-		this.lookupTable = lookupTable;
-	}
 	public ArrayList<KeyValueBean> getOperatorList() {
 		if(operatorList==null) operatorList= new ArrayList<KeyValueBean>();
 		return operatorList;
 	}
 	public void setOperatorList(ArrayList<KeyValueBean> operatorList) {
 		this.operatorList = operatorList;
+	}
+	public ReportFilterValue getFilter() {
+		return filter;
+	}
+	public void setFilter(ReportFilterValue filter) {
+		this.filter = filter;
 	}
     
 }

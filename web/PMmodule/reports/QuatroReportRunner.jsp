@@ -209,7 +209,7 @@ function getOrgList(){
      	<input type="hidden" name="lineno" value="<%=String.valueOf(rIndex)%>" /> 
    	</TD>
    	<TD>
-		<html:select name="tplCriteria" property="relation" indexed="true" onchange="CriteriaChanged(this);">
+		<html:select name="tplCriteria" property="relation" indexed="true">
           <logic:iterate id="relation" name="arRelations" type="String">
             <html:option value="<%=relation%>"><%=relation%></html:option>
           </logic:iterate>
@@ -231,7 +231,7 @@ function getOrgList(){
 	</TD>  
 	<TD>
         <logic:equal name="tplCriteria" property="required" value="true">
-		<html:select name="tplCriteria" disabled="true" property="op" indexed="true" onchange="CriteriaChanged(this);">
+		<html:select name="tplCriteria" disabled="true" property="op" indexed="true">
            <option value=""></option>
            <logic:iterate id="ops" name="tplCriteria" property="operatorList" type="com.quatro.util.KeyValueBean">
               <html:option value="<%=(String)ops.getKey()%>"><bean:write name="ops" property="value" /></html:option>
@@ -239,7 +239,7 @@ function getOrgList(){
 		</html:select>
         </logic:equal>
         <logic:notEqual name="tplCriteria" property="required" value="true">
-		<html:select name="tplCriteria" property="op" indexed="true" onchange="CriteriaChanged(this);">
+		<html:select name="tplCriteria" property="op" indexed="true">
            <option value=""></option>
            <logic:iterate id="ops" name="tplCriteria" property="operatorList" type="com.quatro.util.KeyValueBean">
               <html:option value="<%=(String)ops.getKey()%>"><bean:write name="ops" property="value" /></html:option>
@@ -248,12 +248,25 @@ function getOrgList(){
         </logic:notEqual>
 	</TD>  
 	<TD>
-		<html:hidden name="tplCriteria" property="lookupTable" indexed="true" />
-        <quatro:lookupTag name="tplCriteria" tableName="BED" indexed="true" formProperty="quatroReportRunnerForm" 
-          codeProperty ="val" bodyProperty="valdesc" codeValue="<%=((ReportTempCriValue)tplCriteria).getVal()%>" bodyValue="<%=((ReportTempCriValue)tplCriteria).getValDesc()%>"></quatro:lookupTag>
-        <logic:notEqual name="tplCriteria" property="lookupTable" value="">
-		  <img src="microsoftsearch.gif" onclick="showLookupx(<%=String.valueOf(rIndex)%>);">
-        </logic:notEqual>
+        <logic:notEmpty name="tplCriteria" property="filter">
+          <html:hidden name="tplCriteria" property="filter.fieldType" indexed="true" />
+          <logic:equal name="tplCriteria" property="filter.fieldType" value="S">
+            <logic:empty name="tplCriteria" property="filter.lookupTable">
+              <html:text name="tplCriteria" property="val" indexed="true"/>
+            </logic:empty>
+            <logic:notEmpty name="tplCriteria" property="filter.lookupTable">
+              <html:hidden name="tplCriteria" property="filter.lookupTable" indexed="true" />
+              <quatro:lookupTag name="tplCriteria" tableName="<%=((ReportTempCriValue)tplCriteria).getFilter().getLookupTable()%>" indexed="true" formProperty="quatroReportRunnerForm" 
+                 codeProperty ="val" bodyProperty="valdesc" codeValue="<%=((ReportTempCriValue)tplCriteria).getVal()%>" bodyValue="<%=((ReportTempCriValue)tplCriteria).getValDesc()%>"></quatro:lookupTag>
+            </logic:notEmpty>
+          </logic:equal>  
+          <logic:equal name="tplCriteria" property="filter.fieldType" value="D">
+            <quatro:datePickerTag name="tplCriteria" property="val" indexed="true" openerForm="quatroReportRunnerForm"></quatro:datePickerTag>
+          </logic:equal>  
+          <logic:equal name="tplCriteria" property="filter.fieldType" value="N">
+             <html:text name="tplCriteria" property="val" indexed="true"/>
+          </logic:equal>  
+        </logic:notEmpty>
 	</TD>  
    	</TR>
    	</logic:iterate>

@@ -24,7 +24,6 @@ public class QuatroReportRunnerAction extends Action {
 		String param=(String)request.getParameter("id");
 		QuatroReportRunnerForm myForm = (QuatroReportRunnerForm)form;
 		int rptNo;
-//        String loginId = "999998";
 		String loginId = (String)request.getSession().getAttribute("user");
 
         ArrayList lstExportFormat = myForm.getExportFormatList();
@@ -93,7 +92,7 @@ public class QuatroReportRunnerAction extends Action {
     
 	public void OnCriteriaTextChangedHandler(int reportNo, QuatroReportRunnerForm myForm, HttpServletRequest request)
 	{
-    	ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
+		ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
         ReportTempValue rptTemp = rptVal.getReportTemp();
         if (rptTemp == null)
         {
@@ -106,6 +105,7 @@ public class QuatroReportRunnerAction extends Action {
 		String sTemp2 = aTemp1[0].replaceAll("tplCriteria", "");
 		sTemp2= sTemp2.substring(1, sTemp2.length());
 		int row= Integer.parseInt(sTemp2);
+
 		int col=0;
 		if(aTemp1[1].equals("relation")){
 		  col=1;
@@ -119,6 +119,8 @@ public class QuatroReportRunnerAction extends Action {
 		else if(aTemp1[1].equals("val")){
 		  col=4;
 		}
+
+		if(col!=2) return;
 		
 		ArrayList cris = (ArrayList) request.getSession().getAttribute(DataViews.REPORT_CRI);
 		Map map=request.getParameterMap();
@@ -133,60 +135,40 @@ public class QuatroReportRunnerAction extends Action {
           String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
           String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
           String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
-          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
+          String[] arFieldType=(String[])map.get("tplCriteria[" + i + "].filter.fieldType");
+          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].filter.lookupTable");
 
-//	      if(arRelation!=null) criNew.setRelation(arRelation[0]);
-//	      if(arOp!=null) criNew.setOp(arOp[0]);
+	      if(arRelation!=null) criNew.setRelation(arRelation[0]);
+	      if(arOp!=null) criNew.setOp(arOp[0]);
 	      if(arVal!=null) criNew.setVal(arVal[0]);
 	      if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
-//	      if(arLookupTable!=null) criNew.setLookupTable(arLookupTable[0]);
+	      if(arFieldNo!=null){
+		  	int iFieldNo = Integer.parseInt(arFieldNo[0]);
+		  	criNew.setFieldNo(iFieldNo);
+			ReportFilterValue filter = new ReportFilterValue();
+		    filter.setFieldNo(iFieldNo);
+		    if(arFieldType!=null) filter.setFieldType(arFieldType[0]);
+		    if(arLookupTable!=null) filter.setLookupTable(arLookupTable[0]);
+		    criNew.setFilter(filter);
+		  }
 	    }
 
 		ReportTempCriValue rptCri = (ReportTempCriValue)cris.get(row);
-
 		ReportFilterValue rptFilterVal = null;
-		
-        switch (col)
-		{
-			case 1: //relation
-                String[] arRelation=(String[])map.get("tplCriteria[" + row + "].relation");
-                rptCri.setRelation(arRelation[0]);
-
-                break;
-			case 2: //fieldNo
-                String[] arFieldNo=(String[])map.get("tplCriteria[" + row + "].fieldNo");
-                int fieldNo= 0;
-                if(arFieldNo!=null) fieldNo=Integer.parseInt(arFieldNo[0]);
-
-				rptCri.setFieldNo(fieldNo);
-				if (fieldNo == 0)  return;
-
-				rptFilterVal = rpt.GetFilterField(reportNo, rptCri.getFieldNo());
-				rptCri.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
-				break;
-			case 3:  //operator
-  			    String[] arOp=(String[])map.get("tplCriteria[" + row + "].op");
-			    if(arOp!=null){
-			    	rptCri.setOp(arOp[0]);
-			    }else{
-			    	rptCri.setOp("");
-			    }
-                break;
-			case 4: //val
- 				break;
+        String[] arFieldNo=(String[])map.get("tplCriteria[" + row + "].fieldNo");
+        int fieldNo= 0;
+        if(arFieldNo!=null) fieldNo=Integer.parseInt(arFieldNo[0]);
+		rptCri.setFieldNo(fieldNo);
+		if (fieldNo == 0){
+			rptCri.setFilter(rptFilterVal);
+			return;
 		}
-        String[] arVal=(String[])map.get("tplCriteria[" + row + "].val");
-		if(arVal!=null){
-		  rptCri.setVal(arVal[0]);
-		}else{
-		  rptCri.setVal("");
-		}
-		String[] arValDesc=(String[])map.get("tplCriteria[" + row + "].valdesc");
-		if(arValDesc!=null){
-		  rptCri.setValDesc(arValDesc[0]);
-		}else{
-		  rptCri.setValDesc("");
-		}
+		rptFilterVal = rpt.GetFilterField(reportNo, rptCri.getFieldNo());
+		rptCri.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
+		rptCri.setFilter(rptFilterVal);
+
+	    rptCri.setVal("");
+		rptCri.setValDesc("");
 		
 		request.getSession().setAttribute(DataViews.REPORT_CRI, cris);
 		if(rptVal.getReportTemp()!=null){
@@ -213,43 +195,18 @@ public class QuatroReportRunnerAction extends Action {
 
 	public void btnRun_Click(int reportNo, QuatroReportRunnerForm myForm, HttpServletRequest request)
 	{
-        ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
         ReportTempValue rptTempVal=null;
         try
         {
-        	rptTempVal= BuildTemplate(myForm, request); 
+//        	rptTempVal= BuildTemplate(myForm, request); 
+        	BuildTemplate(myForm, request); 
         }catch (Exception ex){
-    		ReportTempValue repTemp = new ReportTempValue();
-  	        ArrayList<ReportTempCriValue> tempCris= new ArrayList<ReportTempCriValue>();
-  		    Map map=request.getParameterMap();
-		    String[] obj2= (String[])map.get("lineno");
-		    int lineno=0;
-		    if(obj2!=null) lineno=obj2.length;
-	        for(int i=0;i<lineno;i++){
-		      ReportTempCriValue criNew = new ReportTempCriValue();
-	          String[] arRelation=(String[])map.get("tplCriteria[" + i + "].relation");
-	          String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
-	          String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
-	          String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
-	          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
-	          if(arFieldNo!=null){
-			    int iFieldNo = Integer.parseInt(arFieldNo[0]);
-  			    criNew.setFieldNo(iFieldNo);
-		        if(arRelation!=null) criNew.setRelation(arRelation[0]);
-			    if(arOp!=null) criNew.setOp(arOp[0]);
-			    if(arVal!=null) criNew.setVal(arVal[0]);
-			    if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
-			    tempCris.add(criNew);
-			  }
-            }
-	        repTemp.setTemplateCriteria(tempCris);
-	        rptVal.setReportTemp(repTemp);
-  		    request.getSession().setAttribute(DataViews.REPORT, rptVal);
             return;        
 	    }
         
         try{
-        	rptVal.setReportTemp(rptTempVal);
+            ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
+//        	rptVal.setReportTemp(rptTempVal);
             
             rptVal.setExportFormatType(Integer.parseInt(myForm.getExportFormat()));
             rptVal.setPrint2Pdf(false); // this property is kept only for the customized prints 
@@ -452,14 +409,14 @@ public class QuatroReportRunnerAction extends Action {
 		myForm.setFilterFields((ArrayList)rptVal.getFilters());
 	}
 	
-	private ReportTempValue BuildTemplate(QuatroReportRunnerForm myForm, HttpServletRequest request) throws Exception
+	private void BuildTemplate(QuatroReportRunnerForm myForm, HttpServletRequest request) throws Exception
     {
 		String loginId = (String)request.getSession().getAttribute("user");
-	    ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
-        int reportNo = rptVal.getReportNo();
 
-        ReportOptionValue option = null;
+		ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
 		ReportTempValue repTemp = new ReportTempValue();
+	    int reportNo = rptVal.getReportNo();
+        ReportOptionValue option = null;
         repTemp.setReportNo(reportNo);
 	    repTemp.setErrMsg("");
 	    String errMsg = "";
@@ -474,106 +431,118 @@ public class QuatroReportRunnerAction extends Action {
 		  errMsg = rptVal.getReportTemp().ErrMsg;
 		}
 		
-		  repTemp.setLoginId(loginId);
-		  boolean hasAnyCriteria = false;
-		  if ("D".equals(rptVal.getDatePart())){
-		    if ("N".equals(rptVal.getDateOption())){
-		      repTemp.setStartDate(MyDateFormat.getSysDate("1900-01-01"));
-		      repTemp.setEndDate(MyDateFormat.getSysDate("2999-12-31"));
-		    }else{
-		      if (Utility.IsEmpty(myForm.getStartField()) && Utility.IsEmpty(myForm.getEndField())){
-		        noDateRange = true;
-		      }else if (Utility.IsEmpty(myForm.getStartField())){
-		        repTemp.setStartDate(MyDateFormat.getCurrentDate());
-			    repTemp.setEndDate(MyDateFormat.getSysDate(myForm.getEndField()));
-		      }else if (Utility.IsEmpty(myForm.getEndField())){
-	            repTemp.setStartDate(MyDateFormat.getSysDate(myForm.getStartField()));
-		        repTemp.setEndDate(MyDateFormat.getCurrentDate());
-		      }else{
-		        repTemp.setStartDate(MyDateFormat.getSysDate(myForm.getStartField()));
-			    repTemp.setEndDate(MyDateFormat.getSysDate(myForm.getEndField()));
-		        if (repTemp.getStartDate().after(repTemp.getEndDate()))
-		          errMsg = " Start Date Must Be Less or Equal to the End Date";
-		      }
-		    }
+		repTemp.setLoginId(loginId);
+		boolean hasAnyCriteria = false;
+		if ("D".equals(rptVal.getDatePart())){
+		  if ("N".equals(rptVal.getDateOption())){
+		    repTemp.setStartDate(MyDateFormat.getSysDate("1900-01-01"));
+		    repTemp.setEndDate(MyDateFormat.getSysDate("2999-12-31"));
 		  }else{
-		    if ("N".equals(rptVal.getDateOption())){
-		      repTemp.setStartPayPeriod(null);
-		      repTemp.setEndPayPeriod(null);
+		    if (Utility.IsEmpty(myForm.getStartField()) && Utility.IsEmpty(myForm.getEndField())){
+		      noDateRange = true;
+		    }else if (Utility.IsEmpty(myForm.getStartField())){
+		      repTemp.setStartDate(MyDateFormat.getCurrentDate());
+			  repTemp.setEndDate(MyDateFormat.getSysDate(myForm.getEndField()));
+		    }else if (Utility.IsEmpty(myForm.getEndField())){
+	          repTemp.setStartDate(MyDateFormat.getSysDate(myForm.getStartField()));
+		      repTemp.setEndDate(MyDateFormat.getCurrentDate());
 		    }else{
-		      repTemp.setStartPayPeriod(myForm.getStartField().trim());
-		      repTemp.setEndPayPeriod(myForm.getEndField().trim());
-		      if ("".equals(repTemp.getStartPayPeriod()) && "".equals(repTemp.getEndPayPeriod())){
-		        noDateRange = true;
-		      }else if ("".equals(repTemp.getStartPayPeriod())){
-		        repTemp.setStartPayPeriod(repTemp.getEndPayPeriod());
-		      }else if ("".equals(repTemp.getEndPayPeriod())){
-		        repTemp.setEndPayPeriod(repTemp.getStartPayPeriod());
-		      }else{
-		        if (repTemp.getStartPayPeriod().compareTo(repTemp.getEndPayPeriod()) > 0)
-		           errMsg = " Start Date Must Be Less or Equal to the End Date";
-		      }
+		      repTemp.setStartDate(MyDateFormat.getSysDate(myForm.getStartField()));
+			  repTemp.setEndDate(MyDateFormat.getSysDate(myForm.getEndField()));
+		      if (repTemp.getStartDate().after(repTemp.getEndDate()))
+		        errMsg = " Start Date Must Be Less or Equal to the End Date";
 		    }
 		  }
-
-		  if (rptVal.isOrgApplicable()){
-		    ArrayList orgCodes = new ArrayList();
-		    if(myForm.getTxtOrgKey()!=null){
-		      String[] sOrgKey=myForm.getTxtOrgKey().split(":");
-		      String[] sOrgValue=myForm.getTxtOrgValue().split(":");
-		      for (int i = 0; i < sOrgKey.length; i++){
-			    LookupCodeValue org = new LookupCodeValue();
-			    org.setCode(sOrgKey[i]);
-			    org.setDescription(sOrgValue[i]);
-			    orgCodes.add(org);
-		      }
-		    }
-		    repTemp.setOrgCodes(orgCodes);
-		    noOrgs = (orgCodes.size() == 0);
+		}else{
+		  if ("N".equals(rptVal.getDateOption())){
+		    repTemp.setStartPayPeriod(null);
+		    repTemp.setEndPayPeriod(null);
 		  }else{
-		    repTemp.setOrgCodes(null);
+		    repTemp.setStartPayPeriod(myForm.getStartField().trim());
+		    repTemp.setEndPayPeriod(myForm.getEndField().trim());
+		    if ("".equals(repTemp.getStartPayPeriod()) && "".equals(repTemp.getEndPayPeriod())){
+		      noDateRange = true;
+		    }else if ("".equals(repTemp.getStartPayPeriod())){
+		      repTemp.setStartPayPeriod(repTemp.getEndPayPeriod());
+		    }else if ("".equals(repTemp.getEndPayPeriod())){
+		      repTemp.setEndPayPeriod(repTemp.getStartPayPeriod());
+		    }else{
+		      if (repTemp.getStartPayPeriod().compareTo(repTemp.getEndPayPeriod()) > 0)
+		         errMsg = " Start Date Must Be Less or Equal to the End Date";
+		    }
 		  }
+		}
 
-          if(myForm.getReportOption()==null){
-             Iterator iObj=rptVal.getOptions().iterator();
-             while(iObj.hasNext()){
-               option = (ReportOptionValue)iObj.next();
-               break;
-             }
-          }else{
-            int optionNo = Integer.parseInt(myForm.getReportOption());
-            Iterator iObj=rptVal.getOptions().iterator();
-            while(iObj.hasNext()){
-              option = (ReportOptionValue)iObj.next();
-              if(optionNo==option.getOptionNo()) break;
-            }
+		if (rptVal.isOrgApplicable()){
+		  ArrayList orgCodes = new ArrayList();
+		  if(myForm.getTxtOrgKey()!=null){
+		    String[] sOrgKey=myForm.getTxtOrgKey().split(":");
+		    String[] sOrgValue=myForm.getTxtOrgValue().split(":");
+		    for (int i = 0; i < sOrgKey.length; i++){
+			  LookupCodeValue org = new LookupCodeValue();
+			  org.setCode(sOrgKey[i]);
+			  org.setDescription(sOrgValue[i]);
+			  orgCodes.add(org);
+		    }
+		  }
+		  repTemp.setOrgCodes(orgCodes);
+		  noOrgs = (orgCodes.size() == 0);
+		}else{
+		  repTemp.setOrgCodes(null);
+		}
+
+        if(myForm.getReportOption()==null){
+           Iterator iObj=rptVal.getOptions().iterator();
+           while(iObj.hasNext()){
+             option = (ReportOptionValue)iObj.next();
+             break;
+           }
+        }else{
+          int optionNo = Integer.parseInt(myForm.getReportOption());
+          Iterator iObj=rptVal.getOptions().iterator();
+          while(iObj.hasNext()){
+            option = (ReportOptionValue)iObj.next();
+            if(optionNo==option.getOptionNo()) break;
           }
-	      repTemp.setReportOptionID(option.getOptionNo());
+        }
+	    repTemp.setReportOptionID(option.getOptionNo());
 		  
-		  noCriteria = true;
-	      ArrayList<ReportTempCriValue> tempCris= new ArrayList<ReportTempCriValue>();
-		  Map map=request.getParameterMap();
-		  String[] obj2= (String[])map.get("lineno");
-		  int lineno=0;
-		  if(obj2!=null) lineno=obj2.length;
-	      for(int i=0;i<lineno;i++){
-		    ReportTempCriValue criNew = new ReportTempCriValue();
-	        String[] arRelation=(String[])map.get("tplCriteria[" + i + "].relation");
-	        String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
-	        String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
-	        String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
-            String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
-		    if(arFieldNo!=null){
-			  int iFieldNo = Integer.parseInt(arFieldNo[0]);
-			  criNew.setFieldNo(iFieldNo);
-		      if(arRelation!=null) criNew.setRelation(arRelation[0]);
-			  if(arOp!=null) criNew.setOp(arOp[0]);
-			  if(arVal!=null) criNew.setVal(arVal[0]);
-			  if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
-			  tempCris.add(criNew);
-			}
-          }
+	    ArrayList<ReportTempCriValue> tempCris= new ArrayList<ReportTempCriValue>();
+		Map map=request.getParameterMap();
+	    String[] obj2= (String[])map.get("lineno");
+	    int lineno=0;
+	    if(obj2!=null) lineno=obj2.length;
+        for(int i=0;i<lineno;i++){
+	      ReportTempCriValue criNew = new ReportTempCriValue();
+          String[] arRelation=(String[])map.get("tplCriteria[" + i + "].relation");
+          String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
+          String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
+          String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
+          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
+          String[] arFieldType=(String[])map.get("tplCriteria[" + i + "].filter.fieldType");
+          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].filter.lookupTable");
+	      if(arRelation!=null) criNew.setRelation(arRelation[0]);
+		  if(arOp!=null) criNew.setOp(arOp[0]);
+		  if(arVal!=null) criNew.setVal(arVal[0]);
+		  if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
+	      if(arFieldNo!=null){
+	  		int iFieldNo = Integer.parseInt(arFieldNo[0]);
+	  		criNew.setFieldNo(iFieldNo);
+			ReportFilterValue filter = new ReportFilterValue();
+	        filter.setFieldNo(iFieldNo);
+	        if(arFieldType!=null) filter.setFieldType(arFieldType[0]);
+	        if(arLookupTable!=null) filter.setLookupTable(arLookupTable[0]);
+	        criNew.setFilter(filter);
+		  }
+		  tempCris.add(criNew);
+        }
+        repTemp.setTemplateCriteria(tempCris);
+        rptVal.setReportTemp(repTemp);
 
+        request.getSession().setAttribute(DataViews.REPORT, rptVal);
+	    
+	    noCriteria = true;
+	      
 	      String sError="";
 		  if (tempCris.size()>0){
 		    noCriteria = (tempCris.size() == 0);
@@ -587,27 +556,14 @@ public class QuatroReportRunnerAction extends Action {
 		    }
 		  }
 		 
-		  repTemp.setTemplateCriteria(tempCris);
 		  hasAnyCriteria = !(noDateRange && noOrgs && noCriteria);
 
 		  if (!hasAnyCriteria || !("".equals(sError))) errMsg = "Please specify criteria for the report<br>" + sError;
-		  repTemp.setErrMsg("");
 
 		  if (!Utility.IsEmpty(errMsg))
 		    throw new Exception(errMsg);
 		  else
-		    return repTemp;
-		
-/*
-		ReportValue rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
-        int reportNo = rptVal.getReportNo();
-
-        ReportTempValue repTemp = new ReportTempValue();
-        repTemp.setStartDate(Utility.GetSysDate(myForm.getStartField()));
-        repTemp.setEndDate(Utility.GetSysDate(myForm.getEndField()));
-        repTemp.setReportNo(reportNo);
-        return repTemp;
-*/        
+		    return;// repTemp;
     }
 	
     public String ValidateCriteriaString(int reportNo, ArrayList criterias){
@@ -766,6 +722,10 @@ public class QuatroReportRunnerAction extends Action {
     public void ChangeTplCriTable(int operationType, QuatroReportRunnerForm myForm, HttpServletRequest request)
     {
     	ArrayList<ReportTempCriValue> obj= new ArrayList<ReportTempCriValue>();
+		ArrayList cris = new ArrayList();
+		if(request.getSession().getAttribute(DataViews.REPORT_CRI)!=null)
+			 cris = (ArrayList) request.getSession().getAttribute(DataViews.REPORT_CRI);
+
 		Map map=request.getParameterMap();
 		String[] obj2= (String[])map.get("lineno");
 		int lineno=0;
@@ -773,7 +733,6 @@ public class QuatroReportRunnerAction extends Action {
 		
 		int iReportNo = Integer.parseInt(myForm.getReportNo());
 
-//		ReportService reportManager = new ReportService(Integer.parseInt(myForm.getReportNo()));
 		QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
         		getServlet().getServletContext()).getBean("quatroReportManager");
 
@@ -783,49 +742,54 @@ public class QuatroReportRunnerAction extends Action {
 		    for(int i=0;i<lineno;i++)
 		    {
 	          if(map.get("p" + i)!=null) continue;
-		      ReportTempCriValue criNew = new ReportTempCriValue();
+	          ReportTempCriValue criNew=(ReportTempCriValue)cris.get(i);
 	          String[] arRelation=(String[])map.get("tplCriteria[" + i + "].relation");
 	          String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
 	          String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
 	          String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
 	          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
-	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
-		      if(arFieldNo!=null){
-				int iFieldNo = Integer.parseInt(arFieldNo[0]);
-				ReportFilterValue rptFilterVal = reportManager.GetFilterField(iReportNo, iFieldNo);
-				if(rptFilterVal!=null) criNew.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
-				criNew.setFieldNo(iFieldNo);
-			  }
+	          String[] arFieldType=(String[])map.get("tplCriteria[" + i + "].filter.fieldType");
+	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].filter.lookupTable");
 		      if(arRelation!=null) criNew.setRelation(arRelation[0]);
 		      if(arOp!=null) criNew.setOp(arOp[0]);
 		      if(arVal!=null) criNew.setVal(arVal[0]);
 		      if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
-		      if(arLookupTable!=null) criNew.setLookupTable(arLookupTable[0]);
-		      obj.add(criNew);
+	          if(arFieldNo!=null){
+		  		int iFieldNo = Integer.parseInt(arFieldNo[0]);
+				ReportFilterValue filter = new ReportFilterValue();
+			    filter.setFieldNo(iFieldNo);
+			    if(arFieldType!=null) filter.setFieldType(arFieldType[0]);
+			    if(arLookupTable!=null) filter.setLookupTable(arLookupTable[0]);
+		        criNew.setFilter(filter);
+		      }  
+	          obj.add(criNew);
+	          
 		    }
 		    break;
 		  case 2:  //add
 			for(int i=0;i<lineno;i++)
 			{
-			  ReportTempCriValue criNew = new ReportTempCriValue();
-			  String[] arRelation=(String[])map.get("tplCriteria[" + i + "].relation");
-			  String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
-			  String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
-			  String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
-	          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
-	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
-		      if(arFieldNo!=null){
-				int iFieldNo = Integer.parseInt(arFieldNo[0]);
-				ReportFilterValue rptFilterVal = reportManager.GetFilterField(iReportNo, iFieldNo);
-				if(rptFilterVal!=null) criNew.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
-				criNew.setFieldNo(iFieldNo);
-			  }
+              ReportTempCriValue criNew=(ReportTempCriValue)cris.get(i);
+		      String[] arRelation=(String[])map.get("tplCriteria[" + i + "].relation");
+	          String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
+		      String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
+		      String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
+		      String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
+	          String[] arFieldType=(String[])map.get("tplCriteria[" + i + "].filter.fieldType");
+	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].filter.lookupTable");
 			  if(arRelation!=null) criNew.setRelation(arRelation[0]);
 			  if(arOp!=null) criNew.setOp(arOp[0]);
 			  if(arVal!=null) criNew.setVal(arVal[0]);
-		      if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
-		      if(arLookupTable!=null) criNew.setLookupTable(arLookupTable[0]);
-			  obj.add(criNew);
+			  if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
+	          if(arFieldNo!=null){
+	  		    int iFieldNo = Integer.parseInt(arFieldNo[0]);
+			    ReportFilterValue filter = new ReportFilterValue();
+		        filter.setFieldNo(iFieldNo);
+		        if(arFieldType!=null) filter.setFieldType(arFieldType[0]);
+		        if(arLookupTable!=null) filter.setLookupTable(arLookupTable[0]);
+		        criNew.setFilter(filter);
+	          }  
+		      obj.add(criNew);
 			}
 			ReportTempCriValue criNew2 = new ReportTempCriValue();
 			obj.add(criNew2);
@@ -834,77 +798,38 @@ public class QuatroReportRunnerAction extends Action {
 			boolean isInserted=false;
 			for(int i=0;i<lineno;i++)
 			{
-			  ReportTempCriValue criNew = new ReportTempCriValue();
+	          ReportTempCriValue criNew=(ReportTempCriValue)cris.get(i);
 			  String[] arRelation=(String[])map.get("tplCriteria[" + i + "].relation");
-			  String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
+	          String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
 			  String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
 			  String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
-	          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
-	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
-		      if(arFieldNo!=null){
-				int iFieldNo = Integer.parseInt(arFieldNo[0]);
-				ReportFilterValue rptFilterVal = reportManager.GetFilterField(iReportNo, iFieldNo);
-				if(rptFilterVal!=null) criNew.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
-				criNew.setFieldNo(iFieldNo);
-			  }
+			  String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
+	          String[] arFieldType=(String[])map.get("tplCriteria[" + i + "].filter.fieldType");
+	          String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].filter.lookupTable");
 			  if(arRelation!=null) criNew.setRelation(arRelation[0]);
 			  if(arOp!=null) criNew.setOp(arOp[0]);
 			  if(arVal!=null) criNew.setVal(arVal[0]);
-		      if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
-		      if(arLookupTable!=null) criNew.setLookupTable(arLookupTable[0]);
+			  if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
+	          if(arFieldNo!=null){
+		  		int iFieldNo = Integer.parseInt(arFieldNo[0]);
+				ReportFilterValue filter = new ReportFilterValue();
+			    filter.setFieldNo(iFieldNo);
+			    if(arFieldType!=null) filter.setFieldType(arFieldType[0]);
+			    if(arLookupTable!=null) filter.setLookupTable(arLookupTable[0]);
+		        criNew.setFilter(filter);
+		      }  
 			  obj.add(criNew);
 	          if(map.get("p" + i)!=null){
-		 	    ReportTempCriValue criNew3 = new ReportTempCriValue();
+			    ReportTempCriValue criNew3 = new ReportTempCriValue();
 				obj.add(criNew3);
 				isInserted=true;
 			  }
+				
 			}
 			if(isInserted==false)
 			{
 		   	  ReportTempCriValue criNew4 = new ReportTempCriValue();
 			  obj.add(criNew4);
-			}
-			break;
-		  case 4:  //OnCriteriaTextChanged
-			ArrayList<ReportFilterValue> filterFields=(ArrayList<ReportFilterValue>)reportManager.GetCriteriaFieldList(iReportNo);
-			myForm.setFilterFields(filterFields);
-
-			String sTemp1=(String)request.getParameter("onCriteriaChange");
-			sTemp1 = sTemp1.replaceAll("tplCriteria", "");
-			sTemp1 = sTemp1.replaceAll(".fieldNo", "");
-			String sTemp2= sTemp1.substring(1, sTemp1.length()-1);
-			int iCriChange= Integer.parseInt(sTemp2);
-			for(int i=0;i<lineno;i++)
-			{
-			  ReportTempCriValue criNew = new ReportTempCriValue();
-			  String[] arRelation=(String[])map.get("tplCriteria[" + i + "].relation");
-			  String[] arFieldNo=(String[])map.get("tplCriteria[" + i + "].fieldNo");
-			  String[] arOp=(String[])map.get("tplCriteria[" + i + "].op");
-			  String[] arVal=(String[])map.get("tplCriteria[" + i + "].val");
-	          String[] arValDesc=(String[])map.get("tplCriteria[" + i + "].valdesc");
-		      if(arFieldNo!=null){
-				int iFieldNo = Integer.parseInt(arFieldNo[0]);
-			    ReportFilterValue rptFilterVal = reportManager.GetFilterField(iReportNo, iFieldNo);
-				if(rptFilterVal!=null) criNew.setOperatorList(GetOperatorList(rptFilterVal.getOp()));
-				criNew.setFieldNo(iFieldNo);
-		      }
-			  if(i==iCriChange){
-		        if(arFieldNo!=null){
-				  String arLookupTable=GetLookupTable(Integer.parseInt(arFieldNo[0]), filterFields);
-			      if(arLookupTable!=null) criNew.setLookupTable(arLookupTable);
-		        }
-			  }
-			  else
-			  {
-				String[] arLookupTable=(String[])map.get("tplCriteria[" + i + "].lookupTable");
-		        if(arLookupTable!=null) criNew.setLookupTable(arLookupTable[0]);
-			  }
-			  
-			  if(arRelation!=null) criNew.setRelation(arRelation[0]);
-			  if(arOp!=null) criNew.setOp(arOp[0]);
-			  if(arVal!=null) criNew.setVal(arVal[0]);
-		      if(arValDesc!=null) criNew.setValDesc(arValDesc[0]);
-			  obj.add(criNew);
 			}
 			break;
 		}
