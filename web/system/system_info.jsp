@@ -45,7 +45,7 @@
 		}
 		
 	%>
-	<p />
+	<br /><br />
 	<h1>GCInfo</h1>
 	<%=VMStat.getGCFormat() %><br />
 	<%
@@ -59,9 +59,12 @@
 			<%
 		}
 	%>
-	<p />
+	<br /><br />
 	<h1>ThreadInfo</h1>
 	<%=VMStat.getThreadFormat() %><br />
 	<%=VMStat.getThreadInfo()%><br />
+	<br /><br />
+	<h1>DbConnections</h1>
+	<%=DbConnectionFilter.debugMap.toString()%>
 	</body>
 </html>
