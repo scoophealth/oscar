@@ -24,6 +24,7 @@ package org.oscarehr.survey.dao.oscar;
 
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
@@ -45,4 +46,5 @@ public interface OscarFormDAO {
 	
 	public void generateCSV(Long formId, OutputStream out);
 	public void convertFormXMLToDb(Long formId);
+	public Map<String[],String> getFormReport(Long formId) ;
 }

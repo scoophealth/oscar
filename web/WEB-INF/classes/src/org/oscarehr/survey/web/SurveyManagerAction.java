@@ -112,6 +112,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
         return mapping.findForward("list");
     }
     
+    
     public ActionForward test(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	if(!userManager.isAdmin(request)) {
     		postMessage(request,"survey.auth");
@@ -1094,6 +1095,17 @@ public class SurveyManagerAction extends AbstractSurveyAction {
         		}
         	}
         }
+	}
+	
+	
+public ActionForward getUcfReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		Long id = Long.valueOf(request.getParameter("formId"));
+		this.oscarFormManager.convertFormXMLToDb(Long.valueOf(id));
+		request.setAttribute("ucfReports", oscarFormManager.getFormReport(id));
+		
+		return mapping.findForward("ucfReport");
+		
 	}
 	
 }

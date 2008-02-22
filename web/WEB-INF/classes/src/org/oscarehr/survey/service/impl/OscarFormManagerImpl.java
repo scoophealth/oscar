@@ -2,6 +2,7 @@ package org.oscarehr.survey.service.impl;
 
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.service.OscarFormManager;
@@ -24,5 +25,9 @@ public class OscarFormManagerImpl implements OscarFormManager {
 
 	public void convertFormXMLToDb(Long formId) {
 		dao.convertFormXMLToDb(formId);
+	}
+	
+	public Map<String[],String> getFormReport(Long formId) {
+		return dao.getFormReport(formId);
 	}
 }

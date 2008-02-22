@@ -29,10 +29,13 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.map.LinkedMap;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.model.oscar.OscarForm;
@@ -372,6 +375,53 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 			return q.getType().getSelect().getRenderType();
 		} 
 		return "N/A";
+	}
+	
+	public Map<String[],String> getFormReport(Long formId) {
+		Map<String[],String> questionAnswers = new LinkedHashMap();
+		List<OscarFormQuestion> questions = this.getHibernateTemplate().find("select ofq from OscarFormQuestion ofq where formId=?",formId);
+		if(questions!=null) {			
+			for(int x=0;x<questions.size();x++) {
+				OscarFormQuestion o = questions.get(x);
+				
+				String description = questions.get(x).getDescription();
+				Long pageId = questions.get(x).getPage();
+				Long sectionId = questions.get(x).getSection();
+				Long questionId = questions.get(x).getQuestion();
+				String type = questions.get(x).getType();
+				
+				//count checkbox, select , and radio
+				if("checkbox".equalsIgnoreCase(type)|| "select".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
+										
+					String queryStr = "select distinct d from OscarFormInstance i, OscarFormData d where i.formId=? and i.id=d.instanceId and d.pageNumber=? and d.sectionId=? and d.questionId= ? group by d.key, d.value";
+					List rs = getHibernateTemplate().find(queryStr, new Object[] { formId, pageId, sectionId, questionId} );
+					if(!rs.isEmpty()) {
+						Iterator it = rs.iterator();
+						while(it.hasNext()) {
+							OscarFormData data = (OscarFormData)it.next();
+							String value = data.getValue();
+							int count = countAnswersByQuestioins(formId,pageId,sectionId,questionId, value);
+							String answers[] = new String[2];
+							answers[0]=description;
+							answers[1]=value;
+							
+							questionAnswers.put(answers,String.valueOf(count));			
+										
+						}
+					}
+				}
+			}
+		}
+		return questionAnswers;		
+	}
+	
+	public int countAnswersByQuestioins(Long formId,Long pageId,Long sectionId,Long questionId, String value) {
+		String queryStr = "select count(d.value) from OscarFormInstance i, OscarFormData d where d.value=? and i.formId=? and i.id=d.instanceId and d.pageNumber=? and d.sectionId=? and d.questionId= ?";
+		Long results = (Long)getHibernateTemplate().find(queryStr, new Object[] { value, formId, pageId, sectionId, questionId} ).get(0);
+		if(results!=null) {
+			return results.intValue();
+		} else
+			return 0;
 	}
 }
 
