@@ -183,7 +183,6 @@
             oldDiv = prequel[idx] + origId;
             newDiv = prequel[idx] + newId;            
             $(oldDiv).id = newDiv;        
-            console.log(oldDiv + " -> " + newDiv);
         }  
     </nested:notEmpty>
     
