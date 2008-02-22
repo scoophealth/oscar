@@ -194,6 +194,9 @@
             <div>
                 <a href="<%=request.getContextPath()%>/PMmodule/reports/PopulationReportForm.jsp">Population Report</a>
             </div>
+            <div>
+                <html:link action="/SurveyManager.do?method=reportForm">User Created Form Report</html:link>
+            </div>
         </div>
     </c:if>
 
