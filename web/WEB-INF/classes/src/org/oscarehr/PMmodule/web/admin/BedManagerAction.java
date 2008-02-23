@@ -1,11 +1,15 @@
 package org.oscarehr.PMmodule.web.admin;
 
+import java.util.List;
+
 import org.apache.struts.action.*;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
 import org.oscarehr.PMmodule.model.Bed;
+import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Room;
+import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.service.FacilityManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.springframework.beans.factory.annotation.Required;
@@ -27,10 +31,14 @@ public class BedManagerAction extends BaseAction {
         // dispatch to correct method based on which submit button was selected
         if (request.getParameter("submit.saveRooms") != null)
             return saveRooms(mapping, form, request, response);
+        else if (request.getParameter("submit.deleteRoom") != null)
+            return deleteRoom(mapping, form, request, response);
         else if (request.getParameter("submit.addRooms") != null)
             return addRooms(mapping, form, request, response);
         else if (request.getParameter("submit.saveBeds") != null)
             return saveBeds(mapping, form, request, response);
+        else if (request.getParameter("submit.deleteBed") != null)
+            return deleteBed(mapping, form, request, response);
         else if (request.getParameter("submit.addBeds") != null)
             return addBeds(mapping, form, request, response);
         else
@@ -81,7 +89,52 @@ public class BedManagerAction extends BaseAction {
 
         return manage(mapping, form, request, response);
     }
+	
+	public ActionForward deleteRoom(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        
+		ActionMessages messages = new ActionMessages();
+		BedManagerForm bForm = (BedManagerForm) form;
 
+		Integer roomId = bForm.getRoomToDelete();
+		
+		//(1)Check whether any client is assigned to this room ('room_demographic' table)-> 
+		//  if yes, disallow room delete and display message.
+		//(2)if no client assigned, check whether any beds assigned ('bed' table) -> 
+		// if some bed assigned, retrieve all beds assigned to this room -> delete them all <-- ???
+		//(3)then delete this room ('room' table)
+		try {
+			List<RoomDemographic> roomDemographicList = getRoomDemographicManager().getRoomDemographicByRoom(roomId);
+
+			if(roomDemographicList != null  &&  !roomDemographicList.isEmpty()){
+				throw new RoomHasActiveBedsException("The room has client(s) assigned to it and cannot be removed.");
+			}
+			
+			Bed[] beds = bedManager.getBedsForDeleteByRoom(roomId);
+			
+			if(beds != null  &&  beds.length > 0){
+				
+				for(int i=0; i < beds.length; i++){
+					try{
+						bedManager.deleteBed(beds[i]);
+					}catch (BedReservedException be) {
+						log.debug("deleteRoom(): Exception in deleting Beds["+i+"]: " + be);
+			        } 
+				}
+			}
+			
+			Room room = roomManager.getRoom(roomId);
+			roomManager.deleteRoom(room);
+	        
+	        
+        } catch (RoomHasActiveBedsException e) {
+    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.active.beds.error", e.getMessage()));
+    		saveMessages(request, messages);
+        }
+
+
+        return manage(mapping, form, request, response);
+    }
+	
 	public ActionForward saveBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         BedManagerForm bForm = (BedManagerForm) form;
 
@@ -106,6 +159,34 @@ public class BedManagerAction extends BaseAction {
 			
 	        bedManager.saveBeds(beds);
 	        
+        } catch (BedReservedException e) {
+			ActionMessages messages = new ActionMessages();
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
+			saveMessages(request, messages);
+        } 
+
+		return manage(mapping, form, request, response);
+    }
+
+	public ActionForward deleteBed(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        BedManagerForm bForm = (BedManagerForm) form;
+
+        Integer bedId = bForm.getBedToDelete();
+		//(1)Check whether any client is assigned to this bed ('bed_demographic' table)-> 
+		//  if yes, disallow bed delete and display message.
+		//(2)if no client assigned, delete this bed ('bed' table)
+		
+		try {
+			
+			BedDemographic bedDemographic = getBedDemographicManager().getBedDemographicByBed(bedId);
+
+			if(bedDemographic != null){
+				throw new BedReservedException("The bed has client assigned to it and cannot be removed.");
+			}
+			
+			Bed bed = bedManager.getBedForDelete(bedId);
+			bedManager.deleteBed(bed);
+		
         } catch (BedReservedException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));

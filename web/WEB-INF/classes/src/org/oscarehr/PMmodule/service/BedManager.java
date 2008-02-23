@@ -88,6 +88,14 @@ public class BedManager {
         return bed;
     }
 
+    public Bed getBedForDelete(Integer bedId) {
+        if (bedId == null) {
+            handleException(new IllegalArgumentException("bedId must not be null"));
+        }
+        Bed bed = bedDAO.getBed(bedId);
+        return bed;
+    }
+
     /**
      * Get beds by program
      *
@@ -241,7 +249,11 @@ public class BedManager {
         }
         return beds;
     }
-    
+    public Bed[] getBedsForDeleteByRoom(Integer roomId) {
+        Bed[] beds = bedDAO.getBedsByRoom(roomId, Boolean.TRUE);
+        return beds;
+    }
+
     /*
      * 
      * (e.g. used in BedManagerAction.saveBeds() )
@@ -404,6 +416,11 @@ public class BedManager {
         bedDAO.saveBed(bed);
     }
 
+    public void deleteBed(Bed bed) throws BedReservedException {//Louis-debug
+        
+        bedDAO.deleteBed(bed);
+    }
+
     BedType getDefaultBedType() {
         for (BedType bedType : getBedTypes()) {
             if (bedType.isDefault()) {
@@ -425,9 +442,10 @@ public class BedManager {
     }
 
     void setAttributes(Bed bed) {
-        bed.setBedType(bedDAO.getBedType(bed.getBedTypeId()));
-        if (bed.getRoomId() != null)
+   		bed.setBedType(bedDAO.getBedType(bed.getBedTypeId()));
+        if (bed.getRoomId() != null){
             bed.setRoom(roomDAO.getRoom(bed.getRoomId()));
+        }
 
         Integer teamId = bed.getTeamId();
 

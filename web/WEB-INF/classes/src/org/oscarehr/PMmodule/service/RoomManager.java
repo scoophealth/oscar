@@ -418,6 +418,10 @@ public class RoomManager {
         roomDAO.saveRoom(room);
     }
 
+    public void deleteRoom(Room room) throws RoomHasActiveBedsException {//Louis-debug
+        roomDAO.deleteRoom(room);
+    }
+
     RoomType getDefaultRoomType() {
         for (RoomType roomType : getRoomTypes()) {
             if (roomType.isDefault()) {

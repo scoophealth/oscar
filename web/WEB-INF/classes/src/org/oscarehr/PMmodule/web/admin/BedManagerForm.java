@@ -17,6 +17,8 @@ public class BedManagerForm extends ActionForm {
     private Bed[] beds;
     private BedType[] bedTypes;
     private Program[] programs;
+    private Integer roomToDelete;
+    private Integer bedToDelete;
     
 
     public Integer getFacilityId() {
@@ -98,4 +100,21 @@ public class BedManagerForm extends ActionForm {
 	public void setAssignedBedRooms(Room[] assignedBedRooms) {
 		this.assignedBedRooms = assignedBedRooms;
 	}
+
+	public Integer getBedToDelete() {
+		return bedToDelete;
+	}
+
+	public void setBedToDelete(Integer bedToDelete) {
+		this.bedToDelete = bedToDelete;
+	}
+
+	public Integer getRoomToDelete() {
+		return roomToDelete;
+	}
+
+	public void setRoomToDelete(Integer roomToDelete) {
+		this.roomToDelete = roomToDelete;
+	}
+
 }

@@ -20,6 +20,8 @@
 <table width="100%" summary="Manage rooms and beds">
 
 <html:hidden property="facilityId" />
+<html:hidden property="roomToDelete" />
+<html:hidden property="bedToDelete" />
 <tr>
     <td width="80%">
         <div class="tabs">
@@ -115,6 +117,12 @@
                     </c:otherwise>
                 </c:choose>
             </display:column>
+            
+            <display:column title="Delete" sortable="true">
+                 <input type="submit" name="submit.deleteRoom"  value="Delete"
+            		onclick='bedManagerForm.roomToDelete.value="<c:out value="${room.id}"/>"'  />
+            </display:column>
+            
         </display:table>
     </td>
     <td width="20%">
@@ -195,8 +203,10 @@
                 </c:choose>
             </display:column>
             
-            
-                            
+            <display:column title="Delete" sortable="true">
+            	<input type="submit" name="submit.deleteBed"  value="Delete"
+            		   onclick='bedManagerForm.bedToDelete.value="<c:out value="${bed.id}"/>"'  />
+            </display:column>
             
         </display:table>
     </td>
