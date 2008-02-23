@@ -154,6 +154,10 @@ public abstract class BaseAction extends DispatchAction {
 		return (RoomDemographicManager) getAppContext().getBean("roomDemographicManager");
 	}
 	
+	public BedDemographicManager getBedDemographicManager() {
+		return (BedDemographicManager) getAppContext().getBean("bedDemographicManager");
+	}
+
 	public ProviderManager getProviderManager() {
 		return (ProviderManager) getAppContext().getBean("providerManager");
 	}

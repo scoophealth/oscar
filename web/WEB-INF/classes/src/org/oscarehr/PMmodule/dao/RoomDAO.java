@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.RoomType;
@@ -215,6 +216,13 @@ public class RoomDAO extends HibernateDaoSupport {
 
 		log.debug("saveRoom: id: " + room.getId());
 	}
+
+    public void deleteRoom(Room room) {
+    	if(room != null){
+        	log.debug("deleteRoom: id " + room.getId());
+		}
+        getHibernateTemplate().delete(room);
+    }
 
 	String getRoomsQueryString(Integer facilityId, Integer programId, Boolean active) {
 		StringBuilder queryBuilder = new StringBuilder("from Room r");
