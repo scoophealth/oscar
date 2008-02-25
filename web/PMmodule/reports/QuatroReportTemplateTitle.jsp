@@ -20,23 +20,29 @@ function showNew() {
    quatroReportSaveTemplateForm.txtDescription.disabled = false;
    return true;
 }
+
+function setupOpt(){
+  var selectedRadio=document.getElementById('<c:out value="${quatroReportSaveTemplateForm.optSaveAsSelected}" />');
+  if(selectedRadio!=null) selectedRadio.checked=true;
+}
 </script>
 </head>
-<body>
+<body onload="setupOpt()">
+<%=session.getAttribute(com.quatro.model.DataViews.REPORTTPL)%>
 <html:form action="/QuatroReport/SaveReportTemplate.do">
 <table width="100%">
 <tr><td align="center" colspan="2">Saving Report Template</td></tr>
 <tr><td colspan="2" style="color:#ff0000;"><c:out value="${quatroReportSaveTemplateForm.msg}" /></td></tr>
 <tr><td width="25%" align="right">As New: 
-  <input value="optNew" name="optSaveAs" type="radio" onclick="javascript:showNew();" /> 
+  <input value="optNew" name="optSaveAs" id="optNew" type="radio" onclick="javascript:showNew();" /> 
 </td>
 <td><html:text property="txtDescription" size="100%" /></td></tr>
 <tr><td align="right">To replace the template:
-  <input value="optOld" name="optSaveAs" type="radio" onclick="javascript:showTitle();" />
+  <input value="optOld" name="optSaveAs" id="optOld" type="radio" onclick="javascript:showTitle();" />
 </td>
 <td><html:text property="txtTitle" size="100%" /></td></tr>
 <tr><td align="right">Private:</td>
-<td><<html:checkbox property="chkPrivate"/></td></tr>
+<td><html:checkbox property="chkPrivate"/></td></tr>
 <tr><td>&nbsp;</td>
 <td><input type="submit" name="Save" value="Save" />
 <input type="submit" name="btnClose" value="Close"  onclick="window.close();" /></td></tr>

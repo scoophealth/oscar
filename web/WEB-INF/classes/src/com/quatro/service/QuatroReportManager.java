@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.quatro.dao.QuatroReportDao;
 import com.quatro.model.*;
+
 import java.util.Date;
 
 public class QuatroReportManager {

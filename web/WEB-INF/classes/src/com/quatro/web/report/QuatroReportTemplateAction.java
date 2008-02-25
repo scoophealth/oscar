@@ -16,10 +16,16 @@ public class QuatroReportTemplateAction extends Action {
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		QuatroReportSaveTemplateForm myForm = (QuatroReportSaveTemplateForm)form;
-		if((String)request.getParameter("Save")!=null)
-		{
-			btnSave_Click(myForm, request);
+
+		String param=(String)request.getSession().getAttribute(DataViews.REPORTTPL);
+		if(param!=null){
+		   if(Integer.parseInt(param)>0)
+			 myForm.setOptSaveAsSelected("optOld");
+		   else
+			 myForm.setOptSaveAsSelected("optNew");
 		}
+
+		if((String)request.getParameter("Save")!=null) btnSave_Click(myForm, request);
 		ActionForward forward = mapping.findForward("success");
 		return forward;
 	}
@@ -62,6 +68,7 @@ public class QuatroReportTemplateAction extends Action {
 
         try{
             reportManager.SaveReportTemplate(temp);
+    		request.getSession().setAttribute(DataViews.REPORTTPL, String.valueOf(temp.getTemplateNo()));
 			myForm.setMsg(" The template saved successfully");
 		}
 		catch(Exception ex){

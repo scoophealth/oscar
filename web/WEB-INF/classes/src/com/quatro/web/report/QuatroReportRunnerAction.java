@@ -22,10 +22,15 @@ public class QuatroReportRunnerAction extends Action {
 			throws Exception {
 
 		String param=(String)request.getParameter("id");
+		String param2=(String)request.getParameter("templateNo");
 		
 		QuatroReportRunnerForm myForm = (QuatroReportRunnerForm)form;
 		int rptNo;
 		String loginId = (String)request.getSession().getAttribute("user");
+		if(param2!=null)
+		  request.getSession().setAttribute(DataViews.REPORTTPL, param2);
+		else
+		  if(request.getSession().getAttribute(DataViews.REPORTTPL)==null) request.getSession().setAttribute(DataViews.REPORTTPL, "0");
 
         ArrayList lstExportFormat = myForm.getExportFormatList();
 
@@ -246,7 +251,6 @@ public class QuatroReportRunnerAction extends Action {
 //            ReportService reportManager = new ReportService(rptVal.getReportNo());
 //            reportManager.DwonloadRptFile(rptFilePath, option.RptFileNo);
 
-//    		request.getSession().setAttribute(DataViews.REPORTTPL, rptTempVal);
     		request.getSession().setAttribute(DataViews.REPORT, rptVal);
     		request.getSession().setAttribute(DataViews.REPORT_OPTION, option);
    		    myForm.setStrClientJavascript("showReport");//('" + request.getContextPath() + "/PMmodule/Reports/quatroReportViewer.do');");

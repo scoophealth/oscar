@@ -8,6 +8,7 @@ public class QuatroReportSaveTemplateForm extends ActionForm{
 	private String txtTitle;
 	private String chkPrivate;
 	private String msg;
+	private String optSaveAsSelected;
 
 	public String getChkPrivate() {
 		return chkPrivate;
@@ -20,6 +21,12 @@ public class QuatroReportSaveTemplateForm extends ActionForm{
 	}
 	public void setOptSaveAs(String optSaveAs) {
 		this.optSaveAs = optSaveAs;
+	}
+	public String getOptSaveAsSelected() {
+		return optSaveAsSelected;
+	}
+	public void setOptSaveAsSelected(String optSaveAsSelected) {
+		this.optSaveAsSelected = optSaveAsSelected;
 	}
 	public String getTxtDescription() {
 		return txtDescription;

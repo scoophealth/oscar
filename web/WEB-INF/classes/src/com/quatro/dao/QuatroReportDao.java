@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.hibernate.SessionFactory;
 import org.hibernate.Hibernate;
+import org.hibernate.Transaction;
 
 public class QuatroReportDao extends HibernateDaoSupport {
 
@@ -124,7 +125,53 @@ public class QuatroReportDao extends HibernateDaoSupport {
   	  }
  
   	  public void SaveReportTemplate(ReportTempValue rtv){
-          getHibernateTemplate().saveOrUpdate(rtv);
+
+  		 int templateNo = rtv.getTemplateNo();
+	     Session sess= getSessionFactory().openSession();
+  		 Transaction tx=sess.beginTransaction();
+  		 try {
+  		      if (templateNo > 0){
+  	  		    Query query= sess.createQuery("delete ReportTempOrgValue s where s.templateNo = ?"); 
+   	  	        query.setInteger(0, templateNo); 
+  	  	        query.executeUpdate(); 
+
+  	  		    query= sess.createQuery("delete ReportTempCriValue s where s.templateNo = ?"); 
+  	  	        query.setInteger(0, templateNo); 
+  	  	        query.executeUpdate();
+              }
+         
+  		      sess.saveOrUpdate(rtv);
+
+              ArrayList orgs = (ArrayList)rtv.getOrgCodes();
+              if (orgs != null){
+                for(int i=0;i<orgs.size();i++){
+      	          LookupCodeValue orgCd = (LookupCodeValue)orgs.get(i);
+                  if (orgCd != null){
+                    ReportTempOrgValue rtlv = new ReportTempOrgValue();
+                    rtlv.setTemplateNo(rtv.getTemplateNo());
+                    rtlv.setOrgCd(orgCd.getCode());
+                    sess.save(rtlv);
+                  }
+                }
+              }
+              
+              ArrayList cris = rtv.getTemplateCriteria();
+              if (cris != null){
+                for(int i=0;i<cris.size();i++){
+       	          ReportTempCriValue cri = (ReportTempCriValue)cris.get(i);
+                  if (cri != null){
+                    cri.setTemplateNo(rtv.getTemplateNo());
+                    sess.save(cri);
+                  }
+                }
+              }
+
+              tx.commit();
+  		 }catch(Exception e){
+  			 tx.rollback();
+  		 }
+         sess.close();
+  	  
   	  }
   	  
 }
