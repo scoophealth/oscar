@@ -2117,6 +2117,8 @@ create table facility (
     `contact_phone` varchar(255) default NULL,
     `hic` tinyint(1) NOT NULL default FALSE,
     `disabled` tinyint(1) NOT NULL default '0',
+    `org_id` int(10) NOT NULL default '0',
+    `sector_id` int(10) NOT NULL default '0',
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_facility_name` USING HASH (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
