@@ -442,7 +442,8 @@ function changeToView(id) {
         var btmImg = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
         new Insertion.Top(parent, btmImg); 
     }
-    var input = "<pre>" + tmp + "<\/pre>";
+    
+    var input = "<span id='txt" + nId + "'>" + tmp.replace(/\n/g,"<br>") + "<\/span>";
     new Insertion.Top(parent, input);
     //$(txt).style.fontSize = normalFont;
     
@@ -482,13 +483,13 @@ function minView(e) {
     shrink(txt, 14);
     //$(txt).style.height = divHeight;    
     
-    var nodes = $(txt).getElementsBySelector('pre')
-    if( nodes.length > 0 ) {
-        var line = nodes[0].innerHTML;
-        var dateValue = $(dateId) != null ? $(dateId).innerHTML : "";
-        line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:25%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:65%;'>" + line + "<\/div>";
-        new Insertion.Top(txt,line);        
-    }
+    var txtId = "txt" + nId;
+    var line = $(txtId).innerHTML.substr(0,100);
+    line = line.replace(/<br>/g," ");
+    var dateValue = $(dateId) != null ? $(dateId).innerHTML : "";
+    line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:25%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:65%;'>" + line + "<\/div>";
+    new Insertion.Top(txt,line);        
+    
     
     //img = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>";
     //new Insertion.Top(txt, img);
@@ -678,18 +679,15 @@ function editNote(e) {
     }
     
     //place text in textarea for editing
-    nodes = $(txt).getElementsBySelector('pre');  
-    if( nodes.length > 0 ) {        
-        payload = nodes[0].innerHTML;    
-        nodes[0].remove();
-    }    
-    
+    var txtId = "txt" + nId;    
+    payload = $(txtId).innerHTML;    
     payload = payload.replace(/^\s+|\s+$/g,"");
+    payload = payload.replace(/<br>/g,"\n");
     payload += "\n";
-                           
+    Element.remove(txtId);                       
     caseNote = "caseNote_note" + nId;                
     
-    var input = "<textarea tabindex='7' cols='84' rows='10' wrap='hard' class='txtArea' style='line-height:1.1em;' name='caseNote_note' id='" + caseNote + "'>" + payload + "<\/textarea>";                    
+    var input = "<textarea tabindex='7' cols='84' rows='10' wrap='soft' class='txtArea' style='line-height:1.1em;' name='caseNote_note' id='" + caseNote + "'>" + payload + "<\/textarea>";                    
     new Insertion.Top(txt, input);                 
     
     Element.observe(caseNote, 'keyup', monitorCaseNote);
@@ -757,9 +755,9 @@ function collapseView(e) {
     Element.remove(img);
     
     $(txt).style.height = divHeight;
-    html = $(txt).innerHTML;
-    html = html.replace(/<span>|<\/span>|<pre>|<\/pre>/ig,"");
-    $(txt).innerHTML = html;
+    //html = $(txt).innerHTML;
+    //html = html.replace(/<span>|<\/span>|<pre>|<\/pre>/ig,"");
+    //$(txt).innerHTML = html;
     $(txt).style.cursor = "pointer";
     
     Event.observe(txt, 'click', viewNote);
@@ -771,8 +769,8 @@ function viewNote(e) {
     var img = "<img id='quitImg" + txt.substr(1) + "' onclick='collapseView(event)' style='float:right; cursor:pointer;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";    
         
     $(txt).style.height = "auto";
-    html = $(txt).innerHTML;
-    $(txt).innerHTML = "<pre>" + html + "<\/pre>";        
+    //html = $(txt).innerHTML;
+    //$(txt).innerHTML = "<pre>" + html + "<\/pre>";        
     $(txt).style.cursor = "text";
         
     new Insertion.Top(txt,img);
@@ -1097,7 +1095,7 @@ function newNote(e) {
     ++newNoteCounter;
     var newNoteIdx = "0" + newNoteCounter;
     var sigId = "sig"+ newNoteIdx;
-    var input = "<textarea tabindex='7' cols='84' rows='1' wrap='hard' class='txtArea' style='line-height:1.0em;' name='caseNote_note' id='caseNote_note" + newNoteIdx + "'>" + reason + "<\/textarea>";
+    var input = "<textarea tabindex='7' cols='84' rows='1' wrap='soft' class='txtArea' style='line-height:1.0em;' name='caseNote_note' id='caseNote_note" + newNoteIdx + "'>" + reason + "<\/textarea>";
     var passwd  = 
                 <c:if test="${sessionScope.passwordEnabled=='true'}">
                         "<p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>" +		
@@ -1600,7 +1598,7 @@ Version version = (Version) ctx.getBean("version");
                     <bean:message key="oscarEncounter.Index.otherMed"/>:
                     <% } %>
                 </div>
-                <div style="float:left; width:18%; margin-right:-4px; border-width:0px; background-color:#CCCCFF;" class="RowTop" >
+                <div style="float:left; width:15%; margin-right:-4px; border-width:0px; background-color:#CCCCFF;" class="RowTop" >
                     <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) {
                     out.print(oscarVariables.getProperty("medicalHistory", ""));
                     %>
@@ -1609,7 +1607,7 @@ Version version = (Version) ctx.getBean("version");
                     <% } %>
                 </div>   
                 
-                <div class="RowTop" style="clear:right; float:right; width:15%; text-align:right;vertical-align:bottom; background-color:#CCCCFF;">
+                <div class="RowTop" style="clear:right; float:right; width:18%; text-align:right;vertical-align:bottom; background-color:#CCCCFF;">
                     <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
                     <bean:message key="oscarEncounter.Index.x"/></a> |
                     <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowOneSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
@@ -1650,9 +1648,9 @@ Version version = (Version) ctx.getBean("version");
                 <% } %>
             </div><input type="hidden" name="ocInput"/>
             
-            <div style="float:left; width:35%; margin-right:-4px; background-color:#CCCCFF;" class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>   
+            <div style="float:left; width:32%; margin-right:-4px; background-color:#CCCCFF;" class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>   
             
-            <div class="RowTop" style="clear:right; float:right; width:15%; text-align:right; vertical-align:bottom; background-color:#CCCCFF;">
+            <div class="RowTop" style="clear:right; float:right; width:18%; text-align:right; vertical-align:bottom; background-color:#CCCCFF;">
                 <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowTwoX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
                 <bean:message key="oscarEncounter.Index.x"/></a> |
                 <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowTwoSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
@@ -1679,8 +1677,8 @@ Version version = (Version) ctx.getBean("version");
             </div> 
         
         <div id="notCPP" style="height:70%; margin-left:2px; background-color:#FFFFFF;">
-        <div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white;"><jsp:include page="rightColumn.jsp" /></div>
-        <div id="topContent" style="float:left; width:75%; margin-right:-2px; padding-bottom:10px; background-color:#CCCCFF; font-size:10px;">
+        <%--<div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white;"><jsp:include page="rightColumn.jsp" /></div>--%>
+        <div id="topContent" style="float:left; width:100%; margin-right:-2px; padding-bottom:10px; background-color:#CCCCFF; font-size:10px;">
             <span style="cursor:pointer; text-decoration:underline;" onclick="showFilter();">View Filter</span>
             <div id="filter" style="display:none;">
                 <div style="height:150px; width:auto; overflow:auto; float:left; position:relative; left:10%;">
@@ -1788,7 +1786,7 @@ Version version = (Version) ctx.getBean("version");
         <input type="hidden" name="notes2print" id="notes2print" value="">
         <input type="hidden" name="printCPP" id="printCPP" value="false">
         <input type="hidden" name="printRx" id="printRx" value="false">
-        <div id="mainContent" style="background-color:#FFFFFF; width:75%; margin-right:-2px; display:inline; float:left;"> 
+        <div id="mainContent" style="background-color:#FFFFFF; width:100%; margin-right:-2px; display:inline; float:left;"> 
             <span id="issueList" style="background-color:#FFFFFF; height:440px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
                 <table id="issueTable" class="enTemplate_name_auto_complete" style="position:relative; left:0px; display:none;">
                     <tr>
@@ -1831,7 +1829,7 @@ Version version = (Version) ctx.getBean("version");
                             if( note.getId() == savedId ) {    
                             found = true;
                             %>    
-                            <textarea  tabindex="7" cols="84" rows="10" wrap='hard' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note"/></textarea>
+                            <textarea  tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note"/></textarea>
                             <div class="sig" style="display:inline;" id="sig<%=note.getId()%>">
                                 <%@ include file="noteIssueList.jsp" %>
                             </div>
@@ -1847,7 +1845,7 @@ Version version = (Version) ctx.getBean("version");
                                                                                                                                             
                             if( note.isLocked() ) {
                             %>
-                            <pre><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></pre>                                  
+                            <span id="txt<%=note.getId()%>"><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></span>
                             <%
                             }
                             else {                                      
@@ -1856,7 +1854,7 @@ Version version = (Version) ctx.getBean("version");
                             %>
                             <img title="Minimize Display" id='quitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
                             <img title="Print" id='print<%=note.getId()%>' alt="Toggle Print Note" onclick="togglePrint(<%=note.getId()%>, event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>
-                            <pre><%=noteStr%></pre>
+                            <span id="txt<%=note.getId()%>"><%=noteStr.replaceAll("\n", "<br>")%></span>
                             <%
                             if( largeNote(noteStr) ) {
                             %>                                       
@@ -1957,7 +1955,7 @@ Version version = (Version) ctx.getBean("version");
                 <div class="note">
                     <input type="hidden" id="signed<%=savedId%>" value="false">
                     <div id="n<%=savedId%>" style="line-height:1.1em;">                                     
-                        <textarea  tabindex="7" cols="84" rows="10" wrap='hard' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
+                        <textarea  tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
                         <div id="sig0">
                             <%@ include file="noteIssueList.jsp" %>                                        
                         </div>
