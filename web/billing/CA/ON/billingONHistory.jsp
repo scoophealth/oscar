@@ -80,7 +80,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <% // new billing records
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 String limit = " limit " + strLimit1 + "," + strLimit2;
-List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), Integer.parseInt(strLimit1), Integer.parseInt(strLimit2), null);
+List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), Integer.parseInt(strLimit2), Integer.parseInt(strLimit1), null);
 int nItems=0;
 for(int i=0; i<aL.size(); i=i+2) {
 	nItems++;
