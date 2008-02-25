@@ -41,7 +41,7 @@ public class CaisiEditorDAO extends HibernateDaoSupport {
     }
     
     public List getActiveLabelValue(String category, String label) {
-    	return getHibernateTemplate().find("from CaisiEditor ce where ce.Category=? and ce.Label =? and ce.IsActive='YES' ", new Object[] {category,label});
+    	return getHibernateTemplate().find("from CaisiEditor ce where ce.category=? and ce.label =? and ce.isActive='YES' ", new Object[] {category,label});
     }
     
     public List getActiveLabelValue(String labell) {
