@@ -61,20 +61,21 @@ public class EctDisplayRxAction extends EctDisplayAction {
         arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
         long now = System.currentTimeMillis();
         long month = 1000L * 60L * 60L * 24L * 30L;
-        for(int idx = 0; idx < arr.length; ++idx ) {
-            NavBarDisplayDAO.Item item = Dao.Item();                                    
+        for(int idx = 0; idx < arr.length; ++idx ) {            
             oscar.oscarRx.data.RxPrescriptionData.Prescription drug = arr[idx];
+            if( drug.isArchived() )
+                continue;
             
-            String styleColor = "";
-            if(drug.isCurrent() == true && drug.isArchived() ){
-                styleColor="style=\"color:red;text-decoration: line-through;\"";  
-            }else if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
+            NavBarDisplayDAO.Item item = Dao.Item();                                                
+            
+            String styleColor = "";            
+            if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
                 styleColor="style=\"color:orange;font-weight:bold;\"";
-            }else if (drug.isCurrent() && !drug.isArchived())  {                                        
+            }else if (drug.isCurrent() )  {                                        
                 styleColor="style=\"color:red;\"";
-            }else if (!drug.isCurrent() && drug.isArchived()){
-                styleColor="style=\"text-decoration: line-through;\"";
-            }
+            }else
+                continue;
+
             date = drug.getRxDate();
             serviceDateStr = DateUtils.getDate(date, dateFormat);                                        
       
