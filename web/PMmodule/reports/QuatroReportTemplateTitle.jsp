@@ -28,8 +28,8 @@ function setupOpt(){
 </script>
 </head>
 <body onload="setupOpt()">
-<%=session.getAttribute(com.quatro.model.DataViews.REPORTTPL)%>
 <html:form action="/QuatroReport/SaveReportTemplate.do">
+<input type="hidden" name="postback" value="Y" />
 <table width="100%">
 <tr><td align="center" colspan="2">Saving Report Template</td></tr>
 <tr><td colspan="2" style="color:#ff0000;"><c:out value="${quatroReportSaveTemplateForm.msg}" /></td></tr>

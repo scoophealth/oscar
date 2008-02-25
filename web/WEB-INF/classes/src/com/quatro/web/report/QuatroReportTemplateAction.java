@@ -19,10 +19,16 @@ public class QuatroReportTemplateAction extends Action {
 
 		String param=(String)request.getSession().getAttribute(DataViews.REPORTTPL);
 		if(param!=null){
-		   if(Integer.parseInt(param)>0)
+		   if(Integer.parseInt(param)>0){
 			 myForm.setOptSaveAsSelected("optOld");
-		   else
+			 String param2=(String)request.getParameter("postback");
+			 if(param2==null){  // not postback
+			   ReportValue rptValue = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
+			   myForm.setTxtTitle(rptValue.getReportTemp().getDesc());
+			 }  
+		   }else{
 			 myForm.setOptSaveAsSelected("optNew");
+		   }
 		}
 
 		if((String)request.getParameter("Save")!=null) btnSave_Click(myForm, request);

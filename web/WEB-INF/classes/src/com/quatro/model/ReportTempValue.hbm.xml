@@ -10,11 +10,11 @@
         <property name="reportNo" /> 
         <property name="reportOptionID" /> 
         <property name="desc" column="DESCRIPTION" /> 
-        <property name="startDate" type="java.util.Date" /> 
-        <property name="endDate" type="java.util.Date" /> 
+        <property name="startDate" type="java.sql.Date" /> 
+        <property name="endDate" type="java.sql.Date" /> 
         <property name="startPayPeriod" /> 
         <property name="endPayPeriod" /> 
-        <property name="updateDate" type="java.util.Date" /> 
+        <property name="updateDate" type="java.sql.Date" /> 
         <property name="loginId" /> 
         <property name="privateTemplate" column="PRIVATEYN" /> 
 	</class>
