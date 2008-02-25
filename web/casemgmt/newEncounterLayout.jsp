@@ -436,9 +436,7 @@ function monitorNavBars(e) {
     else if( win >= minWin &&  main == minMain ) {
         $("main").style.width = "100%";       
     }
-    
-    var ht = $("mainContent").getHeight() + $("topContent").getHeight();
-    $("rightNavBar").style.height = ht + "px";  //make sure navbar covers complete height regardless of content
+        
 }
 
 function init() {        
@@ -450,6 +448,7 @@ function init() {
 
 function navBarLoader() {
     $("leftNavBar").style.height = $("content").getHeight();
+    $("rightNavBar").style.height = $("content").getHeight();
     
     /*
      *is right navbar present?
@@ -621,12 +620,17 @@ function navBarLoader() {
           </div>
           
           <div id="leftNavBar" style="display:inline; float:left; width:20%;">
-              <tiles:insert attribute="navigation" />
+              <tiles:insert attribute="leftNavigation" />
           </div>  
           
-          <div id="content" style="display:inline; float:left; width:80%; background-color:#CCCCFF;">
+          <div id="content" style="display:inline; float:left; width:60%; background-color:#CCCCFF;">
               <tiles:insert attribute="body" />
           </div>
+          
+          <div id="rightNavBar" style="display:inline; float:right; width:20%; margin-left:-3px;">
+              <tiles:insert attribute="rightNavigation" />
+          </div>  
+
       </div>
   </body>
 </html:html>

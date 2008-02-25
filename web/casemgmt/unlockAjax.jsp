@@ -12,7 +12,7 @@
 
 <% CaseManagementNote note = (CaseManagementNote)request.getAttribute("Note");
     pageContext.setAttribute("provName", note.getProviderName());    
-        
+    pageContext.setAttribute("fmtTxt", note.getNote().replaceAll("\n", "<br>"));        
     String dateFormat = "dd-MMM-yyyy H:mm";
 %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
@@ -20,7 +20,7 @@
     <c:if test="${success}">    
         <img title="Minimize Display" id='quitImg<c:out value="${Note.id}"/>' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
         <img title="Print" id='print<c:out value="${Note.id}"/>' alt="Toggle Print Note" onclick="togglePrint(<c:out value="${Note.id}"/>, event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>
-        <pre><c:out value="${Note.note}"/></pre>
+        <span id="txt<c:out value="${Note.id}"/>"><c:out escapeXml="false" value="${fmtTxt}"/></span>
         <div id="sig<c:out value="${Note.id}"/>">
             <div class="sig" id="sumary<c:out value="${Note.id}"/>">
                 <div id="observation<c:out value="${Note.id}"/>" style="float:right;margin-right:3px;"><i>Date:&nbsp;<span id="obs<c:out value="${Note.id}"/>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;rev<a href="#" onclick="return showHistory('<c:out value="${Note.id}"/>', event);"><%=note.getRevision()%></a></i></div>
@@ -76,8 +76,8 @@
     </c:if>
     <c:if test="${ not success}"> 
         <img title="Minimize Display" id='quitImg<c:out value="${Note.id}"/>' alt="Minimize Display" onclick='resetView(true, true, event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>        
-        <pre><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat)%> <c:out value="${provName}" /></pre>
-        <span id="passwdError"><pre style="color:red;">Incorrect password</pre></span>
+        <span id="txt<c:out value="${Note.id}"/>"><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat)%> <c:out value="${provName}" /></span>
+        <p id="passwdError" style="color:red;">Incorrect password</p>
         <p id='passwdPara' class="passwd">Password:&nbsp;<input onkeypress="return grabEnter('btnUnlock', event);" type='password' id='passwd' size='16'>&nbsp;
             <input id='btnUnlock' type='button' onclick="return unlock_ajax('<c:out value="n${Note.id}"/>');" value='<bean:message key="oscarEncounter.Index.btnUnLock"/>'>
         </p>

@@ -399,11 +399,15 @@
                         name="header"
                         value="/casemgmt/newEncounterHeader.jsp" />
 		<put
-			name="navigation"
+			name="leftNavigation"
 			value="/casemgmt/newNavigation.jsp" />
 		<put
 			name="body"
 			value="/casemgmt/newCaseManagementView.jsp" />                
+		<put
+			name="rightNavigation"
+			value="/casemgmt/rightColumn.jsp" />
+                      
 	</definition> 
         <definition
                 name="page.casemgmt.view"
