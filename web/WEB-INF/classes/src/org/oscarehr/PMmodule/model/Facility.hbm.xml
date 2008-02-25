@@ -53,6 +53,20 @@
                 not-null="true"
                 length="1"
                 />
+        <property
+                name="orgId"
+                column="org_id"
+                type="integer"
+                not-null="true"
+                length="10"
+                />
+        <property
+                name="sectorId"
+                column="sector_id"
+                type="integer"
+                not-null="true"
+                length="10"
+                />
     </class>
 </hibernate-mapping>
         

@@ -14,7 +14,9 @@ public class Facility implements Serializable {
 	private String contactPhone;
     private boolean hic;   
     private boolean disabled;
-
+    private Integer orgId;
+    private Integer sectorId;
+    
     public Facility() {
     }
 
@@ -86,8 +88,24 @@ public class Facility implements Serializable {
     public void setHic(boolean hic) {
         this.hic = hic;
     }
+    
+    public Integer getOrgId() {
+		return orgId;
+	}
 
-    public boolean equals(Object o) {
+	public void setOrgId(Integer orgId) {
+		this.orgId = orgId;
+	}
+
+	public Integer getSectorId() {
+		return sectorId;
+	}
+
+	public void setSectorId(Integer sectorId) {
+		this.sectorId = sectorId;
+	}
+
+	public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
