@@ -167,6 +167,7 @@
     <bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
 	<bean id="facilityDAO" class="org.oscarehr.PMmodule.dao.FacilityDAO" autowire="byName"/>
 	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName"/>
+	<bean id="caisiEditorDAO" class="org.caisi.dao.CaisiEditorDAO" autowire="byName" />	
 	<!--  configure the scratch pad -->
     <bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
     <bean id="quatroLookupDao" class="com.quatro.dao.QuatroLookupDao" autowire="byName" />
@@ -196,10 +197,17 @@
     </bean>
 
     <!-- managers  -->
-    <bean id="facilityManager" parent="baseTransactionProxy" lazy-init="default"
+    <bean id="caisiEditorManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.FacilityManager" autowire="byName"/>
+            <bean class="org.caisi.service.CaisiEditorManager" autowire="byName"/>
+        </property>
+    </bean>
+    
+    <bean id="facilityManager" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="org.oscarehr.PMmodule.service.FacilityManager" autowire="byName">            	
+            </bean>
         </property>
     </bean>
     

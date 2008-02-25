@@ -75,6 +75,7 @@
     <bean name="/PMmodule/FacilityManager" class="org.oscarehr.PMmodule.web.admin.FacilityManagerAction" singleton="false">
         <property name="logManager" ref="logManager"/>
         <property name="facilityManager" ref="facilityManager"/>
+        <property name="caisiEditorManager" ref="caisiEditorManager"/>
     </bean>
     <bean name="/PMmodule/BedManager" class="org.oscarehr.PMmodule.web.admin.BedManagerAction" singleton="false">
         <property name="bedManager" ref="bedManager"/>

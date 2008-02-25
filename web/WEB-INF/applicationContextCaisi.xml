@@ -31,8 +31,7 @@
     <bean id="bedDemographicAuditStrategy" class="org.oscarehr.PMmodule.dao.BedDemographicAuditStrategy" autowire="byName"/>
     <bean id="roomAuditStrategy" class="org.oscarehr.PMmodule.dao.RoomAuditStrategy" lazy-init="default" autowire="byName"/>
 
-    <!-- DAO -->
-    <bean id="caisiEditorDAO" class="org.caisi.dao.CaisiEditorDAO" autowire="byName" />
+    <!-- DAO -->    
     <bean id="issueAdminDAO" class="org.caisi.dao.IssueAdminDAO" autowire="byName" />
     <bean id="caisiRoleDAO" class="org.caisi.dao.CaisiRoleDAO" autowire="byName" />
     <bean id="accessTypeDAO" class="org.caisi.dao.AccessTypeDAO" autowire="byName"/>
@@ -51,13 +50,7 @@
     <bean id="populationReportDAO" class="org.oscarehr.common.dao.PopulationReportDAO" autowire="byName"/>
     
 
-    <!-- managers  -->
-    <bean id="caisiEditorManager" parent="baseTransactionProxy" lazy-init="default"
-          dependency-check="default">
-        <property name="target">
-            <bean class="org.caisi.service.CaisiEditorManager" autowire="byName"/>
-        </property>
-    </bean>
+    <!-- managers  -->    
     <bean id="issueAdminManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
           lazy-init="default"  dependency-check="default">
         <property name="transactionManager" ref="transactionManager"/>
