@@ -150,7 +150,7 @@ public class BedDemographicDAO extends HibernateDaoSupport {
     public void saveBedDemographic(BedDemographic bedDemographic) {
         updateHistory(bedDemographic);
 
-        getHibernateTemplate().saveOrUpdate(bedDemographic);
+        bedDemographic = (BedDemographic)getHibernateTemplate().merge(bedDemographic);
         getHibernateTemplate().flush();
 
         log.debug("saveBedDemographic: " + bedDemographic);
