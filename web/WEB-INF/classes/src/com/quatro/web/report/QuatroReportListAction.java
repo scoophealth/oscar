@@ -18,7 +18,32 @@ import com.quatro.service.QuatroReportManager;
 
 public class QuatroReportListAction extends DispatchAction {
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		QuatroReportListForm myForm = (QuatroReportListForm)form;
+		if((String)request.getParameter("Delete")!=null) btnDelete_Click(myForm, request);
 		return reportlist(mapping,form,request,response);
+	}
+
+	public void btnDelete_Click(QuatroReportListForm myForm, HttpServletRequest request)
+	{
+		String chkNo= myForm.getChkDel();
+		if(chkNo==null) return;
+		
+		QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
+        		getServlet().getServletContext()).getBean("quatroReportManager");
+		
+		chkNo = chkNo.substring(1);
+		StringBuilder str = new StringBuilder();
+		String[] sArray = chkNo.split(","); 
+		for(int i=0;i<sArray.length;i++){
+		  String param = (String)request.getParameter("p" + sArray[i]);
+		  if(param!=null) str.append("," + param);
+		}
+
+		if(str.toString()!=null){
+		  String templateNo= str.toString().substring(1);
+		  reportManager.DeleteReportTemplates(templateNo);
+		}  
+		
 	}
 	
 	public ActionForward reportlist(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

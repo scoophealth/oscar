@@ -90,10 +90,23 @@ public class QuatroReportManager {
 	public List GetReportGroupList(String providerNo) 
 	{
 		List rgs = quatroReportDao.GetReportGroupList(providerNo);
-		for (int i=0; i<rgs.size(); i++)
-		{
+		for (int i=0; i<rgs.size(); i++){
 			ReportGroupValue rgv = (ReportGroupValue) rgs.get(i);
-			rgv.setReports(quatroReportDao.GetReportList(providerNo, rgv.getReportGroupId()));
+//			rgv.setReports(quatroReportDao.GetReportList(providerNo, rgv.getReportGroupId()));
+			List lst1=quatroReportDao.GetReportList(providerNo, rgv.getReportGroupId());
+		    List lst3= new ArrayList();
+			for (int j=0; j<lst1.size(); j++){
+			  ReportValue obj1=(ReportValue)lst1.get(j);
+			  ReportEXValue obj2= new ReportEXValue();
+			  obj2.setReportNo(obj1.getReportNo());
+			  obj2.setTitle(obj1.getTitle());
+			  obj2.setDescription(obj1.getDescription());
+			  obj2.setTemplateNo("");
+			  List lst2 = quatroReportDao.GetReportTemplates(obj1.getReportNo(), providerNo);
+			  obj2.setChildList(lst2);
+		      lst3.add(obj2);
+			}
+			rgv.setReports(lst3);
 		}
 		return rgs;
 	}
@@ -116,5 +129,13 @@ public class QuatroReportManager {
 	
 	public void SaveReportTemplate(ReportTempValue rtv){
 		quatroReportDao.SaveReportTemplate(rtv);
+	}
+
+	public void DeleteReportTemplates(String templateNo){
+		if(templateNo==null) return;
+		String[] sArray= templateNo.split(",");
+		for(int i=0;i<sArray.length;i++){
+		  quatroReportDao.DeleteReportTemplate(sArray[i]);
+		}  
 	}
 }

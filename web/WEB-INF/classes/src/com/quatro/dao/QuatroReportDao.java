@@ -123,7 +123,16 @@ public class QuatroReportDao extends HibernateDaoSupport {
 		  String sSQL="FROM ReportTempValue s WHERE s.reportNo=? AND (s.loginId=? or s.privateTemplate=true)";
 	      return  getHibernateTemplate().find(sSQL,params);
   	  }
- 
+ /*
+  	  public List GetReportTemplatesShort(int reportNo, String userId){
+          ArrayList paramList = new ArrayList();
+	      paramList.add(Integer.valueOf(reportNo));
+	      paramList.add(userId);
+	      Object params[] = paramList.toArray(new Object[paramList.size()]);          
+		  String sSQL="FROM ReportEXValue s WHERE s.reportNo=? AND (s.loginId=? or s.privateTemplate=true)";
+	      return  getHibernateTemplate().find(sSQL,params);
+  	  }
+*/
   	  public void SaveReportTemplate(ReportTempValue rtv){
 
   		 int templateNo = rtv.getTemplateNo();
@@ -173,5 +182,31 @@ public class QuatroReportDao extends HibernateDaoSupport {
          sess.close();
   	  
   	  }
+
+  	  public void DeleteReportTemplate(String templateNo){
+         int iTempNo=Integer.valueOf(templateNo).intValue();
+ 	     
+         Session sess= getSessionFactory().openSession();
+   		 Transaction tx=sess.beginTransaction();
+   		 try {
+   			  Query query= sess.createQuery("delete ReportTempValue s where s.templateNo =?"); 
+    	  	  query.setInteger(0, iTempNo); 
+   	  	      query.executeUpdate(); 
+
+	  		  query= sess.createQuery("delete ReportTempOrgValue s where s.templateNo = ?"); 
+    	  	  query.setInteger(0, iTempNo); 
+  	  	      query.executeUpdate(); 
+
+  	  		  query= sess.createQuery("delete ReportTempCriValue s where s.templateNo = ?"); 
+    	  	  query.setInteger(0, iTempNo); 
+  	  	      query.executeUpdate();
+
+  	  	      tx.commit();
+   		 }catch(Exception e){
+   			 tx.rollback();
+   		 }
+          sess.close();
+   	  
+   	  }
   	  
 }

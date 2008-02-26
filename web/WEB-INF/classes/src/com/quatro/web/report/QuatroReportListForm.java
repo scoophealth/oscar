@@ -8,6 +8,7 @@ import com.quatro.model.*;
 public class QuatroReportListForm extends ActionForm{
 	List reportGroups;
 	String provider;
+	String chkDel;
 	
 	public List getReportGroups() {
 		return reportGroups;
@@ -23,6 +24,14 @@ public class QuatroReportListForm extends ActionForm{
 
 	public void setProvider(String provider) {
 		this.provider = provider;
+	}
+
+	public String getChkDel() {
+		return chkDel;
+	}
+
+	public void setChkDel(String chkDel) {
+		this.chkDel = chkDel;
 	}
 	
 }
