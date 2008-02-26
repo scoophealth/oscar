@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Date;
-import oscar.MyDateFormat;
-import java.text.SimpleDateFormat;
+import oscar.MyDateFormat;;
 
 public class QuatroReportRunnerAction extends Action {
 	
@@ -24,13 +23,10 @@ public class QuatroReportRunnerAction extends Action {
 
 		String param=(String)request.getParameter("id");
 		String param2=(String)request.getParameter("templateNo");
-		int rptNo;
-        int templateNo = 0;
-        if (param2!=null) templateNo=Integer.parseInt(param2); 
 		
 		QuatroReportRunnerForm myForm = (QuatroReportRunnerForm)form;
+		int rptNo;
 		String loginId = (String)request.getSession().getAttribute("user");
-
 		if(param2!=null)
 		  request.getSession().setAttribute(DataViews.REPORTTPL, param2);
 		else
@@ -51,14 +47,21 @@ public class QuatroReportRunnerAction extends Action {
         myForm.setExportFormat(String.valueOf(ReportExportFormat._PDF));
         
         if(param!=null){
-	        rptNo = Integer.parseInt(param);
-            myForm.setReportNo(param);
-	        if (param2!=null && templateNo > 0)
+	  	    String[] strTemp = param.split("_");
+	        rptNo = Integer.parseInt(strTemp[0]);
+            int templateNo = 0;
+	        
+            myForm.setReportNo(strTemp[0]);
+	        if (strTemp.length > 1)
+	        {
+	            templateNo = Integer.parseInt(strTemp[1]);
 	            Refresh(myForm, loginId, rptNo, templateNo, request);
+	        }
 	        else
+	        {
 	            Refresh(myForm, loginId, rptNo, request, true);
-
-	        ActionForward forward = mapping.findForward("success");
+	        }
+			ActionForward forward = mapping.findForward("success");
 			return forward;
 		}
 		//postback form
@@ -261,29 +264,7 @@ public class QuatroReportRunnerAction extends Action {
 	
 	public void Refresh(QuatroReportRunnerForm myForm, String loginId,int reportNo, int templateNo, HttpServletRequest request)
 	{
-		ReportValue rptVal=null;
 		
-	    QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
-	        		getServlet().getServletContext()).getBean("quatroReportManager");
-
-	    rptVal = reportManager.GetReport(reportNo,templateNo, loginId);
-		request.getSession().setAttribute(DataViews.REPORT, rptVal);
-
-		request.getSession().setAttribute(DataViews.REPORTTPL, String.valueOf(templateNo));
-
-		Refresh(myForm, loginId, reportNo, request, false);
-		
-		ReportTempValue rptTempVal =rptVal.getReportTemp();
-		if("D".equals(rptVal.getDatePart())){
-		  myForm.setStartField(MyDateFormat.getSysDateString(rptTempVal.getStartDate()));
-		  myForm.setEndField(MyDateFormat.getSysDateString(rptTempVal.getEndDate()));
-		}else{
-			myForm.setStartField(rptTempVal.getStartPayPeriod());
-			myForm.setEndField(rptTempVal.getEndPayPeriod());
-		}
-		
-		myForm.setOrgSelectionList(rptTempVal.getOrgCodes());
-		myForm.setReportOption(String.valueOf(rptTempVal.getReportOptionID()));
 	}
 	
 	public void Refresh(QuatroReportRunnerForm myForm, String loginId,int reportNo, HttpServletRequest request, boolean refreshFromDB)
@@ -294,7 +275,6 @@ public class QuatroReportRunnerAction extends Action {
 	        		getServlet().getServletContext()).getBean("quatroReportManager");
 		if(refreshFromDB==true){
 		   rptVal = reportManager.GetReport(reportNo, loginId);
-		   request.getSession().setAttribute(DataViews.REPORTTPL, "0");
 		}else{
 		   rptVal = (ReportValue)request.getSession().getAttribute(DataViews.REPORT);
 		}
