@@ -11,7 +11,7 @@
           autowire="default" dependency-check="default">
         <property name="locations">
             <list>
-                <value>/WEB-INF/classes/caisi.properties</value>
+                <value>/WEB-INF/classes/oscar_mcmaster.properties</value>
             </list>
         </property>
     </bean>
