@@ -58,7 +58,6 @@ public class PMMFilter implements Filter {
 	private OscarSecurityManager oscarSecurityManager;
 	private ProviderManager providerManager;
 	private FilterConfig config;
-	private String testModeEnabled;
 
 	public void setProviderManager(HttpServletRequest request) {
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext());
@@ -67,7 +66,6 @@ public class PMMFilter implements Filter {
 		integratorManager = (IntegratorManager) wac.getBean("integratorManager");
 		oscarSecurityManager = (OscarSecurityManager) wac.getBean("oscarSecurityManager");
 		providerManager = (ProviderManager) wac.getBean("providerManager");
-		testModeEnabled = (String) wac.getBean("testmode");
 	}
 
 	public void init(FilterConfig config) throws ServletException {
@@ -79,15 +77,6 @@ public class PMMFilter implements Filter {
 		HttpSession session = request.getSession();
 		
 		setProviderManager(request);
-
-		// for testing
-		if (testModeEnabled != null && testModeEnabled.equals("true")) {
-			if (session.getAttribute("user") == null) {
-				log.warn("using test user");
-				session.setAttribute("user", "999998");
-				session.setAttribute("userrole", "doctor admin");
-			}
-		}
 
 		String oscarUser = (String) session.getAttribute("user");
 		if (oscarUser == null || oscarUser.length() == 0) {
