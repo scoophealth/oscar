@@ -26,7 +26,6 @@ public class QuatroReportDao extends HibernateDaoSupport {
 
 	  public List GetReportOptionList(int rptNo)
 	  {
-//	      return queryForList("GetReportOptionList",  rptNo);
           ArrayList paramList = new ArrayList();
 		  String sSQL="FROM ReportOptionValue s where s.active=true AND s.reportNo= ? ORDER BY s.shortDesc";		
 	      paramList.add(rptNo);
@@ -36,7 +35,6 @@ public class QuatroReportDao extends HibernateDaoSupport {
 
 	  public List GetFilterFieldList(int rptNo)
 	  {
-//	      return queryForList("GetFilterFieldList", rptNo);
           ArrayList paramList = new ArrayList();
 		  String sSQL="FROM ReportFilterValue s WHERE s.reportNo=? order by s.fieldName";		
 	      paramList.add(rptNo);
@@ -115,24 +113,51 @@ public class QuatroReportDao extends HibernateDaoSupport {
           getHibernateTemplate().saveOrUpdate(rdsv);
   	  }
 
-  	  public List GetReportTemplates(int reportNo, String userId){
+  	  public List GetReportTemplates(int reportNo, String loginId){
           ArrayList paramList = new ArrayList();
 	      paramList.add(Integer.valueOf(reportNo));
-	      paramList.add(userId);
+	      paramList.add(loginId);
 	      Object params[] = paramList.toArray(new Object[paramList.size()]);          
 		  String sSQL="FROM ReportTempValue s WHERE s.reportNo=? AND (s.loginId=? or s.privateTemplate=true)";
 	      return  getHibernateTemplate().find(sSQL,params);
   	  }
- /*
-  	  public List GetReportTemplatesShort(int reportNo, String userId){
+
+  	  public ReportTempValue GetReportTemplate(int templateNo, String loginId){
           ArrayList paramList = new ArrayList();
-	      paramList.add(Integer.valueOf(reportNo));
-	      paramList.add(userId);
+	      paramList.add(Integer.valueOf(templateNo));
+	      paramList.add(loginId);
 	      Object params[] = paramList.toArray(new Object[paramList.size()]);          
-		  String sSQL="FROM ReportEXValue s WHERE s.reportNo=? AND (s.loginId=? or s.privateTemplate=true)";
-	      return  getHibernateTemplate().find(sSQL,params);
+		  String sSQL="FROM ReportTempValue s WHERE s.templateNo=? AND (s.loginId=? or s.privateTemplate=true)";
+	      ReportTempValue rptTempVal= (ReportTempValue)getHibernateTemplate().find(sSQL,params).get(0);
+	      
+	      paramList.clear();
+	      paramList.add(Integer.valueOf(templateNo));
+	      Object params2[] = paramList.toArray(new Object[paramList.size()]);          
+		  sSQL="FROM ReportTempCriValue s WHERE s.templateNo=?";
+		  ArrayList lst1 = (ArrayList)getHibernateTemplate().find(sSQL,params2);
+		  for(int i=0;i<lst1.size();i++){
+			ReportTempCriValue obj1 = (ReportTempCriValue)lst1.get(i);
+		    paramList.clear();
+		    paramList.add(Integer.valueOf(obj1.getFieldNo()));
+		    Object params3[] = paramList.toArray(new Object[paramList.size()]);          
+			sSQL="FROM ReportFilterValue s WHERE s.fieldNo=?";
+		    ReportFilterValue obj2 = (ReportFilterValue)getHibernateTemplate().find(sSQL,params3).get(0);
+		    obj1.setFilter(obj2);
+		  }
+		  rptTempVal.setTemplateCriteria(lst1);
+
+//		  sSQL="FROM ReportTempOrgValue s WHERE s.templateNo=?";
+//		  ArrayList lst2 = (ArrayList)getHibernateTemplate().find(sSQL,params2);
+//		  rptTempVal.setOrgCodes(lst2);
+		  
+		  sSQL="select new com.quatro.util.KeyValueBean(b.code, b.description) FROM ReportTempOrgValue a, LookupCodeValue b WHERE a.templateNo=?" +
+		      " and a.orgCd = b.code and b.prefix='ORG'";
+		  ArrayList lst2 = (ArrayList)getHibernateTemplate().find(sSQL,params2);
+		  rptTempVal.setOrgCodes(lst2);
+		  
+		  return rptTempVal;
   	  }
-*/
+
   	  public void SaveReportTemplate(ReportTempValue rtv){
 
   		 int templateNo = rtv.getTemplateNo();

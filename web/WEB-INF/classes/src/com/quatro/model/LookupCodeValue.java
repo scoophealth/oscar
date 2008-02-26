@@ -11,7 +11,7 @@ public class LookupCodeValue {
     private Boolean selectable;
 	private String parentCode;
     private int orderByIndex;
-
+ 
     public Boolean isActive() {
 		return active;
 	}

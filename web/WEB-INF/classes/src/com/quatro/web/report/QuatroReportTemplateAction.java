@@ -54,7 +54,7 @@ public class QuatroReportTemplateAction extends Action {
 
         if (Utility.IsEmpty(temp.getDesc())) {
             myForm.setMsg("Please specify the Description");
-//    		return;
+    		return;
         }
 
         temp.setPrivateTemplate(myForm.getChkPrivate()!=null);

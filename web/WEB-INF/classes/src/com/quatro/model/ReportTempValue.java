@@ -18,6 +18,7 @@ public class ReportTempValue {
     private ArrayList templateCriteria;
     private String criteriaDis;
     private ArrayList orgCodes;
+    private ArrayList orgDescs;  //used to disaplay org desc on JSP page option element
     private int index;
     private String userName;
     public String ErrMsg = "";
@@ -123,6 +124,12 @@ public class ReportTempValue {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public ArrayList getOrgDescs() {
+		return orgDescs;
+	}
+	public void setOrgDescs(ArrayList orgDescs) {
+		this.orgDescs = orgDescs;
 	}
 
 }

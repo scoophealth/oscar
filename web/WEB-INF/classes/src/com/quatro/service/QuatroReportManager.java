@@ -16,9 +16,6 @@ public class QuatroReportManager {
     }
 
 	public ReportValue GetReport(int rptNo, String loginId) {
-//		UserManagementService user = new UserManagementService();
-//		UserValue uv = user.GetUser(loginId);
-
 		ReportValue reportValue = new ReportValue(); 
 		reportValue =(ReportValue)quatroReportDao.GetReport(rptNo, loginId);
 		
@@ -28,6 +25,22 @@ public class QuatroReportManager {
 
 		ArrayList filters= (ArrayList)quatroReportDao.GetFilterFieldList(rptNo);
 		reportValue.setFilters(filters);
+
+		return reportValue;
+	}
+
+	public ReportValue GetReport(int rptNo, int templateNo, String loginId) {
+		ReportValue reportValue = new ReportValue(); 
+		reportValue =(ReportValue)quatroReportDao.GetReport(rptNo, loginId);
+		
+		reportValue.setRunTime(new java.util.Date());
+
+		ArrayList filters= (ArrayList)quatroReportDao.GetFilterFieldList(rptNo);
+		reportValue.setFilters(filters);
+
+		ReportTempValue rptTempValue=quatroReportDao.GetReportTemplate(templateNo, loginId);
+		reportValue.setReportTemp(rptTempValue);
+		
 		return reportValue;
 	}
 
@@ -126,7 +139,7 @@ public class QuatroReportManager {
 	public List GetReportTemplates(int reportNo, String userId){
 		return quatroReportDao.GetReportTemplates(reportNo, userId);
 	}
-	
+
 	public void SaveReportTemplate(ReportTempValue rtv){
 		quatroReportDao.SaveReportTemplate(rtv);
 	}
