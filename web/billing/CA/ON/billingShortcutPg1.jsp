@@ -170,7 +170,7 @@
   }
   } else {
 		JdbcBillingReviewImpl hdbObj = new JdbcBillingReviewImpl();
-		aL = hdbObj.getBillingHist(demo_no, " limit 5 ", "");
+		aL = hdbObj.getBillingHist(demo_no, 5,0, null);
 		if (aL.size()>0) {
 			BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(0);
 			BillingItemData iobj = (BillingItemData) aL.get(1);
