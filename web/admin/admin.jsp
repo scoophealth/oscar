@@ -256,23 +256,29 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       </div>
       
       <% } %>
-      
+  </security:oscarSec> 
+  
       <%-- -add by caisi--%>
+      
       <caisi:isModuleLoad moduleName="caisi">
 	  <div class="adminBox">
 	      <h3>&nbsp;<bean:message key="admin.admin.caisi"/></h3>
 	      <ul>
+	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.systemMessage" rights="r" reverse="<%=false%>" >
 		  <li><a href="../SystemMessage.do"><bean:message key="admin.admin.systemMessage"/></a></li>
+		  </security:oscarSec>
+		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.facilityMessage" rights="r" reverse="<%=false%>" >
 		  <li><a href="../FacilityMessage.do?">Facilities Messages</a></li>
+		  </security:oscarSec>
 		  <li><a href="../CaisiEditor.do?method=list">Caisi List Editor</a></li>
 		  <li><a href="../issueAdmin.do?method=list"><bean:message key="admin.admin.issueEditor"/></a></li>
 		  <li><a href="../CaisiRole.do"><bean:message key="admin.admin.caisiRole"/></a></li>         
 		  <li><a href="../SurveyManager.do"><bean:message key="admin.admin.surveyManager"/></a></li>         
 	      </ul>
 	  </div>
-      </caisi:isModuleLoad>
+      </caisi:isModuleLoad>     
       <%-- -add by caisi end--%>
-  </security:oscarSec>
+    
   
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>" >
