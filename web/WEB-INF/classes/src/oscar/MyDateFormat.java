@@ -24,6 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
 import java.lang.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MyDateFormat {
@@ -113,8 +114,13 @@ public class MyDateFormat {
 		return temp;
 	}
 
-	// Convert yyyy/mm/dd or yyyy-mm-dd or yyyymmdd to System format, used to pickup screen values
-    public static java.sql.Date getSysDate(String pDate)
+	// Convert date to yyyy-mm-dd, used to display screen values
+    public static String getSysDateString(java.util.Date pDate){
+	   SimpleDateFormat formatter =  new SimpleDateFormat("yyyy-MM-dd");
+	   return formatter.format(pDate);
+    }
+
+	public static java.sql.Date getSysDate(String pDate)
     {
         if (pDate == null || "".equals(pDate)) return null;
         if ("TODAY".equals(pDate.toUpperCase())) return new java.sql.Date(new Date().getTime());
