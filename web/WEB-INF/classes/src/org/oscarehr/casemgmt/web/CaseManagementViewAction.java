@@ -61,6 +61,7 @@ import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 
+import oscar.OscarProperties;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.pageUtil.RxSessionBean;
 
@@ -235,7 +236,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             start = current;
 
             /* PROGRESS NOTES */
-            List notes = null;
+            List<CaseManagementNote> notes = null;
 
             // filter the notes by the checked issues and date if set
             UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
@@ -277,6 +278,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             String[] roleId = caseForm.getFilter_roles();
             if (roleId != null && roleId.length > 0) notes = applyRoleFilter(notes, roleId);
 
+            // RFQ style filtering, probably not wanted by anyone else on earth.
+            if (OscarProperties.getInstance().getBooleanProperty("FILTER_CME_NOTES_FOR_FACILITY", "true"))
+            {
+                notes=facilityFiltering(providerNo, notes);
+            }
+            
             this.caseManagementMgr.getEditors(notes);
 
             /*
@@ -299,8 +306,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             
             // remote issues
             GetIssuesNotesResponse issuesAndNotes=integratorManager.getIssueNotes(Long.parseLong(demoNo));
-//            ArrayList<IssueTransfer> issuesTmp=new ArrayList<IssueTransfer>();
-//            request.setAttribute("remoteIssues",issuesTmp.toArray(new IssueTransfer[0]));
             if (issuesAndNotes == null) {
             	request.setAttribute("remoteIssues",null);
             }
@@ -387,6 +392,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         if (useNewCaseMgmt != null && useNewCaseMgmt.equals("true")) return mapping.findForward("page.newcasemgmt.view");
         else return mapping.findForward("page.casemgmt.view");
 
+    }
+
+    private List<CaseManagementNote> facilityFiltering(String providerNo, List<CaseManagementNote> notes) {
+
+        // This method should do the funny filtering by facility, it's a twisted algorithm 
+        // which I won't try to explain but it's origin is the Toronto RFQ so... go figure.
+        
+        
+        
+        return notes;
     }
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {

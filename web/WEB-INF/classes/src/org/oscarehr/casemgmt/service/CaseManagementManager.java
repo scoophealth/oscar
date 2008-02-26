@@ -216,31 +216,31 @@ public class CaseManagementManager {
      */
     public List getNotes(String demographic_no, UserProperty prop) {
         if( prop == null )
-            return this.getNotes(demographic_no);
+            return getNotes(demographic_no);
         
         String staleDate = prop.getValue();
-        return this.caseManagementNoteDAO.getNotesByDemographic(demographic_no, staleDate);
+        return caseManagementNoteDAO.getNotesByDemographic(demographic_no, staleDate);
     }
     
     /*
      *fetch notes for demographic linked with specified issues
      *if date is set, fetch notes after specified date
      */
-    public List getNotes(String demographic_no, String[] issues, UserProperty prop) {
+    public List<CaseManagementNote> getNotes(String demographic_no, String[] issues, UserProperty prop) {
         if( prop == null )
-            return this.getNotes(demographic_no, issues);
+            return getNotes(demographic_no, issues);
                 
         String staleDate = prop.getValue();
-        return this.caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, staleDate);
+        return caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, staleDate);
     }
 
-    public List getNotes(String demographic_no) {
-        return this.caseManagementNoteDAO.getNotesByDemographic(demographic_no);
+    public List<CaseManagementNote> getNotes(String demographic_no) {
+        return caseManagementNoteDAO.getNotesByDemographic(demographic_no);
     }
 
-    public List getNotes(String demographic_no, String[] issues) {
+    public List<CaseManagementNote> getNotes(String demographic_no, String[] issues) {
         //List notesNoLocked = new ArrayList();
-        List notes = this.caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues);
+        List notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues);
         /*
         for(Iterator iter=notes.iterator();iter.hasNext();) {
         	CaseManagementNote note = (CaseManagementNote)iter.next();

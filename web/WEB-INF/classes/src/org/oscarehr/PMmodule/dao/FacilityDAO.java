@@ -34,4 +34,18 @@ public class FacilityDAO extends HibernateDaoSupport {
         getHibernateTemplate().flush();
         getHibernateTemplate().refresh(facility);
     }
+    
+    public List<Long> getFacilityIdByNoteId(int note_id)
+    {
+        // select note_id,program_no,program_id,facility_id from casemgmt_note,room where casemgmt_note.program_no=room.program_id;
+        
+        return(null);
+    }
+    
+    public List<Long> getFacilityIdByProviderId(int provider_id)
+    {
+        // select provider_no,program_provider.program_id,room.program_id,facility_id from program_provider,room where program_provider.program_id=room.program_id;
+        
+        return(null);
+    }
 }

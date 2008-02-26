@@ -64,7 +64,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return note;
 	}
         
-        public List getNotesByDemographic(String demographic_no,String[] issues, String staleDate) {
+        public List<CaseManagementNote> getNotesByDemographic(String demographic_no,String[] issues, String staleDate) {
             String list = null;
             if(issues != null && issues.length>0) {
                     list="";
@@ -88,10 +88,12 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
             }
             String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ?  and cmn.id in (select max(cmn.id) from cmn where cmn.observation_date >= ? GROUP BY uuid) ORDER BY cmn.observation_date asc";            
              
-            return this.getHibernateTemplate().find(hql,new Object[] {demographic_no,d});
+            @SuppressWarnings("unchecked")
+            List<CaseManagementNote> result=getHibernateTemplate().find(hql,new Object[] {demographic_no,d});
+            return result;
         }
         
-        public List getNotesByDemographic(String demographic_no, String staleDate) {
+        public List<CaseManagementNote> getNotesByDemographic(String demographic_no, String staleDate) {
         	if (OscarProperties.getInstance().getDbType().equals("oracle")) {
         		return this.getHibernateTemplate().findByNamedQuery("mostRecentTimeOra", new Object[] {demographic_no, staleDate});
         	}
