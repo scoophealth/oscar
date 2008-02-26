@@ -243,9 +243,6 @@
     </bean>
     <bean id="QuestionTypes" class="org.oscarehr.survey.model.QuestionTypes" scope="singleton" lazy-init="default"
            dependency-check="default"/>
-    <bean id="testmode" class="java.lang.String" lazy-init="default"  dependency-check="default">
-        <constructor-arg value="${testmode.enabled}"/>
-    </bean>
 <!--
         <bean id="UCRConfigurationManager" class="org.oscarehr.PMmodule.web.reports.custom.UCRConfigurationManager">
                 <property name="filename">
