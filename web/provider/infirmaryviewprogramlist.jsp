@@ -3,6 +3,8 @@
      
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <%
 String questr=(String)session.getAttribute("infirmaryView_OscarQue"); 
