@@ -372,7 +372,19 @@ public class QuatroReportViewerAction extends Action {
     	  ;
       }
 //      jspPath= OscarProperties.getInstance().getProperty("RPT_PATH");      
-      String path=jspPath  + "/PMmodule/reports/RptFiles/" + _rptOption.getRptFileName();
+      String path=jspPath  + "PMmodule/reports/RptFiles/" + _rptOption.getRptFileName();
+      if(path.substring(2, 3).equals(":")){  //for Windows System
+      	path=path.substring(1);
+      }
+      
+	  QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
+        		getServlet().getServletContext()).getBean("quatroReportManager");
+      try{
+	     reportManager.DownloadRptFile(path, _rptOption.getRptFileNo());
+      }catch(Exception ex){
+       	  ;
+      }
+      
       try{
           reportDocument1.open(path,0);
           if (!Utility.IsEmpty(criteriaString))  reportDocument1.setRecordSelectionFormula(criteriaString);
@@ -616,7 +628,18 @@ public class QuatroReportViewerAction extends Action {
       	  ;
         }
 //        jspPath= OscarProperties.getInstance().getProperty("RPT_PATH");      
-        String path=jspPath  + "/PMmodule/reports/RptFiles/" + _rptOption.getRptFileName();
+        String path=jspPath  + "PMmodule/reports/RptFiles/" + _rptOption.getRptFileName();
+        if(path.substring(2, 3).equals(":")){  //for Windows System
+        	path=path.substring(1);
+        }
+        
+  	    QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
+      		getServlet().getServletContext()).getBean("quatroReportManager");
+        try{
+	        reportManager.DownloadRptFile(path, _rptOption.getRptFileNo());
+        }catch(Exception ex){
+     	  ;
+        }
         
         try{
              reportDocument1.open(path,0);
