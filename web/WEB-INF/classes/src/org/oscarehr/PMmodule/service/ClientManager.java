@@ -185,7 +185,7 @@ public class ClientManager {
         return jointAdmissionDAO.getJointAdmission(clientId);
     }
 
-    public boolean isClientDependentOfFamily(Integer clientId){//Louis-debug
+    public boolean isClientDependentOfFamily(Integer clientId){
 		
 		JointAdmission clientsJadm = null;
 		if(clientId != null){
@@ -198,7 +198,7 @@ public class ClientManager {
     }
     
     
-    public boolean isClientFamilyHead(Integer clientId){//Louis-debug
+    public boolean isClientFamilyHead(Integer clientId){
 		
 		List<JointAdmission> dependentList = getDependents(Long.valueOf(clientId.toString()));
 		if(dependentList != null  &&  dependentList.size() > 0){

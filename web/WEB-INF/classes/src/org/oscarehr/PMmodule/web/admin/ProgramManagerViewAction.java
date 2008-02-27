@@ -52,6 +52,7 @@ import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.web.BaseAction;
@@ -714,6 +715,150 @@ public class ProgramManagerViewAction extends BaseAction {
         return view(mapping, form, request, response);
     }
 
+    @SuppressWarnings("unchecked")
+    public ActionForward switch_beds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        /*
+    	 *	(1)Check whether both clients are from same program //??? probably not necessary ???
+    	 *	(1.1)If not, disallow bed switching
+		 *
+    	 *	(2)Check whether both beds are from same room:
+    	 *	(2.1)If beds are from same room: you can switch beds in any circumstances
+    	 *
+    	 *	(2.2)If beds are from different rooms:
+    	 *	(2.2.1)Only 2 indpendent clients can switch beds between different rooms.
+    	 *	(2.2.2)If either client is a dependent, disallow switching beds of different rooms
+    	 *	???(2.2.3)If 2 clients are family heads, allow switching beds with different rooms with conditions:
+    	 *	(2.2.3.1)all dependents have to switch together… ???
+    	 *
+    	 *	(3)Save changes to the 'bed' table ??? <- not implemented yet
+		*/
+    	ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
+        ActionMessages messages = new ActionMessages();
+        Bed[] reservedBeds = formBean.getReservedBeds();
+        Bed bed1 = null;
+        Bed bed2 = null;
+        Integer client1 = null;
+        Integer client2 = null;
+        boolean isSameRoom = false;
+        boolean isFamilyHead1 = false;
+        boolean isFamilyHead2 = false;
+        boolean isFamilyDependent1 = false;
+        boolean isFamilyDependent2 = false;
+        boolean isIndependent1 = false;
+        boolean isIndependent2 = false;
+        //List<Integer> familyList = new ArrayList<Integer>();
+    	
+    	String switchBed1 = formBean.getSwitchBed1();
+    	String switchBed2 = formBean.getSwitchBed2();
+    	
+    	if(bedManager == null  ||  bedDemographicManager == null  ||  roomDemographicManager == null){
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.check.error"));
+            saveMessages(request, messages);
+            return view(mapping, form, request, response);
+    	}
+    	if(switchBed1 == null  ||  switchBed1.length() <= 0){
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.check.error"));
+            saveMessages(request, messages);
+            return view(mapping, form, request, response);
+    	}
+		//System.out.println("ProgramManagerViewAction.switch_beds(): switchBed1 = " + switchBed1);    	
+		//System.out.println("ProgramManagerViewAction.switch_beds(): switchBed2 = " + switchBed2);    	
+   		bed1 = bedManager.getBed(Integer.valueOf(switchBed1));
+   		bed2 = bedManager.getBed(Integer.valueOf(switchBed2));
+   		
+   		if(bed1 == null  ||  bed2 == null){
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.check.error"));
+            saveMessages(request, messages);
+            return view(mapping, form, request, response);
+   		}
+   		BedDemographic bedDemographic1 = bedDemographicManager.getBedDemographicByBed(bed1.getId());
+   		BedDemographic bedDemographic2 = bedDemographicManager.getBedDemographicByBed(bed2.getId());
+   		
+   		if(bedDemographic1 == null  ||  bedDemographic2 == null){
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.check.error"));
+            saveMessages(request, messages);
+            return view(mapping, form, request, response);
+   		}
+   		client1 = bedDemographic1.getId().getDemographicNo();
+   		client2 = bedDemographic2.getId().getDemographicNo();
+		//System.out.println("ProgramManagerViewAction.switch_beds(): client1 = " + client1);    	
+		//System.out.println("ProgramManagerViewAction.switch_beds(): client2 = " + client2);    	
+
+   		//Check whether both beds are from same room:
+   		if( bed1.getRoomId().intValue() == bed2.getRoomId().intValue() ){
+   			isSameRoom = true;
+   		}
+
+   		//System.out.println("ProgramManagerViewAction.switch_beds(): isSameRoom = " + isSameRoom);    	
+   		if(isSameRoom){//you can switch beds in same room for any client combination
+   			bedDemographicManager.deleteBedDemographic(bedDemographic1);
+   			bedDemographicManager.deleteBedDemographic(bedDemographic2);
+   			bedDemographic1.getId().setDemographicNo(client2);
+   			bedDemographic2.getId().setDemographicNo(client1);
+   			bedDemographicManager.saveBedDemographic(bedDemographic1);
+   			bedDemographicManager.saveBedDemographic(bedDemographic2);
+   		}else{//beds are from different rooms
+   			isFamilyHead1 = clientManager.isClientFamilyHead(client1);
+   			isFamilyHead2 = clientManager.isClientFamilyHead(client2);
+   			isFamilyDependent1 = clientManager.isClientDependentOfFamily(client1);
+   			isFamilyDependent2 = clientManager.isClientDependentOfFamily(client2);
+			//System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyHead1 = " + isFamilyHead1);    	
+			//System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyHead2 = " + isFamilyHead2);    	
+			//System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyDependent1 = " + isFamilyDependent1);    	
+			//System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyDependent2 = " + isFamilyDependent2);    	
+		
+   			RoomDemographic roomDemographic1 = roomDemographicManager.getRoomDemographicByDemographic(client1);
+   			RoomDemographic roomDemographic2 = roomDemographicManager.getRoomDemographicByDemographic(client2);
+   			
+   			if(roomDemographic1 == null  ||  roomDemographic2 == null){
+   	            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.check.error"));
+   	            saveMessages(request, messages);
+   	            return view(mapping, form, request, response);
+   			}
+   			
+   			if(!isFamilyHead1  &&  !isFamilyDependent1){
+   				isIndependent1 = true;
+   			}
+   			if(!isFamilyHead2  &&  !isFamilyDependent2){
+   				isIndependent2 = true;
+   			}
+
+   			//System.out.println("ProgramManagerViewAction.switch_beds(): isIndependent1 = " + isIndependent1);    	
+   			//System.out.println("ProgramManagerViewAction.switch_beds(): isIndependent2 = " + isIndependent2);    	
+   			//Check whether both clients are indpendents
+   			if(isIndependent1  &&  isIndependent2){
+   				//Can switch beds and rooms
+   	   			bedDemographicManager.deleteBedDemographic(bedDemographic1);
+   	   			bedDemographicManager.deleteBedDemographic(bedDemographic2);
+   	   			bedDemographic1.getId().setDemographicNo(client2);
+   	   			bedDemographic2.getId().setDemographicNo(client1);
+   	   			bedDemographicManager.saveBedDemographic(bedDemographic1);
+   	   			bedDemographicManager.saveBedDemographic(bedDemographic2);
+
+   	   			roomDemographicManager.deleteRoomDemographic(roomDemographic1);
+   	   			roomDemographicManager.deleteRoomDemographic(roomDemographic2);
+   	   			roomDemographic1.getId().setDemographicNo(client2);
+   	   			roomDemographic2.getId().setDemographicNo(client1);
+   	   			roomDemographicManager.saveRoomDemographic(roomDemographic1);
+   	   			roomDemographicManager.saveRoomDemographic(roomDemographic2);
+   			}else{
+   				if(isFamilyDependent1  ||  isFamilyDependent2){//if either client is dependent or both are
+   					//do not allow bed switching
+   		            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.check.dependent_disallowed"));
+   		            saveMessages(request, messages);
+   		            return view(mapping, form, request, response);
+   				}
+   				if(isFamilyHead1  ||  isFamilyHead2){//if either clients are family head
+   					// very complicated!!!
+   		            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.check.familyHead_switch"));
+   		            saveMessages(request, messages);
+   		            return view(mapping, form, request, response);
+   				}
+   			}
+   		}
+        return view(mapping, form, request, response);
+    }
+    
     @Required
     public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
         this.clientRestrictionManager = clientRestrictionManager;

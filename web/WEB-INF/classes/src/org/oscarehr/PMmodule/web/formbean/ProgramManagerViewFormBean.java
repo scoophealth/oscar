@@ -37,6 +37,8 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	private String queueId;
 	private Bed[] reservedBeds;
 	private String remoteReferralId=null;
+	private String switchBed1;
+	private String switchBed2;
 
 	private String radioRejectionReason;
     private ProgramClientRestriction serviceRestriction;
@@ -109,4 +111,20 @@ public class ProgramManagerViewFormBean extends ActionForm {
     public void setServiceRestriction(ProgramClientRestriction serviceRestriction) {
         this.serviceRestriction = serviceRestriction;
     }
+
+	public String getSwitchBed1() {
+		return switchBed1;
+	}
+
+	public void setSwitchBed1(String switchBed1) {
+		this.switchBed1 = switchBed1;
+	}
+
+	public String getSwitchBed2() {
+		return switchBed2;
+	}
+
+	public void setSwitchBed2(String switchBed2) {
+		this.switchBed2 = switchBed2;
+	}
 }

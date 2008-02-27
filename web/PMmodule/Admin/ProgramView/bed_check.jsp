@@ -24,7 +24,56 @@
 		url = '<html:rewrite page="/PMmodule/ProgramManagerView.do?method=viewBedCheckReport&programId="/>';
 		window.open(url + programId, 'bedCheckReport', 'width=1000,height=600,scrollbars=1');
 	}
+	
+	function switchBeds(){
+		var theForm = document.forms[0];
+		var switchBedId = "";
+		var indexBedId = -1;
+		var count = 0;
+		for(i=0; i < theForm.elements.length; i++){
+   			var elementName = theForm.elements[i].name;
+   			
+   			if( elementName.indexOf("switchBedIds") != -1 ){
+   				if(theForm.elements[i].checked == true){
+	   				count++;
+				}
+   			}
+		}
+ 		if(count < 2  ||  count > 2){
+ 			//alert("switchBeds(): count 1= " + count);
+			alert("You must select 2 beds for bed switching.");
+			return;
+ 		}
+ 		theForm.switchBed1.value = "";
+ 		theForm.switchBed2.value = "";
+   		for(i=0; i < theForm.elements.length; i++){
+   			var elementName = theForm.elements[i].name;
+   			if( elementName.indexOf("switchBedIds") != -1 ){
+   				indexBedId = elementName.indexOf("_");
+   				if(indexBedId != -1){
+   					switchBedId = elementName.substring(indexBedId+1, elementName.length);
+   				}
+	 			if(theForm.elements[i].checked == true){
+					if(theForm.switchBed1.value == ""){
+						theForm.switchBed1.value = switchBedId;
+					}
+					if(theForm.switchBed2.value == ""  || theForm.switchBed1.value != switchBedId){
+						theForm.switchBed2.value = switchBedId;
+					}
+	 			}
+			}
+		}		
+		//alert("switchBeds(): switchBed1 2= " + theForm.switchBed1.value);
+		//alert("switchBeds(): switchBed2 2= " + theForm.switchBed2.value);
+		document.forms[0].action = '<html:rewrite action="/PMmodule/ProgramManagerView.do?method=switch_beds" />';
+		document.forms[0].submit();
+	}
+	
 </script>
+
+<html:hidden property="switchBed1" />
+<html:hidden property="switchBed2" />
+
 <table width="100%" summary="View program reserved beds">
 	<tr>
 		<td>
@@ -41,6 +90,11 @@
 						<img src="<c:out value="${ctx}" />/images/details.gif" border="0" />
 					</a>
 				</display:column>
+				
+				<display:column>
+					<input type="checkbox" name="switchBedIds[<c:out value="${reservedBed_rowNum - 1}" />]_<c:out value="${reservedBed.id}" />"  />
+				</display:column>
+
 				<display:column property="roomName" title="Room" />
 				<display:column property="name" title="Bed" />
 				<display:column property="demographicName" title="Client" />
@@ -120,7 +174,8 @@
 	<tr>
 		<td>
 			Generate: <a href="javascript:void(0)" onclick="popupBedCheckReport('<c:out value="${id}"/>')">Bed Check Report</a> 
-		</td>
+			<input type="button" name="bedSwitch"  onclick="switchBeds()"  value="Switch Beds" /> 
+		</td>		
 	</tr>
 	<tr>
 		<td>

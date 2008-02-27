@@ -418,7 +418,7 @@ public class RoomManager {
         roomDAO.saveRoom(room);
     }
 
-    public void deleteRoom(Room room) throws RoomHasActiveBedsException {//Louis-debug
+    public void deleteRoom(Room room) throws RoomHasActiveBedsException {
         roomDAO.deleteRoom(room);
     }
 

@@ -416,7 +416,7 @@ public class BedManager {
         bedDAO.saveBed(bed);
     }
 
-    public void deleteBed(Bed bed) throws BedReservedException {//Louis-debug
+    public void deleteBed(Bed bed) throws BedReservedException {
         
         bedDAO.deleteBed(bed);
     }
