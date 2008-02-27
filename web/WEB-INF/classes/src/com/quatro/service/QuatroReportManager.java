@@ -6,6 +6,8 @@ import com.quatro.dao.QuatroReportDao;
 import com.quatro.model.*;
 
 import java.util.Date;
+import java.io.*;
+import java.sql.Blob;
 
 public class QuatroReportManager {
 
@@ -151,4 +153,25 @@ public class QuatroReportManager {
 		  quatroReportDao.DeleteReportTemplate(sArray[i]);
 		}  
 	}
+	
+	public void DownloadRptFile(String rptFilePath, int fileNo) throws  Exception{
+	   if (fileNo <= 0) return;
+
+	   DocTextValue obj = quatroReportDao.GetDocText(fileNo);
+	   if(obj!=null){
+		 byte[] fileData=obj.getDocText(); 
+  	     if (fileData == null) return;
+
+	     File file=new File(rptFilePath);
+	     if (file.exists()) file.delete();
+	     FileOutputStream st = new FileOutputStream(rptFilePath);
+         try{
+	       for (int i = 0; i < fileData.length; i++) st.write(fileData[i]);
+           st.close();
+         }catch(IOException ex){
+       	  st.close();
+         }
+	   }
+	}
+	
 }

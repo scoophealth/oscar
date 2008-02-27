@@ -234,4 +234,16 @@ public class QuatroReportDao extends HibernateDaoSupport {
    	  
    	  }
   	  
+  	  public DocTextValue GetDocText(int fileNo){
+          try{
+  		  ArrayList paramList = new ArrayList();
+		  String sSQL="FROM DocTextValue s where s.docId=?";		
+	      paramList.add(fileNo);
+	      Object params[] = paramList.toArray(new Object[paramList.size()]);
+	      List lst = getHibernateTemplate().find(sSQL ,params);
+	      return (DocTextValue)lst.get(0);
+          }catch(Exception ex){
+        	  return null;
+          }
+  	  }
 }
