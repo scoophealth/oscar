@@ -123,7 +123,7 @@
     <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
         <%isRequired = IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_ALIAS);%>
         <td><label>Alias<%=isRequired ? REQUIRED_MARKER : ""%>
-        	<br><html:text size="40" maxlength="70" property="client.children"/></label>
+        	<br><html:text size="40" maxlength="70" property="client.alias"/></label>
        </td>
     </caisi:isModuleLoad>
     
