@@ -119,38 +119,15 @@
 
     </td>
 </tr>
-<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-    <tr>
+<tr>
+    <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
         <%isRequired = IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_ALIAS);%>
-        <td><label>Alias<%=isRequired ? REQUIRED_MARKER : ""%><br><html:text size="40" maxlength="70"
-                                                                             property="client.alias"/></label></td>
-        <%isRequired = IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_CITIZENSHIP);%>
-        <td><label>Citizenship<%=isRequired ? REQUIRED_MARKER : ""%><br><html:text size="20" maxlength="40"
-                                                                                   property="client.citizenship"/></label>
-        </td>
-        <%isRequired = IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_CHILDREN);%>
-        <td><label>Children<%=isRequired ? REQUIRED_MARKER : ""%><br><html:text size="20" maxlength="255"
-                                                                                property="client.children"/></label>
-        </td>
-    </tr>
-    <tr>
-        <%isRequired = IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PREVIOUS_ADDRESS);%>
-        <td><label>Previous Address<%=isRequired ? REQUIRED_MARKER : ""%><br><html:text size="40" maxlength="255"
-                                                                                        property="client.previousAddress"/></label>
-        </td>
-        <%isRequired = IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_SOURCE_OF_INCOME);%>
-        <td><label>Source of Income<%=isRequired ? REQUIRED_MARKER : ""%><br><html:text size="20" maxlength="255"
-                                                                                        property="client.sourceOfIncome"/></label>
-        </td>
-        <%isRequired = IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_SIN);%>
-        <td><label>Social Insurance #<%=isRequired ? REQUIRED_MARKER : ""%><br><html:text size="20" maxlength="15"
-                                                                                          property="client.sin"/></label>
-        </td>
-    </tr>
-</caisi:isModuleLoad>
-
-<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
-    <tr>
+        <td><label>Alias<%=isRequired ? REQUIRED_MARKER : ""%>
+        	<br><html:text size="40" maxlength="70" property="client.children"/></label>
+       </td>
+    </caisi:isModuleLoad>
+    
+	<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">    
         <td><label>Health Card #<br>
             <input type="text" size="10" maxlength="10" dojoType="IntegerTextBox" name="client.hin"
                    value="<bean:write name="genericIntakeEditForm"  property="client.hin"/>"/>
@@ -158,10 +135,9 @@
         <td><label>Version<br>
             <input type="text" size="2" maxlength="2" dojoType="AlphaTextBox" name="client.ver"
                    value="<bean:write name="genericIntakeEditForm"  property="client.ver"/>"/>
-        </label></td>
-    </tr>
-</caisi:isModuleLoad>
-
+        </label></td>    
+	</caisi:isModuleLoad>
+</tr>
 
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
     <tr>
