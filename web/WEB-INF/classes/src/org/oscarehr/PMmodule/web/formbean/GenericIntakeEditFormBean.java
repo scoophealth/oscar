@@ -40,7 +40,8 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	private static final String BED_PROGRAM_LABEL = "Bed Program";
 	private static final String EXTERNAL_PROGRAM_LABEL = "External Agency Client Referred From";
 	private static final String COMMUNITY_PROGRAM_LABEL = "Residence Location";
-
+	private static final String PROGRAM_IN_DOMAIN_LABEL = "Select where the intake is being performed if different from Admission Program";
+	
 	private String method;
 
 	private Demographic client;
@@ -60,6 +61,10 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	private List<LabelValueBean> servicePrograms;
 	private String[] serviceProgramIds;
 
+	private List<LabelValueBean> programsInDomain;
+	private String programInDomainId;
+	private String programInDomainLabel;
+	
 	private Intake intake;
 
     private String remoteAgency;
@@ -112,6 +117,54 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		this.provinces = provinces;
 	}
 
+//	 programs in provider's domain --------------------
+
+	public List<LabelValueBean> getProgramsInDomain() {
+		return programsInDomain;
+	}
+
+	public void setProgramsInDomain(List<Program> programs_inDomain) {
+		setProgramInDomainLabel(!programs_inDomain.isEmpty());
+		
+		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
+		labelValues.add(GenericIntakeConstants.EMPTY);
+		labelValues.addAll(convertToLabelValues(programs_inDomain));	
+		programsInDomain = labelValues;
+	}
+
+	public String getProgramInDomainLabel() {
+		return programInDomainLabel;
+	}
+
+	public void setProgramInDomainLabel(boolean hasProgramsInDomain) {
+		StringBuffer buffer = new StringBuffer();
+
+		if (hasProgramsInDomain) {
+			buffer.append(PROGRAM_IN_DOMAIN_LABEL);
+		}
+
+		programInDomainLabel = buffer.toString();
+	}
+
+	// Selected program id
+
+	public Integer getSelectedProgramInDomainId() {
+		return convertToInteger(programInDomainId);
+	}
+
+	public void setSelectedProgramInDomainId(Integer selectedId) {
+		programInDomainId = convertToString(selectedId);
+	}
+
+	public String getProgramInDomainId() {
+		return programInDomainId;
+	}
+
+	public void setProgramInDomainId(String programInDomainId) {
+		this.programInDomainId = programInDomainId;
+	}
+	//---------------------	
+	
 	
 	//	 external programs --------------------
 

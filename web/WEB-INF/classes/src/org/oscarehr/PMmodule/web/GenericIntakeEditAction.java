@@ -1,3 +1,4 @@
+
 /**
  * Copyright (C) 2007.
  * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
@@ -16,6 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
 package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
@@ -203,6 +205,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         String providerNo = getProviderNo(request);
 
         try {
+        	client.setChildren(formBean.getProgramInDomainId());
             saveClient(client, providerNo);
 
             // for RFQ: to save 'external' program.
@@ -334,7 +337,16 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         }
         return externalPrograms;
     }
+    
+    private List<Program> getProgramsInDomain(Set<Program> providerPrograms) {
+        List<Program> programsInDomain = new ArrayList<Program>();
 
+        for (Program program : providerPrograms) {
+            programsInDomain.add(program);
+        }
+        return programsInDomain;
+    }
+    
     private Integer getCurrentBedCommunityProgramId(Integer clientId) {
         Integer currentProgramId = null;
 
@@ -363,6 +375,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         return currentProgramId;
     }
 
+    
     private SortedSet<Integer> getCurrentServiceProgramIds(Integer clientId) {
         SortedSet<Integer> currentProgramIds = new TreeSet<Integer>();
 
@@ -566,6 +579,14 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             if (externalProgramsVisible) {
                 formBean.setExternalPrograms(getExternalPrograms(providerPrograms));
                 formBean.setSelectedExternalProgramId(currentExternalProgramId);
+            }
+            
+            formBean.setProgramsInDomain(getProgramsInDomain(providerPrograms));
+            String intakeLocation = client.getChildren();
+            if(intakeLocation !=null && !"".equals(intakeLocation)) {
+            	formBean.setSelectedProgramInDomainId(Integer.valueOf(intakeLocation));
+            } else {
+            	formBean.setSelectedProgramInDomainId(0);
             }
         }
     }
