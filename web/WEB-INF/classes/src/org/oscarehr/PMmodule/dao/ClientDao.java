@@ -123,6 +123,8 @@ public class ClientDao extends HibernateDaoSupport {
 		String AND = " and ";
 		String WHERE = " where ";
 		String sql = "";
+		String sql2 = "";
+		
 		boolean isOracle = OscarProperties.getInstance().getDbType().equals("oracle");
 		if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
 			firstName = bean.getFirstName();
@@ -138,20 +140,24 @@ public class ClientDao extends HibernateDaoSupport {
 		if (!bean.isSearchUsingSoundex()) {
 			if (firstName.length() > 0) {
 				if (isOracle) {
-					criteria.add(Expression.ilike("FirstName", firstName + "%"));
+					//criteria.add(Expression.ilike("FirstName", firstName + "%"));
+					criteria.add(Restrictions.or(Expression.ilike("FirstName", firstName + "%"),Expression.ilike("Alias", firstName + "%")));
 				}
 				else
 				{
-					criteria.add(Expression.like("FirstName", firstName + "%"));
+					//criteria.add(Expression.like("FirstName", firstName + "%"));
+					criteria.add(Restrictions.or(Expression.like("FirstName", firstName + "%"),Expression.like("Alias", firstName + "%")));
 				}
 			}
 			if (lastName.length() > 0) {
 				if(isOracle){
-					criteria.add(Expression.ilike("LastName", lastName + "%"));
+					//criteria.add(Expression.ilike("LastName", lastName + "%"));
+					criteria.add(Restrictions.or(Expression.ilike("LastName", lastName + "%"),Expression.ilike("Alias", lastName + "%")));
 				}
 				else
 				{
-					criteria.add(Expression.like("LastName", lastName + "%"));
+					//criteria.add(Expression.like("LastName", lastName + "%"));
+					criteria.add(Restrictions.or(Expression.like("LastName", lastName + "%"),Expression.like("Alias", lastName + "%")));
 				}
 			}
 		}
@@ -161,22 +167,38 @@ public class ClientDao extends HibernateDaoSupport {
 				if (isOracle) {
 					sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4)))";
 					criteria.add(Restrictions.or(Restrictions.ilike("FirstName", firstName + "%"), Restrictions.sqlRestriction(sql)));
+				
+					//sql = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + firstName + "'),4)))";
+					//criteria.add(Restrictions.or(Restrictions.ilike("Alias", firstName + "%"), Restrictions.sqlRestriction(sql)));
+				
 				}
 				else
 				{
 					sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name like '" + firstName + "%'))";
-					criteria.add(Restrictions.sqlRestriction(sql));
+					//criteria.add(Restrictions.sqlRestriction(sql));
+					
+					sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (alias like '" + firstName + "%'))";
+					criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
+				
 				}
 			}
 			if (lastName.length() > 0) {
 				if(isOracle) {
 					sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4)))";
 					criteria.add(Restrictions.or(Restrictions.ilike("LastName",lastName + "%" ), Restrictions.sqlRestriction(sql)));
+				
+					//sql = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4)))";
+					//criteria.add(Restrictions.or(Restrictions.ilike("Alias",lastName + "%" ), Restrictions.sqlRestriction(sql)));
+				
 				}
 				else
 				{
 					sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '" + lastName + "%'))";
-					criteria.add(Restrictions.sqlRestriction(sql));
+					//criteria.add(Restrictions.sqlRestriction(sql));
+								
+					sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (alias like '" + lastName + "%'))";
+					criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
+				
 				}
 			}
 		}
@@ -227,20 +249,7 @@ public class ClientDao extends HibernateDaoSupport {
 			{
 				pIdi[i] = Integer.parseInt(pIds[i]);
 			}
-		    subq.add(Restrictions.in("ProgramId", pIdi));			
-		    
-		    
-		    
-
-		  /*  
-		    sql ="{alias}.demographic_no in (select client_id from admission " + 
-				 " where program_id in (" + programIds.toString() + ") " +
-				 (bedProgramIdCond.length()>0? AND + bedProgramIdCond : "") + 
-				// (admitDateFromCond.length()>0? AND + admitDateFromCond : "") + 
-				// (admitDateToCond.length()>0? AND + admitDateToCond : "") + 
-				 ")";
-			criteria.add(Restrictions.sqlRestriction(sql));
-			*/
+		    subq.add(Restrictions.in("ProgramId", pIdi));	
 			
 		}else{  
 			String extraCond = "";
@@ -254,36 +263,7 @@ public class ClientDao extends HibernateDaoSupport {
 				}
 				
 			    subq.add(Restrictions.in("ProgramId", pIdi));		
-			}
-			
-/*		if(bedProgramIdCond.length()>0){		
-  			extraCond = WHERE + bedProgramIdCond;
-			if(admitDateFromCond.length()>0){
-					extraCond += AND + admitDateFromCond;
-				}
-				if(admitDateToCond.length()>0){
-					extraCond += AND + admitDateToCond;
-				}
-		}else{
-				if(admitDateFromCond.length()>0){
-					extraCond += WHERE + admitDateFromCond;
-				if(admitDateToCond.length()>0){
-						extraCond += AND + admitDateToCond;
-					}
-				}else{
-					if(admitDateToCond.length()>0){
-						extraCond += WHERE + admitDateToCond;
-					}
-				}				
-		}
-
-			if(!"".equals(extraCond)) {
-				sql ="{alias}.demographic_no in (select client_id from admission " +  
-				 	extraCond + ")"; 
-			}
-			criteria.add(Restrictions.sqlRestriction(sql));
-		*/	
-				
+			}	
 		}
 		if(bean.getDateFrom() != null && bean.getDateFrom().length() > 0) {
 	    	Date dt = MyDateFormat.getSysDate(bean.getDateFrom().trim());

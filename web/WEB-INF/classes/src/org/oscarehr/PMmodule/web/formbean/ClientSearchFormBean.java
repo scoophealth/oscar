@@ -50,7 +50,7 @@ public class ClientSearchFormBean {
 	
 	public ClientSearchFormBean() {
 		//setSearchOutsideDomain(true);
-		setSearchUsingSoundex(true);
+		//setSearchUsingSoundex(true);
 	}
 	
 	/**
