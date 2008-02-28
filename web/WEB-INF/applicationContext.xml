@@ -263,20 +263,9 @@
             </bean>
         </property>
     </bean>
-    <bean id="admissionManager" parent="baseTransactionProxy">
+    <bean id="admissionManager" parent="baseTransactionProxy" autowire="byName">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.AdmissionManager">
-                <property name="admissionDao" ref="admissionDao"/>
-                <property name="programDao" ref="programDao"/>
-                <property name="programQueueDao" ref="programQueueDao"/>
-                <property name="clientReferralDAO" ref="clientReferralDAO"/>
-                <property name="bedDemographicManager" ref="bedDemographicManager"/>
-                <property name="programClientStatusDAO" ref="programClientStatusDAO"/>
-                <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
-                <property name="roomManager" ref="roomManager"/>
-                <property name="bedManager" ref="bedManager"/>
-                <property name="roomDemographicManager" ref="roomDemographicManager"/>                
-            </bean>
+            <bean class="org.oscarehr.PMmodule.service.AdmissionManager" autowire="byName" />
         </property>
     </bean>
     <bean id="bedDemographicManager" parent="baseTransactionProxy">

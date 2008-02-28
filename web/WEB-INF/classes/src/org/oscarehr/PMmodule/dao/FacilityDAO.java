@@ -34,19 +34,37 @@ public class FacilityDAO extends HibernateDaoSupport {
         getHibernateTemplate().refresh(facility);
     }
     
-    public List<Long> getFacilityIdsByNoteId(long note_id)
+    public List<Long> getFacilityIdsByNoteId(long noteId)
     {
         // select note_id,program_no,program_id,facility_id from casemgmt_note,room where casemgmt_note.program_no=room.program_id;
         
-        String sqlCommand="select facility_id from casemgmt_note,room where casemgmt_note.program_no=room.program_id and note_id="+note_id;
+        String sqlCommand="select facility_id from casemgmt_note,room where casemgmt_note.program_no=room.program_id and note_id="+noteId;
         return(SqlUtils.selectLongList(sqlCommand));
     }
     
-    public List<Long> getFacilityIdsByProviderId(int provider_id)
+    public List<Long> getFacilityIdsByProgramId(int programId)
+    {
+        // select program_id,facility_id from room;
+        
+        String sqlCommand="select facility_id from room where room.program_id="+programId;
+        return(SqlUtils.selectLongList(sqlCommand));
+    }
+    
+    public List<Long> getFacilityIdsByProviderId(int providerId)
     {
         // select provider_no,program_provider.program_id,room.program_id,facility_id from program_provider,room where program_provider.program_id=room.program_id;
 
-        String sqlCommand="select facility_id from program_provider,room where program_provider.program_id=room.program_id and provider_no="+provider_id;
+        String sqlCommand="select facility_id from program_provider,room where program_provider.program_id=room.program_id and provider_no="+providerId;
         return(SqlUtils.selectLongList(sqlCommand));
     }
+    
+    public static  boolean facilityHasIntersection(List<Long> providersFacilityIds, List<Long> noteFacilities) {
+        for (Long id : noteFacilities) {
+            if (providersFacilityIds.contains(id)) return(true);
+        }
+        
+        return(false);
+    }
+
+
 }

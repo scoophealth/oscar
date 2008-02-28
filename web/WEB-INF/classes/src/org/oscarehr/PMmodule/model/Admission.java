@@ -85,8 +85,26 @@ public class Admission implements Serializable {
 	private Integer programId;
 	private String tempAdmitDischarge;
 	private String radioDischargeReason;
+	private boolean dischargeFromTransfer=false;
+	private boolean admissionFromTransfer=false;
 	
-	public void setProgram(Program p) {
+	public boolean isDischargeFromTransfer() {
+        return dischargeFromTransfer;
+    }
+
+    public void setDischargeFromTransfer(boolean dischargeFromTransfer) {
+        this.dischargeFromTransfer = dischargeFromTransfer;
+    }
+
+    public boolean isAdmissionFromTransfer() {
+        return admissionFromTransfer;
+    }
+
+    public void setAdmissionFromTransfer(boolean admissionFromTransfer) {
+        this.admissionFromTransfer = admissionFromTransfer;
+    }
+
+    public void setProgram(Program p) {
 		this.program = p;
 	}
 

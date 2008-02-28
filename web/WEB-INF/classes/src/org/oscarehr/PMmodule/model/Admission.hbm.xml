@@ -56,6 +56,7 @@
 			name="AdmissionDate"
 			not-null="false"
 			type="timestamp" />
+		<property column="admission_from_transfer" name="admissionFromTransfer" />
 		<property
 			column="admission_notes"		
 			name="AdmissionNotes"
@@ -96,6 +97,7 @@
 			name="DischargeDate"
 			not-null="false"
 			type="timestamp" />
+		<property column="discharge_from_transfer" name="dischargeFromTransfer" />
 		<property
 			column="team_id"
 			name="TeamId"

@@ -36,6 +36,7 @@ import java.util.List;
 
 public class AdmissionManager {
 
+    private FacilityDAO facilityDAO=null;
 	private AdmissionDao dao;
 	private ProgramDao programDao;
 	private ProgramQueueDao programQueueDao;
@@ -46,6 +47,10 @@ public class AdmissionManager {
 	private RoomManager roomManager;
 	private BedManager bedManager;
 	private RoomDemographicManager roomDemographicManager;
+
+    public void setFacilityDAO(FacilityDAO facilityDAO) {
+        this.facilityDAO = facilityDAO;
+    }
 
     public List getAdmissions_archiveView(String programId, Integer demographicNo) {
 		return dao.getAdmissions_archiveView(Integer.valueOf(programId), demographicNo);
@@ -137,13 +142,19 @@ public class AdmissionManager {
             }
         }
                 
+        boolean fromTransfer=false;
         // If admitting to bed program, discharge from old bed program
 		if (program.getType().equalsIgnoreCase("bed") && !tempAdmission) {
 			Admission fullAdmission = getCurrentBedProgramAdmission(demographicNo);
 
 			// community?
 			if (fullAdmission != null) {
-				processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "");
+			    List<Long> oldProgramFacilities=facilityDAO.getFacilityIdsByProgramId(fullAdmission.getProgramId());
+                List<Long> newProgramFacilities=facilityDAO.getFacilityIdsByProgramId(program.getId());
+                
+			    fromTransfer=FacilityDAO.facilityHasIntersection(oldProgramFacilities, newProgramFacilities);				
+			    
+			    processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "", null, fromTransfer);
 			} else {
 				fullAdmission = getCurrentCommunityProgramAdmission(demographicNo);
 				if (fullAdmission != null) {
@@ -173,6 +184,7 @@ public class AdmissionManager {
 		newAdmission.setTeamId(0);
 		newAdmission.setAgencyId(new Long(0));
 		newAdmission.setTemporaryAdmission(tempAdmission);
+		newAdmission.setAdmissionFromTransfer(fromTransfer);
 		
 		//keep the client status if he was in the same program with it.
 		Integer clientStatusId = dao.getLastClientStatusFromAdmissionByProgramIdAndClientId(Integer.valueOf(program.getId()),demographicNo);
@@ -312,10 +324,10 @@ public class AdmissionManager {
 	}
 
     public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason) throws AdmissionException {
-        processDischarge(programId, demographicNo, dischargeNotes, radioDischargeReason,null);
+        processDischarge(programId, demographicNo, dischargeNotes, radioDischargeReason,null, false);
     }
     
-    public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason,List<Long> dependents) throws AdmissionException {
+    public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason,List<Long> dependents, boolean fromTransfer) throws AdmissionException {
 	
 		Admission fullAdmission = getCurrentAdmission(String.valueOf(programId), demographicNo);
 	
@@ -327,6 +339,7 @@ public class AdmissionManager {
 		fullAdmission.setDischargeNotes(dischargeNotes);
 		fullAdmission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
 		fullAdmission.setRadioDischargeReason(radioDischargeReason);
+		fullAdmission.setDischargeFromTransfer(fromTransfer);
 		saveAdmission(fullAdmission);
 		
 		if(roomManager != null  &&  roomManager.isRoomOfDischargeProgramAssignedToClient(demographicNo, programId)){
@@ -349,7 +362,7 @@ public class AdmissionManager {
 		
         if (dependents != null){
             for(Long l:dependents){
-                processDischarge(programId,new Integer(l.intValue()),dischargeNotes,radioDischargeReason,null);
+                processDischarge(programId,new Integer(l.intValue()),dischargeNotes,radioDischargeReason,null, fromTransfer);
             }
         }
     }

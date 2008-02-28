@@ -71,7 +71,6 @@ import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.Demographic.ConsentGiven;
-import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
@@ -184,7 +183,7 @@ public class ClientManagerAction extends BaseAction {
         boolean success = true;
 
         try {
-            admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents);
+            admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents, false);
         }
         catch (AdmissionException e) {
             ActionMessages messages = new ActionMessages();

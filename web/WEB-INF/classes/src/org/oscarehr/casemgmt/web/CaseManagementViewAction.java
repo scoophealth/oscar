@@ -416,7 +416,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
             if (Program.BED_TYPE.equals(program.getType())) {
                 List<Long> noteFacilities = facilityDAO.getFacilityIdsByNoteId(caseManagementNote.getId());
-                if (facilityHasIntersection(providersFacilityIds, noteFacilities)) results.add(caseManagementNote);
+                if (FacilityDAO.facilityHasIntersection(providersFacilityIds, noteFacilities)) results.add(caseManagementNote);
             }
             else if (Program.SERVICE_TYPE.equals(program.getType())) {
                 int programIdOfNote=programDao.getProgramIdByNoteId(caseManagementNote.getId());
@@ -428,14 +428,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         }
 
         return results;
-    }
-
-    private boolean facilityHasIntersection(List<Long> providersFacilityIds, List<Long> noteFacilities) {
-        for (Long id : noteFacilities) {
-            if (providersFacilityIds.contains(id)) return(true);
-        }
-        
-        return(false);
     }
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {

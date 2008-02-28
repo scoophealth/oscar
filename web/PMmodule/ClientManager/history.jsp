@@ -57,7 +57,9 @@
     <display:column property="programName" sortable="true" title="Program Name" />
 	<display:column property="programType" sortable="true" title="Program Type" />
 	<display:column property="admissionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Admission Date" />
+	<display:column property="admissionFromTransfer" title="Admission<br />From<br />Transfer" />
 	<display:column property="dischargeDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Discharge Date" />
+	<display:column property="dischargeFromTransfer" title="Discharge<br />From<br />Transfer" />
 	<display:column sortable="true" title="Days in Program">
 		<%
 		Admission tmpAd = (Admission) pageContext.getAttribute("admission");
