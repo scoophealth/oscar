@@ -728,7 +728,7 @@ public class ProgramManagerViewAction extends BaseAction {
     	 *	(2.2.1)Only 2 indpendent clients can switch beds between different rooms.
     	 *	(2.2.2)If either client is a dependent, disallow switching beds of different rooms
     	 *	???(2.2.3)If 2 clients are family heads, allow switching beds with different rooms with conditions:
-    	 *	(2.2.3.1)all dependents have to switch together… ???
+    	 *	(2.2.3.1)all dependents have to switch together ???
     	 *
     	 *	(3)Save changes to the 'bed' table ??? <- not implemented yet
 		*/
