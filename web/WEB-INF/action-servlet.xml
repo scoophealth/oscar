@@ -2,6 +2,8 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
         "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
+	<bean name="/Admin" class="com.quatro.web.admin.AdminAction" singleton="true">
+	</bean>
     <bean name="/Tickler" class="org.caisi.tickler.web.TicklerAction" singleton="false">
         <property name="ticklerManager" ref="ticklerManagerT"/>
         <property name="demographicManager" ref="demographicManagerT"/>
@@ -241,10 +243,20 @@
     <!-- Quatro Shelter Report -->
     <bean name="/QuatroReport/ReportList" class="com.quatro.web.report.QuatroReportListAction" singleton="false">
     </bean>
-    <bean name="/QuatroLookup/LookupList" class="com.quatro.web.QuatroLookupListAction" singleton="false">
+    
+    <!--  Lookup and Table Mainteance -->
+    <bean name="/Lookup/LookupList" class="com.quatro.web.lookup.LookupListAction" singleton="false">
         <property name="lookupManager" ref="lookupManager"/>
     </bean>
-    
+	<bean name="/Lookup/LookupTableList" class="com.quatro.web.lookup.LookupTableListAction" singleton="false">    
+        <property name="lookupManager" ref="lookupManager"/>
+	</bean>
+	<bean name="/Lookup/LookupCodeList" class="com.quatro.web.lookup.LookupCodeListAction" singleton="false">
+        <property name="lookupManager" ref="lookupManager"/>
+	</bean>
+	<bean name="/Lookup/LookupCodeEdit" class="com.quatro.web.lookup.LookupCodeEditAction" singleton="false">
+        <property name="lookupManager" ref="lookupManager"/>
+	</bean>
     <!-- Provider Property -->
     <bean name="/setProviderStaleDate" class="org.oscarehr.provider.web.ProviderPropertyAction" singleton="false">
         <property name="userPropertyDAO" ref="UserPropertyDAO"/>

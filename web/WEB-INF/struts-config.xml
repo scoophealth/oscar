@@ -17,6 +17,16 @@
         <form-bean name="caisiEditorForm" type="org.apache.struts.validator.DynaValidatorForm">
         	<form-property name="caisiEditor" type="org.caisi.model.CaisiEditor"/>
         </form-bean>
+        <form-bean name="lookupListForm" type="com.quatro.web.lookup.LookupListForm" />
+        <form-bean name="lookupTableListForm" type="org.apache.struts.validator.DynaValidatorForm">
+        	<form-property name="modules" type="java.util.List"></form-property>
+        </form-bean>
+        <form-bean name="lookupCodeListForm" type="org.apache.struts.validator.DynaValidatorForm">
+        	<form-property name="tableDef" type="com.quatro.model.LookupTableDefValue"></form-property>
+        	<form-property name="codes" type="java.util.List"></form-property>        
+        </form-bean>
+        <form-bean name="lookupCodeEditForm" type="com.quatro.web.lookup.LookupCodeEditForm">
+        </form-bean>
         <!-- login form bean -->
         <form-bean name="loginForm" type="oscar.login.LoginForm" />
         <form-bean name="msgSendMessageForm" type="oscar.oscarMessenger.pageUtil.MsgSendMessageForm" />
@@ -287,7 +297,6 @@
             <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean" />
         </form-bean>
 
-        <form-bean name="quatroLookupListForm" type="com.quatro.web.QuatroLookupListForm" />
         <form-bean name="quatroReportListForm" type="com.quatro.web.report.QuatroReportListForm" />
         <form-bean name="quatroReportRunnerForm" type="com.quatro.web.report.QuatroReportRunnerForm" />
         <form-bean name="quatroReportViewerForm" type="com.quatro.web.report.QuatroReportViewerForm" />
@@ -348,6 +357,9 @@
         
         
         <!-- caisi core action -->
+		<action path="/Admin" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="systemMessageForm" input="/admin/admin.jsp" validate="false">
+            <forward name="list" path="page.admin.list" />
+		</action>
         <action path="/SystemMessage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="systemMessageForm" input="/caisicore/SystemMessageForm.jsp" validate="false">
             <forward name="view" path="/caisicore/SystemMessage.jsp" />
             <forward name="list" path="/caisicore/SystemMessageList.jsp" />
@@ -1504,7 +1516,7 @@
             <forward name="rlist" path="/PMmodule/Admin/DefaultRoleAccess.do?method=list" redirect="true" />
         </action>
         <!-- REPORTS -->
-        <action path="/QuatroReport/ReportList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="quatroReportListForm" scope="request" validate="false">
+        <action path="/QuatroReport/ReportList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="quatroReportListForm" scope="request" validate="false" >
             <forward name="reportlist" path="page.report.quatroreportlist" />
         </action>
         <action path="/QuatroReport/ReportRunner" type="com.quatro.web.report.QuatroReportRunnerAction"
@@ -1519,9 +1531,25 @@
               name="quatroReportSaveTemplateForm" validate="false" scope="request">
            <forward name="success" path="/PMmodule/reports/QuatroReportTemplateTitle.jsp"/>
         </action>
-        <action path="/QuatroLookup/LookupList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" 
-              name="quatroLookupListForm" scope="request" validate="false">
+        <action path="/Lookup/LookupList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" 
+              name="lookupListForm" scope="request" validate="false">
             <forward name="list" path="/PMmodule/lookup/LookupList.jsp" />
+        </action>
+
+
+        <action path="/Lookup/LookupTableList" type="org.springframework.web.struts.DelegatingActionProxy" 
+              name="lookupTableListForm" scope="request" validate="false" parameter="method">
+            <forward name="list" path="page.admin.lookup.tablelist" />
+        </action>
+
+        <action path="/Lookup/LookupCodeList" type="org.springframework.web.struts.DelegatingActionProxy"
+              name="lookupCodeListForm" scope="request" validate="false" parameter="method">
+            <forward name="list" path="page.admin.lookup.codelist" />
+        </action>
+
+        <action path="/Lookup/LookupCodeEdit" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" 
+              name="lookupCodeEditForm" scope="session" validate="false" input="/PMmodule/lookup/LookupCodeEdit.jsp">
+            <forward name="edit" path="page.admin.lookup.codeedit" />
         </action>
 
         <action path="/PMmodule/Reports/ProgramActivityReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="activityReportForm" scope="request" validate="false">
