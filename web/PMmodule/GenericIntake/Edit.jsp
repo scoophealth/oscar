@@ -258,29 +258,7 @@
 </c:if>
 
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-    <div id="admissionsTable" dojoType="TitlePane" label="External Referral" labelNodeClass="intakeSectionLabel"
-         containerNodeClass="intakeSectionContainer">
-        <table class="intakeTable">
-            <tr>
-                <c:if test="${not empty sessionScope.genericIntakeEditForm.externalPrograms}">
-                    <td class="intakeBedCommunityProgramCell"><label><c:out
-                            value="${sessionScope.genericIntakeEditForm.externalProgramLabel}"/></label></td>
-                </c:if>
-
-            </tr>
-            <tr>
-                <c:if test="${not empty sessionScope.genericIntakeEditForm.externalPrograms}">
-                    <td class="intakeBedCommunityProgramCell">
-                        <html:select property="externalProgramId">
-                            <html:optionsCollection property="externalPrograms" value="value" label="label"/>
-                        </html:select>
-                    </td>
-                </c:if>
-            </tr>
-        </table>
-    </div>
-    
-    <div id="admissionsTable" dojoType="TitlePane" label="Intake Location" labelNodeClass="intakeSectionLabel"
+	<div id="admissionsTable" dojoType="TitlePane" label="Intake Location" labelNodeClass="intakeSectionLabel"
          containerNodeClass="intakeSectionContainer">
         <table class="intakeTable">
             <tr>
@@ -296,6 +274,28 @@
                     <td class="intakeBedCommunityProgramCell">
                         <html:select property="programInDomainId">
                             <html:optionsCollection property="programsInDomain" value="value" label="label"/>
+                        </html:select>
+                    </td>
+                </c:if>
+            </tr>
+        </table>
+    </div>
+
+    <div id="admissionsTable" dojoType="TitlePane" label="External Referral" labelNodeClass="intakeSectionLabel"
+         containerNodeClass="intakeSectionContainer">
+        <table class="intakeTable">
+            <tr>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.externalPrograms}">
+                    <td class="intakeBedCommunityProgramCell"><label><c:out
+                            value="${sessionScope.genericIntakeEditForm.externalProgramLabel}"/></label></td>
+                </c:if>
+
+            </tr>
+            <tr>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.externalPrograms}">
+                    <td class="intakeBedCommunityProgramCell">
+                        <html:select property="externalProgramId">
+                            <html:optionsCollection property="externalPrograms" value="value" label="label"/>
                         </html:select>
                     </td>
                 </c:if>
