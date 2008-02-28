@@ -106,9 +106,10 @@
     }
 </script>
 
-<div id="navcolumn">
-    <table border="0" cellspacing="0" cellpadding="4">
-        <tr>
+<!--
+	 <div id="navcolumn">
+     <table border="0" cellspacing="0" cellpadding="4">
+         <tr>
             <td align="left">
                 <table border="0" cellpadding="0" cellspacing="2">
                     <tr>
@@ -135,16 +136,16 @@
         </tr>
     </table>
 </div>
-
+-->
 <div id="projecttools" class="toolgroup">
 <div class="label">
     <strong>Navigator</strong>
 </div>
 <div class="body">
-    <div>
+<!-- <div>
         <span><html:link action="/PMmodule/ProviderInfo.do">Home</html:link></span>
     </div>
-
+-->
     <div>
         <span>Client Management</span>
 		<security:oscarSec roleName="<%=roleName$%>"
@@ -182,7 +183,7 @@
     <c:if test="${sessionScope.userrole ne 'er_clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
         <div>
             <span>Reporting Tools</span>
-
+			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
             <div>
                 <a href="javascript:void(0)" onclick="javascript:getIntakeReport('quick')">Registration Intake
                     Report</a>
@@ -210,6 +211,12 @@
             <div>
                 <html:link action="/SurveyManager.do?method=reportForm">User Created Form Report</html:link>
             </div>
+            </caisi:isModuleLoad>
+			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+			<div>
+				<html:link action="QuatroReport/ReportList.do">Quatro report Runner</html:link>
+			</div>
+			</caisi:isModuleLoad>
         </div>
     </c:if>
 
@@ -218,15 +225,18 @@
        <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_pmm.caseManagement"
                                rights="r">
-       
+		<div> 
+            <span>Case Management</span>
         <div>
             <span><a href='<c:out value="${ctx}"/>/provider/providercontrol.jsp'>Case Management</a></span>
         </div>
+        </div>
         </security:oscarSec>
     </c:if>
-    <div>
+<!--    <div>
         <span><a href='<%=request.getContextPath()%>/logout.jsp'>Logout</a></span>
     </div>
+-->
 </div>
 <%
     if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
@@ -313,8 +323,12 @@
                     <span>System Administration</span>
 
                     <div>
+                    	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
                         <a HREF="#" ONCLICK="popupPage2('<%=request.getContextPath()%>/admin/admin.jsp', 'Admin');return false;">Admin Page</a>
-                    	
+                    	</caisi:isModuleLoad>
+                    	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+                    	<html:link action="/Admin">Admin Page</html:link>
+                    	</caisi:isModuleLoad>
                     </div>
                 </div>
             </security:oscarSec>
@@ -323,11 +337,11 @@
         <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_pmm.caisiRoles"
                                rights="r">
-        <div>
+        <div><div>
             <span><a href="javascript.void(0);"
                      onclick="window.open('<html:rewrite action="/CaisiRole.do"/>','caisi_role','width=500,height=500');return false;">Caisi
                 Roles</a></span>
-        </div>
+        </div></div>
 		</security:oscarSec>
 
     </div>
