@@ -1,9 +1,9 @@
-----------------------------------------------
--- Export file for user QUATROSHELTER       --
--- Created by mike on 2/21/2008, 4:01:35 PM --
-----------------------------------------------
+-----------------------------------------------
+-- Export file for user QUATROSHELTER        --
+-- Created by Tony on 2/28/2008, 11:03:06 AM --
+-----------------------------------------------
 
-spool QuatroShelterInit.log
+spool allobjects.log
 
 prompt
 prompt Creating table ACCESS_TYPE
@@ -152,6 +152,39 @@ create table APP_LOOKUPTABLE
 alter table APP_LOOKUPTABLE
   add constraint PK_APP_LOOKUPTABLE primary key (TABLEID)
   deferrable;
+
+prompt
+prompt Creating table APP_LOOKUPTABLE_FIELDS
+prompt =====================================
+prompt
+create table APP_LOOKUPTABLE_FIELDS
+(
+  TABLEID     NVARCHAR2(10) not null,
+  FIELDNAME   NVARCHAR2(20) not null,
+  FIELDDESC   NVARCHAR2(40),
+  EDITYN      NVARCHAR2(1),
+  FIELDTYPE   NVARCHAR2(1),
+  LOOKUPTABLE NVARCHAR2(6),
+  FIELDSQL    NVARCHAR2(32),
+  FIELDINDEX  NUMBER,
+  UNIQUEYN    NUMBER
+)
+;
+alter table APP_LOOKUPTABLE_FIELDS
+  add constraint PRI_APP_LOOKUPTABLE_FIELDS primary key (TABLEID, FIELDNAME);
+
+prompt
+prompt Creating table APP_MODULE
+prompt =========================
+prompt
+create table APP_MODULE
+(
+  MODULE_ID   NUMBER(10) not null,
+  DESCRIPTION VARCHAR2(128) not null
+)
+;
+alter table APP_MODULE
+  add constraint PK_APP_MODULE primary key (MODULE_ID);
 
 prompt
 prompt Creating table BATCHELIGIBILITY
@@ -1444,31 +1477,6 @@ create table CUSTOM_FILTER_PROVIDERS
 ;
 
 prompt
-prompt Creating table DAWSON_ACCOUNT
-prompt =============================
-prompt
-create table DAWSON_ACCOUNT
-(
-  USERID      NUMBER not null,
-  ID          NUMBER not null,
-  ACCOUNTNAME VARCHAR2(50)
-)
-;
-
-prompt
-prompt Creating table DAWSON_CONTACT
-prompt =============================
-prompt
-create table DAWSON_CONTACT
-(
-  ID        NUMBER not null,
-  FIRSTNAME VARCHAR2(50),
-  LASTNAME  VARCHAR2(50),
-  EMAIL     VARCHAR2(50)
-)
-;
-
-prompt
 prompt Creating table DEFAULT_ROLE_ACCESS
 prompt ==================================
 prompt
@@ -1660,9 +1668,9 @@ create table DEMOGRAPHIC_MERGED
 ;
 alter table DEMOGRAPHIC_MERGED
   add primary key (ID);
-create unique index IDX_DEMOGRAPHIC_MERGED_1 on DEMOGRAPHIC_MERGED (DEMOGRAPHIC_NO, MERGED_TO, DELETED);
-create unique index IDX_DEMOGRAPHIC_MERGED_2 on DEMOGRAPHIC_MERGED (DEMOGRAPHIC_NO, DELETED);
-create unique index IDX_DEMOGRAPHIC_MERGED_3 on DEMOGRAPHIC_MERGED (MERGED_TO, DELETED);
+create index IDX_DEMOGRAPHIC_MERGED_1 on DEMOGRAPHIC_MERGED (DEMOGRAPHIC_NO, MERGED_TO, DELETED);
+create index IDX_DEMOGRAPHIC_MERGED_2 on DEMOGRAPHIC_MERGED (DEMOGRAPHIC_NO, DELETED);
+create index IDX_DEMOGRAPHIC_MERGED_3 on DEMOGRAPHIC_MERGED (MERGED_TO, DELETED);
 
 prompt
 prompt Creating table DESANNUALREVIEWPLAN
@@ -2037,7 +2045,9 @@ create table FACILITY
   CONTACT_EMAIL VARCHAR2(255),
   CONTACT_PHONE VARCHAR2(255),
   HIC           VARCHAR2(1) default 'N' not null,
-  DISABLED      NUMBER(1) default '0' not null
+  DISABLED      NUMBER(1) default '0' not null,
+  ORG_ID        NUMBER(10) not null,
+  SECTOR_ID     NUMBER(10) not null
 )
 ;
 alter table FACILITY
@@ -3414,6 +3424,815 @@ create table FORMAR
 )
 ;
 alter table FORMAR
+  add primary key (ID);
+
+prompt
+prompt Creating table FORMBCAR2007
+prompt ===========================
+prompt
+create table FORMBCAR2007
+(
+  ID                       NUMBER(10) not null,
+  DEMOGRAPHIC_NO           NUMBER(10) not null,
+  PROVIDER_NO              NUMBER(10),
+  FORMCREATED              DATE,
+  FORMEDITED               TIMESTAMP(6) default CURRENT_TIMESTAMP,
+  C_LASTVISITED            CHAR(3),
+  C_HOSPITAL               VARCHAR2(60),
+  PG1_PRICARE              VARCHAR2(60),
+  PG1_FAMPHY               VARCHAR2(60),
+  PG1_MONAME               VARCHAR2(60),
+  PG1_DATEOFBIRTH          DATE,
+  PG1_AGEATEDD             VARCHAR2(2),
+  PG1_MAIDENNAME           VARCHAR2(60),
+  PG1_ETHORIG              VARCHAR2(60),
+  PG1_LANGPREF             VARCHAR2(60),
+  PG1_PARTNERNAME          VARCHAR2(60),
+  PG1_PARTNERAGE           VARCHAR2(2),
+  PG1_FAETHORIG            VARCHAR2(50),
+  C_SURNAME                VARCHAR2(30),
+  C_GIVENNAME              VARCHAR2(30),
+  C_ADDRESS                VARCHAR2(60),
+  C_CITY                   VARCHAR2(60),
+  C_PROVINCE               VARCHAR2(50),
+  C_POSTAL                 VARCHAR2(8),
+  C_PHONE                  VARCHAR2(60),
+  C_PHONEALT1              VARCHAR2(60),
+  C_PHONEALT2              VARCHAR2(60),
+  C_PHN                    VARCHAR2(20),
+  PG1_GRAVIDA              VARCHAR2(4),
+  PG1_TERM                 VARCHAR2(4),
+  PG1_PRETERM              VARCHAR2(4),
+  PG1_ABORTION             VARCHAR2(3),
+  PG1_INDUCED              VARCHAR2(3),
+  PG1_SPONTANEOUS          VARCHAR2(3),
+  PG1_LIVING               VARCHAR2(3),
+  PG1_OBHISTDATE1          VARCHAR2(10),
+  PG1_BIRTHORABORT1        VARCHAR2(20),
+  PG1_DELIWEEK1            VARCHAR2(8),
+  PG1_LABOHR1              VARCHAR2(8),
+  PG1_DELITYPE1            VARCHAR2(30),
+  PG1_PERICOMP1            VARCHAR2(80),
+  PG1_OBHISTSEX1           VARCHAR2(1),
+  PG1_BIRTHWEIT1           VARCHAR2(8),
+  PG1_BIRTHWEITUNITS1      VARCHAR2(3),
+  PG1_PRESHEALTH1          VARCHAR2(8),
+  PG1_OBHISTDATE2          VARCHAR2(10),
+  PG1_BIRTHORABORT2        VARCHAR2(20),
+  PG1_DELIWEEK2            VARCHAR2(8),
+  PG1_LABOHR2              VARCHAR2(8),
+  PG1_DELITYPE2            VARCHAR2(30),
+  PG1_PERICOMP2            VARCHAR2(80),
+  PG1_OBHISTSEX2           VARCHAR2(1),
+  PG1_BIRTHWEIT2           VARCHAR2(8),
+  PG1_BIRTHWEITUNITS2      VARCHAR2(3),
+  PG1_PRESHEALTH2          VARCHAR2(8),
+  PG1_OBHISTDATE3          VARCHAR2(10),
+  PG1_BIRTHORABORT3        VARCHAR2(20),
+  PG1_DELIWEEK3            VARCHAR2(8),
+  PG1_LABOHR3              VARCHAR2(8),
+  PG1_DELITYPE3            VARCHAR2(30),
+  PG1_PERICOMP3            VARCHAR2(80),
+  PG1_OBHISTSEX3           VARCHAR2(1),
+  PG1_BIRTHWEIT3           VARCHAR2(8),
+  PG1_BIRTHWEITUNITS3      VARCHAR2(3),
+  PG1_PRESHEALTH3          VARCHAR2(8),
+  PG1_OBHISTDATE4          VARCHAR2(10),
+  PG1_BIRTHORABORT4        VARCHAR2(20),
+  PG1_DELIWEEK4            VARCHAR2(8),
+  PG1_LABOHR4              VARCHAR2(8),
+  PG1_DELITYPE4            VARCHAR2(30),
+  PG1_PERICOMP4            VARCHAR2(80),
+  PG1_OBHISTSEX4           VARCHAR2(1),
+  PG1_BIRTHWEIT4           VARCHAR2(8),
+  PG1_BIRTHWEITUNITS4      VARCHAR2(3),
+  PG1_PRESHEALTH4          VARCHAR2(8),
+  PG1_OBHISTDATE5          VARCHAR2(10),
+  PG1_BIRTHORABORT5        VARCHAR2(20),
+  PG1_DELIWEEK5            VARCHAR2(8),
+  PG1_LABOHR5              VARCHAR2(8),
+  PG1_DELITYPE5            VARCHAR2(30),
+  PG1_PERICOMP5            VARCHAR2(80),
+  PG1_OBHISTSEX5           VARCHAR2(1),
+  PG1_BIRTHWEIT5           VARCHAR2(8),
+  PG1_BIRTHWEITUNITS5      VARCHAR2(3),
+  PG1_PRESHEALTH5          VARCHAR2(8),
+  PG1_LMP                  DATE,
+  PG1_MENSCYCLE            VARCHAR2(8),
+  PG1_EDDBYDATE            DATE,
+  PG1_CONTRMETHOD          VARCHAR2(15),
+  PG1_STOPDATE             VARCHAR2(10),
+  PG1_EDDBYUS              DATE,
+  PG1_EDDBYUSPERF          NUMBER(1),
+  PG1_EDDBYUSGESTWKS       VARCHAR2(2),
+  PG1_EDDBYUSGESTDAYS      VARCHAR2(2),
+  PG1_ALLERGYN             NUMBER(1),
+  PG1_ALLERGYY             NUMBER(1),
+  PG1_ALLERGY              VARCHAR2(50),
+  PG1_CURMEDIC             VARCHAR2(255),
+  PG1_BELIPRACT            VARCHAR2(60),
+  PG1_IVFPREGNANCY         NUMBER(1),
+  PG1_IVFPREGNANCYSPEC     VARCHAR2(30),
+  PG1_BLEEDING             NUMBER(1),
+  PG1_BLEEDINGSPEC         VARCHAR2(30),
+  PG1_NAUSEA               NUMBER(1),
+  PG1_NAUSEASPEC           VARCHAR2(30),
+  PG1_INFECT               NUMBER(1),
+  PG1_INFECTSPEC           VARCHAR2(30),
+  PG1_PREPREGOTHER         NUMBER(1),
+  PG1_PREPREGOTHERSPEC     VARCHAR2(30),
+  PG1_IFVPREGNANCY         NUMBER(1),
+  PG1_IFVPREGNANCYSPEC     VARCHAR2(30),
+  PG1_HEARTDISE            NUMBER(1),
+  PG1_HEARTDISESPEC        VARCHAR2(30),
+  PG1_HYPERTS              NUMBER(1),
+  PG1_HYPERTSSPEC          VARCHAR2(30),
+  PG1_DIABETE              NUMBER(1),
+  PG1_DIABETESPEC          VARCHAR2(30),
+  PG1_DEPRPSYCHIAT         NUMBER(1),
+  PG1_DEPRPSYCHIATSPEC     VARCHAR2(30),
+  PG1_ALCOHDRUG            NUMBER(1),
+  PG1_ALCOHDRUGSPEC        VARCHAR2(30),
+  PG1_THROMCOAG            NUMBER(1),
+  PG1_THROMCOAGSPEC        VARCHAR2(30),
+  PG1_INHERDISEASE         NUMBER(1),
+  PG1_INHERDISEASESPEC     VARCHAR2(30),
+  PG1_ETHNIC               NUMBER(1),
+  PG1_ETHNICSPEC           VARCHAR2(30),
+  PG1_FAMHISTOTHER         NUMBER(1),
+  PG1_FAMHISTOTHERSPEC     VARCHAR2(30),
+  PG1_OPERATION            NUMBER(1),
+  PG1_OPERATIONSPEC        VARCHAR2(255),
+  PG1_CVORRESP             NUMBER(1),
+  PG1_CVORRESPSPEC         VARCHAR2(255),
+  PG1_ANESTHETIC           NUMBER(1),
+  PG1_ANESTHETICSPEC       VARCHAR2(40),
+  PG1_UTERINECXPROC        NUMBER(1),
+  PG1_UTERINECXPROCSPEC    VARCHAR2(40),
+  PG1_INFECTSTD            NUMBER(1),
+  PG1_INFECTSTDSPEC        VARCHAR2(40),
+  PG1_SUSCHIPOX            NUMBER(1),
+  PG1_SUSCHIPOXSPEC        VARCHAR2(40),
+  PG1_THRCOAG              NUMBER(1),
+  PG1_THRCOAGSPEC          VARCHAR2(40),
+  PG1_HYPER                NUMBER(1),
+  PG1_HYPERSPEC            VARCHAR2(40),
+  PG1_PIGI                 NUMBER(1),
+  PG1_PIGISPEC             VARCHAR2(40),
+  PG1_PIURIN               NUMBER(1),
+  PG1_PIURINSPEC           VARCHAR2(40),
+  PG1_DBENDOC              NUMBER(1),
+  PG1_DBENDOCSPEC          VARCHAR2(40),
+  PG1_SEIZNEUR             NUMBER(1),
+  PG1_SEIZNEURSPEC         VARCHAR2(40),
+  PG1_DEPRPSY              NUMBER(1),
+  PG1_DEPRPSYSPEC          VARCHAR2(255),
+  PG1_HXANXIETY            NUMBER(1),
+  PG1_HXDEPR               NUMBER(1),
+  PG1_HXBIPOLAR            NUMBER(1),
+  PG1_HXPPDEPR             NUMBER(1),
+  PG1_HXUNKNOWN            NUMBER(1),
+  PG1_HXOTHER              NUMBER(1),
+  PG1_PIOTHER              NUMBER(1),
+  PG1_PIOTHERSPEC          VARCHAR2(40),
+  PG1_NUTRITION            NUMBER(1),
+  PG1_NUTRITIONSPEC        VARCHAR2(40),
+  PG1_NUTRITIONREF         NUMBER(1),
+  PG1_FOLIACIDREF          NUMBER(1),
+  PG1_STPWRKDATE           NUMBER(1),
+  PG1_STPWRKDATESPEC       VARCHAR2(30),
+  PG1_STPWRKDATEREF        NUMBER(1),
+  PG1_FOLIACID             NUMBER(1),
+  PG1_FOLIACIDSPEC         VARCHAR2(30),
+  PG1_ALCO                 NUMBER(1),
+  PG1_ALCONEVER            NUMBER(1),
+  PG1_ALCOQUIT             NUMBER(1),
+  PG1_ALCOQUITDATE         DATE,
+  PG1_ALCOBEF              VARCHAR2(5),
+  PG1_ALCOCURR             VARCHAR2(5),
+  PG1_ALCOBINGENO          NUMBER(1),
+  PG1_ALCOBINGEYES         NUMBER(1),
+  PG1_TWEAK                NUMBER(1),
+  PG1_TWEAKSCORE           VARCHAR2(15),
+  PG1_DRUG                 NUMBER(1),
+  PG1_DRUGSPEC             VARCHAR2(30),
+  PG1_DRUGREF              NUMBER(1),
+  PG1_SUBUSE               NUMBER(1),
+  PG1_SUBUSENO             NUMBER(1),
+  PG1_SUBUSEYES            NUMBER(1),
+  PG1_SUBUSESPEC           VARCHAR2(35),
+  PG1_HEROIN               NUMBER(1),
+  PG1_COCAINE              NUMBER(1),
+  PG1_MARIJUANA            NUMBER(1),
+  PG1_METHADONE            NUMBER(1),
+  PG1_SOLVENTS             NUMBER(1),
+  PG1_SUBUSEOTHER          NUMBER(1),
+  PG1_PRESCRIPTION         NUMBER(1),
+  PG1_SUBUSEUNKNOWN        NUMBER(1),
+  PG1_IPV                  NUMBER(1),
+  PG1_IPVSPEC              VARCHAR2(40),
+  PG1_IPVREF               NUMBER(1),
+  PG1_SMOKEBEF             NUMBER(1),
+  PG1_SMOKEBEFSPEC         VARCHAR2(5),
+  PG1_SMOKECUR             NUMBER(1),
+  PG1_SMOKECURSPEC         VARCHAR2(5),
+  PG1_SMOKENEVER           NUMBER(1),
+  PG1_SMOKEQUIT            NUMBER(1),
+  PG1_SMOKEQUITDATE        DATE,
+  PG1_SECSMOKE             NUMBER(1),
+  PG1_SECSMOKENO           NUMBER(1),
+  PG1_SECSMOKEYES          NUMBER(1),
+  PG1_SECSMOKESPEC         VARCHAR2(30),
+  PG1_FINAHOUSE            NUMBER(1),
+  PG1_FINAHOUSESPEC        VARCHAR2(30),
+  PG1_FINAHOUSEREF         NUMBER(1),
+  PG1_SUPSYS               NUMBER(1),
+  PG1_SUPSYSSPEC           VARCHAR2(30),
+  PG1_SUPSYSREF            NUMBER(1),
+  PG1_SCHYEAR              VARCHAR2(3),
+  PG1_WORK                 VARCHAR2(25),
+  PG1_WORKHOURDAY          VARCHAR2(5),
+  PG1_PTWORK               VARCHAR2(40),
+  PG1_EXAMINATION          DATE,
+  PG1_BP                   VARCHAR2(12),
+  PG1_HEADNECK             VARCHAR2(40),
+  PG1_MUSCSPINE            VARCHAR2(40),
+  PG1_BREANIPP             VARCHAR2(40),
+  PG1_VARISKIN             VARCHAR2(40),
+  PG1_HEARTLUNG            VARCHAR2(40),
+  PG1_PELVIC               VARCHAR2(40),
+  PG1_ABDOMEN              VARCHAR2(40),
+  PG1_SWABSCERV            VARCHAR2(40),
+  PG1_DISBESTCH            NUMBER(1),
+  PG1_DISPREEDU            NUMBER(1),
+  PG1_DISSEXU              NUMBER(1),
+  PG1_DISFDSAFETY          NUMBER(1),
+  PG1_DISMSS               NUMBER(1),
+  PG1_DISMATPAT            NUMBER(1),
+  PG1_DISBELTUSE           NUMBER(1),
+  PG1_DISBFY               NUMBER(1),
+  PG1_DISBFN               NUMBER(1),
+  PG1_DISBFM               NUMBER(1),
+  PG1_DISGENCOUNS          NUMBER(1),
+  PG1_DISHIV               NUMBER(1),
+  PG1_SUMMARY              CLOB,
+  PG1_SIGNATURE            VARCHAR2(40),
+  AR2_RISKNEONDEATH        NUMBER(1),
+  AR2_RISKSTILLBIRTH       NUMBER(1),
+  AR2_RISKABORTION         NUMBER(1),
+  AR2_RISKHABITABORT       NUMBER(1),
+  AR2_RISKPRIPRETBIRTH20   NUMBER(1),
+  AR2_RISKPRICESBIRTH      NUMBER(1),
+  AR2_RISKPRIIUGR          NUMBER(1),
+  AR2_RISKPRIMACR          NUMBER(1),
+  AR2_RISKRHIMMUY          NUMBER(1),
+  AR2_RISKRHIMMUN          NUMBER(1),
+  AR2_RISKMAJCONGANOM      NUMBER(1),
+  AR2_RISKPPHEMO           NUMBER(1),
+  AR2_RISKCONDIET          NUMBER(1),
+  AR2_RISKINSDEPEND        NUMBER(1),
+  AR2_RISKRETDOC           NUMBER(1),
+  AR2_RISKASYMT            NUMBER(1),
+  AR2_RISKSYMT             NUMBER(1),
+  AR2_RISK14090            NUMBER(1),
+  AR2_RISKHYPERDRUG        NUMBER(1),
+  AR2_RISKCHRORENALDISEASE NUMBER(1),
+  AR2_RISKUNDER18          NUMBER(1),
+  AR2_RISKOVER35           NUMBER(1),
+  AR2_RISKUNDERWEIGHT      NUMBER(1),
+  AR2_RISKOBESITY          NUMBER(1),
+  AR2_RISKH152             NUMBER(1),
+  AR2_RISKDEPRE            NUMBER(1),
+  AR2_RISKALCODRUG         NUMBER(1),
+  AR2_RISKSMOKING          NUMBER(1),
+  AR2_RISKOTHERMEDICAL     NUMBER(1),
+  AR2_RISKABNSERUM         NUMBER(1),
+  AR2_RISKALCODRUGCUR      NUMBER(1),
+  AR2_RISKDIAGLARGE        NUMBER(1),
+  AR2_RISKDIAGSMALL        NUMBER(1),
+  AR2_RISKPOLYHYD          NUMBER(1),
+  AR2_RISKMULPREG          NUMBER(1),
+  AR2_RISKMALPRES          NUMBER(1),
+  AR2_RISKMEMRUPT37        NUMBER(1),
+  AR2_RISKBLEEDING         NUMBER(1),
+  AR2_RISKFETALMOV         NUMBER(1),
+  AR2_RISKDEPRECUR         NUMBER(1),
+  AR2_RISKPREGINDHYPERT    NUMBER(1),
+  AR2_RISKPROTE1           NUMBER(1),
+  AR2_RISKGESDIABETE       NUMBER(1),
+  AR2_RISKBLOODANTI        NUMBER(1),
+  AR2_RISKANEMIA           NUMBER(1),
+  AR2_RISKADMPRETERM       NUMBER(1),
+  AR2_RISKPREG42W          NUMBER(1),
+  AR2_RISKWTLOSS           NUMBER(1),
+  AR2_RISKSMOKINGCUR       NUMBER(1),
+  AR2_RISKHYPDISORDER      NUMBER(1),
+  AR2_RISKPLACABRUPTION    NUMBER(1),
+  AR2_INBIRTHPLACE         VARCHAR2(60),
+  AR2_INBIRTHPLACEALT      VARCHAR2(60),
+  AR2_LABBLOOD             VARCHAR2(12),
+  AR2_LABRH                VARCHAR2(12),
+  AR2_LABRUBELLA           VARCHAR2(12),
+  AR2_LABPPVAC             NUMBER(1),
+  AR2_LABHBSAG             VARCHAR2(12),
+  AR2_LABHBSAGN            NUMBER(1),
+  AR2_LABHBSAGY            NUMBER(1),
+  AR2_LABHBSAGDATE         DATE,
+  AR2_LABHBSAGCONTACT      NUMBER(1),
+  AR2_LABHBSAGVAC          NUMBER(1),
+  AR2_LABHEM1ST            VARCHAR2(12),
+  AR2_LABHEM3RD            VARCHAR2(12),
+  AR2_URINECS              VARCHAR2(3),
+  AR2_LABRATDATE1          DATE,
+  AR2_LABRATRES1           VARCHAR2(10),
+  AR2_LABRATDATE2          DATE,
+  AR2_LABRATRES2           VARCHAR2(10),
+  AR2_LABRHIGG             DATE,
+  AR2_LABRHIGG2            DATE,
+  AR2_LABSTS               VARCHAR2(10),
+  AR2_LABHIVTESTN          NUMBER(1),
+  AR2_LABHIVTESTY          NUMBER(1),
+  AR2_LABHIV               VARCHAR2(10),
+  AR2_LABOTHERTEST         VARCHAR2(200),
+  AR2_LABOTHERHEPC         VARCHAR2(3),
+  AR2_LABOTHERTSH          VARCHAR2(3),
+  AR2_LABOTHERVAR          VARCHAR2(3),
+  AR2_LABSCREEN            VARCHAR2(10),
+  AR2_LABSCREENSPEC        VARCHAR2(255),
+  AR2_LABGWEEK             VARCHAR2(5),
+  AR2_LABDIABDATE          DATE,
+  AR2_LABDIABRES           VARCHAR2(10),
+  AR2_LABGGTDATE           DATE,
+  AR2_LABGGTRES            VARCHAR2(60),
+  AR2_LABGBSDATE           DATE,
+  AR2_LABGBSCOPY           NUMBER(1),
+  AR2_LABGBSTESTN          NUMBER(1),
+  AR2_LABGBSTESTY          NUMBER(1),
+  AR2_LABGBSRES            VARCHAR2(10),
+  AR2_LABEDINSCORE         VARCHAR2(5),
+  AR2_LABEDINDATE          DATE,
+  AR2_LABEDINN             NUMBER(1),
+  AR2_LABEDINY             NUMBER(1),
+  AR2_PROPREG              VARCHAR2(50),
+  AR2_PROLABOUR            VARCHAR2(50),
+  AR2_PROPOSTPARTUM        VARCHAR2(50),
+  AR2_PRONEWBORN           VARCHAR2(50),
+  AR2_PROLIFE              VARCHAR2(50),
+  AR2_AGE                  VARCHAR2(5),
+  AR2_1USOUNDDATE          DATE,
+  AR2_GESTAGEUS            VARCHAR2(10),
+  AR2_AMNIOCUTOFFY         NUMBER(1),
+  AR2_AMNIOCUTOFFN         NUMBER(1),
+  PG2_PROBCOMMENT          VARCHAR2(255),
+  PG2_INVESTIGATION        CLOB,
+  PG3_PROBCOMMENT          VARCHAR2(255),
+  PG3_INVESTIGATION        CLOB,
+  PG2_DOULA                VARCHAR2(100),
+  PG2_DOULANO              VARCHAR2(30),
+  PG3_DOULA                VARCHAR2(100),
+  PG3_DOULANO              VARCHAR2(30),
+  AR2_TOPCALL              NUMBER(1),
+  AR2_TOPPRETERM           NUMBER(1),
+  AR2_TOPHOSP              NUMBER(1),
+  AR2_TOPDOULA             NUMBER(1),
+  AR2_TOPSLEEP             NUMBER(1),
+  AR2_TOPRISKS             NUMBER(1),
+  AR2_TOPMOVE              NUMBER(1),
+  AR2_TOPPLAN              NUMBER(1),
+  AR2_TOPVBAC              NUMBER(1),
+  AR2_TOPSEATS             NUMBER(1),
+  AR2_TOPFEED              NUMBER(1),
+  AR2_TOPPAIN              NUMBER(1),
+  AR2_TOPCSEC              NUMBER(1),
+  C_PPWT                   VARCHAR2(5),
+  C_PPHT                   VARCHAR2(5),
+  C_PPBMI                  VARCHAR2(5),
+  C_EDD                    DATE,
+  PG2_DATE1                DATE,
+  PG2_WT1                  VARCHAR2(5),
+  PG2_BMI1                 VARCHAR2(5),
+  PG2_BP1                  VARCHAR2(8),
+  PG2_URINE1               VARCHAR2(8),
+  PG2_URINEG1              VARCHAR2(8),
+  PG2_GEST1                VARCHAR2(8),
+  PG2_HT1                  VARCHAR2(8),
+  PG2_FHRACT1              VARCHAR2(8),
+  PG2_FM1                  NUMBER(1),
+  PG2_POS1                 VARCHAR2(8),
+  PG2_COMMENT1             VARCHAR2(80),
+  PG2_RETIN1               VARCHAR2(8),
+  PG2_DATE2                DATE,
+  PG2_WT2                  VARCHAR2(5),
+  PG2_BMI2                 VARCHAR2(5),
+  PG2_BP2                  VARCHAR2(8),
+  PG2_URINE2               VARCHAR2(8),
+  PG2_URINEG2              VARCHAR2(8),
+  PG2_GEST2                VARCHAR2(8),
+  PG2_HT2                  VARCHAR2(8),
+  PG2_FHRACT2              VARCHAR2(8),
+  PG2_FM2                  NUMBER(1),
+  PG2_POS2                 VARCHAR2(8),
+  PG2_COMMENT2             VARCHAR2(80),
+  PG2_RETIN2               VARCHAR2(8),
+  PG2_DATE3                DATE,
+  PG2_WT3                  VARCHAR2(5),
+  PG2_BMI3                 VARCHAR2(5),
+  PG2_BP3                  VARCHAR2(8),
+  PG2_URINE3               VARCHAR2(8),
+  PG2_URINEG3              VARCHAR2(8),
+  PG2_GEST3                VARCHAR2(8),
+  PG2_HT3                  VARCHAR2(8),
+  PG2_FHRACT3              VARCHAR2(8),
+  PG2_FM3                  NUMBER(1),
+  PG2_POS3                 VARCHAR2(8),
+  PG2_COMMENT3             VARCHAR2(80),
+  PG2_RETIN3               VARCHAR2(8),
+  PG2_DATE4                DATE,
+  PG2_WT4                  VARCHAR2(5),
+  PG2_BMI4                 VARCHAR2(5),
+  PG2_BP4                  VARCHAR2(8),
+  PG2_URINE4               VARCHAR2(8),
+  PG2_URINEG4              VARCHAR2(8),
+  PG2_GEST4                VARCHAR2(8),
+  PG2_HT4                  VARCHAR2(8),
+  PG2_FHRACT4              VARCHAR2(8),
+  PG2_FM4                  NUMBER(1),
+  PG2_POS4                 VARCHAR2(8),
+  PG2_SENTHOSP20           NUMBER(1),
+  PG2_TOPATIENT20          NUMBER(1),
+  PG2_COMMENT4             VARCHAR2(80),
+  PG2_RETIN4               VARCHAR2(8),
+  PG2_DATE5                DATE,
+  PG2_WT5                  VARCHAR2(5),
+  PG2_BMI5                 VARCHAR2(5),
+  PG2_BP5                  VARCHAR2(8),
+  PG2_URINE5               VARCHAR2(8),
+  PG2_URINEG5              VARCHAR2(8),
+  PG2_GEST5                VARCHAR2(8),
+  PG2_HT5                  VARCHAR2(8),
+  PG2_FHRACT5              VARCHAR2(8),
+  PG2_FM5                  NUMBER(1),
+  PG2_POS5                 VARCHAR2(8),
+  PG2_COMMENT5             VARCHAR2(80),
+  PG2_RETIN5               VARCHAR2(8),
+  PG2_DATE6                DATE,
+  PG2_WT6                  VARCHAR2(5),
+  PG2_BMI6                 VARCHAR2(5),
+  PG2_BP6                  VARCHAR2(8),
+  PG2_URINE6               VARCHAR2(8),
+  PG2_URINEG6              VARCHAR2(8),
+  PG2_GEST6                VARCHAR2(8),
+  PG2_HT6                  VARCHAR2(8),
+  PG2_FHRACT6              VARCHAR2(8),
+  PG2_FM6                  NUMBER(1),
+  PG2_POS6                 VARCHAR2(8),
+  PG2_COMMENT6             VARCHAR2(80),
+  PG2_RETIN6               VARCHAR2(8),
+  PG2_DATE7                DATE,
+  PG2_WT7                  VARCHAR2(5),
+  PG2_BMI7                 VARCHAR2(5),
+  PG2_BP7                  VARCHAR2(8),
+  PG2_URINE7               VARCHAR2(8),
+  PG2_URINEG7              VARCHAR2(8),
+  PG2_GEST7                VARCHAR2(8),
+  PG2_HT7                  VARCHAR2(8),
+  PG2_FHRACT7              VARCHAR2(8),
+  PG2_FM7                  NUMBER(1),
+  PG2_POS7                 VARCHAR2(8),
+  PG2_COMMENT7             VARCHAR2(80),
+  PG2_RETIN7               VARCHAR2(8),
+  PG2_DATE8                DATE,
+  PG2_WT8                  VARCHAR2(5),
+  PG2_BMI8                 VARCHAR2(5),
+  PG2_BP8                  VARCHAR2(8),
+  PG2_URINE8               VARCHAR2(8),
+  PG2_URINEG8              VARCHAR2(8),
+  PG2_GEST8                VARCHAR2(8),
+  PG2_HT8                  VARCHAR2(8),
+  PG2_FHRACT8              VARCHAR2(8),
+  PG2_FM8                  NUMBER(1),
+  PG2_POS8                 VARCHAR2(8),
+  PG2_COMMENT8             VARCHAR2(80),
+  PG2_RETIN8               VARCHAR2(8),
+  PG2_DATE9                DATE,
+  PG2_WT9                  VARCHAR2(5),
+  PG2_BMI9                 VARCHAR2(5),
+  PG2_BP9                  VARCHAR2(8),
+  PG2_URINE9               VARCHAR2(8),
+  PG2_URINEG9              VARCHAR2(8),
+  PG2_GEST9                VARCHAR2(8),
+  PG2_HT9                  VARCHAR2(8),
+  PG2_FHRACT9              VARCHAR2(8),
+  PG2_FM9                  NUMBER(1),
+  PG2_POS9                 VARCHAR2(8),
+  PG2_COMMENT9             VARCHAR2(80),
+  PG2_RETIN9               VARCHAR2(8),
+  PG2_DATE10               DATE,
+  PG2_WT10                 VARCHAR2(5),
+  PG2_BMI10                VARCHAR2(5),
+  PG2_BP10                 VARCHAR2(8),
+  PG2_URINE10              VARCHAR2(8),
+  PG2_URINEG10             VARCHAR2(8),
+  PG2_GEST10               VARCHAR2(8),
+  PG2_HT10                 VARCHAR2(8),
+  PG2_FHRACT10             VARCHAR2(8),
+  PG2_FM10                 NUMBER(1),
+  PG2_POS10                VARCHAR2(8),
+  PG2_COMMENT10            VARCHAR2(80),
+  PG2_RETIN10              VARCHAR2(8),
+  PG2_DATE11               DATE,
+  PG2_WT11                 VARCHAR2(5),
+  PG2_BMI11                VARCHAR2(5),
+  PG2_BP11                 VARCHAR2(8),
+  PG2_URINE11              VARCHAR2(8),
+  PG2_URINEG11             VARCHAR2(8),
+  PG2_GEST11               VARCHAR2(8),
+  PG2_HT11                 VARCHAR2(8),
+  PG2_FHRACT11             VARCHAR2(8),
+  PG2_FM11                 NUMBER(1),
+  PG2_POS11                VARCHAR2(8),
+  PG2_COMMENT11            VARCHAR2(80),
+  PG2_RETIN11              VARCHAR2(8),
+  PG2_DATE12               DATE,
+  PG2_WT12                 VARCHAR2(5),
+  PG2_BMI12                VARCHAR2(5),
+  PG2_BP12                 VARCHAR2(8),
+  PG2_URINE12              VARCHAR2(8),
+  PG2_URINEG12             VARCHAR2(8),
+  PG2_GEST12               VARCHAR2(8),
+  PG2_HT12                 VARCHAR2(8),
+  PG2_FHRACT12             VARCHAR2(8),
+  PG2_FM12                 NUMBER(1),
+  PG2_POS12                VARCHAR2(8),
+  PG2_COMMENT12            VARCHAR2(80),
+  PG2_RETIN12              VARCHAR2(8),
+  PG2_DATE13               DATE,
+  PG2_WT13                 VARCHAR2(5),
+  PG2_BMI13                VARCHAR2(5),
+  PG2_BP13                 VARCHAR2(8),
+  PG2_URINE13              VARCHAR2(8),
+  PG2_URINEG13             VARCHAR2(8),
+  PG2_GEST13               VARCHAR2(8),
+  PG2_HT13                 VARCHAR2(8),
+  PG2_FHRACT13             VARCHAR2(8),
+  PG2_FM13                 NUMBER(1),
+  PG2_POS13                VARCHAR2(8),
+  PG2_COMMENT13            VARCHAR2(80),
+  PG2_RETIN13              VARCHAR2(8),
+  PG2_DATE14               DATE,
+  PG2_WT14                 VARCHAR2(5),
+  PG2_BMI14                VARCHAR2(5),
+  PG2_BP14                 VARCHAR2(8),
+  PG2_URINE14              VARCHAR2(8),
+  PG2_URINEG14             VARCHAR2(8),
+  PG2_GEST14               VARCHAR2(8),
+  PG2_HT14                 VARCHAR2(8),
+  PG2_FHRACT14             VARCHAR2(8),
+  PG2_FM14                 NUMBER(1),
+  PG2_POS14                VARCHAR2(8),
+  PG2_COMMENT14            VARCHAR2(80),
+  PG2_RETIN14              VARCHAR2(8),
+  PG2_DATE15               DATE,
+  PG2_WT15                 VARCHAR2(5),
+  PG2_BMI15                VARCHAR2(5),
+  PG2_BP15                 VARCHAR2(8),
+  PG2_URINE15              VARCHAR2(8),
+  PG2_URINEG15             VARCHAR2(8),
+  PG2_GEST15               VARCHAR2(8),
+  PG2_HT15                 VARCHAR2(8),
+  PG2_FHRACT15             VARCHAR2(8),
+  PG2_FM15                 NUMBER(1),
+  PG2_POS15                VARCHAR2(8),
+  PG2_COMMENT15            VARCHAR2(80),
+  PG2_RETIN15              VARCHAR2(8),
+  PG2_DATE16               DATE,
+  PG2_WT16                 VARCHAR2(5),
+  PG2_BMI16                VARCHAR2(5),
+  PG2_BP16                 VARCHAR2(8),
+  PG2_URINE16              VARCHAR2(8),
+  PG2_URINEG16             VARCHAR2(8),
+  PG2_GEST16               VARCHAR2(8),
+  PG2_HT16                 VARCHAR2(8),
+  PG2_FHRACT16             VARCHAR2(8),
+  PG2_FM16                 NUMBER(1),
+  PG2_POS16                VARCHAR2(8),
+  PG2_COMMENT16            VARCHAR2(80),
+  PG2_RETIN16              VARCHAR2(8),
+  PG2_SIGNATURE            VARCHAR2(60),
+  PG3_DATE1                DATE,
+  PG3_WT1                  VARCHAR2(5),
+  PG3_BMI1                 VARCHAR2(5),
+  PG3_BP1                  VARCHAR2(8),
+  PG3_URINE1               VARCHAR2(8),
+  PG3_URINEG1              VARCHAR2(8),
+  PG3_GEST1                VARCHAR2(8),
+  PG3_HT1                  VARCHAR2(8),
+  PG3_FHRACT1              VARCHAR2(8),
+  PG3_FM1                  NUMBER(1),
+  PG3_POS1                 VARCHAR2(8),
+  PG3_COMMENT1             VARCHAR2(80),
+  PG3_RETIN1               VARCHAR2(8),
+  PG3_DATE2                DATE,
+  PG3_WT2                  VARCHAR2(5),
+  PG3_BMI2                 VARCHAR2(5),
+  PG3_BP2                  VARCHAR2(8),
+  PG3_URINE2               VARCHAR2(8),
+  PG3_URINEG2              VARCHAR2(8),
+  PG3_GEST2                VARCHAR2(8),
+  PG3_HT2                  VARCHAR2(8),
+  PG3_FHRACT2              VARCHAR2(8),
+  PG3_FM2                  NUMBER(1),
+  PG3_POS2                 VARCHAR2(8),
+  PG3_COMMENT2             VARCHAR2(80),
+  PG3_RETIN2               VARCHAR2(8),
+  PG3_DATE3                DATE,
+  PG3_WT3                  VARCHAR2(5),
+  PG3_BMI3                 VARCHAR2(5),
+  PG3_BP3                  VARCHAR2(8),
+  PG3_URINE3               VARCHAR2(8),
+  PG3_URINEG3              VARCHAR2(8),
+  PG3_GEST3                VARCHAR2(8),
+  PG3_HT3                  VARCHAR2(8),
+  PG3_FHRACT3              VARCHAR2(8),
+  PG3_FM3                  NUMBER(1),
+  PG3_POS3                 VARCHAR2(8),
+  PG3_COMMENT3             VARCHAR2(80),
+  PG3_RETIN3               VARCHAR2(8),
+  PG3_DATE4                DATE,
+  PG3_WT4                  VARCHAR2(5),
+  PG3_BMI4                 VARCHAR2(5),
+  PG3_BP4                  VARCHAR2(8),
+  PG3_URINE4               VARCHAR2(8),
+  PG3_URINEG4              VARCHAR2(8),
+  PG3_GEST4                VARCHAR2(8),
+  PG3_HT4                  VARCHAR2(8),
+  PG3_FHRACT4              VARCHAR2(8),
+  PG3_FM4                  NUMBER(1),
+  PG3_POS4                 VARCHAR2(8),
+  PG3_SENTHOSP20           NUMBER(1),
+  PG3_TOPATIENT20          NUMBER(1),
+  PG3_COMMENT4             VARCHAR2(80),
+  PG3_RETIN4               VARCHAR2(8),
+  PG3_DATE5                DATE,
+  PG3_WT5                  VARCHAR2(5),
+  PG3_BMI5                 VARCHAR2(5),
+  PG3_BP5                  VARCHAR2(8),
+  PG3_URINE5               VARCHAR2(8),
+  PG3_URINEG5              VARCHAR2(8),
+  PG3_GEST5                VARCHAR2(8),
+  PG3_HT5                  VARCHAR2(8),
+  PG3_FHRACT5              VARCHAR2(8),
+  PG3_FM5                  NUMBER(1),
+  PG3_POS5                 VARCHAR2(8),
+  PG3_COMMENT5             VARCHAR2(80),
+  PG3_RETIN5               VARCHAR2(8),
+  PG3_DATE6                DATE,
+  PG3_WT6                  VARCHAR2(5),
+  PG3_BMI6                 VARCHAR2(5),
+  PG3_BP6                  VARCHAR2(8),
+  PG3_URINE6               VARCHAR2(8),
+  PG3_URINEG6              VARCHAR2(8),
+  PG3_GEST6                VARCHAR2(8),
+  PG3_HT6                  VARCHAR2(8),
+  PG3_FHRACT6              VARCHAR2(8),
+  PG3_FM6                  NUMBER(1),
+  PG3_POS6                 VARCHAR2(8),
+  PG3_COMMENT6             VARCHAR2(80),
+  PG3_RETIN6               VARCHAR2(8),
+  PG3_DATE7                DATE,
+  PG3_WT7                  VARCHAR2(5),
+  PG3_BMI7                 VARCHAR2(5),
+  PG3_BP7                  VARCHAR2(8),
+  PG3_URINE7               VARCHAR2(8),
+  PG3_URINEG7              VARCHAR2(8),
+  PG3_GEST7                VARCHAR2(8),
+  PG3_HT7                  VARCHAR2(8),
+  PG3_FHRACT7              VARCHAR2(8),
+  PG3_FM7                  NUMBER(1),
+  PG3_POS7                 VARCHAR2(8),
+  PG3_COMMENT7             VARCHAR2(80),
+  PG3_RETIN7               VARCHAR2(8),
+  PG3_DATE8                DATE,
+  PG3_WT8                  VARCHAR2(5),
+  PG3_BMI8                 VARCHAR2(5),
+  PG3_BP8                  VARCHAR2(8),
+  PG3_URINE8               VARCHAR2(8),
+  PG3_URINEG8              VARCHAR2(8),
+  PG3_GEST8                VARCHAR2(8),
+  PG3_HT8                  VARCHAR2(8),
+  PG3_FHRACT8              VARCHAR2(8),
+  PG3_FM8                  NUMBER(1),
+  PG3_POS8                 VARCHAR2(8),
+  PG3_COMMENT8             VARCHAR2(80),
+  PG3_RETIN8               VARCHAR2(8),
+  PG3_DATE9                DATE,
+  PG3_WT9                  VARCHAR2(5),
+  PG3_BMI9                 VARCHAR2(5),
+  PG3_BP9                  VARCHAR2(8),
+  PG3_URINE9               VARCHAR2(8),
+  PG3_URINEG9              VARCHAR2(8),
+  PG3_GEST9                VARCHAR2(8),
+  PG3_HT9                  VARCHAR2(8),
+  PG3_FHRACT9              VARCHAR2(8),
+  PG3_FM9                  NUMBER(1),
+  PG3_POS9                 VARCHAR2(8),
+  PG3_COMMENT9             VARCHAR2(80),
+  PG3_RETIN9               VARCHAR2(8),
+  PG3_DATE10               DATE,
+  PG3_WT10                 VARCHAR2(5),
+  PG3_BMI10                VARCHAR2(5),
+  PG3_BP10                 VARCHAR2(8),
+  PG3_URINE10              VARCHAR2(8),
+  PG3_URINEG10             VARCHAR2(8),
+  PG3_GEST10               VARCHAR2(8),
+  PG3_HT10                 VARCHAR2(8),
+  PG3_FHRACT10             VARCHAR2(8),
+  PG3_FM10                 NUMBER(1),
+  PG3_POS10                VARCHAR2(8),
+  PG3_COMMENT10            VARCHAR2(80),
+  PG3_RETIN10              VARCHAR2(8),
+  PG3_DATE11               DATE,
+  PG3_WT11                 VARCHAR2(5),
+  PG3_BMI11                VARCHAR2(5),
+  PG3_BP11                 VARCHAR2(8),
+  PG3_URINE11              VARCHAR2(8),
+  PG3_URINEG11             VARCHAR2(8),
+  PG3_GEST11               VARCHAR2(8),
+  PG3_HT11                 VARCHAR2(8),
+  PG3_FHRACT11             VARCHAR2(8),
+  PG3_FM11                 NUMBER(1),
+  PG3_POS11                VARCHAR2(8),
+  PG3_COMMENT11            VARCHAR2(80),
+  PG3_RETIN11              VARCHAR2(8),
+  PG3_DATE12               DATE,
+  PG3_WT12                 VARCHAR2(5),
+  PG3_BMI12                VARCHAR2(5),
+  PG3_BP12                 VARCHAR2(8),
+  PG3_URINE12              VARCHAR2(8),
+  PG3_URINEG12             VARCHAR2(8),
+  PG3_GEST12               VARCHAR2(8),
+  PG3_HT12                 VARCHAR2(8),
+  PG3_FHRACT12             VARCHAR2(8),
+  PG3_FM12                 NUMBER(1),
+  PG3_POS12                VARCHAR2(8),
+  PG3_COMMENT12            VARCHAR2(80),
+  PG3_RETIN12              VARCHAR2(8),
+  PG3_DATE13               DATE,
+  PG3_WT13                 VARCHAR2(5),
+  PG3_BMI13                VARCHAR2(5),
+  PG3_BP13                 VARCHAR2(8),
+  PG3_URINE13              VARCHAR2(8),
+  PG3_URINEG13             VARCHAR2(8),
+  PG3_GEST13               VARCHAR2(8),
+  PG3_HT13                 VARCHAR2(8),
+  PG3_FHRACT13             VARCHAR2(8),
+  PG3_FM13                 NUMBER(1),
+  PG3_POS13                VARCHAR2(8),
+  PG3_COMMENT13            VARCHAR2(80),
+  PG3_RETIN13              VARCHAR2(8),
+  PG3_DATE14               DATE,
+  PG3_WT14                 VARCHAR2(5),
+  PG3_BMI14                VARCHAR2(5),
+  PG3_BP14                 VARCHAR2(8),
+  PG3_URINE14              VARCHAR2(8),
+  PG3_URINEG14             VARCHAR2(8),
+  PG3_GEST14               VARCHAR2(8),
+  PG3_HT14                 VARCHAR2(8),
+  PG3_FHRACT14             VARCHAR2(8),
+  PG3_FM14                 NUMBER(1),
+  PG3_POS14                VARCHAR2(8),
+  PG3_COMMENT14            VARCHAR2(80),
+  PG3_RETIN14              VARCHAR2(8),
+  PG3_DATE15               DATE,
+  PG3_WT15                 VARCHAR2(5),
+  PG3_BMI15                VARCHAR2(5),
+  PG3_BP15                 VARCHAR2(8),
+  PG3_URINE15              VARCHAR2(8),
+  PG3_URINEG15             VARCHAR2(8),
+  PG3_GEST15               VARCHAR2(8),
+  PG3_HT15                 VARCHAR2(8),
+  PG3_FHRACT15             VARCHAR2(8),
+  PG3_FM15                 NUMBER(1),
+  PG3_POS15                VARCHAR2(8),
+  PG3_COMMENT15            VARCHAR2(80),
+  PG3_RETIN15              VARCHAR2(8),
+  PG3_DATE16               DATE,
+  PG3_WT16                 VARCHAR2(5),
+  PG3_BMI16                VARCHAR2(5),
+  PG3_BP16                 VARCHAR2(8),
+  PG3_URINE16              VARCHAR2(8),
+  PG3_URINEG16             VARCHAR2(8),
+  PG3_GEST16               VARCHAR2(8),
+  PG3_HT16                 VARCHAR2(8),
+  PG3_FHRACT16             VARCHAR2(8),
+  PG3_FM16                 NUMBER(1),
+  PG3_POS16                VARCHAR2(8),
+  PG3_COMMENT16            VARCHAR2(80),
+  PG3_RETIN16              VARCHAR2(8),
+  PG3_SIGNATURE            VARCHAR2(60)
+)
+;
+alter table FORMBCAR2007
   add primary key (ID);
 
 prompt
@@ -11561,6 +12380,25 @@ alter table REPORT_DATE
   add constraint PK_REPORT_DATE primary key (SESSIONID);
 
 prompt
+prompt Creating table REPORT_DATE_SP
+prompt =============================
+prompt
+create table REPORT_DATE_SP
+(
+  REPORTNO    NUMBER not null,
+  STARTDATE   DATE,
+  ENDDATE     DATE,
+  ASOFDATE    DATE,
+  STARTDATE_S VARCHAR2(8),
+  ENDDATE_S   VARCHAR2(8),
+  ASOFDATE_S  VARCHAR2(8),
+  SPTORUN     VARCHAR2(32)
+)
+;
+alter table REPORT_DATE_SP
+  add constraint PK_REPORT_DATE_SP_REPORTNO primary key (REPORTNO);
+
+prompt
 prompt Creating table REPORT_DOCTEXT
 prompt =============================
 prompt
@@ -11766,7 +12604,7 @@ create table REPORT_TEMPLATE
   ENDPAYPERIOD   VARCHAR2(10),
   LOGINID        VARCHAR2(20),
   UPDATEDATE     DATE,
-  PRIVATEYN      VARCHAR2(1)
+  PRIVATEYN      NUMBER(1) not null
 )
 ;
 alter table REPORT_TEMPLATE
@@ -11786,7 +12624,7 @@ create table REPORT_TEMPLATE_CRITERIA
   OPERATORS  VARCHAR2(10),
   VAL        VARCHAR2(40),
   VALDESC    VARCHAR2(120),
-  REQUIRED   VARCHAR2(1)
+  REQUIRED   NUMBER(1)
 )
 ;
 alter table REPORT_TEMPLATE_CRITERIA
@@ -11805,19 +12643,6 @@ create table REPORT_TEMPLATE_ORG
 ;
 alter table REPORT_TEMPLATE_ORG
   add constraint PK_REPORT_TEMPLATE_ORG primary key (TEMPLATENO, COUNTER);
-
-prompt
-prompt Creating table REPORT_TIME
-prompt ==========================
-prompt
-create table REPORT_TIME
-(
-  RECORDID   NUMBER(10) not null,
-  REPORTNO   NUMBER(10) not null,
-  USERID     CHAR(10),
-  REPORTTIME DATE
-)
-;
 
 prompt
 prompt Creating table ROOM
@@ -11981,7 +12806,7 @@ create table SCHEDULETEMPLATE
   PROVIDER_NO VARCHAR2(6) not null,
   NAME        VARCHAR2(20) not null,
   SUMMARY     VARCHAR2(80),
-  TIMECODE    VARCHAR2(255)
+  TIMECODE    VARCHAR2(4000)
 )
 ;
 alter table SCHEDULETEMPLATE
@@ -12279,7 +13104,7 @@ prompt
 create table SYSTEM_MESSAGE
 (
   ID            NUMBER(10) not null,
-  MESSAGE       VARCHAR2(4000),
+  MESSAGE       VARCHAR2(4000) not null,
   CREATION_DATE DATE default '01-JAN-1900',
   EXPIRY_DATE   DATE default '01-JAN-1900'
 )
@@ -12462,7 +13287,7 @@ prompt
 create sequence HIBERNATE_SEQUENCE
 minvalue 1
 maxvalue 999999999999999999999999999
-start with 204061
+start with 200741
 increment by 1
 cache 20;
 
@@ -12492,12 +13317,39 @@ prompt
 prompt Creating view V_LOOKUP_TABLE
 prompt ============================
 prompt
-create or replace view v_lookup_table as
-select 'BED' prefix, id, description, rownum lineID
-    from V_LK_NAME
+CREATE OR REPLACE VIEW V_LOOKUP_TABLE AS
+select 'BTY' prefix, to_char(BED_TYPE_ID) code, NAME description, '' parentcode,1 active,rownum lineID
+    from BED_TYPE
 union
-select 'ORG' prefix, id, description, rownum lineID
+select 'BED' prefix, to_char(BED_ID) code, NAME description, to_char(ROOM_ID) parentcode, active,rownum lineID
+    from BED
+union
+select 'ORG' prefix, to_char(id), description,  null parentcode,1, rownum lineID
     from V_LK_ORG
+union
+select 'ROL', role_name,role_name,  null parentcode, 1,rownum
+       from SECROLE
+union
+select 'ROC', to_char(role_id), name,  null parentcode,1,rownum
+       from CAISI_ROLE
+union
+select 'QGV',QGVIEWCODE,DESCRIPTION,GROUPCODE,1,rownum
+       FROM REPORT_QGVIEWSUMMARY
+union
+SELECT 'RPG',to_char(ID),DESCRIPTION,null,1,orderbyindex
+       FROM REPORT_LK_REPORTGROUP
+union
+SELECT 'LKT',TABLEID,DESCRIPTION,to_char(MODULEID),ACTIVEYN,rownum
+       FROM APP_LOOKUPTABLE
+union
+SELECT 'MOD',to_char(module_Id),description, null, 1,rownum
+from APP_MODULE
+union
+SELECT 'ISS',to_char(ISSUE_ID),DESCRIPTION,ROLE,1,rowNum
+FROM ISSUE
+Union
+SELECT 'ISG',to_char(id),Name,null,1, rownum
+from ISSUEGROUP
 /
 
 prompt
@@ -12517,7 +13369,8 @@ a.client_id client_id,
   d.name room_name,
   e.name client_prog_st_name,
   f.last_name last_name,
-  f.first_name first_name
+  f.first_name first_name,
+  b.agency_id orgCd
 FROM
   admission a,
   program b,
@@ -12525,6 +13378,7 @@ FROM
   room d,
   program_clientstatus e,
   demographic f
+
 WHERE
      a.program_id=b.program_id
      and
@@ -12538,54 +13392,34 @@ WHERE
 /
 
 prompt
-prompt Creating view V_REP_INTAKE
+prompt Creating view V_REP_CLIENT
 prompt ==========================
 prompt
-CREATE OR REPLACE VIEW V_REP_INTAKE AS
-SELECT
-a.client_id client_id,
-  a.admission_date admission_date,
-  a.discharge_date discharge_date,
-  a.admission_status,
-  b.name program_name,
-  b.descr program_description,
-  b.address prog_address,
-  b.phone prog_phone,
-  b.emergency_number prog_emrg_num,
-  b.location prog_location,
-  b.max_allowed prog_max_occ,
-  b.num_of_members prog_numb_members,
-  b.program_status,
-  c.bed_id bed_id,
-  c.name bed_name,
-  d.room_id room_id,
-  d.name room_name,
-  e.name client_prog_st_name,
-  f.last_name last_name,
-  f.first_name first_name,
-  f.address demo_address,
-  f.city demo_city,
-  f.province demo_prov,
-  f.postal demo_postal,
-  f.phone demo_phone,
-  f.year_of_birth||f.month_of_birth||f.date_of_birth DemoDOByyyymmdd
-FROM
-  admission a,
-  program b,
-  bed c,
-  room d,
-  program_clientstatus e,
-  demographic f
-WHERE
-     a.program_id=b.program_id
-     and
-     a.program_id=d.program_id
-     and
-     a.program_id=e.program_id(+)
-     and
-     d.room_id=c.room_id
-     and
-     a.client_id=f.demographic_no
+CREATE OR REPLACE VIEW V_REP_CLIENT AS
+(SELECT DEMOGRAPHIC.LAST_NAME LAST_NAME,  
+DEMOGRAPHIC.FIRST_NAME FIRST_NAME,  
+DEMOGRAPHIC.ADDRESS ADDRESS,  
+DEMOGRAPHIC.CITY CITY,  
+DEMOGRAPHIC.PROVINCE PROVINCE,  
+DEMOGRAPHIC.POSTAL POSTAL,  
+DEMOGRAPHIC.ALIAS ALIAS,  
+INTAKE.INTAKE_ID INTAKE_ID,  
+INTAKE.CLIENT_ID CLIENT_ID,  
+INTAKE.STAFF_ID STAFF_ID,  
+INTAKE.CREATION_DATE CREATION_DATE 
+FROM QUATROSHELTER.INTAKE INNER JOIN DEMOGRAPHIC ON INTAKE.CLIENT_ID=DEMOGRAPHIC.DEMOGRAPHIC_NO )
+/
+
+prompt
+prompt Creating view V_REP_USERLIST
+prompt ============================
+prompt
+CREATE OR REPLACE VIEW V_REP_USERLIST AS
+(SELECT DISTINCT PROVIDER.PROVIDER_NO PROVIDER_NO,  
+PROVIDER.LAST_NAME LAST_NAME,  
+PROVIDER.FIRST_NAME FIRST_NAME,  
+SECUSERROLE.ROLE_NAME ROLE_NAME 
+FROM QUATROSHELTER.PROVIDER INNER JOIN SECUSERROLE ON PROVIDER.PROVIDER_NO=SECUSERROLE.PROVIDER_NO )
 /
 
 prompt
@@ -12642,13 +13476,13 @@ prompt ======================
 prompt
 create or replace function LEFT(
        p_str varchar2,
-       p_len NUMBER
+       p_len NUMBER 
  ) return varchar2 is
   Result varchar2(4000);
 begin
   IF NOT p_str IS NULL THEN
       RESULT := SUBSTR(p_str,1,p_len);
-  END IF;
+  END IF;     
   return(Result);
 end LEFT;
 /
@@ -12685,6 +13519,89 @@ end TO_DAYS;
 /
 
 prompt
+prompt Creating procedure SP_LOOKUPTABLES_I
+prompt ====================================
+prompt
+CREATE OR REPLACE PROCEDURE "SP_LOOKUPTABLES_I"
+(
+  p_moduleId varchar2,
+  p_tableid varchar2,
+	p_tablename varchar2,
+  p_description varchar2
+)
+AS
+
+BEGIN
+
+	INSERT INTO APP_LOOKUPTABLE
+	(TABLEID,MODULEID,TABLE_NAME,DESCRIPTION,ISTREE,TREECODE_LENGTH,ACTIVEYN)
+	VALUES (p_tableid,p_moduleid,p_tablename, p_description,'0',0,'1');
+
+	INSERT INTO APP_LOOKUPTABLE_FIELDS
+	(TABLEID,FIELDNAME,FIELDSQL,EDITYN,FIELDTYPE)
+	SELECT p_tableId, b.COLUMN_NAME, b.COLUMN_NAME,'1',DECODE(b.DATA_TYPE,'VARCHAR2','S','DATE','D','N')
+	FROM ALL_OBJECTS a, USER_TAB_COLUMNS b
+  WHERE a.OBJECT_NAME = b.TABLE_NAME
+  AND a.object_type IN ('VIEW','TABLE')
+	AND a.Object_name = p_tablename;
+EXCEPTION
+         WHEN OTHERS THEN
+              dbms_output.PUT_LINE ('FAILED to add the TABLE, the TABLE ID MAY ALREADY BEEN USED');
+END;
+/
+
+prompt
+prompt Creating procedure SP_QGVIEW_OBJECTS_I
+prompt ======================================
+prompt
+CREATE OR REPLACE PROCEDURE "SP_QGVIEW_OBJECTS_I"
+(
+	p_name varchar2
+)
+AS
+	v_QGVIEWNO integer;
+
+BEGIN
+
+  BEGIN
+	SELECT QGVIEWNO INTO v_QGVIEWNO
+	FROM  REPORT_QGVIEWSUMMARY
+	where qgviewcode = p_name;
+  EXCEPTION
+           WHEN OTHERS THEN
+                v_QGVIEWNO := 0;
+  END;
+
+	IF (v_QGVIEWNO > 0)  THEN
+		DELETE REPORT_QGVIEWSUMMARY
+		where qgviewcode = p_name;
+
+		DELETE REPORT_QGVIEWFIELD
+		where qgviewno= v_QGVIEWNO;
+	END IF;
+
+	SELECT HIBERNATE_SEQUENCE.NEXTVAL INTO v_QGVIEWNO
+  FROM DUAL;
+
+	INSERT INTO REPORT_QGVIEWSUMMARY
+	(QGVIEWNO,QGVIEWCODE, GROUPCODE, MASTERTYPE, UPDATEDBY, UPDATEDDATE, NOTE, ACTIVEYN, SECUREYN, DBENTITY, REFVIEWS, OBJECT_TYPE)
+	SELECT v_QGVIEWNO,OBJECT_NAME, '90','M','oscardoc',SYSDATE, 'intial setup','Y','N',OBJECT_name,OBJECT_name,OBJECT_TYPE
+	FROM ALL_OBJECTS
+	where object_name = p_name AND object_type in ('TABLE','VIEW');
+
+	INSERT INTO REPORT_QGVIEWFIELD
+	(QGVIEWNO,FIELDNAME, FIELDNO, FIELDTYPECODE,SOURCETXT, NOTE)
+	SELECT v_QGVIEWNO, b.COLUMN_NAME, b.COLUMN_ID,
+  DECODE(b.DATA_TYPE,'VARCHAR2','S','DATE','D','N'), b.COLUMN_NAME, 'initial set up'
+	FROM ALL_OBJECTS a, USER_TAB_COLUMNS b
+  WHERE a.OBJECT_NAME = b.TABLE_NAME
+  AND a.object_type IN ('VIEW','TABLE')
+	AND a.Object_name = p_name;
+
+END;
+/
+
+prompt
 prompt Creating trigger TRI_BILLINGREFERRAL_NO
 prompt =======================================
 prompt
@@ -12713,7 +13630,7 @@ DECLARE
        IDX NUMBER;
 BEGIN
      IF :new.DEMOGRAPHIC_NO IS NULL THEN
-          SELECT HIBERNATE_SEQUENCE.NEXTVAL INTO IDX FROM DUAL;
+          SELECT HIBERNATE_SEQUENCE.NEXTVAL INTO IDX FROM DUAL; 
           :new.DEMOGRAPHIC_NO := IDX;
      END IF;
 END;
@@ -12819,7 +13736,7 @@ DECLARE
        IDX NUMBER;
 BEGIN
 
-     SELECT HIBERNATE_SEQUENCE.NEXTVAL INTO IDX FROM DUAL;
+     SELECT HIBERNATE_SEQUENCE.NEXTVAL INTO IDX FROM DUAL; 
      :new.ID := IDX;
 END;
 /
@@ -12836,7 +13753,7 @@ DECLARE
        IDX NUMBER;
 BEGIN
 
-     SELECT HIBERNATE_SEQUENCE.NEXTVAL INTO IDX FROM DUAL;
+     SELECT HIBERNATE_SEQUENCE.NEXTVAL INTO IDX FROM DUAL; 
      :new.security_no := IDX;
 END;
 /
