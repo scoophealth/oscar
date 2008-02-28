@@ -16,8 +16,8 @@
 </style>
 </head>
 <body>
-<html:form action="/QuatroLookup/LookupList.do">
-<display:table class="simple" style="width:100%;" cellspacing="0" cellpadding="0" id="lookup" name="quatroLookupListForm.lookups" export="false" pagesize="0" requestURI="/PMmodule/Reports/QuatroReportList">
+<html:form action="/Lookup/LookupList.do">
+<display:table class="simple" style="width:100%;" cellspacing="0" cellpadding="0" id="lookup" name="lookupListForm.lookups" export="false" pagesize="0" requestURI="/PMmodule/Reports/QuatroReportList">
     <display:setProperty name="paging.banner.placement" value="bottom" />
     <display:setProperty name="paging.banner.item_name" value="agency" />
     <display:setProperty name="paging.banner.items_name" value="facilities" />
@@ -28,9 +28,9 @@
     </display:column>
     <display:column sortable="false" title="Description">
         <a href='javascript:selectMe("<c:out value="${lookup.code}" />", "<c:out value="${lookup.description}" />", 
-        "<c:out value="${quatroLookupListForm.openerFormName}" />", 
-        "<c:out value="${quatroLookupListForm.openerCodeElementName}" />", 
-        "<c:out value="${quatroLookupListForm.openerDescElementName}" />");'><c:out value="${lookup.description}"/> </a>
+        "<c:out value="${lookupListForm.openerFormName}" />", 
+        "<c:out value="${lookupListForm.openerCodeElementName}" />", 
+        "<c:out value="${lookupListForm.openerDescElementName}" />");'><c:out value="${lookup.description}"/> </a>
     </display:column>
 
 </display:table>

@@ -27,6 +27,7 @@
 
 <title>Lookup Code Edit</title>
 <head>
+<script type="text/javascript" src='<c:out value="${ctx}"/>/js/quatroLookup.js'></script>
 </head>
 <!-- html:form action="/caisiEditor" focus="caisiEditor.code" onsubmit="return validateIssueAdminForm(this)" -->
 <html:form action="/Lookup/LookupCodeEdit">
@@ -55,9 +56,9 @@
 	<tr><td>&nbsp;</td></tr>
 </table>
 </logic:notEmpty>
-<table>
+<table width="100%">
 <tr>
-     <th>Category: </th>
+     <th width="20%">Category: </th>
      <th align="left"><bean:write name="lookupCodeEditForm" property="tableDef.moduleName" /></th>
 </tr>
 <tr>
