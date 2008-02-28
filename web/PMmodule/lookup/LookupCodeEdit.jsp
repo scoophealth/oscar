@@ -81,7 +81,9 @@
          </logic:notEmpty>
        </logic:equal>  
        <logic:equal name="field" property="fieldType" value="D">
-         <quatro:datePickerTag name="field" property="val" indexed="true" openerForm="lookupCodeEditForm"></quatro:datePickerTag>
+       	 <bean:define id="dateVal" name="field" property="val"></bean:define>
+         <quatro:datePickerTag name="field" property="val" indexed="true" openerForm="lookupCodeEditForm" 
+         value="<%=oscar.MyDateFormat.getMyStandardDate((String)dateVal)%>"></quatro:datePickerTag>
        </logic:equal>  
        <logic:equal name="field" property="fieldType" value="N">
           <html:text name="field" property="val" indexed="true"/>
