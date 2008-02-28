@@ -25,6 +25,7 @@ package org.oscarehr.casemgmt.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,9 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.Date;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -45,34 +44,44 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.caisi.integrator.message.demographics.GetIssuesNotesResponse;
-import org.caisi.integrator.model.transfer.IssueTransfer;
 import org.caisi.model.CustomFilter;
-import org.caisi.service.CaisiRoleManager;
+import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.service.IntegratorManager;
-import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.common.model.UserProperty;
-import org.oscarehr.casemgmt.model.EncounterWindow;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
+import org.oscarehr.casemgmt.model.EncounterWindow;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
+import org.oscarehr.common.model.UserProperty;
 
 import oscar.OscarProperties;
-import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.pageUtil.RxSessionBean;
 
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
     private static Log log = LogFactory.getLog(CaseManagementViewAction.class);
 
-    private IntegratorManager integratorManager=null;
-    
+    private ProgramDao programDao = null;
+    private FacilityDAO facilityDAO = null;
+    private IntegratorManager integratorManager = null;
+
     public void setIntegratorManager(IntegratorManager integratorManager) {
         this.integratorManager = integratorManager;
+    }
+
+    public void setFacilityDAO(FacilityDAO facilityDAO) {
+        this.facilityDAO = facilityDAO;
+    }
+
+    public void setProgramDao(ProgramDao programDao) {
+        this.programDao = programDao;
     }
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -279,11 +288,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             if (roleId != null && roleId.length > 0) notes = applyRoleFilter(notes, roleId);
 
             // RFQ style filtering, probably not wanted by anyone else on earth.
-            if (OscarProperties.getInstance().getBooleanProperty("FILTER_CME_NOTES_FOR_FACILITY", "true"))
-            {
-                notes=facilityFiltering(providerNo, notes);
+            if (OscarProperties.getInstance().getBooleanProperty("FILTER_CME_NOTES_FOR_FACILITY", "true")) {
+                notes = facilityFiltering(getProviderId(request), notes);
             }
-            
+
             this.caseManagementMgr.getEditors(notes);
 
             /*
@@ -303,15 +311,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             // UCF
             request.setAttribute("survey_list", surveyMgr.getAllForms());
             // request.setAttribute("surveys", surveyManager.getForms(demographicNo));
-            
+
             // remote issues
-            GetIssuesNotesResponse issuesAndNotes=integratorManager.getIssueNotes(Long.parseLong(demoNo));
+            GetIssuesNotesResponse issuesAndNotes = integratorManager.getIssueNotes(Long.parseLong(demoNo));
             if (issuesAndNotes == null) {
-            	request.setAttribute("remoteIssues",null);
+                request.setAttribute("remoteIssues", null);
             }
-            else
-            {
-            	request.setAttribute("remoteIssues",issuesAndNotes.getIssues());
+            else {
+                request.setAttribute("remoteIssues", issuesAndNotes.getIssues());
             }
         }
 
@@ -394,14 +401,42 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
     }
 
-    private List<CaseManagementNote> facilityFiltering(String providerNo, List<CaseManagementNote> notes) {
+    private List<CaseManagementNote> facilityFiltering(int providerNo, List<CaseManagementNote> notes) {
 
-        // This method should do the funny filtering by facility, it's a twisted algorithm 
+        // This method should do the funny filtering by facility, it's a twisted algorithm
         // which I won't try to explain but it's origin is the Toronto RFQ so... go figure.
+
+        ArrayList<CaseManagementNote> results = new ArrayList<CaseManagementNote>();
+        List<Long> providersFacilityIds = facilityDAO.getFacilityIdsByProviderId(providerNo);
+        List<Integer> providersProgramIds = programDao.getProgramIdsByProviderId(providerNo);
+
+        for (CaseManagementNote caseManagementNote : notes) {
+            // do some filtering here
+            String programId = caseManagementNote.getProgram_no();
+            Program program = programMgr.getProgram(programId);
+
+            if (Program.BED_TYPE.equals(program.getType())) {
+                List<Long> noteFacilities = facilityDAO.getFacilityIdsByNoteId(caseManagementNote.getId());
+                if (facilityHasIntersection(providersFacilityIds, noteFacilities)) results.add(caseManagementNote);
+            }
+            else if (Program.SERVICE_TYPE.equals(program.getType())) {
+                int programIdOfNote=programDao.getProgramIdByNoteId(caseManagementNote.getId());
+                if (providersProgramIds.contains(programIdOfNote)) results.add(caseManagementNote);
+            }
+            else {
+                // don't add it at all. if in doubt don't show note, that's more secure than if in doubt show it.
+            }
+        }
+
+        return results;
+    }
+
+    private boolean facilityHasIntersection(List<Long> providersFacilityIds, List<Long> noteFacilities) {
+        for (Long id : noteFacilities) {
+            if (providersFacilityIds.contains(id)) return(true);
+        }
         
-        
-        
-        return notes;
+        return(false);
     }
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {

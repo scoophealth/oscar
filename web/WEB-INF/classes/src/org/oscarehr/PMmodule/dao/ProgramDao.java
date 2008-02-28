@@ -36,6 +36,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;
+import oscar.util.SqlUtils;
 
 public class ProgramDao extends HibernateDaoSupport {
 
@@ -366,10 +367,11 @@ public class ProgramDao extends HibernateDaoSupport {
     public Program getHoldingTankProgram() {
         Program result = null;
 
-        List results = this.getHibernateTemplate().find("from Program p where p.holdingTank = true");
+        @SuppressWarnings("unchecked")
+        List<Program> results = getHibernateTemplate().find("from Program p where p.holdingTank = true");
 
         if (!results.isEmpty()) {
-            result = (Program) results.get(0);
+            result = results.get(0);
         }
 
         if (log.isDebugEnabled()) {
@@ -394,4 +396,19 @@ public class ProgramDao extends HibernateDaoSupport {
         return results;
     }
 
+    public int getProgramIdByNoteId(long note_id)
+    {
+        // select note_id,program_no from casemgmt_note;
+        
+        String sqlCommand="select program_no from casemgmt_note where note_id="+note_id;
+        return(SqlUtils.selectInt(sqlCommand));
+    }
+    
+    public List<Integer> getProgramIdsByProviderId(int provider_id)
+    {
+        // select provider_no,program_provider.program_id from program_provider;
+
+        String sqlCommand="select program_id from program_provider where provider_no="+provider_id;
+        return(SqlUtils.selectIntList(sqlCommand));
+    }
 }

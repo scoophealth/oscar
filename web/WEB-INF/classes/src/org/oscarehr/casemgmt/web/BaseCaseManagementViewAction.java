@@ -120,6 +120,10 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 		return providerNo;
 	}
 	
+    public int getProviderId(HttpServletRequest request){
+        return(Integer.parseInt(getProviderNo(request)));
+    }
+    
 	public String getProviderName(HttpServletRequest request){
 		String providerNo=getProviderNo(request);
 		if (providerNo==null)

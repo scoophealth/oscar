@@ -47,11 +47,14 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -591,52 +594,7 @@ public class SqlUtils {
                 logger.warn("Error closing Statement.", e);
             }
         }
-    }
-
-//Use Prepared Statement and ? parameter for String, Date and int value, don't try to convert Date to String in this way,
-// not consistence on different computers    
-/*    
-    public static String isoToOracleDate(String isoDate) throws ParseException
-    {
-        if (isoDate==null) return(null);
-        
-        SimpleDateFormat isoFormat=new SimpleDateFormat("yyyy-MM-dd");
-        java.util.Date date=isoFormat.parse(isoDate);
-        
-        SimpleDateFormat oracleFormat=new SimpleDateFormat("dd-MMM-yyyy");
-        return(oracleFormat.format(date));
-    }
-*/    
-    /**
-     * Hey! that's not an iso date format.
-     */
-/*  
-    public static String isoToOracleDate2(String isoDate) throws ParseException
-    {
-        if (isoDate==null) return(null);
-        
-        SimpleDateFormat isoFormat=new SimpleDateFormat("yyyy/MM/dd");
-        java.util.Date date=isoFormat.parse(isoDate);
-        
-        SimpleDateFormat oracleFormat=new SimpleDateFormat("dd-MMM-yyyy");
-        return(oracleFormat.format(date));
-    }
-*/    
-    /**
-     * Hey! that's not an iso date format.
-     */
-/*    
-    public static String isoToOracleDate3(String isoDate) throws ParseException
-    {
-        if (isoDate==null) return(null);
-        
-        SimpleDateFormat isoFormat=new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-        java.util.Date date=isoFormat.parse(isoDate);
-        
-        SimpleDateFormat oracleFormat=new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
-        return(oracleFormat.format(date));
-    }
-*/    
+    } 
     
     public static String addOneDay(String oldDate) throws ParseException
     {
@@ -678,5 +636,81 @@ public class SqlUtils {
         if (databaseType==DatabaseTypes.POSTGRESQL) return(column+" ilike '"+pattern+'\'');
         if (databaseType==DatabaseTypes.ORACLE) return("regexp_like("+column+",'"+pattern+"','i')");
         else throw(new IllegalArgumentException("Need a new databaseType added : "+databaseType));
+    }
+    
+    public static List<Long> selectLongList(String sqlCommand)
+    {
+        Connection c=null;
+        PreparedStatement ps=null;
+        ResultSet rs=null;
+        try
+        {
+            c=DbConnectionFilter.getThreadLocalDbConnection();
+            ps=c.prepareStatement(sqlCommand);
+            rs=ps.executeQuery();
+            
+            ArrayList<Long> al=new ArrayList<Long>();
+            
+            while (rs.next()) al.add(rs.getLong(1));
+            
+            return(al);
+        }
+        catch (SQLException e) {
+            throw(new PersistenceException(e));
+        }
+        finally
+        {
+            closeResources(c, ps, rs);
+        }
+    }
+
+    public static int selectInt(String sqlCommand)
+    {
+        Connection c=null;
+        PreparedStatement ps=null;
+        ResultSet rs=null;
+        try
+        {
+            c=DbConnectionFilter.getThreadLocalDbConnection();
+            ps=c.prepareStatement(sqlCommand);
+            rs=ps.executeQuery();
+            
+            rs.next();
+            
+            return(rs.getInt(1));
+        }
+        catch (SQLException e) {
+            throw(new PersistenceException(e));
+        }
+        finally
+        {
+            closeResources(c, ps, rs);
+        }
+    }
+
+    public static List<Integer> selectIntList(String sqlCommand)
+    {
+        Connection c=null;
+        PreparedStatement ps=null;
+        ResultSet rs=null;
+        try
+        {
+            c=DbConnectionFilter.getThreadLocalDbConnection();
+            ps=c.prepareStatement(sqlCommand);
+            rs=ps.executeQuery();
+            
+            ArrayList<Integer> al=new ArrayList<Integer>();
+            
+            while (rs.next()) al.add(rs.getInt(1));
+            
+            return(al);
+        }
+        catch (SQLException e) {
+            throw(new PersistenceException(e));
+        }
+        finally
+        {
+            closeResources(c, ps, rs);
+        }
     }
 }
