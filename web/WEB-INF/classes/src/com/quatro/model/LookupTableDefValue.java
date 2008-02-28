@@ -1,10 +1,13 @@
 package com.quatro.model;
 
 public class LookupTableDefValue {
+   String moduleId;
+   String moduleName;
    String tableId;
    String tableName;
    String description;
    boolean active;
+   boolean tree;
    int treeCodeLength;
 
    public boolean isActive() {
@@ -46,5 +49,28 @@ public class LookupTableDefValue {
    public void setTreeCodeLength(int treeCodeLength) {
 	 this.treeCodeLength = treeCodeLength;
    }
+
+	public String getModuleName() {
+		return moduleName;
+	}
+	
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+	}
+	public String getModuleId() {
+		return moduleId;
+	}
+	
+	public void setModuleId(String moduleId) {
+		this.moduleId = moduleId;
+	}
+
+	public boolean isTree() {
+		return tree;
+	}
+
+	public void setTree(boolean tree) {
+		this.tree = tree;
+	}
 
 }

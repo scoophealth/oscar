@@ -16,6 +16,25 @@ public class Utility {
             return false;
         }
     }
+    public static boolean IsDate(String pStr)
+    {
+    	java.sql.Date date = oscar.MyDateFormat.getSysDate(pStr);
+    	return date != null;
+    }
+    public static boolean IsInt(String pStr)
+    {
+    	boolean isInt = true;
+    	try 
+    	{
+    		Integer i = Integer.valueOf(pStr);
+    		isInt = (i != null);
+    	}
+    	catch (Exception e)
+    	{
+    		isInt = false;
+    	}
+    	return isInt;
+    }
 
     // Convert dd/mm/yyyy d/m/yyyy to System format
     public static Date GetSysDate(String pDate) // throws Exception

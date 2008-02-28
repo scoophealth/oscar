@@ -3,10 +3,12 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.LookupCodeValue" table="V_Lookup_Table">
+	<class name="com.quatro.model.LookupCodeValue" table="V_Lookup_Table" mutable="false">
 		<id name="lineId" />
 		<property name="prefix" />
-        <property name="code" column="code" /> 
+        <property name="code" /> 
         <property name="description" /> 
+        <property name="parentCode"/>
+        <property name="active" type="boolean"/>
 	</class>
 </hibernate-mapping>

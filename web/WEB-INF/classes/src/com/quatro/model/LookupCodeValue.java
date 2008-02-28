@@ -1,5 +1,5 @@
 package com.quatro.model;
-
+import java.util.List;
 public class LookupCodeValue {
 	private int lineId;
 	private String prefix;
@@ -11,8 +11,15 @@ public class LookupCodeValue {
     private Boolean selectable;
 	private String parentCode;
     private int orderByIndex;
- 
-    public Boolean isActive() {
+    private List associates;
+    
+    public List getAssociates() {
+		return associates;
+	}
+	public void setAssociates(List associates) {
+		this.associates = associates;
+	}
+	public Boolean isActive() {
 		return active;
 	}
 	public void setActive(Boolean active) {
@@ -73,5 +80,8 @@ public class LookupCodeValue {
 		this.lineId = lineId;
 	}
     
-
+	public String getCodeId()
+	{
+		return this.prefix + ":" + this.code;
+	}
 }

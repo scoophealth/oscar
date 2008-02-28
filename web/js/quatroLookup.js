@@ -52,7 +52,7 @@ function showLookup(tableId, grandParentName, parentName, openerFormName, codeFi
         queryString += "&dc=1";
     }
         
-	var lookupURL = "/" + appRoot.replace("/", "") + "/QuatroLookup/LookupList.do" + queryString; 
+	var lookupURL = "/" + appRoot.replace("/", "") + "/Lookup/LookupList.do" + queryString; 
 
 	delaySearch =false;
 	top.childWin = window.open(lookupURL,"_blank","resizable=yes,scrollbars=yes,status=yes,width=600,height=450,top=120, left=200");
