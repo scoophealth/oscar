@@ -270,7 +270,8 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.facilityMessage" rights="r" reverse="<%=false%>" >
 		  <li><a href="../FacilityMessage.do?">Facilities Messages</a></li>
 		  </security:oscarSec>
-		  <li><a href="../CaisiEditor.do?method=list">Caisi List Editor</a></li>
+<!-- 		  <li><a href="../CaisiEditor.do?method=list">Caisi List Editor</a></li>  -->
+          <li><html:link action="/Lookup/LookupTableList.do"> Lookup Fields Editor</html:link></li>
 		  <li><a href="../issueAdmin.do?method=list"><bean:message key="admin.admin.issueEditor"/></a></li>
 		  <li><a href="../CaisiRole.do"><bean:message key="admin.admin.caisiRole"/></a></li>         
 		  <li><a href="../SurveyManager.do"><bean:message key="admin.admin.surveyManager"/></a></li>         

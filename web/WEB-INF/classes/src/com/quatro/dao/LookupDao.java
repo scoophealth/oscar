@@ -1,0 +1,207 @@
+package com.quatro.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+import com.quatro.model.*;
+import com.quatro.util.*;
+import java.sql.*;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.oscarehr.PMmodule.model.Program;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import oscar.MyDateFormat;
+import oscar.oscarDB.DBPreparedHandler;
+import oscar.oscarDB.DBPreparedHandlerParam;
+
+import com.quatro.util.*;
+public class LookupDao extends HibernateDaoSupport {
+
+	public List LoadCodeList(String tableIdName, boolean activeOnly, String code, String codeDesc)
+	{
+	   ArrayList paramList = new ArrayList();
+	   String sSQL="FROM LookupCodeValue s where s.prefix= ? ORDER BY s.parentCode, s.description";		
+	   paramList.add(tableIdName);
+	   Object params[] = paramList.toArray(new Object[paramList.size()]);
+	   return getHibernateTemplate().find(sSQL ,params);
+	}
+	public LookupCodeValue GetCode(String tableId,String code)
+	{
+        Criteria criteria = getSession().createCriteria(LookupCodeValue.class);
+        criteria.add(Restrictions.eq("prefix", tableId));
+		criteria.add(Restrictions.eq("code",code));
+		List lst = criteria.list();
+		LookupCodeValue lkv = null;
+		if (lst.size()>0) 
+		{
+			lkv = (LookupCodeValue) lst.get(0);
+		}
+		return lkv;
+	}
+
+	public List LoadCodeList(String tableIdName,boolean activeOnly,  String parentCode,String code, String codeDesc)
+	{
+        Criteria criteria = getSession().createCriteria(LookupCodeValue.class);
+        criteria.add(Restrictions.eq("prefix", tableIdName));
+        if (activeOnly) {
+        	criteria.add(Restrictions.eq("active",true));
+        }
+	   if (!Utility.IsEmpty(parentCode)) {
+		   	criteria.add(Restrictions.eq("parentCode",parentCode));
+	   }
+	   if (!Utility.IsEmpty(code)) {
+		   	criteria.add(Restrictions.eq("code",code));
+	   }
+	   if (!Utility.IsEmpty(codeDesc)) {
+		   	criteria.add(Restrictions.ilike("code","%" + codeDesc + "%"));
+	   }
+	   criteria.addOrder( Order.asc("parentCode"));
+	   criteria.addOrder( Order.asc("description"));
+	   
+	   return criteria.list();
+	}
+
+	public LookupTableDefValue GetLookupTableDef(String tableId)
+	{
+		ArrayList paramList = new ArrayList();
+
+		String sSQL="FROM LookupTableDefValue s where s.tableId= ?";		
+	    paramList.add(tableId);
+	    Object params[] = paramList.toArray(new Object[paramList.size()]);
+	    try{
+	      return (LookupTableDefValue)getHibernateTemplate().find(sSQL ,params).get(0);
+	    }catch(Exception ex){
+	    	return null;
+	    }
+	}
+	public List LoadFieldDefList(String tableId) 
+	{
+		String sSql = "FROM FieldDefValue s where s.tableId=? ORDER BY s.fieldIndex ";
+		ArrayList paramList = new ArrayList();
+	    paramList.add(tableId);
+	    Object params[] = paramList.toArray(new Object[paramList.size()]);
+		return getHibernateTemplate().find(sSql,params);
+	}
+	public List GetCodeFieldValues(LookupTableDefValue tableDef, String code)
+	{
+		String tableName = tableDef.getTableName();
+		List fs = LoadFieldDefList(tableDef.getTableId());
+		String idFieldName = ((FieldDefValue) fs.get(0)).getFieldSQL();
+		
+		String sql = "SELECT ";
+		for(int i=0; i<fs.size(); i++) {
+			FieldDefValue fdv = (FieldDefValue) fs.get(i);
+			if (i==0) {
+				sql += fdv.getFieldSQL();
+			}
+			else
+			{
+				sql += "," + fdv.getFieldSQL();
+			}
+		}
+		sql += " FROM " + tableName;
+		sql += " WHERE " + idFieldName + "='" + code + "'"; 
+		try {
+			DBPreparedHandler db = new DBPreparedHandler();
+			ResultSet rs = db.queryResults(sql);
+			if (rs.next()) {
+				for(int i=0; i< fs.size(); i++) 
+				{
+					FieldDefValue fdv = (FieldDefValue) fs.get(i);
+					String val = db.getString(rs, i+1);
+					fdv.setVal(val);
+					if (!Utility.IsEmpty(fdv.getLookupTable()))
+					{
+						LookupCodeValue lkv = GetCode(fdv.getLookupTable(),val);
+						if (lkv != null) fdv.setValDesc(lkv.getDescription());
+					}
+				}
+			}
+			rs.close();
+		}
+		catch(SQLException e)
+		{
+			System.out.println(e.getStackTrace());
+		}
+		return fs;
+	}
+	public void SaveCodeValue(boolean isNew, LookupTableDefValue tableDef, List fieldDefList) throws SQLException
+	{
+		if (isNew) 
+			InsertCodeValue(tableDef, fieldDefList);
+		else
+			UpdateCodeValue(tableDef,fieldDefList);
+	}
+	
+	private void InsertCodeValue(LookupTableDefValue tableDef, List fieldDefList) throws SQLException
+	{
+		String tableName = tableDef.getTableName();
+		String idFieldName = ((FieldDefValue)fieldDefList.get(0)).getFieldSQL();
+		String idFieldVal = ((FieldDefValue)fieldDefList.get(0)).getVal();
+
+		//check the existence of the code 
+		LookupCodeValue lkv= GetCode(tableDef.getTableId(), idFieldVal);
+		if(lkv != null) 
+		{
+			throw new SQLException("The Code Already Exist");
+		}
+		DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()];
+		String phs = "";
+		String sql = "INSERT INTO  " + tableName + "("; 
+		for(int i=0; i< fieldDefList.size(); i++) {
+			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
+			sql += fdv.getFieldName() + ",";
+			phs +="?,"; 
+			if ("S".equals(fdv.getFieldType()))
+			{
+				params[i] = new DBPreparedHandlerParam(fdv.getVal());
+			}
+			else if ("D".equals(fdv.getFieldType()))
+			{
+				params[i] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(fdv.getVal()));
+			}
+			else
+			{
+				params[i] = new DBPreparedHandlerParam(Integer.valueOf(fdv.getVal()).intValue());
+			}
+		}
+		sql = sql.substring(0,sql.length()-1);
+		phs = phs.substring(0,phs.length()-1);
+		sql += ") Values (" + phs + ")";
+		DBPreparedHandler db = new DBPreparedHandler();
+		db.queryExecuteUpdate(sql, params);
+	}
+	private void UpdateCodeValue(LookupTableDefValue tableDef, List fieldDefList) throws SQLException
+	{
+		String tableName = tableDef.getTableName();
+		String idFieldName = ((FieldDefValue)fieldDefList.get(0)).getFieldSQL();
+		String idFieldVal = ((FieldDefValue)fieldDefList.get(0)).getVal();
+
+		DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()+1];
+		String sql = "UPDATE " + tableName + " SET ";
+		for(int i=0; i< fieldDefList.size(); i++) {
+			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
+			sql += fdv.getFieldName() + "=?,";
+			if ("S".equals(fdv.getFieldType()))
+			{
+				params[i] = new DBPreparedHandlerParam(fdv.getVal());
+			}
+			else if ("D".equals(fdv.getFieldType()))
+			{
+				params[i] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(fdv.getVal()));
+			}
+			else
+			{
+				params[i] = new DBPreparedHandlerParam(Integer.valueOf(fdv.getVal()).intValue());
+			}
+		}
+		sql = sql.substring(0,sql.length()-1);
+		sql += " WHERE " + idFieldName + "=?";
+		params[fieldDefList.size()] = params[0];
+		DBPreparedHandler db = new DBPreparedHandler();
+		db.queryExecuteUpdate(sql, params);
+	}
+}
