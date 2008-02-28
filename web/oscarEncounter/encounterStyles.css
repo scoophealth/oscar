@@ -93,7 +93,7 @@ H3 {
 
 .RowTop
 {
-    font-size:8pt;
+    font-size:9px;
     font-variant:small-caps;
     font:bold;
 }
@@ -293,7 +293,8 @@ div.leftBox{
    /*float: left;
    border-left: 1px solid #6699cc;   
    border-right: 1px solid #6699cc;
-   border-bottom: 1px solid #6699cc;*/
+   border-bottom: 1px solid #6699cc; */
+   background-color: #FFFFFF;
 }
 
 span.footnote {
