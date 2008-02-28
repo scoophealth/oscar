@@ -48,7 +48,6 @@ import org.caisi.model.CustomFilter;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
