@@ -4,6 +4,46 @@
        "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
 <tiles-definitions>
 	<definition
+		name="page.admin.list"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/admin/admin.jsp" />
+	</definition>
+	<definition
+		name="page.admin.lookup.tablelist"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/lookup/LookupTableList.jsp" />
+	</definition>
+	<definition
+		name="page.admin.lookup.codelist"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/lookup/LookupCodeList.jsp" />
+	</definition>
+	<definition
+		name="page.admin.lookup.codeedit"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/lookup/LookupCodeEdit.jsp" />
+	</definition>
+	<definition
 		name="page.pmm.admin.view"
 		path="/PMmodule/layout.jsp">
 		<put
@@ -97,6 +137,9 @@
     <definition
         name="page.pmm.admin.facility.list"
         path="/PMmodule/layout.jsp">
+		<put
+			name="header"
+			value="/PMModule/Header.jsp" />
         <put
             name="navigation"
             value="/PMmodule/navigation.jsp" />
