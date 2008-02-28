@@ -1796,7 +1796,7 @@ Version version = (Version) ctx.getBean("version");
                     </tr>
                 </table> 
             </span>
-            <div id="encMainDiv" style="width:99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color:#FFFFFF; height:420px; overflow:auto; margin-left:2px;">
+            <div id="encMainDiv" style="width:99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color:#FFFFFF; height:410px; overflow:auto; margin-left:2px;">
                 
                 
                 <c:if test="${not empty Notes}">                        
