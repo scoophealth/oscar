@@ -1654,6 +1654,9 @@ CREATE TABLE `issue` (
 DROP TABLE IF EXISTS `program`;
 CREATE TABLE `program` (
   `program_id` int(10) NOT NULL auto_increment,
+	facility_id bigint(22) not null,
+index(facility_id),
+foreign key (facility_id) references facility(id),
   userDefined tinyint(1) not null,
   `agency_id` bigint(11) NOT NULL default '0',
   `intake_program` integer unsigned,

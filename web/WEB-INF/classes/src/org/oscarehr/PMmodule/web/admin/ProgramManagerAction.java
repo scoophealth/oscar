@@ -23,6 +23,7 @@
 package org.oscarehr.PMmodule.web.admin;
 
 import org.apache.struts.action.*;
+import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.model.*;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.web.BaseAction;
@@ -37,6 +38,11 @@ import java.util.List;
 public class ProgramManagerAction extends BaseAction {
 
     protected ClientRestrictionManager clientRestrictionManager;
+    private FacilityDAO facilityDAO=null;
+        
+    public void setFacilityDAO(FacilityDAO facilityDAO) {
+        this.facilityDAO = facilityDAO;
+    }
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return list(mapping, form, request, response);
@@ -81,9 +87,9 @@ public class ProgramManagerAction extends BaseAction {
             //List<ProgramSignature> pss = programManager.getProgramSignatures(Integer.valueOf(id));
             //programForm.set("programSignatures", (ProgramSignature[] ) pss.toArray(new ProgramSignature[pss.size()]));
             //request.setAttribute("programSignatures",programManager.getProgramSignatures(Integer.valueOf(id)));
-            setEditAttributes(request, id);
         }
 
+        setEditAttributes(request, id);
         request.setAttribute("service_restrictions", clientRestrictionManager.getActiveRestrictionsForProgram(Integer.valueOf(id), new Date()));
         request.setAttribute("disabled_service_restrictions", clientRestrictionManager.getDisabledRestrictionsForProgram(Integer.valueOf(id), new Date()));
 
@@ -103,6 +109,8 @@ public class ProgramManagerAction extends BaseAction {
     public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaActionForm programForm = (DynaActionForm) form;
         programForm.set("program", new Program());
+
+        setEditAttributes(request, null);
 
         return mapping.findForward("edit");
     }
@@ -531,7 +539,14 @@ public class ProgramManagerAction extends BaseAction {
         if (this.isCancelled(request)) {
             return list(mapping, form, request, response);
         }
-
+        
+        try {
+            program.setFacilityId(Long.parseLong(request.getParameter("program.facilityId")));
+        }
+        catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+                
         if (request.getParameter("program.allowBatchAdmission") == null) {
             program.setAllowBatchAdmission(false);
         }
@@ -639,6 +654,7 @@ public class ProgramManagerAction extends BaseAction {
         oldProgram.setPhysicalHealth(Boolean.valueOf(request.getParameter("old_physicalHealth")));
         oldProgram.setMentalHealth(Boolean.valueOf(request.getParameter("old_mentalHealth")));
         oldProgram.setHousing(Boolean.valueOf(request.getParameter("old_housing")));
+        oldProgram.setHousing(Boolean.valueOf(request.getParameter("old_facility_id")));
 
         if (isChanged(program,oldProgram)) {
             ProgramSignature programSignature = new ProgramSignature();
@@ -796,33 +812,39 @@ public class ProgramManagerAction extends BaseAction {
     }
 
     private void setEditAttributes(HttpServletRequest request, String programId) {
-        request.setAttribute("id", programId);
-        request.setAttribute("programName", programManager.getProgram(programId).getName());
-        request.setAttribute("providers", programManager.getProgramProviders(programId));
-        request.setAttribute("roles", roleManager.getRoles());
-        request.setAttribute("functionalUserTypes", programManager.getFunctionalUserTypes());
-        request.setAttribute("functional_users", programManager.getFunctionalUsers(programId));
+        if (programId!=null)
+        {
+            request.setAttribute("id", programId);
+            request.setAttribute("programName", programManager.getProgram(programId).getName());
+            request.setAttribute("providers", programManager.getProgramProviders(programId));
+            request.setAttribute("functional_users", programManager.getFunctionalUsers(programId));
 
-        List teams = programManager.getProgramTeams(programId);
+            List teams = programManager.getProgramTeams(programId);
 
-        for (Object team1 : teams) {
-            ProgramTeam team = (ProgramTeam) team1;
+            for (Object team1 : teams) {
+                ProgramTeam team = (ProgramTeam) team1;
 
-            team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
-            team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
+                team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
+                team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
+            }
+
+            request.setAttribute("teams", teams);
+            request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
+
+            request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
+            request.setAttribute("accesses", programManager.getProgramAccesses(programId));
+            request.setAttribute("queue", programQueueManager.getProgramQueuesByProgramId(Long.valueOf(programId)));
+            request.setAttribute("programFirstSignature",programManager.getProgramFirstSignature(Integer.valueOf(programId)));
         }
 
-        request.setAttribute("teams", teams);
+        request.setAttribute("roles", roleManager.getRoles());
+        request.setAttribute("functionalUserTypes", programManager.getFunctionalUserTypes());
 
-        request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
 
-        request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
-        request.setAttribute("accesses", programManager.getProgramAccesses(programId));
         request.setAttribute("accessTypes", programManager.getAccessTypes());
-        request.setAttribute("queue", programQueueManager.getProgramQueuesByProgramId(Long.valueOf(programId)));
-
         request.setAttribute("bed_programs",programManager.getBedPrograms());
-        request.setAttribute("programFirstSignature",programManager.getProgramFirstSignature(Integer.valueOf(programId)));
+
+        request.setAttribute("facilities",facilityDAO.getFacilities());
     }
 
 
@@ -975,6 +997,7 @@ public class ProgramManagerAction extends BaseAction {
                 (program1.isAlcohol() ^ program2.isAlcohol()) ||
                 (program1.isPhysicalHealth() ^ program2.isPhysicalHealth()) ||
                 (program1.isMentalHealth() ^ program2.isMentalHealth()) ||
+                (program1.getFacilityId() != program2.getFacilityId()) ||
                 (program1.isHousing() ^ program2.isHousing())
                 )
 

@@ -63,6 +63,7 @@ Program p = (Program)request.getAttribute("oldProgram");
 <input type="hidden" name="old_physicalHealth" value=<%if(p!=null) { %>"<%=p.isPhysicalHealth() %>" <%}else{ %> "" <%} %>/>
 <input type="hidden" name="old_mentalHealth" value=<%if(p!=null) { %>"<%=p.isMentalHealth() %>" <%}else{ %> "" <%} %>/>
 <input type="hidden" name="old_housing" value=<%if(p!=null) { %>"<%=p.isHousing() %>" <%}else{ %> "" <%} %>/>
+<input type="hidden" name="old_facility_id" value=<%if(p!=null) { %>"<%=p.getFacilityId() %>" <%}else{ %> "" <%} %>/>
 
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
@@ -76,6 +77,16 @@ Program p = (Program)request.getAttribute("oldProgram");
 		<td width="20%">Name:</td>
 		<td><html:text property="program.name" size="30" maxlength="70"/></td>
 	</tr>
+	<tr class="b">
+		<td width="20%">Facility</td>
+		<td>
+			<html-el:select property="program.facilityId">
+				<c:forEach var="facility" items="${facilities}">
+					<html-el:option value="${facility.id}"><c:out value="${facility.name}"/></html-el:option>
+				</c:forEach>
+			</html-el:select>
+		</td>
+	</tr>	
 	<tr class="b">
 		<td width="20%">Description:</td>
 		<td><html:text property="program.descr" size="30" maxlength="255"/></td>
