@@ -16240,4 +16240,4 @@ insert into `secObjPrivilege` values('doctor','_pmm.addProgram','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.globalRoleAccess','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.caisiRoles','|*|',0,999998);
 
-
+INSERT INTO facility (name, description) VALUES ('Default Facility', 'Default facility, please modify with a more appropriate name and description');
