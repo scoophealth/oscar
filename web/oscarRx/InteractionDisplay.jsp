@@ -37,7 +37,7 @@ if ( bean == null ){
          <%=interactions[i].comment%>
          </div>
 <%      }
-    }else if(interactions == null){ %>
+    }else if(interactions == null && bean.getStashSize() > 1){ %>
         <div>Drug to Drug Interaction Service not available</div>                          
 <%  }   %>
 <%!
