@@ -35,6 +35,7 @@ import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.BedType;
+import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 
@@ -358,6 +359,61 @@ public class BedManager {
     	return false;
     }
     
+    public Integer[] getBedClientIds(Bed[] beds){
+    	
+    	Integer[] bedClientIds = null;
+        if(beds != null  &&  beds.length > 0){
+        	BedDemographic bd = null;
+        	bedClientIds = new Integer[beds.length];
+        	for(int i=0; i < beds.length; i++){
+        		bd = bedDemographicManager.getBedDemographicByBed(beds[i].getId());
+        		if(bd != null){
+        			bedClientIds[i] = bd.getId().getDemographicNo();
+        		}else{
+        			bedClientIds[i] = null;
+        		}
+        	}
+        }
+        return bedClientIds;
+
+    }
+    
+    public Bed[] addFamilyIdsToBeds(ClientManager clientManager, Bed[] beds){
+    	
+    	if(clientManager == null  ||  beds == null  ||  beds.length <= 0){
+    		return null;
+    	}
+    	Integer[] bedClientIds = new Integer[beds.length];
+    	JointAdmission clientsJadmFamily = null;
+    	boolean isFamilyHead = false;
+    	Integer headRecord = 0;
+    	
+	    if(beds != null  &&  beds.length > 0){
+	    	BedDemographic bd = null;
+	    	
+	    	for(int i=0; i < beds.length; i++){
+	    		bd = bedDemographicManager.getBedDemographicByBed(beds[i].getId());
+	    		if(bd != null){
+	    			bedClientIds[i] = bd.getId().getDemographicNo();
+	    			clientsJadmFamily = clientManager.getJointAdmission(Long.valueOf(bedClientIds[i].toString()));
+	    			isFamilyHead = clientManager.isClientFamilyHead(bedClientIds[i]);
+	    			if(clientsJadmFamily != null){
+	    				headRecord = Integer.valueOf(clientsJadmFamily.getHeadClientId().toString());
+	    			}else if(isFamilyHead){
+	    				headRecord = bedClientIds[i];
+	    			}else{
+	    				headRecord = null;
+	    			}
+	   			    isFamilyHead = false;
+	    			beds[i].setFamilyId(headRecord);
+	    		}else{
+	    			bedClientIds[i] = null;
+	    			beds[i].setFamilyId(null);
+	    		}
+	    	}
+	    }
+	    return beds;
+    }
     /**
      * @see org.oscarehr.PMmodule.service.BedManager#getBedTypes()
      */

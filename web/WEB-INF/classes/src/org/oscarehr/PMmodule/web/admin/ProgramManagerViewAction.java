@@ -237,50 +237,25 @@ public class ProgramManagerViewAction extends BaseAction {
         	
         	Integer[] bedClientIds = null;
         	Boolean[] isFamilyDependents = null;
-        	boolean isFamilyHead = false;
         	JointAdmission clientsJadm = null;
-        	JointAdmission clientsJadmFamily = null;
         	Bed[] beds = bedManager.getBedsByProgram(Integer.valueOf(programId), true);
-        	Integer headRecord = 0;
-            
+        	beds = bedManager.addFamilyIdsToBeds(clientManager, beds);
             if(beds != null  &&  beds.length > 0){
-            	BedDemographic bd = null;
-            	bedClientIds = new Integer[beds.length];
-            	for(int i=0; i < beds.length; i++){
-            		bd = bedDemographicManager.getBedDemographicByBed(beds[i].getId());
-            		if(bd != null){
-            			bedClientIds[i] = bd.getId().getDemographicNo();
-            			clientsJadmFamily = clientManager.getJointAdmission(Long.valueOf(bedClientIds[i].toString()));
-            			isFamilyHead = clientManager.isClientFamilyHead(bedClientIds[i]);
-            			if(clientsJadmFamily != null){
-            				headRecord = Integer.valueOf(clientsJadmFamily.getHeadClientId().toString());
-            			}else if(isFamilyHead){
-            				headRecord = bedClientIds[i];
-            			}else{
-            				headRecord = null;
-            			}
-           			    isFamilyHead = false;
-            			beds[i].setFamilyId(headRecord);
-            		}else{
-            			bedClientIds[i] = null;
-            			beds[i].setFamilyId(null);
-            		}
-            	}
+	        	bedClientIds = bedManager.getBedClientIds(beds);
+	        	
+	    		if(clientManager != null  &&  bedClientIds != null  &&  bedClientIds.length > 0){
+	    			isFamilyDependents = new Boolean[beds.length];
+	    			for(int i=0; i < bedClientIds.length; i++){
+	    				clientsJadm = clientManager.getJointAdmission(Long.valueOf(bedClientIds[i].toString()));
+	    				
+	    	    		if(clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
+	    	    			isFamilyDependents[i] = new Boolean(true);
+	    	    		}else{
+	    	    			isFamilyDependents[i] = new Boolean(false);
+	    	    		}
+	    			}
+	    		}
             }
-    		
-    		if(clientManager != null  &&  bedClientIds != null  &&  bedClientIds.length > 0){
-    			isFamilyDependents = new Boolean[beds.length];
-    			for(int i=0; i < bedClientIds.length; i++){
-    				clientsJadm = clientManager.getJointAdmission(Long.valueOf(bedClientIds[i].toString()));
-    				
-    	    		if(clientsJadm != null  &&  clientsJadm.getHeadClientId() != null) {
-    	    			isFamilyDependents[i] = new Boolean(true);
-    	    		}else{
-    	    			isFamilyDependents[i] = new Boolean(false);
-    	    		}
-    			}
-    		}
-    		
     		request.setAttribute("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
     		formBean.setReservedBeds(beds);
     		request.setAttribute("isFamilyDependents", isFamilyDependents);
@@ -312,36 +287,8 @@ public class ProgramManagerViewAction extends BaseAction {
     public ActionForward viewBedCheckReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         Integer programId = Integer.valueOf(request.getParameter("programId"));
 
-    	Integer[] bedClientIds = null;
-    	boolean isFamilyHead = false;
-    	JointAdmission clientsJadmFamily = null;
     	Bed[] beds = bedManager.getBedsByProgram(programId, true);
-    	Integer headRecord = 0;
-        
-        if(beds != null  &&  beds.length > 0){
-        	BedDemographic bd = null;
-        	bedClientIds = new Integer[beds.length];
-        	for(int i=0; i < beds.length; i++){
-        		bd = bedDemographicManager.getBedDemographicByBed(beds[i].getId());
-        		if(bd != null){
-        			bedClientIds[i] = bd.getId().getDemographicNo();
-        			clientsJadmFamily = clientManager.getJointAdmission(Long.valueOf(bedClientIds[i].toString()));
-        			isFamilyHead = clientManager.isClientFamilyHead(bedClientIds[i]);
-        			if(clientsJadmFamily != null){
-        				headRecord = Integer.valueOf(clientsJadmFamily.getHeadClientId().toString());
-        			}else if(isFamilyHead){
-        				headRecord = bedClientIds[i];
-        			}else{
-        				headRecord = null;
-        			}
-       			    isFamilyHead = false;
-        			beds[i].setFamilyId(headRecord);
-        		}else{
-        			bedClientIds[i] = null;
-        			beds[i].setFamilyId(null);
-        		}
-        	}
-        }
+    	beds = bedManager.addFamilyIdsToBeds(clientManager, beds);
         request.setAttribute("reservedBeds", beds);
         return mapping.findForward("viewBedCheckReport");
     }
