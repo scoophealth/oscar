@@ -237,10 +237,11 @@ public class ProgramManagerViewAction extends BaseAction {
         	
         	Integer[] bedClientIds = null;
         	Boolean[] isFamilyDependents = null;
+        	boolean isFamilyHead = false;
         	JointAdmission clientsJadm = null;
+        	JointAdmission clientsJadmFamily = null;
         	Bed[] beds = bedManager.getBedsByProgram(Integer.valueOf(programId), true);
-            formBean.setReservedBeds(beds);
-            request.setAttribute("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
+        	Integer headRecord = 0;
             
             if(beds != null  &&  beds.length > 0){
             	BedDemographic bd = null;
@@ -249,8 +250,20 @@ public class ProgramManagerViewAction extends BaseAction {
             		bd = bedDemographicManager.getBedDemographicByBed(beds[i].getId());
             		if(bd != null){
             			bedClientIds[i] = bd.getId().getDemographicNo();
+            			clientsJadmFamily = clientManager.getJointAdmission(Long.valueOf(bedClientIds[i].toString()));
+            			isFamilyHead = clientManager.isClientFamilyHead(bedClientIds[i]);
+            			if(clientsJadmFamily != null){
+            				headRecord = Integer.valueOf(clientsJadmFamily.getHeadClientId().toString());
+            			}else if(isFamilyHead){
+            				headRecord = bedClientIds[i];
+            			}else{
+            				headRecord = null;
+            			}
+           			    isFamilyHead = false;
+            			beds[i].setFamilyId(headRecord);
             		}else{
             			bedClientIds[i] = null;
+            			beds[i].setFamilyId(null);
             		}
             	}
             }
@@ -268,6 +281,8 @@ public class ProgramManagerViewAction extends BaseAction {
     			}
     		}
     		
+    		request.setAttribute("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
+    		formBean.setReservedBeds(beds);
     		request.setAttribute("isFamilyDependents", isFamilyDependents);
             request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
             request.setAttribute("expiredReservations", bedDemographicManager.getExpiredReservations());

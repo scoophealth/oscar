@@ -60,6 +60,7 @@ public class Bed implements Serializable {
     private ProgramTeam team;
     private BedDemographic bedDemographic;
     private Integer communityProgramId;
+    private Integer familyId;
 
     // constructors
     public Bed () {
@@ -144,6 +145,10 @@ public class Bed implements Serializable {
         return bedDemographic != null ? bedDemographic.getDemographicName() : null;
     }
 
+	public Integer getFamilyId() {
+		return familyId;
+	}
+
     public Integer getStatusId() {
         return bedDemographic != null ? bedDemographic.getBedDemographicStatusId() : null;
     }
@@ -168,7 +173,10 @@ public class Bed implements Serializable {
         return communityProgramId;
     }
 
-
+	public void setFamilyId(Integer familyId) {
+		this.familyId = familyId;
+	}
+    
     public void setBedType(BedType bedType) {
         this.bedType = bedType;
     }
@@ -352,4 +360,5 @@ public class Bed implements Serializable {
         }
         return this.hashCode;
     }
+
 }

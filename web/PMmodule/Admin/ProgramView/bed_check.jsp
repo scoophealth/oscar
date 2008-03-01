@@ -98,6 +98,7 @@
 				<display:column property="roomName" title="Room" />
 				<display:column property="name" title="Bed" />
 				<display:column property="demographicName" title="Client" />
+				<display:column property="familyId" title="Family Id" />
 				<!-- status is editable -->
 				<display:column title="Status">
 					<select name="reservedBeds[<c:out value="${reservedBed_rowNum - 1}" />].statusId">
@@ -166,15 +167,13 @@
 				</display:column>
 			</display:table>
 		</td>
-		<td>
-			<br />
-			<html:submit onclick="programManagerViewForm.method.value='saveReservedBeds';">Save</html:submit>
-		</td>
+
 	</tr>
 	<tr>
 		<td>
 			Generate: <a href="javascript:void(0)" onclick="popupBedCheckReport('<c:out value="${id}"/>')">Bed Check Report</a> 
 			<input type="button" name="bedSwitch"  onclick="switchBeds()"  value="Switch Beds" /> 
+			<html:submit onclick="programManagerViewForm.method.value='saveReservedBeds';">Save Changes</html:submit>
 		</td>		
 	</tr>
 	<tr>
