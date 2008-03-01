@@ -312,8 +312,37 @@ public class ProgramManagerViewAction extends BaseAction {
     public ActionForward viewBedCheckReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         Integer programId = Integer.valueOf(request.getParameter("programId"));
 
-        request.setAttribute("reservedBeds", bedManager.getBedsByProgram(programId, true));
-
+    	Integer[] bedClientIds = null;
+    	boolean isFamilyHead = false;
+    	JointAdmission clientsJadmFamily = null;
+    	Bed[] beds = bedManager.getBedsByProgram(programId, true);
+    	Integer headRecord = 0;
+        
+        if(beds != null  &&  beds.length > 0){
+        	BedDemographic bd = null;
+        	bedClientIds = new Integer[beds.length];
+        	for(int i=0; i < beds.length; i++){
+        		bd = bedDemographicManager.getBedDemographicByBed(beds[i].getId());
+        		if(bd != null){
+        			bedClientIds[i] = bd.getId().getDemographicNo();
+        			clientsJadmFamily = clientManager.getJointAdmission(Long.valueOf(bedClientIds[i].toString()));
+        			isFamilyHead = clientManager.isClientFamilyHead(bedClientIds[i]);
+        			if(clientsJadmFamily != null){
+        				headRecord = Integer.valueOf(clientsJadmFamily.getHeadClientId().toString());
+        			}else if(isFamilyHead){
+        				headRecord = bedClientIds[i];
+        			}else{
+        				headRecord = null;
+        			}
+       			    isFamilyHead = false;
+        			beds[i].setFamilyId(headRecord);
+        		}else{
+        			bedClientIds[i] = null;
+        			beds[i].setFamilyId(null);
+        		}
+        	}
+        }
+        request.setAttribute("reservedBeds", beds);
         return mapping.findForward("viewBedCheckReport");
     }
 

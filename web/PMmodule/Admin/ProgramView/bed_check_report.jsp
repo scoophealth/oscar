@@ -41,6 +41,7 @@
 			<display:column property="roomName" title="Room" style="text-align: center" />
 			<display:column property="name" title="Bed" style="text-align: center" />
 			<display:column property="demographicName" title="Client" style="text-align: center" />
+			<display:column property="familyId" title="Family Id" />
 			<display:column property="statusName" title="Status" style="text-align: center" />
 			<display:column title="Late Pass" style="text-align: center">
 				<c:choose>
