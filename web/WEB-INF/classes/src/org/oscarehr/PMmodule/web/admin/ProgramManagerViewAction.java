@@ -55,6 +55,7 @@ import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
+import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -646,7 +647,7 @@ public class ProgramManagerViewAction extends BaseAction {
 					}
 					
                 	if(clientId == null  ||  isClientDependent){//Forbid saving of this particular bedDemographic record when client is dependent of family
-                                        		
+                		//bedManager.saveBed(reservedBed);//should not save bed if dependent                 		
                 	}else{//client can be family head or independent
                 		
                 		if(isClientFamilyHead){
@@ -659,7 +660,12 @@ public class ProgramManagerViewAction extends BaseAction {
 
                 			for(int k=0; familyList != null  &&  k < familyList.size(); k++){
                 				bedDemographic.getId().setDemographicNo(familyList.get(k));
-                			
+                				
+                				BedDemographic dependentBD = bedDemographicManager.getBedDemographicByDemographic(familyList.get(k));
+                				
+                				if(dependentBD != null){
+                					bedDemographic.getId().setBedId(dependentBD.getId().getBedId());
+                				}
 		                		bedManager.saveBed(reservedBed);  
 		                		
 			                    // save bed demographic
@@ -746,6 +752,11 @@ public class ProgramManagerViewAction extends BaseAction {
         boolean isFamilyDependent2 = false;
         boolean isIndependent1 = false;
         boolean isIndependent2 = false;
+        Integer bedDemographicStatusId1 = null;
+        boolean latePass1 = false;
+        Date reservationEnd1 = null;
+        Date assignEnd1 = null;
+        Date today = DateTimeFormatUtils.getToday();
         //List<Integer> familyList = new ArrayList<Integer>();
     	
     	String switchBed1 = formBean.getSwitchBed1();
@@ -781,6 +792,11 @@ public class ProgramManagerViewAction extends BaseAction {
    		}
    		client1 = bedDemographic1.getId().getDemographicNo();
    		client2 = bedDemographic2.getId().getDemographicNo();
+   		
+        bedDemographicStatusId1 = bedDemographic1.getBedDemographicStatusId();
+        latePass1 = bedDemographic1.isLatePass();
+        reservationEnd1 = bedDemographic1.getReservationEnd();
+
 		//System.out.println("ProgramManagerViewAction.switch_beds(): client1 = " + client1);    	
 		//System.out.println("ProgramManagerViewAction.switch_beds(): client2 = " + client2);    	
 
@@ -793,8 +809,18 @@ public class ProgramManagerViewAction extends BaseAction {
    		if(isSameRoom){//you can switch beds in same room for any client combination
    			bedDemographicManager.deleteBedDemographic(bedDemographic1);
    			bedDemographicManager.deleteBedDemographic(bedDemographic2);
+
    			bedDemographic1.getId().setDemographicNo(client2);
+   			bedDemographic1.setBedDemographicStatusId(bedDemographic2.getBedDemographicStatusId());
+   			bedDemographic1.setLatePass(bedDemographic2.isLatePass());
+   			bedDemographic1.setReservationStart(today);
+   			bedDemographic1.setReservationEnd(bedDemographic2.getReservationEnd());
    			bedDemographic2.getId().setDemographicNo(client1);
+   			bedDemographic2.setBedDemographicStatusId(bedDemographicStatusId1);
+   			bedDemographic2.setLatePass(latePass1);
+   			bedDemographic2.setReservationStart(today);
+   			bedDemographic2.setReservationEnd(reservationEnd1);
+
    			bedDemographicManager.saveBedDemographic(bedDemographic1);
    			bedDemographicManager.saveBedDemographic(bedDemographic2);
    		}else{//beds are from different rooms
@@ -830,15 +856,32 @@ public class ProgramManagerViewAction extends BaseAction {
    				//Can switch beds and rooms
    	   			bedDemographicManager.deleteBedDemographic(bedDemographic1);
    	   			bedDemographicManager.deleteBedDemographic(bedDemographic2);
+   	   			
    	   			bedDemographic1.getId().setDemographicNo(client2);
+   	   			bedDemographic1.setBedDemographicStatusId(bedDemographic2.getBedDemographicStatusId());
+   	   			bedDemographic1.setLatePass(bedDemographic2.isLatePass());
+   	   			bedDemographic1.setReservationStart(today);
+   	   			bedDemographic1.setReservationEnd(bedDemographic2.getReservationEnd());
    	   			bedDemographic2.getId().setDemographicNo(client1);
+   	   			bedDemographic2.setBedDemographicStatusId(bedDemographicStatusId1);
+   	   			bedDemographic2.setLatePass(latePass1);
+   	   			bedDemographic2.setReservationStart(today);
+   	   			bedDemographic2.setReservationEnd(reservationEnd1);
+   	   			
    	   			bedDemographicManager.saveBedDemographic(bedDemographic1);
    	   			bedDemographicManager.saveBedDemographic(bedDemographic2);
 
    	   			roomDemographicManager.deleteRoomDemographic(roomDemographic1);
    	   			roomDemographicManager.deleteRoomDemographic(roomDemographic2);
+   	   			
+   	   		    assignEnd1 = roomDemographic1.getAssignEnd();
    	   			roomDemographic1.getId().setDemographicNo(client2);
+   	   		    roomDemographic1.setAssignStart(today);
+   	   		    roomDemographic1.setAssignEnd(roomDemographic2.getAssignEnd());
    	   			roomDemographic2.getId().setDemographicNo(client1);
+   	   		    roomDemographic2.setAssignStart(today);
+   	   		    roomDemographic2.setAssignEnd(assignEnd1);
+
    	   			roomDemographicManager.saveRoomDemographic(roomDemographic1);
    	   			roomDemographicManager.saveRoomDemographic(roomDemographic2);
    			}else{
