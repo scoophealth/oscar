@@ -59,6 +59,7 @@ import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Consent;
+import org.oscarehr.PMmodule.model.HealthSafety;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
 import org.oscarehr.PMmodule.model.Intake;
@@ -72,6 +73,7 @@ import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.Demographic.ConsentGiven;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
+import org.oscarehr.PMmodule.service.HealthSafetyManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
@@ -86,6 +88,7 @@ public class ClientManagerAction extends BaseAction {
 
     private static Log log = LogFactory.getLog(ClientManagerAction.class);
 
+    protected HealthSafetyManager healthSafetyManager;
     protected ClientRestrictionManager clientRestrictionManager;
     protected CaseManagementManager caseManagementManager;
     private ClientReferralDAO clientReferralDAO;
@@ -1310,6 +1313,9 @@ public class ClientManagerAction extends BaseAction {
             Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.valueOf(demographicNo));
             request.setAttribute("mostRecentQuickIntake", mostRecentQuickIntake);
 
+            HealthSafety healthsafety = healthSafetyManager.getHealthSafetyByDemographic(Long.valueOf(demographicNo));
+            request.setAttribute("healthsafety", healthsafety);
+
             Consent consent = consentManager.getMostRecentConsent(Long.valueOf(demographicNo));
             request.setAttribute("consent", consent);
 
@@ -1547,4 +1553,8 @@ public class ClientManagerAction extends BaseAction {
     public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
         this.caseManagementManager = caseManagementManager;
     }
+
+	public void setHealthSafetyManager(HealthSafetyManager healthSafetyManager) {
+		this.healthSafetyManager = healthSafetyManager;
+	}
 }

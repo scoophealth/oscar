@@ -61,6 +61,12 @@ function showConsent(){
 	window.open(url);	
 }		
 
+function openHealthSafety(){
+	var url = '<html:rewrite action="/PMmodule/HealthSafety.do"/>';
+		url += '?method=form&id='+ '<c:out value="${client.demographicNo}"/>';
+	window.open(url,'consent');
+}	
+
 function showEMPILinks() {
 	if (XMLHttpRequestObject) {
 		var obj = document.getElementById('empi_links');
@@ -147,6 +153,32 @@ function openSurvey() {
 	<tr>
 		<th width="20%">EMPI</th>
 		<td><span id='empi_links'>Loading...</span></td>
+	</tr>
+
+	<tr>
+		<th width="20%">Health and Safety</th>
+		<td>
+        <table width="100%" class="simple" border="0" cellspacing="2" cellpadding="3">
+			<c:choose>
+				<c:when test="${empty healthsafety}">
+					<tr><td><span style="color:red">None found</span></td>
+					<td><input type="button" value="New Health and Safety" onclick="openHealthSafety()" /></td></tr>
+				</c:when>
+			    <c:when test="${empty healthsafety.message}">
+					<tr><td><span style="color:red">None found</span></td>
+					<td><input type="button" value="New Health and Safety" onclick="openHealthSafety()" /></td></tr>
+				</c:when>
+				<c:otherwise>
+					<tr><td colspan="3"><c:out value="${healthsafety.message}" /></td></tr>
+					<tr><td width="50%">User Name: <c:out value="${healthsafety.userName}" /></td>
+					<td width="30%">Date: <fmt:formatDate value="${healthsafety.updateDate}" pattern="yyyy-MM-dd" /></td>
+					<td width="20%">
+					<input type="button" value="Edit" onclick="openHealthSafety()" />
+					</td></tr>
+				</c:otherwise>
+			</c:choose>
+         </table>
+		</td>
 	</tr>
 </table>
 
