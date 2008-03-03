@@ -46,7 +46,7 @@
      <th>Field: </th>
      <th alighn="left"><bean:write name="lookupCodeListForm" property="tableDef.description"/></th>
 </tr>
-<tr><td colspn="2">&nbsp;</td>
+<tr><td colspan="2">&nbsp;</td>
 </tr>
 <tr>
 	<th>Id</th><th>Description</th>

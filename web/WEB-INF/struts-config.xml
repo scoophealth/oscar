@@ -249,6 +249,9 @@
             <form-property name="team" type="org.oscarehr.PMmodule.model.ProgramTeam" />
             <form-property name="queue" type="org.oscarehr.PMmodule.model.ProgramQueue" />
             <form-property name="client_status" type="org.oscarehr.PMmodule.model.ProgramClientStatus" />
+            <form-property name="searchStatus" type="java.lang.String"></form-property>
+            <form-property name="searchType" type="java.lang.String"></form-property>
+            <form-property name="searchFacilityId" type="java.lang.String"></form-property>
         </form-bean>
         <form-bean name="agencyManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="agency" type="org.oscarehr.PMmodule.model.Agency" />
