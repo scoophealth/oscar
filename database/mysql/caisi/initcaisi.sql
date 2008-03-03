@@ -8,7 +8,7 @@ CREATE TABLE `access_type` (
   `name` varchar(255) default NULL,
   `type` varchar(255) default NULL,
   PRIMARY KEY  (`access_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `admission`
@@ -36,7 +36,7 @@ CREATE TABLE `admission` (
   `clientstatus_id` bigint(20) DEFAULT 0,
   PRIMARY KEY  (`am_id`),
   KEY `FK1A21809DAA8624B` (`team_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `agency`
@@ -62,7 +62,7 @@ CREATE TABLE `agency` (
   share_notes tinyint not null,
   `hic` tinyint(1) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `bed`
@@ -79,7 +79,7 @@ CREATE TABLE `bed` (
   `name` varchar(45) NOT NULL,
   `active` tinyint(1) unsigned NOT NULL default '1',
   PRIMARY KEY  (`bed_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 
 --
@@ -92,7 +92,7 @@ CREATE TABLE `bed_check_time` (
   `bed_check_time` time NOT NULL,
   PRIMARY KEY  (`bed_check_time_id`),
   UNIQUE KEY `idx_program_time` USING BTREE (`program_id`,`bed_check_time`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `bed_demographic`
@@ -110,7 +110,7 @@ CREATE TABLE  `bed_demographic` (
   PRIMARY KEY  (`bed_id`,`demographic_no`),
   UNIQUE KEY `idx_bed` (`bed_id`),
   UNIQUE KEY `idx_demographic` (`demographic_no`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `bed_demographic_historical`
@@ -123,7 +123,7 @@ CREATE TABLE `bed_demographic_historical` (
   `usage_start` date NOT NULL,
   `usage_end` date NOT NULL,
   PRIMARY KEY  (`bed_id`,`demographic_no`,`usage_start`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `bed_demographic_status`
@@ -136,7 +136,7 @@ CREATE TABLE `bed_demographic_status` (
   `duration` int(10) unsigned NOT NULL default '0',
   `dflt` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`bed_demographic_status_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `bed_type`
@@ -148,7 +148,7 @@ CREATE TABLE `bed_type` (
   `name` varchar(45) NOT NULL,
   `dflt` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`bed_type_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `caisi_form`
@@ -162,7 +162,7 @@ CREATE TABLE `caisi_form` (
   `status` smallint(6) default NULL,
   `version` bigint(20) default '0',
   PRIMARY KEY  (`form_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `caisi_form_data`
@@ -179,7 +179,7 @@ CREATE TABLE `caisi_form_data` (
   `data_key` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `FKC253B2E74497F4E` (`instance_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `caisi_form_instance`
@@ -195,7 +195,7 @@ CREATE TABLE `caisi_form_instance` (
   `username` varchar(255) default NULL,
   `client_id` bigint(20) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 
 DROP TABLE IF EXISTS `caisi_form_data_tmpsave`;
@@ -210,7 +210,7 @@ CREATE TABLE `caisi_form_data_tmpsave` (
   PRIMARY KEY  (`tmp_form_data_id`),
   KEY `caisi_form_data_tmpsave_key1` (`tmp_instance_id`)
 --  KEY `FKC253B2E74497F4F` (`instance_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `caisi_form_instance`
@@ -226,7 +226,7 @@ CREATE TABLE `caisi_form_instance_tmpsave` (
   `username` varchar(255) default NULL,
   `client_id` bigint(20) default NULL,
   PRIMARY KEY  (`tmp_instance_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 
 CREATE TABLE `caisi_form_question` (
@@ -239,7 +239,7 @@ CREATE TABLE `caisi_form_question` (
   `form_question_id` bigint(20),
   `type` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 
 --
@@ -254,7 +254,7 @@ CREATE TABLE `caisi_role` (
   `oscar_name` varchar(255) NOT NULL default '',
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`role_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `casemgmt_cpp`
@@ -277,7 +277,7 @@ CREATE TABLE `casemgmt_cpp` (
   `otherSupportSystems` text default null,
   `pastMedications` text default null,  
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `casemgmt_issue`
@@ -296,7 +296,7 @@ CREATE TABLE `casemgmt_issue` (
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   KEY `FK718D130B49CFB32F` (`issue_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `casemgmt_issue_notes`
@@ -309,7 +309,7 @@ CREATE TABLE `casemgmt_issue_notes` (
   PRIMARY KEY  (`id`,`note_id`),
   KEY `FK5876108D1DA7C976` (`id`),
   KEY `FK5876108D40188B8` (`note_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `casemgmt_note`
@@ -340,7 +340,7 @@ CREATE TABLE `casemgmt_note` (
   KEY `FKA8D537806CCA0FC` (`provider_no`),
 	index(demographic_no),
 	index(uuid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `casemgmt_tmpsave`
@@ -356,7 +356,7 @@ CREATE TABLE `casemgmt_tmpsave` (
   `update_date` datetime default NULL,
   `note_id` int(10),
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `client_image`
@@ -370,7 +370,7 @@ CREATE TABLE `client_image` (
   `image_data` longtext,
   `update_date` datetime default NULL,
   PRIMARY KEY  (`image_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `client_referral`
@@ -393,7 +393,7 @@ CREATE TABLE `client_referral` (
   `present_problems` text default NULL,
   `radioRejectionReason` varchar(10) default '0',
   PRIMARY KEY  (`referral_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 DROP TABLE IF EXISTS `consent`;
 CREATE TABLE `consent` (
@@ -414,7 +414,7 @@ CREATE TABLE `consent` (
   `exclusions` varchar(255) default NULL,
   `refused` tinyint(1) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `consent_interview`
@@ -444,7 +444,7 @@ CREATE TABLE `consent_interview` (
   `comments` varchar(255) default NULL,
   `comments_other` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 DROP TABLE IF EXISTS `cr_cert`;
 CREATE TABLE `cr_cert` (
@@ -462,7 +462,7 @@ CREATE TABLE `cr_cert` (
   `last_changed` datetime default NULL,
   `signature` bigint(20) default NULL,
   PRIMARY KEY  (`cert_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `cr_machine`
@@ -474,7 +474,7 @@ CREATE TABLE `cr_machine` (
   `ip` varchar(15) default NULL,
   `machine_name` varchar(255) default NULL,
   PRIMARY KEY  (`machine_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `cr_policy`
@@ -501,7 +501,7 @@ CREATE TABLE `cr_policy` (
   `certs_current` int(11) default NULL,
   `default_answer` varchar(16) default NULL,
   PRIMARY KEY  (`policy_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `cr_securityquestion`
@@ -514,7 +514,7 @@ CREATE TABLE `cr_securityquestion` (
   `question` varchar(255) default NULL,
   `answer` varchar(255) default NULL,
   PRIMARY KEY  (`question_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `cr_user`
@@ -528,7 +528,7 @@ CREATE TABLE `cr_user` (
   `lockedout` tinyint(1) default NULL,
   `password_expired` tinyint(1) default NULL,
   PRIMARY KEY  (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `cr_userrole`
@@ -539,7 +539,7 @@ CREATE TABLE `cr_userrole` (
   `user_id` varchar(64) NOT NULL default '',
   `user_role` varchar(64) NOT NULL default '',
   PRIMARY KEY  (`user_id`,`user_role`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `custom_filter`
@@ -557,7 +557,7 @@ CREATE TABLE `custom_filter` (
   `name` varchar(255) NOT NULL default '',
   `shortcut` tinyint(1) default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `custom_filter_assignees`
@@ -567,7 +567,7 @@ DROP TABLE IF EXISTS `custom_filter_assignees`;
 CREATE TABLE `custom_filter_assignees` (
   `filter_id` int(10) NOT NULL default '0',
   `provider_no` varchar(6) NOT NULL default ''
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `custom_filter_providers`
@@ -577,7 +577,7 @@ DROP TABLE IF EXISTS `custom_filter_providers`;
 CREATE TABLE `custom_filter_providers` (
   `filter_id` int(10) NOT NULL default '0',
   `provider_no` varchar(6) NOT NULL default ''
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `default_role_access`
@@ -589,7 +589,7 @@ CREATE TABLE `default_role_access` (
   `role_id` int(11) NOT NULL default '0',
   `access_id` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `formfollowup`
@@ -768,7 +768,7 @@ CREATE TABLE `formfollowup` (
   `radio_caredForAnxiety` varchar(24) default NULL,
   `dateLastDoctor1Contact` varchar(24) default NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `formintakea`
@@ -931,7 +931,7 @@ CREATE TABLE `formintakea` (
   `radio_sex` varchar(36) default NULL,
   `effDate` varchar(10) default NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `formintakeb`
@@ -1110,7 +1110,7 @@ CREATE TABLE `formintakeb` (
   `cbox_fortYork` char(1) default '',
   `cbox_downsviewDells` char(1) default '',
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `formintakec`
@@ -1359,7 +1359,7 @@ CREATE TABLE `formintakec` (
   `ids` text,
   `hospitalizations` text,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `formreceptionassessment`
@@ -1506,7 +1506,7 @@ CREATE TABLE `formreceptionassessment` (
   `cbox_fortYork` char(1) default NULL,
   `cbox_downsviewDells` char(1) default NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `functional_user_type`
@@ -1516,7 +1516,7 @@ CREATE TABLE `functional_user_type` (
   `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `intake_node_label`
@@ -1526,7 +1526,7 @@ CREATE TABLE `intake_node_label` (
   `intake_node_label_id` int(10) unsigned NOT NULL auto_increment,
   `lbl` text NOT NULL,
   PRIMARY KEY  (`intake_node_label_id`)
-) ENGINE=InnoDB;
+);
 
 --
 -- Table structure for table `intake_node_type`
@@ -1536,7 +1536,7 @@ CREATE TABLE `intake_node_type` (
   `intake_node_type_id` int(10) unsigned NOT NULL auto_increment,
   `type` varchar(255) NOT NULL,
   PRIMARY KEY  (`intake_node_type_id`)
-) ENGINE=InnoDB;
+);
 
 --
 -- Table structure for table `intake_node_template`
@@ -1552,7 +1552,7 @@ CREATE TABLE `intake_node_template` (
   KEY `IDX_intake_node_template_intake_node_label` (`intake_node_label_id`),
   CONSTRAINT `FK_intake_node_template_intake_node_label` FOREIGN KEY (`intake_node_label_id`) REFERENCES `intake_node_label` (`intake_node_label_id`),
   CONSTRAINT `FK_intake_node_template_intake_node_type` FOREIGN KEY (`intake_node_type_id`) REFERENCES `intake_node_type` (`intake_node_type_id`)
-) ENGINE=InnoDB;
+);
 
 --
 -- Table structure for table `intake_answer_validation`
@@ -1562,7 +1562,7 @@ CREATE TABLE `intake_answer_validation` (
   `intake_answer_validation_id` int(10) unsigned NOT NULL auto_increment,
   `type` varchar(255) NOT NULL,
   PRIMARY KEY  (`intake_answer_validation_id`)
-) ENGINE=InnoDB;
+);
 
 --
 -- Table structure for table `intake_answer_element`
@@ -1579,7 +1579,7 @@ CREATE TABLE `intake_answer_element` (
   KEY `IDX_intake_answer_element_intake_answer_validation` (`intake_answer_validation_id`),
   CONSTRAINT `FK_intake_answer_element_intake_node_template` FOREIGN KEY (`intake_node_template_id`) REFERENCES `intake_node_template` (`intake_node_template_id`),
   CONSTRAINT `FK_intake_answer_element_intake_answer_validation` FOREIGN KEY (`intake_answer_validation_id`) REFERENCES `intake_answer_validation` (`intake_answer_validation_id`)
-) ENGINE=InnoDB;
+);
 
 --
 -- Table structure for table `intake_node`
@@ -1598,7 +1598,7 @@ CREATE TABLE `intake_node` (
   CONSTRAINT `FK_intake_node_intake_node_template` FOREIGN KEY (`intake_node_template_id`) REFERENCES `intake_node_template` (`intake_node_template_id`),
   CONSTRAINT `FK_intake_node_intake_node_label` FOREIGN KEY (`intake_node_label_id`) REFERENCES `intake_node_label` (`intake_node_label_id`),
   CONSTRAINT `FK_intake_node_intake_node` FOREIGN KEY (`parent_intake_node_id`) REFERENCES `intake_node` (`intake_node_id`)
-) ENGINE=InnoDB;
+);
 
 --
 -- Table structure for table `intake`
@@ -1614,7 +1614,7 @@ CREATE TABLE `intake` (
   KEY `IDX_intake_intake_node` (`intake_node_id`),
   KEY `IDX_intake_client_creation_date` (`client_id`,`creation_date`),
   CONSTRAINT `FK_intake_intake_node` FOREIGN KEY (`intake_node_id`) REFERENCES `intake_node` (`intake_node_id`)
-) ENGINE=InnoDB;
+);
 
 --
 -- Table structure for table `intake_answer`
@@ -1630,7 +1630,7 @@ CREATE TABLE `intake_answer` (
   KEY `IDX_intake_answer_intake_node` (`intake_node_id`),
   CONSTRAINT `FK_intake_answer_intake` FOREIGN KEY (`intake_id`) REFERENCES `intake` (`intake_id`),
   CONSTRAINT `FK_intake_answer_intake_node` FOREIGN KEY (`intake_node_id`) REFERENCES `intake_node` (`intake_node_id`)
-) ENGINE=InnoDB;
+);
 
 --
 -- Table structure for table `issue`
@@ -1645,7 +1645,7 @@ CREATE TABLE `issue` (
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `priority` CHAR(10) DEFAULT NULL,
   PRIMARY KEY  (`issue_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `program`
@@ -1693,7 +1693,7 @@ foreign key (facility_id) references facility(id),
   PRIMARY KEY  (`program_id`),
 	ageMin int not null default 0,
 	ageMax int not null default 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `program_access`
@@ -1707,7 +1707,7 @@ CREATE TABLE `program_access` (
   `all_roles` tinyint(1) default NULL,
   PRIMARY KEY  (`id`),
   KEY `FKC385F77F9BCAF076` (`access_type_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `program_access_roles`
@@ -1720,7 +1720,7 @@ CREATE TABLE `program_access_roles` (
   PRIMARY KEY  (`id`,`role_id`),
   KEY `FK55BF0DFDBC1003F0` (`id`),
   KEY `FK55BF0DFD60605436` (`role_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `program_functional_user`
@@ -1735,7 +1735,7 @@ CREATE TABLE `program_functional_user` (
   PRIMARY KEY  (`id`),
   KEY `FK13B70CCFE0B12E7` (`user_type_id`),
   KEY `FK13B70CCE6DF0AD3` (`provider_no`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `program_provider`
@@ -1752,7 +1752,7 @@ CREATE TABLE `program_provider` (
   KEY `FK3EFA2D4C60605436` (`role_id`),
   KEY `FK3EFA2D4CE6DF0AD3` (`provider_no`),
   KEY `FK3EFA2D4CDAA8624B` (`team_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `program_provider_team`
@@ -1765,7 +1765,7 @@ CREATE TABLE `program_provider_team` (
   PRIMARY KEY  (`id`,`elt`),
   KEY `FK5E7B3D703D01BC3D` (`id`),
   KEY `FK5E7B3D703073B4BB` (`elt`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `program_queue`
@@ -1785,7 +1785,7 @@ CREATE TABLE `program_queue` (
   `temporary_admission_flag` tinyint(1) default NULL,
   `present_problems` varchar(255) default NULL,
   PRIMARY KEY  (`queue_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `program_team`
@@ -1797,7 +1797,7 @@ CREATE TABLE `program_team` (
   `name` varchar(255) default NULL,
   `program_id` bigint(20) default NULL,
   PRIMARY KEY  (`team_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `provider_default_program`
@@ -1810,7 +1810,7 @@ CREATE TABLE `provider_default_program` (
   `program_id` int(10) NOT NULL default '0',
   `signnote` tinyint(1) default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `room`
@@ -1829,7 +1829,7 @@ CREATE TABLE `room` (
   `occupancy`  int(10) NULL default '0',
   CONSTRAINT `FK_room_facility` FOREIGN KEY (`facility_id`) REFERENCES `facility` (`id`),
   PRIMARY KEY  (`room_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `room_bed_historical`
@@ -1842,7 +1842,7 @@ CREATE TABLE `room_bed_historical` (
   `contain_start` date NOT NULL,
   `contain_end` date NOT NULL,
   PRIMARY KEY  (`room_id`,`bed_id`,`contain_start`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `room_type`
@@ -1854,7 +1854,7 @@ CREATE TABLE `room_type` (
   `name` varchar(45) NOT NULL,
   `dflt` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`room_type_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 
 CREATE TABLE `room_demographic` (
@@ -1896,7 +1896,7 @@ CREATE TABLE `survey` (
   `launched_instance_id` bigint(20) default NULL,
   `version` bigint(20) default '0',
   PRIMARY KEY  (`surveyid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `surveyData`
@@ -1920,7 +1920,7 @@ CREATE TABLE `surveyData` (
   KEY `survey_date_index` (`survey_date`),
   KEY `answer_index` (`answer`),
   KEY `processed_index` (`processed`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `survey_test_data`
@@ -1938,7 +1938,7 @@ CREATE TABLE `survey_test_data` (
   `type` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `FKB5082892A9437DC8` (`instance_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `survey_test_instance`
@@ -1952,7 +1952,7 @@ CREATE TABLE `survey_test_instance` (
   `user_id` bigint(20) default NULL,
   `client_id` bigint(20) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 --
 -- Table structure for table `system_message`
@@ -1965,7 +1965,7 @@ CREATE TABLE `system_message` (
   `creation_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `expiry_date` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 
 DROP TABLE IF EXISTS `facility_message`;
@@ -1977,7 +1977,7 @@ CREATE TABLE `facility_message` (
   `facility_id` int(22),
   `facility_name` varchar(32),
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 
 DROP TABLE IF EXISTS `pmm_log`;
@@ -2001,7 +2001,7 @@ CREATE TABLE icd10 (
     short_desc VARCHAR(40) NOT NULL,
     long_desc VARCHAR(255) NOT NULL,
     PRIMARY KEY(code)
-) ENGINE = InnoDB;
+);
 
 --
 -- Table structure for table `program_clientstatus`
@@ -2012,7 +2012,7 @@ CREATE TABLE `program_clientstatus` (
   `name` varchar(255) default NULL,
   `program_id` bigint(20) default NULL,
   PRIMARY KEY  (`clientstatus_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 drop table if exists tickler_update;
 create table tickler_update (
@@ -2022,7 +2022,7 @@ create table tickler_update (
 	provider_no varchar(6) not null,
 	update_date datetime not null,
 	primary key(id)
-) TYPE MyISAM;
+);
 
 drop table if exists tickler_comments;
 create table tickler_comments (
@@ -2032,7 +2032,7 @@ create table tickler_comments (
 	provider_no varchar(6) not null,
 	update_date datetime not null,
 	primary key(id)
-) TYPE MyISAM;
+);
 
 DROP TABLE IF EXISTS `formDischargeSummary`;
 CREATE TABLE `formDischargeSummary` (
@@ -2101,7 +2101,7 @@ create table programSignature (
   	`caisiRoleName` varchar(255) NOT NULL default '',
   	`updateDate` datetime default '0000-00-00 00:00:00',
   	PRIMARY KEY (`id`)
-)ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 
 
@@ -2126,7 +2126,7 @@ create table facility (
     `sector_id` int(10) NOT NULL default '0',
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_facility_name` USING HASH (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 -- program restriction based on gender
 drop table if exists `program_client_restriction`;
@@ -2143,7 +2143,7 @@ create table `program_client_restriction` (
     CONSTRAINT `FK_pcr_program` FOREIGN KEY (`program_id`) REFERENCES `program` (`id`),
     CONSTRAINT `FK_pcr_provider` FOREIGN KEY (`provider_no`) REFERENCES `provider` (`provider_no`),
     CONSTRAINT `FK_pcr_demographic` FOREIGN KEY (`demographic_no`) REFERENCES `demographic` (`demographic_no`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 CREATE TABLE `joint_admissions` (
   `id` bigint(11) NOT NULL auto_increment,
@@ -2179,4 +2179,14 @@ create table health_safety
   username       	varchar(128),
   updatedate    	datetime,
   primary key (id)
+);
+
+create table provider_facility
+(
+	provider_id int not null,
+	facility_id int not null,
+	unique (provider_id, facility_id),
+	index (facility_id)
+--	foreign key (provider_id) references provider(provider_no),
+--	foreign key (facility_id) references facility(id),
 );
