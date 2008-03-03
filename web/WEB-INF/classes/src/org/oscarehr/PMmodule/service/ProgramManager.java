@@ -153,6 +153,10 @@ public class ProgramManager {
 	public List<Program> getAllPrograms() {
 		return dao.getAllPrograms();
 	}
+    public List <Program> getAllPrograms(String programStatus, String type, long facilityId)
+    {
+    	return dao.getAllPrograms(programStatus,type,facilityId);
+    }
 
 	public List<Program> getProgramsByAgencyId(String agencyId) {
 		return dao.getProgramsByAgencyId(agencyId);

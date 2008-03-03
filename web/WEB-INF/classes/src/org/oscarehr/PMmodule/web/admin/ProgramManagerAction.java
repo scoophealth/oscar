@@ -49,7 +49,28 @@ public class ProgramManagerAction extends BaseAction {
     }
 
     public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("programs", programManager.getAllPrograms());
+        DynaActionForm programForm = (DynaActionForm) form;
+        String searchStatus = (String) programForm.get("searchStatus");
+        String searchType = (String) programForm.get("searchType");
+        String searchFacilityId = (String) programForm.get("searchFacilityId");
+
+        List <Program> list =  null;
+        if("".equals(searchStatus)) {
+        	searchStatus = "Any";
+        	searchType = "Any";
+        	searchFacilityId = "0";
+        	list = programManager.getAllPrograms();
+        }
+        else
+        {
+        	list = programManager.getAllPrograms(searchStatus, searchType, Long.parseLong(searchFacilityId));
+        }
+    	request.setAttribute("programs", list);
+        request.setAttribute("facilities",facilityDAO.getFacilities());
+
+        programForm.set("searchStatus",searchStatus);
+        programForm.set("searchType", searchType);
+        programForm.set("searchFacilityId", searchFacilityId);
 
         logManager.log("read", "full program list", "", request);
 

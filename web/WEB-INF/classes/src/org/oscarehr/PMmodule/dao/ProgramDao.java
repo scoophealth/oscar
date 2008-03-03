@@ -180,12 +180,27 @@ public class ProgramDao extends HibernateDaoSupport {
         return rs;
     }
 
+    public List <Program> getAllPrograms(String programStatus, String type, long facilityId)
+    {
+        @SuppressWarnings("unchecked")
+    	Criteria c = getSession().createCriteria(Program.class);
+    	if (!"Any".equals(programStatus)) {
+    		c.add(Restrictions.eq("programStatus", programStatus));
+    	}
+    	if (!"Any".equals(type)) {
+    		c.add(Restrictions.eq("type", type));
+    	}
+    	if (facilityId > 0) {
+    		c.add(Restrictions.eq("facilityId", facilityId));
+    	}
+    	return 	c.list();
+    }
     public List<Program> getActiveUserDefinedPrograms() {
         @SuppressWarnings("unchecked")
         List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.userDefined = ? and p.programStatus = 'active'", new Boolean[] { true });
         return rs;
     }
-
+ 
     public List<Program> getProgramsByAgencyId(String agencyId) {
         if (agencyId == null || agencyId.length() <= 0) {
             return null;
