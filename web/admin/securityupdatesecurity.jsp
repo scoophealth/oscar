@@ -127,7 +127,8 @@
         <td  align="right" nowrap><bean:message key="admin.securityrecord.formPassword"/><font size='-2'>(<=10char)</font>:
         </td>
         <td>
-          <input type="text" name="password" value="<%= apptMainBean.getString(rs,"password") %>">
+          <input type="text" name="password" value="*********">
+          <!-- apptMainBean.getString(rs,"password") -->
         </td>
       </tr>
       <tr>
@@ -162,7 +163,8 @@
       <tr>
         <td  align="right" nowrap><bean:message key="admin.securityrecord.formPIN"/>:</td>
         <td>
-          <input type="text" name="pin" value="<%= apptMainBean.getString(rs,"pin")==null?"":apptMainBean.getString(rs,"pin") %>">
+          <input type="text" name="pin" value="****">
+          <!-- apptMainBean.getString(rs,"pin")==null?"":apptMainBean.getString(rs,"pin") -->
         </td>
       </tr>
       <tr>

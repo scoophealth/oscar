@@ -133,6 +133,9 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"security_search_detail", "select * from security where security_no=?"},
     {"security_delete", "delete from security where security_no=? and provider_no!='super'"},
     {"security_update_record", "update security set user_name=?,password=?,provider_no=?,pin=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
+    {"security_update_record2", "update security set user_name=?,password=?,provider_no=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
+    {"security_update_record3", "update security set user_name=?,provider_no=?,pin=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
+    {"security_update_record4", "update security set user_name=?,provider_no=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
     
     {"preference_add_record", "insert into preference (provider_no,start_hour,end_hour,every_min,mygroup_no,default_servicetype,color_template,new_tickler_warning_window) values(?,?,?,?,?,?,?,?)" },
     {"preference_search_titlename", "select * from preference where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
@@ -242,6 +245,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
   apptMainBean.doCommand(request); //store request to a help class object Dict - function&params
   if(true) {
     out.clear();
+    String xx=apptMainBean.whereTo();
     pageContext.forward(apptMainBean.whereTo()); //forward request&response to the target page    
     return;
   }

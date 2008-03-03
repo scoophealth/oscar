@@ -69,11 +69,17 @@ public class LoginCheckLoginBean {
             return cleanNullObj(LOG_PRE + "No Such User: " + username);
         }
         // check pin if needed
+
+        String sPin = pin;
+        if (oscar.OscarProperties.getInstance().isPINEncripted()) sPin = oscar.Misc.encryptPIN(sPin);
+        
+//        if (isWAN() && secBean.getB_RemoteLockSet().intValue() == 1
+//                && (!pin.equals(secBean.getPin()) || pin.length() < 3)) {
         if (isWAN() && secBean.getB_RemoteLockSet().intValue() == 1
-                && (!pin.equals(secBean.getPin()) || pin.length() < 3)) {
+                && (!sPin.equals(secBean.getPin()) || pin.length() < 3)) {
             return cleanNullObj(LOG_PRE + "Pin-remote needed: " + username);
         } else if (!isWAN() && secBean.getB_LocalLockSet().intValue() == 1
-                && (!pin.equals(secBean.getPin()) || pin.length() < 3)) {
+                && (!sPin.equals(secBean.getPin()) || pin.length() < 3)) {
             return cleanNullObj(LOG_PRE + "Pin-local needed: " + username);
         }
 

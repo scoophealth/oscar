@@ -474,4 +474,19 @@ public static String space(int i) {
     	return (String) s;
     }
 
+    public static String encryptPIN(String sPin){
+        StringBuilder sb = new StringBuilder();
+        int i, j;
+        if(sPin==null) return  null;
+
+        j=0;
+        for(i = 0;i<sPin.length();i++){
+    	  char c = sPin.charAt(i);
+    	  j = j + (int)c;
+    	  if(j>127) j = j-127;
+    	  sb.append((char)j);
+    	}
+  	    return sb.toString();
+    }
+    
 }
