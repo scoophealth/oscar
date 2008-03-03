@@ -1,15 +1,21 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ include file="/common/messages.jsp"%>
 <html:form action="/QuatroReport/ReportList.do">
-<table cellpadding="3" cellspacing="0" border="0" width="100%">
- <tr><td style="color: white;font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px; font-weight: bold" background="../images/TitleBar2.png" align="center">
-	Reports</td></tr>
-<tr><td style="font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px;" background="../images/ButtonBar2.png"  align="left">
+<div class="tabs" id="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="Reports">Reports</th>
+		</tr>
+	</table>
+</div>
+
+<table cellpadding="3" cellspacing="0" border="0" width="100%" class="toolgroup">
+<tr><td align="left">
 <img src="../images/Delete16.gif"/>
 <a href="javascript:quatroReportListForm.Delete.click();">Delete Template(s)</a>&nbsp;|&nbsp;
 <html:submit property="Delete" style="width:1px;height:1px;">Delete Template(s)</html:submit>
 </td></tr>
-
+</table>
+<table width="100%">
 <tr><td>
 <%StringBuilder str= new StringBuilder(); %>
 <logic:iterate id="reportGroup" property="reportGroups" name="quatroReportListForm" indexId="rIndex1">
@@ -32,7 +38,7 @@
   </ul>
 </ul>
 </logic:iterate>
-<input type="hidden" name="chkDel" value="<%=str.toString()%>">
+<input type="hidden" name="chkDel" value="<%=str.toString()%>" />
 </td></tr>
  </table>
 </html:form>

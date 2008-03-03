@@ -35,13 +35,16 @@
 <html:hidden property="tableDef.moduleId" />
 <div style="color:red">
 <!--  %@ include file="messages.jsp" % -->
- <table cellpadding="3" cellspacing="0" border="0" width="100%">
+<div class="tabs" id="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="LookupTableList">Lookup Code Edit</th>
+		</tr>
+	</table>
+</div>
+ <table cellpadding="3" cellspacing="0" border="0" width="100%" class="toolgroup">
      <tr>
-         <td style="color: white;font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px; font-weight: bold" background="../images/TitleBar2.png" align="center">
-			Lookup Code Edit</td>
-     </tr>
-     <tr>
-     <td style="font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px;" background="../images/ButtonBar2.png"  align="left">
+     <td  align="left">
 		<html:submit property="method" style="width:1px;height:1px;" value="save"></html:submit>
 		<a href="javascript:document.forms(0).method.click();">
 			<img src="../images/Save16.png" border="0"/> Save </a> &nbsp;|&nbsp;

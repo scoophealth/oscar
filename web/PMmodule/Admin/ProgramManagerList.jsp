@@ -62,6 +62,7 @@
 		<input type="button"  name="search" value="Search" onclick="javascript:submitForm('list')"; />
 	</td>
 </tr>
+<tr><td colspan="4">&nbsp;</td></tr>
 </tbody>
 </table>
 </html:form>

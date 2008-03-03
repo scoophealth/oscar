@@ -17,13 +17,16 @@
 </head>
 <body>
 <html:form action="/Lookup/LookupCodeEdit.do">
- <table cellpadding="3" cellspacing="0" border="0" width="100%">
+<div class="tabs" id="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="LookupTableList">Code List</th>
+		</tr>
+	</table>
+</div>
+ <table cellpadding="3" cellspacing="0" border="0" width="100%" class="toolgroup">
      <tr>
-         <td style="color: white;font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px; font-weight: bold" background="../images/TitleBar2.png" align="center">
-			Code List</td>
-     </tr>
-     <tr>
-     <td style="font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px;" background="../images/ButtonBar2.png"  align="left">
+     <td align="left">
 		<html:link  action="/Lookup/LookupCodeEdit.do" paramName="lookupCodeListForm" paramProperty="tableDef.tableId" paramId="id">
 		<img src="../images/New16.png" border="0"/> Add</html:link>&nbsp;|&nbsp;
 		<html:link action="/Lookup/LookupTableList.do"> <img src="../images/Back16.png" border="0"/> Back to Lookup Fields</html:link>

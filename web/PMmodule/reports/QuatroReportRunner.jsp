@@ -74,12 +74,16 @@ function getOrgList(){
 </script>
 
 <html:form action="/QuatroReport/ReportRunner.do" onsubmit="return getOrgList();">
-<table width="100%">
-<tr><td style="color: white;font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px; font-weight: bold" background="../images/TitleBar2.png" align="center">
-<c:out value="${quatroReportRunnerForm.reportTitle}" />
-</td></tr>
+<div class="tabs" id="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="LookupTableList">Report: <c:out value="${quatroReportRunnerForm.reportTitle}" /></th>
+		</tr>
+	</table>
+</div>
 
-<tr><td style="font-family:Tahoma,Verdana,Arial;font-size: 14px;padding-left:8px;padding-right:8px;padding-top:4px;padding-bottom:4px;" background="../images/ButtonBar2.png"  align="left">
+<table width="100%" class="toolgroup">
+<tr><td align="left">
 <img src="../images/Save16.png"/>
 <a href="javascript:quatroReportRunnerForm.Save.click();">Save Template</a>&nbsp;|&nbsp;
 <html:submit property="Save" style="width:1px;height:1px;">Save Template</html:submit>
@@ -89,10 +93,9 @@ function getOrgList(){
 <a href="javascript:quatroReportRunnerForm.Run.click();">Run Report</a>&nbsp;|&nbsp;
 <img src="../images/Back16.png"/>&nbsp;<html:link action="/QuatroReport/ReportList.do">QuatroShelter Reports</html:link>
 </td></tr>
+</table>
 
-<tr><td valign="top">
-
-<table width="100%">
+<table width="100%" border="1">
    <tr>
        <td class="clsNameLabels"  colspan="2" style="color: #ff0000;"><c:out value="${quatroReportRunnerForm.lblError}" /></td>
    </tr>
