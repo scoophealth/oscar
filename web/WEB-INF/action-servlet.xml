@@ -108,6 +108,9 @@
         <property name="logManager" ref="logManager"/>
         <property name="integratorManager" ref="integratorManager"/>
     </bean>
+    <bean name="/PMmodule/HealthSafety" class="org.oscarehr.PMmodule.web.HealthSafetyAction" singleton="false">
+        <property name="healthSafetyManager" ref="healthSafetyManager"/>
+    </bean>
     <bean name="/PMmodule/Consent" class="org.oscarehr.PMmodule.web.ConsentAction" singleton="false">
         <property name="consentManager" ref="consentManager"/>
         <property name="clientManager" ref="clientManager"/>

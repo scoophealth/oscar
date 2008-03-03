@@ -42,6 +42,7 @@
     <bean id="intakeADao" class="org.oscarehr.PMmodule.dao.IntakeADao" autowire="byName" />
     <bean id="intakeCDao" class="org.oscarehr.PMmodule.dao.IntakeCDao" autowire="byName" />
     <bean id="consentDao" class="org.oscarehr.PMmodule.dao.ConsentDAO" autowire="byName" />
+    <bean id="healthSafetyDao" class="org.oscarehr.PMmodule.dao.HealthSafetyDao" autowire="byName" />
     <bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
     <bean id="formsDAO" class="org.oscarehr.PMmodule.dao.FormsDAO" autowire="byName"/>
     <bean id="surveyDAO" class="org.oscarehr.survey.dao.hibernate.SurveyDAOHibernate" autowire="byName"/>
@@ -122,6 +123,16 @@
         </property>
     </bean>
     <!-- Generic Intake -->
+    <bean id="healthSafetyManager" parent="baseTransactionProxy" lazy-init="default"
+          dependency-check="default">
+        <property name="target">
+            <bean class="org.oscarehr.PMmodule.service.HealthSafetyManager" lazy-init="default"
+                  dependency-check="default">
+               <property name="healthSafetyDao" ref="healthSafetyDao"/>
+            </bean>
+        </property>
+    </bean>
+   
     <bean id="consentManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">

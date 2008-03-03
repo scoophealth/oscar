@@ -226,6 +226,9 @@
             <form-property name="hospitalization" type="org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization[]" size="20" />
             <form-property name="bean" type="org.oscarehr.PMmodule.web.formbean.IntakeFormBean" />
         </form-bean>
+        <form-bean name="healthSafetyForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="healthsafety" type="org.oscarehr.PMmodule.model.HealthSafety" />
+        </form-bean>
         <form-bean name="consentForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="consent" type="org.oscarehr.PMmodule.model.Consent" />
             <form-property name="interview" type="org.oscarehr.PMmodule.model.ConsentInterview" />
@@ -1449,6 +1452,10 @@
             <forward name="error" path="/PMmodule/ProviderInfo.do?method=view" />
             <forward name="cancel-new" path="/PMmodule/ProviderInfo.do?method=view" />
             <forward name="cancel-update" path="/PMmodule/ClientManager.do?method=edit" />
+        </action>
+        <action path="/PMmodule/HealthSafety" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="healthSafetyForm" validate="false">
+            <forward name="edit" path="/PMmodule/HealthSafety.jsp" />
+            <forward name="success" path="/PMmodule/HealthSafetyExit.jsp" />
         </action>
         <action path="/PMmodule/Consent" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="consentForm" input="/PMmodule/Consent/consentFormA.jsp" validate="false">
             <forward name="formA" path="/PMmodule/Consent/consentFormA.jsp" />
