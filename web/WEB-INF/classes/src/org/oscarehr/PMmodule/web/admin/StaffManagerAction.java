@@ -39,6 +39,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
+import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -50,7 +53,33 @@ import org.oscarehr.PMmodule.web.formbean.StaffManagerViewFormBean;
 public class StaffManagerAction extends BaseAction {
 	private static Log log = LogFactory.getLog(StaffManagerAction.class);
 	
-	public void setEditAttributes(HttpServletRequest request, Provider provider) {
+	private FacilityDAO facilityDAO=null;
+	
+	public void setFacilityDAO(FacilityDAO facilityDAO) {
+        this.facilityDAO = facilityDAO;
+    }
+	
+    public ActionForward add_to_facility(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        
+        int facilityId=Integer.parseInt(request.getParameter("facility_id"));
+        int providerId=Integer.parseInt(request.getParameter("id"));
+
+        ProviderDao.addProviderToFacility(providerId, facilityId);
+        
+        return edit(mapping,form,request,response);
+    }
+        
+    public ActionForward remove_from_facility(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        
+        int facilityId=Integer.parseInt(request.getParameter("facility_id"));
+        int providerId=Integer.parseInt(request.getParameter("id"));
+
+        ProviderDao.removeProviderFromFacility(providerId, facilityId);
+        
+        return edit(mapping,form,request,response);
+    }
+        
+    public void setEditAttributes(HttpServletRequest request, Provider provider) {
 		request.setAttribute("id",provider.getProviderNo());
 		request.setAttribute("providerName",provider.getFormattedName());
 		
@@ -76,6 +105,12 @@ public class StaffManagerAction extends BaseAction {
 		}
 		request.setAttribute("all_programs",allProgramsInContainer);
 		request.setAttribute("roles",roleManager.getRoles());
+		
+		List<Facility> allFacilities=facilityDAO.getFacilities();
+        request.setAttribute("all_facilities",allFacilities);
+        
+        List<Integer> providerFacilities=ProviderDao.getFacilityIds(Integer.parseInt(provider.getProvider_no()));
+        request.setAttribute("providerFacilities",providerFacilities);
 	}
 	
 	protected List sortProgramProviders(List pps) {

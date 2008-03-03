@@ -28,7 +28,7 @@ import org.oscarehr.PMmodule.model.Provider;
 
 public class StaffManagerViewFormBean {
 	private String tab;
-	public static final String[] tabs = {"Summary","Programs"};
+	public static final String[] tabs = {"Summary","Programs","Facilities"};
 	private String sort;
 	
 	public StaffManagerViewFormBean() {

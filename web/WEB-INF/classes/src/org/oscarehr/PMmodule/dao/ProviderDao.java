@@ -30,14 +30,14 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;
+import oscar.util.SqlUtils;
 
 public class ProviderDao extends HibernateDaoSupport {
-	private Log log = LogFactory.getLog(ProviderDao.class);
+	private static Log log = LogFactory.getLog(ProviderDao.class);
 	
 	public boolean providerExists(String providerNo) {
 		boolean exists = (((Long) getHibernateTemplate().iterate("select count(*) from Provider p where p.ProviderNo = " + providerNo).next()) == 1);
@@ -133,5 +133,27 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 
 		return results;
+	}
+	
+	public static void addProviderToFacility(int providerId, int facilityId)
+	{
+	    try {
+            SqlUtils.update("insert into provider_facility values ("+providerId+','+facilityId+')');
+        }
+        catch (RuntimeException e) {
+            // chances are it's a duplicate unique entry exception so it's safe to ignore.
+            // this is still unexpected because duplicate calls shouldn't be made
+            log.warn("Unexpected exception occurred.", e);
+        }
+	}
+	
+	public static void removeProviderFromFacility(int providerId, int facilityId)
+	{
+        SqlUtils.update("delete from provider_facility where provider_id="+providerId+" and facility_id="+facilityId);
+	}
+	
+	public static List<Integer> getFacilityIds(int providerId)
+	{
+	    return(SqlUtils.selectIntList("select facility_id from provider_facility where provider_id="+providerId));
 	}
 }

@@ -116,7 +116,8 @@
         <property name="clientManager" ref="clientManager"/>
         <property name="logManager" ref="logManager"/>
     </bean>
-    <bean name="/PMmodule/StaffManager" class="org.oscarehr.PMmodule.web.admin.StaffManagerAction" singleton="false">
+    <bean name="/PMmodule/StaffManager" class="org.oscarehr.PMmodule.web.admin.StaffManagerAction" singleton="false" >
+        <property name="facilityDAO" ref="facilityDAO"/>
         <property name="programManager" ref="programManager"/>
         <property name="providerManager" ref="providerManager"/>
         <property name="logManager" ref="logManager"/>
