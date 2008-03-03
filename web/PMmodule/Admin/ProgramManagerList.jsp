@@ -7,6 +7,11 @@
 		}
 		return false;
 	}
+	function submitForm(method)
+	{
+		document.programManagerForm.method.value=method;
+		document.programManagerForm.submit()
+	}
 </script>
 <%@ include file="/common/messages.jsp"%>
 <div class="tabs" id="tabs">
@@ -16,6 +21,50 @@
 		</tr>
 	</table>
 </div>
+<html:form action="/PMmodule/ProgramManager.do">
+<table class="simple" cellspacing="2" cellpadding="3" width="100%">
+<thead>
+<tr>
+	<th>Status</th>
+	<th>Type</th>
+	<th>Facility</th>
+	<th>&nbsp;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>
+			<html:select property="searchStatus">
+				<html:option value="Any" />
+				<html:option value="active" />
+				<html:option value="inactive" />
+			</html:select>
+	</td>
+	<td>
+			<html:select property="searchType">
+				<html:option value="Any" />
+				<html:option value="Bed" />
+				<html:option value="Service" />
+				<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+				<html:option value="External"/>
+				</caisi:isModuleLoad>
+			</html:select>
+	</td>
+	<td>
+			<html-el:select property="searchFacilityId">
+				<html-el:option value="0">Any</html-el:option>
+				<c:forEach var="facility" items="${facilities}">
+					<html-el:option value="${facility.id}"><c:out value="${facility.name}"/></html-el:option>
+				</c:forEach>
+			</html-el:select>
+	</td>
+	<td>
+		<input type="button"  name="search" value="Search" onclick="javascript:submitForm('list')"; />
+	</td>
+</tr>
+</tbody>
+</table>
+</html:form>
 <display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="programs" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 	<display:setProperty name="paging.banner.item_name" value="program" />
