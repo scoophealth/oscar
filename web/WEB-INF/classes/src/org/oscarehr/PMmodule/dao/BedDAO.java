@@ -104,6 +104,16 @@ public class BedDAO extends HibernateDaoSupport {
 
         return getBeds(query, values);
     }
+    
+    @SuppressWarnings("unchecked")
+    public Bed[] getBedsByFilter(Integer facilityId, Integer roomId, Boolean active) {
+        String query = getBedsQuery(facilityId, roomId, active);
+        Object[] values = getBedsValues(facilityId, roomId, active);
+        List beds = getBeds(query, values);
+        log.debug("getBedsByFilter: size " + beds.size());
+
+        return (Bed[]) beds.toArray(new Bed[beds.size()]);
+    }
 
     /**
      * @return all bed types

@@ -1,5 +1,7 @@
 package org.oscarehr.PMmodule.web.admin;
 
+import java.util.Map;
+
 import org.apache.struts.action.ActionForm;
 import org.oscarehr.PMmodule.model.*;
 
@@ -19,7 +21,13 @@ public class BedManagerForm extends ActionForm {
     private Program[] programs;
     private Integer roomToDelete;
     private Integer bedToDelete;
-    
+    private Integer roomStatusFilter;
+    private Integer bedStatusFilter;
+    private Integer bedProgramFilterForRoom;
+    private Integer bedProgramFilterForBed;
+    private Map roomStatusNames;
+    private Map bedStatusNames;
+   
 
     public Integer getFacilityId() {
         return facilityId;
@@ -115,6 +123,54 @@ public class BedManagerForm extends ActionForm {
 
 	public void setRoomToDelete(Integer roomToDelete) {
 		this.roomToDelete = roomToDelete;
+	}
+
+	public Integer getBedProgramFilterForBed() {
+		return bedProgramFilterForBed;
+	}
+
+	public void setBedProgramFilterForBed(Integer bedProgramFilterForBed) {
+		this.bedProgramFilterForBed = bedProgramFilterForBed;
+	}
+
+	public Integer getBedProgramFilterForRoom() {
+		return bedProgramFilterForRoom;
+	}
+
+	public void setBedProgramFilterForRoom(Integer bedProgramFilterForRoom) {
+		this.bedProgramFilterForRoom = bedProgramFilterForRoom;
+	}
+
+	public Integer getBedStatusFilter() {
+		return bedStatusFilter;
+	}
+
+	public void setBedStatusFilter(Integer bedStatusFilter) {
+		this.bedStatusFilter = bedStatusFilter;
+	}
+
+	public Integer getRoomStatusFilter() {
+		return roomStatusFilter;
+	}
+
+	public void setRoomStatusFilter(Integer roomStatusFilter) {
+		this.roomStatusFilter = roomStatusFilter;
+	}
+
+	public Map getBedStatusNames() {
+		return bedStatusNames;
+	}
+
+	public void setBedStatusNames(Map bedStatusNames) {
+		this.bedStatusNames = bedStatusNames;
+	}
+
+	public Map getRoomStatusNames() {
+		return roomStatusNames;
+	}
+
+	public void setRoomStatusNames(Map roomStatusNames) {
+		this.roomStatusNames = roomStatusNames;
 	}
 
 }

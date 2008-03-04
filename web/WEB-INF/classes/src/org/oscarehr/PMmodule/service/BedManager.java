@@ -178,6 +178,19 @@ public class BedManager {
         return beds.toArray(new Bed[beds.size()]);
     }
 
+    
+    public List<Bed> getBedsByFilter(Integer facilityId, Integer roomId, Boolean active,  boolean reserved) {
+    	List<Bed> beds = new ArrayList<Bed>();
+        for (Bed bed : bedDAO.getBedsByFilter(facilityId, roomId, active)) {
+            setAttributes(bed);
+
+            if (!filterBed(bed, reserved)) {
+                beds.add(bed);
+            }
+        }
+        return beds;
+    }
+    
     /**
      * Get beds by facility
      *

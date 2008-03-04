@@ -5,6 +5,18 @@
     {
         return confirm("Are you sure you want to delete " + name + " ?");
     }
+    
+    function roomFilter(){
+		document.forms[0].action = '<html:rewrite action="/PMmodule/BedManager.do?method=doRoomFilter" />';
+		document.forms[0].submit();
+    	
+    }
+    
+    function bedFilter(){
+		document.forms[0].action = '<html:rewrite action="/PMmodule/BedManager.do?method=doBedFilter" />';
+		document.forms[0].submit();
+    	
+    }    
 </script>
 <%@ include file="/common/messages.jsp"%>
 <div class="tabs" id="tabs">
@@ -22,6 +34,7 @@
 <html:hidden property="facilityId" />
 <html:hidden property="roomToDelete" />
 <html:hidden property="bedToDelete" />
+
 <tr>
     <td width="80%">
         <div class="tabs">
@@ -31,6 +44,30 @@
                 </tr>
             </table>
         </div>
+        
+<!-- begin room status & bed program filter -->        
+		<table width="100%">
+			<tr>
+				<td width="60%">
+				</td>
+				<td width="20%" style="font-weight:bold">
+					Room Status<br/>
+					<html:select property="roomStatusFilter"  name="bedManagerForm" onchange="roomFilter();">
+						<html:optionsCollection  property="roomStatusNames"  value="key"  label="value"/>
+					</html:select>
+				</td>
+				<td width="20%" align="right" style="font-weight:bold">
+					Bed Program<br/>
+					<html:select property="bedProgramFilterForRoom" name="bedManagerForm"  onchange="roomFilter();" >
+						<option value="0">Any</option>
+						<html:optionsCollection  property="programs"  value="id"  label="name"/>
+					</html:select>
+				</td>
+			</tr>
+		</table>
+        
+<!-- end room status & bed program filter -->           
+        
         <display:table class="simple" name="sessionScope.bedManagerForm.rooms" uid="room" requestURI="/PMmodule/BedManager.do" summary="Edit rooms">
             <display:column title="Name" sortable="true">
                 <input type="text" name="rooms[<c:out value="${room_rowNum - 1}" />].name" value="<c:out value="${room.name}" />" />
@@ -150,6 +187,29 @@
                 </tr>
             </table>
         </div>
+        
+<!-- begin bed status & bed program filter -->        
+		<table width="100%">
+			<tr>
+				<td width="60%">
+				</td>
+				<td width="20%" style="font-weight:bold">
+					Bed Status<br/>
+					<html:select property="bedStatusFilter"  name="bedManagerForm" onchange="bedFilter();">
+						<html:optionsCollection  property="bedStatusNames"  value="key"  label="value"/>
+					</html:select>
+				</td>
+				<td width="20%" align="right"  style="font-weight:bold">
+					Bed Program<br/>
+					<html:select property="bedProgramFilterForBed" name="bedManagerForm" onchange="bedFilter();" >
+						<option value="0">Any</option>
+						<html:optionsCollection  property="programs"  value="id"  label="name"/>
+					</html:select>
+				</td>
+			</tr>
+		</table>
+<!-- end bed status & bed program filter -->           
+        
         <display:table class="simple" name="sessionScope.bedManagerForm.beds" uid="bed" requestURI="/PMmodule/BedManager.do" summary="Edit beds">
 
             <display:column title="Name" sortable="true">
