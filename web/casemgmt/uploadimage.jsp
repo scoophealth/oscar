@@ -35,7 +35,6 @@
 		application.setAttribute("javax.servlet.context.tempdir",new java.io.File(tmpDir));
 	}
 %>
-<!-- <%@ include file="/casemgmt/taglibs.jsp" %> -->
 <head>
 <title>Client Image Manager</title>
 <meta http-equiv="Cache-Control" content="no-cache">
@@ -48,6 +47,15 @@
 			}
 		%>
 	}
+	
+	function onPicUpload(){
+  	  var obj= document.getElementsByName("clientImage.imagefile")[0];
+      if(obj.value==""){
+      	alert("Please specify picture path and name for upload.");
+      	return false;
+      }	
+	  return true;
+	}
 </script>
 </head>
 <body bgcolor="#C4D9E7" bgproperties="fixed" onLoad="self.focus();init_page();" topmargin="0" leftmargin="0" rightmargin="0">
@@ -56,7 +64,7 @@
 </table>
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7">
 
-	<html:form action="/ClientImage" enctype="multipart/form-data" method="post">
+	<html:form action="/ClientImage" enctype="multipart/form-data" method="post" onsubmit="return onPicUpload();">
 	<input type="hidden" name="method" value="saveImage"/>
 	<%
 	request.getSession().setAttribute("clientId",request.getParameter("demographicNo"));
