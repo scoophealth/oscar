@@ -75,21 +75,27 @@
 	<td>
        <logic:equal name="field" property="fieldType" value="S">
          <logic:empty name="field" property="lookupTable">
-           <html:text name="field" property="val" indexed="true"/>
+           <html:text name="field" property="val" indexed="true"  style="{width:100%}"/>
          </logic:empty>
          <logic:notEmpty name="field" property="lookupTable">
            <html:hidden name="field" property="lookupTable" indexed="true" />
-           <quatro:lookupTag name="field" tableName="<%=field.getLookupTable()%>" indexed="true" formProperty="lookupCodeEditForm" 
+           <quatro:lookupTag name="field" tableName="<%=field.getLookupTable()%>" indexed="true" formProperty="lookupCodeEditForm" codeWidth="10%"
               codeProperty ="val" bodyProperty="valdesc" codeValue="<%=field.getVal()%>" bodyValue="<%=field.getValDesc()%>"></quatro:lookupTag>
          </logic:notEmpty>
        </logic:equal>  
        <logic:equal name="field" property="fieldType" value="D">
        	 <bean:define id="dateVal" name="field" property="val"></bean:define>
-         <quatro:datePickerTag name="field" property="val" indexed="true" openerForm="lookupCodeEditForm" 
+         <quatro:datePickerTag name="field" property="val" indexed="true" openerForm="lookupCodeEditForm"  width="200px"
          value="<%=oscar.MyDateFormat.getMyStandardDate((String)dateVal)%>"></quatro:datePickerTag>
        </logic:equal>  
        <logic:equal name="field" property="fieldType" value="N">
-          <html:text name="field" property="val" indexed="true"/>
+          <html:text name="field" property="val" indexed="true" />
+       </logic:equal>
+       <logic:equal name="field" property="fieldType" value="B">
+          <html:select name="field" property="val" indexed="true">
+          	<html:option value="1">Yes</html:option>
+          	<html:option value="0">No</html:option>
+          </html:select>
        </logic:equal>
       </td>
   </tr>  

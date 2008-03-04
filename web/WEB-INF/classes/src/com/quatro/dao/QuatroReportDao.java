@@ -4,12 +4,9 @@ import java.util.*;
 
 import com.quatro.model.*;
 
-import org.caisi.model.CaisiEditor;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import org.hibernate.SessionFactory;
-import org.hibernate.Hibernate;
 import org.hibernate.Transaction;
 
 public class QuatroReportDao extends HibernateDaoSupport {

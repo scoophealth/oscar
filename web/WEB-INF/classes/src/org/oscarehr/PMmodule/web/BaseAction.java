@@ -57,13 +57,14 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
+import com.quatro.service.*;
 public abstract class BaseAction extends DispatchAction {
 	
 	protected static final String PARAM_START = "?";
 	protected static final String PARAM_EQUALS = "=";
 	protected static final String PARAM_AND = "&";
 	
+	protected LookupManager lookupManager;
 	protected CaseManagementManager caseManagementManager;
 	protected AdmissionManager admissionManager;
 	protected AgencyManager agencyManager;
@@ -109,7 +110,7 @@ public abstract class BaseAction extends DispatchAction {
 	public ApplicationContext getAppContext() {
 		return WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext());
 	}
-	
+
 	public CaseManagementManager getCaseManagementManager() {
 		return (CaseManagementManager)getAppContext().getBean("CaseManagementManager");
 	}
@@ -283,6 +284,14 @@ public abstract class BaseAction extends DispatchAction {
 
 	public void setCaisiEditorManager(CaisiEditorManager caisiEditorManager) {
 		this.caisiEditorManager = caisiEditorManager;
+	}
+
+	public LookupManager getLookupManager() {
+		return lookupManager;
+	}
+
+	public void setLookupManager(LookupManager lookupManager) {
+		this.lookupManager = lookupManager;
 	}
 
 }

@@ -196,7 +196,15 @@
             <table width="100%" border="1" cellspacing="2" cellpadding="3">
                 <tr class="b">
                     <td width="20%">Reason for service restriction:</td>
-                    <td><html:textarea cols="50" rows="7" property="serviceRestriction.comments" /></td>
+                    <td>
+                    	<html:select property="serviceRestriction.commentId">
+						<c:forEach var="restriction" items="${serviceRestrictionList}">
+							<html-el:option value="${restriction.code}"><c:out value="${restriction.description}"/></html-el:option>
+						</c:forEach>
+						</html:select>
+                    </td>
+                    
+                    <!--html:textarea cols="50" rows="7" property="serviceRestriction.comments" /></td -->
                 </tr>
                 <tr class="b">
                     <td width="20%">Length of restriction (in days)</td>

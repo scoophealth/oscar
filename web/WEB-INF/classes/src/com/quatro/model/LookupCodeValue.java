@@ -10,6 +10,9 @@ public class LookupCodeValue {
 	private Boolean active;
     private Boolean selectable;
 	private String parentCode;
+	private String buf1;
+	private String buf2;
+	
     private int orderByIndex;
     private List associates;
     
@@ -83,5 +86,17 @@ public class LookupCodeValue {
 	public String getCodeId()
 	{
 		return this.prefix + ":" + this.code;
+	}
+	public String getBuf1() {
+		return buf1;
+	}
+	public void setBuf1(String buf1) {
+		this.buf1 = buf1;
+	}
+	public String getBuf2() {
+		return buf2;
+	}
+	public void setBuf2(String buf2) {
+		this.buf2 = buf2;
 	}
 }

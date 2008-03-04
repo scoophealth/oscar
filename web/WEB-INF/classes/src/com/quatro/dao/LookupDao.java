@@ -23,7 +23,7 @@ public class LookupDao extends HibernateDaoSupport {
 	public List LoadCodeList(String tableIdName, boolean activeOnly, String code, String codeDesc)
 	{
 	   ArrayList paramList = new ArrayList();
-	   String sSQL="FROM LookupCodeValue s where s.prefix= ? ORDER BY s.parentCode, s.description";		
+	   String sSQL="FROM LookupCodeValue s where s.prefix= ? ORDER BY s.orderByIndex,s.parentCode, s.description";		
 	   paramList.add(tableIdName);
 	   Object params[] = paramList.toArray(new Object[paramList.size()]);
 	   return getHibernateTemplate().find(sSQL ,params);
@@ -58,6 +58,7 @@ public class LookupDao extends HibernateDaoSupport {
 	   if (!Utility.IsEmpty(codeDesc)) {
 		   	criteria.add(Restrictions.ilike("code","%" + codeDesc + "%"));
 	   }
+	   criteria.addOrder( Order.asc("orderByIndex"));
 	   criteria.addOrder( Order.asc("parentCode"));
 	   criteria.addOrder( Order.asc("description"));
 	   
@@ -127,6 +128,48 @@ public class LookupDao extends HibernateDaoSupport {
 			System.out.println(e.getStackTrace());
 		}
 		return fs;
+	}
+	public List GetCodeFieldValues(LookupTableDefValue tableDef)
+	{
+		String tableName = tableDef.getTableName();
+		List fs = LoadFieldDefList(tableDef.getTableId());
+		ArrayList codes = new ArrayList();
+		String sql = "SELECT ";
+		for(int i=0; i<fs.size(); i++) {
+			FieldDefValue fdv = (FieldDefValue) fs.get(i);
+			if (i==0) {
+				sql += fdv.getFieldSQL();
+			}
+			else
+			{
+				sql += "," + fdv.getFieldSQL();
+			}
+		}
+		sql += " FROM " + tableName;
+		try {
+			DBPreparedHandler db = new DBPreparedHandler();
+			ResultSet rs = db.queryResults(sql);
+			while (rs.next()) {
+				for(int i=0; i< fs.size(); i++) 
+				{
+					FieldDefValue fdv = (FieldDefValue) fs.get(i);
+					String val = db.getString(rs, i+1);
+					fdv.setVal(val);
+					if (!Utility.IsEmpty(fdv.getLookupTable()))
+					{
+						LookupCodeValue lkv = GetCode(fdv.getLookupTable(),val);
+						if (lkv != null) fdv.setValDesc(lkv.getDescription());
+					}
+				}
+				codes.add(fs);
+			}
+			rs.close();
+		}
+		catch(SQLException e)
+		{
+			System.out.println(e.getStackTrace());
+		}
+		return codes;
 	}
 	public void SaveCodeValue(boolean isNew, LookupTableDefValue tableDef, List fieldDefList) throws SQLException
 	{

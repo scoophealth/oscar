@@ -83,6 +83,7 @@ import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.springframework.beans.factory.annotation.Required;
 
 import oscar.oscarDemographic.data.DemographicRelationship;
+import com.quatro.service.*;
 
 public class ClientManagerAction extends BaseAction {
 
@@ -91,6 +92,7 @@ public class ClientManagerAction extends BaseAction {
     protected HealthSafetyManager healthSafetyManager;
     protected ClientRestrictionManager clientRestrictionManager;
     protected CaseManagementManager caseManagementManager;
+    
     private ClientReferralDAO clientReferralDAO;
 
     public void setClientReferralDAO(ClientReferralDAO clientReferralDAO) {
@@ -1474,6 +1476,7 @@ public class ClientManagerAction extends BaseAction {
         /* service restrictions */
         if (tabBean.getTab().equals("Service Restrictions")) {
             request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), new Date()));
+            request.setAttribute("serviceRestrictionList",lookupManager.LoadCodeList("SRT",true, null, null));
         }
 
         /* discharge */
@@ -1483,6 +1486,8 @@ public class ClientManagerAction extends BaseAction {
             request.setAttribute("temporaryAdmissions", admissionManager.getCurrentTemporaryProgramAdmission(Integer.valueOf(demographicNo)));
             request.setAttribute("current_bed_program", admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(demographicNo)));
             request.setAttribute("current_community_program", admissionManager.getCurrentCommunityProgramAdmission(Integer.valueOf(demographicNo)));
+            request.setAttribute("dischargeReasons", lookupManager.LoadCodeList("DRN",true, null, null));
+            request.setAttribute("dischargeReasons2",lookupManager.LoadCodeList("DR2",true, null, null));
         }
 
         /* Relations */

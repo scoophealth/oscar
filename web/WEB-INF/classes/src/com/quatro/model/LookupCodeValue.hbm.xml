@@ -4,11 +4,12 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class name="com.quatro.model.LookupCodeValue" table="V_Lookup_Table" mutable="false">
-		<id name="lineId" />
+		<id name="code" />
 		<property name="prefix" />
-        <property name="code" /> 
         <property name="description" /> 
         <property name="parentCode"/>
         <property name="active" type="boolean"/>
+        <property name="buf1" />
+        <property name="orderByIndex" column="LINEID" />
 	</class>
 </hibernate-mapping>

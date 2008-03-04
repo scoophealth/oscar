@@ -12,6 +12,7 @@ public class ProgramClientRestriction implements Serializable {
     private int programId;
     private int demographicNo;
     private String providerNo;
+    private String commentId;
     private String comments;
     private Date startDate;
     private Date endDate;
@@ -143,5 +144,13 @@ public class ProgramClientRestriction implements Serializable {
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
     }
+
+	public String getCommentId() {
+		return commentId;
+	}
+
+	public void setCommentId(String commentId) {
+		this.commentId = commentId;
+	}
 
 }

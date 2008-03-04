@@ -323,11 +323,12 @@
                     <span>System Administration</span>
 
                     <div>
-                    	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
                         <a HREF="#" ONCLICK="popupPage2('<%=request.getContextPath()%>/admin/admin.jsp', 'Admin');return false;">Admin Page</a>
-                    	</caisi:isModuleLoad>
+                    </div>
                     	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-                    	<html:link action="/Admin">Admin Page</html:link>
+                    	<div>	
+                    		<html:link action="/Lookup/LookupTableList.do">Lookup Field Options Editor</html:link>
+                   		</div>
                     	</caisi:isModuleLoad>
                     </div>
                 </div>

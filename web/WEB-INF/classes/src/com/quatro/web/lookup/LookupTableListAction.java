@@ -30,7 +30,7 @@ public class LookupTableListAction extends DispatchAction {
 	}
 	
 	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        String tableId="MOD";
+        String tableId="FCT";
 		List lst = lookupManager.LoadCodeList(tableId, false, null, null);
 		
 		for(int i=0; i<lst.size(); i++)

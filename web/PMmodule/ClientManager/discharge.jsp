@@ -162,6 +162,7 @@ Community Program:&nbsp;
 	<br />
 	<br />
 	<table width="100%" border="1" cellspacing="2" cellpadding="3">
+	<caisi:isModuleLoad moduleName="SHERBOURNE_HEALTH_CENTER" reverse="false">
 		<%if(request.getAttribute("nestedReason")!=null && request.getAttribute("nestedReason").equals("true")){%>
 		<tr>
             <td width="5%"><html:radio property="admission.radioDischargeReason" value='<%="" + DischargeReason.MEDICAL_NEEDS_EXCEED_PROVISION.ordinal()%>' /></td>
@@ -205,7 +206,15 @@ Community Program:&nbsp;
 			<td><bean:message  bundle="pmm" key="discharge.reason.OTHER"/></td>
 		</tr>	
 		<%} %>
-		
+		</caisi:isModuleLoad>
+ 	    <caisi:isModuleLoad moduleName="SHERBOURNE_HEALTH_CENTER" reverse="true">
+			<c:forEach var="dischargeReason" items="${dischargeReasons}">
+				<tr>
+					<td width="5%"> <html-el:radio  property="admission.radioDischargeReason" value="${dischargeReason.code}" /></td>
+					<td><bean:write name="dischargeReason" property="description"/></td>
+				</tr>
+			</c:forEach>
+		</caisi:isModuleLoad>
 		<tr class="b">
 			<td width="20%">Discharge Notes:</td>
 			<td><html:textarea cols="50" rows="7" property="admission.dischargeNotes" /></td>
