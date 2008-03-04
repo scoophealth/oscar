@@ -175,12 +175,14 @@ function onSub() {
 		if("".equals(sDate) || sDate==null)  sDate = "1900-01-01";
 		if("".equals(eDate) || eDate==null)  eDate = "2999-01-01";
 	  }
-	  
+
 	  DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[2];
-	  params[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(eDate));
+	  params[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDateEX(eDate, 1));
 	  params[1]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(sDate));
+
       sql = "select * from log where provider_no='" + providerNo + "' and dateTime <= ?";
       sql += " and dateTime >= ? and content like '" + content + "' order by dateTime desc ";
+
       if("*".equals(providerNo)) {
 		  bAll = true;
 	      sql = "select * from log where dateTime <= ?";
