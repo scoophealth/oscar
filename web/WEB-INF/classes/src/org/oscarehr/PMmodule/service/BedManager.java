@@ -464,30 +464,31 @@ public class BedManager {
      * @throws BedReservedException
      *             bed is inactive and reserved
      */
-    public void saveBeds(Bed[] beds) throws BedReservedException,
-DuplicateBedNameException {
+    public void saveBeds(Bed[] beds) throws BedReservedException, DuplicateBedNameException {
         if (beds == null) {
             handleException(new IllegalArgumentException("beds must not be null"));
         }
 
 		// Checks if there are beds with same name in the same room.
 		ArrayList<Bed> duplicateBeds = new ArrayList<Bed>();
+		
 		for (int i = 0; i < beds.length; i++) {
 			for (int j = 0; j < beds.length; j++) {
 				if (i == j)
 					continue;
 				if (beds[i].getName().equals(beds[j].getName())
-						&& beds[i].getRoomId().intValue() == beds[j]
-								.getRoomId().intValue()) {
+						&& beds[i].getRoomId().intValue() == beds[j].getRoomId().intValue()) {
+					
+					beds[i].setRoom(roomDAO.getRoom(beds[i].getRoomId()));
 					duplicateBeds.add(beds[i]);
 					StringBuffer errMsg = new StringBuffer();
 					for (Iterator it = duplicateBeds.iterator(); it.hasNext();) {
 						Bed theBed = (Bed) it.next();
-						errMsg.append(theBed.getName() + " "
-								+ theBed.getRoomName());
+						if(theBed != null){
+							errMsg.append(theBed.getName() + " " + theBed.getRoomName());
+						}
 					}
-					handleException(new DuplicateBedNameException(errMsg
-							.toString()));
+					handleException(new DuplicateBedNameException(errMsg.toString()));
 					return;
 				}
 			}
