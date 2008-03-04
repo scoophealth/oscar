@@ -114,6 +114,18 @@ public class AppointmentMainBean {
   	return (dbPH.queryExecuteUpdate(sqlExec, intparam));
   }
 
+  public boolean isPINEncrypted() throws Exception{
+	  ResultSet rs =null;
+  	  rs = dbPH.queryResults("select PARAMVALUE from APP_CONFIG where PARAMETER='PIN_ENCRYPTED'");
+  	  if(rs.next()==false) return true;
+  	  return rs.getInt(1)>0;
+  }
+
+  public void encryptPIN() throws Exception{
+	  
+  	  dbPH.queryExecuteUpdate("update APP_CONFIG set PARAMVALUE=1 where PARAMETER='PIN_ENCRYPTED'");
+  }
+  
   public ResultSet queryResults(String[] aKeyword, String dboperation) throws Exception{
 	 	String sqlQuery =null;
 

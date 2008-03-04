@@ -24,6 +24,7 @@
  */
 -->
 
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page import="java.sql.*, java.util.*, oscar.*" buffer="none" errorPage="errorpage.jsp" %>
@@ -31,6 +32,7 @@
 
 <html:html locale="true">
 <head><title><bean:message key="admin.securitysearchresults.title"/></title>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <link rel="stylesheet" href="../web.css" />
 <script LANGUAGE="JavaScript">
     <!--
@@ -47,6 +49,9 @@
       // check input data in the future 
     }
 
+    function encryptPIN(){
+	   window.open("<c:out value="${ctx}"/>/admin/encryptPIN.jsp","_blank","width=100,height=100");
+    }
     //-->
     </script>
 </head>
@@ -85,7 +90,16 @@
 
 <table width="100%" border="0">
 <tr>
-<td align="left"><i><bean:message key="admin.search.keywords"/></i>: <%=request.getParameter("keyword")%></td>
+<td align="left"><i><bean:message key="admin.search.keywords"/></i>: <%=request.getParameter("keyword")%>
+&nbsp;
+<%
+if(apptMainBean.isPINEncrypted()==false){
+ %>
+<input type="button" name="encryptPIN" value="Encrypt PIN" onclick="encryptPIN()">
+ <%
+ }
+ %>
+</td>
 </tr>
 </table>
 <CENTER><table width="100%" cellspacing="0" cellpadding="2" border="1" bgcolor="#ffffff"> 
