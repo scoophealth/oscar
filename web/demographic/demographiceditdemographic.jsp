@@ -845,8 +845,21 @@ div.demographicWrapper {
                                                 <bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>: <b><%=apptMainBean.getString(rs,"roster_status")%></b>
                                                 <bean:message key="demographic.demographiceditdemographic.DateJoined"/>: <b><%=MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"hc_renew_date"))%></b>
                                             </li>
+
                                             <li>
-                                                <bean:message key="demographic.demographiceditdemographic.formPatientStatus"/>:<b><%=apptMainBean.getString(rs,"patient_status")%></b>
+<%
+String PatStat = rs.getString("patient_status");
+String Dead = "DE";
+String Inactive = "IN";
+
+if ( PatStat.equals(Dead) ) {%>
+                                               <div style="color: #FF0000; "><bean:message key="demographic.demographiceditdemographic.formPatientStatus"/>:<b><%=rs.getString("patient_status")%></b></div>
+<%} else if (PatStat.equals(Inactive) ){%>
+                                               <div style="color: #0000FF; "><bean:message key="demographic.demographiceditdemographic.formPatientStatus"/>:<b><%=rs.getString("patient_status")%></b>
+<%} else {%>
+                                               <bean:message key="demographic.demographiceditdemographic.formPatientStatus"/>:<b><%=rs.getString("patient_status")%></b>
+<%}%>
+
                                             </li>
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formChartNo"/>:<b><%=apptMainBean.getString(rs,"chart_no")%></b>
