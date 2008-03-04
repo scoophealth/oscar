@@ -37,10 +37,27 @@
 		var endDate = document.ticklerForm.elements['filter.endDate'].value;
 		
 		if(check_date(startDate) && check_date(endDate)) {
-		
-		var form = document.ticklerForm;
-		form.method.value='filter';
-		form.submit();
+		  
+		  var sArray1=startDate.split("-");
+		  var sArray2=endDate.split("-");
+		  var bValid=true;
+		  
+		  if(parseInt(sArray1[0])>parseInt(sArray2[0])) {
+		    bValid=false;
+		  }else if(parseInt(sArray1[1])>parseInt(sArray2[1])) {
+		    bValid=false;
+		  }else if(parseInt(sArray1[2])>parseInt(sArray2[2])) {
+		    bValid=false;
+		  }
+		    
+		  if(!bValid){
+            alert("Begin Date cann not be greater than End Date.");
+            return false;		
+		  }else{
+		    var form = document.ticklerForm;
+		    form.method.value='filter';
+		    form.submit();
+		  }  
 		} else {
 			return false;
 		}		
