@@ -28,6 +28,7 @@ import oscar.oscarDB.*;
 import oscar.util.*;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class AppointmentMainBean {
 
@@ -122,8 +123,18 @@ public class AppointmentMainBean {
   }
 
   public void encryptPIN() throws Exception{
-	  
   	  dbPH.queryExecuteUpdate("update APP_CONFIG set PARAMVALUE=1 where PARAMETER='PIN_ENCRYPTED'");
+	  ResultSet rs =null;
+  	  rs = dbPH.queryResults("select SECURITY_NO, PIN from SECURITY");
+  	  ArrayList<String> lst= new ArrayList<String>();
+  	  while(rs.next()){
+  		 String str= "update SECURITY set PIN='" + Misc.encryptPIN(rs.getString("PIN")) + "' where SECURITY_NO=" + String.valueOf(rs.getInt("SECURITY_NO"));
+  		 lst.add(str);
+  	  }
+  	  rs.close();
+      for(int i=0;i<lst.size();i++){
+    	  dbPH.queryExecuteUpdate((String)lst.get(i));
+      }
   }
   
   public ResultSet queryResults(String[] aKeyword, String dboperation) throws Exception{
