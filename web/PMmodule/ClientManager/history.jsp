@@ -49,6 +49,9 @@
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 	<display:setProperty name="basic.msg.empty_list" value="This client is not currently admitted to any programs." />
 
+	<%
+		Admission tmpAd = (Admission) pageContext.getAttribute("admission");
+	%>
     <display:column sortable="false">
         <a href="javascript:void(0)" onclick="popupAdmissionInfo('<c:out value="${admission.id}" />')">
             <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
@@ -57,13 +60,15 @@
     <display:column property="programName" sortable="true" title="Program Name" />
 	<display:column property="programType" sortable="true" title="Program Type" />
 	<display:column property="admissionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Admission Date" />
-	<display:column property="admissionFromTransfer" title="Admission<br />From<br />Transfer" />
+	<display:column title="Facility<br />Admission" >
+	<%=!tmpAd.isAdmissionFromTransfer()%>
+	</display:column>
 	<display:column property="dischargeDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Discharge Date" />
-	<display:column property="dischargeFromTransfer" title="Discharge<br />From<br />Transfer" />
+	<display:column title="Facility<br />Discharge" >
+	<%=!tmpAd.isDischargeFromTransfer()%>
+	</display:column>
 	<display:column sortable="true" title="Days in Program">
 		<%
-		Admission tmpAd = (Admission) pageContext.getAttribute("admission");
-
 		Date admissionDate = tmpAd.getAdmissionDate();
 		Date dischargeDate = tmpAd.getDischargeDate();
 		
