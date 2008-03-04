@@ -1,3 +1,4 @@
+drop table LST_GENDER;
 create table LST_GENDER
 (CODE varchar2(1) NOT NULL,
  DESCRIPTION varchar2(80),
@@ -5,11 +6,11 @@ create table LST_GENDER
  DISPLAYORDER NUMBER,
  PRIMARY KEY (CODE)
 );
-truncate table lst_gender;
 insert into lst_gender (code,description,isactive,displayorder) values ('M','Male',1,2);
 insert into lst_gender (code,description,isactive,displayorder) values ('F','Female',1,1);
 insert into lst_gender (code,description,isactive,displayorder) values ('T','Transgender',1,3);
 
+drop table LST_SECTOR;
 create table LST_SECTOR
 (ID NUMBER NOT NULL,
  DESCRIPTION varchar2(80),
@@ -17,12 +18,12 @@ create table LST_SECTOR
  DISPLAYORDER NUMBER,
  PRIMARY KEY (ID)
 );
-truncate table lst_sector;
 insert into lst_sector (id,description,isactive,displayorder) values (1,'Men',1,1);
 insert into lst_sector (id,description,isactive,displayorder) values (2,'Women',1,2);
 insert into lst_sector (id,description,isactive,displayorder) values (3,'Families',1,3);
 insert into lst_sector (id,description,isactive,displayorder) values (4,'Youth',1,4);
 
+drop table LST_ORGANIZATION;
 create table LST_ORGANIZATION
 (ID NUMBER NOT NULL,
  DESCRIPTION varchar2(80),
@@ -30,13 +31,13 @@ create table LST_ORGANIZATION
  DISPLAYORDER NUMBER,
  PRIMARY KEY (ID)
 );
-truncate table lst_organization;
 insert into lst_organization (id,description,isactive,displayorder) values (1,'City of Toronto',1,1);
 insert into lst_organization (id,description,isactive,displayorder) values (2,'Salvation Army',1,2);
 insert into lst_organization (id,description,isactive,displayorder) values (3,'Fred Victor',1,3);
 ;
 alter table APP_MODULE add ISACTIVE number(1);
 alter table APP_MODULE add DISPLAYORDER number;
+
 truncate table app_module;
 insert into app_module (module_id, description, isactive,displayorder) values(1,'Client Management',1,10);
 insert into app_module (module_id, description, isactive,displayorder) values(2,'Shelter Management',2,20);
@@ -46,20 +47,22 @@ insert into app_module (module_id, description, isactive,displayorder) values(5,
 insert into app_module (module_id, description, isactive,displayorder) values(6,'Intake',1,60);
 insert into app_module (module_id, description, isactive,displayorder) values(7,'Agency',1,70);
 
+delete app_lookuptable where tableid in ('GEN','SEC','OGN','DRN','SRT','ORG');
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
 values ('GEN',6,'LST_GENDER','Gender',0,0,1);
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
 values ('SEC',7,'LST_SECTOR','Sector',0,0,1);
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
-values ('ORG',7,'LST_ORGANIZATION','Organization',0,0,1);
+values ('OGN',7,'LST_ORGANIZATION','Organization',0,0,1);
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
 values ('DRN',1,'LST_DISCHARGE_REASON','Discharge Reason',0,0,1);
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
-values ('DR2',1,'LST_DISCHARGE_REASON_SECONDARY','Discharge Reason, Secondary',0,0,1);
-insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
 values ('SRT',1,'LST_SERVICE_RESTRICTION','Service Restriction',0,0,1);
+insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
+values ('ORG',1,'V_LK_ORG','Organization Chart',0,0,1);
 
 -- Create table
+drop table LST_DISCHARGE_REASON;
 create table LST_DISCHARGE_REASON
 (
   ID   NUMBER not null,
@@ -67,46 +70,16 @@ create table LST_DISCHARGE_REASON
   NEEDSECONDARY NUMBER(1),  
   ISACTIVE    NUMBER(1),
   DISPLAYORDER NUMBER,
-primary key (ID)
-)
+  primary key (ID)
+);
+insert into LST_DISCHARGE_REASON (ID,DESCRIPTION,NEEDSECONDARY,ISACTIVE,DISPLAYORDER) 
+values (1,'Service restriction',0,1,10);
+insert into LST_DISCHARGE_REASON (ID,DESCRIPTION,NEEDSECONDARY,ISACTIVE,DISPLAYORDER) 
+values (2,'Client Self Discharge',0,1,10);
+insert into LST_DISCHARGE_REASON (ID,DESCRIPTION,NEEDSECONDARY,ISACTIVE,DISPLAYORDER) 
+values (3,'Other Program more appropriate',0,1,10);
 ;
-insert into LIST_DISCHARGE_REASON (ID,DESCRIPTION,NEEDSECONDARY,ISACTIVE,DISPLAYORDER) 
-values (1,'
-
--- Create table
-create table LST_DISCHARGE_REASON_SECONDARY
-(
-  ID   NUMBER not null,
-  DESCRIPTION VARCHAR2(80),
-  ISACTIVE    NUMBER(1),
-  DISPLAYORDER NUMBER,
-primary key (ID)
-)
-;
-truncate table lst_discharge_reason;
-insert into lst_discharge_reason(id,description,needsecondary,isactive,displayorder)
-values (1,'Client requires acute care',0,1,10);
-insert into lst_discharge_reason(id,description,needsecondary,isactive,displayorder)
-values (2,'Client not interested',0,1,20);
-insert into lst_discharge_reason(id,description,needsecondary,isactive,displayorder)
-values (3,'Client does not fit program criteria',1,1,30); 
-insert into lst_discharge_reason(id,description,needsecondary,isactive,displayorder)
-values (4,'Program does not have space available',0,1,40); 
-insert into lst_discharge_reason(id,description,needsecondary,isactive,displayorder)
-values (5,'Other',0,1,50); 
-;
-truncate table lst_discharge_reason_secondary;
-insert into lst_discharge_reason_secondary(id,description,isactive,displayorder)
-values (1, 'Client medical needs exceed what can be provided',1,10); 
-insert into lst_discharge_reason_secondary(id,description,isactive,displayorder)
-values (2, 'Client social/behavioural needs exceed what can be provided',1,20); 
-insert into lst_discharge_reason_secondary(id,description,isactive,displayorder)
-values (3, 'Client withdrawal needs exceed what can be provided',1,30); 
-insert into lst_discharge_reason_secondary(id,description,isactive,displayorder)
-values (4, 'Client mental health needs exceeds what can be provided',1,40); 
-insert into lst_discharge_reason_secondary(id,description,isactive,displayorder)
-values (5, 'Client has other care needs which can not be provided',1,50); 
-;
+drop table LST_FIELD_CATEGORY;
 create table LST_FIELD_CATEGORY
 (ID NUMBER NOT NULL,
  DESCRIPTION varchar2(80),
@@ -123,6 +96,7 @@ values(3,'Intake',	1,	30);
 insert into lst_field_category (id, description,isactive,displayorder)
 values(4,'Program', 1, 40);
 
+drop table LST_SERVICE_RESTRICTION;
 create table LST_SERVICE_RESTRICTION
 (ID NUMBER NOT NULL,
  DESCRIPTION varchar2(80),
@@ -130,13 +104,13 @@ create table LST_SERVICE_RESTRICTION
  DISPLAYORDER NUMBER,
  PRIMARY KEY (ID)
 );
-truncate table lst_service_restriction;
 insert into lst_service_restriction(id,description,isactive,displayorder)
 values (1,'Assault of client',1,10);    
 insert into lst_service_restriction(id,description,isactive,displayorder)
 values (2,'Assault of staff',1,20);    
 insert into lst_service_restriction(id,description,isactive,displayorder)
 values (3,'Other',1,30);    
+
 drop table APP_LOOKUPTABLE_FIELDS;
 create table APP_LOOKUPTABLE_FIELDS
 (
@@ -217,14 +191,6 @@ values ('DRN', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 4, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('DRN', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 5, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('DR2', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 0, 1);
-insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('DR2', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
-insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('DR2', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
-insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('DR2', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
-insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('SRT', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 0, 1);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('SRT', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
@@ -282,9 +248,6 @@ FROM LST_ORGANIZATION
 union
 SELECT 'DRN',to_char(id),DESCRIPTION,null,isactive, displayorder, to_char(needsecondary)
 FROM LST_DISCHARGE_REASON
-union
-SELECT 'DR2',to_char(id),DESCRIPTION,null,isactive, displayorder, null
-FROM LST_DISCHARGE_REASON_SECONDARY
 union
 SELECT 'SRT',to_char(id),DESCRIPTION,null,isactive, displayorder,null
 FROM LST_SERVICE_RESTRICTION
