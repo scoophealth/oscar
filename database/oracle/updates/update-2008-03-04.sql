@@ -1,3 +1,5 @@
+update access_type set name="can make program discharge" where name="can ake program discharge";
+
 create table APP_CONFIG
 (
   PARAMID       NUMBER(10) not null,
