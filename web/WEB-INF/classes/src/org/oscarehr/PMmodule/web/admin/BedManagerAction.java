@@ -129,7 +129,7 @@ public class BedManagerAction extends BaseAction {
     		saveMessages(request, messages);
         }
 
-        return doRoomFilter(mapping, form, request, response);
+        return manage(mapping, form, request, response);
     }
 	
 	public ActionForward deleteRoom(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -174,7 +174,7 @@ public class BedManagerAction extends BaseAction {
         }
 
 
-        return doRoomFilter(mapping, form, request, response);
+        return manage(mapping, form, request, response);
     }
 	
 	public ActionForward saveBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -211,7 +211,7 @@ public class BedManagerAction extends BaseAction {
 			saveMessages(request, messages);
         }
 
-		return doBedFilter(mapping, form, request, response);
+		return manage(mapping, form, request, response);
     }
 
 	public ActionForward deleteBed(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -239,7 +239,7 @@ public class BedManagerAction extends BaseAction {
 			saveMessages(request, messages);
         }
 
-		return doBedFilter(mapping, form, request, response);
+		return manage(mapping, form, request, response);
     }
 
 	public ActionForward addRooms(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -256,7 +256,7 @@ public class BedManagerAction extends BaseAction {
             }
 		}
 
-        return doRoomFilter(mapping, form, request, response);
+        return manage(mapping, form, request, response);
     }
 
 	public ActionForward addBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -274,7 +274,7 @@ public class BedManagerAction extends BaseAction {
             }
 		}
 
-        return doBedFilter(mapping, form, request, response);
+        return manage(mapping, form, request, response);
     }
 
 	public ActionForward doRoomFilter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
