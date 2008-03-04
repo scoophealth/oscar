@@ -488,5 +488,11 @@ public static String space(int i) {
     	}
   	    return sb.toString();
     }
-    
+    public static String getRandomNumber(int digits)
+    {
+    	int max = (int) Math.pow(10, digits)-1;
+    	java.util.Random rnd = new java.util.Random();
+    	int rn = rnd.nextInt(max);
+    	return forwardZero(String.valueOf(rn), digits);
+    }
 }

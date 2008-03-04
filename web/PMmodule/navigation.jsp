@@ -327,7 +327,7 @@
                     </div>
                     	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
                     	<div>	
-                    		<html:link action="/Lookup/LookupTableList.do">Lookup Field Options Editor</html:link>
+                    		<html:link action="/Lookup/LookupTableList.do">Lookup Field Editor</html:link>
                    		</div>
                     	</caisi:isModuleLoad>
                     </div>
