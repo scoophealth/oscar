@@ -25,6 +25,7 @@ package org.oscarehr.PMmodule.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +33,7 @@ import org.oscarehr.PMmodule.dao.BedDAO;
 import org.oscarehr.PMmodule.dao.ProgramTeamDAO;
 import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.exception.BedReservedException;
+import org.oscarehr.PMmodule.exception.DuplicateBedNameException;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.BedType;
@@ -462,11 +464,34 @@ public class BedManager {
      * @throws BedReservedException
      *             bed is inactive and reserved
      */
-    public void saveBeds(Bed[] beds) throws BedReservedException {
+    public void saveBeds(Bed[] beds) throws BedReservedException,
+DuplicateBedNameException {
         if (beds == null) {
             handleException(new IllegalArgumentException("beds must not be null"));
         }
 
+		// Checks if there are beds with same name in the same room.
+		ArrayList<Bed> duplicateBeds = new ArrayList<Bed>();
+		for (int i = 0; i < beds.length; i++) {
+			for (int j = 0; j < beds.length; j++) {
+				if (i == j)
+					continue;
+				if (beds[i].getName().equals(beds[j].getName())
+						&& beds[i].getRoomId().intValue() == beds[j]
+								.getRoomId().intValue()) {
+					duplicateBeds.add(beds[i]);
+					StringBuffer errMsg = new StringBuffer();
+					for (Iterator it = duplicateBeds.iterator(); it.hasNext();) {
+						Bed theBed = (Bed) it.next();
+						errMsg.append(theBed.getName() + " "
+								+ theBed.getRoomName());
+					}
+					handleException(new DuplicateBedNameException(errMsg
+							.toString()));
+					return;
+				}
+			}
+		}
         for (Bed bed : beds) {
             saveBed(bed);
         }

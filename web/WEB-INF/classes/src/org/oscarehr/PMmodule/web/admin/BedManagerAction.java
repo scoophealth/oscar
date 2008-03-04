@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.apache.struts.action.*;
 import org.oscarehr.PMmodule.exception.BedReservedException;
+import org.oscarehr.PMmodule.exception.DuplicateBedNameException;
+import org.oscarehr.PMmodule.exception.DuplicateRoomNameException;
 import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
@@ -121,6 +123,10 @@ public class BedManagerAction extends BaseAction {
     		ActionMessages messages = new ActionMessages();
     		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.active.beds.error", e.getMessage()));
     		saveMessages(request, messages);
+        } catch (DuplicateRoomNameException e) {
+    		ActionMessages messages = new ActionMessages();
+    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.duplicate.name.error", e.getMessage()));
+    		saveMessages(request, messages);
         }
 
         return doRoomFilter(mapping, form, request, response);
@@ -199,7 +205,11 @@ public class BedManagerAction extends BaseAction {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
 			saveMessages(request, messages);
-        } 
+        } catch (DuplicateBedNameException e) {
+			ActionMessages messages = new ActionMessages();
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.duplicate.name.error", e.getMessage()));
+			saveMessages(request, messages);
+        }
 
 		return doBedFilter(mapping, form, request, response);
     }
