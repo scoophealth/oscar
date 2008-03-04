@@ -36,6 +36,7 @@ import org.oscarehr.PMmodule.dao.BedDAO;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
+import org.oscarehr.PMmodule.exception.DuplicateRoomNameException;
 import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
@@ -403,9 +404,18 @@ public class RoomManager {
      * @throws RoomHasActiveBedsException
      *             room has active beds
      */
-    public void saveRooms(Room[] rooms) throws RoomHasActiveBedsException {
+    public void saveRooms(Room[] rooms) throws RoomHasActiveBedsException, DuplicateRoomNameException {
         if (rooms == null) {
             handleException(new IllegalArgumentException("rooms must not be null"));
+        }
+        //Check for duplicate room names.
+        for (int i = 0; i < rooms.length; i++) {
+        	for (int j = 0; j < rooms.length; j++) {
+        		if ((i != j) && (rooms[i].getName().equals(rooms[j].getName()) && rooms[i].getProgramId().equals(rooms[j].getProgramId()))) {
+        			handleException(new DuplicateRoomNameException(rooms[i].getName()));
+        			return;
+        		}
+        	}
         }
 
         for (Room room : rooms) {
