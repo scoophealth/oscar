@@ -116,4 +116,24 @@ public class DBHelp {
     {
     	return oscar.Misc.getString(rs, columnIndex);
     }
+    public synchronized String getNewProviderNo()
+    {
+    	try {
+	    	String pno = oscar.Misc.getRandomNumber(6);
+	    	String sql = "select count(*) from provider where provider_no= '" + pno + "'";
+	    	ResultSet rs = searchDBRecord(sql, "");
+	    	while (rs.next()) {
+	    		if (rs.getInt(1)> 0) {
+	    			pno = oscar.Misc.getRandomNumber(6);
+	    			sql = "select count(*) from prvider where provider_no= '" + pno + "'";
+	    			rs= searchDBRecord(sql, "");
+	    		}
+	    	}
+	    	return pno;
+    	}
+    	catch(Exception ex)
+    	{
+    		return "";
+    	}
+    }
 }

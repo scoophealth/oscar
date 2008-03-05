@@ -126,6 +126,10 @@ public class OscarProperties extends Properties {
      public boolean isTorontoRFQ() {
         return getBooleanProperty("TORONTO_RFQ", "yes") || getBooleanProperty("TORONTO_RFQ", "true");
     }   
+     
+     public boolean isProviderNoAuto() {
+         return getBooleanProperty("AUTO_GENERATE_PROVIDER_NO", "yes") || getBooleanProperty("AUTO_GENERATE_PROVIDER_NO", "true");
+     }   
 
      public boolean isPINEncripted() {
          return getBooleanProperty("IsPINEncripted", "yes") || getBooleanProperty("IsPINEncripted", "true");
