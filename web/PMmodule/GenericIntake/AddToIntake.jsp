@@ -5,6 +5,10 @@
 <%
 WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
+IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
+ArrayList nodes = new ArrayList();
+buildNodes(itn, nodes);
+
 
 if (request.getParameter("newpos") != null && request.getParameter("parent_intake_node_id") != null && request.getParameter("elementType") != null && request.getParameter("intake_node_label") != null){
     
@@ -14,26 +18,50 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     String intNodeLabel          = request.getParameter("intake_node_label") ;
     
     IntakeNodeLabel intakeNodeLabel = new IntakeNodeLabel();
-    intakeNodeLabel.setLabel(intNodeLabel);
-    int lblId = 1;
-    if (intNodeLabel != null && !intNodeLabel.equals("")){
-        genericIntakeManager.saveNodeLabel(intakeNodeLabel);
-        lblId = intakeNodeLabel.getId();
+    int lblId = -1;
+    if (intNodeLabel != null){
+	String lastLabel = (String) session.getAttribute("lastLabel");
+	if (lastLabel!=null) {
+	    lblId = Integer.parseInt(lastLabel)-1;
+	}
+	session.setAttribute("lastLabel", String.valueOf(lblId));
+	intakeNodeLabel.setLabel(intNodeLabel);
+	intakeNodeLabel.setId(lblId);
     }
-        
+    
     IntakeNode intakeNode = new IntakeNode();
+    int iNodeId = -1;
+    String lastId = (String) session.getAttribute("lastId");
+    if (lastId!=null) {
+	iNodeId = Integer.parseInt(lastId)-1;
+    }
+    session.setAttribute("lastId", String.valueOf(iNodeId));
+    intakeNode.setId(iNodeId);
+    
     IntakeNodeTemplate intakeNodeTemplate = new IntakeNodeTemplate();
-    intakeNodeTemplate.setId(Integer.parseInt(eleType));
+//    intakeNodeTemplate.setId(Integer.parseInt(eleType));
+    intakeNodeTemplate = (IntakeNodeTemplate) genericIntakeManager.getIntakeNodeTemplate(Integer.parseInt(eleType));
+    
     intakeNode.setNodeTemplate(intakeNodeTemplate);
     intakeNode.setLabel(intakeNodeLabel);
     intakeNode.setPos(Integer.parseInt(npos));
     
-    IntakeNode parentNode = new IntakeNode();
-    parentNode.setId(Integer.parseInt(parent_intake_node_id));
-    System.out.println(" "+intakeNode.toString()+ " \n\n\n"+parentNode.getId());
+    //IntakeNode parentNode = new IntakeNode();
+    //parentNode.setId(Integer.parseInt(parent_intake_node_id));
+    //System.out.println(" "+intakeNode.toString()+ " \n\n\n"+parentNode.getId());
+    
+    IntakeNode parentNode = findNode(Integer.parseInt(parent_intake_node_id), nodes);
     intakeNode.setParent(parentNode);
     
-    genericIntakeManager.saveIntakeNode(intakeNode);
+    //genericIntakeManager.saveIntakeNode(intakeNode);
+    if (parentNode.getChildren()!=null) {
+	List p_children = parentNode.getChildren();
+	p_children.add(intakeNode);
+    } else {
+	ArrayList p_children = new ArrayList();
+	p_children.add(intakeNode);
+	parentNode.setChildren(p_children);
+    }
     
     response.sendRedirect("close.jsp");
     return;
@@ -102,3 +130,28 @@ String pSize        = request.getParameter("pSize");
         </form>  
     </body>
 </html>
+
+<%!
+
+void buildNodes(IntakeNode in, ArrayList aln) {
+    aln.add(in);
+    for (IntakeNode iN : in.getChildren()) {
+	buildNodes(iN, aln);
+    }
+}
+
+IntakeNode findNode(Integer Id, ArrayList nodes) {
+    IntakeNode iNode = null;
+    for (int i=0; i<nodes.size(); i++) {
+	IntakeNode in = (IntakeNode) nodes.get(i);
+	if (in.getId()!=null) {
+	    if (in.getId().equals(Id)) {
+		iNode = in;
+		i = nodes.size();
+	    }
+	}
+    }
+    return iNode;
+}
+
+%>

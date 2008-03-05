@@ -6,6 +6,9 @@
 <%
   WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
   GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
+  IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
+    ArrayList nodes = new ArrayList();
+    buildNodes(itn, nodes);
         
     String lblEdit = request.getParameter("lbledit");
     String id = request.getParameter("id");
@@ -14,7 +17,9 @@
         IntakeNodeLabel iLabel = new IntakeNodeLabel();
         iLabel.setId(Integer.parseInt(id));
         iLabel.setLabel(lblEdit);
-        genericIntakeManager.updateNodeLabel(iLabel);
+        //genericIntakeManager.updateNodeLabel(iLabel);
+	writeLabel(iLabel, nodes);
+	
         response.sendRedirect("close.jsp");
         return;
     }
@@ -22,8 +27,9 @@
     
     String val = "";
     if(id !=null){
-        IntakeNodeLabel eLabel = genericIntakeManager.getIntakeNodeLabel(Integer.parseInt(id));
-        val = eLabel.getLabel();
+        //IntakeNodeLabel eLabel = genericIntakeManager.getIntakeNodeLabel(Integer.parseInt(id));
+	IntakeNodeLabel eLabel = findLabel(Integer.parseInt(id), nodes);
+        val = eLabel!=null ? eLabel.getLabel() : "";
     }
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -49,3 +55,38 @@
     
     </body>
 </html>
+
+<%!
+
+void buildNodes(IntakeNode in, ArrayList aln) {
+    aln.add(in);
+    for (IntakeNode iN : in.getChildren()) {
+	buildNodes(iN, aln);
+    }
+}
+
+IntakeNode findNode(Integer labelId, ArrayList nodes) {
+    IntakeNode iNode = null;
+    for (int i=0; i<nodes.size(); i++) {
+	IntakeNode in = (IntakeNode) nodes.get(i);
+	if (in.getLabel()!=null) {
+	    if (in.getLabel().getId().equals(labelId)) {
+		iNode = in;
+		i = nodes.size();
+	    }
+	}
+    }
+    return iNode;
+}
+
+IntakeNodeLabel findLabel(Integer labelId, ArrayList nodes) {
+    IntakeNode iNode = findNode(labelId, nodes);
+    return iNode.getLabel();
+}
+
+void writeLabel(IntakeNodeLabel iLabel, ArrayList nodes) {
+    IntakeNode iNode = findNode(iLabel.getId(), nodes);
+    iNode.setLabel(iLabel);
+}
+
+%>

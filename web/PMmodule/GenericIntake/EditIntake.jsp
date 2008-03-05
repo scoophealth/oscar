@@ -12,18 +12,38 @@
         <title>Edit Intake</title>
         <script type="text/javascript">
             function add(id,nodeTemplateId,parentId,pos,psize){
-               //window.open("AddToIntake.jsp?id="+id+"&node="+nodeTemplateId+"&parentId="+parentId+"&pos="+pos+"&pSize="+psize);
                var eURL = "AddToIntake.jsp?id="+id+"&node="+nodeTemplateId+"&parentId="+parentId+"&pos="+pos+"&pSize="+psize;
                popup('200','300',eURL,'intakeAdd');
+            }
             
+            function del(id, pid){
+	       var ans = confirm("Delete this node (and all its children) ?");
+	       if (ans) {
+		   var eURL = "DeleteIntake.jsp?id="+id+"&parentId="+pid;
+		   popup('200','300',eURL,'intakeDel');
+	       }
             }
             
             function editlabel(id){
-               //window.open("EditLabel.jsp?id="+id);
                var eURL = "EditLabel.jsp?id="+id;
                popup('200','300',eURL,'lbledit');
-            
             }
+            
+            function reorder(id){
+               var eURL = "ReorderNode.jsp?id="+id;
+               popup('300','400',eURL,'rodrnode');
+            }
+            
+            function saveform(){
+               var eURL = "SaveForm.jsp";
+               popup('200','300',eURL,'sveform');
+            }
+	    
+	    function resetform(){
+               var eURL = "ResetForm.jsp";
+               popup('200','300',eURL,'rstform');
+            }
+
         </script>
         <style type="text/css">
             @import "<html:rewrite page="/css/genericIntake.css"/>";
@@ -86,21 +106,26 @@
         List<IntakeNode> lis = genericIntakeManager.getIntakeNodes();
         
         if (lis != null){%>
-        
-                <%for (IntakeNode i: lis){%>
-                    <a href="EditIntake.jsp?id=<%=i.getId()%>"> - <%=i.getLabelStr()%> - </a>
-                <%}%>
-        
+
+	<select>
+	    <%for (IntakeNode i: lis){%>
+	    <option onclick="location.href='EditIntake.jsp?id=<%=i.getId()%>'"> - <%=i.getLabelStr()%> - </option>
+	    <%}%>
+	</select>
       <%}
         String id = request.getParameter("id");
         if (id == null){ id = "41333";};
         int iNum = Integer.parseInt(id);
-        
-        IntakeNode iNode = genericIntakeManager.getIntakeNode(iNum);
+	
+	IntakeNode iNode = (IntakeNode) session.getAttribute("intakeNode");
+        if (iNode==null || !iNode.getId().equals(iNum)) iNode = genericIntakeManager.getIntakeNode(iNum);
         
         goRunner(iNode,out);
-        
-        
+        session.setAttribute("intakeNode", iNode);
+	
+	out.write("<p>&nbsp;</p>");
+	out.write(" <input type=\"button\" value=\"Save Form\" onclick=\"saveform();\">");
+	out.write(" <input type=\"button\" value=\"Reset\" onclick=\"resetform();\">");
         %>
     </body>
 </html>
@@ -135,10 +160,10 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         out.write("<h1>");
         out.write(in.getLabelStr());
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','1','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\"> - edit label -</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','1','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
         if(hasChildren){
-            out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+in.getId()+"');\"> - reorder children -</a>");
+            out.write(" <a href=\"javascript: void(0);\" onclick=\"reorder('"+in.getId()+"');\">[reorder children]</a>");
         }
         out.write("</h1>");
         exitElement = "";
@@ -147,17 +172,18 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         out.write("<blockquote>");
         out.write(in.getLabelStr());
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\"> - edit label -</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
     } else if (node.isSection()) {
         out.write("<div  style=\"border:1px solid #84A3D1;\">");
         out.write("<h3 style=\"background:#85AEEC ; border:1px solid #84A3D1; color:#000000;  font-size:12px; font-weight:bold; margin-top: 0;\">");
         out.write(in.getLabelStr());
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','4','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\"> - edit label -</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','4','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
+	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
         if(hasChildren){
-            out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+in.getId()+"');\"> - reorder children -</a>");
+            out.write(" <a href=\"javascript: void(0);\" onclick=\"reorder('"+in.getId()+"');\">[reorder children]</a>");
         }
         
         out.write("</h3>");
@@ -167,10 +193,11 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         out.write("<h3 style=\"background:grey ; border:1px solid grey; color:#000000;  font-size:12px; font-weight:bold; margin-top: 0;\">");
         out.write(in.getLabelStr());
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','5','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\"> - edit label -</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','5','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
+	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
         if(hasChildren){
-            out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+in.getId()+"');\"> - reorder children -</a>");
+            out.write(" <a href=\"javascript: void(0);\" onclick=\"reorder('"+in.getId()+"');\">[reorder children]</a>");
         }
         out.write("</h3>");
     } else if (node.isAnswerCompound()) {
@@ -179,35 +206,36 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         out.write("Inline group of questions :"+in.getLabelStr());
 //out.write("+ answer scalar choice + answer scalar text + answer scalar note")
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','6','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\"> - edit label -</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','6','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
+	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
         if(hasChildren){
-            out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+in.getId()+"');\"> - reorder children -</a>");
+            out.write(" <a href=\"javascript: void(0);\" onclick=\"reorder('"+in.getId()+"');\">[reorder children]</a>");
         }
         out.write("</h3>");
         exitElement = "</div>";
     } else if (node.isAnswerChoice()) {
         out.write("<blockquote>");
         out.write("<label><input type=\"checkbox\"/>"+in.getLabelStr()+ "</label>");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\"> - edit label -</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
         
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
-//out.write("<a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
+//out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
         
     } else if (node.isAnswerText()) {
         out.write("<blockquote>");
         out.write("<label>"+in.getLabelStr()+ "<input type=\"text\"  /> </label>");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\"> - edit label -</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
         
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
-//out.write("<a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
+//out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
         
     } else if (node.isAnswerNote()) {
         out.write("<blockquote>");
         out.write(in.getLabelStr()+"<textarea rows=\"5\" cols=\"50\"></textarea>");
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
-//out.write("<a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
-        out.write("<a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\"> - edit label -</a>");
+//out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
     } else {
         throw new IllegalStateException("No html adapter for type: " + node.getType());
     }
@@ -215,7 +243,6 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
     for (IntakeNode iN : in.getChildren()){
         goRunner(iN,out);
     }
-    
     
     out.write(exitElement);
 }
