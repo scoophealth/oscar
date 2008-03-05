@@ -258,6 +258,7 @@ function checkTypeIn() {
   	int idx = 0;
   	while(idx < offset) {
   		rs.next();
+                idx++;
   	}
   	idx = 0;
     while (rs.next() && idx < Integer.parseInt(strLimit1)) {
