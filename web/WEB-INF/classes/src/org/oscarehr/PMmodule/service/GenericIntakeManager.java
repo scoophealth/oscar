@@ -42,6 +42,7 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.model.IntakeNodeLabel;
+import org.oscarehr.PMmodule.model.IntakeNodeTemplate;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.ReportStatistic;
 
@@ -372,7 +373,10 @@ public class GenericIntakeManager {
         public IntakeNodeLabel getIntakeNodeLabel(Integer intakeNodeLabelId){
             return genericIntakeNodeDAO.getIntakeNodeLabel(intakeNodeLabelId);
         }
-        
+
+        public IntakeNodeTemplate getIntakeNodeTemplate(Integer intakeNodeTemplateId){
+            return genericIntakeNodeDAO.getIntakeNodeTemplate(intakeNodeTemplateId);
+        }
         
 	public IntakeNode getIntakeNode(Integer nodeId) {
 		if (nodeId == null) {
