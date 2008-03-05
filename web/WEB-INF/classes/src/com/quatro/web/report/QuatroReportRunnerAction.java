@@ -710,7 +710,7 @@ public class QuatroReportRunnerAction extends Action {
 		if (Utility.IsEmpty(ops)) return operators;
 		for(int i=0; i<ops.length(); i++)
 		{
-			String op = ops.substring(i,1);
+			String op = ops.substring(i,i+1);
 			if(op.equals("B"))
 			{
 			  operators.add(new KeyValueBean("BETWEEN", "Between"));

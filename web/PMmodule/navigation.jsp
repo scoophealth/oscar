@@ -214,7 +214,7 @@
             </caisi:isModuleLoad>
 			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
 			<div>
-				<html:link action="QuatroReport/ReportList.do">Quatro report Runner</html:link>
+				<html:link action="QuatroReport/ReportList.do">Quatro Report Runner</html:link>
 			</div>
 			</caisi:isModuleLoad>
         </div>

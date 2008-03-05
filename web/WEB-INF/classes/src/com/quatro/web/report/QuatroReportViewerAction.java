@@ -179,7 +179,14 @@ public class QuatroReportViewerAction extends Action {
                 }
                 ReportFilterValue filter = qrManager.GetFilterField(reportNo, fieldNo);
                 String FieldType = filter.getFieldType();
-                criteriaSQL += "{" + tableName + filter.getFieldSQL() + "}";
+                if ("S".equals(FieldType)) {
+                	criteriaSQL += "UpperCase({" + tableName + filter.getFieldSQL() + "})";
+                }
+                else
+                {
+                    criteriaSQL += "{" + tableName + filter.getFieldSQL() + "}";
+                	
+                }
                 r_criteriaDis += filter.getFieldName();
 
                 criteriaSQL += " " + op + " ";
@@ -216,7 +223,7 @@ public class QuatroReportViewerAction extends Action {
                     }
                     else if ("S".equals(FieldType))
                     {
-                        criteriaSQL += "\"" + val + "\"";
+                        criteriaSQL += "\"" + val.toUpperCase() + "\"";
                         r_criteriaDis += "\"" + valDesc + "\"";
                     }
                     else
