@@ -45,7 +45,8 @@
     </bean>
     <bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false" autowire="byName">
         <property name="surveyManager" ref="oscarSurveyManager"/>        
-        <property name="caseManagementManager" ref="CaseManagementManager"/>       
+        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="lookupManager" ref="lookupManager"/>       
     </bean>
     <bean name="/PMmodule/ProviderInfo" class="org.oscarehr.PMmodule.web.ProviderInfoAction" singleton="false">
         <property name="programManager" ref="programManager"/>
@@ -78,7 +79,7 @@
     <bean name="/PMmodule/FacilityManager" class="org.oscarehr.PMmodule.web.admin.FacilityManagerAction" singleton="false">
         <property name="logManager" ref="logManager"/>
         <property name="facilityManager" ref="facilityManager"/>
-        <property name="caisiEditorManager" ref="caisiEditorManager"/>
+        <property name="lookupManager" ref="lookupManager"/>
     </bean>
     <bean name="/PMmodule/BedManager" class="org.oscarehr.PMmodule.web.admin.BedManagerAction" singleton="false">
         <property name="bedManager" ref="bedManager"/>
@@ -178,7 +179,7 @@
         <property name="integratorManager" ref="integratorManager"/>
         <property name="programManager" ref="programManager"/>
         <property name="surveyManager" ref="oscarSurveyManager"/>
-        <property name="caisiEditorManager" ref="caisiEditorManager"/>   
+        <property name="lookupManager" ref="lookupManager"/>   
         <property name="caseManagementManager" ref="CaseManagementManager"/>       
     </bean>
     <bean name="/PMmodule/GenericIntake/Report" class="org.oscarehr.PMmodule.web.GenericIntakeReportAction" singleton="false">

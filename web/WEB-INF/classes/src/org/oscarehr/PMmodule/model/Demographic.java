@@ -62,6 +62,7 @@ public class Demographic implements Serializable {
     private String ver;
     private String dateOfBirth;
     private String sex;
+    private String sexDesc;
     private Date dateJoined;
     private String familyDoctor;
     private String city;
@@ -817,5 +818,17 @@ public class Demographic implements Serializable {
     public void setSubRecord(Set subRecord) {
         this.subRecord = subRecord;
     }
+
+
+
+	public String getSexDesc() {
+		return sexDesc;
+	}
+
+
+
+	public void setSexDesc(String sexDesc) {
+		this.sexDesc = sexDesc;
+	}
 }
 

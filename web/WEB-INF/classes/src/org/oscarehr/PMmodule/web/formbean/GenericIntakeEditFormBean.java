@@ -45,7 +45,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	private String method;
 
 	private Demographic client;
-	private LabelValueBean[] genders;
+	private List genders;
 	private LabelValueBean[] months;
 	private LabelValueBean[] days;
 	private LabelValueBean[] provinces;
@@ -71,7 +71,6 @@ public class GenericIntakeEditFormBean extends ActionForm {
     private Long remoteAgencyDemographicNo;
 
     public GenericIntakeEditFormBean() {
-		genders = GenericIntakeConstants.GENDERS;
 		months = GenericIntakeConstants.MONTHS;
 		days = GenericIntakeConstants.DAYS;
 		provinces = GenericIntakeConstants.PROVINCES;
@@ -93,11 +92,11 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		this.client = client;
 	}
 
-	public LabelValueBean[] getGenders() {
+	public List getGenders() {
 		return genders;
 	}
 	
-	public void setGenders(LabelValueBean[] genders) {
+	public void setGenders(List genders) {
 		this.genders = genders;
 	}
 

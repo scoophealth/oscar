@@ -3,7 +3,6 @@ package org.oscarehr.PMmodule.web.admin;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.caisi.service.CaisiEditorManager;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.service.FacilityManager;
 import org.oscarehr.PMmodule.web.BaseAction;
@@ -42,10 +41,10 @@ public class FacilityManagerAction extends BaseAction {
         request.setAttribute(BEAN_FACILITIES, filteredFacilities);
 
         //get agency's organization list from caisi editor table        
-        request.setAttribute("orgList", caisiEditorManager.getActiveLabelValue("Agency", "Organization"));
+        request.setAttribute("orgList", lookupManager.LoadCodeList("OGN", true, null, null));
         
         //get agency's sector list from caisi editor table
-        request.setAttribute("sectorList", caisiEditorManager.getActiveLabelValue("Agency", "Sector"));
+        request.setAttribute("sectorList", lookupManager.LoadCodeList("SEC", true,null, null));
     	
         return mapping.findForward(FORWARD_LIST);
     }
@@ -55,8 +54,8 @@ public class FacilityManagerAction extends BaseAction {
         Integer id = Integer.valueOf(idStr);
         Facility facility = facilityManager.getFacility(id);
         
-        DynaActionForm facilityForm = (DynaActionForm) form;
-        facilityForm.set("facility",facility);
+        FacilityManagerForm facilityForm = (FacilityManagerForm) form;
+        facilityForm.setFacility(facility);
         
         request.setAttribute(BEAN_ASSOCIATED_PROGRAMS, facilityManager.getAssociatedPrograms(id));
         request.setAttribute("id", facility.getId());
@@ -76,10 +75,10 @@ public class FacilityManagerAction extends BaseAction {
         request.setAttribute("sectorId",facility.getSectorId());
         
         //get agency's organization list from caisi editor table        
-        request.setAttribute("orgList", caisiEditorManager.getActiveLabelValue("Agency", "Organization"));
+        request.setAttribute("orgList", lookupManager.LoadCodeList("OGN", true,null,null));
         
         //get agency's sector list from caisi editor table
-        request.setAttribute("sectorList", caisiEditorManager.getActiveLabelValue("Agency", "Sector"));
+        request.setAttribute("sectorList", lookupManager.LoadCodeList("SEC",true,null,null));
         
         return mapping.findForward(FORWARD_EDIT);
     }
@@ -98,10 +97,10 @@ public class FacilityManagerAction extends BaseAction {
         ((FacilityManagerForm) form).setFacility(facility);
         
         //get agency's organization list from caisi editor table        
-        request.setAttribute("orgList", caisiEditorManager.getActiveLabelValue("Agency", "Organization"));
+        request.setAttribute("orgList", lookupManager.LoadCodeList("OGN",true,null,null));
         
         //get agency's sector list from caisi editor table
-        request.setAttribute("sectorList", caisiEditorManager.getActiveLabelValue("Agency", "Sector"));
+        request.setAttribute("sectorList", lookupManager.LoadCodeList("OGN", true, null, null));
         
         return mapping.findForward(FORWARD_EDIT);
     }

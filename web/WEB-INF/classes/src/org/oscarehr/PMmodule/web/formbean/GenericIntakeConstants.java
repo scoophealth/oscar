@@ -12,17 +12,7 @@ import oscar.oscarDB.DBHandler;
 public class GenericIntakeConstants {
 
 	public static final LabelValueBean EMPTY = new LabelValueBean("", ""); 
-	
-	
-	
-	public static final LabelValueBean[] GENDERS = new LabelValueBean[] {
-    	//new LabelValueBean("", "D"),
-    	new LabelValueBean("Male", "M"),
-    	new LabelValueBean("Female", "F"),
-    	new LabelValueBean("Transgendered", "T")
-	};
-    
-	
+	    
 	public static final LabelValueBean[] MONTHS = new LabelValueBean[] { 
     	new LabelValueBean("Month", ""),
     	new LabelValueBean("January", "01"), new LabelValueBean("February", "02"),

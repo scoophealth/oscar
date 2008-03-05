@@ -40,8 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.LabelValueBean;
-import org.caisi.model.CaisiEditor;
-import org.caisi.service.CaisiEditorManager;
+import com.quatro.service.LookupManager;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
@@ -68,13 +67,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
         // [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
-        List lGenders = caisiEditorManager.getActiveLabelCaisiEditor("gender");
-        int nSize = lGenders.size();
-        LabelValueBean[] genders = new LabelValueBean[nSize];
-        for (int i = 0; i < nSize; i++) {
-            CaisiEditor ce = (CaisiEditor) lGenders.get(i);
-            genders[i] = new LabelValueBean(ce.getLabelValue(), ce.getLabelCode());
-        }
+        List genders =  lookupManager.LoadCodeList("GEN", true, null,null);
         formBean.setGenders(genders);
         // end of change
 
@@ -135,13 +128,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
         // [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
-        List lGenders = caisiEditorManager.getActiveLabelCaisiEditor("gender");
-        int nSize = lGenders.size();
-        LabelValueBean[] genders = new LabelValueBean[nSize];
-        for (int i = 0; i < nSize; i++) {
-            CaisiEditor ce = (CaisiEditor) lGenders.get(i);
-            genders[i] = new LabelValueBean(ce.getLabelValue(), ce.getLabelCode());
-        }
+        List genders = lookupManager.LoadCodeList("GEN",true,null,null);
         formBean.setGenders(genders);
         // end of change
 

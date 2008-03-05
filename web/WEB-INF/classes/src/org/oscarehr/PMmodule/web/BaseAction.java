@@ -30,7 +30,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.RedirectingActionForward;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.service.CaisiEditorManager;
 import org.caisi.service.CaisiRoleManager;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
@@ -76,7 +75,6 @@ public abstract class BaseAction extends DispatchAction {
 	protected ConsentManager consentManager;
 	protected FormsManager formsManager;
 	protected GenericIntakeManager genericIntakeManager;
-	protected CaisiEditorManager caisiEditorManager;
 	protected IntakeAManager intakeAManager;
 	protected IntakeCManager intakeCManager;
 	protected IntegratorManager integratorManager;
@@ -276,14 +274,6 @@ public abstract class BaseAction extends DispatchAction {
 		path.append(parameters);
 		
 		return new RedirectingActionForward(path.toString());
-	}
-
-	public CaisiEditorManager getCaisiEditorManager() {
-		return (CaisiEditorManager) getAppContext().getBean("caisiEditorManager");
-	}
-
-	public void setCaisiEditorManager(CaisiEditorManager caisiEditorManager) {
-		this.caisiEditorManager = caisiEditorManager;
 	}
 
 	public LookupManager getLookupManager() {

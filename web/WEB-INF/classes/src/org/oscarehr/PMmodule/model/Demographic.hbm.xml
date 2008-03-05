@@ -24,6 +24,7 @@
 		<property column="first_name" length="30" name="FirstName" not-null="true" type="string" />
 		<property column="last_name" length="30" name="LastName" not-null="true" type="string" />
 		<property column="sex" length="1" name="Sex" not-null="true" type="string" />
+		<property name="SexDesc" not-null="true" type="string" formula="(select lst.description from lst_gender lst where lst.code=sex)"/>
 		<property column="month_of_birth" length="2" name="MonthOfBirth" type="string" />
 		<property column="date_of_birth" length="2" name="DateOfBirth" type="string" />
 		<property column="year_of_birth" length="4" name="YearOfBirth" type="string" />
