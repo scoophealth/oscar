@@ -8,7 +8,10 @@ public class FieldDefValue extends BaseObject{
 	    private String fieldType;
 	    private String lookupTable;           
 	    private String fieldSQL;
-	    private boolean isEditable;
+	    private boolean editable;
+	    private boolean auto;
+	    private boolean unique;
+	    private int genericIdx;
 	    private int fieldIndex;
 	    
 	    private String val;
@@ -71,11 +74,11 @@ public class FieldDefValue extends BaseObject{
 		}
 
 		public boolean isEditable() {
-			return isEditable;
+			return editable;
 		}
 		
-		public void setEditable(boolean isEditable) {
-			this.isEditable = isEditable;
+		public void setEditable(boolean editable) {
+			this.editable = editable;
 		}
 
 		public int getFieldIndex() {
@@ -84,5 +87,29 @@ public class FieldDefValue extends BaseObject{
 
 		public void setFieldIndex(int fieldIndex) {
 			this.fieldIndex = fieldIndex;
+		}
+
+		public boolean isAuto() {
+			return auto;
+		}
+
+		public void setAuto(boolean auto) {
+			this.auto= auto;
+		}
+
+		public int getGenericIdx() {
+			return genericIdx;
+		}
+
+		public void setGenericIdx(int genericIdx) {
+			this.genericIdx = genericIdx;
+		}
+
+		public boolean isUnique() {
+			return unique;
+		}
+
+		public void setUnique(boolean unique) {
+			this.unique = unique;
 		}
 	}

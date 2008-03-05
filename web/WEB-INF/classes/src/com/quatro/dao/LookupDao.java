@@ -171,10 +171,25 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		return codes;
 	}
+	private int GetNextId(String idFieldName, String tableName) throws SQLException
+
+	{
+		String sql = "SELECT MAX(" + idFieldName + ")";
+		sql += " FROM " + tableName;
+		DBPreparedHandler db = new DBPreparedHandler();
+		ResultSet rs = db.queryResults(sql);
+		int id = 0;
+		if (rs.next()) 
+			 id = rs.getInt(1);
+		return id + 1;
+	}
+	
 	public void SaveCodeValue(boolean isNew, LookupTableDefValue tableDef, List fieldDefList) throws SQLException
 	{
 		if (isNew) 
+		{
 			InsertCodeValue(tableDef, fieldDefList);
+		}
 		else
 			UpdateCodeValue(tableDef,fieldDefList);
 	}
@@ -198,6 +213,10 @@ public class LookupDao extends HibernateDaoSupport {
 			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
 			sql += fdv.getFieldName() + ",";
 			phs +="?,"; 
+			if (fdv.isAuto())
+			{
+				fdv.setVal(String.valueOf(GetNextId(fdv.getFieldSQL(), tableName)));
+			}
 			if ("S".equals(fdv.getFieldType()))
 			{
 				params[i] = new DBPreparedHandlerParam(fdv.getVal());

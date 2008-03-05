@@ -14,5 +14,8 @@
         <property name="lookupTable" column="LOOKUPTABLE" /> 
         <property name="fieldSQL" /> 
         <property name="fieldIndex" />
+		<property name="auto" column="AUTOYN" />
+		<property name="unique" column="UNIQUEYN" />
+		<property name="genericIdx" column="GENERICIDX" />
 	</class>
 </hibernate-mapping>
