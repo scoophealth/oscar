@@ -107,7 +107,7 @@
         <%isRequired = IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_GENDER);%>
         <label>Gender<%=isRequired ? REQUIRED_MARKER : ""%><br>
             <html:select property="client.sex">
-                <html:optionsCollection property="genders" value="value" label="label"/>
+                <html:optionsCollection property="genders" value="code" label="description"/>
             </html:select>
         </label>
     </td>

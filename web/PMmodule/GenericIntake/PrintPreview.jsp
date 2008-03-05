@@ -51,7 +51,7 @@ Intake intake = intakeEditForm.getIntake();
 					<tr>
 						<td><label>First Name<br><c:out value="${sessionScope.genericIntakeEditForm.client.firstName}" /></label></td>
 						<td><label>Last Name<br><c:out value="${sessionScope.genericIntakeEditForm.client.lastName}" /></label></td>
-						<td><label>Gender<br><c:out value="${sessionScope.genericIntakeEditForm.client.sex}" /></label></td>
+						<td><label>Gender<br><c:out value="${sessionScope.genericIntakeEditForm.client.sexDesc}" /></label></td>
 						<td><label>Birth Date<br><c:out value="${sessionScope.genericIntakeEditForm.client.formattedDob}" /></label></td>
 					</tr>
 					<tr>
