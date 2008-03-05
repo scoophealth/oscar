@@ -1610,6 +1610,8 @@ CREATE TABLE `intake` (
   `client_id` int(10) unsigned NOT NULL,
   `staff_id` varchar(6) NOT NULL,
   `creation_date` datetime NOT NULL,
+  `intake_status` varchar(10) not null default 'Signed',
+  `intake_location` int(10) default 0,
   PRIMARY KEY  (`intake_id`),
   KEY `IDX_intake_intake_node` (`intake_node_id`),
   KEY `IDX_intake_client_creation_date` (`client_id`,`creation_date`),
@@ -2190,3 +2192,72 @@ create table provider_facility
 --	foreign key (provider_id) references provider(provider_no),
 --	foreign key (facility_id) references facility(id),
 );
+
+-- quatro group's report runner
+create table lst_gender
+(
+	code char(1) NOT NULL,
+ 	description varchar(80),
+ 	isactive tinyint(1),
+ 	displayorder int(10),
+ 	PRIMARY KEY (code)
+);
+
+create table lst_sector
+(
+	id int(10) NOT NULL auto_increment,
+ 	description varchar(80),
+ 	isactive tinyint(1),
+ 	displayorder int(10),
+ 	PRIMARY KEY (id)
+);
+
+create table lst_organization
+(
+	id int(10) NOT NULL auto_increment,
+ 	description varchar(80),
+ 	isactive tinyint(1),
+ 	displayorder int(10),
+ 	PRIMARY KEY (id)
+);
+
+create table lst_discharge_reason
+(
+  id   int(10) not null auto_increment,
+  description 	varchar(80),
+  needsecondary tinyint(1),  
+  isactive    	tinyint(1),
+  displayorder 	int(10),
+  primary key (id)
+);
+
+create table lst_field_category
+(
+ id int(10) NOT NULL auto_increment,
+ description varchar(80),
+ isactive tinyint(1),
+ displayorder int(10),
+ PRIMARY KEY (id)
+);
+
+create table lst_service_restriction
+(
+ id int(10) NOT NULL auto_increment,
+ description varchar(80),
+ isactive tinyint(1),
+ displayorder int(10),
+ PRIMARY KEY (id)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
