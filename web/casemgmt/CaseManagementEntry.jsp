@@ -428,6 +428,7 @@ if (pId==null) pId="";
 			<td class="fieldValue"><html:checkbox property="includeIssue" onchange="setChangeFlag(true);" /></td>
 		</tr>
 
+      <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<c:if test="${param.from=='casemgmt' || requestScope.from=='casemgmt'}" >
 		<c:url value="${sessionScope.billing_url}" var="url"/>
 		<caisirole:SecurityAccess accessName="billing" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId="<%=pId%>">
@@ -440,6 +441,8 @@ if (pId==null) pId="";
 			</tr>
 		</caisirole:SecurityAccess>
 		</c:if>		
+	 </caisi:isModuleLoad>
+		
 		<caisi:isModuleLoad moduleName="casemgmt.note.password.enabled">
 		<tr>
 			<td class="fieldTitle">Password:</td>
