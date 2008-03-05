@@ -75,7 +75,12 @@
 	<td>
        <logic:equal name="field" property="fieldType" value="S">
          <logic:empty name="field" property="lookupTable">
-           <html:text name="field" property="val" indexed="true"  style="{width:100%}"/>
+         	<logic:equal name="field" property="editable" value="true">
+	           <html:text name="field" property="val" indexed="true"  style="{width:100%}"/>
+           </logic:equal>
+         	<logic:equal name="field" property="editable" value="false">
+	           <html:text name="field" property="val" indexed="true"  style="{width:100%}" readonly="readonly"/>
+           </logic:equal>
          </logic:empty>
          <logic:notEmpty name="field" property="lookupTable">
            <html:hidden name="field" property="lookupTable" indexed="true" />
@@ -89,7 +94,12 @@
          value="<%=oscar.MyDateFormat.getMyStandardDate((String)dateVal)%>"></quatro:datePickerTag>
        </logic:equal>  
        <logic:equal name="field" property="fieldType" value="N">
-          <html:text name="field" property="val" indexed="true" />
+       	   <logic:equal name="field" property="editable" value="true">
+          	<html:text name="field" property="val" indexed="true" />
+           </logic:equal>
+       	   <logic:equal name="field" property="editable" value="false">
+          	<html:text name="field" property="val" indexed="true" disabled="true" />
+           </logic:equal>
        </logic:equal>
        <logic:equal name="field" property="fieldType" value="B">
           <html:select name="field" property="val" indexed="true">
