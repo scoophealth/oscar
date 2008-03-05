@@ -79,7 +79,8 @@
 	           <html:text name="field" property="val" indexed="true"  style="{width:100%}"/>
            </logic:equal>
          	<logic:equal name="field" property="editable" value="false">
-	           <html:text name="field" property="val" indexed="true"  style="{width:100%}" readonly="readonly"/>
+	           <bean:write name="field" property="val"/>
+	           <html:hidden name="field" property="val" indexed="true"  style="{width:100%}"/>
            </logic:equal>
          </logic:empty>
          <logic:notEmpty name="field" property="lookupTable">
@@ -98,7 +99,8 @@
           	<html:text name="field" property="val" indexed="true" />
            </logic:equal>
        	   <logic:equal name="field" property="editable" value="false">
-          	<html:text name="field" property="val" indexed="true" disabled="true" />
+       	   	<bean:write name="field" property="val" /> 
+          	<html:hidden name="field" property="val" indexed="true" />
            </logic:equal>
        </logic:equal>
        <logic:equal name="field" property="fieldType" value="B">

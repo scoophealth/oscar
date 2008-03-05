@@ -47,19 +47,27 @@ insert into app_module (module_id, description, isactive,displayorder) values(5,
 insert into app_module (module_id, description, isactive,displayorder) values(6,'Intake',1,60);
 insert into app_module (module_id, description, isactive,displayorder) values(7,'Agency',1,70);
 
-delete app_lookuptable where tableid in ('GEN','SEC','OGN','DRN','SRT','ORG');
+delete app_lookuptable where tableid in ('GEN','SEC','OGN','DRN','SRT','ORG','LKT','FCT','ISS','IGP');
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
-values ('GEN',6,'LST_GENDER','Gender',0,0,1);
+values ('GEN',4,'LST_GENDER','Gender',0,0,1);
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
-values ('SEC',7,'LST_SECTOR','Sector',0,0,1);
+values ('SEC',2,'LST_SECTOR','Sector',0,0,1);
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
-values ('OGN',7,'LST_ORGANIZATION','Organization',0,0,1);
+values ('OGN',2,'LST_ORGANIZATION','Organization',0,0,1);
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
-values ('DRN',1,'LST_DISCHARGE_REASON','Discharge Reason',0,0,1);
+values ('DRN',5,'LST_DISCHARGE_REASON','Discharge Reason',0,0,1);
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
-values ('SRT',1,'LST_SERVICE_RESTRICTION','Service Restriction',0,0,1);
+values ('SRT',3,'LST_SERVICE_RESTRICTION','Service Restriction',0,0,1);
 insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
 values ('ORG',1,'V_LK_ORG','Organization Chart',0,0,1);
+insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
+values ('LKT',1,'APP_LOOKUPTABLE','Available Fields',0,0,1);
+insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
+values ('FCT',1,'LST_FIELD_CATEGORY','Field Category',0,0,1);
+insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
+values ('ISS',3,'ISSUE','Issue',0,0,1);
+insert into app_lookuptable(tableid,moduleid,table_name,description,istree,treecode_length,activeyn)
+values ('IGP',3,'ISSUEGROUP','Issue Group',0,0,1);
 
 -- Create table
 drop table LST_DISCHARGE_REASON;
@@ -88,13 +96,15 @@ create table LST_FIELD_CATEGORY
  PRIMARY KEY (ID)
 );
 insert into lst_field_category (id, description,isactive,displayorder)
-values(1,'Agency',	1,	10);
+values(1,'System',	1,	10);
 insert into lst_field_category (id, description,isactive,displayorder)
-values(2,'Client',  1, 20);
+values(2,'Agency',	1,	10);
 insert into lst_field_category (id, description,isactive,displayorder)
-values(3,'Intake',	1,	30);
+values(3,'Client',  1, 20);
 insert into lst_field_category (id, description,isactive,displayorder)
-values(4,'Program', 1, 40);
+values(4,'Intake',	1,	30);
+insert into lst_field_category (id, description,isactive,displayorder)
+values(5,'Program', 1, 40);
 
 drop table LST_SERVICE_RESTRICTION;
 create table LST_SERVICE_RESTRICTION
@@ -129,19 +139,21 @@ create table APP_LOOKUPTABLE_FIELDS
 )
 ;
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('FCT', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 0, 1);
+values ('FCT', 'ID', 'Id', '0', 'N', null, 'ID', 1, 1, 1, 1);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('FCT', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('FCT', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('BTY', 'BED_TYPE_ID', 'Id', '1', 'N', null, 'BED_TYPE_ID', 1, 1, 0, 1);
+values ('FCT', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
+insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
+values ('BTY', 'BED_TYPE_ID', 'Id', '0', 'N', null, 'BED_TYPE_ID', 1, 1, 1, 1);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('BTY', 'NAME', 'Name', '1', 'S', null, 'NAME', 2, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('BTY', 'DFLT', 'Default Capacity', '1', 'N', null, 'DFLT', 3, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('LKT', 'TABLEID', 'Id', '1', 'S', null, 'TABLEID', 1, 1, 0, 0);
+values ('LKT', 'TABLEID', 'Id', '1', 'S', null, 'TABLEID', 1, 1, 1, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('LKT', 'MODULEID', 'Category', '1', 'S', 'FCT', 'MODULEID', 2, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
@@ -155,9 +167,7 @@ values ('LKT', 'TREECODE_LENGTH', 'Tree Code Length (if is tree)', '1', 'N', nul
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('LKT', 'ACTIVEYN', 'Active?', '1', 'B', null, 'ACTIVEYN', 7, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('FCT', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
-insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('GEN', 'CODE', 'Code', '1', 'S', null, 'CODE', 1, 1, 0, 0);
+values ('GEN', 'CODE', 'Code', '1', 'S', null, 'CODE', 1, 1, 1, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('GEN', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
@@ -165,7 +175,7 @@ values ('GEN', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('GEN', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('SEC', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 0, 1);
+values ('SEC', 'ID', 'Id', '0', 'N', null, 'ID', 1, 1, 1, 1);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('SEC', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
@@ -173,7 +183,7 @@ values ('SEC', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('SEC', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('OGN', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 0, 1);
+values ('OGN', 'ID', 'Id', '0', 'N', null, 'ID', 1, 1, 1, 1);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('OGN', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
@@ -181,7 +191,7 @@ values ('OGN', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('OGN', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('DRN', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 0, 1);
+values ('DRN', 'ID', 'Id', '0', 'N', null, 'ID', 1, 1, 1, 1);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('DRN', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
@@ -191,7 +201,7 @@ values ('DRN', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 4, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('DRN', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 5, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
-values ('SRT', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 0, 1);
+values ('SRT', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 1, 1);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)
 values ('SRT', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
 insert into APP_LOOKUPTABLE_FIELDS (TABLEID, FIELDNAME, FIELDDESC, EDITYN, FIELDTYPE, LOOKUPTABLE, FIELDSQL, FIELDINDEX, UNIQUEYN, GENERICIDX, AUTOYN)

@@ -184,28 +184,21 @@ public class LookupDao extends HibernateDaoSupport {
 		return id + 1;
 	}
 	
-	public void SaveCodeValue(boolean isNew, LookupTableDefValue tableDef, List fieldDefList) throws SQLException
+	public String SaveCodeValue(boolean isNew, LookupTableDefValue tableDef, List fieldDefList) throws SQLException
 	{
 		if (isNew) 
 		{
-			InsertCodeValue(tableDef, fieldDefList);
+			return InsertCodeValue(tableDef, fieldDefList);
 		}
 		else
-			UpdateCodeValue(tableDef,fieldDefList);
+			return UpdateCodeValue(tableDef,fieldDefList);
 	}
 	
-	private void InsertCodeValue(LookupTableDefValue tableDef, List fieldDefList) throws SQLException
+	private String InsertCodeValue(LookupTableDefValue tableDef, List fieldDefList) throws SQLException
 	{
 		String tableName = tableDef.getTableName();
-		String idFieldName = ((FieldDefValue)fieldDefList.get(0)).getFieldSQL();
-		String idFieldVal = ((FieldDefValue)fieldDefList.get(0)).getVal();
+		String idFieldVal = "";
 
-		//check the existence of the code 
-		LookupCodeValue lkv= GetCode(tableDef.getTableId(), idFieldVal);
-		if(lkv != null) 
-		{
-			throw new SQLException("The Code Already Exist");
-		}
 		DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()];
 		String phs = "";
 		String sql = "INSERT INTO  " + tableName + "("; 
@@ -215,7 +208,8 @@ public class LookupDao extends HibernateDaoSupport {
 			phs +="?,"; 
 			if (fdv.isAuto())
 			{
-				fdv.setVal(String.valueOf(GetNextId(fdv.getFieldSQL(), tableName)));
+				idFieldVal = String.valueOf(GetNextId(fdv.getFieldSQL(), tableName));
+				fdv.setVal(idFieldVal);
 			}
 			if ("S".equals(fdv.getFieldType()))
 			{
@@ -233,19 +227,32 @@ public class LookupDao extends HibernateDaoSupport {
 		sql = sql.substring(0,sql.length()-1);
 		phs = phs.substring(0,phs.length()-1);
 		sql += ") Values (" + phs + ")";
+
+		//check the existence of the code 
+		LookupCodeValue lkv= GetCode(tableDef.getTableId(), idFieldVal);
+		if(lkv != null) 
+		{
+			throw new SQLException("The Code Already Exist");
+		}
 		DBPreparedHandler db = new DBPreparedHandler();
 		db.queryExecuteUpdate(sql, params);
+		return idFieldVal;
 	}
-	private void UpdateCodeValue(LookupTableDefValue tableDef, List fieldDefList) throws SQLException
+	private String UpdateCodeValue(LookupTableDefValue tableDef, List fieldDefList) throws SQLException
 	{
 		String tableName = tableDef.getTableName();
-		String idFieldName = ((FieldDefValue)fieldDefList.get(0)).getFieldSQL();
-		String idFieldVal = ((FieldDefValue)fieldDefList.get(0)).getVal();
+		String idFieldName = "";
+		String idFieldVal = "";
 
 		DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()+1];
 		String sql = "UPDATE " + tableName + " SET ";
 		for(int i=0; i< fieldDefList.size(); i++) {
 			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
+			if (fdv.getGenericIdx()==1) {
+				idFieldName = fdv.getFieldSQL();
+				idFieldVal = fdv.getVal();
+			}
+			
 			sql += fdv.getFieldName() + "=?,";
 			if ("S".equals(fdv.getFieldType()))
 			{
@@ -265,5 +272,6 @@ public class LookupDao extends HibernateDaoSupport {
 		params[fieldDefList.size()] = params[0];
 		DBPreparedHandler db = new DBPreparedHandler();
 		db.queryExecuteUpdate(sql, params);
+		return idFieldVal;
 	}
 }

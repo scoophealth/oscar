@@ -64,9 +64,9 @@ public class LookupCodeEditAction extends DispatchAction {
 		com.quatro.web.lookup.LookupCodeEditForm qform = (com.quatro.web.lookup.LookupCodeEditForm) form;
 		LookupTableDefValue tableDef = qform.getTableDef();
 		List fieldDefList = qform.getCodeFields();
+		boolean isNew = qform.isNewCode();
 		Map map=request.getParameterMap();
 		String errMsg = "";
-		String code="";
 		for(int i=0; i<fieldDefList.size(); i++)
 		{
 			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
@@ -81,10 +81,12 @@ public class LookupCodeEditAction extends DispatchAction {
 				}
 				else if("N".equals(fdv.getFieldType()))
 				{
-					if(!Utility.IsInt(fdv.getVal()))
-					{
-						if (!Utility.IsEmpty(errMsg)) errMsg += "<BR/>";
-						errMsg += fdv.getFieldDesc() + " should be an Integer Number";
+					if (!(fdv.isAuto() && isNew)) {
+						if(!Utility.IsInt(fdv.getVal()))
+						{
+							if (!Utility.IsEmpty(errMsg)) errMsg += "<BR/>";
+							errMsg += fdv.getFieldDesc() + " should be an Integer Number";
+						}
 					}
 				}
 			}
@@ -92,7 +94,6 @@ public class LookupCodeEditAction extends DispatchAction {
 			{
 				fdv.setVal("");
 			}
-			if(i==0) code = fdv.getVal();
 
 		}
 		if(!Utility.IsEmpty(errMsg)) 
@@ -100,9 +101,8 @@ public class LookupCodeEditAction extends DispatchAction {
 			qform.setErrMsg(errMsg);
 			return mapping.findForward("edit");
 		}
-		boolean isNew = qform.isNewCode();
 		try {
-			lookupManager.SaveCodeValue(isNew, tableDef, fieldDefList);
+			String code = lookupManager.SaveCodeValue(isNew, tableDef, fieldDefList);
 			fieldDefList = lookupManager.GetCodeFieldValues(tableDef, code);
 			qform.setCodeFields(fieldDefList);
 			qform.setNewCode(false);

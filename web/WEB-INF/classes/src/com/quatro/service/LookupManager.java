@@ -39,8 +39,8 @@ public class LookupManager {
 	{
 		return lookupDao.GetCodeFieldValues(tableDef);
 	}
-	public void SaveCodeValue(boolean isNew, LookupTableDefValue tableDef, List fieldDefList) throws SQLException
+	public String SaveCodeValue(boolean isNew, LookupTableDefValue tableDef, List fieldDefList) throws SQLException
 	{
-		lookupDao.SaveCodeValue(isNew, tableDef, fieldDefList);
+		return lookupDao.SaveCodeValue(isNew, tableDef, fieldDefList);
 	}
 }
