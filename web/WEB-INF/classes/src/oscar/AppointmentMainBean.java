@@ -117,13 +117,13 @@ public class AppointmentMainBean {
 
   public boolean isPINEncrypted() throws Exception{
 	  ResultSet rs =null;
-  	  rs = dbPH.queryResults("select PARAMVALUE from APP_CONFIG where PARAMETER='PIN_ENCRYPTED'");
+  	  rs = dbPH.queryResults("select value from property where name='IS_PIN_ENCRYPTED'");
   	  if(rs.next()==false) return true;
   	  return rs.getInt(1)>0;
   }
 
   public void encryptPIN() throws Exception{
-  	  dbPH.queryExecuteUpdate("update APP_CONFIG set PARAMVALUE=1 where PARAMETER='PIN_ENCRYPTED'");
+  	  dbPH.queryExecuteUpdate("update property set value=1 where name='IS_PIN_ENCRYPTED'");
 	  ResultSet rs =null;
   	  rs = dbPH.queryResults("select SECURITY_NO, PIN from SECURITY");
   	  ArrayList<String> lst= new ArrayList<String>();
