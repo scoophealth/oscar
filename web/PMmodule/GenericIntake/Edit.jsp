@@ -47,6 +47,9 @@
         var programFemaleOnly =<%=session.getAttribute("programFemaleOnly")%>;
         var programTransgenderOnly =<%=session.getAttribute("programTransgenderOnly")%>;
 
+		var RFQ_Admit = <%=session.getAttribute("RFQ_ADMIT") %>;
+		var RFQ_INTAKE_ADMISSION = <%=session.getAttribute("RFQ_INTAKE_ADMISSION")%>;
+		
 		<%=session.getAttribute("programAgeValidationMethod")%>
 
         // -->
@@ -68,6 +71,16 @@
                     + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";
             window.open(page, "", windowprops);
         }
+        
+        function init_intake() {        
+        	if(RFQ_Admit == false) {
+        		alert("Client must first be discharged from their current bed program before you can admit them to a new bed program or residence location.");
+        	} else {
+        		if(RFQ_INTAKE_ADMISSION == false) {
+        			alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
+        		}    
+        	}	   	
+        }
     </script>
     <script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />"></script>
     <script type="text/javascript" src="<html:rewrite page="/js/AlphaTextBox.js" />"></script>
@@ -81,8 +94,9 @@
     <script type="text/javascript" src="<html:rewrite page="/js/checkDate.js" />"></script>
     <html:base/>
 </head>
-<body class="edit">
-<html:form action="/PMmodule/GenericIntake/Edit" onsubmit="return validateEdit()">
+<body class="edit" onload="init_intake()">
+
+<html:form action="/PMmodule/GenericIntake/Edit" onsubmit="return validateEdit()" >
 <html:hidden property="method"/>
 <div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
 <div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
@@ -350,10 +364,11 @@
         <tr>
             <td>
                 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-                    <html:submit onclick="save()">Save</html:submit>&nbsp;
+                    <html:submit onclick="return save()">Save</html:submit>&nbsp;
                 </caisi:isModuleLoad>
                 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-                    <c:choose>
+                    <!--
+       				<c:choose>
                         <c:when test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
                             <html:submit onclick="save()">Save</html:submit>&nbsp;
                         </c:when>
@@ -361,6 +376,11 @@
                             <html:submit onclick="save()">Save And Do Intake Accessment</html:submit>&nbsp;
                         </c:otherwise>
                     </c:choose>
+                    -->
+                    
+                    <html:submit onclick="return save_temp()">Temporary Save</html:submit>&nbsp;
+                    <html:submit onclick="return save_admit()">Admit, Sign And Save</html:submit>&nbsp;
+                    <html:submit onclick="save_notAdmit()">Intake Without Admission, Sign And Save</html:submit>
                 </caisi:isModuleLoad>
                 <html:reset>Reset</html:reset>
             </td>

@@ -75,21 +75,24 @@ public class GenericIntakeManager {
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#copyQuickIntake(java.lang.Integer, java.lang.String)
 	 */
 	public Intake copyQuickIntake(Integer clientId, String staffId) {
-		return copyIntake(getQuickIntakeNode(), clientId, null, staffId);
+		//return copyIntake(getQuickIntakeNode(), clientId, null, staffId);
+		return copyIntakeWithId(getQuickIntakeNode(), clientId, null, staffId);
 	}
 
 	/**
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#copyIndepthIntake(java.lang.Integer, java.lang.String)
 	 */
 	public Intake copyIndepthIntake(Integer clientId, String staffId) {
-		return copyIntake(getIndepthIntakeNode(), clientId, null, staffId);
+		//return copyIntake(getIndepthIntakeNode(), clientId, null, staffId);
+		return copyIntakeWithId(getIndepthIntakeNode(), clientId, null, staffId);
 	}
 
 	/**
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#copyProgramIntake(java.lang.Integer, java.lang.Integer, java.lang.String)
 	 */
 	public Intake copyProgramIntake(Integer clientId, Integer programId, String staffId) {
-		return copyIntake(getProgramIntakeNode(programId), clientId, programId, staffId);
+		//return copyIntake(getProgramIntakeNode(programId), clientId, programId, staffId);
+		return copyIntakeWithId(getProgramIntakeNode(programId), clientId, programId, staffId);
 	}
 
 	// Create
@@ -192,6 +195,12 @@ public class GenericIntakeManager {
 		return genericIntakeDAO.saveIntake(intake);
 	}
 
+	// Save Or Update
+	
+	public void saveUpdateIntake(Intake intake) {
+		genericIntakeDAO.saveUpdateIntake(intake);
+	}
+	
 	// Report
 
 	public GenericIntakeDAO.GenericIntakeReportStatistics getQuestionStatistics2(String intakeType, Integer programId, Date startDate, Date endDate) throws SQLException {
@@ -287,7 +296,27 @@ public class GenericIntakeManager {
 
 		return intake;
 	}
+	
+	private Intake copyIntakeWithId(IntakeNode node, Integer clientId, Integer programId, String staffId) {
+		Intake source = genericIntakeDAO.getLatestIntake(node, clientId, programId);
+		Intake dest = createIntakeWithId(node, clientId, programId, staffId,source.getId(),source.getIntakeLocation());
 
+		if (source != null) {
+			for (IntakeAnswer answer : source.getAnswers()) {
+				dest.getAnswerMapped(answer.getNode().getIdStr()).setValue(answer.getValue());
+			}
+		}
+
+		return dest;
+	}	
+
+	private Intake createIntakeWithId(IntakeNode node, Integer clientId, Integer programId, String staffId, Integer intakeId, Integer intakeLocation) {
+		Intake intake = Intake.create(node, clientId, programId, staffId, intakeId, intakeLocation);
+		createAnswers(intake, intake.getNode().getChildren());
+
+		return intake;
+	}
+	
 	private void createAnswers(Intake intake, List<IntakeNode> children) {
 		for (IntakeNode child : children) {
 			if (child.isAnswerScalar()) {

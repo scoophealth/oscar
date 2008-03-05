@@ -91,6 +91,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         ProgramUtils.addProgramRestrictions(request);
 
+        request.getSession().setAttribute("RFQ_ADMIT", true);
+        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
+        
         return mapping.findForward(EDIT);
     }
 
@@ -156,6 +159,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         ProgramUtils.addProgramRestrictions(request);
 
+        request.getSession().setAttribute("RFQ_ADMIT", true);
+        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
+        
         return mapping.findForward(EDIT);
     }
 
@@ -183,7 +189,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         return mapping.findForward(PRINT);
     }
 
-    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    public ActionForward save_all(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, String saveWhich) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
         Intake intake = formBean.getIntake();
@@ -191,22 +197,99 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         Demographic client = formBean.getClient();
         String providerNo = getProviderNo(request);
 
-        try {
-        	client.setChildren(formBean.getProgramInDomainId());
+        request.getSession().setAttribute("RFQ_ADMIT", true);
+        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
+        
+        try { 
+        	// save client information.
             saveClient(client, providerNo);
-
-            // for RFQ: to save 'external' program.
+            
+            // for RFQ: 
             if (OscarProperties.getInstance().isTorontoRFQ()) {
-                admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
+            	Integer clientId = client.getDemographicNo();
+            	if(clientId !=null && !"".equals(clientId)) {
+            	Integer oldId = getCurrentBedCommunityProgramId(client.getDemographicNo());
+        		Integer newId = formBean.getSelectedBedCommunityProgramId();
+        		
+            	// RFQ feature request: intake admit, sign  and save
+            	// Don't allow to admit the client from one bed program to another bed program.
+            	// Only allow to admit the client from the community program to the bed program.
+            	if("RFQ_admit".equals(saveWhich)) {
+            		if(oldId!=null && programManager.isBedProgram(oldId.toString())){
+            			if(oldId.intValue()!=newId.intValue() && programManager.isBedProgram(newId.toString())) {
+            				request.getSession().setAttribute("RFQ_ADMIT", false);
+            				return mapping.findForward(EDIT);
+            			}
+            		}
+            	}
+            	
+            	// RFQ : intake without admission , sign and save
+            	if("RFQ_notAdmit".equals(saveWhich)) {
+            		//not change in admission made for the client
+            		if( (oldId!=null && newId!=null && oldId.intValue() != newId.intValue()) ||
+            				(oldId==null && newId!=null) ||
+            				(oldId!=null && newId==null)) {
+            			request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",false);
+            			return mapping.findForward(EDIT);
+            		}
+            	}           	
+            	 
+            	
+            	//Save 'external' program for RFQ.
+            	admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
+            	}
+            	//get and set intake location
+            	//client.setChildren(formBean.getProgramInDomainId());
+            	Integer intakeLocationId = 0;
+            	String intakeLocationStr = formBean.getProgramInDomainId();
+            	if(intakeLocationStr ==null || "".equals(intakeLocationStr)) {
+            		Integer selectedBedCommunityProgramId = formBean.getSelectedBedCommunityProgramId();
+            		if("RFQ_admit".equals(saveWhich)) {
+            			if(programManager.isBedProgram(selectedBedCommunityProgramId.toString())) {           			
+            				intakeLocationId = selectedBedCommunityProgramId;
+            			} else {
+            				intakeLocationId = Integer.valueOf(formBean.getProgramInDomainId());
+            			}
+            		}
+            	} else {
+            		intakeLocationId = Integer.valueOf(intakeLocationStr);
+            	}
+            	
+            	intake.setIntakeLocation(intakeLocationId); 
             }
-
-            admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId());
-
-            if (!formBean.getSelectedServiceProgramIds().isEmpty()) admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
-            saveIntake(intake, client.getDemographicNo());
-
+            
+            admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich);
+            
+            if (!formBean.getSelectedServiceProgramIds().isEmpty()) {
+            	admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
+            }
+            
+            if("normal".equals(saveWhich)) {
+            	//normal intake saving . eg. seaton house
+            	intake.setIntakeStatus("Signed");
+            	intake.setId(null);
+            	saveIntake(intake, client.getDemographicNo());
+            } else {
+            	//RFQ intake saving...
+            	if ("RFQ_temp".equals(saveWhich)) {            
+            		intake.setIntakeStatus("Unsigned");            	
+            		saveUpdateIntake(intake, client.getDemographicNo());
+            	} else if("RFQ_admit".equals(saveWhich)) {
+            		intake.setIntakeStatus("Signed");
+            		intake.setId(null);
+            		saveIntake(intake, client.getDemographicNo());
+            	} else if("RFQ_notAdmit".equals(saveWhich)) {
+            		intake.setIntakeStatus("Signed");
+            		intake.setId(null);
+            		saveIntake(intake, client.getDemographicNo());
+            	}
+            }
+            
+            
             // don't move updateRemote up...this method has the problem needs to be fixed
-            if (integratorManager.isEnabled()) updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
+            if (integratorManager.isEnabled()) {
+            	updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
+            }
         }
         catch (ProgramFullException e) {
             ActionMessages messages = new ActionMessages();
@@ -229,10 +312,27 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),
                 getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()));
-
+                
         return mapping.findForward(EDIT);
     }
-
+    
+    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	return save_all(mapping,form,request,response, "normal");
+    }
+    
+    public ActionForward save_temp(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	
+    	return save_all(mapping,form,request,response,"RFQ_temp");
+    }
+    
+    public ActionForward save_admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	return save_all(mapping,form,request,response,"RFQ_admit");
+    }
+    
+    public ActionForward save_notAdmit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	return save_all(mapping,form,request,response,"RFQ_notAdmit");
+    }
+    
     private void updateRemote(Demographic client, String remoteAgency, Long remoteAgencyDemographicNo) {
         integratorManager.saveClient(client, remoteAgency, remoteAgencyDemographicNo);
     }
@@ -419,10 +519,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         }
     }
 
-    private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+    private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId, String saveWhich) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
         Program bedCommunityProgram = null;
         Integer currentBedCommunityProgramId = getCurrentBedCommunityProgramId(clientId);
-
+        
+        if("RFQ_notAdmit".equals(saveWhich) && bedCommunityProgramId == null && currentBedCommunityProgramId == null) {
+        	return;
+        }
         if (bedCommunityProgramId == null && currentBedCommunityProgramId == null) {
             bedCommunityProgram = programManager.getHoldingTankProgram();
         }
@@ -543,6 +646,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         genericIntakeManager.saveIntake(intake);
     }
 
+    private void saveUpdateIntake(Intake intake, Integer clientId) {
+        intake.setClientId(clientId);
+        genericIntakeManager.saveUpdateIntake(intake);
+    }
+    
     // Bean
 
     private void setBeanProperties(GenericIntakeEditFormBean formBean, Intake intake, Demographic client, String providerNo, boolean bedCommunityProgramsVisible, boolean serviceProgramsVisible, boolean externalProgramsVisible,
@@ -569,11 +677,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             }
             
             formBean.setProgramsInDomain(getProgramsInDomain(providerPrograms));
-            String intakeLocation = client.getChildren();
-            if(intakeLocation !=null && !"".equals(intakeLocation)) {
-            	formBean.setSelectedProgramInDomainId(Integer.valueOf(intakeLocation));
-            } else {
+           
+            String intakeLocation = String.valueOf(intake.getIntakeLocation());
+            if(intakeLocation ==null || "".equals(intakeLocation) || "null".equals(intakeLocation)) {
             	formBean.setSelectedProgramInDomainId(0);
+            } else {
+            	formBean.setSelectedProgramInDomainId(Integer.valueOf(intakeLocation));
             }
         }
     }

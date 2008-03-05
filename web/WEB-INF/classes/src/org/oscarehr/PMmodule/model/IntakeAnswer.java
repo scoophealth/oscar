@@ -39,10 +39,18 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
     public static IntakeAnswer create(IntakeNode node) {
 		IntakeAnswer answer = new IntakeAnswer();
 		answer.setNode(node);
-
+		
 		return answer;
 	}
 
+    public static IntakeAnswer create(IntakeNode node,Integer intake_answer_id) {
+		IntakeAnswer answer = new IntakeAnswer();
+		answer.setNode(node);
+		answer.setId(intake_answer_id);
+		return answer;
+	}
+
+    
     // constructors
 	public IntakeAnswer() {
 		initialize();

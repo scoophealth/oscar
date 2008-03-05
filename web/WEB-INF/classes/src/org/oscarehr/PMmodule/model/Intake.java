@@ -44,27 +44,43 @@ public class Intake implements Serializable {
     public static String PROP_CREATED_ON = "createdOn";
     public static String PROP_ID = "id";
     public static String PROP_CLIENT_ID = "clientId";
-
+    
+    
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Integer id;// fields
     private Integer clientId;
     private String staffId;
-    private Calendar createdOn;// many to one
+    private Calendar createdOn;// many to one    
     private IntakeNode node;// collections
     private java.util.Set<IntakeAnswer> answers;
-
+    private String intakeStatus;
+    private Integer intakeLocation;
+    
     public static Intake create(IntakeNode node, Integer clientId, Integer programId, String staffId) {
 		Intake intake = new Intake();
 		intake.setNode(node);
 		intake.setClientId(clientId);
 		intake.setProgramId(programId);
 		intake.setStaffId(staffId);
-		intake.setCreatedOn(Calendar.getInstance());
-
+		intake.setCreatedOn(Calendar.getInstance());		
 		return intake;
 	}
 	
+    public static Intake create(IntakeNode node, Integer clientId, Integer programId, String staffId, Integer intakeId, Integer intakeLocation) {
+		Intake intake = new Intake();
+		intake.setNode(node);
+		intake.setClientId(clientId);
+		intake.setProgramId(programId);
+		intake.setStaffId(staffId);
+		intake.setCreatedOn(Calendar.getInstance());
+		
+		intake.setId(intakeId);
+		intake.setIntakeLocation(intakeLocation);
+		
+		return intake;
+	}
+    
 	private Demographic client;
 	private Provider staff;
 	private Integer programId;
@@ -94,6 +110,7 @@ public class Intake implements Serializable {
 		this.setCreatedOn(createdOn);
 		initialize();
 	}
+	
 	
 	protected void initialize() {
 		setAnswers(new TreeSet<IntakeAnswer>());
@@ -182,8 +199,25 @@ public class Intake implements Serializable {
 	
 	public void setProgramId(Integer programId) {
 		this.programId = programId;
-	}
+	}	
 	
+	public String getIntakeStatus() {
+		return intakeStatus;
+	}
+
+	public void setIntakeStatus(String intakeStatus) {
+		this.intakeStatus = intakeStatus;
+	}
+
+	
+	public Integer getIntakeLocation() {
+		return intakeLocation;
+	}
+
+	public void setIntakeLocation(Integer intakeLocation) {
+		this.intakeLocation = intakeLocation;
+	}
+
 	public String getCreatedOnStr() {
 		return DATE_FORMAT.format(getCreatedOn().getTime());
 	}

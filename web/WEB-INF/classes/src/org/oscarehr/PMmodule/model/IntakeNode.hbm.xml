@@ -53,7 +53,7 @@
 			<one-to-many class="Intake" />
 		</set>
 		
-		<set name="answers" inverse="true" sort="natural">
+		<set name="answers" inverse="true" sort="natural" >
 			<key column="intake_node_id" />
 			<one-to-many class="IntakeAnswer" />
 		</set>

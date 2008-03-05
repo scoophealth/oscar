@@ -71,6 +71,7 @@ function openSurvey(methodId) {
 		<tr>
 			<th>Date</th>
 			<th>Staff</th>
+			<th>Status</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
@@ -78,6 +79,7 @@ function openSurvey(methodId) {
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
+			<td><c:out value="${intake.intakeStatus}"/></td>
 			<td><input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
 		</tr>
 	</c:forEach>

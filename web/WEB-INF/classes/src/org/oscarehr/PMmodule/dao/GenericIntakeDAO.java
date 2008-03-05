@@ -100,6 +100,14 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		return intakeId;
 	}
 
+	public void saveUpdateIntake(Intake intake) {
+		getHibernateTemplate().saveOrUpdate(intake);
+		getHibernateTemplate().flush();
+		LOG.info("saved intake: " + intake);
+
+		//return intakeId;
+	}
+	
 	/**
 	 * @throws SQLException
 	 */

@@ -355,6 +355,7 @@ function openSurvey() {
 			<th>Name</th>
 			<th>Most Recent</th>
 			<th>Staff</th>
+			<th>Status</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
@@ -363,6 +364,7 @@ function openSurvey() {
 		<c:if test="${mostRecentQuickIntake != null}">
 			<td><c:out value="${mostRecentQuickIntake.createdOnStr}" /></td>
 			<td><c:out value="${mostRecentQuickIntake.staffName}" /></td>
+			<td><c:out value="${mostRecentQuickIntake.intakeStatus}"/></td>
 			<td>
 				<%
 					if (!UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external))
