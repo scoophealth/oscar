@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.model.IntakeNodeLabel;
+import org.oscarehr.PMmodule.model.IntakeNodeTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -72,12 +73,20 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
     
     public IntakeNodeLabel getIntakeNodeLabel(Integer intakeNodeLabelId){
         if (intakeNodeLabelId == null || intakeNodeLabelId < 1) {
-            throw new IllegalArgumentException("intakeNodeId must be non-null and greater than 0");
+            throw new IllegalArgumentException("intakeNodeLabelId must be non-null and greater than 0");
         }
         IntakeNodeLabel intakeNodeLabel = (IntakeNodeLabel)getHibernateTemplate().get(IntakeNodeLabel.class, intakeNodeLabelId);
         return intakeNodeLabel;
     }
-    
+
+    public IntakeNodeTemplate getIntakeNodeTemplate(Integer intakeNodeTemplateId){
+        if (intakeNodeTemplateId == null || intakeNodeTemplateId < 1) {
+            throw new IllegalArgumentException("intakeNodeTemplateId must be non-null and greater than 0");
+        }
+        IntakeNodeTemplate intakeNodeTemplate = (IntakeNodeTemplate)getHibernateTemplate().get(IntakeNodeTemplate.class, intakeNodeTemplateId);
+        return intakeNodeTemplate;
+    }
+
     
     public void saveIntakeNode(IntakeNode intakeNode){
         getHibernateTemplate().save(intakeNode);
