@@ -51,7 +51,8 @@
   </tr>
 </table>
 <%
-
+boolean isOk = false;
+int retry = 0;
 String curUser_no = (String)session.getAttribute("user");
   String[] param =new String[18];
   param[0]=request.getParameter("provider_no");
@@ -76,37 +77,45 @@ String curUser_no = (String)session.getAttribute("user");
   param[17]=request.getParameter("provider_activity");
 
 DBHelp dbObj = new DBHelp();
-
-String	sql   = "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity) values (";
-sql += "'" + param[0] + "',";
-sql += "'" + StringEscapeUtils.escapeSql(param[1]) + "',";
-sql += "'" + StringEscapeUtils.escapeSql(param[2]) + "',";
-sql += "'" + StringEscapeUtils.escapeSql(param[3]) + "',";
-sql += "'" + param[4] + "',";
-sql += "'" + param[5] + "',";
-sql += "'" + param[6] + "',";
-sql += "?,";
-sql += "'" + param[8] + "',";
-sql += "'" + param[9] + "',";
-sql += "'" + param[10] + "',";
-sql += "'" + param[11] + "',";
-sql += "'" + param[12] + "',";
-sql += "'" + param[13] + "',";
-sql += "'" + param[14] + "',";
-sql += "'" + param[15] + "',";
-sql += "'" + param[16] + "',";
-sql += "'" + param[17] + "')";
-//System.out.println(sql);
 DBPreparedHandlerParam[] param2= new DBPreparedHandlerParam[1];
 param2[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));
-
-if(dbObj.updateDBRecord(sql, param2)>0) {
+while ((!isOk) && retry < 3) {
+  // check if the provider no need to be auto generated
+  if (OscarProperties.getInstance().isProviderNoAuto()) 
+  {
+  	param[0]= dbObj.getNewProviderNo();
+  }
+  String	sql   = "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity) values (";
+	sql += "'" + param[0] + "',";
+	sql += "'" + StringEscapeUtils.escapeSql(param[1]) + "',";
+	sql += "'" + StringEscapeUtils.escapeSql(param[2]) + "',";
+	sql += "'" + StringEscapeUtils.escapeSql(param[3]) + "',";
+	sql += "'" + param[4] + "',";
+	sql += "'" + param[5] + "',";
+	sql += "'" + param[6] + "',";
+	sql += "?,";
+	sql += "'" + param[8] + "',";
+	sql += "'" + param[9] + "',";
+	sql += "'" + param[10] + "',";
+	sql += "'" + param[11] + "',";
+	sql += "'" + param[12] + "',";
+	sql += "'" + param[13] + "',";
+	sql += "'" + param[14] + "',";
+	sql += "'" + param[15] + "',";
+	sql += "'" + param[16] + "',";
+	sql += "'" + param[17] + "')";
+	//System.out.println(sql);
+	
+	isOk = (dbObj.updateDBRecord(sql, param2)>0);
+	retry ++;
+}
+if (isOk) {
 	String proId = param[0];
 	String ip = request.getRemoteAddr();
 	LogAction.addLog(curUser_no, "add", "adminAddUser", proId, ip);
 
-ProviderBillCenter billCenter = new ProviderBillCenter();
-billCenter.addBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter")); 
+	ProviderBillCenter billCenter = new ProviderBillCenter();
+	billCenter.addBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter")); 
 
 //  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
 //  if (rowsAffected ==1) {
@@ -116,7 +125,7 @@ billCenter.addBillCenter(request.getParameter("provider_no"),request.getParamete
 <%
   } else {
 %>
-  <h1><bean:message key="admin.provideraddrecord.msgAdditionFailure"/></title>
+  <h1><bean:message key="admin.provideraddrecord.msgAdditionFailure"/></h1>
 <%
   }
   //apptMainBean.closePstmtConn();

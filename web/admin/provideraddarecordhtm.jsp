@@ -40,6 +40,7 @@
  * Ontario, Canada
  */
 -->
+<%@page import="oscar.OscarProperties"%>
 <html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
@@ -88,7 +89,11 @@ function upCaseCtrl(ctrl) {
       <tr>
         <td width="50%" align="right"><bean:message key="admin.provider.formProviderNo"/><font color="red">:</font> </td>
         <td>
-          <input type="text" name="provider_no" maxlength="6">
+          <%if(OscarProperties.getInstance().isProviderNoAuto()){ %>
+	          <input type="text" name="provider_no" maxlength="6" readonly="readonly" value="000000">
+	      <%} else {%>
+	          <input type="text" name="provider_no" maxlength="6">
+		 <%}%>	      
         </td>
       </tr>
       <tr>
