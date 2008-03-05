@@ -50,15 +50,19 @@ public final class LoginAction extends DispatchAction {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        String ip = request.getRemoteAddr();
+
         String nextPage=request.getParameter("nextPage");
         if (nextPage!=null) {
             // set current facility
-            Facility facility=facilityDAO.getFacility(Integer.parseInt(request.getParameter("currentFacilityId")));
+            String facilityIdString=request.getParameter("currentFacilityId");
+            Facility facility=facilityDAO.getFacility(Integer.parseInt(facilityIdString));
             request.getSession().setAttribute("currentFacility", facility);
+            String username=(String)request.getSession().getAttribute("user");
+            LogAction.addLog(username, LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIdString, ip);
             return mapping.findForward(nextPage);
         }
 
-        String ip = request.getRemoteAddr();
         String where = "failure";
         // String userName, password, pin, propName;
         LoginForm frm = (LoginForm) form;
@@ -187,6 +191,7 @@ public final class LoginAction extends DispatchAction {
                 // set current facility
                 Facility facility=facilityDAO.getFacility(facilityIds.get(0));
                 request.getSession().setAttribute("currentFacility", facility);
+                LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIds.get(0), ip);
             }
             else {
                 // do nothing, not in any facilities
