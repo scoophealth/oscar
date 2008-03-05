@@ -75,10 +75,10 @@ function do_batch_discharge(community,bed) {
 		programBox = document.programManagerViewForm.batch_discharge_program;
 		if(bed){
 			programBox = document.programManagerViewForm.batch_discharge_program;			
-			document.programManagerViewForm.type.value='bed';
+			document.programManagerViewForm.type.value='Bed';
 		}
 		else {			
-			document.programManagerViewForm.type.value='service';
+			document.programManagerViewForm.type.value='Service';
 		}
 	}
 
