@@ -65,7 +65,6 @@ public final class LoginAction extends DispatchAction {
 
         String where = "failure";
         // String userName, password, pin, propName;
-        LoginForm frm = (LoginForm) form;
         String userName = ((LoginForm) form).getUsername();
         String password = ((LoginForm) form).getPassword();
         String pin = ((LoginForm) form).getPin();
