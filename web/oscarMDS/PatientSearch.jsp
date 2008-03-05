@@ -254,14 +254,14 @@ function checkTypeIn() {
   if(rs==null) {
     out.println("failed!!!");
   } else {
-  	int offset = Integer.parseInt(strLimit2);
+  	int offset = Integer.parseInt(strLimit1);
   	int idx = 0;
   	while(idx < offset) {
   		rs.next();
                 idx++;
   	}
   	idx = 0;
-    while (rs.next() && idx < Integer.parseInt(strLimit1)) {
+    while (rs.next() && idx < Integer.parseInt(strLimit2)) {
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
 
