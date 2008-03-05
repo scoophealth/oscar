@@ -132,7 +132,7 @@ public class OscarProperties extends Properties {
      }   
 
      public boolean isPINEncripted() {
-         return getBooleanProperty("ISPIN_ENCRYPTED", "yes") || getBooleanProperty("ISPIN_ENCRYPTED", "true");
+         return getBooleanProperty("IS_PIN_ENCRYPTED", "yes") || getBooleanProperty("IS_PIN_ENCRYPTED", "true");
      }
      
      public String getDbType()

@@ -162,7 +162,7 @@ Community Program:&nbsp;
 	<br />
 	<br />
 	<table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<caisi:isModuleLoad moduleName="SHERBOURNE_HEALTH_CENTER" reverse="false">
+	<caisi:isModuleLoad moduleName="ALT_DISCHARGE_REASON" reverse="true">
 		<%if(request.getAttribute("nestedReason")!=null && request.getAttribute("nestedReason").equals("true")){%>
 		<tr>
             <td width="5%"><html:radio property="admission.radioDischargeReason" value='<%="" + DischargeReason.MEDICAL_NEEDS_EXCEED_PROVISION.ordinal()%>' /></td>
