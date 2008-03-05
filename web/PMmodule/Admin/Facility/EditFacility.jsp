@@ -3,8 +3,9 @@
 <%@ include file="/common/messages.jsp"%>
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/validation.js">
-<%-- don't close in 1 statement, will break IE7 --%>
 </script>
+<!-- don't close in 1 statement, will break IE7 -->
+
 
 <div class="tabs" id="tabs">
     <table cellpadding="3" cellspacing="0" border="0">
@@ -59,11 +60,11 @@
 				<option value="0">&nbsp;</option>
 				<c:forEach var="org" items="${orgList}">
 					<c:choose>
-						<c:when test="${orgId == org.id }">
-							<option value="<c:out value="${org.id}"/>" selected><c:out value="${org.labelValue}" /></option>
+						<c:when test="${orgId == org.code }">
+							<option value="<c:out value="${org.code}"/>" selected><c:out value="${org.description}" /></option>
 						</c:when>
 						<c:otherwise>
-							<option value="<c:out value="${org.id}"/>"><c:out value="${org.labelValue}" /></option>
+							<option value="<c:out value="${org.code}"/>"><c:out value="${org.description}" /></option>
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>			 
@@ -77,11 +78,11 @@
             <option value="0">&nbsp;</option>
 				<c:forEach var="sector" items="${sectorList}">
 					<c:choose>
-						<c:when test="${sectorId == sector.id }">
-							<option value="<c:out value="${sector.id}"/>" selected><c:out value="${sector.labelValue}" /></option>
+						<c:when test="${sectorId == sector.code }">
+							<option value="<c:out value="${sector.code}"/>" selected><c:out value="${sector.description}" /></option>
 						</c:when>
 						<c:otherwise>
-							<option value="<c:out value="${sector.id}"/>"><c:out value="${sector.labelValue}" /></option>
+							<option value="<c:out value="${sector.code}"/>"><c:out value="${sector.description}" /></option>
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>			 
