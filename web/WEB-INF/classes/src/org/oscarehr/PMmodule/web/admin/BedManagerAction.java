@@ -35,17 +35,17 @@ public class BedManagerAction extends BaseAction {
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
         // dispatch to correct method based on which submit button was selected
-        if (request.getParameter("submit.saveRooms") != null)
+        if ("".equals(request.getParameter("submit.saveRoom"))==false || request.getParameter("submit.saveRooms") != null)
             return saveRooms(mapping, form, request, response);
         else if (request.getParameter("submit.deleteRoom") != null)
             return deleteRoom(mapping, form, request, response);
-        else if (request.getParameter("submit.addRooms") != null)
+        else if ("".equals(request.getParameter("submit.addRoom"))==false)
             return addRooms(mapping, form, request, response);
-        else if (request.getParameter("submit.saveBeds") != null)
+        else if ("".equals(request.getParameter("submit.saveBed"))==false || request.getParameter("submit.saveBeds") != null)
             return saveBeds(mapping, form, request, response);
         else if (request.getParameter("submit.deleteBed") != null)
             return deleteBed(mapping, form, request, response);
-        else if (request.getParameter("submit.addBeds") != null)
+        else if ("".equals(request.getParameter("submit.addBed"))==false || request.getParameter("submit.addBeds") != null)
             return addBeds(mapping, form, request, response);
         else
             return manage(mapping, form, request, response);
@@ -246,6 +246,15 @@ public class BedManagerAction extends BaseAction {
         BedManagerForm bForm = (BedManagerForm) form;
 		Integer numRooms = bForm.getNumRooms();
 
+		Integer roomslines = Integer.valueOf(request.getParameter("roomslines"));
+        if(numRooms != null){
+        	if(numRooms<=0){
+        	  numRooms=0;
+        	}else if(numRooms + roomslines > 10){
+        	  numRooms= 10 - roomslines; 
+        	}
+        }
+		
 		if (numRooms!= null && numRooms > 0) {
 			try {
 	            roomManager.addRooms(bForm.getFacilityId(), numRooms);
@@ -264,7 +273,16 @@ public class BedManagerAction extends BaseAction {
         BedManagerForm bForm = (BedManagerForm) form;
 		Integer numBeds = bForm.getNumBeds();
 
-		if (numBeds != null && numBeds > 0) {
+		Integer bedslines = Integer.valueOf(request.getParameter("bedslines"));
+        if(numBeds != null){
+        	if(numBeds<=0){
+        	  numBeds=0;
+        	}else if(numBeds + bedslines > 10){
+        	  numBeds= 10 - bedslines; 
+        	}
+        }
+		
+        if (numBeds != null && numBeds > 0) {
 			try {
 	            bedManager.addBeds(facilityId, numBeds);
             } catch (BedReservedException e) {

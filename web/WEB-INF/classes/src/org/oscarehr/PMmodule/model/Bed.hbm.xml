@@ -27,7 +27,7 @@
         <property name="facilityId" column="facility_id" type="integer" not-null="true" length="10" />
 		<property name="roomStart" column="room_start" type="date" not-null="true" length="10" />
 		<property name="teamId" column="team_id" type="integer" length="10" />
-		<property name="name" column="name" type="string" not-null="true" length="45" />
+		<property name="name" column="name" type="string" length="45" />
 		<property name="active" column="active" type="boolean" not-null="true" />
 	</class>
 </hibernate-mapping>
