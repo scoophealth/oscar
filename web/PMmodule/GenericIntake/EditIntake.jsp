@@ -150,6 +150,10 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
     if (in.getChildren() != null && in.getChildren().size() > 1){
         hasChildren = true;
     }
+    
+    if (in.getId().equals(1) || in.getId().equals(2)) {
+	in.setLabel(in.getNodeTemplate().getLabel());
+    }
     String labelId = "";
     if (in.getLabel() != null){
         labelId = ""+in.getLabel().getId();
