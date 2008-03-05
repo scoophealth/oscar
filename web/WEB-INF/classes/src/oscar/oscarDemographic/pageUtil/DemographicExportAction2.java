@@ -461,7 +461,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    data = String.valueOf(allergies[j].getAllergy().getPickID());
 		    if (filled(data)) {
 			cdsDt.Code drugCode = alr.addNewCode();
-			drugCode.setCodingSystem("Drug Identification Number");
+			drugCode.setCodingSystem("DIN");
 			drugCode.setValue(data);
 			aSummary = appendLine(aSummary, "DIN: ", data);
 		    }
