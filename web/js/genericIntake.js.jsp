@@ -35,7 +35,21 @@ function validateSearchForm() {
 	return true;
 }
 
+function validBedCommunityProgram() {
+	var programIdStr=getElement('bedCommunityProgramId').value;
+	var programId = Number(programIdStr);
+		
+	if(programIdStr == "") {
+		//alert( "Bed program is mandatory");
+		return false;
+	} else {
+		return true;
+	}
+}
+
 function validateEdit() {
+	
+	
 	<%
 		if (IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_FIRST_NAME))
 		{
@@ -69,13 +83,9 @@ function validateEdit() {
 			<%
 		}
 	%> 
+		
 		var programIdStr=getElement('bedCommunityProgramId').value;
 		var programId = Number(programIdStr);
-		
-		if(programIdStr == "") {
-			alert( "Bed program is mandatory");
-			return false;
-		}
 		
 		if (gender.value == 'M')
 		{
@@ -289,6 +299,7 @@ function validateEdit() {
 		return window.confirm("No service program has been selected.\nAre you sure you want to submit?");
 	}
 	
+	
 	return true;
 }
 
@@ -318,7 +329,32 @@ function copyRemote(agencyId, demographicId) {
 }
 
 function save() {
+	if(!validBedCommunityProgram()) {
+		alert( "Bed program is mandatory");
+		return false;
+	}
+	
 	setMethod('save');
+}
+
+function save_temp() {
+	if(!validBedCommunityProgram()) {
+		alert( "Bed program is mandatory");
+		return false;
+	}
+	setMethod('save_temp');
+}
+
+function save_admit() {
+	if(!validBedCommunityProgram()) {
+		alert( "Bed program is mandatory");		
+		return false;			
+	} 
+	setMethod('save_admit');
+}
+
+function save_notAdmit() {
+	setMethod('save_notAdmit');
 }
 
 function clientEdit() {
