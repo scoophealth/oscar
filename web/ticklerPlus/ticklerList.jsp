@@ -337,7 +337,7 @@ String style = "";
 		</tr>
 	-->
 		<tr>
-			<td><input type="button" value="Create New Tickler" onclick="location.href='<html:rewrite action="/Tickler"/>?method=edit'"/></td>
+			<!--<td><input type="button" value="Create New Tickler" onclick="location.href='<html:rewrite action="/Tickler"/>?method=edit'"/></td>-->
 			<td class=noprint><input type="button" value="Complete"
 				onclick="batch_operation('complete');" /></td>
 			<td class=noprint><input type="button" value="Delete"
