@@ -315,8 +315,7 @@
             </div>
             </security:oscarSec>
         </div>
-        <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-            <security:oscarSec roleName="<%=roleName$%>"
+        <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc,_admin.torontoRfq"
                                rights="r">
                 <div>
@@ -325,15 +324,13 @@
                     <div>
                         <a HREF="#" ONCLICK="popupPage2('<%=request.getContextPath()%>/admin/admin.jsp', 'Admin');return false;">Admin Page</a>
                     </div>
-                    	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-                    	<div>	
-                    		<html:link action="/Lookup/LookupTableList.do">Lookup Field Editor</html:link>
-                   		</div>
-                    	</caisi:isModuleLoad>
-                    </div>
+                   	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+                   	<div>	
+                   		<html:link action="/Lookup/LookupTableList.do">Lookup Field Editor</html:link>
+                  	</div>
+                    </caisi:isModuleLoad>
                 </div>
-            </security:oscarSec>
-        </caisi:isModuleLoad>
+        </security:oscarSec>
         
         <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_pmm.caisiRoles"
