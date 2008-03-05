@@ -83,7 +83,7 @@
 <br>
 Attention:
 <br>
-Only gif and jpg image type are alowed for the client photo uploading.
+Only gif and jpg image type are allowed for the client photo uploading.
 <br>
 <br>
 
