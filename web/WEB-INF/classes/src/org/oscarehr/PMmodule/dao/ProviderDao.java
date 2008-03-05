@@ -135,10 +135,10 @@ public class ProviderDao extends HibernateDaoSupport {
 		return results;
 	}
 	
-	public static void addProviderToFacility(int providerId, int facilityId)
+	public static void addProviderToFacility(String providerId, int facilityId)
 	{
 	    try {
-            SqlUtils.update("insert into provider_facility values ("+providerId+','+facilityId+')');
+            SqlUtils.update("insert into provider_facility values ('"+providerId+"',"+facilityId+')');
         }
         catch (RuntimeException e) {
             // chances are it's a duplicate unique entry exception so it's safe to ignore.
@@ -147,13 +147,13 @@ public class ProviderDao extends HibernateDaoSupport {
         }
 	}
 	
-	public static void removeProviderFromFacility(int providerId, int facilityId)
+	public static void removeProviderFromFacility(String providerId, int facilityId)
 	{
-        SqlUtils.update("delete from provider_facility where provider_id="+providerId+" and facility_id="+facilityId);
+        SqlUtils.update("delete from provider_facility where provider_id='"+providerId+"' and facility_id="+facilityId);
 	}
 	
-	public static List<Integer> getFacilityIds(int providerId)
+	public static List<Integer> getFacilityIds(String providerId)
 	{
-	    return(SqlUtils.selectIntList("select facility_id from provider_facility where provider_id="+providerId));
+	    return(SqlUtils.selectIntList("select facility_id from provider_facility where provider_id='"+providerId+'\''));
 	}
 }

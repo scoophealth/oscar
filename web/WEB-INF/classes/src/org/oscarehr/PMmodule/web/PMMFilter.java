@@ -38,7 +38,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.service.AgencyManager;
-import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.service.OscarSecurityManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.springframework.web.context.WebApplicationContext;
@@ -54,7 +53,6 @@ public class PMMFilter implements Filter {
 	private static Log log = LogFactory.getLog(PMMFilter.class);
 
 	private AgencyManager agencyManager;
-	private IntegratorManager integratorManager;
 	private OscarSecurityManager oscarSecurityManager;
 	private ProviderManager providerManager;
 	private FilterConfig config;
@@ -63,7 +61,6 @@ public class PMMFilter implements Filter {
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext());
 
 		agencyManager = (AgencyManager) wac.getBean("agencyManager");
-		integratorManager = (IntegratorManager) wac.getBean("integratorManager");
 		oscarSecurityManager = (OscarSecurityManager) wac.getBean("oscarSecurityManager");
 		providerManager = (ProviderManager) wac.getBean("providerManager");
 	}
@@ -85,11 +82,6 @@ public class PMMFilter implements Filter {
 
             return;
         }
-
-		if (session.getAttribute("provider") == null) {
-			log.debug("setting session variable: provider");
-			session.setAttribute("provider", providerManager.getProvider(oscarUser));
-		}
 		
 		session.setAttribute("program_domain", providerManager.getProgramDomain(oscarUser));
 
@@ -111,8 +103,6 @@ public class PMMFilter implements Filter {
 			Agency.setLocalAgency(agency);
 		}
 
-		// init integrator
-		integratorManager.isEnabled();
 
 		chain.doFilter(baseRequest, baseResponse);
 	}

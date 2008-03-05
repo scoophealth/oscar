@@ -62,7 +62,7 @@ public class StaffManagerAction extends BaseAction {
     public ActionForward add_to_facility(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         
         int facilityId=Integer.parseInt(request.getParameter("facility_id"));
-        int providerId=Integer.parseInt(request.getParameter("id"));
+        String providerId=request.getParameter("id");
 
         ProviderDao.addProviderToFacility(providerId, facilityId);
         
@@ -72,7 +72,7 @@ public class StaffManagerAction extends BaseAction {
     public ActionForward remove_from_facility(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         
         int facilityId=Integer.parseInt(request.getParameter("facility_id"));
-        int providerId=Integer.parseInt(request.getParameter("id"));
+        String providerId=request.getParameter("id");
 
         ProviderDao.removeProviderFromFacility(providerId, facilityId);
         
@@ -109,7 +109,7 @@ public class StaffManagerAction extends BaseAction {
 		List<Facility> allFacilities=facilityDAO.getFacilities();
         request.setAttribute("all_facilities",allFacilities);
         
-        List<Integer> providerFacilities=ProviderDao.getFacilityIds(Integer.parseInt(provider.getProvider_no()));
+        List<Integer> providerFacilities=ProviderDao.getFacilityIds(provider.getProvider_no());
         request.setAttribute("providerFacilities",providerFacilities);
 	}
 	

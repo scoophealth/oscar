@@ -32,7 +32,7 @@
 	        <img src="<html:rewrite page="/images/caisi_1.jpg" />" alt="Caisi" id="caisilogo"  border="0"/>
 	    <%}%>
         </td>
-        <td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome <b><c:out value="${sessionScope.provider.formattedName}" /></b>
+        <td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome <b><c:out value="${sessionScope.provider.formattedName}" /></b>, current facility=<c:out value="${sessionScope.currentFacility.name}" />
         </td>
         <td align="center" width="50px"><html:link action="/PMmodule/ProviderInfo.do">Home</html:link></td>
         <td width="50px" align="center">
