@@ -33,19 +33,19 @@ public class BedManagerAction extends BaseAction {
     private FacilityManager facilityManager;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-
+    	//revert back to current because the additional conditions broke all codes of adding and deleting
         // dispatch to correct method based on which submit button was selected
-        if (request.getParameter("submit.saveRooms") != null  ||  "".equals(request.getParameter("submit.saveRoom"))==false)
+        if (request.getParameter("submit.saveRooms") != null)
             return saveRooms(mapping, form, request, response);
         else if (request.getParameter("submit.deleteRoom") != null)
             return deleteRoom(mapping, form, request, response);
-        else if (request.getParameter("submit.addRooms") != null  ||  "".equals(request.getParameter("submit.addRoom"))==false)
+        else if (request.getParameter("submit.addRooms") != null)
             return addRooms(mapping, form, request, response);
-        else if (request.getParameter("submit.saveBeds") != null  ||  "".equals(request.getParameter("submit.saveBed"))==false)
+        else if (request.getParameter("submit.saveBeds") != null)
             return saveBeds(mapping, form, request, response);
         else if (request.getParameter("submit.deleteBed") != null)
             return deleteBed(mapping, form, request, response);
-        else if (request.getParameter("submit.addBeds") != null  ||  "".equals(request.getParameter("submit.addBed"))==false)
+        else if (request.getParameter("submit.addBeds") != null)
             return addBeds(mapping, form, request, response);
         else
             return manage(mapping, form, request, response);
@@ -116,7 +116,6 @@ public class BedManagerAction extends BaseAction {
 	        	rooms[i].setActive(false);
 	        }
         }
-		
 		try {
 	        roomManager.saveRooms(rooms);
         } catch (RoomHasActiveBedsException e) {
@@ -187,7 +186,6 @@ public class BedManagerAction extends BaseAction {
 	        	beds[i].setActive(false);
 	        }
         }
-		
 		Room[] rooms = roomManager.getUnfilledRoomIds(beds);
 		if(rooms == null){
 			rooms = bForm.getRooms();
@@ -195,10 +193,8 @@ public class BedManagerAction extends BaseAction {
 				log.error("saveBeds(): No beds are assigned to rooms.");
 			}
 		}
-		
 		try {
 			beds = bedManager.getBedsForUnfilledRooms(rooms, beds);
-			
 	        bedManager.saveBeds(beds);
 	        
         } catch (BedReservedException e) {
@@ -245,7 +241,7 @@ public class BedManagerAction extends BaseAction {
 	public ActionForward addRooms(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         BedManagerForm bForm = (BedManagerForm) form;
 		Integer numRooms = bForm.getNumRooms();
-
+/*//Creating bug
 		Integer roomslines = Integer.valueOf(request.getParameter("roomslines"));
         if(numRooms != null){
         	if(numRooms<=0){
@@ -254,7 +250,7 @@ public class BedManagerAction extends BaseAction {
         	  numRooms= 10 - roomslines; 
         	}
         }
-		
+*/
 		if (numRooms!= null && numRooms > 0) {
 			try {
 	            roomManager.addRooms(bForm.getFacilityId(), numRooms);
@@ -272,7 +268,7 @@ public class BedManagerAction extends BaseAction {
         Integer facilityId = Integer.valueOf(request.getParameter("facilityId"));
         BedManagerForm bForm = (BedManagerForm) form;
 		Integer numBeds = bForm.getNumBeds();
-
+/*//Creating bug - broke code
 		Integer bedslines = Integer.valueOf(request.getParameter("bedslines"));
         if(numBeds != null){
         	if(numBeds<=0){
@@ -281,8 +277,8 @@ public class BedManagerAction extends BaseAction {
         	  numBeds= 10 - bedslines; 
         	}
         }
-		
-        if (numBeds != null && numBeds > 0) {
+*/
+		if (numBeds != null && numBeds > 0) {
 			try {
 	            bedManager.addBeds(facilityId, numBeds);
             } catch (BedReservedException e) {
