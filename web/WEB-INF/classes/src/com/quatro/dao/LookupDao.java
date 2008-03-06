@@ -23,7 +23,7 @@ public class LookupDao extends HibernateDaoSupport {
 	public List LoadCodeList(String tableIdName, boolean activeOnly, String code, String codeDesc)
 	{
 	   ArrayList paramList = new ArrayList();
-	   String sSQL="FROM LookupCodeValue s where s.prefix= ? ORDER BY s.orderByIndex,s.parentCode, s.description";		
+	   String sSQL="from LookupCodeValue s where s.prefix= ? order by s.orderByIndex,s.parentCode, s.description";		
 	   paramList.add(tableIdName);
 	   Object params[] = paramList.toArray(new Object[paramList.size()]);
 	   return getHibernateTemplate().find(sSQL ,params);
@@ -69,7 +69,7 @@ public class LookupDao extends HibernateDaoSupport {
 	{
 		ArrayList paramList = new ArrayList();
 
-		String sSQL="FROM LookupTableDefValue s where s.tableId= ?";		
+		String sSQL="from LookupTableDefValue s where s.tableId= ?";		
 	    paramList.add(tableId);
 	    Object params[] = paramList.toArray(new Object[paramList.size()]);
 	    try{
@@ -80,7 +80,7 @@ public class LookupDao extends HibernateDaoSupport {
 	}
 	public List LoadFieldDefList(String tableId) 
 	{
-		String sSql = "FROM FieldDefValue s where s.tableId=? ORDER BY s.fieldIndex ";
+		String sSql = "from FieldDefValue s where s.tableId=? order by s.fieldIndex ";
 		ArrayList paramList = new ArrayList();
 	    paramList.add(tableId);
 	    Object params[] = paramList.toArray(new Object[paramList.size()]);
@@ -92,7 +92,7 @@ public class LookupDao extends HibernateDaoSupport {
 		List fs = LoadFieldDefList(tableDef.getTableId());
 		String idFieldName = ((FieldDefValue) fs.get(0)).getFieldSQL();
 		
-		String sql = "SELECT ";
+		String sql = "select ";
 		for(int i=0; i<fs.size(); i++) {
 			FieldDefValue fdv = (FieldDefValue) fs.get(i);
 			if (i==0) {
@@ -103,8 +103,8 @@ public class LookupDao extends HibernateDaoSupport {
 				sql += "," + fdv.getFieldSQL();
 			}
 		}
-		sql += " FROM " + tableName;
-		sql += " WHERE " + idFieldName + "='" + code + "'"; 
+		sql += " from " + tableName;
+		sql += " where " + idFieldName + "='" + code + "'"; 
 		try {
 			DBPreparedHandler db = new DBPreparedHandler();
 			ResultSet rs = db.queryResults(sql);
@@ -134,7 +134,7 @@ public class LookupDao extends HibernateDaoSupport {
 		String tableName = tableDef.getTableName();
 		List fs = LoadFieldDefList(tableDef.getTableId());
 		ArrayList codes = new ArrayList();
-		String sql = "SELECT ";
+		String sql = "select ";
 		for(int i=0; i<fs.size(); i++) {
 			FieldDefValue fdv = (FieldDefValue) fs.get(i);
 			if (i==0) {
@@ -145,7 +145,7 @@ public class LookupDao extends HibernateDaoSupport {
 				sql += "," + fdv.getFieldSQL();
 			}
 		}
-		sql += " FROM " + tableName;
+		sql += " from " + tableName;
 		try {
 			DBPreparedHandler db = new DBPreparedHandler();
 			ResultSet rs = db.queryResults(sql);
@@ -174,8 +174,8 @@ public class LookupDao extends HibernateDaoSupport {
 	private int GetNextId(String idFieldName, String tableName) throws SQLException
 
 	{
-		String sql = "SELECT MAX(" + idFieldName + ")";
-		sql += " FROM " + tableName;
+		String sql = "select max(" + idFieldName + ")";
+		sql += " from " + tableName;
 		DBPreparedHandler db = new DBPreparedHandler();
 		ResultSet rs = db.queryResults(sql);
 		int id = 0;
@@ -201,7 +201,7 @@ public class LookupDao extends HibernateDaoSupport {
 
 		DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()];
 		String phs = "";
-		String sql = "INSERT INTO  " + tableName + "("; 
+		String sql = "insert into  " + tableName + "("; 
 		for(int i=0; i< fieldDefList.size(); i++) {
 			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
 			sql += fdv.getFieldName() + ",";
@@ -226,7 +226,7 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		sql = sql.substring(0,sql.length()-1);
 		phs = phs.substring(0,phs.length()-1);
-		sql += ") Values (" + phs + ")";
+		sql += ") values (" + phs + ")";
 
 		//check the existence of the code 
 		LookupCodeValue lkv= GetCode(tableDef.getTableId(), idFieldVal);
@@ -245,7 +245,7 @@ public class LookupDao extends HibernateDaoSupport {
 		String idFieldVal = "";
 
 		DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()+1];
-		String sql = "UPDATE " + tableName + " SET ";
+		String sql = "update " + tableName + " set ";
 		for(int i=0; i< fieldDefList.size(); i++) {
 			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
 			if (fdv.getGenericIdx()==1) {
@@ -268,7 +268,7 @@ public class LookupDao extends HibernateDaoSupport {
 			}
 		}
 		sql = sql.substring(0,sql.length()-1);
-		sql += " WHERE " + idFieldName + "=?";
+		sql += " where " + idFieldName + "=?";
 		params[fieldDefList.size()] = params[0];
 		DBPreparedHandler db = new DBPreparedHandler();
 		db.queryExecuteUpdate(sql, params);
