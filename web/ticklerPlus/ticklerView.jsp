@@ -6,6 +6,8 @@
 <%@ include file="messages.jsp" %>
 
 <br/>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
 <html>
 <body>
 <script>
@@ -23,6 +25,7 @@
 <table width="60%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
 <%
 	String demographic_name="";
+	String program_name="";
 	String provider_name="";
 	String assignee_name="";
 	String status = "Active";
@@ -33,6 +36,14 @@
 		if(demographic != null) {
 			demographic_name = demographic.getLastName() + "," + demographic.getFirstName();
 		}
+		
+		if (temp.getProgram_id()!=null)
+		{
+			ProgramDao programDao=(ProgramDao)SpringUtils.beanFactory.getBean("programDao");
+			Program program=programDao.getProgram(temp.getProgram_id());
+			program_name=program.getName();
+		}
+			
 		Provider provider = (Provider)temp.getProvider();
 		if(provider != null) {
 			provider_name = provider.getLastName() + "," + provider.getFirstName();
@@ -55,6 +66,10 @@
 	<tr>
 		<td class="fieldTitle">Demographic:</td>
 		<td class="fieldValue"><a href="../demographic/demographiccontrol.jsp?demographic_no=<c:out value="${tickler.demographic_no}"/>&displaymode=edit&dboperation=search_detail" target="demographic"><%=demographic_name %></a></td>
+	</tr>
+	<tr>
+		<td class="fieldTitle">Program:</td>
+		<td class="fieldValue"><%=program_name %></a></td>
 	</tr>
 	<tr>
 		<td class="fieldTitle">Provider:</td>

@@ -6765,6 +6765,7 @@ CREATE TABLE studylogin (
 CREATE TABLE tickler (
   tickler_no int(10) NOT NULL auto_increment,
   demographic_no int(10) default '0',
+  program_id int,
   message text,
   status char(1) default NULL,
   update_date datetime default '0001-01-01 00:00:00',

@@ -328,10 +328,14 @@ public class TicklerAction extends DispatchAction {
 	/* save a tickler */
 	public ActionForward save(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		log.debug("save");
+	    log.debug("save");
 		Provider user = providerMgr.getProvider(getProviderNo(request));
 		DynaActionForm ticklerForm = (DynaActionForm)form;
         Tickler tickler = (Tickler)ticklerForm.get("tickler");
+        
+        // set the program which the tickler was written in if there is a program.
+        String programIdStr=(String)request.getSession().getAttribute("infirmaryView_programId");
+        if (programIdStr!=null) tickler.setProgram_id(Integer.valueOf(programIdStr));
         
         /* get service time */
         String service_hour = request.getParameter("tickler.service_hour");

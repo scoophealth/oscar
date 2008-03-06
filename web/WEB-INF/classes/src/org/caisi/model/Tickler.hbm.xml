@@ -22,6 +22,7 @@
 			<generator class="increment" />
 		</id>
 		<property name="demographic_no" />
+		<property name="program_id" />
 		<property name="message" />
 		<property name="status" />
 		<property name="update_date" type="java.util.Date" />

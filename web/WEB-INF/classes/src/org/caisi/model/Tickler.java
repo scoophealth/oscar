@@ -34,6 +34,7 @@ import org.oscarehr.PMmodule.model.Provider;
 public class Tickler extends BaseObject {
 	private Long tickler_no;
 	private String demographic_no;
+	private Integer program_id;
 	private String message;
 	private char status;
 	private Date update_date;
@@ -174,5 +175,11 @@ public class Tickler extends BaseObject {
 		Date d = formatter.parse(getServiceDate() + " " + time);
 		setService_date(d);
 	}
+    public Integer getProgram_id() {
+        return program_id;
+    }
+    public void setProgram_id(Integer program_id) {
+        this.program_id = program_id;
+    }
 	
 }
