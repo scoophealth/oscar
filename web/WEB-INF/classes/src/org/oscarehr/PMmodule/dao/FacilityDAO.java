@@ -27,7 +27,7 @@ public class FacilityDAO extends HibernateDaoSupport {
     public List<Program> getAssociatedPrograms(Integer facilityId) {
         return getHibernateTemplate().find("select distinct p from Program p, Facility f, Room r where p.id = r.programId and r.facilityId = f.id and f.id = ?", facilityId);
     }
-
+    
     public void saveFacility(Facility facility) {
         getHibernateTemplate().saveOrUpdate(facility);
         getHibernateTemplate().flush();

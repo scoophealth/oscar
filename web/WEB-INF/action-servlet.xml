@@ -48,10 +48,7 @@
         <property name="caseManagementManager" ref="CaseManagementManager"/>
         <property name="lookupManager" ref="lookupManager"/>       
     </bean>
-    <bean name="/PMmodule/ProviderInfo" class="org.oscarehr.PMmodule.web.ProviderInfoAction" singleton="false">
-        <property name="programManager" ref="programManager"/>
-        <property name="providerManager" ref="providerManager"/>
-    </bean>
+    <bean name="/PMmodule/ProviderInfo" class="org.oscarehr.PMmodule.web.ProviderInfoAction" singleton="false" autowire="byName" />
     <bean name="/PMmodule/ProgramManager" class="org.oscarehr.PMmodule.web.admin.ProgramManagerAction" singleton="false" >
         <property name="facilityDAO" ref="facilityDAO"/>
         <property name="admissionManager" ref="admissionManager"/>

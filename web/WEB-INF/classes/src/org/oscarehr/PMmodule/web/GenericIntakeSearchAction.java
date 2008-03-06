@@ -36,6 +36,7 @@ import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
@@ -47,6 +48,12 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     // Forwards
     private static final String FORWARD_SEARCH_FORM = "searchForm";
     private static final String FORWARD_INTAKE_EDIT = "intakeEdit";
+
+    protected SurveyManager surveyManager;
+
+    public void setSurveyManager(SurveyManager mgr) {
+        this.surveyManager = mgr;
+    }
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {

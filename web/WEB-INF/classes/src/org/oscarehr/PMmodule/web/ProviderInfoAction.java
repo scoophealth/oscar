@@ -23,6 +23,8 @@ package org.oscarehr.PMmodule.web;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
@@ -33,6 +35,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProviderInfoAction extends BaseAction {
+
+    private FacilityDAO facilityDAO=null;
+    
+    public void setFacilityDAO(FacilityDAO facilityDAO) {
+        this.facilityDAO = facilityDAO;
+    }
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return view(mapping, form, request, response);
@@ -63,18 +71,15 @@ public class ProviderInfoAction extends BaseAction {
             }
         }
 
-        List<Facility> facilityDomain = new ArrayList<Facility>();
-        for (Facility facility : providerManager.getFacilitiesInProgramDomain(providerNo)) {
-
-            if (!facility.isDisabled()) {
-
-                facilityDomain.add(facility);
-            }
+        List<Integer> facilityIds = ProviderDao.getFacilityIds(providerNo);
+        ArrayList<Facility> facilities=new ArrayList<Facility>();
+        for (Integer facilityId : facilityIds){
+            facilities.add(facilityDAO.getFacility(facilityId));
         }
-
-
+        
+        
         request.setAttribute("programDomain", programDomain);
-        request.setAttribute("facilityDomain", facilityDomain);
+        request.setAttribute("facilityDomain", facilities);
 
         return mapping.findForward("view");
     }

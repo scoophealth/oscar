@@ -52,11 +52,11 @@ import org.oscarehr.PMmodule.service.RatePageManager;
 import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
-import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import com.quatro.service.*;
+
+import com.quatro.service.LookupManager;
 public abstract class BaseAction extends DispatchAction {
 	
 	protected static final String PARAM_START = "?";
@@ -84,7 +84,6 @@ public abstract class BaseAction extends DispatchAction {
 	protected ProgramQueueManager programQueueManager;
 	protected RoleManager roleManager;
 	protected RoomManager roomManager;
-	protected SurveyManager surveyManager;
 	protected CaisiRoleManager providerCaisiRoleManager;
 	
 	public void addError(HttpServletRequest req, String message) {
@@ -244,10 +243,6 @@ public abstract class BaseAction extends DispatchAction {
 
 	public void setRoomManager(RoomManager roomManager) {
 		this.roomManager = roomManager;
-	}
-
-	public void setSurveyManager(SurveyManager mgr) {
-		this.surveyManager = mgr;
 	}
 
 	protected String getProviderNo(HttpServletRequest request) {

@@ -30,13 +30,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.survey.SurveyReport;
 import org.oscarehr.survey.SurveyReportEntry;
-
 import org.oscarehr.surveymodel.SurveyDocument.Survey;
 
 public class BaseUCFReport extends BaseAction {
+
+    protected SurveyManager surveyManager;
+
+    public void setSurveyManager(SurveyManager mgr) {
+        this.surveyManager = mgr;
+    }
 
 	protected String getFormId() {
 		return "6";

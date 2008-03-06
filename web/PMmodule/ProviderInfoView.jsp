@@ -26,7 +26,7 @@ Your Program Domain <a href="javascript:void(0)" onclick="popupHelp('program_dom
     <display:column property="program.queueSize" sortable="true" title="Clients in Queue" />
 </display:table>
 <br/>
-The following facilities are associated with rooms assigned to programs in your domain:
+You belong to the following facilities:
 <display:table class="simple" cellspacing="2" cellpadding="3" id="facility" name="facilityDomain" export="false" requestURI="/PMmodule/ProviderInfo.do">
     <display:setProperty name="basic.msg.empty_list" value="No facilities." />
     <display:column sortable="true" sortProperty="name" title="Facility Name">

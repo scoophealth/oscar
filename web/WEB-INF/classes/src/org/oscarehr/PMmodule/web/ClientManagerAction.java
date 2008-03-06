@@ -74,6 +74,7 @@ import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.Demographic.ConsentGiven;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.service.HealthSafetyManager;
+import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
@@ -97,6 +98,12 @@ public class ClientManagerAction extends BaseAction {
 
     public void setClientReferralDAO(ClientReferralDAO clientReferralDAO) {
         this.clientReferralDAO = clientReferralDAO;
+    }
+
+    protected SurveyManager surveyManager;
+
+    public void setSurveyManager(SurveyManager mgr) {
+        this.surveyManager = mgr;
     }
 
     // Parameter

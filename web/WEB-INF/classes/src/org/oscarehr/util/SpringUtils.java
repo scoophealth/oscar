@@ -11,14 +11,14 @@ import org.springframework.beans.factory.BeanFactory;
  * The main usage is probably the beanFactory singleton.
  */
 public class SpringUtils {
-    //    private static final String[] configs = {"/applicationContext.xml", "/applicationContextCaisi.xml"};
-    //    public static final BeanFactory beanFactory = new ClassPathXmlApplicationContext(configs);
-
     /**
      * This variable is populated by one of the context listeners.
      */
     public static BeanFactory beanFactory = null;
 
+    /**
+     * This method should only be called by DbConnectionFilter, everyone else should use that to obtain a connection. 
+     */
     protected static Connection getDbConnection() throws SQLException {
         BasicDataSource ds = (BasicDataSource)SpringUtils.beanFactory.getBean("dataSource");
         Connection c=ds.getConnection();

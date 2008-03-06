@@ -39,8 +39,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.apache.struts.util.LabelValueBean;
-import com.quatro.service.LookupManager;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
@@ -50,6 +48,7 @@ import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 
 import oscar.OscarProperties;
@@ -62,6 +61,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     private static final String EDIT = "edit";
     private static final String PRINT = "print";
     private static final String CLIENT_EDIT = "clientEdit";
+
+    protected SurveyManager surveyManager;
+
+    public void setSurveyManager(SurveyManager mgr) {
+        this.surveyManager = mgr;
+    }
 
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
