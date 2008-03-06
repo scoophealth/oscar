@@ -5,9 +5,9 @@
         window.open(url + topic,'help','width=450, height=200');
     }
 </script>
-<br />
-<br />
-<br />
+<c:import url="/SystemMessage.do?method=view" />
+<c:import url="/FacilityMessage.do?method=view" />
+<br/>
 Your Agency Domain <a href="javascript:void(0)" onclick="popupHelp('agency_domain')">?</a> includes:
 <display:table class="simple" cellspacing="2" cellpadding="3" id="agency" name="agencyDomain" export="false" requestURI="/PMmodule/ProviderInfo.do">
     <display:setProperty name="basic.msg.empty_list" value="No agencies." />
