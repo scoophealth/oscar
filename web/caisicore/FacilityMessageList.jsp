@@ -85,6 +85,7 @@
 		
 		<table>
 		<tr>
+			<td><input type="button" value="Back" onclick="location.href='<%=request.getContextPath()%>/admin/admin.jsp'"/></td>
 			<td><input type="button" value="Create New Message" onclick="location.href='FacilityMessage.do?method=edit'"/></td>
 		</tr>
 		</table>
