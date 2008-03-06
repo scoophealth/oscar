@@ -13,6 +13,6 @@
 		<property name="tree" column="istree" />
         <property name="treeCodeLength" column="treecode_length" />
         <property name="moduleId"/>
-        <property name="moduleName"  formula="(select t.description from v_lookup_table t where t.prefix='MOD' and t.code=moduleId)"/> 
+        <property name="moduleName"  formula="(select t.description from v_lookup_table t where t.prefix='FCT' and t.code=moduleId)"/> 
 	</class>
 </hibernate-mapping>
