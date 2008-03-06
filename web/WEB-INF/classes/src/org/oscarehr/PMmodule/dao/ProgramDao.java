@@ -180,6 +180,12 @@ public class ProgramDao extends HibernateDaoSupport {
         return rs;
     }
 
+    public List<Program> getAllActiveBedPrograms() {
+        @SuppressWarnings("unchecked")
+        List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.programStatus = 'active' and p.type='Bed' ");
+        return rs;
+    }
+    
     public List <Program> getAllPrograms(String programStatus, String type, long facilityId)
     {
         @SuppressWarnings("unchecked")

@@ -53,7 +53,7 @@ public class ProgramUtils
         sb.append("function validAgeRangeForProgram(programId, age)\n");
         sb.append("{\n");
         
-        for (Program program : programDao.getAllActivePrograms())
+        for (Program program : programDao.getAllActiveBedPrograms())
         {
             sb.append("if (programId == "+program.getId()+" && ( age<"+program.getAgeMin()+" || age>"+program.getAgeMax()+" )) return(false);\n");
         }
