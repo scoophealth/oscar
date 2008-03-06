@@ -271,7 +271,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 		  <li><html:link action="/FacilityMessage.do?">Facilities Messages</html:link></li>
 		  </security:oscarSec>
 <!-- 		  <li><html:link action="/CaisiEditor.do?method=list">Caisi List Editor</html:link></li>  -->
-          <li><html:link action="/Lookup/LookupTableList.do"> Lookup Field Options Editor</html:link></li>
+          <li><html:link action="/Lookup/LookupTableList.do"> Lookup Field Editor</html:link></li>
 		  <li><html:link action="/issueAdmin.do?method=list"><bean:message key="admin.admin.issueEditor"/></html:link></li>
 		  <li><html:link action="/CaisiRole.do"><bean:message key="admin.admin.caisiRole"/></html:link></li>         
 		  <li><html:link action="/SurveyManager.do"><bean:message key="admin.admin.surveyManager"/></html:link></li>         

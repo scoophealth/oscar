@@ -30,7 +30,7 @@ public class LookupListAction extends DispatchAction {
 	
 	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String tableId=request.getParameter("tableId");
-		List lst = lookupManager.LoadCodeList(tableId, false, null, null);
+		List lst = lookupManager.LoadCodeList(tableId, true, null, null);
 		LookupListForm qform = (LookupListForm) form;
 		qform.setLookups(lst);
 		qform.setOpenerFormName(request.getParameter("openerForm"));
