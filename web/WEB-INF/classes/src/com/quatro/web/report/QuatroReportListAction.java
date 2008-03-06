@@ -40,8 +40,11 @@ public class QuatroReportListAction extends DispatchAction {
 		}
 
 		if(str.toString()!=null){
-		  String templateNo= str.toString().substring(1);
-		  reportManager.DeleteReportTemplates(templateNo);
+		  String templateNo= str.toString();
+		  if("".equals(templateNo)==false){
+			  templateNo = templateNo.substring(1);
+			  reportManager.DeleteReportTemplates(templateNo);
+		  }
 		}  
 		
 	}
