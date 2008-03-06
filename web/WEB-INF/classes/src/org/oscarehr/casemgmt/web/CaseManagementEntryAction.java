@@ -366,7 +366,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                     return false;
                 
 		String providerNo = getProviderNo(request);
-                Provider provider = getProvider(request);
+        Provider provider = getProvider(request);
 		String userName = provider != null?provider.getFullName():"";
                 
                 String demo = getDemographicNo(request);
@@ -394,7 +394,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 			note.setSigned(false);                        
 			cform.setSign("off");
 		} else {			
-			note.setSigning_provider_no(userName);
+			note.setSigning_provider_no(providerNo);
 			note.setSigned(true);
 		}
                 
