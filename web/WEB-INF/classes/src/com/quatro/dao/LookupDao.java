@@ -20,14 +20,27 @@ import oscar.oscarDB.DBPreparedHandlerParam;
 import com.quatro.util.*;
 public class LookupDao extends HibernateDaoSupport {
 
-	public List LoadCodeList(String tableIdName, boolean activeOnly, String code, String codeDesc)
+	public List LoadCodeList(String tableId, boolean activeOnly, String code, String codeDesc)
 	{
+/*
 	   ArrayList paramList = new ArrayList();
 	   String sSQL="from LookupCodeValue s where s.prefix= ? order by s.orderByIndex,s.parentCode, s.description";		
 	   paramList.add(tableIdName);
 	   Object params[] = paramList.toArray(new Object[paramList.size()]);
 	   return getHibernateTemplate().find(sSQL ,params);
+*/	   
+       Criteria criteria = getSession().createCriteria(LookupCodeValue.class);
+       criteria.add(Restrictions.eq("prefix", tableId));
+       if(activeOnly) criteria.add(Restrictions.eq("active",true));
+	   if(!Utility.IsEmpty(code)) criteria.add(Restrictions.eq("code",code));
+	   if(!Utility.IsEmpty(codeDesc)) criteria.add(Restrictions.ilike("description", "%" + codeDesc + "%"));
+	   criteria.addOrder(Order.asc("orderByIndex"));
+	   criteria.addOrder(Order.asc("parentCode"));
+	   criteria.addOrder(Order.asc("description"));
+	   List lst = criteria.list();
+	   return lst;
 	}
+	
 	public LookupCodeValue GetCode(String tableId,String code)
 	{
         Criteria criteria = getSession().createCriteria(LookupCodeValue.class);

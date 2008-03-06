@@ -9,6 +9,8 @@ public class LookupListForm extends ActionForm{
     String openerFormName;
     String openerCodeElementName;
     String openerDescElementName;
+    String keywordName;
+    String tableId;
     
 	public List getLookups() {
 		return lookups;
@@ -40,5 +42,21 @@ public class LookupListForm extends ActionForm{
 
 	public void setOpenerFormName(String openerFormName) {
 		this.openerFormName = openerFormName;
+	}
+
+	public String getKeywordName() {
+		return keywordName;
+	}
+
+	public void setKeywordName(String keywordName) {
+		this.keywordName = keywordName;
+	}
+
+	public String getTableId() {
+		return tableId;
+	}
+
+	public void setTableId(String tableId) {
+		this.tableId = tableId;
 	}
 }

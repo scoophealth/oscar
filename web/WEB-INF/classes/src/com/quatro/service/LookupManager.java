@@ -11,6 +11,7 @@ public class LookupManager {
 	public List LoadCodeList(String tableId, boolean activeOnly, String code, String codeDesc) {
         return lookupDao.LoadCodeList(tableId, activeOnly, code, codeDesc);
 	}
+
 	public List LoadCodeList(String tableId, boolean activeOnly, String parentCode, String code, String codeDesc) {
         return lookupDao.LoadCodeList(tableId, activeOnly,parentCode, code, codeDesc);
 	}

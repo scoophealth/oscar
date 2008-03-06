@@ -38,4 +38,16 @@ public class LookupListAction extends DispatchAction {
 		qform.setOpenerDescElementName(request.getParameter("descName"));
 		return mapping.findForward("list");
 	}
+	
+	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LookupListForm qform = (LookupListForm) form;
+        String tableId=request.getParameter("tableId");
+		List lst = lookupManager.LoadCodeList(tableId, true, null, qform.getKeywordName());
+		qform.setLookups(lst);
+		qform.setOpenerFormName(request.getParameter("openerForm"));
+		qform.setOpenerCodeElementName(request.getParameter("codeName"));
+		qform.setOpenerDescElementName(request.getParameter("descName"));
+		return mapping.findForward("list");
+	}
+	
 }
