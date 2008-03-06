@@ -51,6 +51,8 @@
         dayStr = "0" + dayStr;
 
     String dateStr = yearStr + "-" + mthStr + "-" + dayStr;
+    Version version=null;
+	WebApplicationContext ctx=null;
 %>
 
 <script type="text/javascript">
@@ -124,8 +126,8 @@
                         <td nowrap="nowrap" width="120">
                             <div align="center">
                                 <%
-                                    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-                                    Version version = (Version) ctx.getBean("version");
+                                    ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+                                    version = (Version) ctx.getBean("version");
                                 %>
                                 <span style="font-weight:bold"><%=version.getVersion()%></span>
                             </div>
@@ -332,7 +334,7 @@
                 </div>
         </security:oscarSec>
         
-        <security:oscarSec roleName="<%=roleName$%>"
+<!--         <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_pmm.caisiRoles"
                                rights="r">
         <div><div>
@@ -341,7 +343,7 @@
                 Roles</a></span>
         </div></div>
 		</security:oscarSec>
-
+-->
     </div>
 </div>
 <%

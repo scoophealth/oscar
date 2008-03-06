@@ -178,7 +178,7 @@
                         
                 <input type="hidden" name="mergeAction" value="merge" />
                 <input type="hidden" name="provider_no" value="<%= session.getAttribute("user") %>" />
-                <input type="hidden" name="caisiSearch" value="yes"
+                <input type="hidden" name="caisiSearch" value="yes"/>
             <input type="submit" value="Merge Selected Records"/>
             </security:oscarSec>
 	
