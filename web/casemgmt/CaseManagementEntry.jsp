@@ -365,7 +365,7 @@ if (pId==null) pId="";
 			submitString = submitString + "this.form.deleteId.value=" + "'"
 					+ ind.intValue() + "';";
 			%>					
-					<input type="submit" value="Change Diagnosis" onclick="<%=submitString%>">
+					<input type="submit" value="Change Issue" onclick="<%=submitString%>">
 				</td>
 			</tr>
 		</nested:iterate>
