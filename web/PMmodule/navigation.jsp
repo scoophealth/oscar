@@ -240,9 +240,7 @@
     </div>
 -->
 </div>
-<%
-    if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
-%>
+
 <div id="admintools" class="toolgroup">
     <div class="label">
         <strong>Administration</strong>
@@ -346,6 +344,4 @@
 -->
     </div>
 </div>
-<%
-    }
-%>
+
