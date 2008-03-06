@@ -105,18 +105,17 @@
         
         List<IntakeNode> lis = genericIntakeManager.getIntakeNodes();
         
-        if (lis != null){%>
-
-	<select>
-	    <%for (IntakeNode i: lis){%>
-	    <option onclick="location.href='EditIntake.jsp?id=<%=i.getId()%>'"> - <%=i.getLabelStr()%> - </option>
-	    <%}%>
-	</select>
-      <%}
         String id = request.getParameter("id");
         if (id == null){ id = "41333";};
         int iNum = Integer.parseInt(id);
 	
+        if (lis != null){%>
+	<select>
+	    <%for (IntakeNode i: lis){%>
+	    <option <%=i.getId()==iNum?"selected":""%> onclick="location.href='EditIntake.jsp?id=<%=i.getId()%>'"> - <%=i.getLabelStr()%> - </option>
+	    <%}%>
+	</select>
+	<%}
 	IntakeNode iNode = (IntakeNode) session.getAttribute("intakeNode");
         if (iNode==null || !iNode.getId().equals(iNum)) iNode = genericIntakeManager.getIntakeNode(iNum);
         
@@ -221,6 +220,7 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
     } else if (node.isAnswerChoice()) {
         out.write("<blockquote>");
         out.write("<label><input type=\"checkbox\"/>"+in.getLabelStr()+ "</label>");
+	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
         out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
         
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
@@ -229,6 +229,7 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
     } else if (node.isAnswerText()) {
         out.write("<blockquote>");
         out.write("<label>"+in.getLabelStr()+ "<input type=\"text\"  /> </label>");
+	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
         out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
         
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
@@ -239,6 +240,7 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         out.write(in.getLabelStr()+"<textarea rows=\"5\" cols=\"50\"></textarea>");
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
 //out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
+	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
         out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
     } else {
         throw new IllegalStateException("No html adapter for type: " + node.getType());
