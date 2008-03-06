@@ -417,7 +417,6 @@ public class RoomManager {
         		}
         	}
         }
-
         for (Room room : rooms) {
             saveRoom(room);
         }
@@ -477,10 +476,11 @@ public class RoomManager {
             if (!roomDAO.roomExists(roomId)) {
                 handleException(new IllegalStateException("no room with id : " + roomId));
             }
-
+/*
             if (!room.isActive() && bedDAO.getBedsByRoom(roomId, Boolean.TRUE).length > 0) {
                 handleException(new RoomHasActiveBedsException("room with id : " + roomId + " has active beds"));
             }
+*/            
         }
     }
 
