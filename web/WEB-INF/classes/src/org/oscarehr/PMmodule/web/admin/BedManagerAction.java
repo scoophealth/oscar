@@ -35,17 +35,17 @@ public class BedManagerAction extends BaseAction {
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
         // dispatch to correct method based on which submit button was selected
-        if ("".equals(request.getParameter("submit.saveRoom"))==false || request.getParameter("submit.saveRooms") != null)
+        if (request.getParameter("submit.saveRooms") != null  ||  "".equals(request.getParameter("submit.saveRoom"))==false)
             return saveRooms(mapping, form, request, response);
         else if (request.getParameter("submit.deleteRoom") != null)
             return deleteRoom(mapping, form, request, response);
-        else if ("".equals(request.getParameter("submit.addRoom"))==false)
+        else if (request.getParameter("submit.addRooms") != null  ||  "".equals(request.getParameter("submit.addRoom"))==false)
             return addRooms(mapping, form, request, response);
-        else if ("".equals(request.getParameter("submit.saveBed"))==false || request.getParameter("submit.saveBeds") != null)
+        else if (request.getParameter("submit.saveBeds") != null  ||  "".equals(request.getParameter("submit.saveBed"))==false)
             return saveBeds(mapping, form, request, response);
         else if (request.getParameter("submit.deleteBed") != null)
             return deleteBed(mapping, form, request, response);
-        else if ("".equals(request.getParameter("submit.addBed"))==false || request.getParameter("submit.addBeds") != null)
+        else if (request.getParameter("submit.addBeds") != null  ||  "".equals(request.getParameter("submit.addBed"))==false)
             return addBeds(mapping, form, request, response);
         else
             return manage(mapping, form, request, response);
@@ -63,7 +63,7 @@ public class BedManagerAction extends BaseAction {
         bForm.setAssignedBedRooms(roomManager.getAssignedBedRooms(facilityId));
         bForm.setRoomTypes(roomManager.getRoomTypes());
         bForm.setNumRooms(1);
-        bForm.setBeds(bedManager.getBedsByFacility(facilityId, false));
+        bForm.setBeds(bedManager.getBedsByFacility(facilityId, null, false));
         bForm.setBedTypes(bedManager.getBedTypes());
         bForm.setNumBeds(1);
         bForm.setPrograms(programManager.getBedPrograms());
