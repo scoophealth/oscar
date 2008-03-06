@@ -3,22 +3,22 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.ReportOptionValue" table="REPORT_OPTION">
-		<id name="optionNo" column="REPORTOPTIONID" unsaved-value="0">
+	<class name="com.quatro.model.ReportOptionValue" table="report_option">
+		<id name="optionNo" column="reportoptionid" unsaved-value="0">
 			<generator class="native" />
 		</id>
-        <property name="reportNo" column="REPORTNO" /> 
+        <property name="reportNo" column="reportno" /> 
         <property name="optionTitle" /> 
-        <property name="optionDescription" column="LONGDESC" /> 
-        <property name="active" column="ACTIVEYN" /> 
-        <property name="default" column="DEFAULTYN" /> 
-        <property name="dateFieldName" column="DATEFIELD" /> 
-        <property name="dateFieldDesc" column="DATEFIELDDESC" /> 
-        <property name="dateFieldType" column="DATEFIELDTYPE" /> 
-        <property name="dbsqlWhere" column="SQLWHERE" /> 
-        <property name="dbsqlOrderBy" column="SQLORDERBY" /> 
-        <property name="rptFileName" column="RPTFILENAME" /> 
-        <property name="rptFileNo" column="RPTFILENO" /> 
-        <property name="rptVersion" column="RPTVERSION" type="java.util.Date" /> 
+        <property name="optionDescription" column="longdesc" /> 
+        <property name="active" column="activeyn" /> 
+        <property name="default" column="defaultyn" /> 
+        <property name="dateFieldName" column="datefield" /> 
+        <property name="dateFieldDesc" column="datefielddesc" /> 
+        <property name="dateFieldType" column="datefieldtype" /> 
+        <property name="dbsqlWhere" column="sqlwhere" /> 
+        <property name="dbsqlOrderBy" column="sqlorderby" /> 
+        <property name="rptFileName" column="rptfilename" /> 
+        <property name="rptFileNo" column="rptfileno" /> 
+        <property name="rptVersion" column="rptversion" type="java.util.Date" /> 
 	</class>
 </hibernate-mapping>

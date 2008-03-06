@@ -3,22 +3,22 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.ReportValue" table="V_USER_REPORT" mutable="false" >
+	<class name="com.quatro.model.ReportValue" table="v_user_report" mutable="false" >
 		<id name="reportNo"></id>
         <property name="title"/> 
         <property name="description"/> 
         <property name="reportGroupId" /> 
-        <property name="accessType" column="ACCESS_TYPE"/> 
+        <property name="accessType" column="access_type"/> 
         <property name="reportGroupDesc"/> 
         <property name="dateOption"/> 
         <property name="datePart" /> 
         <property name="notes"/> 
         <property name="tableName"/> 
-        <property name="author" column="UPDATEDBY"/> 
+        <property name="author" column="updatedby"/> 
         <property name="updatedDate" type="java.util.Date"/> 
         <property name="orgApplicable" /> 
         <property name="reportType" /> 
-        <property name="providerNo" column="PROVIDER_NO"/> 
+        <property name="providerNo" column="provider_no"/> 
         <set name="options" lazy="false" order-by="optionTitle">
           <key column="reportNo" not-null="true" />
           <one-to-many class="com.quatro.model.ReportOptionValue"></one-to-many>

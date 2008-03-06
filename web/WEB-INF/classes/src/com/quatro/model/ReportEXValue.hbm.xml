@@ -3,7 +3,7 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.ReportEXValue" table="REPORT_TEMPLATE">
+	<class name="com.quatro.model.ReportEXValue" table="report_template">
 		<id name="reportNo" unsaved-value="0"/>
         <property name="templateNo" /> 
         <property name="loginId" />

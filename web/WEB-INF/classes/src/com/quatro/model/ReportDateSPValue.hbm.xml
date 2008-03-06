@@ -3,7 +3,7 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.ReportDateSPValue" table="REPORT_DATE_SP">
+	<class name="com.quatro.model.ReportDateSPValue" table="report_date_sp">
 		<id name="reportNo">
 			<generator class="assigned" />
 		</id>

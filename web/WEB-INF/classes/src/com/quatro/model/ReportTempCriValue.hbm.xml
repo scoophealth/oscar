@@ -3,14 +3,14 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.ReportTempCriValue" table="REPORT_TEMPLATE_CRITERIA">
+	<class name="com.quatro.model.ReportTempCriValue" table="report_template_criteria">
 		<id name="counter" unsaved-value="0">
 			<generator class="native" />
 		</id>
         <property name="templateNo" /> 
         <property name="relation" /> 
         <property name="fieldNo" /> 
-        <property name="op" column="OPERATOR" /> 
+        <property name="op" column="operator" /> 
         <property name="val" /> 
         <property name="valDesc" /> 
         <property name="required" /> 

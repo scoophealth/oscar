@@ -3,8 +3,8 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.DocTextValue" table="REPORT_DOCTEXT" mutable="false">
-		<id name="docId" column="DOCID" />
-		<property name="docTextBlob" type="blob" column="DOCDATA" />
+	<class name="com.quatro.model.DocTextValue" table="report_doctext" mutable="false">
+		<id name="docId" column="docid" />
+		<property name="docTextBlob" type="blob" column="docdata" />
 	</class>
 </hibernate-mapping>

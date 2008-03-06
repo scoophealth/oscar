@@ -3,7 +3,7 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.ReportTempOrgValue" table="REPORT_TEMPLATE_ORG">
+	<class name="com.quatro.model.ReportTempOrgValue" table="report_template_org">
 		<id name="counter" unsaved-value="0">
 			<generator class="native" />
 		</id>

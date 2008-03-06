@@ -3,8 +3,8 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.ReportDateValue" table="REPORT_DATE">
-		<id name="sessionId" column="SESSIONID" type="string">
+	<class name="com.quatro.model.ReportDateValue" table="report_date">
+		<id name="sessionId" column="sessionid" type="string">
 			<generator class="assigned" />
 		</id>
         <property name="startDate" type="java.util.Date" /> 

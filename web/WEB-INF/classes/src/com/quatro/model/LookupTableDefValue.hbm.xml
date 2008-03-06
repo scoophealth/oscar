@@ -3,16 +3,16 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.LookupTableDefValue" table="APP_LOOKUPTABLE" mutable="false">
+	<class name="com.quatro.model.LookupTableDefValue" table="app_lookuptable" mutable="false">
 		<id name="tableId" unsaved-value="0">
 			<generator class="native" />
 		</id>
-        <property name="tableName" column="TABLE_NAME" /> 
+        <property name="tableName" column="table_name" /> 
         <property name="description" /> 
-        <property name="active" column="ACTIVEYN" /> 
-		<property name="tree" column="ISTREE" />
-        <property name="treeCodeLength" column="TREECODE_LENGTH" />
+        <property name="active" column="activeyn" /> 
+		<property name="tree" column="istree" />
+        <property name="treeCodeLength" column="treecode_length" />
         <property name="moduleId"/>
-        <property name="moduleName"  formula="(select t.description from v_lookup_table t where t.prefix='MOD' and t.CODE=moduleId)"/> 
+        <property name="moduleName"  formula="(select t.description from v_lookup_table t where t.prefix='MOD' and t.code=moduleId)"/> 
 	</class>
 </hibernate-mapping>

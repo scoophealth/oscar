@@ -3,17 +3,17 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.ReportFilterValue" table="REPORT_FILTER">
-		<id name="fieldNo" column="FIELDNO" unsaved-value="0">
+	<class name="com.quatro.model.ReportFilterValue" table="report_filter">
+		<id name="fieldNo" column="fieldno" unsaved-value="0">
 			<generator class="native" />
 		</id>
         <property name="reportNo" /> 
         <property name="fieldName" /> 
         <property name="fieldDesc" /> 
         <property name="fieldType" /> 
-        <property name="lookupTable" column="LOOKUP_TABLE" /> 
-        <property name="op" column="OPERATOR" /> 
-        <property name="tree" column="LOOKUP_TREE" /> 
+        <property name="lookupTable" column="lookup_table" /> 
+        <property name="op" column="operator" /> 
+        <property name="tree" column="lookup_tree" /> 
         <property name="fieldSQL" /> 
         <property name="note" />
 	</class>
