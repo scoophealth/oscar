@@ -48,11 +48,11 @@ public class TicklerManager {
         ticklerDAO.saveTickler(tickler);
     }
 
-    public List getTicklers() {
+    public List<Tickler> getTicklers() {
         return ticklerDAO.getTicklers();
     }
 
-    public List getTicklers(CustomFilter filter) {
+    public List<Tickler> getTicklers(CustomFilter filter) {
         return ticklerDAO.getTicklers(filter);
     }
 
