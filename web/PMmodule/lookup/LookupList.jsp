@@ -19,8 +19,8 @@
 <html:form action="/Lookup/LookupList.do">
 <html:hidden property="tableId"/>
 <table width="100%" border="0">
-<tr><td width="50%"><html:text property="keywordName" style="width:100%;" /></td>
-<td width="50%"><html:submit property="method" value="search" /></td></tr>
+<tr><td width="80%">Description: <html:text property="keywordName" style="width:100%;" /></td>
+<td width="20%"><html:submit property="method" value="search" /></td></tr>
 <tr><td colspan="2">
 <display:table class="simple" style="width:100%;" cellspacing="0" cellpadding="0" id="lookup" name="lookupListForm.lookups" export="false" pagesize="0" requestURI="/PMmodule/Reports/QuatroReportList">
     <display:setProperty name="paging.banner.placement" value="bottom" />
