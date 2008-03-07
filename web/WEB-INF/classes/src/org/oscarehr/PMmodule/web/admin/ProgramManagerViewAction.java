@@ -53,20 +53,19 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.RoomDemographic;
-import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.beans.factory.annotation.Required;
-
+import org.oscarehr.PMmodule.service.SurveyManager;
 public class ProgramManagerViewAction extends BaseAction {
 
     private static final Log log = LogFactory.getLog(ProgramManagerViewAction.class);
 
     protected ClientRestrictionManager clientRestrictionManager;
-    protected CaseManagementManager caseManagementManager;
+    protected SurveyManager surveyManager;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return view(mapping, form, request, response);
@@ -899,7 +898,7 @@ public class ProgramManagerViewAction extends BaseAction {
     }
 
     @Required
-    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
-        this.caseManagementManager = caseManagementManager;
+    public void setSurveyManager(SurveyManager surveyManager) {
+        this.surveyManager = surveyManager;
     }
 }
