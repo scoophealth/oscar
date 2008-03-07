@@ -217,7 +217,7 @@ union
 select 'BED' prefix, to_char(BED_ID) code, NAME description, to_char(ROOM_ID) parentcode, active,BED_ID,to_char(BED_TYPE_ID)
     from BED
 union
-select 'ORG' prefix, to_char(id), description,  null parentcode,1, 0 lineID, null
+select 'ORG' prefix, to_char(id), description,  null parentcode,isactive, 0 lineID, null
     from V_LK_ORG
 union
 select 'ROL', role_name,role_name,  null parentcode, 1,0,null
@@ -238,7 +238,7 @@ union
 SELECT 'MOD',to_char(module_Id),description, null, 1,0,null
 from APP_MODULE
 union
-SELECT 'FCT',to_char(Id),description, null, 1,0,null
+SELECT 'FCT',to_char(Id),description, null, isactive,0,null
 from LST_FIELD_CATEGORY
 union
 SELECT 'ISS',to_char(ISSUE_ID),DESCRIPTION,ROLE,1,0,null

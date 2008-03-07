@@ -31,12 +31,12 @@ public class LookupTableListAction extends DispatchAction {
 	
 	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String tableId="FCT";
-		List lst = lookupManager.LoadCodeList(tableId, false, null, null);
+		List lst = lookupManager.LoadCodeList(tableId, true, null, null);
 		
 		for(int i=0; i<lst.size(); i++)
 		{
 			LookupCodeValue lkv = (LookupCodeValue) lst.get(i);
-			List l1 = lookupManager.LoadCodeList("LKT",false,lkv.getCode(),null,null);
+			List l1 = lookupManager.LoadCodeList("LKT",true,lkv.getCode(),null,null);
 			lkv.setAssociates(l1);
 		}
 		

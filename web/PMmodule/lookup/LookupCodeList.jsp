@@ -49,7 +49,7 @@
 <tr><td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-	<th>Id</th><th>Description</th>
+	<th>Id</th><th>Description</th><th>Active</th><th>Display Order</th>
 </tr>
 
 <logic:iterate id="lkCode" name="lookupCodeListForm" property="codes">
@@ -63,6 +63,17 @@
 		<html:link action="/Lookup/LookupCodeEdit.do" paramId="id" paramProperty="codeId" paramName="lkCode">
  			<bean:write name="lkCode" property="description" />
 	 	</html:link>
+ 	</td>
+ 	<td>
+ 		<logic:equal value="true" name="lkCode" property="active">
+ 			Yes
+ 		</logic:equal>
+ 		<logic:equal value="false" name="lkCode" property="active">
+ 			No
+ 		</logic:equal>
+ 	</td>
+ 	<td>
+ 		<bean:write name="lkCode" property="orderByIndex" />
  	</td>
 </tr> 	
 	</logic:iterate>

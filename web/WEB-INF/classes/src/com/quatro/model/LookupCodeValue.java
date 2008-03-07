@@ -7,8 +7,8 @@ public class LookupCodeValue {
 	private String description;
 	private String shortDesc;
 	private String note;
-	private Boolean active;
-    private Boolean selectable;
+	private boolean active;
+    private boolean selectable;
 	private String parentCode;
 	private String buf1;
 	private String buf2;
@@ -22,7 +22,7 @@ public class LookupCodeValue {
 	public void setAssociates(List associates) {
 		this.associates = associates;
 	}
-	public Boolean isActive() {
+	public boolean isActive() {
 		return active;
 	}
 	public void setActive(Boolean active) {
@@ -58,7 +58,7 @@ public class LookupCodeValue {
 	public void setParentCode(String parentCode) {
 		this.parentCode = parentCode;
 	}
-	public Boolean isSelectable() {
+	public boolean isSelectable() {
 		return selectable;
 	}
 	public void setSelectable(Boolean selectable) {
