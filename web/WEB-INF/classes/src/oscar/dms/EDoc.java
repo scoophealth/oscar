@@ -22,10 +22,11 @@
  */
 package oscar.dms;
 
-import oscar.oscarTags.*;
-import oscar.util.*;
 import java.util.Date;
+
 import oscar.OscarProperties;
+import oscar.oscarTags.TagObject;
+import oscar.util.UtilDateUtilities;
 
 public class EDoc extends TagObject implements Comparable {
     private String docId;
@@ -35,6 +36,7 @@ public class EDoc extends TagObject implements Comparable {
     private String fileName = "";
     private String html = "";
     private String creatorId = "";
+    private Integer programId=null;
     private char status;
     private String module = "";
     private String moduleId = "";
@@ -253,4 +255,14 @@ public class EDoc extends TagObject implements Comparable {
     public boolean isInIndivo() {
         return indivoRegistered;
     }
+
+    public Integer getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(Integer programId) {
+        this.programId = programId;
+    }
+    
+    
 }

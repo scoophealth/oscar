@@ -88,6 +88,11 @@ public class AddEditDocumentAction extends Action {
             }
             writeLocalFile(docFile, fileName);
             newDoc.setContentType(docFile.getContentType());
+
+            // if the document was added in the context of a program
+            String programIdStr = (String) request.getSession().getAttribute("infirmaryView_programId");
+            if (programIdStr!=null) newDoc.setProgramId(Integer.valueOf(programIdStr));
+            
             //---
             EDocUtil.addDocumentSQL(newDoc);
         } catch (Exception e) {

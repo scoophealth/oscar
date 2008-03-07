@@ -27,19 +27,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
-import oscar.login.DBHelp;
-import oscar.oscarDB.DBHandler;
-import oscar.oscarDB.DBPreparedHandler;
-import oscar.oscarDB.DBPreparedHandlerParam;
-
-import java.util.*;
-import java.sql.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import oscar.util.*;
+
 import oscar.MyDateFormat;
 import oscar.OscarProperties;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarDB.DBPreparedHandlerParam;
+import oscar.util.SqlUtilBaseS;
+import oscar.util.UtilDateUtilities;
 
 //all SQL statements here
 public class EDocUtil extends SqlUtilBaseS {
@@ -96,22 +98,24 @@ public class EDocUtil extends SqlUtilBaseS {
     
     public static void addDocumentSQL(EDoc newDocument) {
     	
-    	 String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status, contenttype, public1, observationdate) VALUES (?,?,?,?,?,?,?,?,?,?)";
-    	 DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[10];
-         param[0] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType()));
-         param[1] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription()));
-         param[2] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml()));
-         param[3] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName()));
-         param[4] = new DBPreparedHandlerParam(newDocument.getCreatorId());
+    	 String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, program_id, updatedatetime, status, contenttype, public1, observationdate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+    	 DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[11];
+    	 int counter=0;
+    	 param[counter++] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType()));
+         param[counter++] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription()));
+         param[counter++] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml()));
+         param[counter++] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName()));
+         param[counter++] = new DBPreparedHandlerParam(newDocument.getCreatorId());
+         param[counter++] = new DBPreparedHandlerParam(newDocument.getProgramId());
         
          java.sql.Date od1 = MyDateFormat.getSysDate(newDocument.getDateTimeStamp());
-         param[5] = new DBPreparedHandlerParam(od1);
+         param[counter++] = new DBPreparedHandlerParam(od1);
          
-         param[6] = new DBPreparedHandlerParam(String.valueOf(newDocument.getStatus()));
-         param[7] = new DBPreparedHandlerParam(newDocument.getContentType());
-         param[8] = new DBPreparedHandlerParam(newDocument.getDocPublic());
+         param[counter++] = new DBPreparedHandlerParam(String.valueOf(newDocument.getStatus()));
+         param[counter++] = new DBPreparedHandlerParam(newDocument.getContentType());
+         param[counter++] = new DBPreparedHandlerParam(newDocument.getDocPublic());
          java.sql.Date od2 = MyDateFormat.getSysDate(newDocument.getObservationDate());
-         param[9] = new DBPreparedHandlerParam(od2);     
+         param[counter++] = new DBPreparedHandlerParam(od2);     
        
     	/*String documentSql = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status, contenttype, public1, observationdate) " +
                 "VALUES ('" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType()) + "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription()) + 
@@ -439,41 +443,41 @@ public class EDocUtil extends SqlUtilBaseS {
     }
     
     public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator) throws SQLException {
-	String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,updatedatetime,status,contenttype,public1,observationdate) values (?,?,?,?,?,'A',?,0,?)";
-	String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
-	int key = 0;
-	
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	Connection conn = db.GetConnection();
-	PreparedStatement add_record = conn.prepareStatement(add_record_string1);
-	
-	add_record.setString(1, docType);
-	add_record.setString(2, docDesc);
-	add_record.setString(3, docFileName);
-	add_record.setString(4, docCreator);
-	add_record.setString(5, updateDateTime);
-	add_record.setString(6, contentType);
-	add_record.setString(7, observationDate);
-	
-	add_record.executeUpdate();
-	ResultSet rs = add_record.getGeneratedKeys();
-	if(rs.next()) key = rs.getInt(1);
-	add_record.close();
-	rs.close();
-	
-	if (key>0) {
-	    add_record = conn.prepareStatement(add_record_string2);
-	    add_record.setString(1, demoNo);
-	    add_record.setString(2, getLastDocumentNo());
+        String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,updatedatetime,status,contenttype,public1,observationdate) values (?,?,?,?,?,'A',?,0,?)";
+        String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
+        int key = 0;
 
-	    add_record.executeUpdate();
-	    rs = add_record.getGeneratedKeys();
-	    if(rs.next()) key = rs.getInt(1);
-	    add_record.close();
-	    rs.close();	    
-	}
-	db.CloseConn();
-	return key;
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        Connection conn = db.GetConnection();
+        PreparedStatement add_record = conn.prepareStatement(add_record_string1);
+
+        add_record.setString(1, docType);
+        add_record.setString(2, docDesc);
+        add_record.setString(3, docFileName);
+        add_record.setString(4, docCreator);
+        add_record.setString(5, updateDateTime);
+        add_record.setString(6, contentType);
+        add_record.setString(7, observationDate);
+
+        add_record.executeUpdate();
+        ResultSet rs = add_record.getGeneratedKeys();
+        if (rs.next()) key = rs.getInt(1);
+        add_record.close();
+        rs.close();
+
+        if (key > 0) {
+            add_record = conn.prepareStatement(add_record_string2);
+            add_record.setString(1, demoNo);
+            add_record.setString(2, getLastDocumentNo());
+
+            add_record.executeUpdate();
+            rs = add_record.getGeneratedKeys();
+            if (rs.next()) key = rs.getInt(1);
+            add_record.close();
+            rs.close();
+        }
+        db.CloseConn();
+        return key;
     }
     
     private static String getLastDocumentNo(){
