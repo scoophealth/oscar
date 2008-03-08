@@ -44,7 +44,7 @@ void saveNodeLabels(IntakeNode in, GenericIntakeManager gim) {
 
 void copyIntakeNode(IntakeNode org, IntakeNode cpy) {
     cpy.setAnswers(org.getAnswers());
-    cpy.setIntakes(org.getIntakes());
+//    cpy.setIntakes(org.getIntakes());
     cpy.setLabel(org.getLabel());
     cpy.setNodeTemplate(org.getNodeTemplate());
     cpy.setPos(org.getPos());
