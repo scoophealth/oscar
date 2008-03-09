@@ -138,6 +138,30 @@ public class StaffManagerAction extends BaseAction {
 		//changed to get all active providers
 		request.setAttribute("providers",providerManager.getActiveProviders());
 		
+        request.setAttribute("facilities",facilityDAO.getFacilities());
+//        request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", 0));
+
+		logManager.log("read","full provider list","",request);
+		return mapping.findForward("list");
+	}
+
+	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm providerForm = (DynaActionForm)form;
+
+		String facilityId = (String)providerForm.get("facilityId");
+		if(facilityId==null) facilityId="0"; 
+		String programId = (String)providerForm.get("programId");
+		if(programId==null) programId="0"; 
+        if(facilityId.equals("0")){
+        	providerForm.set("programId", "0");
+        	programId="0";
+        }
+        		
+		request.setAttribute("facilities",facilityDAO.getFacilities());
+        if(facilityId.equals("0")==false) request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", Integer.valueOf(facilityId)));
+
+		request.setAttribute("providers",providerManager.getActiveProviders(facilityId, programId));
+        
 		logManager.log("read","full provider list","",request);
 		return mapping.findForward("list");
 	}

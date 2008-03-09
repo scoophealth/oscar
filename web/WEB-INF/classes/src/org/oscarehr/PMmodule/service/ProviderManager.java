@@ -75,6 +75,10 @@ public class ProviderManager
 	{
 		return dao.getActiveProviders();
 	}
+
+    public List<Provider> getActiveProviders(String facilityId, String programId) {
+		return dao.getActiveProviders(facilityId, programId);
+    }
 	
 	public List<Provider> search(String name) {
 		return dao.search(name);

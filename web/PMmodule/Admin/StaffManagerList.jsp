@@ -1,4 +1,5 @@
 <%@ include file="/taglibs.jsp" %>
+<%@ taglib uri="/WEB-INF/quatro-tag.tld" prefix="quatro" %>
 
 <html:html>
 	<head>
@@ -35,7 +36,23 @@
 			function sort() {
 			
 			}
+			
+	        function select_facility(ctl) {
+//     		  var programId = ctl.options[ctl.selectedIndex].value;
+//        	  document.staffManagerForm.elements['view.admissionId'].value=programId;
+		      document.staffManagerForm.method.value='search';
+		      document.staffManagerForm.submit();
+	        }
+	        
+	        function select_program(ctl) {
+//     		  var programId = ctl.options[ctl.selectedIndex].value;
+//        	  document.staffManagerForm.elements['view.admissionId'].value=programId;
+		      document.staffManagerForm.method.value='search';
+		      document.staffManagerForm.submit();
+	        }
 		</script>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<script type="text/javascript" src='<c:out value="${ctx}"/>/js/quatroLookup.js'></script>
 
 	</head>
 
@@ -44,6 +61,8 @@
 		<br/>
 		<%@ include file="/common/messages.jsp"%>
 		<br/>			
+
+<html:form action="/PMmodule/StaffManager.do">
 			
 		<div class="tabs" id="tabs">
 			<table cellpadding="3" cellspacing="0" border="0">
@@ -54,6 +73,30 @@
 				</tr>
 			</table>
 		</div>
+
+        <table width="100%" border="0">
+          <tr><td width="35%" style="font-weight:bold">Facilities</td>
+          <td width="55%" style="font-weight:bold">Programs</td>
+          <td width="10%"><html-el:hidden property="method" value="" /></td></tr>
+          <tr><td>
+             <html-el:select property="facilityId" onchange="select_facility(this);">
+               <html-el:option value="0">Any</html-el:option>
+               <c:forEach var="facility" items="${facilities}">
+                  <html-el:option value="${facility.id}"><c:out value="${facility.name}"/></html-el:option>
+               </c:forEach>
+			 </html-el:select>
+		   </td>
+		   <td>
+<!-- 		   <quatro:lookupTag tableName="PRM" formProperty="staffManagerForm" bodyProperty="valdesc" codeProperty="val" codeWidth="1px"></quatro:lookupTag> -->
+             <html-el:select property="programId" onchange="select_program(this);">
+               <html-el:option value="0">Any</html-el:option>
+               <c:forEach var="program" items="${programs}">
+                  <html-el:option value="${program.id}"><c:out value="${program.name}"/></html-el:option>
+               </c:forEach>
+			 </html-el:select>
+		   </td>
+		   <td></td></tr>
+        </table></br>
 
 		<display:table class="simple" cellspacing="2" cellpadding="3" id="provider" name="providers" export="false" pagesize="0" requestURI="/PMmodule/StaffManager.do">
 		  <display:setProperty name="paging.banner.placement" value="bottom"/>
@@ -70,6 +113,8 @@
 		  <display:column property="workPhone"  sortable="true" title="Work Phone" />
 		  <display:column property="providerType"  sortable="true" title="OSCAR Type" />
 		</display:table>
+
+</html:form>
 
 	</body>
 </html:html>

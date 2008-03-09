@@ -22,6 +22,7 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -90,6 +91,33 @@ public class ProviderDao extends HibernateDaoSupport {
 		if (log.isDebugEnabled()) {
 			log.debug("getProviders: # of results=" + rs.size());
 		}
+		return rs;
+	}
+
+    public List<Provider> getActiveProviders(String facilityId, String programId) {
+        ArrayList paramList = new ArrayList();
+
+    	String sSQL;
+    	List<Provider> rs;
+    	if(programId!=null && "0".equals(programId)==false){
+    	  sSQL="FROM  Provider p where p.Status='1' and p.ProviderNo in " +
+               "(select c.ProviderNo from ProgramProvider c where c.ProgramId =?) ORDER BY p.LastName";
+	      paramList.add(Long.valueOf(programId));
+	      Object params[] = paramList.toArray(new Object[paramList.size()]);
+	      rs =  getHibernateTemplate().find(sSQL ,params);
+    	}else if(facilityId!=null && "0".equals(facilityId)==false){
+    	  sSQL="FROM  Provider p where p.Status='1' and p.ProviderNo in " +
+                "(select c.ProviderNo from ProgramProvider c where c.ProgramId in " +
+                "(select a.id from Program a where a.facilityId=?)) ORDER BY p.LastName";
+  	      paramList.add(Long.valueOf(facilityId));
+  	      Object params[] = paramList.toArray(new Object[paramList.size()]);
+	      rs = getHibernateTemplate().find(sSQL ,params);
+    	}else{
+    	  sSQL="FROM  Provider p where p.Status='1' ORDER BY p.LastName";
+    	  rs = getHibernateTemplate().find(sSQL);
+    	}
+//    	List<Provider> rs = getHibernateTemplate().find("FROM  Provider p ORDER BY p.LastName");
+
 		return rs;
 	}
 
