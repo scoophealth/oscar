@@ -66,7 +66,7 @@ public class BedManagerAction extends BaseAction {
         bForm.setBeds(bedManager.getBedsByFacility(facilityId, null, false));
         bForm.setBedTypes(bedManager.getBedTypes());
         bForm.setNumBeds(1);
-        bForm.setPrograms(programManager.getBedPrograms());
+        bForm.setPrograms(programManager.getBedPrograms(facilityId));
         bForm.setFacility(facility);
         Map statusNames = new HashMap();
         statusNames.put("1", "Active");
@@ -93,7 +93,7 @@ public class BedManagerAction extends BaseAction {
         bForm.setBeds(bForm.getBeds());
         bForm.setBedTypes(bedManager.getBedTypes());
         bForm.setNumBeds(1);
-        bForm.setPrograms(programManager.getBedPrograms());
+        bForm.setPrograms(programManager.getBedPrograms(facilityId));
         bForm.setFacility(facility);
         Map statusNames = new HashMap();
         statusNames.put("1", "Active");

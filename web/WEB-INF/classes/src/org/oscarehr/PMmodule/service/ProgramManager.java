@@ -165,6 +165,10 @@ public class ProgramManager {
 	public Program[] getBedPrograms() {
 		return dao.getBedPrograms();
 	}
+	
+	public Program[] getBedPrograms(Integer facilityId) {
+		return dao.getBedPrograms(facilityId);
+	}
 
 	public List getServicePrograms() {
 		return dao.getServicePrograms();

@@ -225,6 +225,16 @@ public class ProgramDao extends HibernateDaoSupport {
     }
 
     @SuppressWarnings("unchecked")
+    public Program[] getBedPrograms(Integer facilityId) {
+        //List list = getHibernateTemplate().find("FROM Program p WHERE p.type = 'Bed' ORDER BY p.name");
+    	List list = getHibernateTemplate().find("FROM Program p WHERE p.facilityId = "+ facilityId + " AND  p.type = 'Bed' ORDER BY p.name");
+        if (log.isDebugEnabled()) {
+            log.debug("getBedPrograms: # of programs: " + list.size());
+        }
+
+        return (Program[]) list.toArray(new Program[list.size()]);
+    }
+    @SuppressWarnings("unchecked")
     public Program[] getBedPrograms() {
         List list = getHibernateTemplate().find("FROM Program p WHERE p.type = 'Bed' ORDER BY p.name");
 
