@@ -380,7 +380,7 @@
                     
                     <html:submit onclick="return save_temp()">Temporary Save</html:submit>&nbsp;
                     <html:submit onclick="return save_admit()">Admit, Sign And Save</html:submit>&nbsp;
-                    <html:submit onclick="save_notAdmit()">Intake Without Admission, Sign And Save</html:submit>
+                    <html:submit onclick="return save_notAdmit()">Intake Without Admission, Sign And Save</html:submit>
                 </caisi:isModuleLoad>
                 <html:reset>Reset</html:reset>
             </td>
