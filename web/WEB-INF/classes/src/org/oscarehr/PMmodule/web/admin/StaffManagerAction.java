@@ -106,7 +106,7 @@ public class StaffManagerAction extends BaseAction {
 		request.setAttribute("all_programs",allProgramsInContainer);
 		request.setAttribute("roles",roleManager.getRoles());
 		
-		List<Facility> allFacilities=facilityDAO.getFacilities();
+		List<Facility> allFacilities=facilityDAO.getActiveFacilities();
         request.setAttribute("all_facilities",allFacilities);
         
         List<Integer> providerFacilities=ProviderDao.getFacilityIds(provider.getProvider_no());
@@ -138,7 +138,7 @@ public class StaffManagerAction extends BaseAction {
 		//changed to get all active providers
 		request.setAttribute("providers",providerManager.getActiveProviders());
 		
-        request.setAttribute("facilities",facilityDAO.getFacilities());
+        request.setAttribute("facilities",facilityDAO.getActiveFacilities());
 //        request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", 0));
 
 		logManager.log("read","full provider list","",request);
@@ -157,7 +157,7 @@ public class StaffManagerAction extends BaseAction {
         	programId="0";
         }
         		
-		request.setAttribute("facilities",facilityDAO.getFacilities());
+		request.setAttribute("facilities",facilityDAO.getActiveFacilities());
         if(facilityId.equals("0")==false) request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", Integer.valueOf(facilityId)));
 
 		request.setAttribute("providers",providerManager.getActiveProviders(facilityId, programId));

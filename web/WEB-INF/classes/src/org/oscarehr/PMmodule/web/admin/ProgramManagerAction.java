@@ -875,7 +875,7 @@ public class ProgramManagerAction extends BaseAction {
         request.setAttribute("accessTypes", programManager.getAccessTypes());
         request.setAttribute("bed_programs",programManager.getBedPrograms());
 
-        request.setAttribute("facilities",facilityDAO.getFacilities());
+        request.setAttribute("facilities",facilityDAO.getActiveFacilities());
     }
 
 
