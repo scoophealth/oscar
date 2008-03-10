@@ -128,8 +128,8 @@ String curUser_no = (String)session.getAttribute("user");
       <!--
 		function setfocus() {
 		  this.focus();
-		  document.forms[0].referral_no.focus();
-		  document.forms[0].referral_no.select();
+		  document.forms[0].role_name.focus();
+		  document.forms[0].role_name.select();
 		}
 	    function onSearch() {
 	        //document.forms[0].submit.value="Search";

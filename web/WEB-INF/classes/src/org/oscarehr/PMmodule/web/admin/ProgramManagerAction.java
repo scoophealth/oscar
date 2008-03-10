@@ -255,7 +255,7 @@ public class ProgramManagerAction extends BaseAction {
             return list(mapping, form, request, response);
         }
 
-        int numQueue = programQueueManager.getProgramQueuesByProgramId(Long.valueOf(id)).size();
+        int numQueue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(id)).size();
         if (numQueue > 0) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.delete.queue", name, String.valueOf(numQueue)));
@@ -864,7 +864,7 @@ public class ProgramManagerAction extends BaseAction {
 
             request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
             request.setAttribute("accesses", programManager.getProgramAccesses(programId));
-            request.setAttribute("queue", programQueueManager.getProgramQueuesByProgramId(Long.valueOf(programId)));
+            request.setAttribute("queue", programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId)));
             request.setAttribute("programFirstSignature",programManager.getProgramFirstSignature(Integer.valueOf(programId)));
         }
 
