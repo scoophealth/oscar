@@ -289,6 +289,8 @@
             <form-property name="provider" type="org.oscarehr.PMmodule.model.Provider" />
             <form-property name="program_provider" type="org.oscarehr.PMmodule.model.ProgramProvider" />
             <form-property name="view" type="org.oscarehr.PMmodule.web.formbean.StaffManagerViewFormBean" />
+            <form-property name="facilityId" type="java.lang.String" />
+            <form-property name="programId" type="java.lang.String" />
         </form-bean>
         <form-bean name="preIntakeForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.PreIntakeForm" />
