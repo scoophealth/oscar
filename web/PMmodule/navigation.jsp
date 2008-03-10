@@ -332,7 +332,7 @@
                 </div>
         </security:oscarSec>
         
-<!--         <security:oscarSec roleName="<%=roleName$%>"
+         <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_pmm.caisiRoles"
                                rights="r">
         <div><div>
@@ -341,7 +341,7 @@
                 Roles</a></span>
         </div></div>
 		</security:oscarSec>
--->
+
     </div>
 </div>
 
