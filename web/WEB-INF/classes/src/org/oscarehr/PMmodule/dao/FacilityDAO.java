@@ -23,6 +23,12 @@ public class FacilityDAO extends HibernateDaoSupport {
         return getHibernateTemplate().find(query);
     }
 
+    public List<Facility> getActiveFacilities() {
+        String query = "from Facility f where disabled=false";
+        return getHibernateTemplate().find(query);
+    }
+    
+    
     @SuppressWarnings("unchecked")
     public List<Program> getAssociatedPrograms(Integer facilityId) {
         return getHibernateTemplate().find("select distinct p from Program p, Facility f, Room r where p.id = r.programId and r.facilityId = f.id and f.id = ?", facilityId);

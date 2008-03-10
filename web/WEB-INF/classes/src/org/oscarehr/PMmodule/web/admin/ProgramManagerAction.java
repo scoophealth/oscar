@@ -76,7 +76,7 @@ public class ProgramManagerAction extends BaseAction {
         	list = programManager.getAllPrograms(searchStatus, searchType, Long.parseLong(searchFacilityId));
         }
     	request.setAttribute("programs", list);
-        request.setAttribute("facilities",facilityDAO.getFacilities());
+        request.setAttribute("facilities",facilityDAO.getActiveFacilities());
 
         programForm.set("searchStatus",searchStatus);
         programForm.set("searchType", searchType);
