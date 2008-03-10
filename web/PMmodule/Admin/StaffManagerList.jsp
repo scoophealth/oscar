@@ -47,7 +47,7 @@
 	        function select_program(ctl) {
 //     		  var programId = ctl.options[ctl.selectedIndex].value;
 //        	  document.staffManagerForm.elements['view.admissionId'].value=programId;
-		      document.staffManagerForm.method.value='search2';
+		      document.staffManagerForm.method.value='search';
 		      document.staffManagerForm.submit();
 	        }
 		</script>
