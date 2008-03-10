@@ -3,7 +3,12 @@ insert into agency (id, name, description, local, share_notes, hic) values (0, '
 
 -- default roles
 INSERT INTO `caisi_role` VALUES (1,'doctor',0,'',now()),(2,'nurse',0,'',now()),(3,'counsellor',0,'',now()),(4,'csw',0,'',now());
-INSERT INTO `access_type` VALUES (1,'write doctor issues','access'),(2,'read doctor issues','access'),(3,'read doctor notes','access'),(4,'write nurse issues','access'),(5,'read nurse issues','access'),(6,'read nurse notes','access'),(7,'write counsellor issues','access'),(8,'read counsellor issues','access'),(9,'read counsellor notes','access'),(10,'write csw issues','access'),(11,'read csw issues','access'),(12,'read csw notes','access');
+
+INSERT INTO `access_type` VALUES (1,'write doctor issues','access'),(2,'read doctor issues','access'),(3,'read doctor notes','access'),(4,'read doctor ticklers','access'),
+(5,'write nurse issues','access'),(6,'read nurse issues','access'),(7,'read nurse notes','access'),(8,'read nurse ticklers','access'),
+(9,'write counsellor issues','access'),(10,'read counsellor issues','access'),(11,'read counsellor notes','access'),(12,'read counsellor ticklers','access'),
+(13,'write csw issues','access'),(14,'read csw issues','access'),(15,'read csw notes','access'),(16,'read csw ticklers','access')
+;
 
 -- access types
 INSERT INTO `access_type` (name,type) VALUES ('Write Ticklers','Action'),('prescription Write','access'),('billing','access'),('medical encounter','access'),('immunization','access'),('prevention','access'),('oscarcomm','access'),('disease registry','access'),('medical form','access'),('measurements','access'),('eform','access'),('lab','access'),('prescription Read','access'),('read ticklers','access'),('master file','access'),('Service restriction override on referral','access'),('Service restriction override on admission','access'),('Create service restriction','access'),('Disable service restriction','access');
@@ -16225,14 +16230,24 @@ insert into `secObjectName` values('_pmm.addProgram');
 insert into `secObjectName` values('_pmm.globalRoleAccess');
 insert into `secObjectName` values('_pmm.caisiRoles');
 
+insert into `secObjectName` values('_pmm_editProgram.general');
+insert into `secObjectName` values('_pmm_editProgram.staff');
+insert into `secObjectName` values('_pmm_editProgram.functionUser');
+insert into `secObjectName` values('_pmm_editProgram.teams');
+insert into `secObjectName` values('_pmm_editProgram.clients');
+insert into `secObjectName` values('_pmm_editProgram.queue');
+insert into `secObjectName` values('_pmm_editProgram.access');
+insert into `secObjectName` values('_pmm_editProgram.bedCheck');
+insert into `secObjectName` values('_pmm_editProgram.clientStatus');
+insert into `secObjectName` values('_pmm_editProgram.serviceRestrictions');
+
+insert into `secObjPrivilege` values('doctor','_admin.facilityMessage','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.systemMessage','|*|',0,999998);
 
 insert into `secObjPrivilege` values('doctor','_pmm.clientSearch','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.newClient','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.mergeRecords','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.caseManagement','|*|',0,999998);
-
-insert into `secObjPrivilege` values('doctor','_admin.facilityMessage','|*|',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.systemMessage','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.agencyInformation','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.manageFacilities','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.staffList','|*|',0,999998);
@@ -16240,6 +16255,18 @@ insert into `secObjPrivilege` values('doctor','_pmm.programList','|*|',0,999998)
 insert into `secObjPrivilege` values('doctor','_pmm.addProgram','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.globalRoleAccess','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.caisiRoles','|*|',0,999998);
+
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.general','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.staff','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.functionUser','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.teams','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.clients','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.queue','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.access','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.bedCheck','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.clientStatus','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.serviceRestrictions','|*|',0,999998);
+
 
 INSERT INTO facility (name, description) VALUES ('Default Facility', 'Default facility, please modify with a more appropriate name and description');
 
