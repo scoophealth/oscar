@@ -24,7 +24,7 @@ public class BedManagerForm extends ActionForm {
     private Integer roomStatusFilter;
     private Integer bedStatusFilter;
     private Integer bedProgramFilterForRoom;
-    private Integer bedProgramFilterForBed;
+    private Integer bedRoomFilterForBed;
     private Map roomStatusNames;
     private Map bedStatusNames;
    
@@ -125,12 +125,12 @@ public class BedManagerForm extends ActionForm {
 		this.roomToDelete = roomToDelete;
 	}
 
-	public Integer getBedProgramFilterForBed() {
-		return bedProgramFilterForBed;
+	public Integer getBedRoomFilterForBed() {
+		return bedRoomFilterForBed;
 	}
 
-	public void setBedProgramFilterForBed(Integer bedProgramFilterForBed) {
-		this.bedProgramFilterForBed = bedProgramFilterForBed;
+	public void setBedRoomFilterForBed(Integer bedRoomFilterForBed) {
+		this.bedRoomFilterForBed = bedRoomFilterForBed;
 	}
 
 	public Integer getBedProgramFilterForRoom() {

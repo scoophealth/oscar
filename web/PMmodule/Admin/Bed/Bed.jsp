@@ -108,15 +108,15 @@
 <!-- begin room status & bed program filter -->        
 		<table width="100%">
 			<tr>
-				<td width="60%">
+				<td width="40%">
 				</td>
-				<td width="20%" style="font-weight:bold">
+				<td width="30%" style="font-weight:bold">
 					Room Status<br/>
 					<html:select property="roomStatusFilter"  name="bedManagerForm" onchange="roomFilter();">
 						<html:optionsCollection  property="roomStatusNames"  value="key"  label="value"/>
 					</html:select>
 				</td>
-				<td width="20%" align="right" style="font-weight:bold">
+				<td width="30%" align="right" style="font-weight:bold">
 					Bed Program<br/>
 					<html:select property="bedProgramFilterForRoom" name="bedManagerForm"  onchange="roomFilter();" >
 						<option value="0">Any</option>
@@ -254,19 +254,18 @@
 <!-- begin bed status & bed program filter -->        
 		<table width="100%">
 			<tr>
-				<td width="60%">
+				<td width="40%">
 				</td>
-				<td width="20%" style="font-weight:bold">
+				<td width="30%" style="font-weight:bold">
 					Bed Status<br/>
 					<html:select property="bedStatusFilter"  name="bedManagerForm" onchange="bedFilter();">
 						<html:optionsCollection  property="bedStatusNames"  value="key"  label="value"/>
 					</html:select>
 				</td>
-				<td width="20%" align="right"  style="font-weight:bold">
-					Bed Program<br/>
-					<html:select property="bedProgramFilterForBed" name="bedManagerForm" onchange="bedFilter();" >
-						<option value="0">Any</option>
-						<html:optionsCollection  property="programs"  value="id"  label="name"/>
+				<td width="30%" align="right"  style="font-weight:bold">
+ 					Room<br/>
+					<html:select property="bedRoomFilterForBed" name="bedManagerForm" onchange="bedFilter();" >
+						<html:optionsCollection  property="rooms"  value="id"  label="name"/>
 					</html:select>
 				</td>
 			</tr>

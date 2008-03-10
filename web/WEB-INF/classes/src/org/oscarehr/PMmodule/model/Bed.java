@@ -97,7 +97,8 @@ public class Bed implements Serializable {
         initialize();
     }
 
-
+/*
+    //a new bed should belong to a room.
     public static Bed create(Integer facilityId, BedType bedType) {
         Bed bed = new Bed();
         bed.setBedTypeId(bedType.getId());
@@ -108,8 +109,20 @@ public class Bed implements Serializable {
         bed.setFacilityId(facilityId);
         return bed;
     }
+*/
+    
+    public static Bed create(Integer facilityId, Integer roomId, BedType bedType) {
+        Bed bed = new Bed();
+        bed.setBedTypeId(bedType.getId());
+        bed.setRoomId(roomId);
+        bed.setRoomStart(Calendar.getInstance().getTime());
+        bed.setName(DEFAULT_NAME);
+        bed.setActive(DEFAULT_ACTIVE);
+        bed.setFacilityId(facilityId);
+        return bed;
+    }
 
-
+    
     /* [CONSTRUCTOR MARKER END] */
 
 

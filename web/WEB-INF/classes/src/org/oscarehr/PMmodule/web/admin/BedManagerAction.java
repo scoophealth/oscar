@@ -33,19 +33,19 @@ public class BedManagerAction extends BaseAction {
     private FacilityManager facilityManager;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	//revert back to current because the additional conditions broke all codes of adding and deleting
-        // dispatch to correct method based on which submit button was selected
-        if (request.getParameter("submit.saveRooms") != null)
+        // dispatch to correct method based on which button was selected
+        //Please don't make changes that causes addRoom and addBed button not working any more! 
+    	if ("".equals(request.getParameter("submit.saveRoom"))==false)
             return saveRooms(mapping, form, request, response);
         else if (request.getParameter("submit.deleteRoom") != null)
             return deleteRoom(mapping, form, request, response);
-        else if (request.getParameter("submit.addRooms") != null)
+        else if ("".equals(request.getParameter("submit.addRoom"))==false)
             return addRooms(mapping, form, request, response);
-        else if (request.getParameter("submit.saveBeds") != null)
+        else if ("".equals(request.getParameter("submit.saveBed"))== false)
             return saveBeds(mapping, form, request, response);
         else if (request.getParameter("submit.deleteBed") != null)
             return deleteBed(mapping, form, request, response);
-        else if (request.getParameter("submit.addBeds") != null)
+        else if ("".equals(request.getParameter("submit.addBed")) == false)
             return addBeds(mapping, form, request, response);
         else
             return manage(mapping, form, request, response);
@@ -63,7 +63,15 @@ public class BedManagerAction extends BaseAction {
         bForm.setAssignedBedRooms(roomManager.getAssignedBedRooms(facilityId));
         bForm.setRoomTypes(roomManager.getRoomTypes());
         bForm.setNumRooms(1);
-        bForm.setBeds(bedManager.getBedsByFacility(facilityId, null, false));
+
+        if(bForm.getBedRoomFilterForBed()==null){
+        	Room[] room=bForm.getRooms();
+        	if(room!=null) bForm.setBedRoomFilterForBed(room[0].getId());
+        }
+//        bForm.setBeds(bedManager.getBedsByFacility(facilityId, null, false));
+        List<Bed> lst=bedManager.getBedsByFilter(facilityId, bForm.getBedRoomFilterForBed(), null, false);
+        bForm.setBeds(lst.toArray(new Bed[lst.size()]));
+
         bForm.setBedTypes(bedManager.getBedTypes());
         bForm.setNumBeds(1);
         bForm.setPrograms(programManager.getBedPrograms(facilityId));
@@ -241,8 +249,12 @@ public class BedManagerAction extends BaseAction {
 	public ActionForward addRooms(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         BedManagerForm bForm = (BedManagerForm) form;
 		Integer numRooms = bForm.getNumRooms();
-/*//Creating bug
-		Integer roomslines = Integer.valueOf(request.getParameter("roomslines"));
+
+		Integer roomslines=0;
+		if("".equals(request.getParameter("roomslines"))==false){
+		  roomslines = Integer.valueOf(request.getParameter("roomslines"));
+		}
+		
         if(numRooms != null){
         	if(numRooms<=0){
         	  numRooms=0;
@@ -250,7 +262,7 @@ public class BedManagerAction extends BaseAction {
         	  numRooms= 10 - roomslines; 
         	}
         }
-*/
+
 		if (numRooms!= null && numRooms > 0) {
 			try {
 	            roomManager.addRooms(bForm.getFacilityId(), numRooms);
@@ -268,8 +280,13 @@ public class BedManagerAction extends BaseAction {
         Integer facilityId = Integer.valueOf(request.getParameter("facilityId"));
         BedManagerForm bForm = (BedManagerForm) form;
 		Integer numBeds = bForm.getNumBeds();
-/*//Creating bug - broke code
-		Integer bedslines = Integer.valueOf(request.getParameter("bedslines"));
+		Integer roomId = bForm.getBedRoomFilterForBed();
+
+		Integer bedslines=0;
+		if("".equals(request.getParameter("bedslines"))==false){
+		  bedslines = Integer.valueOf(request.getParameter("bedslines"));
+		}
+		
         if(numBeds != null){
         	if(numBeds<=0){
         	  numBeds=0;
@@ -277,10 +294,10 @@ public class BedManagerAction extends BaseAction {
         	  numBeds= 10 - bedslines; 
         	}
         }
-*/
+
 		if (numBeds != null && numBeds > 0) {
 			try {
-	            bedManager.addBeds(facilityId, numBeds);
+	            bedManager.addBeds(facilityId, roomId, numBeds);
             } catch (BedReservedException e) {
     			ActionMessages messages = new ActionMessages();
     			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
@@ -321,7 +338,7 @@ public class BedManagerAction extends BaseAction {
         Integer facilityId = Integer.valueOf(request.getParameter("facilityId"));
         BedManagerForm bForm = (BedManagerForm) form;
         Integer bedStatus = bForm.getBedStatusFilter(); 
-        Integer bedFilteredProgram = bForm.getBedProgramFilterForBed();
+        Integer bedFilteredProgram = bForm.getBedRoomFilterForBed();
         Boolean bedStatusBoolean = new Boolean(false);
         
         List<Bed> filteredBeds = new ArrayList<Bed>();
@@ -337,7 +354,7 @@ public class BedManagerAction extends BaseAction {
         if(bedFilteredProgram.intValue() == 0){
         	bedFilteredProgram = null;
         }
-
+/*
         List<Bed> filteredBedsList = null;
         Room[] filteredRooms = roomManager.getAssignedBedRooms(facilityId, bedFilteredProgram, bedStatusBoolean);
         for(int i=0; filteredRooms != null  &&  i < filteredRooms.length; i++){
@@ -347,7 +364,10 @@ public class BedManagerAction extends BaseAction {
         		filteredBeds.addAll(filteredBedsList);
         	}
         }
+*/
         
+		filteredBeds = bedManager.getBedsByFilter(facilityId, bForm.getBedRoomFilterForBed(), bedStatusBoolean, false);
+
         bForm.setBeds(filteredBeds.toArray(new Bed[filteredBeds.size()]));
         form = bForm;
 

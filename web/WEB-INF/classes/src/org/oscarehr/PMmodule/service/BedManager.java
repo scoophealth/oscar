@@ -165,6 +165,7 @@ public class BedManager {
      *            reserved flag
      * @return array of beds
      */
+/*
     public Bed[] getBedsByFacility(Integer facilityId, boolean reserved) {
         if (facilityId == null) {
             return new Bed[] {};
@@ -179,8 +180,8 @@ public class BedManager {
         }
         return beds.toArray(new Bed[beds.size()]);
     }
-
-    public Bed[] getBedsByFacility(Integer facilityId, Boolean active, boolean reserved) {
+    
+    public Bed[] getBedsByFacility(Integer facilityId, Integer roomId, Boolean active, boolean reserved) {
         if (facilityId == null) {
             return new Bed[] {};
         }
@@ -194,7 +195,7 @@ public class BedManager {
         }
         return beds.toArray(new Bed[beds.size()]);
     }
-
+*/
     
     public List<Bed> getBedsByFilter(Integer facilityId, Integer roomId, Boolean active,  boolean reserved) {
     	List<Bed> beds = new ArrayList<Bed>();
@@ -459,7 +460,7 @@ public class BedManager {
      * @throws BedReservedException
      *             bed is inactive and reserved
      */
-    public void addBeds(Integer facilityId, int numBeds) throws BedReservedException {
+    public void addBeds(Integer facilityId, Integer roomId, int numBeds) throws BedReservedException {
         if (numBeds < 1) {
             handleException(new IllegalArgumentException("numBeds must be greater than or equal to 1"));
         }
@@ -467,7 +468,7 @@ public class BedManager {
         BedType defaultBedType = getDefaultBedType();
 
         for (int i = 0; i < numBeds; i++) {
-            saveBed(Bed.create(facilityId, defaultBedType));
+            saveBed(Bed.create(facilityId, roomId, defaultBedType));
         }
     }
 
