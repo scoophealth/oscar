@@ -65,7 +65,8 @@ public class CaisiRoleManager {
         accessTypeDAO.addAccessType("write " + role.getName() + " issues", "access");
         accessTypeDAO.addAccessType("read " + role.getName() + " issues", "access");
         accessTypeDAO.addAccessType("read " + role.getName() + " notes", "access");
-
+        accessTypeDAO.addAccessType("read " + role.getName() + " ticklers", "access");
+        
         return null;
     }
 
