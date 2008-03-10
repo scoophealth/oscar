@@ -3,7 +3,7 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>" >
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.reporting" rights="r" reverse="<%=true%>" >
 <%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
