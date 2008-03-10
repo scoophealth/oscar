@@ -47,6 +47,17 @@ function validBedCommunityProgram() {
 	}
 }
 
+function validIntakeLocation() {
+	var programIdStr=getElement('programInDomainId').value;
+	var programId = Number(programIdStr);
+		
+	if(programIdStr == "") {		
+		return false;
+	} else {
+		return true;
+	}
+}
+
 function validateEdit() {
 	
 	
@@ -342,6 +353,11 @@ function save_temp() {
 		alert( "Bed program is mandatory");
 		return false;
 	}
+	if(!validIntakeLocation()) {
+		alert("You cannot make a temporary save without selecting an intake location.");
+		return false;
+	}
+	
 	setMethod('save_temp');
 }
 
@@ -354,6 +370,11 @@ function save_admit() {
 }
 
 function save_notAdmit() {
+	if(!validIntakeLocation()) {
+		alert("You cannot save without selecting an intake location.");
+		return false;
+	}
+	
 	setMethod('save_notAdmit');
 }
 
