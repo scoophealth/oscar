@@ -194,6 +194,7 @@ CREATE TABLE `caisi_form_instance` (
   `user_id` bigint(20) default NULL,
   `username` varchar(255) default NULL,
   `client_id` bigint(20) default NULL,
+  program_id int,
   PRIMARY KEY  (`id`)
 );
 
@@ -225,6 +226,7 @@ CREATE TABLE `caisi_form_instance_tmpsave` (
   `user_id` bigint(20) default NULL,
   `username` varchar(255) default NULL,
   `client_id` bigint(20) default NULL,
+  program_id int,
   PRIMARY KEY  (`tmp_instance_id`)
 );
 
@@ -292,6 +294,7 @@ CREATE TABLE `casemgmt_issue` (
   `certain` tinyint(1) NOT NULL default '0',
   `major` tinyint(1) NOT NULL default '0',
   `resolved` tinyint(1) NOT NULL default '0',
+  program_id int,
   `type` varchar(100) NOT NULL default '',
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),

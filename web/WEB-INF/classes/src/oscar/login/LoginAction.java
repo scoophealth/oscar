@@ -32,6 +32,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -55,7 +56,7 @@ public final class LoginAction extends DispatchAction {
         String nextPage=request.getParameter("nextPage");
         if (nextPage!=null) {
             // set current facility
-            String facilityIdString=request.getParameter("currentFacilityId");
+            String facilityIdString=request.getParameter(SessionConstants.CURRENT_FACILITY_ID);
             Facility facility=facilityDAO.getFacility(Integer.parseInt(facilityIdString));
             request.getSession().setAttribute("currentFacility", facility);
             String username=(String)request.getSession().getAttribute("user");

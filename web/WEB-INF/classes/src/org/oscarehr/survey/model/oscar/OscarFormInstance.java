@@ -36,6 +36,7 @@ public class OscarFormInstance implements Serializable {
 	private String username;
 	private long clientId;
 	private Set data = new HashSet();
+	private Integer programId=null;
 	
 	public long getClientId() {
 		return clientId;
@@ -85,5 +86,11 @@ public class OscarFormInstance implements Serializable {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+    public Integer getProgramId() {
+        return programId;
+    }
+    public void setProgramId(Integer programId) {
+        this.programId = programId;
+    }
 	
 }

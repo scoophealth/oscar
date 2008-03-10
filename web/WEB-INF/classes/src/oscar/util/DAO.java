@@ -107,17 +107,10 @@ public class DAO {
      * @return
      */
     public DBPreparedHandler getDBPreparedHandler() throws SQLException {
-        return new DBPreparedHandler(pvar.getProperty("db_driver"),pvar.getProperty("db_uri") + pvar.getProperty("db_name"),pvar.getProperty("db_username"),pvar.getProperty("db_password"));
+        return new DBPreparedHandler();
     }
 
 	/**
-	 * @return
-	 */
-	public DBPreparedHandlerAdvanced getDBPreparedHandlerAdvanced() throws SQLException {
-		return new DBPreparedHandlerAdvanced(pvar.getProperty("db_driver"),pvar.getProperty("db_uri") + pvar.getProperty("db_name"),pvar.getProperty("db_username"),pvar.getProperty("db_password"));
-	}
-
-    /**
      * @param handler
      */
     public void setDBPreparedHandler(DBPreparedHandler handler) {

@@ -71,7 +71,7 @@ public class CadProcedimentoDAO extends DAO {
 
         sql = sql + " order by ds_procedimento";
 
-        DBPreparedHandlerAdvanced db = getDBPreparedHandlerAdvanced();
+        DBPreparedHandlerAdvanced db = new DBPreparedHandlerAdvanced();
         PreparedStatement pstmProc = db.getPrepareStatement(sql);
 
         try {

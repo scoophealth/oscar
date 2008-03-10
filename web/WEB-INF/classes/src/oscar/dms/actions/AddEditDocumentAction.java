@@ -26,6 +26,8 @@ package oscar.dms.actions;
 import java.io.*;
 import org.apache.struts.action.*;
 import org.apache.struts.upload.*;
+import org.oscarehr.util.SessionConstants;
+
 import javax.servlet.http.*;
 import oscar.dms.data.*;
 import java.util.*;
@@ -90,7 +92,7 @@ public class AddEditDocumentAction extends Action {
             newDoc.setContentType(docFile.getContentType());
 
             // if the document was added in the context of a program
-            String programIdStr = (String) request.getSession().getAttribute("infirmaryView_programId");
+            String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
             if (programIdStr!=null) newDoc.setProgramId(Integer.valueOf(programIdStr));
             
             //---

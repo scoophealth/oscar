@@ -375,7 +375,7 @@ public class ImportDemographicDataAction2 extends Action {
 		    }
 		    DemographicRelationship demoRel = new DemographicRelationship();
 		    if (!cDemoNo.equals("")) {
-			demoRel.addDemographicRelationship(demoNo, cDemoNo, rel, sdm, emc, ""/*notes*/, providerNo);
+		        demoRel.addDemographicRelationship(demoNo, cDemoNo, rel, sdm, emc, ""/*notes*/, providerNo, null);
 		    }
 		}
 

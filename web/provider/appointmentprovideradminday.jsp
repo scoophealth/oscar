@@ -50,7 +50,7 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end ffffffffffffff-->
 
-<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" %>
+<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*, org.oscarehr.util.*" %>
 <%@ page import="org.apache.commons.lang.*" %>
 
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -838,7 +838,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 <logic:equal name="infirmaryView_isOscar" value="false">
 	<%String prID="1"; %> 	
 	<logic:present name="infirmaryView_programId">
-	<%prID=(String)session.getAttribute("infirmaryView_programId"); %>
+	<%prID=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID); %>
 	</logic:present>
 	<logic:iterate id="pb" name="infirmaryView_programBeans" type="org.apache.struts.util.LabelValueBean">
 	  	<%if (pb.getValue().equals(prID)) {%>
@@ -1129,7 +1129,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 <logic:equal name="infirmaryView_isOscar" value="false">
 	<%String prID="1"; %> 
 	<logic:present name="infirmaryView_programId">
-	<%prID=(String)session.getAttribute("infirmaryView_programId"); %>
+	<%prID=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID); %>
 	</logic:present>
 	<logic:iterate id="pb" name="infirmaryView_programBeans" type="org.apache.struts.util.LabelValueBean">
 	  	<%if (pb.getValue().equals(prID)) {%>

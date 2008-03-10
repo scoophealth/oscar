@@ -649,7 +649,7 @@ public class MDSResultsData {
     public static boolean updateReportStatus(Properties props, int labNo, int providerNo, char status, String comment) {
         
         try {
-            DBPreparedHandler db = new DBPreparedHandler( props.getProperty("db_driver"), props.getProperty("db_uri")+props.getProperty("db_name"), props.getProperty("db_username"), props.getProperty("db_password") );
+            DBPreparedHandler db = new DBPreparedHandler();
             // handles the case where this provider/lab combination is not already in providerLabRouting table
             String sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?)";
             if ( db.queryExecuteUpdate(sql, new String[] { comment }) == 0 ) {

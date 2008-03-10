@@ -50,7 +50,7 @@ public class AppointmentMainBean {
 
     dbSQL=new UtilDict();
     dbSQL.setDef(dbOperation);
-    dbPH=new DBPreparedHandler(dbParams[0],dbParams[1],dbParams[2],dbParams[3]);
+    dbPH=new DBPreparedHandler();
   }
 
   public void doConfigure( String[]dbParams,String[][]dbOperation,String[][]controlToFile) throws Exception {
@@ -62,7 +62,7 @@ public class AppointmentMainBean {
     dbSQL=new UtilDict();
     dbSQL.setDef(dbOperation);
 //    makeDBPreparedHandler(dbParams, dbOperation);
-    dbPH=new DBPreparedHandler(dbParams[0],dbParams[1],dbParams[2],dbParams[3]);
+    dbPH=new DBPreparedHandler();
   }
   public void doCommand(HttpServletRequest request) {
   	//wrap the request object into a Dict help object

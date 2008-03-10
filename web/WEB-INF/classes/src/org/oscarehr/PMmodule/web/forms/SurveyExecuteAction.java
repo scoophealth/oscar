@@ -22,9 +22,27 @@
 
 package org.oscarehr.PMmodule.web.forms;
 
+import java.io.File;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Demographic;
@@ -48,12 +66,7 @@ import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.surveymodel.SurveyDocument.Survey;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.StringReader;
-import java.util.*;
+import org.oscarehr.util.SessionConstants;
 
 public class SurveyExecuteAction extends DispatchAction {
     private Log log = LogFactory.getLog(getClass());
@@ -564,6 +577,10 @@ public class SurveyExecuteAction extends DispatchAction {
             }
         }
 
+        // if the form was saved in the context of a program
+        String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+        if (programIdStr!=null) instance.setProgramId(Integer.valueOf(programIdStr));        
+        
         surveyManager.saveFormInstance(instance);
         
         //If saving survey succeed, then delete tmpsave record.
@@ -804,6 +821,10 @@ public class SurveyExecuteAction extends DispatchAction {
                 }
             }
         }
+
+        // if the form was saved in the context of a program
+        String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+        if (programIdStr!=null) instance.setProgramId(Integer.valueOf(programIdStr));        
 
         surveyManager.saveFormInstanceTmpsave(instance);
 

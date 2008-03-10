@@ -1,14 +1,14 @@
-<%@ page import="oscar.*" %>
+<%@ page import="oscar.*, org.oscarehr.util.*" %>
 
 <logic:equal name="infirmaryView_isOscar" value="false">
 <%	
-	session.setAttribute("case_program_id", session.getAttribute("infirmaryView_programId"));
+	session.setAttribute("case_program_id", session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID));
 	java.util.Date todayDate=new java.util.Date();
 	todayDate.setHours(23);
 	todayDate.setMinutes(59);
 	todayDate.setSeconds(59);
 	
-	if (((String)session.getAttribute("infirmaryView_programId")).equalsIgnoreCase("0"))
+	if (((String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)).equalsIgnoreCase("0"))
 	{%>
 	<p><b>No Assigned Program.</b></p>
 	<%}else

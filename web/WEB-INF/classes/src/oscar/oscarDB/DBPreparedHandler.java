@@ -45,9 +45,6 @@ public class DBPreparedHandler {
     public DBPreparedHandler() {
     }
     
-    public DBPreparedHandler(String dbDriver, String dbName, String dbUser, String dbPwd) throws SQLException {
-    }
-
     public static Connection getConnection() throws SQLException {
         return DbConnectionFilter.getThreadLocalDbConnection();
     }

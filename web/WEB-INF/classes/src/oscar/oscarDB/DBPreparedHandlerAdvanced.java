@@ -28,10 +28,6 @@ import java.sql.*;
 
 
 public class DBPreparedHandlerAdvanced extends DBPreparedHandler {
-    public DBPreparedHandlerAdvanced(String dbDriver, String dbName,
-        String dbUser, String dbPwd) throws SQLException {
-        super(dbDriver, dbName, dbUser, dbPwd);
-    }
 
 	synchronized public void setAutoCommit(boolean flag)
 		throws SQLException {

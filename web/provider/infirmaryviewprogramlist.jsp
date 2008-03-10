@@ -5,6 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ page import="org.oscarehr.util.*" %>
 
 <%
 String questr=(String)session.getAttribute("infirmaryView_OscarQue"); 
@@ -32,7 +33,7 @@ function submitStatus(ctrl) {
     <br><b>Program:</b>
     <select id="bedprogram_no" name="bedprogram_no" onchange="submitProgram(this)">
 	<%java.util.List programBean=(java.util.List)session.getAttribute("infirmaryView_programBeans");
-	String programId=(String)session.getAttribute("infirmaryView_programId");
+	String programId=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
 	if (programBean.size()==0 || programId.equalsIgnoreCase("0")){%>
 	<option value="0" selected>-No assigned program-</option>
 	<%}else{ %> 
@@ -52,7 +53,7 @@ function submitStatus(ctrl) {
     <br><b>Program:</b>
     <select id="bedprogram_no" name="bedprogram_no" onchange="submitProgram(this)">
 	<%java.util.List programBean=(java.util.List)session.getAttribute("infirmaryView_programBeans");
-	String programId=(String)session.getAttribute("infirmaryView_programId");
+	String programId=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
 	if (programBean.size()==0 || programId.equalsIgnoreCase("0")){%>
 	<option value="0" selected>-No assigned program-</option>
 	<%}else{ %> 

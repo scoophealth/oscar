@@ -27,6 +27,7 @@
 		<property name="certain" />
 		<property name="major" />
 		<property name="resolved" />
+		<property name="program_id" />
 		<property name="type" />
 		<property name="update_date" type="java.util.Date" />
 		<set name="notes" table="casemgmt_issue_notes" lazy="true" inverse="true">

@@ -127,7 +127,7 @@ public class CommonLabResultData {
     public static boolean updateReportStatus(Properties props, int labNo, int providerNo, char status, String comment, String labType) {
         
         try {
-            DBPreparedHandler db = new DBPreparedHandler( props.getProperty("db_driver"), props.getProperty("db_uri")+props.getProperty("db_name"), props.getProperty("db_username"), props.getProperty("db_password") );
+            DBPreparedHandler db = new DBPreparedHandler();
             // handles the case where this provider/lab combination is not already in providerLabRouting table
             String sql = "select id, status from providerLabRouting where lab_type = '"+labType+"' and provider_no = '"+providerNo+"' and lab_no = '"+labNo+"'";
             

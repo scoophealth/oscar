@@ -149,7 +149,6 @@ public class EDocUtil extends SqlUtilBaseS {
        String docDescription = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription());
        String docFileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName());
        String html = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml());
-       String contentType = newDocument.getContentType();
        System.out.println("obs date: " + newDocument.getObservationDate());
       
        /*String editDocSql = "UPDATE document SET doctype='" + doctype + "', docdesc='" + docDescription + "', updatedatetime='" + getDmsDateTime() + "', public1='" + newDocument.getDocPublic() + "', observationdate='" + newDocument.getObservationDate() + "', docxml='" + html + "'";

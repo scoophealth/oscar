@@ -20,7 +20,7 @@
  -->
  
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*, org.oscarehr.util.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -30,7 +30,7 @@
 <%
 	String formClass = "DischargeSummary";
 	String formLink = "formDischargeSummary.jsp";
-	int programNo = Integer.parseInt((String)request.getSession().getAttribute("infirmaryView_programId"));
+	int programNo = Integer.parseInt((String)request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID));
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
 	int provNo = Integer.parseInt((String) session.getAttribute("user"));

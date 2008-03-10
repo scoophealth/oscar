@@ -29,12 +29,13 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ page  import="java.util.*,java.net.*"  errorPage="errorpage.jsp"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils" %>
+<%@page import="org.oscarehr.util.SessionConstants"%>
 
 <caisi:isModuleLoad moduleName="caisi"><%
     String isOscar = request.getParameter("infirmaryView_isOscar");
     if (session.getAttribute("infirmaryView_isOscar")==null) isOscar="false";
     if (isOscar!=null) session.setAttribute("infirmaryView_isOscar", isOscar);
-    session.setAttribute("infirmaryView_programId",request.getParameter("infirmaryView_programId"));
+    session.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,request.getParameter(SessionConstants.CURRENT_PROGRAM_ID));
     session.setAttribute("infirmaryView_OscarURL",request.getRequestURL());
 
 %><c:import url="/infirm.do?action=getSig" />

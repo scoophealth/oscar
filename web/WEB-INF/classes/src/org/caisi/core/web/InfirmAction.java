@@ -38,6 +38,7 @@ import org.apache.struts.util.LabelValueBean;
 import org.caisi.service.InfirmBedProgramManager;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.util.SessionConstants;
 
 public class InfirmAction extends BaseAction
 {
@@ -101,12 +102,12 @@ public class InfirmAction extends BaseAction
 			if (OriprogramId==0) programId=0;
 			if (defaultprogramId==0 && OriprogramId!=0) programId=OriprogramId;
 		}
-		if (se.getAttribute("infirmaryView_programId")!=null){
-			programId=Integer.valueOf((String)se.getAttribute("infirmaryView_programId")).intValue();
+		if (se.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)!=null){
+			programId=Integer.valueOf((String)se.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)).intValue();
 		}
 		if (programId!=defaultprogramId) getInfirmBedProgramManager().setDefaultProgramId(providerNo,programId);
 		
-		se.setAttribute("infirmaryView_programId",String.valueOf(programId));
+		se.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,String.valueOf(programId));
 		
 		//if()
 		if(programId != 0) {

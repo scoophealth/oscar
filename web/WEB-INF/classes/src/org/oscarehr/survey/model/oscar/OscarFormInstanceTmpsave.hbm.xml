@@ -28,6 +28,7 @@
 		<property name="userId" type="long" column="user_id" />
 		<property name="username" type="string" column="username" />
 		<property name="clientId" type="long" column="client_id" />
+		<property name="programId" column="program_id" />
 		<set name="data" table="caisi_form_data_tmpsave" lazy="false" cascade="all,delete-orphan">
 			<key column="tmp_instance_id" />
 			<one-to-many class="org.oscarehr.survey.model.oscar.OscarFormDataTmpsave" />

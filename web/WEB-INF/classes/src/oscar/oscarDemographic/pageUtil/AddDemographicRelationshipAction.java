@@ -30,6 +30,9 @@ package oscar.oscarDemographic.pageUtil;
 
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
+import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.util.SessionConstants;
+
 import oscar.oscarDemographic.data.*;
 
 /**
@@ -69,9 +72,14 @@ public class AddDemographicRelationshipAction extends Action {
         if (emergContact != null && emergContact.equals("yes")){
             eBool = true;
         }
+
+        // if we're in a facility tag this association with the facility
+        Facility facility=(Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
+        Integer facilityId=null;
+        if (facility!=null) facilityId=facility.getId();
         
         DemographicRelationship demo = new DemographicRelationship();
-        demo.addDemographicRelationship(origDemo,linkingDemo,relation,sdmBool,eBool,notes,providerNo);
+        demo.addDemographicRelationship(origDemo,linkingDemo,relation,sdmBool,eBool,notes,providerNo, facilityId);
         
         request.setAttribute("demo", origDemo);
         // ***** NEW CODE *****
@@ -177,7 +185,7 @@ public class AddDemographicRelationshipAction extends Action {
             
             //now save this
             DemographicRelationship demo2 = new DemographicRelationship();
-            demo2.addDemographicRelationship(origDemo,linkingDemo,relation,sdmBool,eBool,notes,providerNo);
+            demo2.addDemographicRelationship(origDemo,linkingDemo,relation,sdmBool,eBool,notes,providerNo, facilityId);
         }
         
         

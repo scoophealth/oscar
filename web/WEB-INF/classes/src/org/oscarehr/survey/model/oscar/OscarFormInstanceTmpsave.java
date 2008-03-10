@@ -36,6 +36,7 @@ public class OscarFormInstanceTmpsave implements Serializable {
 	private long userId;
 	private String username;
 	private long clientId;
+	private Integer programId;
 	private Set data = new HashSet();
 		
 	public long getInstanceId() {
@@ -93,5 +94,11 @@ public class OscarFormInstanceTmpsave implements Serializable {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+    public Integer getProgramId() {
+        return programId;
+    }
+    public void setProgramId(Integer programId) {
+        this.programId = programId;
+    }
 	
 }

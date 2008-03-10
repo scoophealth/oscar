@@ -82,7 +82,7 @@ public class CidDAO extends DAO {
 
 		sql = sql + " order by ds_cid";
 
-		DBPreparedHandlerAdvanced db = getDBPreparedHandlerAdvanced();
+		DBPreparedHandlerAdvanced db = new DBPreparedHandlerAdvanced();
 		PreparedStatement pstmCid = db.getPrepareStatement(sql);
 
 		try {

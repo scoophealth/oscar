@@ -59,7 +59,7 @@ public class AppointmentDAO extends DAO {
         sqlDiag = "insert into cad_diagnostico (appointment_no, co_cid) values (?, ?)";
         sqlApp = "update appointment set billing = 'P' where appointment_no = ?";
 
-        DBPreparedHandlerAdvanced db = getDBPreparedHandlerAdvanced();
+        DBPreparedHandlerAdvanced db = new DBPreparedHandlerAdvanced();
         PreparedStatement pstmProc = db.getPrepareStatement(sqlProc);
         PreparedStatement pstmDiag = db.getPrepareStatement(sqlDiag);
 		PreparedStatement pstmApp = db.getPrepareStatement(sqlApp);
@@ -121,7 +121,7 @@ public class AppointmentDAO extends DAO {
         sqlProc = "delete from cad_procedimento_realizado where appointment_no = ?";
         sqlDiag = "delete from cad_diagnostico where appointment_no = ?";
 
-        DBPreparedHandlerAdvanced db = getDBPreparedHandlerAdvanced();
+        DBPreparedHandlerAdvanced db = new DBPreparedHandlerAdvanced();
         PreparedStatement pstmProc = db.getPrepareStatement(sqlProc);
         PreparedStatement pstmDiag = db.getPrepareStatement(sqlDiag);
 

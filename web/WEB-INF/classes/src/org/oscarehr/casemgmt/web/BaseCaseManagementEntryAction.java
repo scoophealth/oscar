@@ -226,7 +226,10 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		return rt + "]\n";
 	}
 
-	protected CaseManagementIssue newIssueToCIssue(CaseManagementEntryFormBean cform, Issue iss) {
+	/**
+	 * @param programId is optional, can be null for none.
+	 */
+	protected CaseManagementIssue newIssueToCIssue(CaseManagementEntryFormBean cform, Issue iss, Integer programId) {
 		CaseManagementIssue cIssue = new CaseManagementIssue();
 		// cIssue.setActive(true);
 		cIssue.setAcute(false);
@@ -244,6 +247,7 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		cIssue.setType(issueType);
 		cIssue.setUpdate_date(new Date());
 		cIssue.setWriteAccess(true);
+		cIssue.setProgram_id(programId);
 		// add it to database
 		List uList = new ArrayList();
 		uList.add(cIssue);

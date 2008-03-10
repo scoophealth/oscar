@@ -45,6 +45,7 @@ public class CaseManagementIssue extends BaseObject {
 	private Date update_date;
 	private Set notes = new HashSet();
 	private Issue issue;
+	private Integer program_id=null;
 	
 	private boolean writeAccess;
 	
@@ -183,5 +184,15 @@ public class CaseManagementIssue extends BaseObject {
 	public void setWriteAccess(boolean writeAccess) {
 		this.writeAccess = writeAccess;
 	}
+
+
+    public Integer getProgram_id() {
+        return program_id;
+    }
+
+
+    public void setProgram_id(Integer program_id) {
+        this.program_id = program_id;
+    }
 	
 }

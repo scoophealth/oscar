@@ -58,7 +58,10 @@ public class DemographicRelationship {
    public DemographicRelationship() {
    }
    
-   public void addDemographicRelationship(String demographic,String linkingDemographic,String relationship,boolean sdm,boolean emergency,String notes,String providerNo){
+   /**
+    * @param facilityId can be null
+    */
+   public void addDemographicRelationship(String demographic,String linkingDemographic,String relationship,boolean sdm,boolean emergency,String notes,String providerNo, Integer facilityId){
        String sdmStr = "0";
        String eContact = "0";
        if (sdm){
@@ -71,8 +74,8 @@ public class DemographicRelationship {
        try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            String sql = "insert into relationships (demographic_no,relation_demographic_no,relation,sub_decision_maker,emergency_contact,notes,creator,creation_date) values "
-            + "('"+demographic+"','"+linkingDemographic+"','"+StringEscapeUtils.escapeSql(relationship)+"','"+sdmStr+"','"+eContact+"','"+StringEscapeUtils.escapeSql(notes)+"','"+providerNo+"',now())";
+            String sql = "insert into relationships (facility_id,demographic_no,relation_demographic_no,relation,sub_decision_maker,emergency_contact,notes,creator,creation_date) values "
+            + "("+facilityId+",'"+demographic+"','"+linkingDemographic+"','"+StringEscapeUtils.escapeSql(relationship)+"','"+sdmStr+"','"+eContact+"','"+StringEscapeUtils.escapeSql(notes)+"','"+providerNo+"',now())";
             db.RunSQL(sql);                                                
             db.CloseConn();
             

@@ -51,6 +51,7 @@ import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.util.SessionConstants;
 
 import oscar.OscarProperties;
 
@@ -141,7 +142,7 @@ public class TicklerAction extends DispatchAction {
         // filter out any tickler is not in the provider's currently selected program
 
         if (isModuleLoaded(request, "caisi")) {
-            String programIdStr = (String) request.getSession().getAttribute("infirmaryView_programId");
+            String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
             int programId=-1;
             if (programIdStr!=null) programId=Integer.parseInt(programIdStr);
             
@@ -300,7 +301,7 @@ public class TicklerAction extends DispatchAction {
         Tickler tickler = (Tickler) ticklerForm.get("tickler");
 
         // set the program which the tickler was written in if there is a program.
-        String programIdStr = (String) request.getSession().getAttribute("infirmaryView_programId");
+        String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
         if (programIdStr != null) tickler.setProgram_id(Integer.valueOf(programIdStr));
 
         /* get service time */

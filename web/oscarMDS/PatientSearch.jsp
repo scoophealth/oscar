@@ -188,7 +188,7 @@ function checkTypeIn() {
   
   ResultSet rs=null;
   Properties props = (Properties) request.getSession().getAttribute("oscarVariables");
-  DBPreparedHandler db = new DBPreparedHandler( props.getProperty("db_driver"), props.getProperty("db_uri")+props.getProperty("db_name"), props.getProperty("db_username"), props.getProperty("db_password") );
+  DBPreparedHandler db = new DBPreparedHandler();
   
   String keyword="";
   if ( request.getParameter("keyword") != null ) {        

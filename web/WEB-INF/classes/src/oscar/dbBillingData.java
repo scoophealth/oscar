@@ -72,7 +72,7 @@ public class dbBillingData {
   private void getService_code() { //if failed, username will be null
   	String [] temp=new String[4];
     try {
-      accessDB = new DBPreparedHandler(oscarVariables.getProperty("db_driver"),oscarVariables.getProperty("db_uri")+oscarVariables.getProperty("db_name")+"?user="+oscarVariables.getProperty("db_username")+"&password="+oscarVariables.getProperty("db_password"),oscarVariables.getProperty("db_username"),oscarVariables.getProperty("db_password"));
+      accessDB = new DBPreparedHandler();
       String strSQL="select service_code, description, value, percentage from billingservice where service_code = '" + service_code +"'";
     //   System.out.println("SQL=" + strSQL);
 

@@ -7035,6 +7035,7 @@ CREATE TABLE `demographicExt` (
 
 CREATE TABLE `relationships` (
   `id` int(10) NOT NULL auto_increment,
+  `facility_id` int,
   `demographic_no` int(10) NOT NULL default '0',
   `relation_demographic_no` int(10) NOT NULL default '0',
   `relation` varchar(20) default NULL,
