@@ -66,7 +66,9 @@ public class BedManagerAction extends BaseAction {
 
         if(bForm.getBedRoomFilterForBed()==null){
         	Room[] room=bForm.getRooms();
-        	if(room!=null) bForm.setBedRoomFilterForBed(room[0].getId());
+        	if(room!=null && room[0]!=null){
+        		bForm.setBedRoomFilterForBed(room[0].getId());
+        	}
         }
 //        bForm.setBeds(bedManager.getBedsByFacility(facilityId, null, false));
         List<Bed> lst=bedManager.getBedsByFilter(facilityId, bForm.getBedRoomFilterForBed(), null, false);
