@@ -897,8 +897,8 @@ public class CaseManagementManager {
         return issList;
     }
 
-    public List filterIssues(List issues, String providerNo, String programId) {
-        List filteredIssues = new ArrayList();
+    public List<CaseManagementIssue> filterIssues(List<CaseManagementIssue> issues, String providerNo, String programId) {
+        List<CaseManagementIssue> filteredIssues = new ArrayList<CaseManagementIssue>();
 
         if (issues.isEmpty()) {
             return issues;
