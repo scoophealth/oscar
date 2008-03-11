@@ -79,6 +79,19 @@ public class ClientRestrictionManager {
         return returnPcrs;
     }
 
+    public List<ProgramClientRestriction> getActiveRestrictionsForClient(int demographicNo, int facilityId, Date asOfDate) {
+        // check dao for restriction
+        Collection<ProgramClientRestriction> pcrs = programClientRestrictionDAO.findForClient(demographicNo, facilityId);
+        List<ProgramClientRestriction> returnPcrs = new ArrayList<ProgramClientRestriction>();
+        if (pcrs != null && !pcrs.isEmpty()) {
+            for (ProgramClientRestriction pcr : pcrs) {
+                if (pcr.getStartDate().getTime() <= asOfDate.getTime() && pcr.getEndDate().getTime() <= pcr.getEndDate().getTime())
+                    returnPcrs.add(pcr);
+            }
+        }
+        return returnPcrs;
+    }
+    
     public List<ProgramClientRestriction> getDisabledRestrictionsForClient(int demographicNo, Date asOfDate) {
         // check dao for restriction
         Collection<ProgramClientRestriction> pcrs = programClientRestrictionDAO.findDisabledForClient(demographicNo);

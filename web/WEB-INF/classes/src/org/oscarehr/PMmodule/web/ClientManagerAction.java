@@ -59,6 +59,7 @@ import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Consent;
+import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.HealthSafety;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
@@ -504,7 +505,12 @@ public class ClientManagerAction extends BaseAction {
         clientForm.set("serviceRestriction", new ProgramClientRestriction());
         clientForm.set("serviceRestrictionLength", null);
 
-        request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(id), new Date()));
+        Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
+        if(facility!=null){
+          request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(id), facility.getId(), new Date()));
+        }else{
+          request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(id), 0, new Date()));
+        }
 
         setEditAttributes(form, request, id);
         logManager.log("write", "service_restriction", id, request);
@@ -1482,7 +1488,13 @@ public class ClientManagerAction extends BaseAction {
 
         /* service restrictions */
         if (tabBean.getTab().equals("Service Restrictions")) {
-            request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), new Date()));
+//            request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), new Date()));
+            Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
+            if(facility!=null){
+              request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), facility.getId(), new Date()));
+            }else{
+              request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), 0, new Date()));
+            }
             request.setAttribute("serviceRestrictionList",lookupManager.LoadCodeList("SRT",true, null, null));
         }
 

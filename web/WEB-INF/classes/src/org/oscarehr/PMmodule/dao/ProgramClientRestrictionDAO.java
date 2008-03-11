@@ -9,6 +9,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  */
@@ -58,6 +59,28 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
             setRelationships(pcr);
         }
         return pcrs;
+    }
+
+    public Collection<ProgramClientRestriction> findForClient(int demographicNo, int facilityId) {
+        ArrayList paramList = new ArrayList();
+        String sSQL="from ProgramClientRestriction pcr where pcr.enabled = true and " +
+  		 "pcr.demographicNo = ? and pcr.programId in (select s.id from Program s where s.facilityId = ? ) " +
+         "order by pcr.programId";
+          paramList.add(Integer.valueOf(demographicNo));
+          paramList.add(Long.valueOf((long)facilityId));
+          Object params[] = paramList.toArray(new Object[paramList.size()]);
+          Collection<ProgramClientRestriction> pcrs= getHibernateTemplate().find(sSQL, params);
+          for (ProgramClientRestriction pcr : pcrs) {
+              setRelationships(pcr);
+          }
+          return pcrs;
+/*
+    	Collection<ProgramClientRestriction> pcrs = getHibernateTemplate().find("from ProgramClientRestriction pcr where pcr.enabled = true and pcr.demographicNo = ? order by pcr.programId", demographicNo);
+        for (ProgramClientRestriction pcr : pcrs) {
+            setRelationships(pcr);
+        }
+        return pcrs;
+*/        
     }
 
     public Collection<ProgramClientRestriction> findDisabledForClient(int demographicNo) {
