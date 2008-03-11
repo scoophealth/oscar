@@ -383,7 +383,6 @@
                 <property name="programTeamDAO" ref="programTeamDAO"/>
                 <property name="programAccessDAO" ref="programAccessDAO"/>
                 <property name="admissionDAO" ref="admissionDao"/>
-                <property name="integratorManager" ref="integratorManager"/>
                 <property name="defaultRoleAccessDAO" ref="defaultRoleAccessDAO"/>
                 <property name="programClientStatusDAO" ref="programClientStatusDAO"/>
                 <property name="enabled" value="${pmm.refer.temporaryAdmission.enabled}"/>
