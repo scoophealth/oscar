@@ -31,6 +31,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
+import org.oscarehr.PMmodule.model.Facility;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ClientReferralDAO extends HibernateDaoSupport {
@@ -140,14 +141,27 @@ public class ClientReferralDAO extends HibernateDaoSupport {
     }
     // end of change
 
-    public List<ClientReferral> getActiveReferrals(Long clientId) {
+    public List<ClientReferral> getActiveReferrals(Long clientId, Integer facilityId) {
         if (clientId == null || clientId.longValue() <= 0) {
             throw new IllegalArgumentException();
         }
 
         @SuppressWarnings("unchecked")
-        List<ClientReferral> results = this.getHibernateTemplate().find("from ClientReferral cr where cr.ClientId = ? and (cr.Status = '"+ClientReferral.STATUS_ACTIVE+"' or cr.Status = '"+ClientReferral.STATUS_PENDING+"' or cr.Status = '"+ClientReferral.STATUS_UNKNOWN+"')", clientId);
-
+        List<ClientReferral> results;
+        if(facilityId==null){
+          results = this.getHibernateTemplate().find("from ClientReferral cr where cr.ClientId = ? and (cr.Status = '"+ClientReferral.STATUS_ACTIVE+"' or cr.Status = '"+ClientReferral.STATUS_PENDING+"' or cr.Status = '"+ClientReferral.STATUS_UNKNOWN+"')", clientId);
+        }else{
+          ArrayList paramList = new ArrayList();
+          String sSQL="from ClientReferral cr where cr.ClientId = ? and (cr.Status = '" + ClientReferral.STATUS_ACTIVE+"' or cr.Status = '" + 
+            ClientReferral.STATUS_PENDING + "' or cr.Status = '" + ClientReferral.STATUS_UNKNOWN + "')" + 
+            " and ( (cr.FacilityId=?) or (cr.ProgramId in (select s.id from Program s where s.facilityId=?)))";
+          paramList.add(clientId);
+          paramList.add(facilityId);
+          paramList.add((long)facilityId);
+          Object params[] = paramList.toArray(new Object[paramList.size()]);
+          results = getHibernateTemplate().find(sSQL, params);
+        }
+        
         if (log.isDebugEnabled()) {
             log.debug("getActiveReferrals: clientId=" + clientId + ",# of results=" + results.size());
         }

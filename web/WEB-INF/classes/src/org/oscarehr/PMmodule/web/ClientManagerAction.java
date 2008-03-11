@@ -355,6 +355,12 @@ public class ClientManagerAction extends BaseAction {
         referral.setClientId(clientId);
         referral.setProgramId((long) programId);
         referral.setProviderNo(providerId);
+
+        int facilityId=0;
+        Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
+        if(facility!=null) facilityId=facility.getId();
+        referral.setFacilityId(facilityId);
+        
         referral.setReferralDate(new Date());
         referral.setProgramType(p.getType());
 
@@ -1251,6 +1257,10 @@ public class ClientManagerAction extends BaseAction {
 
         ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
 
+        String facilityId="0";
+        Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
+        if(facility!=null) facilityId= facility.getId().toString(); 
+        
         request.setAttribute("id", demographicNo);
         request.setAttribute("client", clientManager.getClientByDemographicNo(demographicNo));
 
@@ -1351,7 +1361,7 @@ public class ClientManagerAction extends BaseAction {
                 }
             }
 
-            request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo));
+            request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, facilityId));
         }
 
         /* history */
@@ -1483,18 +1493,14 @@ public class ClientManagerAction extends BaseAction {
 
         /* refer */
         if (tabBean.getTab().equals("Refer")) {
-            request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo));
+            request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, facilityId));
         }
 
         /* service restrictions */
         if (tabBean.getTab().equals("Service Restrictions")) {
 //            request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), new Date()));
-            Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
-            if(facility!=null){
-              request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), facility.getId(), new Date()));
-            }else{
-              request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), 0, new Date()));
-            }
+            request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), Integer.valueOf(facilityId), new Date()));
+
             request.setAttribute("serviceRestrictionList",lookupManager.LoadCodeList("SRT",true, null, null));
         }
 

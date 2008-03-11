@@ -62,6 +62,7 @@ public class ClientReferral implements Serializable {
     private Long _clientId;
     private java.util.Date _referralDate;
     private Long _providerNo;
+    private Integer facilityId;
     private String _notes;
     private String presentProblems;
     private String radioRejectionReason;
@@ -400,4 +401,12 @@ public class ClientReferral implements Serializable {
     public String toString () {
         return super.toString();
     }
+
+	public Integer getFacilityId() {
+		return facilityId;
+	}
+
+	public void setFacilityId(Integer facilityId) {
+		this.facilityId = facilityId;
+	}
 }

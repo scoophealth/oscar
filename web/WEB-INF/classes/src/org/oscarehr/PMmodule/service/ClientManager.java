@@ -103,8 +103,8 @@ public class ClientManager {
         return referralDAO.getReferrals(Long.valueOf(clientId));
     }
 
-    public List<ClientReferral> getActiveReferrals(String clientId) {
-        List<ClientReferral> results = referralDAO.getActiveReferrals(Long.valueOf(clientId));
+    public List<ClientReferral> getActiveReferrals(String clientId, String sourceFacilityId) {
+        List<ClientReferral> results = referralDAO.getActiveReferrals(Long.valueOf(clientId), Integer.valueOf(sourceFacilityId));
 
         for (ClientReferral referral : results) {
             if (referral.getAgencyId().longValue() > 0) {
