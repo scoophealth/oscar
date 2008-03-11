@@ -43,14 +43,6 @@ public class FacilityDAO extends HibernateDaoSupport {
         getHibernateTemplate().refresh(facility);
     }
     
-    public List<Long> getFacilityIdsByNoteId(long noteId)
-    {
-        // select note_id,program_no,program_id,facility_id from casemgmt_note,room where casemgmt_note.program_no=room.program_id;
-        
-        String sqlCommand="select facility_id from casemgmt_note,room where casemgmt_note.program_no=room.program_id and note_id="+noteId;
-        return(SqlUtils.selectLongList(sqlCommand));
-    }
-    
     public List<Integer> getFacilityIdsByProgramId(int programId)
     {
         // select program_id,facility_id from room;
@@ -72,15 +64,6 @@ public class FacilityDAO extends HibernateDaoSupport {
         
         return(results);
     }    
-    
-    @Deprecated
-    public List<Long> getFacilityIdsByProviderId(int providerId)
-    {
-        // select provider_no,program_provider.program_id,room.program_id,facility_id from program_provider,room where program_provider.program_id=room.program_id;
-
-        String sqlCommand="select facility_id from program_provider,room where program_provider.program_id=room.program_id and provider_no="+providerId;
-        return(SqlUtils.selectLongList(sqlCommand));
-    }
     
     public List<Integer> getFacilityIdsByProviderId(String providerId)
     {
