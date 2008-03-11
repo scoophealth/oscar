@@ -16,6 +16,7 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     String parent_intake_node_id = request.getParameter("parent_intake_node_id") ;
     String eleType               = request.getParameter("elementType") ;
     String intNodeLabel          = request.getParameter("intake_node_label") ;
+    String mandatory		 = request.getParameter("mandatory") ;
     
     IntakeNodeLabel intakeNodeLabel = new IntakeNodeLabel();
     int lblId = -1;
@@ -45,6 +46,10 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     intakeNode.setNodeTemplate(intakeNodeTemplate);
     intakeNode.setLabel(intakeNodeLabel);
     intakeNode.setPos(Integer.parseInt(npos));
+    if (mandatory!=null) {
+	intakeNode.setMandatory(true);
+    }
+    
     
     //IntakeNode parentNode = new IntakeNode();
     //parentNode.setId(Integer.parseInt(parent_intake_node_id));
@@ -85,9 +90,22 @@ String pSize        = request.getParameter("pSize");
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Add To Intake</title>
+	<script type="text/javascript">
+	    function doMandatory() {
+		if (document.addToIntakeFrm.mandatorySet.value==0) {
+		    alert("Only Question or Answer Compound can be set mandatory!");
+		    document.forms[0].mandatory.checked = false;
+		}
+	    }
+	    
+	    function mandSet(val) {
+		document.addToIntakeFrm.mandatorySet.value=val;
+		doMandatory();
+	    }
+	</script>
     </head>
     <body>
-        <form method="post" action="AddToIntake.jsp">
+        <form name="addToIntakeFrm" method="post" action="AddToIntake.jsp">
             
             <input type="hidden" name="newpos"                value="<%=pSize%>"/>
             
@@ -102,18 +120,18 @@ String pSize        = request.getParameter("pSize");
             <%}else if(nodeTemplate.equals("3") ){%>
             NADA
             <%}else if(nodeTemplate.equals("4") ){%>
-            +<input type="radio" name="elementType" value="5">question</input><br/>
-            +<input type="radio" name="elementType" value="6"> answer compound</input> <br/>
-            +<input type="radio" name="elementType" value="7"> answer scalar choice</input> <br/>
-            +<input type="radio" name="elementType" value="8"> answer scalar text</input> <br/>
-            +<input type="radio" name="elementType" value="13"> answer scalar note</input><br/>
+            +<input type="radio" name="elementType" value="5" onclick="mandSet(1);">question</input><br/>
+            +<input type="radio" name="elementType" value="6" onclick="mandSet(1);"> answer compound</input> <br/>
+            +<input type="radio" name="elementType" value="7" onclick="mandSet(0);"> answer scalar choice</input> <br/>
+            +<input type="radio" name="elementType" value="8" onclick="mandSet(0);"> answer scalar text</input> <br/>
+            +<input type="radio" name="elementType" value="13" onclick="mandSet(0);"> answer scalar note</input><br/>
             
             <%}else if(nodeTemplate.equals("5") ){%>
-            +<input type="radio" name="elementType" value="5"> question</input><br/>
-            +<input type="radio" name="elementType" value="6"> answer compound</input> <br/>
-            +<input type="radio" name="elementType" value="7"> answer scalar choice</input> <br/>
-            +<input type="radio" name="elementType" value="8"> answer scalar text</input> <br/>
-            +<input type="radio" name="elementType" value="13"> answer scalar note</input><br/>
+            +<input type="radio" name="elementType" value="5" onclick="mandSet(1);"> question</input><br/>
+            +<input type="radio" name="elementType" value="6" onclick="mandSet(1);"> answer compound</input> <br/>
+            +<input type="radio" name="elementType" value="7" onclick="mandSet(0);"> answer scalar choice</input> <br/>
+            +<input type="radio" name="elementType" value="8" onclick="mandSet(0);"> answer scalar text</input> <br/>
+            +<input type="radio" name="elementType" value="13" onclick="mandSet(0);"> answer scalar note</input><br/>
             <%}else if(nodeTemplate.equals("6") ){%>
             +<input type="radio" name="elementType" value="7"> answer scalar choice</input> <br/>
             +<input type="radio" name="elementType" value="8"> answer scalar text</input> <br/>
@@ -125,7 +143,10 @@ String pSize        = request.getParameter("pSize");
       
             <br> Label Text (Leave blank for no text):
             <input type="text" name="intake_node_label" />
-            
+	    <%if (nodeTemplate.equals("4") || nodeTemplate.equals("5")) {%>
+	    <input type="checkbox" name="mandatory" onclick="doMandatory();">Mandatory</input>
+	    <input type="hidden" name="mandatorySet"/>
+            <%}%>
             <input type="submit" value="Add" />
         </form>  
     </body>

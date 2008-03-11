@@ -13,7 +13,7 @@
         <script type="text/javascript">
             function add(id,nodeTemplateId,parentId,pos,psize){
                var eURL = "AddToIntake.jsp?id="+id+"&node="+nodeTemplateId+"&parentId="+parentId+"&pos="+pos+"&pSize="+psize;
-               popup('200','300',eURL,'intakeAdd');
+               popup('220','330',eURL,'intakeAdd');
             }
             
             function del(id, pid){
@@ -195,6 +195,9 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         out.write("<blockquote>");
         out.write("<h3 style=\"background:grey ; border:1px solid grey; color:#000000;  font-size:12px; font-weight:bold; margin-top: 0;\">");
         out.write(in.getLabelStr());
+	if (in.getMandatory()) {
+	    out.write("<font color=red>*</font>");
+	}
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
         out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','5','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
 	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
@@ -207,6 +210,9 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         out.write("<div  style=\"border:1px solid blue;\">");
         out.write("<h3 style=\" border:1px solid #84A3D1; color:#000000;  font-size:12px; font-weight:bold; margin-top: 0;\">");
         out.write("Inline group of questions :"+in.getLabelStr());
+	if (in.getMandatory()) {
+	    out.write("<font color=red>*</font>");
+	}
 //out.write("+ answer scalar choice + answer scalar text + answer scalar note")
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
         out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','6','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
