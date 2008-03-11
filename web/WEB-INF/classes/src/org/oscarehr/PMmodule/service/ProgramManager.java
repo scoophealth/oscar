@@ -447,20 +447,10 @@ public class ProgramManager {
         // if no program restrictions are defined.
         if (programId==null) return(true);
         
-        // if they're in the programs then just short circuit.
-        List<Integer> providersProgramIds = programDao.getCachedProgramIdsByProviderId(providerNo);
-        if (providersProgramIds.contains(programId)) return(true);
-        
         // check the providers facilities against the programs facilities
         List<Integer> providersFacilityIds = facilityDAO.getCachedFacilityIdsByProviderId(providerNo);
-        Program program = getProgram(programId);
-
-        // we only have to deal with bed programs cuz if it's a service program
-        // then it must be in the providers program list before we add it and that's done above.
-        if (Program.BED_TYPE.equals(program.getType())) {
-            List<Integer> programFacilities = facilityDAO.getCachedFacilityIdsByProgramId(programId);
-            if (FacilityDAO.facilityHasIntersection(providersFacilityIds, programFacilities)) return(true);
-        }
+        List<Integer> programFacilities = facilityDAO.getCachedFacilityIdsByProgramId(programId);
+        if (FacilityDAO.facilityHasIntersection(providersFacilityIds, programFacilities)) return(true);
 
         return(false);
     }
