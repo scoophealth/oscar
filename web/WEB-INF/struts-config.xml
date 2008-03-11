@@ -67,7 +67,6 @@
         <form-bean name="FrmFormForm" type="oscar.form.pageUtil.FrmFormForm" />
         <form-bean name="EctConsultationFormRequestForm" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm" />
         <form-bean name="EctViewConsultationRequestsForm" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsForm" />
-        <form-bean name="EctConsultationFormRequestPrintAction" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestPrintAction" />
         <form-bean name="EctViewRequestForm" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewRequestForm" />
         <form-bean name="EctDemographicSearchForm" type="oscar.oscarEncounter.search.pageUtil.EctDemographicSearchForm" />
         <form-bean name="EctProceedForm" type="oscar.oscarEncounter.search.pageUtil.EctProceedForm" />
@@ -686,7 +685,7 @@
             <forward name="printpdf" path="/oscarEncounter/oscarConsultationRequest/printPdf.do" />
             <forward name="fax" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormFax.jsp" />
         </action>
-        <action input="/oscarEncounter/oscarconsultationRequest/ConsultationFormRequest.jsp" name="EctConsultationFormRequestPrintAction" path="/oscarEncounter/oscarConsultationRequest/printPdf" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestPrintAction">
+        <action input="/oscarEncounter/oscarconsultationRequest/ConsultationFormRequest.jsp"  path="/oscarEncounter/oscarConsultationRequest/printPdf" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestPrintAction">
             <forward name="error" path="/oscarEncounter/ViewRequest.do?error=error"/>
         </action>
         <action input="/oscarEncounter/oscarConsultationRequest/attachmentReport.jsp" name="FrmForm" path="/oscarEncounter/oscarConsultation/printAttached" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationPrintDocsAction">
