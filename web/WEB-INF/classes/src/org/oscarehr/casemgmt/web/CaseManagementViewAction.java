@@ -57,6 +57,7 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.EncounterWindow;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.SessionConstants;
 
 import oscar.oscarRx.pageUtil.RxSessionBean;
 
@@ -225,7 +226,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             current = System.currentTimeMillis();
             log.debug("GET ISSUES " + String.valueOf(current - start));
             start = current;
-            issues=caseManagementMgr.filterIssues(issues, providerNo, programId);
+            Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
+            issues=caseManagementMgr.filterIssues(issues, providerNo, programId,currentFacilityId);
             current = System.currentTimeMillis();
             log.debug("FILTER ISSUES " + String.valueOf(current - start));
             start = current;
@@ -256,7 +258,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             current = System.currentTimeMillis();
             log.debug("GET NOTES " + String.valueOf(current - start));
             start = current;
-            notes = caseManagementMgr.filterNotes(notes, providerNo, programId);
+            notes = caseManagementMgr.filterNotes(notes, providerNo, programId,currentFacilityId);
             current = System.currentTimeMillis();
             log.debug("FILTER NOTES " + String.valueOf(current - start));
             start = current;
@@ -399,7 +401,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         searchBean.setSearchText(caseForm.getSearchText());
         List results = this.caseManagementMgr.search(searchBean);
         List filtered1 = manageLockedNotes(results, false, this.getUnlockedNotesMap(request));
-        List filteredResults = caseManagementMgr.filterNotes(filtered1, getProviderNo(request), programId);
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
+        List filteredResults = caseManagementMgr.filterNotes(filtered1, getProviderNo(request), programId,currentFacilityId);
 
         List sortedResults = this.sort_notes(filteredResults, caseForm.getNote_sort());
         request.setAttribute("search_results", sortedResults);

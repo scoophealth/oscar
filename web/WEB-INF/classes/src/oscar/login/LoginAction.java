@@ -58,7 +58,8 @@ public final class LoginAction extends DispatchAction {
             // set current facility
             String facilityIdString=request.getParameter(SessionConstants.CURRENT_FACILITY_ID);
             Facility facility=facilityDAO.getFacility(Integer.parseInt(facilityIdString));
-            request.getSession().setAttribute("currentFacility", facility);
+            request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, Integer.parseInt(facilityIdString));
+            request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
             String username=(String)request.getSession().getAttribute("user");
             LogAction.addLog(username, LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIdString, ip);
             return mapping.findForward(nextPage);

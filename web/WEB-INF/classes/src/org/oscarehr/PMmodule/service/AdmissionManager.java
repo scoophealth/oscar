@@ -22,17 +22,30 @@
 
 package org.oscarehr.PMmodule.service;
 
-import org.oscarehr.PMmodule.dao.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.PMmodule.dao.ClientReferralDAO;
+import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.ProgramClientStatusDAO;
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.ProgramQueueDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
-import org.oscarehr.PMmodule.model.*;
+import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.AdmissionSearchBean;
+import org.oscarehr.PMmodule.model.BedDemographic;
+import org.oscarehr.PMmodule.model.ClientReferral;
+import org.oscarehr.PMmodule.model.JointAdmission;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramClientRestriction;
+import org.oscarehr.PMmodule.model.ProgramQueue;
+import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.springframework.beans.factory.annotation.Required;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class AdmissionManager {
 
@@ -149,10 +162,10 @@ public class AdmissionManager {
 
 			// community?
 			if (fullAdmission != null) {
-			    List<Integer> oldProgramFacilities=facilityDAO.getFacilityIdsByProgramId(fullAdmission.getProgramId());
-                List<Integer> newProgramFacilities=facilityDAO.getFacilityIdsByProgramId(program.getId());
-                
-			    fromTransfer=FacilityDAO.facilityHasIntersection(oldProgramFacilities, newProgramFacilities);				
+			    
+			    Program oldProgram=programDao.getProgram(fullAdmission.getProgramId());
+                Program newProgram=programDao.getProgram(program.getId());
+			    fromTransfer=(oldProgram.getFacilityId()==newProgram.getFacilityId());			
 			    
 			    processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "", null, fromTransfer);
 			} else {

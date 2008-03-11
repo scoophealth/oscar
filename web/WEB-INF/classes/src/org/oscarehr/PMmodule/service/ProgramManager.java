@@ -442,16 +442,15 @@ public class ProgramManager {
 	 * based on facility filtering.
 	 * @param programId is allowed to be null.
 	 */
-    public boolean hasAccessBasedOnFacility(String providerNo, Integer programId) {
-
+    public boolean hasAccessBasedOnFacility(Integer currentFacilityId, Integer programId) {
+System.err.println("------------- currentF:"+currentFacilityId);
         // if no program restrictions are defined.
         if (programId==null) return(true);
+        if (currentFacilityId==null && programId==null) return(true);
         
         // check the providers facilities against the programs facilities
-        List<Integer> providersFacilityIds = facilityDAO.getCachedFacilityIdsByProviderId(providerNo);
-        List<Integer> programFacilities = facilityDAO.getCachedFacilityIdsByProgramId(programId);
-        if (FacilityDAO.facilityHasIntersection(providersFacilityIds, programFacilities)) return(true);
-
-        return(false);
+        Program program=getProgram(programId);
+System.err.println("------------- programF:"+program.getFacilityId());
+        return(program.getFacilityId()==currentFacilityId.intValue());
     }
 }

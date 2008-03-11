@@ -150,8 +150,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         /* remove the remembered echart string */
         request.getSession().setAttribute("lastSavedNoteString", null);
 
-        List issues;
-        issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), providerNo, programId);
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
+        List issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), providerNo, programId,currentFacilityId);
 
         /*
          * if(request.getSession().getAttribute("archiveView")!="true") issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono),providerNo,programId); else issues = caseManagementMgr.getIssues(providerNo, demono);
@@ -678,8 +678,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         List filteredSearchResults = new ArrayList();
 
         // remove issues which we already have - we don't want duplicates
-        List existingIssues;
-        existingIssues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), providerNo, programId);
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
+        List existingIssues= caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), providerNo, programId,currentFacilityId);
 
         Map existingIssuesMap = convertIssueListToMap(existingIssues);
         for (Iterator iter = searchResults.iterator(); iter.hasNext();) {
@@ -732,8 +732,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         List filteredSearchResults = new ArrayList();
 
         // remove issues which we already have - we don't want duplicates
-        List existingIssues;
-        existingIssues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), providerNo, programId);
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
+        List existingIssues= caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), providerNo, programId, currentFacilityId);
         /*
          * if(request.getSession().getAttribute("archiveView")!="true") existingIssues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono),providerNo,programId); else existingIssues = caseManagementMgr.getIssues(providerNo,
          * demono);
@@ -1203,7 +1203,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             programId = "0";
         }
 
-        notes = caseManagementMgr.filterNotes(notes, providerNo, programId);
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
+        notes = caseManagementMgr.filterNotes(notes, providerNo, programId,currentFacilityId);
 
         for (int idx = notes.size() - 1; idx >= 0; --idx) {
             CaseManagementNote n = (CaseManagementNote) notes.get(idx);

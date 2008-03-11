@@ -135,7 +135,9 @@ public class TicklerAction extends DispatchAction {
         log.debug("filter");
         DynaActionForm ticklerForm = (DynaActionForm) form;
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
-        List<Tickler> ticklers = ticklerMgr.getTicklers(filter, getProviderNo(request));
+        
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
+        List<Tickler> ticklers = ticklerMgr.getTicklers(filter, currentFacilityId);
 
         List cf = ticklerMgr.getCustomFilters(this.getProviderNo(request));
         // make my tickler filter
@@ -186,7 +188,8 @@ public class TicklerAction extends DispatchAction {
         filter.setClient(null);
         filter.setAssignee((String) request.getSession().getAttribute("user"));
         filter.setDemographic_webName(null);
-        List ticklers = ticklerMgr.getTicklers(filter, getProviderNo(request));
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
+        List ticklers = ticklerMgr.getTicklers(filter, currentFacilityId);
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         request.setAttribute("demographics", demographicMgr.getDemographics());

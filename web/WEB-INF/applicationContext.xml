@@ -337,6 +337,7 @@
         <property name="caseManagementTmpSaveDAO" ref="CaseManagementTmpSaveDAO"/>
         <property name="admissionManager" ref="admissionManager"/>
         <property name="enabled" value="${casemgmt.note.password.enabled}"/>
+        <property name="programManager" ref="programManager"/>
     </bean>
     <bean id="roleManager" parent="baseTransactionProxy" >
         <property name="target">
@@ -420,6 +421,7 @@
     <bean id="ticklerManagerTargetT" class="org.caisi.service.TicklerManager">
         <property name="ticklerDAO" ref="ticklerDAOT"/>
         <property name="customFilterDAO" ref="customFilterDAOT"/>
+        <property name="programManager" ref="programManager"/>
     </bean>
 
     <bean id="demographicManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">

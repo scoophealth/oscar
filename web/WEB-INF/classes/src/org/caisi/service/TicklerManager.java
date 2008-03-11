@@ -62,23 +62,23 @@ public class TicklerManager {
         return ticklerDAO.getTicklers();
     }
 
-    public List<Tickler> getTicklers(CustomFilter filter, String providerNo) {
+    public List<Tickler> getTicklers(CustomFilter filter, Integer currentFacilityId) {
         List<Tickler> results = ticklerDAO.getTicklers(filter);
 
         // filter based on facility
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-            results = ticklerFacilityFiltering(providerNo, results);
+            results = ticklerFacilityFiltering(currentFacilityId, results);
         }
 
         return(results);
     }
 
-    private List<Tickler> ticklerFacilityFiltering(String providerId, List<Tickler> ticklers) {
+    private List<Tickler> ticklerFacilityFiltering(Integer currentFacilityId, List<Tickler> ticklers) {
         ArrayList<Tickler> results = new ArrayList<Tickler>();
 
         for (Tickler tickler : ticklers) {
             Integer programId = tickler.getProgram_id();
-            if (programManager.hasAccessBasedOnFacility(providerId, programId)) results.add(tickler);
+            if (programManager.hasAccessBasedOnFacility(currentFacilityId, programId)) results.add(tickler);
         }
 
         return results;

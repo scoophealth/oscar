@@ -38,6 +38,7 @@ import oscar.util.DateUtils;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.util.SessionConstants;
 
 /**
  *
@@ -71,7 +72,8 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
         List issues = null;        
         issues = caseManagementMgr.getIssues(bean.providerNo,bean.getDemographicNo());             
         String programId = (String)request.getSession().getAttribute("case_program_id");
-        issues = caseManagementMgr.filterIssues(issues,bean.providerNo,programId);
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
+        issues = caseManagementMgr.filterIssues(issues,bean.providerNo,programId,currentFacilityId);
 
         for(int idx = 0; idx < issues.size(); ++idx ) {
             NavBarDisplayDAO.Item item = Dao.Item();                                    
