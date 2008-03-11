@@ -287,7 +287,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             if (roleId != null && roleId.length > 0) notes = applyRoleFilter(notes, roleId);
 
             // RFQ style filtering, probably not wanted by anyone else on earth.
-            if (OscarProperties.getInstance().getBooleanProperty("FILTER_CME_NOTES_FOR_FACILITY", "true")) {
+            if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
                 notes = facilityFiltering(getProviderId(request), notes);
             }
 
