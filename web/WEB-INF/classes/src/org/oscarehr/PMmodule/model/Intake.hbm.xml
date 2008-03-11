@@ -33,6 +33,7 @@
 		<property name="createdOn" column="creation_date" type="calendar" not-null="true" />
 		<property name="intakeStatus" column="intake_status" type="string" not-null="true" length="10"/>
 		<property name="intakeLocation" column="intake_location" type="integer" not-null="false" length="10"/>
+		<property name="facilityId" column="facility_id" type="integer" not-null="true" length="11" />
 		
 		<many-to-one name="node"
 			column="intake_node_id"

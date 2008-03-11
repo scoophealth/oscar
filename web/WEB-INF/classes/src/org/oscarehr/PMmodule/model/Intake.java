@@ -56,6 +56,7 @@ public class Intake implements Serializable {
     private java.util.Set<IntakeAnswer> answers;
     private String intakeStatus;
     private Integer intakeLocation;
+    private Integer facilityId;
     
     public static Intake create(IntakeNode node, Integer clientId, Integer programId, String staffId) {
 		Intake intake = new Intake();
@@ -216,6 +217,15 @@ public class Intake implements Serializable {
 
 	public void setIntakeLocation(Integer intakeLocation) {
 		this.intakeLocation = intakeLocation;
+	}
+	
+	
+	public Integer getFacilityId() {
+		return facilityId;
+	}
+
+	public void setFacilityId(Integer facilityId) {
+		this.facilityId = facilityId;
 	}
 
 	public String getCreatedOnStr() {

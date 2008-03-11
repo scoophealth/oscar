@@ -39,23 +39,27 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
 public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     private static Log LOG = LogFactory.getLog(GenericIntakeEditAction.class);
+    private static FacilityDAO facilityDao=(FacilityDAO)SpringUtils.beanFactory.getBean("facilityDAO");    
 
     // Forwards
     private static final String EDIT = "edit";
@@ -93,10 +97,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(
                 intakeType), null, null, null);
-
+        
+        request.getSession().setAttribute("intakeCurrentBedCommunityId","");
+        
         ProgramUtils.addProgramRestrictions(request);
-
-        request.getSession().setAttribute("RFQ_ADMIT", true);
+        
+        //request.getSession().setAttribute("RFQ_ADMIT", true);
         request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
         
         return mapping.findForward(EDIT);
@@ -125,6 +131,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         formBean.setRemoteAgency(getRemoteAgency(request));
         formBean.setRemoteAgencyDemographicNo(getRemoteAgencyDemographicNo(request));
 
+        
         return mapping.findForward(EDIT);
     }
 
@@ -162,9 +169,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         // UCF -- intake accessment : please don't remove the following line
         request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
 
+        request.getSession().setAttribute("intakeCurrentBedCommunityId",getCurrentBedCommunityProgramId(clientId));
+        
         ProgramUtils.addProgramRestrictions(request);
 
-        request.getSession().setAttribute("RFQ_ADMIT", true);
+        //request.getSession().setAttribute("RFQ_ADMIT", true);
         request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
         
         return mapping.findForward(EDIT);
@@ -202,7 +211,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         Demographic client = formBean.getClient();
         String providerNo = getProviderNo(request);
 
-        request.getSession().setAttribute("RFQ_ADMIT", true);
+        //request.getSession().setAttribute("RFQ_ADMIT", true);
         request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
         
         try { 
@@ -219,22 +228,26 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             	// RFQ feature request: intake admit, sign  and save
             	// Don't allow to admit the client from one bed program to another bed program.
             	// Only allow to admit the client from the community program to the bed program.
-            	if("RFQ_admit".equals(saveWhich)) {
+            	/*if("RFQ_admit".equals(saveWhich)) {
             		if(oldId!=null && programManager.isBedProgram(oldId.toString())){
             			if(oldId.intValue()!=newId.intValue() && programManager.isBedProgram(newId.toString())) {
-            				request.getSession().setAttribute("RFQ_ADMIT", false);
-            				return mapping.findForward(EDIT);
+            				//request.getSession().setAttribute("RFQ_ADMIT", false);
+            				//setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),
+            		        //        getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()));
+            		              
+            				//return mapping.findForward(EDIT);
+            				
             			}
             		}
             	}
-            	
+        		*/
             	// RFQ : intake without admission , sign and save
-            	if("RFQ_notAdmit".equals(saveWhich)) {
-            		//not change in admission made for the client
+            	if("RFQ_notAdmit".equals(saveWhich) || "RFQ_temp".equals(saveWhich)) {
+            		//no change in admission made for the client
             		if( (oldId!=null && newId!=null && oldId.intValue() != newId.intValue()) ||
             				(oldId==null && newId!=null) ||
             				(oldId!=null && newId==null)) {
-            			request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",false);
+            			request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",false);            			    
             			return mapping.findForward(EDIT);
             		}
             	}           	
@@ -261,12 +274,18 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             	}
             	
             	intake.setIntakeLocation(intakeLocationId); 
+            	
+            	Facility currentFacility = (Facility)request.getSession().getAttribute("currentFacility");
+            	Integer currentFacilityId = currentFacility.getId();
+            	intake.setFacilityId(currentFacilityId);
             }
             
-            admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich);
+            if("RFQ_admit".equals(saveWhich) || "normal".equals(saveWhich)) {
+            	admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich);
             
-            if (!formBean.getSelectedServiceProgramIds().isEmpty()) {
-            	admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
+            	if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
+            		admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
+            	}
             }
             
             if("normal".equals(saveWhich)) {
@@ -317,6 +336,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),
                 getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()));
+        
+        request.getSession().setAttribute("intakeCurrentBedCommunityId",getCurrentBedCommunityProgramId(client.getDemographicNo()));
                 
         return mapping.findForward(EDIT);
     }
@@ -603,13 +624,14 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         }else{
         
 	        if (bedCommunityProgram != null) {
-	            if (currentBedCommunityProgramId == null) {
+	            if (currentBedCommunityProgramId == null) {	            	
 	                admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
 	            }
 	            else if (!currentBedCommunityProgramId.equals(bedCommunityProgramId)) {
 	                if (programManager.getProgram(currentBedCommunityProgramId).isBed()) {
 	                    if (bedCommunityProgram.isBed()) {
-	                        admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+	                        //automatic discharge from one bed program to another bed program.
+	                    	admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
 	                    }
 	                    else {
 	                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, clientId, providerNo, "intake discharge", "0");
@@ -690,6 +712,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             	formBean.setSelectedProgramInDomainId(Integer.valueOf(intakeLocation));
             }
         }
+       
     }
 
 }

@@ -196,7 +196,7 @@ public class ClientManagerAction extends BaseAction {
         boolean success = true;
 
         try {
-            admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents, false);
+            admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents, false, false);
         }
         catch (AdmissionException e) {
             ActionMessages messages = new ActionMessages();

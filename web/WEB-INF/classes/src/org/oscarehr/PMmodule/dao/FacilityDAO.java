@@ -42,4 +42,28 @@ public class FacilityDAO extends HibernateDaoSupport {
         getHibernateTemplate().flush();
         getHibernateTemplate().refresh(facility);
     }
+    
+    public List<Long> getDistinctFacilityIdsByProgramId(int programId)
+    {
+        // select program_id,facility_id from room;
+        
+        String sqlCommand="select distinct facility_id from room where room.program_id="+programId;
+        return(SqlUtils.selectLongList(sqlCommand));
+    }
+    
+    public List<Long> getDistinctProgramIdsByFacilityId(int facilityId) {
+    	String sqlCommand = "select distinct program_id from room where room.facility_id=" + facilityId;
+    	return(SqlUtils.selectLongList(sqlCommand));
+    }
+    
+       
+    public static  boolean facilityHasIntersection(List<Long> providersFacilityIds, List<Long> noteFacilities) {
+        for (Long id : noteFacilities) {
+            if (providersFacilityIds.contains(id)) return(true);
+        }
+        
+        return(false);
+    }
+
+
 }

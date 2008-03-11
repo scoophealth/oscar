@@ -87,6 +87,7 @@ public class Admission implements Serializable {
 	private String radioDischargeReason;
 	private boolean dischargeFromTransfer=false;
 	private boolean admissionFromTransfer=false;
+	private boolean automaticDischarge=false;
 	
 	public boolean isDischargeFromTransfer() {
         return dischargeFromTransfer;
@@ -449,7 +450,15 @@ public class Admission implements Serializable {
      */
     public void setRadioDischargeReason(String radioDischargeReason) {
     	this.radioDischargeReason = radioDischargeReason;
-    }
+    }    
+    
+	public boolean getAutomaticDischarge() {
+		return automaticDischarge;
+	}
+
+	public void setAutomaticDischarge(boolean automaticDischarge) {
+		this.automaticDischarge = automaticDischarge;
+	}
 
 	public boolean equals(Object obj) {
     	if (null == obj) return false;

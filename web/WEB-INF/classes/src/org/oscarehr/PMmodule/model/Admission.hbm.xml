@@ -43,7 +43,7 @@
 			length="24"
 			name="AdmissionStatus"
 			not-null="false"
-			type="string" />
+			type="string" />		
 		<property
 			column="client_id"
 			length="11"
@@ -120,6 +120,10 @@
 			name="ClientStatusId"
 			not-null="false"
 			type="integer" />	
+		<property 
+			column="automatic_discharge"
+			name="automaticDischarge"
+			/>	
 		<many-to-one
 			name="clientStatus"
 			class="org.oscarehr.PMmodule.model.ProgramClientStatus"

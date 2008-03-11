@@ -21,15 +21,19 @@
 */
 package org.oscarehr.PMmodule.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.util.SpringUtils;
 
 public class ProgramUtils
 {
-    private static ProgramDao programDao=(ProgramDao)SpringUtils.beanFactory.getBean("programDao");    
+    private static ProgramDao programDao=(ProgramDao)SpringUtils.beanFactory.getBean("programDao");
+    private static FacilityDAO facilityDao=(FacilityDAO)SpringUtils.beanFactory.getBean("facilityDAO");    
 
     /**
      * This method stores the program ids as javascript arrays of numbers in the session space grouped
@@ -41,12 +45,39 @@ public class ProgramUtils
     public static void addProgramRestrictions(HttpServletRequest request) {
         addProgramGenderRestrictions(request);
         addProgramAgeRestrictions(request);
+        intakeAdmitToNewFacilityValidation(request);
     }
     
     private static void addProgramAgeRestrictions(HttpServletRequest request) {
         request.getSession().setAttribute("programAgeValidationMethod", addProgramAgeRestrictionsMethod());
     }
 
+    private static void intakeAdmitToNewFacilityValidation(HttpServletRequest request) {
+    	request.getSession().setAttribute("admitToNewFacilityValidationMethod", admitToNewFacilityValidationMethod(request));
+    }
+    
+    public static String admitToNewFacilityValidationMethod(HttpServletRequest request) {
+        StringBuilder sb=new StringBuilder();
+        
+        sb.append("function isNewFacility(programId)\n");
+        sb.append("{\n");
+        
+        Integer oldProgramId = (Integer)request.getSession().getAttribute("intakeCurrentBedCommunityId");
+        //List<Long> facilityIds = facilityDao.getFacilityIdsByProgramId(Integer.valueOf(oldProgramId).intValue());
+        
+        
+        for (Long fId : facilityDao.getDistinctFacilityIdsByProgramId(oldProgramId.intValue())) {
+            for(Long pIds : facilityDao.getDistinctProgramIdsByFacilityId(fId.intValue())) {  
+            	sb.append("if (programId == "+pIds.intValue()+ ") { return(false); }\n");       
+        	}
+        }
+        
+        sb.append("return(true);\n");
+        sb.append("}\n");
+        
+        return(sb.toString());
+    }
+    
     public static String addProgramAgeRestrictionsMethod() {
         StringBuilder sb=new StringBuilder();
         

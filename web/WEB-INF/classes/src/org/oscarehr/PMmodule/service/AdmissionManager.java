@@ -156,18 +156,30 @@ public class AdmissionManager {
         }
                 
         boolean fromTransfer=false;
+        boolean hasIntersection=false;
+        boolean automaticDischarge=false;
         // If admitting to bed program, discharge from old bed program
 		if (program.getType().equalsIgnoreCase("bed") && !tempAdmission) {
 			Admission fullAdmission = getCurrentBedProgramAdmission(demographicNo);
 
 			// community?
 			if (fullAdmission != null) {
-			    
 			    Program oldProgram=programDao.getProgram(fullAdmission.getProgramId());
                 Program newProgram=programDao.getProgram(program.getId());
 			    fromTransfer=(oldProgram.getFacilityId()==newProgram.getFacilityId());			
 			    
-			    processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "", null, fromTransfer);
+			    
+			    List<Long> oldProgramFacilities=facilityDAO.getDistinctFacilityIdsByProgramId(fullAdmission.getProgramId());
+                List<Long> newProgramFacilities=facilityDAO.getDistinctFacilityIdsByProgramId(program.getId());                
+			    hasIntersection=FacilityDAO.facilityHasIntersection(oldProgramFacilities, newProgramFacilities);				
+			    
+			    //discharge from old bed program to a new bed program which is in the different facility
+			    //This is called automatic discharge.
+			    if(!hasIntersection)
+			    	automaticDischarge = true;
+			    
+			    //processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "", null, fromTransfer);
+			    processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "", null, fromTransfer,automaticDischarge);
 			} else {
 				fullAdmission = getCurrentCommunityProgramAdmission(demographicNo);
 				if (fullAdmission != null) {
@@ -337,10 +349,10 @@ public class AdmissionManager {
 	}
 
     public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason) throws AdmissionException {
-        processDischarge(programId, demographicNo, dischargeNotes, radioDischargeReason,null, false);
-    }
+        processDischarge(programId, demographicNo, dischargeNotes, radioDischargeReason,null, false, false);
+    }    
     
-    public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason,List<Long> dependents, boolean fromTransfer) throws AdmissionException {
+    public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason,List<Long> dependents, boolean fromTransfer, boolean automaticDischarge) throws AdmissionException {
 	
 		Admission fullAdmission = getCurrentAdmission(String.valueOf(programId), demographicNo);
 	
@@ -353,6 +365,8 @@ public class AdmissionManager {
 		fullAdmission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
 		fullAdmission.setRadioDischargeReason(radioDischargeReason);
 		fullAdmission.setDischargeFromTransfer(fromTransfer);
+		fullAdmission.setAutomaticDischarge(automaticDischarge);
+		
 		saveAdmission(fullAdmission);
 		
 		if(roomManager != null  &&  roomManager.isRoomOfDischargeProgramAssignedToClient(demographicNo, programId)){
@@ -375,7 +389,7 @@ public class AdmissionManager {
 		
         if (dependents != null){
             for(Long l:dependents){
-                processDischarge(programId,new Integer(l.intValue()),dischargeNotes,radioDischargeReason,null, fromTransfer);
+                processDischarge(programId,new Integer(l.intValue()),dischargeNotes,radioDischargeReason,null, fromTransfer, automaticDischarge);
             }
         }
     }
