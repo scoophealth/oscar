@@ -70,7 +70,7 @@ public class UnreadTicklerAction extends DispatchAction {
 		}
         CustomFilter filter = new CustomFilter();
         filter.setAssignee(providerNo);
-        Collection coll = ticklerMgr.getTicklers(filter);
+        Collection coll = ticklerMgr.getTicklers(filter, providerNo);
         if(oldNum != -1 && (coll.size() > oldNum)) {
         	request.setAttribute("difference",new Integer(coll.size() - oldNum));
         }

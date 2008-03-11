@@ -1,33 +1,37 @@
 /*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
+ * 
+ * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for 
+ * Centre for Research on Inner City Health, St. Michael's Hospital, 
+ * Toronto, Ontario, Canada 
+ */
 
 package org.caisi.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.caisi.dao.CustomFilterDAO;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.CustomFilter;
 import org.caisi.model.Tickler;
+import org.oscarehr.PMmodule.service.ProgramManager;
+
+import oscar.OscarProperties;
 
 /**
  */
@@ -35,6 +39,12 @@ public class TicklerManager {
 
     private TicklerDAO ticklerDAO = null;
     private CustomFilterDAO customFilterDAO = null;
+
+    private ProgramManager programManager = null;
+
+    public void setProgramManager(ProgramManager programManager) {
+        this.programManager = programManager;
+    }
 
     public void setTicklerDAO(TicklerDAO ticklerDAO) {
         this.ticklerDAO = ticklerDAO;
@@ -52,18 +62,36 @@ public class TicklerManager {
         return ticklerDAO.getTicklers();
     }
 
-    public List<Tickler> getTicklers(CustomFilter filter) {
-        return ticklerDAO.getTicklers(filter);
+    public List<Tickler> getTicklers(CustomFilter filter, String providerNo) {
+        List<Tickler> results = ticklerDAO.getTicklers(filter);
+
+        // filter based on facility
+        if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
+            results = ticklerFacilityFiltering(providerNo, results);
+        }
+
+        return(results);
     }
 
-    public int getActiveTicklerCount(String providerNo){
+    private List<Tickler> ticklerFacilityFiltering(String providerId, List<Tickler> ticklers) {
+        ArrayList<Tickler> results = new ArrayList<Tickler>();
+
+        for (Tickler tickler : ticklers) {
+            Integer programId = tickler.getProgram_id();
+            if (programManager.hasAccessBasedOnFacility(providerId, programId)) results.add(tickler);
+        }
+
+        return results;
+    }
+
+    public int getActiveTicklerCount(String providerNo) {
         return ticklerDAO.getActiveTicklerCount(providerNo);
     }
-    
-    public int getNumTicklers(CustomFilter filter){
+
+    public int getNumTicklers(CustomFilter filter) {
         return ticklerDAO.getNumTicklers(filter);
     }
-    
+
     public Tickler getTickler(String tickler_no) {
         Long id = Long.valueOf(tickler_no);
         return ticklerDAO.getTickler(id);
@@ -98,9 +126,9 @@ public class TicklerManager {
     public List getCustomFilters(String provider_no) {
         return customFilterDAO.getCustomFilters(provider_no);
     }
-    
-    public List getCustomFilterWithShortCut( String providerNo) {
-	return customFilterDAO.getCustomFilterWithShortCut(providerNo);
+
+    public List getCustomFilterWithShortCut(String providerNo) {
+        return customFilterDAO.getCustomFilterWithShortCut(providerNo);
     }
 
     public CustomFilter getCustomFilter(String name) {

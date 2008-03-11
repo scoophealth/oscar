@@ -23,7 +23,6 @@
 package org.caisi.tickler.web;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -136,27 +135,7 @@ public class TicklerAction extends DispatchAction {
         log.debug("filter");
         DynaActionForm ticklerForm = (DynaActionForm) form;
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
-        List<Tickler> ticklersTemp = ticklerMgr.getTicklers(filter);
-        List<Tickler> ticklers = new ArrayList<Tickler>();
-
-        // filter out any tickler is not in the provider's currently selected program
-
-        if (isModuleLoaded(request, "caisi")) {
-            String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
-            int programId=-1;
-            if (programIdStr!=null) programId=Integer.parseInt(programIdStr);
-            
-            for (Tickler tickler : ticklersTemp) {
-                // if the tickler has no program associated or if it is in the current program, show it.
-                if (tickler.getProgram_id()==null || tickler.getProgram_id().intValue() == programId)
-                {
-                    ticklers.add(tickler);
-                }
-            }
-        }
-        else {
-            ticklers=ticklersTemp;
-        }
+        List<Tickler> ticklers = ticklerMgr.getTicklers(filter, getProviderNo(request));
 
         List cf = ticklerMgr.getCustomFilters(this.getProviderNo(request));
         // make my tickler filter
@@ -207,7 +186,7 @@ public class TicklerAction extends DispatchAction {
         filter.setClient(null);
         filter.setAssignee((String) request.getSession().getAttribute("user"));
         filter.setDemographic_webName(null);
-        List ticklers = ticklerMgr.getTicklers(filter);
+        List ticklers = ticklerMgr.getTicklers(filter, getProviderNo(request));
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         request.setAttribute("demographics", demographicMgr.getDemographics());
