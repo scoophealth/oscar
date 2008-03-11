@@ -100,7 +100,7 @@ public class FacilityManagerAction extends BaseAction {
         request.setAttribute("orgList", lookupManager.LoadCodeList("OGN",true,null,null));
         
         //get agency's sector list from caisi editor table
-        request.setAttribute("sectorList", lookupManager.LoadCodeList("OGN", true, null, null));
+        request.setAttribute("sectorList", lookupManager.LoadCodeList("SEC", true, null, null));
         
         return mapping.findForward(FORWARD_EDIT);
     }
