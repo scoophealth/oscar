@@ -200,7 +200,7 @@ public class JdbcBillingReviewImpl {
 		}
 		else{
 	      sql = "select * from billing_on_cheader1 where demographic_no=" + demoNo + 
-	            "  and billing_date>=? and  and billing_date <=?" + 
+	            "  and billing_date>=? and billing_date <=?" + 
 				" and status!='D' order by billing_date desc, billing_time desc, id desc ";// + strLimit;
 	      rs = dbPH.queryResults_paged(sql, pDateRange, iOffSet);
 		}	
