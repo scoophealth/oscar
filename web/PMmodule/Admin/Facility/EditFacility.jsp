@@ -4,6 +4,17 @@
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/validation.js">
 </script>
+<script type="text/javascript">
+	function validateForm()
+	{
+		if (bCancel == true) 
+			return confirm("Do you really want to Cancel?");
+		var isOk = false;
+		isOk = validateRequiredField('facilityName', 'Facility Name', 32);
+		if (isOk) isOk = validateRequiredField('facilityDesc', 'Facility Description', 70);
+		return isOk;
+	}
+</script>
 <!-- don't close in 1 statement, will break IE7 -->
 
 
@@ -15,7 +26,7 @@
     </table>
 </div>
 
-<html:form action="/PMmodule/FacilityManager.do" onsubmit="return validateRequiredField('facilityName', 'Name', 32)">
+<html:form action="/PMmodule/FacilityManager.do" onsubmit="return validateForm();">
     <html:hidden property="agencyId"/>
     <input type="hidden" name="method" value="save" />
     <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -29,8 +40,8 @@
             <td><html:text property="facility.name" size="32" maxlength="32" styleId="facilityName" /></td>
         </tr>
         <tr class="b">
-            <td width="20%">Description:</td>
-            <td><html:text property="facility.description" size="70" maxlength="70"/></td>
+            <td width="20%">Description: *</td>
+            <td><html:text property="facility.description" size="70" maxlength="70" styleId="facilityDesc" /></td>
         </tr>
         <tr class="b">
             <td width="20%">HIC:</td>
@@ -93,7 +104,7 @@
         <tr>
             <td colspan="2">
                 <html:submit property="submit.save">Save</html:submit>
-                <html:cancel property="submit.cancel">Cancel</html:cancel>
+                <html:cancel>Cancel</html:cancel>
             </td>
         </tr>
     </table>
