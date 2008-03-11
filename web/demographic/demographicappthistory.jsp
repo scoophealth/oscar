@@ -177,7 +177,7 @@ function refresh() {
       <td align="center"><%=apptMainBean.getString(rs,"end_time")%></td>
       <td><%=apptMainBean.getString(rs,"reason")%></td>
       <td><%=apptMainBean.getString(rs,"last_name")+","+apptMainBean.getString(rs,"first_name")%></td>
-      <td>&nbsp;<%=apptMainBean.getString(rs,"status")==null?"":(apptMainBean.getString(rs,"status").equals("N")?"No Show":(apptMainBean.getString(rs,"status").equals("C")?"Cancelled":"") ) %></td>
+      <td>&nbsp;<%=apptMainBean.getString(rs,"status")==null?"":(apptMainBean.getString(rs,"status").contains("N")?"No Show":(apptMainBean.getString(rs,"status").equals("C")?"Cancelled":"") ) %></td>
 </tr>
 <%
     }
