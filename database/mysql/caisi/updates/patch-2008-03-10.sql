@@ -1,6 +1,8 @@
 alter table caisi_form_instance add column program_id int after client_id;
 alter table caisi_form_instance_tmpsave add column program_id int after client_id;
 alter table casemgmt_issue add column program_id int after resolved;
+alter table relationships add column facility_id int after id;
+
 
 insert into `secObjectName` values('_pmm_editProgram.general');
 insert into `secObjectName` values('_pmm_editProgram.staff');
