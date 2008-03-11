@@ -376,17 +376,8 @@
     </bean>
     <bean id="programManager" parent="baseTransactionProxy">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.ProgramManager">
-                <property name="programDao" ref="programDao"/>
-                <property name="programProviderDAO" ref="programProviderDAO"/>
-                <property name="programFunctionalUserDAO" ref="programFunctionalUserDAO"/>
-                <property name="programTeamDAO" ref="programTeamDAO"/>
-                <property name="programAccessDAO" ref="programAccessDAO"/>
-                <property name="admissionDAO" ref="admissionDao"/>
-                <property name="defaultRoleAccessDAO" ref="defaultRoleAccessDAO"/>
-                <property name="programClientStatusDAO" ref="programClientStatusDAO"/>
+            <bean class="org.oscarehr.PMmodule.service.ProgramManager" autowire="byName">
                 <property name="enabled" value="${pmm.refer.temporaryAdmission.enabled}"/>
-                <property name="programSignatureDao" ref="programSignatureDao"/>
             </bean>
         </property>
     </bean>
@@ -397,7 +388,6 @@
                 <property name="clientReferralDAO" ref="clientReferralDAO"/>
                 <property name="jointAdmissionDAO" ref="jointAdmissionDAO"/>
                 <property name="programQueueManager" ref="programQueueManager"/>
-                <property name="integratorManager" ref="integratorManager"/>
                 <property name="admissionManager" ref="admissionManager"/>
                 <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
                 <property name="outsideOfDomainEnabled" value="${pmm.client.search.outside.of.domain.enabled}"/>

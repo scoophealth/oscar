@@ -60,7 +60,7 @@ public class ProgramManager {
 	private ProgramFunctionalUserDAO programFunctionalUserDAO;
 	private ProgramTeamDAO programTeamDAO;
 	private ProgramAccessDAO programAccessDAO;
-	private AdmissionDao admissionDAO;
+	private AdmissionDao admissionDao;
 	private DefaultRoleAccessDAO defaultRoleAccessDAO;
 	private ProgramClientStatusDAO clientStatusDAO;
 	private ProgramSignatureDao programSignatureDao;
@@ -108,8 +108,8 @@ public class ProgramManager {
 		this.programAccessDAO = dao;
 	}
 
-	public void setAdmissionDAO(AdmissionDao dao) {
-		this.admissionDAO = dao;
+	public void setAdmissionDao(AdmissionDao dao) {
+		this.admissionDao = dao;
 	}
 
 	public void setDefaultRoleAccessDAO(DefaultRoleAccessDAO dao) {
@@ -320,7 +320,7 @@ public class ProgramManager {
 	}
 
 	public List getAllClientsInTeam(Integer programId, Integer teamId) {
-		return this.admissionDAO.getAdmissionsInTeam(programId, teamId);
+		return admissionDao.getAdmissionsInTeam(programId, teamId);
 	}
 
 	public List search(Program criteria) {
