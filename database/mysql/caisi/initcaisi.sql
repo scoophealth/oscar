@@ -34,6 +34,7 @@ CREATE TABLE `admission` (
   `agency_id` int(11) default '0',
   `radioDischargeReason` varchar(10) default '0',
   `clientstatus_id` bigint(20) DEFAULT 0,
+  `automatic_discharge` tinyint(1) default 0,
   PRIMARY KEY  (`am_id`),
   KEY `FK1A21809DAA8624B` (`team_id`)
 );
@@ -1617,6 +1618,7 @@ CREATE TABLE `intake` (
   `creation_date` datetime NOT NULL,
   `intake_status` varchar(10) not null default 'Signed',
   `intake_location` int(10) default 0,
+  `facility_id` int(11),
   PRIMARY KEY  (`intake_id`),
   KEY `IDX_intake_intake_node` (`intake_node_id`),
   KEY `IDX_intake_client_creation_date` (`client_id`,`creation_date`),
