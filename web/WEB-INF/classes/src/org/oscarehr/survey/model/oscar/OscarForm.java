@@ -27,6 +27,7 @@ public class OscarForm {
 	public static final short STATUS_INACTIVE	= 2;
 	
 	private Long formId;
+	private Integer facilityId;
     private String description;
 	private String surveyData;
 	private short status;
@@ -63,4 +64,11 @@ public class OscarForm {
 	public void setFormId(Long formId) {
 		this.formId = formId;
 	}
+    public Integer getFacilityId() {
+        return facilityId;
+    }
+    public void setFacilityId(Integer facilityId) {
+        this.facilityId = facilityId;
+    }
+	
 }

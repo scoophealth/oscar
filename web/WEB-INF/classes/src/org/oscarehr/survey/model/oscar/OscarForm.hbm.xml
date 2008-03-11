@@ -21,6 +21,7 @@
 		<id name="formId" column="form_id" unsaved-value="0">
 			<generator class="native" />
 		</id>
+		<property name="facilityId" />
 		<property name="description" type="string" />
 		<property name="surveyData" type="text" />
 		<property name="status" type="short" />

@@ -295,7 +295,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             }
 
             // UCF
-            request.setAttribute("survey_list", surveyMgr.getAllForms());
+            request.setAttribute("survey_list", surveyMgr.getAllForms(currentFacilityId));
             // request.setAttribute("surveys", surveyManager.getForms(demographicNo));
 
             // remote issues

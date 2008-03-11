@@ -33,6 +33,7 @@ import org.oscarehr.surveymodel.SurveyDocument;
 
 public interface SurveyManager {
 	public List getAllForms();
+    public List getAllForms(Integer facilityId);
 	public OscarForm getForm(String formId);
 	public void saveFormInstance(OscarFormInstance instance);
 	public void saveFormInstanceTmpsave(OscarFormInstanceTmpsave instance);

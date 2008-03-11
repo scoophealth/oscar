@@ -50,9 +50,14 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 		this.surveyDAO = dao;
 	}
 	
-	public List getAllForms() {
+	public List<OscarForm> getAllForms() {
 		return surveyDAO.getAllForms();
 	}
+
+    public List<OscarForm> getAllForms(Integer facilityId) {
+        return surveyDAO.getAllForms(facilityId);
+    }
+	
 	public OscarForm getForm(String formId) {
 		return surveyDAO.getForm(Long.valueOf(formId));
 	}

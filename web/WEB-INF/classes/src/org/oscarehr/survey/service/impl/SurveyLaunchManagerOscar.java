@@ -44,6 +44,7 @@ public class SurveyLaunchManagerOscar implements SurveyLaunchManager {
 		form.setDescription(survey.getDescription());
 		form.setSurveyData(survey.getSurveyData());
 		form.setStatus(OscarForm.STATUS_ACTIVE);
+		form.setFacilityId(survey.getFacilityId());
 		
 		oscarFormDAO.saveOscarForm(form);
 		

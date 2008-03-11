@@ -157,6 +157,7 @@ CREATE TABLE `bed_type` (
 DROP TABLE IF EXISTS `caisi_form`;
 CREATE TABLE `caisi_form` (
   `form_id` bigint(20) NOT NULL auto_increment,
+  facility_id int,
   `description` varchar(255) default NULL,
   `surveyData` text,
   `status` smallint(6) default NULL,
