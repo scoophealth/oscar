@@ -253,20 +253,20 @@ public class CaseManagementManager {
         return notes;
     }
 
-    public List getIssues(String providerNo, String demographic_no) {
+    public List<CaseManagementIssue> getIssues(String providerNo, String demographic_no) {
         return caseManagementIssueDAO.getIssuesByDemographicOrderActive(demographic_no);
 
     }
 
-    public List getActiveIssues(String providerNo, String demographic_no) {
+    public List<CaseManagementIssue> getActiveIssues(String providerNo, String demographic_no) {
         return caseManagementIssueDAO.getActiveIssuesByDemographic(demographic_no);
     }
 
-    public List getIssues(String providerNo, String demographic_no, List accessRight) {
+    public List<CaseManagementIssue> getIssues(String providerNo, String demographic_no, List accessRight) {
         return filterIssueList(getIssues(providerNo, demographic_no), providerNo, accessRight);
     }
 
-    public List getActiveIssues(String providerNo, String demographic_no, List accessRight) {
+    public List<CaseManagementIssue> getActiveIssues(String providerNo, String demographic_no, List accessRight) {
         return filterIssueList(getActiveIssues(providerNo, demographic_no), providerNo, accessRight);
     }
 
