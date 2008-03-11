@@ -134,6 +134,12 @@ function validateEdit() {
 		{
 			return error(year, "The birth date you entered is not a valid date.");
 		}
+	
+	
+		if(isNewFacility(programId) ) 
+		{							
+			return window.confirm("The client is currently admitted in another facility. Admitting into your facility will result in an automatic discharge from that other facility. As an alternative to this, it is recommended that you perform a temporary save of this intake or an intake without admission and contact the other facility so that they can make a discharge before you admit this client.\n Do you still wish to automatically discharge this client from the other facility and admit into this program? ");
+		} 
 		
 	<%
 		
