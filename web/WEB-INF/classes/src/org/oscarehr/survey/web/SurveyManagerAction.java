@@ -62,6 +62,7 @@ import org.oscarehr.surveymodel.Section;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.surveymodel.PossibleAnswersDocument.PossibleAnswers;
 import org.oscarehr.surveymodel.SelectDocument.Select;
+import org.oscarehr.util.SessionConstants;
 
 
 
@@ -811,6 +812,9 @@ public class SurveyManagerAction extends AbstractSurveyAction {
             survey.setDateCreated(new Date());
         }
     
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        survey.setFacilityId(currentFacilityId);
+        
         survey.setUserId(Long.valueOf((String)request.getSession().getAttribute("user")));
         
         try {

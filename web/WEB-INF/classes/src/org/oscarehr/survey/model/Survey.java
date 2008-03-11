@@ -35,6 +35,7 @@ public class Survey extends BaseObject {
     private String description;
 	private String surveyData;
     private Long userId;
+    private Integer facilityId;
     private Short status;
     private Date dateCreated;
     private Date dateLaunched;
@@ -163,6 +164,12 @@ public class Survey extends BaseObject {
 	public void setLaunchedInstanceId(long launchedInstanceId) {
 		this.launchedInstanceId = launchedInstanceId;
 	}
+    public Integer getFacilityId() {
+        return facilityId;
+    }
+    public void setFacilityId(Integer facilityId) {
+        this.facilityId = facilityId;
+    }
     
 	
 }

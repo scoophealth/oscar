@@ -1896,6 +1896,7 @@ CREATE TABLE `survey` (
   `surveyData` text,
   `status` smallint(6) default NULL,
   `userId` bigint(20) default NULL,
+  facilityId int,
   `dateCreated` datetime default NULL,
   `dateLaunched` datetime default NULL,
   `dateClosed` datetime default NULL,

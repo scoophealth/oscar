@@ -26,6 +26,7 @@
 		<property name="version" />
 		<property name="status" type="short" />
 		<property name="userId" type="long" />
+		<property name="facilityId" />
 		<property name="dateCreated" type="timestamp" />
 		<property name="dateLaunched" type="timestamp" />
 		<property name="dateClosed" type="timestamp" />
