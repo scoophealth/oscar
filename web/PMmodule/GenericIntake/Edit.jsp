@@ -47,11 +47,13 @@
         var programFemaleOnly =<%=session.getAttribute("programFemaleOnly")%>;
         var programTransgenderOnly =<%=session.getAttribute("programTransgenderOnly")%>;
 
-		var RFQ_Admit = <%=session.getAttribute("RFQ_ADMIT") %>;
 		var RFQ_INTAKE_ADMISSION = <%=session.getAttribute("RFQ_INTAKE_ADMISSION")%>;
 		
+		var currentBedCommunityId = <%=session.getAttribute("intakeCurrentBedCommunityId")%>;
+		
 		<%=session.getAttribute("programAgeValidationMethod")%>
-
+		<%=session.getAttribute("admitToNewFacilityValidationMethod")%>
+		
         // -->
 
         function openSurvey(ctl) {
@@ -72,13 +74,9 @@
             window.open(page, "", windowprops);
         }
         
-        function init_intake() {        
-        	if(RFQ_Admit == false) {
-        		alert("Client must first be discharged from their current bed program before you can admit them to a new bed program or residence location.");
-        	} else {
-        		if(RFQ_INTAKE_ADMISSION == false) {
-        			alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
-        		}    
+        function init_intake() {   
+        	if(RFQ_INTAKE_ADMISSION == false) {
+        		alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
         	}	   	
         }
     </script>
