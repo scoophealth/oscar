@@ -25,6 +25,7 @@ package org.oscarehr.PMmodule.dao;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -33,6 +34,7 @@ import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;
@@ -435,11 +437,34 @@ public class ProgramDao extends HibernateDaoSupport {
         return(SqlUtils.selectInt(sqlCommand));
     }
     
+    @Deprecated
     public List<Integer> getProgramIdsByProviderId(int provider_id)
     {
         // select provider_no,program_provider.program_id from program_provider;
 
         String sqlCommand="select program_id from program_provider where provider_no="+provider_id;
         return(SqlUtils.selectIntList(sqlCommand));
+    }
+
+    public List<Integer> getProgramIdsByProviderId(String provider_id)
+    {
+        // select provider_no,program_provider.program_id from program_provider;
+
+        String sqlCommand="select program_id from program_provider where provider_no='"+provider_id+'\'';
+        return(SqlUtils.selectIntList(sqlCommand));
+    }
+
+    private static TimeClearedHashMap<String, List<Integer>> programIdsByProviderIdCache=new TimeClearedHashMap<String, List<Integer>>(DateUtils.MILLIS_PER_MINUTE*5, DateUtils.MILLIS_PER_MINUTE);
+    public List<Integer> getCachedProgramIdsByProviderId(String provider_id)
+    {
+        List<Integer> results=programIdsByProviderIdCache.get(provider_id);
+        
+        if (results==null)
+        {
+            results=getProgramIdsByProviderId(provider_id);
+            programIdsByProviderIdCache.put(provider_id, results);
+        }
+        
+        return(results);
     }
 }

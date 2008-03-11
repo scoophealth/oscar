@@ -149,8 +149,8 @@ public class AdmissionManager {
 
 			// community?
 			if (fullAdmission != null) {
-			    List<Long> oldProgramFacilities=facilityDAO.getFacilityIdsByProgramId(fullAdmission.getProgramId());
-                List<Long> newProgramFacilities=facilityDAO.getFacilityIdsByProgramId(program.getId());
+			    List<Integer> oldProgramFacilities=facilityDAO.getFacilityIdsByProgramId(fullAdmission.getProgramId());
+                List<Integer> newProgramFacilities=facilityDAO.getFacilityIdsByProgramId(program.getId());
                 
 			    fromTransfer=FacilityDAO.facilityHasIntersection(oldProgramFacilities, newProgramFacilities);				
 			    

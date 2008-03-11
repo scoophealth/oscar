@@ -48,11 +48,11 @@ import org.caisi.model.CustomFilter;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
@@ -225,7 +225,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         /* ISSUES */
 
         if (tab.equals("Current Issues")) {
-            List issues = null;
+            List<CaseManagementIssue> issues = null;
             if (!caseForm.getHideActiveIssue().equals("true")) {
                 issues = caseManagementMgr.getIssues(providerNo, this.getDemographicNo(request));
             }
@@ -238,11 +238,19 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             current = System.currentTimeMillis();
             log.debug("GET ISSUES " + String.valueOf(current - start));
             start = current;
-            request.setAttribute("Issues", caseManagementMgr.filterIssues(issues, providerNo, programId));
+            issues=caseManagementMgr.filterIssues(issues, providerNo, programId);
             current = System.currentTimeMillis();
             log.debug("FILTER ISSUES " + String.valueOf(current - start));
             start = current;
 
+            // filter issues based on facility
+            if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
+                issues = issuesFacilityFiltering(getProviderNo(request), issues);
+            }
+
+            request.setAttribute("Issues", issues);
+
+            
             /* PROGRESS NOTES */
             List<CaseManagementNote> notes = null;
 
@@ -286,9 +294,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             String[] roleId = caseForm.getFilter_roles();
             if (roleId != null && roleId.length > 0) notes = applyRoleFilter(notes, roleId);
 
-            // RFQ style filtering, probably not wanted by anyone else on earth.
+            // filter notes based on facility
             if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-                notes = facilityFiltering(getProviderId(request), notes);
+                notes = notesFacilityFiltering(getProviderNo(request), notes);
             }
 
             this.caseManagementMgr.getEditors(notes);
@@ -400,31 +408,24 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
     }
 
-    private List<CaseManagementNote> facilityFiltering(int providerNo, List<CaseManagementNote> notes) {
+    private List<CaseManagementIssue> issuesFacilityFiltering(String providerId, List<CaseManagementIssue> issues) {
+        ArrayList<CaseManagementIssue> results = new ArrayList<CaseManagementIssue>();
 
-        // This method should do the funny filtering by facility, it's a twisted algorithm
-        // which I won't try to explain but it's origin is the Toronto RFQ so... go figure.
+        for (CaseManagementIssue caseManagementIssue : issues) {
+            Integer programId = caseManagementIssue.getProgram_id();
+            if (programMgr.hasAccessBasedOnFacility(providerId, programId)) results.add(caseManagementIssue);
+        }
+
+        return results;
+    }
+
+    private List<CaseManagementNote> notesFacilityFiltering(String providerNo, List<CaseManagementNote> notes) {
 
         ArrayList<CaseManagementNote> results = new ArrayList<CaseManagementNote>();
-        List<Long> providersFacilityIds = facilityDAO.getFacilityIdsByProviderId(providerNo);
-        List<Integer> providersProgramIds = programDao.getProgramIdsByProviderId(providerNo);
 
         for (CaseManagementNote caseManagementNote : notes) {
-            // do some filtering here
             String programId = caseManagementNote.getProgram_no();
-            Program program = programMgr.getProgram(programId);
-
-            if (Program.BED_TYPE.equals(program.getType())) {
-                List<Long> noteFacilities = facilityDAO.getFacilityIdsByNoteId(caseManagementNote.getId());
-                if (FacilityDAO.facilityHasIntersection(providersFacilityIds, noteFacilities)) results.add(caseManagementNote);
-            }
-            else if (Program.SERVICE_TYPE.equals(program.getType())) {
-                int programIdOfNote=programDao.getProgramIdByNoteId(caseManagementNote.getId());
-                if (providersProgramIds.contains(programIdOfNote)) results.add(caseManagementNote);
-            }
-            else {
-                // don't add it at all. if in doubt don't show note, that's more secure than if in doubt show it.
-            }
+            if (programId==null || programMgr.hasAccessBasedOnFacility(providerNo, Integer.parseInt(programId))) results.add(caseManagementNote);
         }
 
         return results;

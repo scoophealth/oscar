@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.DefaultRoleAccessDAO;
+import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramClientStatusDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
@@ -54,16 +55,20 @@ public class ProgramManager {
 	
 	private static Log log = LogFactory.getLog(ProgramManager.class);
 
-	private ProgramDao dao;
+	private ProgramDao programDao;
 	private ProgramProviderDAO programProviderDAO;
 	private ProgramFunctionalUserDAO programFunctionalUserDAO;
 	private ProgramTeamDAO programTeamDAO;
 	private ProgramAccessDAO programAccessDAO;
 	private AdmissionDao admissionDAO;
-	private IntegratorManager integratorManager;
 	private DefaultRoleAccessDAO defaultRoleAccessDAO;
 	private ProgramClientStatusDAO clientStatusDAO;
 	private ProgramSignatureDao programSignatureDao;
+    private FacilityDAO facilityDAO = null;
+
+    public void setFacilityDAO(FacilityDAO facilityDAO) {
+        this.facilityDAO = facilityDAO;
+    }
 	
 	private boolean enabled;
 	
@@ -83,12 +88,8 @@ public class ProgramManager {
 		this.programSignatureDao = programSignatureDao;
 	}
 
-	public void setIntegratorManager(IntegratorManager mgr) {
-		this.integratorManager = mgr;
-	}
-
 	public void setProgramDao(ProgramDao dao) {
-		this.dao = dao;
+		this.programDao = dao;
 	}
 
 	public void setProgramProviderDAO(ProgramProviderDAO dao) {
@@ -120,15 +121,15 @@ public class ProgramManager {
 	}
 	
 	public Program getProgram(String programId) {
-		return dao.getProgram(Integer.valueOf(programId));
+		return programDao.getProgram(Integer.valueOf(programId));
 	}
 
 	public Program getProgram(Integer programId) {
-		return dao.getProgram(programId);
+		return programDao.getProgram(programId);
 	}
 
 	public Program getProgram(Long programId) {
-		return dao.getProgram(new Integer(programId.intValue()));
+		return programDao.getProgram(new Integer(programId.intValue()));
 	}
 
 	public Program getProgram(Long agencyId, String programId) {
@@ -147,58 +148,58 @@ public class ProgramManager {
 	}
 
 	public String getProgramName(String programId) {
-		return dao.getProgramName(Integer.valueOf(programId));
+		return programDao.getProgramName(Integer.valueOf(programId));
 	}
 
 	public List<Program> getAllPrograms() {
-		return dao.getAllPrograms();
+		return programDao.getAllPrograms();
 	}
     public List <Program> getAllPrograms(String programStatus, String type, long facilityId)
     {
-    	return dao.getAllPrograms(programStatus,type,facilityId);
+    	return programDao.getAllPrograms(programStatus,type,facilityId);
     }
 
 	public List<Program> getProgramsByAgencyId(String agencyId) {
-		return dao.getProgramsByAgencyId(agencyId);
+		return programDao.getProgramsByAgencyId(agencyId);
 	}
 
 	public Program[] getBedPrograms() {
-		return dao.getBedPrograms();
+		return programDao.getBedPrograms();
 	}
 	
 	public Program[] getBedPrograms(Integer facilityId) {
-		return dao.getBedPrograms(facilityId);
+		return programDao.getBedPrograms(facilityId);
 	}
 
 	public List getServicePrograms() {
-		return dao.getServicePrograms();
+		return programDao.getServicePrograms();
 	}
 
 	public Program[] getExternalPrograms() {
-		return dao.getExternalPrograms();
+		return programDao.getExternalPrograms();
 	}
 	
 	public boolean isBedProgram(String programId) {
-		return dao.isBedProgram(Integer.valueOf(programId));
+		return programDao.isBedProgram(Integer.valueOf(programId));
 	}
 
 	public boolean isServiceProgram(String programId) {
-		return dao.isServiceProgram(Integer.valueOf(programId));
+		return programDao.isServiceProgram(Integer.valueOf(programId));
 	}
 
 	public boolean isCommunityProgram(String programId) {
-		return dao.isCommunityProgram(Integer.valueOf(programId));
+		return programDao.isCommunityProgram(Integer.valueOf(programId));
 	}
 
 	public void saveProgram(Program program) {
 		if (program.getHoldingTank()) {
-			dao.resetHoldingTank();
+			programDao.resetHoldingTank();
 		}
-		dao.saveProgram(program);
+		programDao.saveProgram(program);
 	}
 
 	public void removeProgram(String programId) {
-		dao.removeProgram(Integer.valueOf(programId));
+		programDao.removeProgram(Integer.valueOf(programId));
 	}
 
 	// TODO: Implement this method for real
@@ -323,11 +324,11 @@ public class ProgramManager {
 	}
 
 	public List search(Program criteria) {
-		return this.dao.search(criteria);
+		return this.programDao.search(criteria);
 	}
 
 	public Program getHoldingTankProgram() {
-		return this.dao.getHoldingTankProgram();
+		return this.programDao.getHoldingTankProgram();
 	}
 
 	public ProgramAccess getProgramAccess(String programId, String accessTypeId) {
@@ -336,7 +337,7 @@ public class ProgramManager {
 
 	// nys
 	public Long getAgencyIdByProgramId(String programId) {
-		Program p = dao.getProgram(Integer.valueOf(programId));
+		Program p = programDao.getProgram(Integer.valueOf(programId));
 		Long pp = p.getAgencyId();
 		return pp;
 	}
@@ -353,13 +354,13 @@ public class ProgramManager {
 	}
 
 	public Program[] getCommunityPrograms() {
-		return dao.getCommunityPrograms();
+		return programDao.getCommunityPrograms();
 	}
 	
 	public List getProgramBeans(String providerNo) {		
 		if (providerNo==null||"".equalsIgnoreCase(providerNo.trim())) return new ArrayList();
 		ArrayList pList = new ArrayList();
-		Program[] program = dao.getCommunityPrograms();
+		Program[] program = programDao.getCommunityPrograms();
 		for(int i=0; i<program.length; i++){
 			pList.add(new LabelValueBean(program[i].getName(),program[i].getId().toString()));
 		}
@@ -435,4 +436,32 @@ public class ProgramManager {
 	public void saveProgramSignature(ProgramSignature programSignature) {
 		programSignatureDao.saveProgramSignature(programSignature);
 	}
+	
+	/**
+	 * This method returns true if the provider is authorised to see items of this programId
+	 * based on facility filtering.
+	 * @param programId is allowed to be null.
+	 */
+    public boolean hasAccessBasedOnFacility(String providerNo, Integer programId) {
+
+        // if no program restrictions are defined.
+        if (programId==null) return(true);
+        
+        // if they're in the programs then just short circuit.
+        List<Integer> providersProgramIds = programDao.getCachedProgramIdsByProviderId(providerNo);
+        if (providersProgramIds.contains(programId)) return(true);
+        
+        // check the providers facilities against the programs facilities
+        List<Integer> providersFacilityIds = facilityDAO.getCachedFacilityIdsByProviderId(providerNo);
+        Program program = getProgram(programId);
+
+        // we only have to deal with bed programs cuz if it's a service program
+        // then it must be in the providers program list before we add it and that's done above.
+        if (Program.BED_TYPE.equals(program.getType())) {
+            List<Integer> programFacilities = facilityDAO.getCachedFacilityIdsByProgramId(programId);
+            if (FacilityDAO.facilityHasIntersection(providersFacilityIds, programFacilities)) return(true);
+        }
+
+        return(false);
+    }
 }

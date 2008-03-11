@@ -120,6 +120,7 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 		return providerNo;
 	}
 	
+	@Deprecated
     public int getProviderId(HttpServletRequest request){
         return(Integer.parseInt(getProviderNo(request)));
     }
