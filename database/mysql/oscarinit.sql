@@ -7264,3 +7264,17 @@ CREATE TABLE `providerbillcenter` (
   `billcenter_code` char(2) NOT NULL default '""',
   PRIMARY KEY  (`provider_no`)
 ) ENGINE=MyISAM ;
+
+--
+-- Needed by Program Managaer
+--
+
+create table provider_facility
+(
+	provider_id int not null,
+	facility_id int not null,
+	unique (provider_id, facility_id),
+	index (facility_id)
+--	foreign key (provider_id) references provider(provider_no),
+--	foreign key (facility_id) references facility(id),
+);
