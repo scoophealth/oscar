@@ -1,0 +1,1 @@
+alter table client_referral add facility_id number(10);
