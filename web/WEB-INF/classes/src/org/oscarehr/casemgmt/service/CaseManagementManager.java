@@ -30,13 +30,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.struts.util.LabelValueBean;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -48,6 +45,7 @@ import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.casemgmt.dao.AllergyDAO;
 import org.oscarehr.casemgmt.dao.ApptDAO;
@@ -58,25 +56,27 @@ import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.dao.EchartDAO;
 import org.oscarehr.casemgmt.dao.EncounterFormDAO;
+import org.oscarehr.casemgmt.dao.EncounterWindowDAO;
+import org.oscarehr.casemgmt.dao.HashAuditDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.dao.MessagetblDAO;
 import org.oscarehr.casemgmt.dao.PrescriptionDAO;
 import org.oscarehr.casemgmt.dao.ProviderSignitureDao;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
-import org.oscarehr.casemgmt.dao.HashAuditDAO;
-import org.oscarehr.casemgmt.dao.EncounterWindowDAO;
-import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
+import org.oscarehr.casemgmt.model.EncounterWindow;
+import org.oscarehr.casemgmt.model.HashAuditImpl;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
-import org.oscarehr.casemgmt.model.HashAuditImpl;
-import org.oscarehr.casemgmt.model.EncounterWindow;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+
+import oscar.OscarProperties;
 
 public class CaseManagementManager {
 
@@ -104,6 +104,12 @@ public class CaseManagementManager {
     protected UserPropertyDAO userPropertyDAO;
    
     private boolean enabled;
+
+    private ProgramManager programManager = null;
+    public void setProgramManager(ProgramManager programManager) {
+        this.programManager = programManager;
+    }
+
 
     //retrieve list of providers who have edited specific note
     public void getEditors(CaseManagementNote note) {
@@ -828,6 +834,12 @@ public class CaseManagementManager {
                 filteredNotes.add(cmNote);
             }
         }
+        
+        // filter notes based on facility
+        if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
+            filteredNotes = notesFacilityFiltering(providerNo, filteredNotes);
+        }
+
         return filteredNotes;
     }
 
@@ -968,9 +980,38 @@ public class CaseManagementManager {
                 filteredIssues.add(cmIssue);
             }
         }
+        
+        // filter issues based on facility
+        if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
+            filteredIssues = issuesFacilityFiltering(providerNo, filteredIssues);
+        }
+
         return filteredIssues;
     }
 
+    private List<CaseManagementIssue> issuesFacilityFiltering(String providerId, List<CaseManagementIssue> issues) {
+        ArrayList<CaseManagementIssue> results = new ArrayList<CaseManagementIssue>();
+
+        for (CaseManagementIssue caseManagementIssue : issues) {
+            Integer programId = caseManagementIssue.getProgram_id();
+            if (programManager.hasAccessBasedOnFacility(providerId, programId)) results.add(caseManagementIssue);
+        }
+
+        return results;
+    }
+
+    private List<CaseManagementNote> notesFacilityFiltering(String providerNo, List<CaseManagementNote> notes) {
+
+        ArrayList<CaseManagementNote> results = new ArrayList<CaseManagementNote>();
+
+        for (CaseManagementNote caseManagementNote : notes) {
+            String programId = caseManagementNote.getProgram_no();
+            if (programId==null || programManager.hasAccessBasedOnFacility(providerNo, Integer.parseInt(programId))) results.add(caseManagementNote);
+        }
+
+        return results;
+    }
+    
     public void saveNoteSimple(CaseManagementNote note) {
         this.caseManagementNoteDAO.saveNote(note);
     }

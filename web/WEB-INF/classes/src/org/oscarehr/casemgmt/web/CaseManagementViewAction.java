@@ -45,8 +45,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.caisi.integrator.message.demographics.GetIssuesNotesResponse;
 import org.caisi.model.CustomFilter;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
-import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -60,27 +58,16 @@ import org.oscarehr.casemgmt.model.EncounterWindow;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.model.UserProperty;
 
-import oscar.OscarProperties;
 import oscar.oscarRx.pageUtil.RxSessionBean;
 
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
     private static Log log = LogFactory.getLog(CaseManagementViewAction.class);
 
-    private ProgramDao programDao = null;
-    private FacilityDAO facilityDAO = null;
     private IntegratorManager integratorManager = null;
 
     public void setIntegratorManager(IntegratorManager integratorManager) {
         this.integratorManager = integratorManager;
-    }
-
-    public void setFacilityDAO(FacilityDAO facilityDAO) {
-        this.facilityDAO = facilityDAO;
-    }
-
-    public void setProgramDao(ProgramDao programDao) {
-        this.programDao = programDao;
     }
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -243,11 +230,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             log.debug("FILTER ISSUES " + String.valueOf(current - start));
             start = current;
 
-            // filter issues based on facility
-            if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-                issues = issuesFacilityFiltering(getProviderNo(request), issues);
-            }
-
             request.setAttribute("Issues", issues);
 
             
@@ -293,11 +275,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             request.setAttribute("roles", roles);
             String[] roleId = caseForm.getFilter_roles();
             if (roleId != null && roleId.length > 0) notes = applyRoleFilter(notes, roleId);
-
-            // filter notes based on facility
-            if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-                notes = notesFacilityFiltering(getProviderNo(request), notes);
-            }
 
             this.caseManagementMgr.getEditors(notes);
 
@@ -406,29 +383,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         if (useNewCaseMgmt != null && useNewCaseMgmt.equals("true")) return mapping.findForward("page.newcasemgmt.view");
         else return mapping.findForward("page.casemgmt.view");
 
-    }
-
-    private List<CaseManagementIssue> issuesFacilityFiltering(String providerId, List<CaseManagementIssue> issues) {
-        ArrayList<CaseManagementIssue> results = new ArrayList<CaseManagementIssue>();
-
-        for (CaseManagementIssue caseManagementIssue : issues) {
-            Integer programId = caseManagementIssue.getProgram_id();
-            if (programMgr.hasAccessBasedOnFacility(providerId, programId)) results.add(caseManagementIssue);
-        }
-
-        return results;
-    }
-
-    private List<CaseManagementNote> notesFacilityFiltering(String providerNo, List<CaseManagementNote> notes) {
-
-        ArrayList<CaseManagementNote> results = new ArrayList<CaseManagementNote>();
-
-        for (CaseManagementNote caseManagementNote : notes) {
-            String programId = caseManagementNote.getProgram_no();
-            if (programId==null || programMgr.hasAccessBasedOnFacility(providerNo, Integer.parseInt(programId))) results.add(caseManagementNote);
-        }
-
-        return results;
     }
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
