@@ -50,6 +50,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
+import org.oscarehr.util.SessionConstants;
 
 public class ConsultationAttachDocsAction
     extends Action {
@@ -67,7 +68,8 @@ public class ConsultationAttachDocsAction
         String provNo = frm.getString("providerNo");
         String[] arrDocs = frm.getStrings("attachedDocs");
                 
-        ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,arrDocs);
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,arrDocs,currentFacilityId);
         Doc.attach();
         
         ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,arrDocs);

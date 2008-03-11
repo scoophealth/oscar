@@ -34,6 +34,7 @@ if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*, oscar.oscarLab.ca.on.*, oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%
 //preliminary JSP code
@@ -146,9 +147,9 @@ function popup1(height, width, url, windowName){
            
            <div class="documentLists">
                <%-- STUFF TO DISPLAY --%>
-             <%                
-                
-                ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED);                                               
+             <%                            
+	          	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+                ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED, currentFacilityId);                                               
              %>
               <div class="doclist">
                    <div class="headerline">

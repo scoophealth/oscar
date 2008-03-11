@@ -31,28 +31,21 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfImportedPage;
-import java.util.ArrayList;
-import javax.servlet.http.*;
 import java.awt.Color;
-import java.io.*;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.BaseFont;
-import com.lowagie.text.pdf.ColumnText;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfWriter;
-import com.lowagie.text.pdf.PdfReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.oscarehr.util.SessionConstants;
+
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
-
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
@@ -60,6 +53,19 @@ import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.util.ConcatPDF;
 import oscar.util.UtilDateUtilities;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.ColumnText;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 /**
  *
  * @author wrighd
@@ -271,7 +277,8 @@ public class EctConsultationFormRequestPrintPdf {
         
         String demoNo = (String) request.getAttribute("demo");
         String reqId = (String) request.getAttribute("reqId");
-        ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED);
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED, currentFacilityId);
         ArrayList pdfDocs = new ArrayList();
         
         // add recently created pdf to the list

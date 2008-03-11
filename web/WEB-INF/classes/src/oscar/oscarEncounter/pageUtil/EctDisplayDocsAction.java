@@ -25,24 +25,22 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import oscar.dms.*;
-import oscar.oscarEncounter.data.*;
-import oscar.util.StringUtils;
-import oscar.util.DateUtils;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Date;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
-import javax.servlet.ServletException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.util.MessageResources;
+
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.SessionConstants;
+
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
+import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
@@ -72,7 +70,8 @@ public class EctDisplayDocsAction extends EctDisplayAction {
   
     StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");    
     String js = "";
-    ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE);
+    Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+    ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, currentFacilityId);
     String dbFormat = "yyyy-MM-dd";
     String serviceDateStr = "";    
     String key;

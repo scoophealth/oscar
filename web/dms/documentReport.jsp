@@ -40,6 +40,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%
 for( Enumeration e = request.getParameterNames(); e.hasMoreElements(); ) {
@@ -304,13 +305,14 @@ function popup1(height, width, url, windowName){
                 ArrayList categories = new ArrayList();
                 ArrayList categoryKeys = new ArrayList();
                 ArrayList privatedocs = new ArrayList();
-                privatedocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort);
+                Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+                privatedocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort, currentFacilityId);
 
                 categories.add(privatedocs);
                 categoryKeys.add(moduleName + "'s Private Documents");
                 if (module.equals("provider")) {
                     ArrayList publicdocs = new ArrayList();
-                    publicdocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PUBLIC, sort);
+                    publicdocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PUBLIC, sort, currentFacilityId);
                     categories.add(publicdocs);
                     categoryKeys.add("Public Documents");
                 }

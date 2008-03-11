@@ -37,6 +37,8 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import org.apache.xmlbeans.GDateBuilder;
 import org.apache.xmlbeans.XmlCalendar;
+import org.oscarehr.util.SessionConstants;
+
 import oscar.appt.AppointmentDAO;
 import oscar.appt.AppointmentDAO.Appointment;
 import oscar.appt.ApptStatusData;
@@ -771,7 +773,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		}
 
 		// REPORTS RECEIVED
-		ArrayList edoc_list = new EDocUtil().listDemoDocs(demoNo);
+	    Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+		ArrayList edoc_list = new EDocUtil().listDemoDocs(demoNo,currentFacilityId);
 
 		if (!edoc_list.isEmpty()) {
 		    for (int j=0; j<edoc_list.size(); j++) {

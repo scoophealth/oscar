@@ -443,14 +443,12 @@ public class ProgramManager {
 	 * @param programId is allowed to be null.
 	 */
     public boolean hasAccessBasedOnFacility(Integer currentFacilityId, Integer programId) {
-System.err.println("------------- currentF:"+currentFacilityId);
         // if no program restrictions are defined.
         if (programId==null) return(true);
         if (currentFacilityId==null && programId==null) return(true);
         
         // check the providers facilities against the programs facilities
         Program program=getProgram(programId);
-System.err.println("------------- programF:"+program.getFacilityId());
         return(program.getFacilityId()==currentFacilityId.intValue());
     }
 }

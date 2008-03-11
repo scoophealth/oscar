@@ -27,6 +27,7 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList, oscar.dms.*, oscar.oscarLab.ca.on.*, oscar.util.StringUtils"%>
+<%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
@@ -36,8 +37,9 @@
 %>
 <ul id="attachedList" style="background-color:white; padding-left: 20px; list-style-position: outside; list-style-type: lower-roman;">
         <%
+      		Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
             ArrayList privatedocs = new ArrayList();
-            privatedocs = EDocUtil.listDocs(demo, requestId, EDocUtil.ATTACHED);
+            privatedocs = EDocUtil.listDocs(demo, requestId, EDocUtil.ATTACHED, currentFacilityId);
             EDoc curDoc;                                        
             for(int idx = 0; idx < privatedocs.size(); ++idx)
             {                    

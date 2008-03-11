@@ -38,6 +38,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 <%@ page import="oscar.oscarLab.ca.on.*"%>
 <%@ page import="oscar.oscarLab.ca.all.Hl7textResultsData"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@page import="org.oscarehr.util.SessionConstants"%>
 <%@ page contentType="text/html; charset=UTF-8" %> 
 <%
 
@@ -265,7 +266,8 @@ function save() {
            <html:select style="width: 100%;" property="documents" multiple="1" size="10">                           
              <%                
                 ArrayList privatedocs = new ArrayList();
-                privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.UNATTACHED);
+             	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+                privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.UNATTACHED, currentFacilityId);
                 EDoc curDoc;                
                 for(int idx = 0; idx < privatedocs.size(); ++idx)
                 {
@@ -303,7 +305,8 @@ function save() {
            <html:select style="width: 100%;" property="attachedDocs" multiple="1" size="10">
                <%                
                 ArrayList privatedocs = new ArrayList();
-                privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.ATTACHED);
+            	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+                privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.ATTACHED,currentFacilityId);
                 EDoc curDoc;                
                 for(int idx = 0; idx < privatedocs.size(); ++idx)
                 {
