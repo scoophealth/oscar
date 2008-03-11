@@ -42,6 +42,7 @@ public class IntakeNode implements Serializable {
     private IntakeNodeTemplate nodeTemplate;
     private IntakeNodeLabel label;
     private Integer pos;
+    private boolean mandatory;
     private IntakeNode parent;// collections
     private List<IntakeNode> children;
     private Set<Intake> intakes;
@@ -359,6 +360,14 @@ public class IntakeNode implements Serializable {
     }
     
     
+    public boolean getMandatory() {
+        return mandatory;
+    }
+
+   
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
     
     
 
