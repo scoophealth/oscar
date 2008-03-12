@@ -130,8 +130,10 @@ function setfocus() {
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formHomePhone"/>: </td>
-    <td><input type="text" name="phone" value="<%= apptMainBean.getString(rs,"phone") %>"><bean:message key="admin.provider.formWorkPhone"/>: 
-    <input type="text" name="workphone" value="<%= apptMainBean.getString(rs,"work_phone") == null?"":(apptMainBean.getString(rs,"work_phone")) %>" maxlength="50"></td></tr>
+    <td><input type="text" name="phone" value="<%= apptMainBean.getString(rs,"phone") %>"></td></tr>
+  <tr>
+	<td align="right"><bean:message key="admin.provider.formWorkPhone"/>: </td>
+	<td><input type="text" name="workphone" value="<%= apptMainBean.getString(rs,"work_phone") == null?"":(apptMainBean.getString(rs,"work_phone")) %>" maxlength="50"></td></tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formPager"/>: </td>
     <td>
