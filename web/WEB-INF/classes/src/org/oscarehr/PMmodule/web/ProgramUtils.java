@@ -64,7 +64,7 @@ public class ProgramUtils
         
         String oldProgramId = (String)request.getSession().getAttribute("intakeCurrentBedCommunityId");
         
-        if(oldProgramId != null) {
+        if(oldProgramId != null && !"".equals(oldProgramId)) {
          	for (Long fId : facilityDao.getDistinctFacilityIdsByProgramId(Integer.valueOf(oldProgramId).intValue())) {
             	for(Long pIds : facilityDao.getDistinctProgramIdsByFacilityId(fId.intValue())) {  
             		sb.append("if (programId == "+pIds.intValue()+ ") { return(false); }\n");       
