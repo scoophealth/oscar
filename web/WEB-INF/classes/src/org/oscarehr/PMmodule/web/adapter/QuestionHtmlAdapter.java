@@ -42,7 +42,7 @@ public class QuestionHtmlAdapter extends AbstractHtmlAdapter {
 		indent(preBuilder).append("<td class=\"intakeQuestionCell\" colspan=\"").append(getDistanceToMaxLevel()).append("\">").append(EOL);
 		beginTag();
 		
-		indent(preBuilder).append(getLabel()).append(EOL);
+		indent(preBuilder).append(getLabel()).append(getMandatory()?"<font color=red>*</font>":"").append(EOL);
 		
 		endTag();
 		indent(preBuilder).append("</td>").append(EOL);

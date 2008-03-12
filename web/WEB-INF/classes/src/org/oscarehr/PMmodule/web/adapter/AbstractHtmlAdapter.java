@@ -99,6 +99,10 @@ abstract class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 		return node.getLabelStr();
 	}
 	
+	protected boolean getMandatory() {
+		return node.getMandatory();
+	}
+	
 	protected int getDistanceToQuestionLevel() {
 		return node.getLevel() - node.getQuestionLevel();
 	}
