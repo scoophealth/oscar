@@ -16,8 +16,14 @@
 		document.ticklerForm.method.value='reassign';
 		document.ticklerForm.submit();
 	}
+	
+	function onsubmit()
+	{
+		document.ticklerForm.id.value=<c:out value="${tickler.tickler_no}"/>;
+		document.ticklerForm.method.value='add_comment';
+	}
 </script>
-<html:form action="/Tickler">
+<html:form action="/Tickler" onsubmit="onsubmit();" >
 <input type="hidden" name="id" value=""/>
 <input type="hidden" name="method" value=""/>
 		
@@ -218,7 +224,7 @@
 		<tr>
 				<td class="fieldValue" colspan=3">
 					<input type="text" size="50" name="comment"/>
-					<input type="button" value="Add Comment" onclick="document.ticklerForm.id.value='<c:out value="${tickler.tickler_no}"/>';document.ticklerForm.method.value='add_comment';document.ticklerForm.submit();"/>
+					<input type="submit" value="Add Comment"  />
 				</td>
 		</tr>
 </table>
