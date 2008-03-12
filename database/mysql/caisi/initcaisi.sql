@@ -158,7 +158,7 @@ CREATE TABLE `bed_type` (
 DROP TABLE IF EXISTS `caisi_form`;
 CREATE TABLE `caisi_form` (
   `form_id` bigint(20) NOT NULL auto_increment,
-  facility_id int,
+  facilityId int,
   `description` varchar(255) default NULL,
   `surveyData` text,
   `status` smallint(6) default NULL,
@@ -386,6 +386,7 @@ CREATE TABLE `client_referral` (
   `referral_id` bigint(20) NOT NULL auto_increment,
   `agency_id` bigint(20) NOT NULL default '0',
   `client_id` bigint(20) NOT NULL default '0',
+  `facility_id` int(10) NOT NULL default '0',
   `referral_date` datetime default NULL,
   `provider_no` bigint(20) NOT NULL default '0',
   `notes` text default NULL,
