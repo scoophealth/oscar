@@ -2192,7 +2192,7 @@ create table health_safety
 );
 
 
--- quatro group's report runner
+-- Tables for quatro group's report runner
 create table lst_gender
 (
 	code char(1) NOT NULL,
@@ -2249,14 +2249,352 @@ create table lst_service_restriction
 );
 
 
+-- Tables for quatro group's report runner:
+DROP TABLE IF EXISTS report;
+create table report
+(
+  reportno     	bigint(10) 	NOT NULL auto_increment,
+  title         varchar(80) default NULL,
+  description	varchar(255) default NULL,
+  orgapplicable tinyint(1) 	default 0,
+  reporttype	char(3) 	default NULL,
+  dateoption	char(1)	default NULL,
+  datepart		char(1)	default NULL,
+  reportgroup	int(10)		default 0,
+  notes			text 		default NULL,
+  tablename		varchar(30)	default NULL,
+  updatedby		varchar(20)	default NULL,
+  updateddate	datetime 	default NULL,
+  sptorun		varchar(32) default NULL,
+  PRIMARY KEY  (reportno)
+);
+
+DROP TABLE IF EXISTS report_date;
+create table report_date
+(
+  sessionid		varchar(32) NOT NULL ,
+  startdate   	date default NULL,
+  enddate		date default NULL,
+  asofdate		date default NULL,
+  startdate_s 	varchar(8) 	default NULL,
+  enddate_s		varchar(8)	default NULL,   
+  asofdate_s	varchar(8)	default NULL,
+  PRIMARY KEY  (sessionid)
+);
+
+DROP TABLE IF EXISTS `report_date_sp`;
+create table report_date_sp
+(
+  reportno		int(10)    NOT NULL auto_increment,
+  startdate		date default NULL , 
+  enddate		date default NULL,
+  asofdate		date default NULL,
+  startdate_s	varchar(8) default NULL,
+  enddate_s		varchar(8) default NULL,
+  asofdate_s	varchar(8) default NULL,
+  sptorun		varchar(32) default NULL,
+  PRIMARY KEY  (reportno)
+);
+
+DROP TABLE IF EXISTS `report_doctext`;
+create table report_doctext
+(
+  docid       int(10) NOT NULL auto_increment,
+  docdata     text,
+  revdatetime TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY  (docid)
+);
+
+DROP TABLE IF EXISTS `report_document`;
+create table report_document
+(
+  docid          int(10) NOT NULL auto_increment,
+  subject        varchar(256) default NULL,
+  privacycd      varchar(3) default NULL,
+  ownerid        varchar(12) default NULL,
+  checkoutyn     char(1) default NULL,
+  checkoutuserid	varchar(12) default NULL,
+  checkoutdate	datetime 	default NULL,
+  doctype		varchar(3) 	default NULL,
+  filename		varchar(128) default NULL,
+  moduleid		varchar(6) 	default NULL,
+  refno			varchar(12) default NULL,
+  filetype		varchar(5) 	default NULL,
+  viewid		varchar(36) default NULL,
+  viewrefno		varchar(12)	default NULL,
+  revdatetime   datetime default NULL,
+  PRIMARY KEY  (docid)
+);
+
+DROP TABLE IF EXISTS `report_filter`;
+create table report_filter
+(  
+  fieldno           int(10) NOT NULL auto_increment,
+  reportno          int(10) default 0,
+  fieldname         varchar(32) default NULL,
+  fielddesc         varchar(80)	default NULL,
+  fieldtype         varchar(10)	default NULL,
+  lookup_table      varchar(30) default NULL,
+  iscrosstabheaders char(1)	default NULL,
+  operator			varchar(10)	default NULL,
+  lookup_tree       char(1)	default NULL,
+  fieldsql          varchar(32)	default NULL,
+  lookup_script     varchar(50)	default NULL,
+  note              varchar(128)	default NULL,
+  valueformat       varchar(32)	default NULL,
+  PRIMARY KEY  (fieldno)
+);
+
+DROP TABLE IF EXISTS `report_lk_reportgroup`;
+create table report_lk_reportgroup
+(
+  id           int(10) NOT NULL auto_increment,
+  description  varchar(40)	default NULL,
+  shortdesc    varchar(10)	default NULL,
+  activeyn     char(1)	default NULL,
+  orderbyindex int(10)	default 0,
+  note         varchar(128)	default NULL,
+  PRIMARY KEY  (id)
+);
+
+DROP TABLE IF EXISTS `report_option`;
+create table report_option
+(  
+  reportoptionid int(10) NOT NULL auto_increment,
+  reportno       int(10) not null,
+  optiontitle    varchar(120)	default NULL,
+  longdesc       varchar(120)	default NULL,
+  activeyn       tinyint(1)	default 0,
+  defaultyn      tinyint(1)	default 0,
+  datefield      varchar(32)	default NULL,
+  datefielddesc  varchar(32)	default NULL,
+  sqlwhere       text	default NULL,
+  sqlorderby     text	default NULL,
+  rptfilename    varchar(128)	default NULL,
+  rptfileno      int(10)	default 0,
+  rptversion     datetime default NULL,
+  datefieldtype  varchar(3)	default NULL,
+  PRIMARY KEY  (reportoptionid)
+);
+
+DROP TABLE IF EXISTS `report_qgviewfield`;
+create table report_qgviewfield
+(
+  qgviewno      int(10) NOT NULL auto_increment,  
+  fieldno       int(10) not null,
+  fieldname     varchar(32) not null,
+  description   varchar(80)	default NULL,
+  fieldtypecode varchar(8)	default NULL,
+  numbermask    varchar(16)	default NULL,
+  fieldlength   int(10) 	default 0,
+  sourcetxt     text	default NULL,
+  note          varchar(255) default NULL,
+  grouprank     int(10)		default 0,
+  lookuptable   varchar(6)	default NULL,
+  PRIMARY KEY  (qgviewno,fieldno)
+);
+
+DROP TABLE IF EXISTS `report_qgviewsummary`;
+create table report_qgviewsummary
+(
+  qgviewno    int(10) NOT NULL auto_increment,
+  qgviewcode  varchar(30) 	not null ,
+  description varchar(80) 	default NULL,
+  groupcode   varchar(10)	default NULL,
+  mastertype  char(1)	default NULL,
+  updatedby   varchar(12)	default NULL,
+  updateddate datetime	default NULL,
+  note        text	default NULL,
+  activeyn    char(1)	default NULL,
+  secureyn    char(1)	default NULL,
+  dbentity    varchar(40)	default NULL,
+  refviews    varchar(512)	default NULL,
+  relations   text	default NULL,
+  filters     text	default NULL,
+  object_type varchar(5)	default NULL,
+  distinctyn  char(1)	default NULL,
+  PRIMARY KEY  (qgviewno)
+);
+
+DROP TABLE IF EXISTS `report_role`;
+create table report_role
+(
+  reportno    	int(10) NOT NULL default 0,
+  rolecode		varchar(20) not null ,
+  access_type	char(1) 	default NULL,
+  PRIMARY KEY  (reportno,rolecode)
+);
+
+DROP TABLE IF EXISTS `report_template`;
+create table report_template
+(
+  templateno     int(10) NOT NULL auto_increment,
+  reportno       int(10) not null	default 0,
+  reportoptionid int(10)	default 0,
+  description    varchar(120)	default NULL,
+  startdate      datetime	default NULL,
+  enddate        datetime	default NULL,
+  startpayperiod varchar(10)	default NULL,
+  endpayperiod   varchar(10)	default NULL,
+  loginid        varchar(20)	default NULL,
+  updatedate     datetime	default NULL,
+  privateyn      char(1)	default NULL,
+  PRIMARY KEY  (templateno)
+);
+
+DROP TABLE IF EXISTS `report_template_criteria`;
+create table report_template_criteria 
+(
+  counter    int(10) not null	default 0,
+  templateno int(10) not null	default 0,
+  relation   varchar(10)	default NULL,
+  fieldno    int(10)	default 0,
+  operator   varchar(10)	default NULL,
+  operators  varchar(10)	default NULL,
+  val        varchar(40)	default NULL,
+  valdesc    varchar(120)	default NULL,
+  required   char(1)	default NULL,
+  PRIMARY KEY  (templateno,counter)
+);
+
+DROP TABLE IF EXISTS `report_template_org`;
+create table report_template_org
+(
+  counter    int(10) not null,
+  templateno int(10) not null,
+  orgcd      varchar(72),
+  PRIMARY KEY  (templateno,counter)
+);
+
+DROP TABLE IF EXISTS app_lookuptable;
+create table app_lookuptable
+(
+  tableid         varchar(32) not null,
+  moduleid        varchar(5),
+  table_name      varchar(32),
+  description     varchar(80),
+  istree          tinyint(1),
+  treecode_length int(10),
+  activeyn        tinyint(1),
+  PRIMARY KEY  (tableid)
+);
+
+DROP TABLE IF EXISTS app_lookuptable_fields;
+create table app_lookuptable_fields
+(
+  tableid     VARCHAR(10) not null,
+  fieldname   VARCHAR(20) not null,
+  fielddesc   VARCHAR(40),
+  edityn      VARCHAR(1),
+  fieldtype   VARCHAR(1),
+  lookuptable VARCHAR(6),
+  fieldsql    VARCHAR(32),
+  fieldindex  int(10),
+  uniqueyn    int(10),
+  primary key (tableid, fieldname)
+);
+
+DROP TABLE IF EXISTS app_module;
+create table app_module
+(
+  module_id   int(10) not null,
+  description varchar(128) not null,
+  primary key (module_id)
+);
 
 
+-- Views for quatro report runner:
+CREATE OR REPLACE VIEW v_lk_name AS
+SELECT 0 grandParentID, 0 parentID, bed_type_id id, name description
+FROM bed_type a;
+
+CREATE OR REPLACE VIEW v_lk_org AS
+SELECT 0 grandParentID, 0 parentID, id, name description
+FROM agency;
+
+CREATE OR REPLACE VIEW v_lookup_table AS
+select 'BTY' prefix, bed_type_id code, name description, '' parentcode,1 active,bed_type_id lineID, dflt buf1
+    from bed_type
+union
+select 'BED' prefix, bed_id code, name description, room_id parentcode, active,bed_id,bed_type_id 
+    from bed
+union
+select 'ORG' prefix, id, description,  null parentcode,1, 0 lineID, null
+    from v_lk_org
+union
+select 'ROL', role_name,role_name,  null parentcode, 1,0, null 
+       from secRole
+union
+select 'ROC', role_id, name,  null parentcode,1,0 ,null
+       from caisi_role
+union
+select 'QGV', qgviewcode, description, groupcode,1,0,null
+       FROM report_qgviewsummary
+union
+SELECT 'RPG',id , description, null,1,orderbyindex, null
+       FROM report_lk_reportgroup
+union
+SELECT 'LKT', tableid, description, moduleid, activeyn,0 , null
+       FROM app_lookuptable
+union
+SELECT 'MOD',module_id, description, null, 1,0 , null
+from app_module
+union
+SELECT 'FCT',id,description, null, 1,0,null
+from lst_field_category
+union
+SELECT 'ISS',issue_id, description, role,1,0, null
+FROM issue
+union
+SELECT 'ISG', id, name,null,1, 0, null
+from IssueGroup
+union
+SELECT 'GEN',code,description,null,isactive, displayorder,null
+FROM lst_gender
+union
+SELECT 'SEC',id,description,null,isactive, displayorder, null
+FROM lst_sector
+union
+SELECT 'OGN',id,description,null,isactive, displayorder, null
+FROM lst_organization
+union
+SELECT 'DRN',id,description,null,isactive, displayorder, needsecondary 
+FROM lst_discharge_reason
+union
+SELECT 'SRT',id,description,null,isactive, displayorder,null
+FROM lst_service_restriction
+;
 
 
+CREATE OR REPLACE VIEW v_rep_bedlog AS
+SELECT
+a.client_id client_id,
+  a.admission_date admission_date,
+  a.discharge_date discharge_date,
+  p.name program_name,
+  p.descr program_description,
+  b.bed_id bed_id,
+  b.name bed_name,
+  r.room_id room_id,
+  r.name room_name,
+  pc.name client_prog_st_name,
+  d.last_name last_name,
+  d.first_name first_name,
+  p.agency_id orgCd
+FROM
+	admission a left join program_clientstatus pc on a.program_id=pc.program_id  
+	join program p on a.program_id= p.program_id 	
+	join demographic d on a.client_id=d.demographic_no 
+	join (room r join bed b on r.room_id=b.room_id) on a.program_id=r.program_id 
+;
 
 
-
-
-
-
-
+CREATE OR REPLACE VIEW v_user_report AS
+SELECT a.reportno, a.title, a.description, a.orgapplicable, a.reporttype, a.dateoption, a.datepart,
+       a.reportgroup,d.id reportgroupid, a.tablename, a.notes, c.provider_no,
+       MAX(b.access_type) access_type, d.description reportgroupdesc, a.updatedby, a.updateddate
+FROM  report a left join report_lk_reportgroup d on a.reportgroup=d.id 
+		join (report_role b join secUserRole c on b.rolecode = c.role_name) on a.reportno = b.reportno 
+GROUP BY a.reportno, a.title, a.description, a.orgapplicable, a.reporttype, a.dateoption, a.datepart, 
+	a.reportgroup,d.id, a.tablename,a.notes, c.provider_no, d.description, a.updatedby, a.updateddate
+;
