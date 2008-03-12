@@ -85,10 +85,10 @@ public class AdmissionManager {
 		return dao.getAdmissions(demographicNo);
 	}
 	
-	public List getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
-		return dao.getAdmissionsByFacility(demographicNo, facilityId);
+	public List<Admission> getAdmissionsByProgramId(Integer programId, Boolean automaticDischarge, Integer days) {
+		return dao.getAdmissionsByProgramId(programId,automaticDischarge,days);
 	}
-
+	
 	public List getCurrentAdmissions(Integer demographicNo) {
 		return dao.getCurrentAdmissions(demographicNo);
 	}

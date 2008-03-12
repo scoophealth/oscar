@@ -1,5 +1,7 @@
 package org.oscarehr.PMmodule.service;
 
+import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
@@ -13,7 +15,9 @@ import java.util.List;
 public class FacilityManager {
 
     private FacilityDAO facilityDAO;
-
+    private ClientDao demographicDAO;
+    private AdmissionDao admissionDao;
+    
     public Facility getFacility(Integer facilityId) {
         return facilityDAO.getFacility(facilityId);
     }
@@ -25,7 +29,7 @@ public class FacilityManager {
     public List<Program> getAssociatedPrograms(Integer facilityId) {
         return facilityDAO.getAssociatedPrograms(facilityId);
     }
-
+    
     public void saveFacility(Facility facility) {
         facilityDAO.saveFacility(facility);
     }
@@ -39,4 +43,5 @@ public class FacilityManager {
         this.facilityDAO = facilityDAO;
     }
 
+    
 }

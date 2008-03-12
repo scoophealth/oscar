@@ -23,6 +23,7 @@
 package org.oscarehr.PMmodule.dao;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
@@ -141,7 +142,8 @@ public class AdmissionDao extends HibernateDaoSupport {
         return rs;
     }
 
-    public List getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
+   
+   public List getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
         if (demographicNo == null || demographicNo <= 0) {
             throw new IllegalArgumentException();
         }
@@ -156,7 +158,31 @@ public class AdmissionDao extends HibernateDaoSupport {
 
         return rs;
     }
+   
+   
+   
+    public List<Admission> getAdmissionsByProgramId(Integer programId, Boolean automaticDischarge, Integer days) {
+        if (programId == null || programId <= 0) {
+            throw new IllegalArgumentException();
+        }
+       
+        //today's date
+        Calendar calendar = Calendar.getInstance();
+     
+        //today's date -  days
+        calendar.add(Calendar.DAY_OF_YEAR, days);
+        
+        Date sevenDaysAgo = calendar.getTime();
+        
+        String queryStr = "FROM Admission a WHERE a.ProgramId=? and a.AutomaticDischarge=? and a.DischargeDate>= ? ORDER BY a.DischargeDate DESC";
+        List rs = getHibernateTemplate().find(queryStr, new Object[] { programId, automaticDischarge, sevenDaysAgo });
 
+        if (log.isDebugEnabled()) {
+            log.debug("getAdmissions for programId " + programId + ", # of admissions: " + rs.size());
+        }
+
+        return rs;
+    }
     
     public List getCurrentAdmissions(Integer demographicNo) {
         if (demographicNo == null || demographicNo <= 0) {

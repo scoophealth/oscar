@@ -43,6 +43,7 @@ public class FacilityDAO extends HibernateDaoSupport {
         getHibernateTemplate().refresh(facility);
     }
     
+   
     public List<Long> getDistinctFacilityIdsByProgramId(int programId)
     {
         // select program_id,facility_id from room;
