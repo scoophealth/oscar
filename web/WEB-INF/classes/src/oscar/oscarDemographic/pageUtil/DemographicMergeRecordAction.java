@@ -29,6 +29,9 @@ public class DemographicMergeRecordAction  extends Action {
     }
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
         
+        if (request.getParameterValues("records")==null) {
+            return mapping.findForward("failure");
+        }
         String outcome = "success";
         ArrayList records = new ArrayList(Arrays.asList(request.getParameterValues("records")));
         String head = request.getParameter("head");
