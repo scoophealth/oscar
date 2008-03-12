@@ -76,7 +76,15 @@ public class AdmissionManager {
 	public Admission getCurrentAdmission(String programId, Integer demographicNo) {
 		return dao.getCurrentAdmission(Integer.valueOf(programId), demographicNo);
 	}
+		
+	public List getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
+		return dao.getAdmissionsByFacility(demographicNo, facilityId);
+	}
 
+	public List getCurrentAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
+		return dao.getCurrentAdmissionsByFacility(demographicNo, facilityId);
+	}
+	
 	public List getAdmissions() {
 		return dao.getAdmissions();
 	}
@@ -85,16 +93,8 @@ public class AdmissionManager {
 		return dao.getAdmissions(demographicNo);
 	}
 	
-	public List<Admission> getAdmissionsByProgramId(Integer programId, Boolean automaticDischarge, Integer days) {
-		return dao.getAdmissionsByProgramId(programId,automaticDischarge,days);
-	}
-	
 	public List getCurrentAdmissions(Integer demographicNo) {
 		return dao.getCurrentAdmissions(demographicNo);
-	}
-
-	public List getCurrentAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
-		return dao.getCurrentAdmissionsByFacility(demographicNo, facilityId);
 	}
 
 	public Admission getCurrentBedProgramAdmission(Integer demographicNo) {
