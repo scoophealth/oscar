@@ -146,7 +146,7 @@ public class ClientDao extends HibernateDaoSupport {
 		}
 		
 		String clientNo = bean.getDemographicNo(); 
-		if (!"".equals(clientNo))
+		if (clientNo != null && !"".equals(clientNo))
 		{
 			if (com.quatro.util.Utility.IsInt(clientNo) ) {
 				criteria.add(Expression.eq("DemographicNo", Integer.valueOf(clientNo).intValue()));
@@ -231,7 +231,7 @@ public class ClientDao extends HibernateDaoSupport {
 		}
 			
 		gender = bean.getGender();
-		if (!"".equals(gender))
+		if (gender != null && !"".equals(gender))
 		{
 			criteria.add(Expression.eq("Sex", gender));
 		}
