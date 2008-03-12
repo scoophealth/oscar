@@ -21,6 +21,10 @@
 * Toronto, Ontario, Canada 
 */
  -->
+<% 
+	String topic = request.getParameter("topic"); 
+	System.out.println(" the topic is " + topic);
+%>
 
 <%@ include file="/taglibs.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -40,7 +44,7 @@
 			<c:otherwise>
 				<h3><c:out value="${param.topic}" /></h3>
 				<br />
-				<bean:message key="<%=request.getParameter("topic") %>" bundle="help" />
+				<bean:message key="<%=topic%>" bundle="help" />
 			</c:otherwise>
 		</c:choose>
 	<br />
