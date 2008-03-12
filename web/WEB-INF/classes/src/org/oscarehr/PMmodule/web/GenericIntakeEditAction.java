@@ -169,7 +169,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         // UCF -- intake accessment : please don't remove the following line
         request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
 
-        request.getSession().setAttribute("intakeCurrentBedCommunityId",getCurrentBedCommunityProgramId(clientId));
+        request.getSession().setAttribute("intakeCurrentBedCommunityId",String.valueOf(getCurrentBedCommunityProgramId(clientId)));
         
         ProgramUtils.addProgramRestrictions(request);
 
@@ -337,7 +337,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),
                 getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()));
         
-        request.getSession().setAttribute("intakeCurrentBedCommunityId",getCurrentBedCommunityProgramId(client.getDemographicNo()));
+        request.getSession().setAttribute("intakeCurrentBedCommunityId",String.valueOf(getCurrentBedCommunityProgramId(client.getDemographicNo())));
                 
         return mapping.findForward(EDIT);
     }
