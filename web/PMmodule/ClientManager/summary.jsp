@@ -119,17 +119,26 @@ function openSurvey() {
 
 <table class="simple" cellspacing="2" cellpadding="3">
 	<tr>
+		<th width="20%">Client No</th>
+		<td><c:out value="${client.demographicNo}" /></td>
+	</tr>
+	<tr>
 		<th width="20%">Name</th>
 		<td><c:out value="${client.formattedName}" /></td>
 	</tr>
 	<tr>
-		<th width="20%">Master File #</th>
-		<td><c:out value="${client.demographicNo}" /></td>
+		<th width="20%">Alias</th>
+		<td><c:out value="${client.alias}" /></td>
 	</tr>
 	<tr>
 		<th width="20%">Date of Birth</th>
 		<td><c:out value="${client.yearOfBirth}" />/<c:out value="${client.monthOfBirth}" />/<c:out value="${client.dateOfBirth}" /></td>
 	</tr>
+	<tr>
+		<th width="20%">Gender</th>
+		<td><c:out value="${client.sexDesc}" /></td>
+	</tr>
+	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 	<tr>
 		<th width="20%">Health Card</th>
 		<td><c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" /></td>
@@ -150,6 +159,14 @@ function openSurvey() {
 		%>
 		</td>
 	</tr>
+	</caisi:isModuleLoad>
+	<tr>
+		<th width="20%">Active?</th>
+		<td>
+			<logic:equal value="0" property="activeCount" name="client">No</logic:equal>
+			<logic:notEqual value="0" property="activeCount" name="client">Yes</logic:notEqual>
+		</td>
+	</tr>	
 	<tr>
 		<th width="20%">EMPI</th>
 		<td><span id='empi_links'>Loading...</span></td>
