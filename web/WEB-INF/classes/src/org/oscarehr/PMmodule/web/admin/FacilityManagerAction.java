@@ -93,7 +93,7 @@ public class FacilityManagerAction extends BaseAction {
         			Demographic client = clientDao.getClientByDemographicNo(admission.getClientId());
         		        		
         			String name = client.getFirstName() + " " + client.getLastName();
-        			String dob = client.getYearOfBirth() + "/" + client.getYearOfBirth() + "/" + client.getDateOfBirth();
+        			String dob = client.getYearOfBirth() + "/" + client.getMonthOfBirth() + "/" + client.getDateOfBirth();
         			String pName = program.getName();
         			Date dischargeDate = admission.getDischargeDate();
         			String dDate = dischargeDate.toString();
@@ -118,17 +118,7 @@ public class FacilityManagerAction extends BaseAction {
         	        	fdc.setInOneDay(false);
         	        }
         	        facilityClients.add(fdc);	
-    	        	/*
-        	        String key = String.valueOf(admission.getId());
-        	        if(dischargeDate.after(oneDayAgo)) {        	        	
-        	        	key = "day1" + key;
-        			} else {
-        				key = "day7" + key;
-        			}
-        			
-        			//facilityClients.add(values);
-        			facilityClientsMap.put(key, values);
-        			*/
+    	        	
         		}
         	}
         	}
