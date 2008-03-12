@@ -71,7 +71,15 @@ public class SystemMessage extends BaseObject {
 	public void setExpiry_day(String day) throws IllegalArgumentException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			setExpiry_date(formatter.parse(day));
+			Date dt=formatter.parse(day);
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(dt);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(getExpiry_date());		
+			cal.set(Calendar.DAY_OF_MONTH, cal1.get(Calendar.DAY_OF_MONTH));
+			cal.set(Calendar.MONTH, cal1.get(Calendar.MONTH));
+			cal.set(Calendar.YEAR, cal1.get(Calendar.YEAR));
+			setExpiry_date(cal.getTime());
 		}catch(Exception e) {
 			throw new IllegalArgumentException("date must be in yyyy-MM-dd format");
 		}
@@ -85,12 +93,20 @@ public class SystemMessage extends BaseObject {
 			hour += 12;
 		}
 		return String.valueOf(hour);
-	}
-	
+	}	
 	public void setExpiry_hour(String hour) {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(getExpiry_date());		
-		cal.set(Calendar.HOUR,Integer.valueOf(hour).intValue());
+		cal.setTime(getExpiry_date());	
+		int hr = Integer.valueOf(hour).intValue();
+		if (hr >= 12 ) {
+			cal.set(Calendar.AM_PM,Calendar.PM);
+			cal.set(Calendar.HOUR,hr-12);
+		}
+		else
+		{
+			cal.set(Calendar.AM_PM,Calendar.AM);
+			cal.set(Calendar.HOUR,hr);
+		}
 		setExpiry_date(cal.getTime());
 	}
 	

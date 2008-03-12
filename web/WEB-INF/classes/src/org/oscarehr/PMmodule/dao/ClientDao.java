@@ -181,26 +181,25 @@ public class ClientDao extends HibernateDaoSupport {
 				criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
 			
 			}
+		}	
+		if (lastName.length() > 0) {
+			if(isOracle) {
+				sql = "(LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))";
+				criteria.add(Restrictions.or(Restrictions.or(Restrictions.ilike("LastName", lastNameL), Restrictions.sqlRestriction(sql)),
+						     Restrictions.ilike("Alias", lastNameL)));
 			
-			if (lastName.length() > 0) {
-				if(isOracle) {
-					sql = "(LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))";
-					criteria.add(Restrictions.or(Restrictions.or(Restrictions.ilike("LastName", lastNameL), Restrictions.sqlRestriction(sql)),
-							     Restrictions.ilike("Alias", lastNameL)));
-				
-					//sql = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4)))";
-					//criteria.add(Restrictions.or(Restrictions.ilike("Alias",lastName + "%" ), Restrictions.sqlRestriction(sql)));
-				
-				}
-				else
-				{
-					sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '%" + lastName + "%'))";
-					//criteria.add(Restrictions.sqlRestriction(sql));
-								
-					sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (alias like '%" + lastName + "%'))";
-					criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
-				
-				}
+				//sql = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4)))";
+				//criteria.add(Restrictions.or(Restrictions.ilike("Alias",lastName + "%" ), Restrictions.sqlRestriction(sql)));
+			
+			}
+			else
+			{
+				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '%" + lastName + "%'))";
+				//criteria.add(Restrictions.sqlRestriction(sql));
+							
+				sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (alias like '%" + lastName + "%'))";
+				criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
+			
 			}
 		}
 		

@@ -111,7 +111,16 @@ public class FacilityMessage extends BaseObject {
 	public void setExpiry_hour(String hour) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(getExpiry_date());		
-		cal.set(Calendar.HOUR,Integer.valueOf(hour).intValue());
+		int hr = Integer.valueOf(hour).intValue();
+		if (hr >= 12 ) {
+			cal.set(Calendar.AM_PM,Calendar.PM);
+			cal.set(Calendar.HOUR,hr-12);
+		}
+		else
+		{
+			cal.set(Calendar.AM_PM,Calendar.AM);
+			cal.set(Calendar.HOUR,hr);
+		}
 		setExpiry_date(cal.getTime());
 	}
 	
