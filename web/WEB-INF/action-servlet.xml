@@ -78,6 +78,8 @@
         <property name="logManager" ref="logManager"/>
         <property name="facilityManager" ref="facilityManager"/>
         <property name="lookupManager" ref="lookupManager"/>
+        <property name="admissionDao" ref="admissionDao"/>
+        <property name="clientDao" ref="clientDao"/>
     </bean>
     <bean name="/PMmodule/BedManager" class="org.oscarehr.PMmodule.web.admin.BedManagerAction" singleton="false">
         <property name="bedManager" ref="bedManager"/>
