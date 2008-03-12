@@ -154,7 +154,7 @@
                                objectName="_pmm.clientSearch"
                                rights="r">
         <div>
-            <html:link action="/PMmodule/ClientSearch2.do">Client Search</html:link>
+            <html:link action="/PMmodule/ClientSearch2.do">Search Client</html:link>
         </div>
         </security:oscarSec>
         
@@ -331,7 +331,7 @@
                     </caisi:isModuleLoad>
                 </div>
         </security:oscarSec>
-        
+<!--         
          <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_pmm.caisiRoles"
                                rights="r">
@@ -341,7 +341,7 @@
                 Roles</a></span>
         </div></div>
 		</security:oscarSec>
-
+-->
     </div>
 </div>
 
