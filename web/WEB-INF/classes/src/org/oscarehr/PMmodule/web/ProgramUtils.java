@@ -62,15 +62,14 @@ public class ProgramUtils
         sb.append("function isNewFacility(programId)\n");
         sb.append("{\n");
         
-        Integer oldProgramId = (Integer)request.getSession().getAttribute("intakeCurrentBedCommunityId");
-        //List<Long> facilityIds = facilityDao.getFacilityIdsByProgramId(Integer.valueOf(oldProgramId).intValue());
-        if(oldProgramId != null) 
-        {
-	        for (Long fId : facilityDao.getDistinctFacilityIdsByProgramId(oldProgramId.intValue())) {
-	            for(Long pIds : facilityDao.getDistinctProgramIdsByFacilityId(fId.intValue())) {  
-	            	sb.append("if (programId == "+pIds.intValue()+ ") { return(false); }\n");       
-	        	}
-	        }
+        String oldProgramId = (String)request.getSession().getAttribute("intakeCurrentBedCommunityId");
+        
+        if(oldProgramId != null) {
+         	for (Long fId : facilityDao.getDistinctFacilityIdsByProgramId(Integer.valueOf(oldProgramId).intValue())) {
+            	for(Long pIds : facilityDao.getDistinctProgramIdsByFacilityId(fId.intValue())) {  
+            		sb.append("if (programId == "+pIds.intValue()+ ") { return(false); }\n");       
+        		}
+        	}
         }
         sb.append("return(true);\n");
         sb.append("}\n");
