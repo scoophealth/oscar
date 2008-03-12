@@ -21,7 +21,7 @@ create table lst_program_type
   code         VARCHAR2(20) not null,
   description  VARCHAR2(80),
   isactive     NUMBER(1),
-  displayorder NUMBER
+  displayorder NUMBER,
   primary key (code)
 );
 --insert records
