@@ -40,6 +40,7 @@ public interface SurveyManager {
 	public OscarFormInstance getLatestForm(String formId, String clientId);
 	public List getForms(String clientId);
 	public List getForms(String formId, String clientId);	
+	public List getFormsByFacility(String clientId, Integer facilityId);	
 	public OscarFormInstance getCurrentFormById(String formInstanceId);
 	public List getTmpForms(String tmpInstanceId, String formId, String clientId, String providerId);
 	public List getTmpFormData(String tmpInstanceId);

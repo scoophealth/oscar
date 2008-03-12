@@ -61,6 +61,18 @@ public class SurveyDAO extends HibernateDaoSupport {
         return result;
     }
 
+    public List getForms(Long clientId, Integer facilityId) {
+        ArrayList paramList = new ArrayList();
+        String sSQL="from OscarFormInstance f where f.clientId = ? and f.formId in " +
+        	"(select s.formId from OscarForm s where s.facilityId =?) order by f.dateCreated DESC";  
+        paramList.add(clientId);
+        paramList.add(facilityId);
+        Object params[] = paramList.toArray(new Object[paramList.size()]);
+        List result = getHibernateTemplate().find(sSQL, params);
+        return result;
+//    	List result = this.getHibernateTemplate().find("from OscarFormInstance f where f.clientId = ? order by f.dateCreated DESC", clientId);
+    }
+
     public List getForms(Long formId, Long clientId) {
         List result = this.getHibernateTemplate().find("from OscarFormInstance f where f.formId = ? and f.clientId = ? order by f.dateCreated DESC", new Object[] {formId, clientId});
         return result;

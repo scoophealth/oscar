@@ -101,6 +101,11 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 	public List getForms(String formId, String clientId) {
 		return surveyDAO.getForms(Long.valueOf(formId),Long.valueOf(clientId));
 	}
+
+	public List getFormsByFacility(String clientId, Integer facilityId){
+		return surveyDAO.getForms(Long.valueOf(clientId), facilityId);
+	}
+	
 	public OscarFormInstance getCurrentFormById(String formInstanceId) {
 		return surveyDAO.getCurrentFormById(Long.valueOf(formInstanceId));
 	}

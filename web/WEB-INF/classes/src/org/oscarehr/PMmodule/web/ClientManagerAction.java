@@ -1319,8 +1319,8 @@ public class ClientManagerAction extends BaseAction {
 
         if (tabBean.getTab().equals("Summary")) {
             /* survey module */
-            request.setAttribute("survey_list", surveyManager.getAllForms());
-            request.setAttribute("surveys", surveyManager.getForms(demographicNo));
+            request.setAttribute("survey_list", surveyManager.getAllForms(Integer.valueOf(facilityId)));
+            request.setAttribute("surveys", surveyManager.getFormsByFacility(demographicNo, Integer.valueOf(facilityId)));
 
             // request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
             // only allow bed/service programs show up.(not external program)
@@ -1487,8 +1487,8 @@ public class ClientManagerAction extends BaseAction {
             request.setAttribute("programsWithIntake", genericIntakeManager.getProgramsWithIntake(Integer.valueOf(demographicNo)));
 
             /* survey module */
-            request.setAttribute("survey_list", surveyManager.getAllForms());
-            request.setAttribute("surveys", surveyManager.getForms(demographicNo));
+            request.setAttribute("survey_list", surveyManager.getAllForms(Integer.valueOf(facilityId)));
+            request.setAttribute("surveys", surveyManager.getFormsByFacility(demographicNo, Integer.valueOf(facilityId)));
         }
 
         /* refer */
