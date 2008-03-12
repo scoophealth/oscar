@@ -124,10 +124,14 @@ public class GenericIntakeManager {
 	/**
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getMostRecentQuickIntake(java.lang.Integer)
 	 */
+	public Intake getMostRecentQuickIntakeByFacility(Integer clientId, Integer facilityId) {
+		return genericIntakeDAO.getLatestIntakeByFacility(getQuickIntakeNode(), clientId, null, facilityId);
+	}
+
 	public Intake getMostRecentQuickIntake(Integer clientId) {
 		return genericIntakeDAO.getLatestIntake(getQuickIntakeNode(), clientId, null);
 	}
-
+	
 	/**
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getMostRecentIndepthIntake(java.lang.Integer)
 	 */

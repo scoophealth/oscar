@@ -1335,7 +1335,7 @@ public class ClientManagerAction extends BaseAction {
             }
             request.setAttribute("admissions", bedServiceList);
 
-            Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.valueOf(demographicNo));
+            Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntakeByFacility(Integer.valueOf(demographicNo), Integer.valueOf(facilityId));
             request.setAttribute("mostRecentQuickIntake", mostRecentQuickIntake);
 
             HealthSafety healthsafety = healthSafetyManager.getHealthSafetyByDemographic(Long.valueOf(demographicNo));

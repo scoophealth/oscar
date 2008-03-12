@@ -60,6 +60,18 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 	/**
 	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getLatestIntake(IntakeNode, java.lang.Integer, Integer)
 	 */
+	public Intake getLatestIntakeByFacility(IntakeNode node, Integer clientId, Integer programId, Integer facilityId) {
+		if (node == null || clientId == null) {
+			throw new IllegalArgumentException("Parameters node and clientId must be non-null");
+		}
+
+		List<Intake> intakes = getIntakesByFacility(node, clientId, programId, facilityId);
+		Intake intake = !intakes.isEmpty() ? intakes.get(0) : null;
+		LOG.info("get latest intake: " + intake);
+
+		return intake;
+	}
+
 	public Intake getLatestIntake(IntakeNode node, Integer clientId, Integer programId) {
 		if (node == null || clientId == null) {
 			throw new IllegalArgumentException("Parameters node and clientId must be non-null");
@@ -71,7 +83,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 
 		return intake;
 	}
-
+	
 	/**
 	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getIntakes(org.oscarehr.PMmodule.model.IntakeNode, java.lang.Integer, Integer)
 	 */
@@ -89,6 +101,20 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		return intakes;
 	}
 
+	public List<Intake> getIntakesByFacility(IntakeNode node, Integer clientId, Integer programId, Integer facilityId) {
+		if (node == null || clientId == null) {
+			throw new IllegalArgumentException("Parameters node and clientId must be non-null");
+		}
+
+		List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and i.facilityId =? order by i.createdOn desc",
+				new Object[] { node, clientId, facilityId });
+		List<Intake> intakes = convertToIntakes(results, programId);
+
+		LOG.info("get intakes: " + intakes.size());
+
+		return intakes;
+	}
+	
 	/**
 	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#saveIntake(org.oscarehr.PMmodule.model.Intake)
 	 */
