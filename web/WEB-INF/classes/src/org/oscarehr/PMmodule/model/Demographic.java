@@ -91,6 +91,8 @@ public class Demographic implements Serializable {
     private Integer headRecord = null;
     private Set subRecord = null;
     
+    private int activeCount = 0;
+    private int hsAlertCount = 0;
     public enum ConsentGiven
     {
         ALL, CIRCLE_OF_CARE, EMPI, INCAPACITATED_EMERGENCY, NONE
@@ -829,6 +831,36 @@ public class Demographic implements Serializable {
 
 	public void setSexDesc(String sexDesc) {
 		this.sexDesc = sexDesc;
+	}
+
+
+
+	public boolean isActive() {
+		return activeCount > 0;
+	}
+
+
+	public boolean hasHsAlert() {
+		return hsAlertCount > 0;
+	}
+
+	public int getActiveCount() {
+		return activeCount;
+	}
+	public void setActiveCount(int activeCount) {
+		this.activeCount = activeCount;
+	}
+
+
+
+	public int getHsAlertCount() {
+		return hsAlertCount;
+	}
+
+
+
+	public void setHsAlertCount(int hsAlertCount) {
+		this.hsAlertCount = hsAlertCount;
 	}
 }
 

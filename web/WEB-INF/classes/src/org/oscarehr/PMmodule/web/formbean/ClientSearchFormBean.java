@@ -36,17 +36,21 @@ public class ClientSearchFormBean {
 	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 	private Calendar calendar = Calendar.getInstance();
 	
+	private String demographicNo;
 	private String firstName;
 	private String lastName;
 	private String dob;
 	private String healthCardNumber;
 	private String healthCardVersion;
+	private String gender;
+	private String active;
 	private boolean searchOutsideDomain;
 	private boolean searchUsingSoundex;
 	private String bedProgramId; 
 	private String dateFrom;
 	private String dateTo;
 	private List programDomain;
+	private List genders;
 	
 	public ClientSearchFormBean() {
 		//setSearchOutsideDomain(true);
@@ -225,6 +229,38 @@ public class ClientSearchFormBean {
 	 */
 	public void setDateTo(String dateTo) {
 		this.dateTo = dateTo;
+	}
+
+	public String getDemographicNo() {
+		return demographicNo;
+	}
+
+	public void setDemographicNo(String demographicNo) {
+		this.demographicNo = demographicNo;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
+	}
+
+	public List getGenders() {
+		return genders;
+	}
+
+	public void setGenders(List genders) {
+		this.genders = genders;
 	}
 	
 }

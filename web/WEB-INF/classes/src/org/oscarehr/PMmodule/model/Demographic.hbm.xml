@@ -59,10 +59,14 @@
 		<property column="citizenship" length="40" name="Citizenship" type="string" />
 		<property column="sin" length="15" name="Sin" type="string" />
 	
-                <property
-			name="HeadRecord"
-			type="integer"
-                        formula="(select d.merged_to from demographic_merged d where d.deleted = 0 and d.demographic_no = demographic_no)"/>
+        <property name="HeadRecord" type="integer"
+                  formula="(select d.merged_to from demographic_merged d where d.deleted = 0 and d.demographic_no = demographic_no)"/>
+
+		<property name="activeCount" type="integer"
+				  formula="(select count(*) from admission a where a.client_id=demographic_no and a.admission_status='current' 
+				           and a.program_id in (select p.program_id from program p where p.type='Bed'))" />
+		<property name="hsAlertCount"
+				  formula="(select count(*) from health_safety h where h.demographic_no=demographic_no)" />
                
                 <set name="SubRecord" table="demographic_merged" where= "deleted = 0" lazy="false" >
                     <key column="merged_to"/>

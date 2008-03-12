@@ -117,6 +117,145 @@ public class ClientDao extends HibernateDaoSupport {
 		Criteria criteria = getSession().createCriteria(Demographic.class);
 		String firstName = "";
 		String lastName = "";
+		String firstNameL = "";
+		String lastNameL = "";
+		String bedProgramIdCond = "";
+		String admitDateFromCond = "";
+		String admitDateToCond = "";
+		String active = "";
+		String gender = "";
+		String AND = " and ";
+		String WHERE = " where ";
+		String sql = "";
+		String sql2 = "";
+		
+		@SuppressWarnings("unchecked")
+		List<Demographic> results = null;
+
+		boolean isOracle = OscarProperties.getInstance().getDbType().equals("oracle");
+		if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
+			firstName = bean.getFirstName();
+			firstName = StringEscapeUtils.escapeSql(firstName);
+			firstNameL = "%" + firstName + "%"; 
+		}
+		
+		if (bean.getLastName() != null && bean.getLastName().length() > 0) {
+			lastName = bean.getLastName();
+			lastName = StringEscapeUtils.escapeSql(lastName);
+			lastNameL = "%" + lastName + "%";
+		}
+		
+		String clientNo = bean.getDemographicNo(); 
+		if (!"".equals(clientNo))
+		{
+			if (com.quatro.util.Utility.IsInt(clientNo) ) {
+				criteria.add(Expression.eq("DemographicNo", Integer.valueOf(clientNo).intValue()));
+				results = criteria.list();
+			} 
+			else 
+			{
+				/* invalid client no generates a empty search results */
+				results = new ArrayList();
+			}
+			if (returnOptinsOnly)
+			{
+				results=filterDemographicForDataSharingOptedIn(results);
+				log.debug("search: # of results after returnOptinsOnly filter =" + results.size());
+			}
+		    return results;
+		}
+		
+		if (firstName.length() > 0) {
+			if (isOracle) {
+				sql = "(LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
+				criteria.add(Restrictions.or(Restrictions.or(Restrictions.ilike("FirstName", firstNameL), Restrictions.sqlRestriction(sql)),
+						     Restrictions.ilike("Alias", firstNameL)));
+				
+			}
+			else
+			{
+				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name like '" + firstName + "%'))";
+				//criteria.add(Restrictions.sqlRestriction(sql));
+				
+				sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (alias like '%" + firstName + "%'))";
+				criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
+			
+			}
+			
+			if (lastName.length() > 0) {
+				if(isOracle) {
+					sql = "(LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))";
+					criteria.add(Restrictions.or(Restrictions.or(Restrictions.ilike("LastName", lastNameL), Restrictions.sqlRestriction(sql)),
+							     Restrictions.ilike("Alias", lastNameL)));
+				
+					//sql = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4)))";
+					//criteria.add(Restrictions.or(Restrictions.ilike("Alias",lastName + "%" ), Restrictions.sqlRestriction(sql)));
+				
+				}
+				else
+				{
+					sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '%" + lastName + "%'))";
+					//criteria.add(Restrictions.sqlRestriction(sql));
+								
+					sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (alias like '%" + lastName + "%'))";
+					criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
+				
+				}
+			}
+		}
+		
+		if (bean.getDob() != null && bean.getDob().length() > 0) {
+			criteria.add(Expression.eq("YearOfBirth", bean.getYearOfBirth()));
+			criteria.add(Expression.eq("MonthOfBirth", bean.getMonthOfBirth()));
+			criteria.add(Expression.eq("DateOfBirth", bean.getDayOfBirth()));
+		}
+
+		if (bean.getHealthCardNumber() != null && bean.getHealthCardNumber().length() > 0) {
+			criteria.add(Expression.eq("Hin", bean.getHealthCardNumber()));
+		}
+
+		if (bean.getHealthCardVersion() != null && bean.getHealthCardVersion().length() > 0) {
+			criteria.add(Expression.eq("Ver", bean.getHealthCardVersion()));
+		}
+		
+		if(bean.getBedProgramId() != null && bean.getBedProgramId().length() > 0) {
+			bedProgramIdCond = " program_id = " + bean.getBedProgramId();
+		}
+		active = bean.getActive();
+		if("1".equals(active)) {
+			criteria.add(Expression.ge("activeCount", 1));
+		}
+		else if ("0".equals(active))
+		{
+			criteria.add(Expression.eq("activeCount", 0));
+		}
+			
+		gender = bean.getGender();
+		if (!"".equals(gender))
+		{
+			criteria.add(Expression.eq("Sex", gender));
+		}
+		
+		results = criteria.list();
+
+		if (log.isDebugEnabled()) {
+			log.debug("search: # of results=" + results.size());
+		}
+
+		if (returnOptinsOnly)
+		{
+			results=filterDemographicForDataSharingOptedIn(results);
+			
+			log.debug("search: # of results after returnOptinsOnly filter =" + results.size());
+		}
+		
+		return results;
+	}
+	public List<Demographic> search_ori(ClientSearchFormBean bean, boolean returnOptinsOnly) {
+
+		Criteria criteria = getSession().createCriteria(Demographic.class);
+		String firstName = "";
+		String lastName = "";
 		String bedProgramIdCond = "";
 		String admitDateFromCond = "";
 		String admitDateToCond = "";

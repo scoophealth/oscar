@@ -23,7 +23,7 @@
         </form-bean>
         <form-bean name="lookupCodeListForm" type="org.apache.struts.validator.DynaValidatorForm">
         	<form-property name="tableDef" type="com.quatro.model.LookupTableDefValue"></form-property>
-        	<form-property name="codes" type="java.util.List"></form-property>        
+        	<form-property name="codes" type="java.util.List"></form-property>    
         </form-bean>
         <form-bean name="lookupCodeEditForm" type="com.quatro.web.lookup.LookupCodeEditForm">
         </form-bean>

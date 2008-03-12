@@ -42,6 +42,7 @@
         <property name="clientManager" ref="clientManager"/>
         <property name="logManager" ref="logManager"/>
         <property name="programManager" ref="programManager"/>
+        <property name="lookupManager" ref="lookupManager"/>
     </bean>
     <bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false" autowire="byName">
         <property name="surveyManager" ref="oscarSurveyManager"/>        

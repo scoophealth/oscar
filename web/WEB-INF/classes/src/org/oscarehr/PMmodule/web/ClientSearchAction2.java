@@ -61,6 +61,9 @@ public class ClientSearchAction2 extends BaseAction {
 			allBedPrograms.add((Program)allBedProgramsInArr[i]);
 		}
 		request.setAttribute("allBedPrograms", allBedPrograms);
+		
+		request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
+		
 		return mapping.findForward("form");
 	}
 	
@@ -77,10 +80,10 @@ public class ClientSearchAction2 extends BaseAction {
 		}
 		request.setAttribute("allBedPrograms", allBedPrograms);
 		
-		/* do the search */
 		formBean.setProgramDomain((List)request.getSession().getAttribute("program_domain"));
 		boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
 		
+		/* do the search */
 		request.setAttribute("clients",clientManager.search(formBean, allowOnlyOptins));
 		
 		// sort out the consent type used to search
@@ -96,6 +99,7 @@ public class ClientSearchAction2 extends BaseAction {
 		if(formBean.isSearchOutsideDomain()) {
 			logManager.log("read","out of domain client search","",request);
 		}
+		request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
 				
 		return mapping.findForward("form");
 	}
