@@ -1324,7 +1324,7 @@ public class ClientManagerAction extends BaseAction {
 
             // request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
             // only allow bed/service programs show up.(not external program)
-            List currentAdmissionList = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));
+            List currentAdmissionList = admissionManager.getCurrentAdmissionsByFacility(Integer.valueOf(demographicNo), Integer.valueOf(facilityId));
             List bedServiceList = new ArrayList();
             for (Iterator ad = currentAdmissionList.iterator(); ad.hasNext();) {
                 Admission admission1 = (Admission) ad.next();
@@ -1366,8 +1366,8 @@ public class ClientManagerAction extends BaseAction {
 
         /* history */
         if (tabBean.getTab().equals("History")) {
-            request.setAttribute("admissionHistory", admissionManager.getAdmissions(Integer.valueOf(demographicNo)));
-            request.setAttribute("referralHistory", clientManager.getReferrals(demographicNo));
+            request.setAttribute("admissionHistory", admissionManager.getAdmissionsByFacility(Integer.valueOf(demographicNo), Integer.valueOf(facilityId)));
+            request.setAttribute("referralHistory", clientManager.getReferralsByFacility(demographicNo, Integer.valueOf(facilityId)));
         }
 
         List<?> currentAdmissions = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));

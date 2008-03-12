@@ -141,6 +141,22 @@ public class AdmissionDao extends HibernateDaoSupport {
         return rs;
     }
 
+    public List getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
+        if (demographicNo == null || demographicNo <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        String queryStr = "FROM Admission a WHERE a.ClientId=? and a.ProgramId in " +
+           "(select s.id from Program s where s.facilityId=? or s.facilityId is null) ORDER BY a.AdmissionDate DESC";
+        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, new Long(facilityId.longValue()) });
+
+        if (log.isDebugEnabled()) {
+            log.debug("getAdmissionsByFacility for clientId " + demographicNo + ", # of admissions: " + rs.size());
+        }
+
+        return rs;
+    }
+
     
     public List getCurrentAdmissions(Integer demographicNo) {
         if (demographicNo == null || demographicNo <= 0) {
@@ -158,6 +174,27 @@ public class AdmissionDao extends HibernateDaoSupport {
 
     }
 
+    public List getCurrentAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
+        if (demographicNo == null || demographicNo <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        if (facilityId == null || facilityId < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        String queryStr = "FROM Admission a WHERE a.ClientId=? and a.ProgramId in " +
+           "(select s.id from Program s where s.facilityId=? or s.facilityId is null) AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
+        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, new Long(facilityId.longValue()) });
+
+        if (log.isDebugEnabled()) {
+            log.debug("getCurrentAdmissionsByFacility for clientId " + demographicNo + ", # of admissions: " + rs.size());
+        }
+
+        return rs;
+
+    }
+    
     public Admission getCurrentExternalProgramAdmission(ProgramDao programDAO, Integer demographicNo) {
         if (programDAO == null) {
             throw new IllegalArgumentException();

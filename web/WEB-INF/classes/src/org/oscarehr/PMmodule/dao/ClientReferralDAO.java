@@ -66,6 +66,27 @@ public class ClientReferralDAO extends HibernateDaoSupport {
         
         return results;
     }
+
+    public List getReferralsByFacility(Long clientId, Integer facilityId) {
+
+        if (clientId == null || clientId.longValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+        if (facilityId == null || facilityId.intValue() < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        String sSQL="from ClientReferral cr where cr.ClientId = ? " +
+                    " and ( (cr.FacilityId=?) or (cr.ProgramId in (select s.id from Program s where s.facilityId=? or s.facilityId is null)))";
+        List results = this.getHibernateTemplate().find(sSQL, new Object[] { clientId, facilityId, new Long(facilityId.longValue()) });
+//        		"from ClientReferral cr where cr.ClientId = ?", clientId);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getReferralsByFacility: clientId=" + clientId + ",# of results=" + results.size());
+        }
+        results = displayResult(results);
+        return results;
+    }
     
     // [ 1842692 ] RFQ Feature - temp change for pmm referral history report
     // - suggestion: to add a new field to the table client_referral (Referring program/agency)

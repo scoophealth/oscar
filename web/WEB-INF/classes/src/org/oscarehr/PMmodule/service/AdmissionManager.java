@@ -85,8 +85,16 @@ public class AdmissionManager {
 		return dao.getAdmissions(demographicNo);
 	}
 	
+	public List getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
+		return dao.getAdmissionsByFacility(demographicNo, facilityId);
+	}
+
 	public List getCurrentAdmissions(Integer demographicNo) {
 		return dao.getCurrentAdmissions(demographicNo);
+	}
+
+	public List getCurrentAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
+		return dao.getCurrentAdmissionsByFacility(demographicNo, facilityId);
 	}
 
 	public Admission getCurrentBedProgramAdmission(Integer demographicNo) {
