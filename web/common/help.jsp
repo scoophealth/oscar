@@ -23,7 +23,6 @@
  -->
 <% 
 	String topic = request.getParameter("topic"); 
-	System.out.println(" the topic is " + topic);
 %>
 
 <%@ include file="/taglibs.jsp"%>
