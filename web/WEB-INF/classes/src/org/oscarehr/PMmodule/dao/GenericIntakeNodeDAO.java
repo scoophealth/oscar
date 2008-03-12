@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.model.IntakeNodeLabel;
 import org.oscarehr.PMmodule.model.IntakeNodeTemplate;
@@ -69,6 +70,10 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
     
     public void updateNodeLabel(IntakeNodeLabel intakeNodeLabel){
         getHibernateTemplate().update(intakeNodeLabel);   
+    }
+    
+    public void updateQuickIntakeAgency(Agency agency){
+        getHibernateTemplate().update(agency);
     }
     
     public IntakeNodeLabel getIntakeNodeLabel(Integer intakeNodeLabelId){

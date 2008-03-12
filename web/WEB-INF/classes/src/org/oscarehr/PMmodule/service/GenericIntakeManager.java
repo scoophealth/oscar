@@ -373,7 +373,13 @@ public class GenericIntakeManager {
         public void updateNodeLabel(IntakeNodeLabel intakeNodeLabel){
             genericIntakeNodeDAO.updateNodeLabel(intakeNodeLabel);   
         }
-    
+	
+	public void updateQuickIntakeAgency(Integer intakeNodeId) {
+	    Agency agency = Agency.getLocalAgency();
+	    agency.setIntakeQuick(intakeNodeId);
+	    genericIntakeNodeDAO.updateQuickIntakeAgency(agency);
+	}
+	
         public IntakeNodeLabel getIntakeNodeLabel(Integer intakeNodeLabelId){
             return genericIntakeNodeDAO.getIntakeNodeLabel(intakeNodeLabelId);
         }
