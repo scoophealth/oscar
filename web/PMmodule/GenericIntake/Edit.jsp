@@ -47,9 +47,7 @@
         var programFemaleOnly =<%=session.getAttribute("programFemaleOnly")%>;
         var programTransgenderOnly =<%=session.getAttribute("programTransgenderOnly")%>;
 
-		var RFQ_INTAKE_ADMISSION = <%=session.getAttribute("RFQ_INTAKE_ADMISSION")%>;
-		
-		var currentBedCommunityId = <%=session.getAttribute("intakeCurrentBedCommunityId")%>;
+		var RFQ_INTAKE_ADMISSION = <%=session.getAttribute("RFQ_INTAKE_ADMISSION")%>;		
 		
 		<%=session.getAttribute("programAgeValidationMethod")%>
 		<%=session.getAttribute("admitToNewFacilityValidationMethod")%>
