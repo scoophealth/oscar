@@ -1517,7 +1517,7 @@ public class ClientManagerAction extends BaseAction {
 
         /* Relations */
         DemographicRelationship demoRelation = new DemographicRelationship();
-        ArrayList<Hashtable> relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo);
+        ArrayList<Hashtable> relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo, Integer.valueOf(facilityId));
         List<JointAdmission> list = clientManager.getDependents(new Long(demographicNo));
         JointAdmission clientsJadm = clientManager.getJointAdmission(new Long(demographicNo));
         int familySize = list.size() + 1;

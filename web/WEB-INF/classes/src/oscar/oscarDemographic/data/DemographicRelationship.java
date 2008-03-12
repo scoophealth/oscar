@@ -196,6 +196,38 @@ public class DemographicRelationship {
       return list; 
    }
 
+   public ArrayList getDemographicRelationshipsWithNamePhone(String demographic_no, Integer facilityId){                 
+	      ArrayList list = new ArrayList();
+	      try {
+	         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	         ResultSet rs;
+	         String sql = "select * from relationships where demographic_no = '"+demographic_no+"' and deleted != '1'" +
+	                      " and facility_id=" + facilityId.toString();
+	         rs = db.GetSQL(sql);
+	         while(rs.next()){
+	            Hashtable h = new Hashtable();
+	            String demo = db.getString(rs,"relation_demographic_no");
+	            DemographicData dd = new DemographicData();
+	            DemographicData.Demographic demographic = dd.getDemographic(demo);    
+	            h.put("lastName", demographic.getLastName());
+	            h.put("firstName", demographic.getFirstName());
+	            h.put("phone", demographic.getPhone());
+	            h.put("demographicNo", demo);
+	            h.put("relation", db.getString(rs,"relation"));
+	            
+	            h.put("subDecisionMaker", booleanConverter(db.getString(rs,"sub_decision_maker")));
+	            h.put("emergencyContact", booleanConverter(db.getString(rs,"emergency_contact")));
+	            h.put("notes", db.getString(rs,"notes"));
+	            h.put("age",demographic.getAge());
+	            list.add(h);
+	         }
+	         db.CloseConn();            
+	      } catch (SQLException e) {
+	         System.out.println(e.getMessage());
+	      }       
+	      return list; 
+	   }
+
    
    private Boolean booleanConverter(String s){      
       boolean isTrue = false;
