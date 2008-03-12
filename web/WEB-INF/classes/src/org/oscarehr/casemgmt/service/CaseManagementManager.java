@@ -982,7 +982,6 @@ public class CaseManagementManager {
         }
         
         // filter issues based on facility
-System.err.println("##################### "+OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true"));
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
             filteredIssues = issuesFacilityFiltering(currentFacilityId, filteredIssues);
         }
