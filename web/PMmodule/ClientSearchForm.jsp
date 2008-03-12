@@ -146,7 +146,7 @@
 							<%
 						}
 					%>
-					<td align="center"><input type="button" name="reset" value="reset" onclick="javascript:resetClientFields();" /></td>
+					<td align="center"><input type="reset" name="reset" value="reset" /></td>
 				</tr>
 			</table>
 		</div>
