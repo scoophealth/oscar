@@ -265,16 +265,15 @@ create table app_module
 
 
 -- views:
-
-CREATE OR REPLACE VIEW V_LK_NAME AS
+CREATE OR REPLACE VIEW v_lk_name AS
 SELECT 0 grandParentID, 0 parentID, bed_type_id id, name description
 FROM bed_type a;
 
-CREATE OR REPLACE VIEW V_LK_ORG AS
+CREATE OR REPLACE VIEW v_lk_org AS
 SELECT 0 grandParentID, 0 parentID, id, name description
 FROM agency;
 
-CREATE OR REPLACE VIEW V_Lookup_Table AS
+CREATE OR REPLACE VIEW v_lookup_table AS
 select 'BTY' prefix, bed_type_id code, name description, '' parentcode,1 active,bed_type_id lineID, dflt buf1
     from bed_type
 union
@@ -282,7 +281,7 @@ select 'BED' prefix, bed_id code, name description, room_id parentcode, active,b
     from bed
 union
 select 'ORG' prefix, id, description,  null parentcode,1, 0 lineID, null
-    from V_LK_ORG
+    from v_lk_org
 union
 select 'ROL', role_name,role_name,  null parentcode, 1,0, null 
        from secRole
@@ -328,7 +327,7 @@ FROM lst_service_restriction
 ;
 
 
-CREATE OR REPLACE VIEW V_REP_BEDLOG AS
+CREATE OR REPLACE VIEW v_rep_bedlog AS
 SELECT
 a.client_id client_id,
   a.admission_date admission_date,
@@ -351,7 +350,7 @@ FROM
 ;
 
 
-CREATE OR REPLACE VIEW V_USER_REPORT AS
+CREATE OR REPLACE VIEW v_user_report AS
 SELECT a.reportno, a.title, a.description, a.orgapplicable, a.reporttype, a.dateoption, a.datepart,
        a.reportgroup,d.id reportgroupid, a.tablename, a.notes, c.provider_no,
        MAX(b.access_type) access_type, d.description reportgroupdesc, a.updatedby, a.updateddate
@@ -361,23 +360,19 @@ GROUP BY a.reportno, a.title, a.description, a.orgapplicable, a.reporttype, a.da
 	a.reportgroup,d.id, a.tablename,a.notes, c.provider_no, d.description, a.updatedby, a.updateddate
 ;
 
-
 -- data 
-
-INSERT INTO secObjectName (objectName)
-  VALUES ('_reportRunner');
-INSERT INTO secObjectName (objectName)
-  VALUES ('_reportWriter');
+INSERT INTO secObjectName (objectName) VALUES ('_reportRunner');
+INSERT INTO secObjectName (objectName) VALUES ('_reportWriter');
 
 
 INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
-  VALUES ('admin', '_reportRunner', '|*|', 0, '999998');
+VALUES ('admin', '_reportRunner', '|*|', 0, '999998');
 INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
-  VALUES ('admin', '_reportWriter', '|*|', 0, '999998');
+VALUES ('admin', '_reportWriter', '|*|', 0, '999998');
 INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
-  VALUES ('doctor', '_reportRunner', '|*|', 0, '999998');
+VALUES ('doctor', '_reportRunner', '|*|', 0, '999998');
 INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
-  VALUES ('doctor', '_reportWriter', '|*|', 0, '999998');
+VALUES ('doctor', '_reportWriter', '|*|', 0, '999998');
 
 
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
@@ -446,20 +441,20 @@ values (5, 'Reports');
 
 
 insert into report (reportno, title, description, orgapplicable, reporttype, dateoption, datepart, reportgroup, notes, tablename, updatedby, updateddate, sptorun)
-values (81, 'Shelter Bed Logs', 'Bed Logs in a given shelter on given dates ', 1, 'RPT', 'B', 'D', 15, null, 'V_REP_BEDLOG', 'oscardoc', to_date('12-07-2007 09:37:47', 'dd-mm-yyyy hh24:mi:ss'), null);
+values (81, 'Shelter Bed Logs', 'Bed Logs in a given shelter on given dates ', 1, 'RPT', 'B', 'D', 15, null, 'V_REP_BEDLOG', 'oscardoc', '2007-12-07 09:37:47', null);
 insert into report (reportno, title, description, orgapplicable, reporttype, dateoption, datepart, reportgroup, notes, tablename, updatedby, updateddate, sptorun)
-values (82, 'Client List', 'Under designing, please do not test', 1, 'RPT', 'N', null, 5, null, null, 'mespina', to_date('12-07-2007 09:37:47', 'dd-mm-yyyy hh24:mi:ss'), null);
+values (82, 'Client List', 'Under designing, please do not test', 1, 'RPT', 'N', null, 5, null, null, 'mespina', '2007-12-07 09:37:47', null);
 insert into report (reportno, title, description, orgapplicable, reporttype, dateoption, datepart, reportgroup, notes, tablename, updatedby, updateddate, sptorun)
-values (83, 'Case List', 'Under designing, please do not test', 1, 'RPT', 'N', null, 10, null, null, 'mespina', to_date('12-07-2007 09:37:47', 'dd-mm-yyyy hh24:mi:ss'), null);
+values (83, 'Case List', 'Under designing, please do not test', 1, 'RPT', 'N', null, 10, null, null, 'mespina', '2007-12-07 09:37:47', null);
 insert into report (reportno, title, description, orgapplicable, reporttype, dateoption, datepart, reportgroup, notes, tablename, updatedby, updateddate, sptorun)
-values (200594, 'User List', 'List of Users', 1, 'RPT', 'L', 'M', 90, null, 'V_REP_USERLIST', 'oscardoc', to_date('22-02-2008 23:19:44', 'dd-mm-yyyy hh24:mi:ss'), null);
+values (200594, 'User List', 'List of Users', 1, 'RPT', 'L', 'M', 90, null, 'V_REP_USERLIST', 'oscardoc', '2008-02-22 23:19:44', null);
 
 
 insert into report_date_sp (reportno, startdate, enddate, asofdate, startdate_s, enddate_s, asofdate_s, sptorun)
-values (88, to_date('06-12-2007', 'dd-mm-yyyy'), to_date('08-02-2008', 'dd-mm-yyyy'), to_date('06-12-2007', 'dd-mm-yyyy'), '20071206', '20080208', '20071206', 'sp_cr_insert_empreghrs_tbl');
+values (88, '2007-12-06', '2008-02-08', '2007-12-06', '20071206', '20080208', '20071206', 'sp_cr_insert_empreghrs_tbl');
 
 insert into report_document (docid, subject, privacycd, ownerid, checkoutyn, checkoutuserid, checkoutdate, doctype, filename, moduleid, refno, filetype, viewid, viewrefno, revdatetime)
-values (200696, 'List Of Users', 'P', 'oscardoc', '0', null, null, 'RPT', 'CR_USER_LIST.rpt', 'REPORT', null, null, null, null, to_date('27-02-2008 14:36:13', 'dd-mm-yyyy hh24:mi:ss'));
+values (200696, 'List Of Users', 'P', 'oscardoc', '0', null, null, 'RPT', 'CR_USER_LIST.rpt', 'REPORT', null, null, null, null, '2008-02-27 14:36:13');
 
 insert into report_filter (reportno, fieldno, fieldname, fielddesc, fieldtype, lookup_table, iscrosstabheaders, operator, lookup_tree, fieldsql, lookup_script, note, valueformat)
 values (200594, 200618, 'ROLE_NAME', null, 'S', 'ROL', null, 'C', null, 'ROLE_NAME', null, null, null);
@@ -700,21 +695,21 @@ insert into report_qgviewfield (qgviewno, fieldname, fieldno, description, field
 values (200617, 'CLIENTSTATUS_ID', 16, null, 'N', null, null, 'CLIENTSTATUS_ID', 'initial set up', null, null);
 
 insert into report_qgviewsummary (qgviewno, qgviewcode, description, groupcode, mastertype, updatedby, updateddate, note, activeyn, secureyn, dbentity, refviews, relations, filters, object_type, distinctyn)
-values (200615, 'DEMOGRAPHIC', null, '90', 'M', 'oscardoc', to_date('22-02-2008 21:13:31', 'dd-mm-yyyy hh24:mi:ss'), 'intial setup', '1', '0', 'DEMOGRAPHIC', 'DEMOGRAPHIC', null, null, 'TABLE', null);
+values (200615, 'DEMOGRAPHIC', null, '90', 'M', 'oscardoc', '2008-02-22 21:13:31', 'intial setup', '1', '0', 'DEMOGRAPHIC', 'DEMOGRAPHIC', null, null, 'TABLE', null);
 insert into report_qgviewsummary (qgviewno, qgviewcode, description, groupcode, mastertype, updatedby, updateddate, note, activeyn, secureyn, dbentity, refviews, relations, filters, object_type, distinctyn)
-values (200616, 'INTAKE', null, '90', 'M', 'oscardoc', to_date('22-02-2008 21:13:44', 'dd-mm-yyyy hh24:mi:ss'), 'intial setup', '1', '0', 'INTAKE', 'INTAKE', null, null, 'TABLE', null);
+values (200616, 'INTAKE', null, '90', 'M', 'oscardoc', '2008-02-22', 'intial setup', '1', '0', 'INTAKE', 'INTAKE', null, null, 'TABLE', null);
 insert into report_qgviewsummary (qgviewno, qgviewcode, description, groupcode, mastertype, updatedby, updateddate, note, activeyn, secureyn, dbentity, refviews, relations, filters, object_type, distinctyn)
-values (200617, 'ADMISSION', null, '90', 'M', 'oscardoc', to_date('22-02-2008 21:13:54', 'dd-mm-yyyy hh24:mi:ss'), 'intial setup', '1', '0', 'ADMISSION', 'ADMISSION', null, null, 'TABLE', null);
+values (200617, 'ADMISSION', null, '90', 'M', 'oscardoc', '2008-02-22', 'intial setup', '1', '0', 'ADMISSION', 'ADMISSION', null, null, 'TABLE', null);
 insert into report_qgviewsummary (qgviewno, qgviewcode, description, groupcode, mastertype, updatedby, updateddate, note, activeyn, secureyn, dbentity, refviews, relations, filters, object_type, distinctyn)
-values (200549, 'V_REP_BEDLOG', null, '90', 'M', 'oscardoc', to_date('20-02-2008 14:19:40', 'dd-mm-yyyy hh24:mi:ss'), 'intial setup', '1', '0', 'V_REP_BEDLOG', 'V_REP_BEDLOG', null, null, 'VIEW', null);
+values (200549, 'V_REP_BEDLOG', null, '90', 'M', 'oscardoc', '2008-02-20 14:19:40', 'intial setup', '1', '0', 'V_REP_BEDLOG', 'V_REP_BEDLOG', null, null, 'VIEW', null);
 insert into report_qgviewsummary (qgviewno, qgviewcode, description, groupcode, mastertype, updatedby, updateddate, note, activeyn, secureyn, dbentity, refviews, relations, filters, object_type, distinctyn)
-values (200554, 'V_REP_USERLIST', 'User List', '90', 'N', 'oscardoc', to_date('21-02-2008 15:37:41', 'dd-mm-yyyy hh24:mi:ss'), null, '0', '0', 'V_REP_USERLIST', 'PROVIDER,SECUSERROLE', 'PROVIDER INNER JOIN SECUSERROLE ON PROVIDER.PROVIDER_NO=SECUSERROLE.PROVIDER_NO', null, 'VIEW', '1');
+values (200554, 'V_REP_USERLIST', 'User List', '90', 'N', 'oscardoc', '2008-02-21 15:37:41', null, '0', '0', 'V_REP_USERLIST', 'PROVIDER,SECUSERROLE', 'PROVIDER INNER JOIN SECUSERROLE ON PROVIDER.PROVIDER_NO=SECUSERROLE.PROVIDER_NO', null, 'VIEW', '1');
 insert into report_qgviewsummary (qgviewno, qgviewcode, description, groupcode, mastertype, updatedby, updateddate, note, activeyn, secureyn, dbentity, refviews, relations, filters, object_type, distinctyn)
-values (200611, 'V_REP_CLIENT', 'List of clients', '5', 'N', 'oscardoc', to_date('22-02-2008 23:00:16', 'dd-mm-yyyy hh24:mi:ss'), 'This is a master view for clients', '0', '0', 'V_REP_CLIENT', 'DEMOGRAPHIC,INTAKE', 'INTAKE INNER JOIN DEMOGRAPHIC ON INTAKE.CLIENT_ID=DEMOGRAPHIC.DEMOGRAPHIC_NO', null, 'VIEW', null);
+values (200611, 'V_REP_CLIENT', 'List of clients', '5', 'N', 'oscardoc', '2008-02-22 23:00:16', 'This is a master view for clients', '0', '0', 'V_REP_CLIENT', 'DEMOGRAPHIC,INTAKE', 'INTAKE INNER JOIN DEMOGRAPHIC ON INTAKE.CLIENT_ID=DEMOGRAPHIC.DEMOGRAPHIC_NO', null, 'VIEW', null);
 insert into report_qgviewsummary (qgviewno, qgviewcode, description, groupcode, mastertype, updatedby, updateddate, note, activeyn, secureyn, dbentity, refviews, relations, filters, object_type, distinctyn)
-values (200555, 'PROVIDER', null, '90', 'M', 'oscardoc', to_date('21-02-2008 12:59:20', 'dd-mm-yyyy hh24:mi:ss'), 'intial setup', '1', '0', 'PROVIDER', 'PROVIDER', null, null, 'TABLE', null);
+values (200555, 'PROVIDER', null, '90', 'M', 'oscardoc', '2008-02-21', 'intial setup', '1', '0', 'PROVIDER', 'PROVIDER', null, null, 'TABLE', null);
 insert into report_qgviewsummary (qgviewno, qgviewcode, description, groupcode, mastertype, updatedby, updateddate, note, activeyn, secureyn, dbentity, refviews, relations, filters, object_type, distinctyn)
-values (200556, 'SECUSERROLE', null, '90', 'M', 'oscardoc', to_date('21-02-2008 12:59:53', 'dd-mm-yyyy hh24:mi:ss'), 'intial setup', '1', '0', 'SECUSERROLE', 'SECUSERROLE', null, null, 'TABLE', null);
+values (200556, 'SECUSERROLE', null, '90', 'M', 'oscardoc', '2008-02-21 12:59:53', 'intial setup', '1', '0', 'SECUSERROLE', 'SECUSERROLE', null, null, 'TABLE', null);
 
 
 insert into report_role (reportno, rolecode, access_type)
@@ -729,15 +724,15 @@ insert into report_role (reportno, rolecode, access_type)
 values (200594, 'admin', '1');
 
 insert into report_template (templateno, reportno, reportoptionid, description, startdate, enddate, startpayperiod, endpayperiod, loginid, updatedate, privateyn)
-values (200682, 81, 2, 'asdfgh', to_date('04-02-2008', 'dd-mm-yyyy'), to_date('22-02-2008', 'dd-mm-yyyy'), null, null, '999998', null, 0);
+values (200682, 81, 2, 'asdfgh', '2008-02-04', '2008-02-22', null, null, '999998', null, 0);
 insert into report_template (templateno, reportno, reportoptionid, description, startdate, enddate, startpayperiod, endpayperiod, loginid, updatedate, privateyn)
-values (200686, 81, 1, 'qwert', to_date('01-02-2008', 'dd-mm-yyyy'), to_date('28-02-2008', 'dd-mm-yyyy'), null, null, '999998', null, 0);
+values (200686, 81, 1, 'qwert', '2008-02-01', '2008-02-28', null, null, '999998', null, 0);
 insert into report_template (templateno, reportno, reportoptionid, description, startdate, enddate, startpayperiod, endpayperiod, loginid, updatedate, privateyn)
-values (200622, 200594, 200595, 'List of doctors', to_date('30-12-1899', 'dd-mm-yyyy'), to_date('30-12-1899', 'dd-mm-yyyy'), null, null, '999998', to_date('22-02-2008 21:37:02', 'dd-mm-yyyy hh24:mi:ss'), 0);
+values (200622, 200594, 200595, 'List of doctors', '1899-12-30', '1899-12-30', null, null, '999998', '2008-02-22 21:37:02', 0);
 insert into report_template (templateno, reportno, reportoptionid, description, startdate, enddate, startpayperiod, endpayperiod, loginid, updatedate, privateyn)
-values (313, 83, 7, 'Incident Cost Exception Report - Estimated Costs =$0', to_date('30-12-1899', 'dd-mm-yyyy'), to_date('30-12-1899', 'dd-mm-yyyy'), null, null, '999998', to_date('11-07-2007 10:34:00', 'dd-mm-yyyy hh24:mi:ss'), 0);
+values (313, 83, 7, 'Incident Cost Exception Report - Estimated Costs =$0', '1899-12-30', '1899-12-30', null, null, '999998', '2007-11-07 10:34:00', 0);
 insert into report_template (templateno, reportno, reportoptionid, description, startdate, enddate, startpayperiod, endpayperiod, loginid, updatedate, privateyn)
-values (312, 83, 6, 'Fatal Public Electrical Incidents', to_date('30-12-1899', 'dd-mm-yyyy'), to_date('30-12-1899', 'dd-mm-yyyy'), null, null, '999998', to_date('10-07-2007 15:32:56', 'dd-mm-yyyy hh24:mi:ss'), 0);
+values (312, 83, 6, 'Fatal Public Electrical Incidents', '1899-12-30', '1899-12-30', null, null, '999998', '2007-07-10 15:32:56', 0);
 
 
 
@@ -761,6 +756,7 @@ insert into report_template_org (counter, templateno, orgcd)
 values (1, 200622, 'ORG');
 insert into report_template_org (counter, templateno, orgcd)
 values (200693, 200682, '0');
+
 
 
 
