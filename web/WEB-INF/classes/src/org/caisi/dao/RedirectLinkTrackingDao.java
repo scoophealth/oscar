@@ -63,7 +63,7 @@ public class RedirectLinkTrackingDao {
         PreparedStatement ps = null;
         try {
             c = DbConnectionFilter.getThreadLocalDbConnection();
-            ps = c.prepareStatement("delete from RedirectLinkTracking where date<?");
+            ps = c.prepareStatement("delete from RedirectLinkTracking where redirectDate<?");
             ps.setTimestamp(1, new Timestamp(date.getTime()));
             ps.executeUpdate();
         }
@@ -89,7 +89,7 @@ public class RedirectLinkTrackingDao {
             RedirectLinkTracking temp = null;
             while (rs.next()) {
                 temp = new RedirectLinkTracking();
-                temp.date = rs.getTimestamp("date");
+                temp.date = rs.getTimestamp("redirectDate");
                 temp.providerNo = rs.getString("provider_no");
                 result.add(temp);
             }
