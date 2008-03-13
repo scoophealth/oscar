@@ -197,13 +197,16 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   </div>
 
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=false%>" >
-      <div class="adminBox">
+      
+      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.provider" rights="r">
+	  <div class="adminBox">
 	  <h3>&nbsp;<bean:message key="admin.admin.provider"/></h3>
 	  <ul>
 	      <li><html:link  page="/admin/provideraddarecordhtm.jsp"><bean:message key="admin.admin.btnAddProvider"/></html:link></li>
 	      <li><html:link page="/admin/providersearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchProvider"/></html:link></li>
 	  </ul>
       </div>
+      </security:oscarSec>
   </security:oscarSec>
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>" >
       <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
@@ -225,6 +228,8 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       </caisi:isModuleLoad>
   </security:oscarSec>      
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=false%>" >
+      
+      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.security" rights="r">
       <div class="adminBox">
 	  <h3>&nbsp;<bean:message key="admin.admin.security"/></h3>
 	  <ul>
@@ -235,13 +240,19 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 	      </security:oscarSec>
 	      <li><a href="#" onclick = 'popupPage(500,700,&quot;<html:rewrite page="/admin/providerRole.jsp"/>&quot;);return false;'>Assign Role to Provider</a></li>
 	      <li><a href="#" onclick = 'popupPage(500,800,&quot;<html:rewrite page="/admin/providerPrivilege.jsp"/>&quot;);return false;'>Assign Role/Rights to Object</a></li>
+	      
+	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.securityLogReport" rights="r">
 	      <li><a href="#" onclick = 'popupPage(500,800,&quot;<html:rewrite page="/admin/logReport.jsp"/>?keyword=admin&quot;);return false;'>Security Log Report</a></li>
+	      </security:oscarSec>
+	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.unlockAccount" rights="r">
 	      <li><a href="#" onclick = 'popupPage(500,800,&quot;<html:rewrite page="/admin/unLock.jsp" />&quot;);return false;'>Unlock Account</a></li>
+	      </security:oscarSec>
 	  </ul>
       </div>
+      </security:oscarSec>
       
       <% if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled()){%>
-      
+      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.cookieRevolver" rights="r">
       <div class="adminBox">
 	  <h3>&nbsp;2 Factor Authentication</h3>
 	  <ul>
@@ -254,29 +265,39 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 	      <li><a href="#" onclick = "popupPage(500,700,'../gatekeeper/matrixadmin/show');return false;">Generate matrix cards</a></li>
 	  </ul>
       </div>
-      
+      </security:oscarSec>
       <% } %>
   </security:oscarSec> 
   
       <%-- -add by caisi--%>
       
-      <caisi:isModuleLoad moduleName="caisi">
+      <caisi:isModuleLoad moduleName="caisi">      
+      
 	  <div class="adminBox">
 	      <h3>&nbsp;<bean:message key="admin.admin.caisi"/></h3>
 	      <ul>
-	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.systemMessage" rights="r" reverse="<%=false%>" >
+	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.systemMessage" rights="r" reverse="<%=false%>" >
 		  <li><html:link action="/SystemMessage.do"><bean:message key="admin.admin.systemMessage"/></html:link></li>
 		  </security:oscarSec>
-		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.facilityMessage" rights="r" reverse="<%=false%>" >
+		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.facilityMessage" rights="r" reverse="<%=false%>" >
 		  <li><html:link action="/FacilityMessage.do?">Facilities Messages</html:link></li>
 		  </security:oscarSec>
 <!-- 		  <li><html:link action="/CaisiEditor.do?method=list">Caisi List Editor</html:link></li>  -->
+          <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.lookupFieldEditor" rights="r">
           <li><html:link action="/Lookup/LookupTableList.do"> Lookup Field Editor</html:link></li>
+		  </security:oscarSec>		  
+		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.issueEditor" rights="r">
 		  <li><html:link action="/issueAdmin.do?method=list"><bean:message key="admin.admin.issueEditor"/></html:link></li>
+		  </security:oscarSec>		  
+		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.caisiRoles" rights="r">
 		  <li><html:link action="/CaisiRole.do"><bean:message key="admin.admin.caisiRole"/></html:link></li>         
+		  </security:oscarSec>
+		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.userCreatedForms" rights="r">
 		  <li><html:link action="/SurveyManager.do"><bean:message key="admin.admin.surveyManager"/></html:link></li>         
+	      </security:oscarSec>
 	      </ul>
 	  </div>
+	
       </caisi:isModuleLoad>     
       <%-- -add by caisi end--%>
     
