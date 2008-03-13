@@ -1,0 +1,1 @@
+alter table RedirectLinkTracking change provider_no provider_no varchar(6) not null;

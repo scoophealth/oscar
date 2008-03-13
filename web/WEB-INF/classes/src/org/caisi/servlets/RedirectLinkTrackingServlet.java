@@ -38,7 +38,6 @@ import org.apache.log4j.Logger;
 import org.caisi.dao.RedirectLinkDao;
 import org.caisi.dao.RedirectLinkTrackingDao;
 import org.caisi.model.RedirectLink;
-import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -130,18 +129,7 @@ public class RedirectLinkTrackingServlet extends javax.servlet.http.HttpServlet 
             }
 
             // get provider
-            int providerId = -1;
-            try {
-                providerId = Integer.parseInt((String)request.getSession().getAttribute("user"));
-            }
-            catch (NullPointerException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                return;
-            }
-            catch (NumberFormatException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                return;
-            }
+            String providerId = (String)request.getSession().getAttribute("user");
 
             // track redirect
             redirectLinkTrackingDao.addInstanceOfRedirect(new Date(), providerId, redirectLinkId);

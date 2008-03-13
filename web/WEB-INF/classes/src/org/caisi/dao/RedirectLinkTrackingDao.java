@@ -36,14 +36,14 @@ import oscar.util.SqlUtils;
 
 public class RedirectLinkTrackingDao {
 
-    public void addInstanceOfRedirect(Date date, int providerId, int redirectLinkId) {
+    public void addInstanceOfRedirect(Date date, String providerId, int redirectLinkId) {
         Connection c = null;
         PreparedStatement ps = null;
         try {
             c = DbConnectionFilter.getThreadLocalDbConnection();
             ps = c.prepareStatement("insert into RedirectLinkTracking values (?,?,?)");
             ps.setTimestamp(1, new Timestamp(date.getTime()));
-            ps.setInt(2, providerId);
+            ps.setString(2, providerId);
             ps.setInt(3, redirectLinkId);
             ps.executeUpdate();
         }
@@ -90,7 +90,7 @@ public class RedirectLinkTrackingDao {
             while (rs.next()) {
                 temp = new RedirectLinkTracking();
                 temp.date = rs.getTimestamp("date");
-                temp.providerNo = rs.getInt("provider_no");
+                temp.providerNo = rs.getString("provider_no");
                 result.add(temp);
             }
         }
