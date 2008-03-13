@@ -1014,7 +1014,15 @@ public class ClientManagerAction extends BaseAction {
         DynaActionForm clientForm = (DynaActionForm) form;
 
         Program criteria = (Program) clientForm.get("program");
-        request.setAttribute("programs", programManager.search(criteria));
+
+        int facilityId=0;
+        Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
+        if(facility!=null) facilityId=facility.getId();
+        if(facilityId>0){
+           request.setAttribute("programs", programManager.searchByFacility(criteria, new Integer(facilityId)));
+        }else{
+           request.setAttribute("programs", programManager.search(criteria));
+        }
 
         ProgramUtils.addProgramRestrictions(request);
 

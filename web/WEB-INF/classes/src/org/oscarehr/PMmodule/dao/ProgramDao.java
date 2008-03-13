@@ -411,6 +411,90 @@ public class ProgramDao extends HibernateDaoSupport {
         return results;
     }
 
+    public List searchByFacility(Program program, Integer facilityId) {
+        if (program == null) {
+            throw new IllegalArgumentException();
+        }
+        if (facilityId == null) {
+            throw new IllegalArgumentException();
+        }
+
+        boolean isOracle = OscarProperties.getInstance().getDbType().equals("oracle");
+        Criteria criteria = getSession().createCriteria(Program.class);
+
+        if (program.getName() != null && program.getName().length() > 0) {
+            String programName = StringEscapeUtils.escapeSql(program.getName());
+            String sql = "";
+            if (isOracle) {
+            	sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4)))";
+            	criteria.add(Restrictions.or(Restrictions.ilike("name", "%" + programName + "%"), Restrictions.sqlRestriction(sql)));
+            }
+            else
+            {
+            	sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4))" + " " + "OR (name like '" + "%" + programName + "%'))";
+                criteria.add(Restrictions.sqlRestriction(sql));
+            }
+        }
+
+        if (program.getType() != null && program.getType().length() > 0) {
+            criteria.add(Expression.eq("type", program.getType()));
+        }
+
+        if (program.getType() == null || program.getType().equals("") || !program.getType().equals("community")) {
+            criteria.add(Expression.ne("type", "community"));
+        }
+
+        criteria.add(Expression.eq("programStatus", "active"));
+
+        if (program.getManOrWoman() != null && program.getManOrWoman().length() > 0) {
+            criteria.add(Expression.eq("manOrWoman", program.getManOrWoman()));
+        }
+
+        if (program.isTransgender()) {
+            criteria.add(Expression.eq("transgender", true));
+        }
+
+        if (program.isFirstNation()) {
+            criteria.add(Expression.eq("firstNation", true));
+        }
+
+        if (program.isBedProgramAffiliated()) {
+            criteria.add(Expression.eq("bedProgramAffiliated", true));
+        }
+
+        if (program.isAlcohol()) {
+            criteria.add(Expression.eq("alcohol", true));
+        }
+
+        if (program.getAbstinenceSupport() != null && program.getAbstinenceSupport().length() > 0) {
+            criteria.add(Expression.eq("abstinenceSupport", program.getAbstinenceSupport()));
+        }
+
+        if (program.isPhysicalHealth()) {
+            criteria.add(Expression.eq("physicalHealth", true));
+        }
+
+        if (program.isHousing()) {
+            criteria.add(Expression.eq("housing", true));
+        }
+
+        if (program.isMentalHealth()) {
+            criteria.add(Expression.eq("mentalHealth", true));
+        }
+
+        criteria.add(Expression.eq("facilityId", new Long(facilityId.longValue())));
+        
+        criteria.addOrder(Order.asc("name"));
+
+        List results = criteria.list();
+
+        if (log.isDebugEnabled()) {
+            log.debug("search: # results: " + results.size());
+        }
+
+        return results;
+    }
+    
     public void resetHoldingTank() {
         Query q = getSession().createQuery("update Program set holdingTank = false");
         q.executeUpdate();
