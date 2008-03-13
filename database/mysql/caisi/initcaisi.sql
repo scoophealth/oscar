@@ -2125,7 +2125,7 @@ create table IntakeRequiredFields (fieldKey varchar(255) not null primary key , 
 -- Facility table, added to CAISI to support RFQ requirement of facilities.
 drop table if exists `facility`;
 create table facility (
-    `id` bigint(22) NOT NULL auto_increment,
+    `id` int NOT NULL auto_increment,
     `name` varchar(32) NOT NULL default '',
     `description` VARCHAR(70) NOT NULL default '',
     `contact_name` varchar(255) default NULL,
