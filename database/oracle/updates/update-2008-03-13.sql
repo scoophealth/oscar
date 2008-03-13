@@ -12,7 +12,7 @@ END;
 
 create table REDIRECTLINKTRACKING
 (
-  DATE1          DATE not null,
+  redirectDate DATE not null,
   PROVIDER_NO    VARCHAR2(6) not null,
   REDIRECTLINKID INTEGER not null
 )
