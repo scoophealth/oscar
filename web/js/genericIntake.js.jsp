@@ -350,7 +350,9 @@ function save() {
 		alert( "Bed program is mandatory");
 		return false;
 	}
-	
+	if (!check_mandatory()) {
+	    return false;
+	}
 	setMethod('save');
 }
 
@@ -363,7 +365,9 @@ function save_temp() {
 		alert("You cannot make a temporary save without selecting an intake location.");
 		return false;
 	}
-	
+	if (!check_mandatory()) {
+	    return false;
+	}
 	setMethod('save_temp');
 }
 
@@ -372,6 +376,9 @@ function save_admit() {
 		alert( "Bed program is mandatory");		
 		return false;			
 	} 
+	if (!check_mandatory()) {
+	    return false;
+	}
 	setMethod('save_admit');
 }
 
@@ -380,8 +387,100 @@ function save_notAdmit() {
 		alert("You cannot save without selecting an intake location.");
 		return false;
 	}
-	
+	if (!check_mandatory()) {
+	    return false;
+	}
 	setMethod('save_notAdmit');
+}
+
+function check_mandatory() {
+    var mquestSingle = new Array();
+    var mquestMultiIdx = new Array();
+    var mquestMultiName = new Array();
+    var mqs = 0;
+    var mqm = 0;
+    var ret = false;
+    for (i=0; i<document.forms[0].elements.length; i++) {
+	if (document.forms[0].elements[i].name.substring(0,7)=="mquests") {
+	    mquestSingle[mqs] = document.forms[0].elements[i].value;
+	    mqs++;
+	} else if (document.forms[0].elements[i].name.substring(0,7)=="mquestm") {
+	    mquestMultiIdx[mqm] = document.forms[0].elements[i].name;
+	    mquestMultiName[mqm] = document.forms[0].elements[i].value;
+	    mqm++;
+	}
+    }
+    ret = check_mandatory_single(mquestSingle);
+    if (ret) {
+	ret = check_mandatory_multi(mquestMultiIdx, mquestMultiName);
+    }
+    if (!ret) {
+	alert("All mandatory questions must be answered!");
+    }
+    return ret;
+}
+
+function check_mandatory_single(mqSingle) {
+    var errFree = true;
+    for (i=0; i<document.forms[0].elements.length; i++) {
+	for (j=0; j<mqSingle.length; j++) {
+	    if (document.forms[0].elements[i].name==mqSingle[j]) {
+		errFree = checkfilled(document.forms[0].elements[i]);
+	    }
+	    break;
+	}
+	if (!errFree) {
+	    break;
+	}
+    }
+    return errFree;
+}
+
+function check_mandatory_multi(mqIndex, mqName) {
+    var errFree = true;
+    var ans_ed = 0;
+    
+    for (i=0; i<mqIndex.length; i++) {
+	for (j=0; j<document.forms[0].elements.length; j++) {
+	    if (document.forms[0].elements[j].name==mqName[i]) {
+		if (checkfilled(document.forms[0].elements[j])) {
+		    ans_ed++;
+		}
+		break;
+	    }
+	}
+	if (i==mqIndex.length-1 || (i<mqIndex.length-1 && nxtGrp(mqIndex[i], mqIndex[i+1]))) {
+	    if (ans_ed==0) {
+		errFree = false;
+		break;
+	    } else {
+		ans_ed = 0;
+	    }
+	}
+    }
+    return errFree;
+}
+
+function nxtGrp(first, second) {
+    var mrk = first.lastIndexOf('_') + 1;
+    var firstIdx = first.substring(mrk, first.length);
+    mrk = second.lastIndexOf('_') + 1;
+    var secondIdx = second.substring(mrk, second.length);
+    
+    return (firstIdx!=secondIdx);
+}
+
+function checkfilled(elem) {
+    if (elem.type=="text" || elem.type=="textarea") {
+	if (elem.value.replace(" ","")=="") {
+	    return false;
+	}
+    } else if (elem.type=="checkbox") {
+	if (!elem.checked) {
+	    return false;
+	}
+    }
+    return true;
 }
 
 function clientEdit() {

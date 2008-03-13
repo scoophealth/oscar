@@ -34,6 +34,12 @@ public class AnswerScalarNoteHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
 		indent(preBuilder).append(startLabel(true)).append(getTextInput(getId(), COLS, ROWS, getAnswerValue())).append(endLabel(false)).append(EOL);
+		String mquest = "mquests";
+		if (getNoOfSibling()>1) mquest = "mquestm";
+		String pId = "_" + getParent().getId();
+		if (getParent().getMandatory()) {
+		    indent(preBuilder).append("<input type=\"hidden\" name=\""+mquest+getPos()+pId+"\" value=\"intake.answerMapped("+getId()+").value\">").append(EOL);
+		}
 
 		return endAnswer(preBuilder);
 	}

@@ -33,6 +33,12 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 		
 		if (isAnswerBoolean()) {
 			indent(preBuilder).append(startLabel(false)).append(createCheckBox(IntakeAnswerElement.TRUE)).append(endLabel(true)).append(EOL);
+			String mquest = "mquests";
+			if (getNoOfSibling()>1) mquest = "mquestm";
+			String pId = "_" + getParent().getId();
+			if (getParent().getMandatory()) {
+			    indent(preBuilder).append("<input type=\"hidden\" name=\""+mquest+getPos()+pId+"\" value=\"intake.answerMapped("+getId()+").value\">").append(EOL);
+			}
 		} else {
 			indent(preBuilder).append(startLabel(true)).append(String.format("<select name=\"intake.answerMapped(%s).value\">", new Object[] { getId() })).append(EOL);
 			beginTag();
@@ -48,6 +54,12 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 
 			endTag();
 			indent(preBuilder).append("</select>").append(endLabel(false)).append(EOL);
+			String mquest = "mquests";
+			if (getNoOfSibling()>1) mquest = "mquestm";
+			String pId = "_" + getParent().getId();
+			if (getParent().getMandatory()) {
+			    indent(preBuilder).append("<input type=\"hidden\" name=\""+mquest+getPos()+pId+"\" value=\"intake.answerMapped("+getId()+").value\">").append(EOL);
+			}
 		}
 		
 		return endAnswer(preBuilder);
