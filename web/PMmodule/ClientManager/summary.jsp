@@ -70,7 +70,7 @@ function openHealthSafety(){
 function showEMPILinks() {
 	if (XMLHttpRequestObject) {
 		var obj = document.getElementById('empi_links');
-		
+		if (obj == null) return;
 		XMLHttpRequestObject.open("GET",'<html:rewrite action="/PMmodule/ClientManager"/>?method=getLinks&id=<c:out value="${client.demographicNo}"/>');
 		
 		XMLHttpRequestObject.onreadystatechange = function()
@@ -159,6 +159,10 @@ function openSurvey() {
 		%>
 		</td>
 	</tr>
+	<tr>
+		<th width="20%">EMPI</th>
+		<td><span id='empi_links'>Loading...</span></td>
+	</tr>
 	</caisi:isModuleLoad>
 	<tr>
 		<th width="20%">Active?</th>
@@ -167,10 +171,6 @@ function openSurvey() {
 			<logic:notEqual value="0" property="activeCount" name="client">Yes</logic:notEqual>
 		</td>
 	</tr>	
-	<tr>
-		<th width="20%">EMPI</th>
-		<td><span id='empi_links'>Loading...</span></td>
-	</tr>
 
 	<tr>
 		<th width="20%">Health and Safety</th>
