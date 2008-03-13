@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.caisi.integrator.model.transfer.GetReferralResponseTransfer;
+import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
@@ -60,6 +61,8 @@ import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.beans.factory.annotation.Required;
 import org.oscarehr.PMmodule.service.SurveyManager;
+import org.oscarehr.PMmodule.model.Facility;
+
 public class ProgramManagerViewAction extends BaseAction {
 
     private static final Log log = LogFactory.getLog(ProgramManagerViewAction.class);
@@ -67,6 +70,12 @@ public class ProgramManagerViewAction extends BaseAction {
     protected ClientRestrictionManager clientRestrictionManager;
     protected SurveyManager surveyManager;
 
+    private FacilityDAO facilityDAO=null;
+    
+    public void setFacilityDAO(FacilityDAO facilityDAO) {
+        this.facilityDAO = facilityDAO;
+    }
+    
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return view(mapping, form, request, response);
     }
@@ -144,6 +153,8 @@ public class ProgramManagerViewAction extends BaseAction {
 
         Program program = programManager.getProgram(programId);
         request.setAttribute("program", program);
+        Facility facility=facilityDAO.getFacility(new Integer((int)program.getFacilityId()));
+        if(facility!=null) request.setAttribute("facilityName", facility.getName());
 
        
         if (formBean.getTab().equals("General")) {

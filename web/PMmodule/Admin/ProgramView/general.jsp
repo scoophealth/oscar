@@ -35,6 +35,10 @@
 		<td><c:out value="${program.name}" /></td>
 	</tr>
 	<tr class="b">
+		<td width="20%">Facility:</td>
+		<td><c:out value="${facilityName}" /></td>
+	</tr>
+	<tr class="b">
 		<td width="20%">Description:</td>
 		<td><c:out value="${program.descr}" /></td>
 	</tr>

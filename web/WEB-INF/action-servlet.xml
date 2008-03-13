@@ -62,6 +62,7 @@
         <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
     </bean>
     <bean name="/PMmodule/ProgramManagerView" class="org.oscarehr.PMmodule.web.admin.ProgramManagerViewAction" singleton="false" autowire="byName" >
+        <property name="facilityDAO" ref="facilityDAO"/>
         <property name="surveyManager" ref="oscarSurveyManager"/>
         <property name="caseManagementManager" ref="CaseManagementManager"/>       
     </bean>
