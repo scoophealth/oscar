@@ -40,6 +40,7 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import com.quatro.service.*;
 
 public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
@@ -50,13 +51,19 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     private static final String FORWARD_INTAKE_EDIT = "intakeEdit";
 
     protected SurveyManager surveyManager;
+    protected LookupManager lookupManager;
 
     public void setSurveyManager(SurveyManager mgr) {
         this.surveyManager = mgr;
     }
+	public void setLookupManager(LookupManager lookupManager) {
+		this.lookupManager = lookupManager;
+	}
+
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
         return mapping.findForward(FORWARD_SEARCH_FORM);
     }
 
@@ -83,6 +90,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         intakeSearchBean.setLocalMatches(localMatches);
 
         intakeSearchBean.setSearchPerformed(true);
+		request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
         
         // if matches found display results, otherwise create local intake
         if (!localMatches.isEmpty() || !remoteMatches.isEmpty()) {
@@ -132,6 +140,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         ClientSearchFormBean clientSearchBean = new ClientSearchFormBean();
         clientSearchBean.setFirstName(intakeSearchBean.getFirstName());
         clientSearchBean.setLastName(intakeSearchBean.getLastName());
+        clientSearchBean.setGender(intakeSearchBean.getGender());
         clientSearchBean.setSearchOutsideDomain(true);
         clientSearchBean.setSearchUsingSoundex(true);
 

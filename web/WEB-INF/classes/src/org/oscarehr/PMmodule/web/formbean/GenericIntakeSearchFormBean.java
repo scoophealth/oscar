@@ -42,6 +42,7 @@ public class GenericIntakeSearchFormBean extends ActionForm {
 	private String yearOfBirth;
 	private String healthCardNumber;
 	private String healthCardVersion;
+	private String gender;
 
     private boolean searchPerformed = false;
 
@@ -196,4 +197,12 @@ public class GenericIntakeSearchFormBean extends ActionForm {
     public void setLocalAgencyUsername(String localAgencyUsername) {
         this.localAgencyUsername = localAgencyUsername;
     }
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 }

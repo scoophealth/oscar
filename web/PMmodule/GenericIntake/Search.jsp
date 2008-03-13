@@ -32,6 +32,18 @@
             <html:text property="yearOfBirth" size="4" maxlength="4" />&nbsp;(YYYY)
         </td>
     </tr>
+	<tr>
+		<th> Gender</th>
+		<td>
+			<html-el:select property="gender">
+				<html-el:option value="">Any</html-el:option>
+				<c:forEach var="gen" items="${genders}">
+					<html-el:option value="${gen.code}"><c:out value="${gen.description}"/></html-el:option>
+				</c:forEach>
+			</html-el:select>
+		</td>
+	</tr>
+    <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
     <caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
         <tr>
             <th>Health Card</th>
@@ -41,6 +53,7 @@
             </td>
         </tr>
     </caisi:isModuleLoad>
+	</caisi:isModuleLoad>
     <tr>
         <td colspan="2">
             <br />

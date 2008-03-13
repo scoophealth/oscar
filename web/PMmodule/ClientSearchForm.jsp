@@ -16,16 +16,19 @@
 <script>
 	function resetClientFields() {
 		var form = document.clientSearchForm2;
+		form.elements['criteria.demographicNo'].value='';
 		form.elements['criteria.firstName'].value='';
 		form.elements['criteria.lastName'].value='';
 		form.elements['criteria.dob'].value='';
-		form.elements['criteria.healthCardNumber'].value='';
-		form.elements['criteria.healthCardVersion'].value='';
-		form.elements['criteria.searchOutsideDomain'].checked = true;
-		form.elements['criteria.searchUsingSoundex'].checked = true;
-		form.elements['criteria.dateFrom'].value=''; 
-		form.elements['criteria.dateTo'].value=''; 
-		form.elements['criteria.bedProgramId'].selectedIndex = 0;
+		// form.elements['criteria.healthCardNumber'].value='';
+		// form.elements['criteria.healthCardVersion'].value='';
+		// form.elements['criteria.searchOutsideDomain'].checked = true;
+		// form.elements['criteria.searchUsingSoundex'].checked = true;
+		// form.elements['criteria.dateFrom'].value=''; 
+		// form.elements['criteria.dateTo'].value=''; 
+		// form.elements['criteria.bedProgramId'].selectedIndex = 0;
+		form.elements['criteria.active'].selectedIndex = 0;
+		form.elements['criteria.gender'].selectedIndex = 0;
 	}
 
 	function popupHelp(type) {
@@ -34,8 +37,6 @@
 </script>
 <html:form action="/PMmodule/ClientSearch2">
 	<input type="hidden" name="method" value="search" />
-	
-	<br />
 	
 	<div id="projecthome" class="app">
 		<div class="h4">
@@ -146,7 +147,7 @@
 							<%
 						}
 					%>
-					<td align="center"><input type="reset" name="reset" value="reset" /></td>
+					<td align="center"><input type="button" name="reset" value="reset" onclick="resetClientFields()"/></td>
 				</tr>
 			</table>
 		</div>
