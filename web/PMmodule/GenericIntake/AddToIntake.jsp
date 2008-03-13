@@ -92,8 +92,8 @@ String pSize        = request.getParameter("pSize");
         <title>Add To Intake</title>
 	<script type="text/javascript">
 	    function doMandatory() {
-		if (document.addToIntakeFrm.mandatorySet.value==0) {
-		    alert("Only Question or Answer Compound can be set mandatory!");
+		if (document.addToIntakeFrm.mandatorySet.value==0 && document.forms[0].mandatory.checked==true) {
+		    alert("Only Questions and Answer Compound can be set mandatory!");
 		    document.forms[0].mandatory.checked = false;
 		}
 	    }
