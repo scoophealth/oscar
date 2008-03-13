@@ -36,7 +36,7 @@
 		
 		var name = document.programManagerForm.elements['providerName'].value;
 		
-		window.open(url, 'provider_search','width=500, height=400');
+		window.open(url, 'provider_search','width=500, height=400, scrollbars=yes');
 	}
 
 	function deleteProvider(id) {
