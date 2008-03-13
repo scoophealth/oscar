@@ -5,6 +5,8 @@
   String userfirstname = (String) session.getAttribute("userfirstname");
   String userlastname = (String) session.getAttribute("userlastname");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
+  String origDate = null;
+
   
 
   boolean bFirstDisp=true; //this is the first time to display the window
@@ -403,6 +405,7 @@ function onCut() {
             </td>
             <td width="20%"  ALIGN="LEFT"> 
 		<%
+                 origDate =  rs.getString("createdatetime");
                  String lastDateTime = bFirstDisp?apptMainBean.getString(rs,"updatedatetime"):request.getParameter("updatedatetime");
                  if (lastDateTime == null){ lastDateTime = bFirstDisp?apptMainBean.getString(rs,"createdatetime"):request.getParameter("createdatetime"); }
 		%>
@@ -426,6 +429,13 @@ function onCut() {
               <INPUT TYPE="hidden" NAME="remarks" VALUE="">
               <INPUT TYPE="hidden" NAME="appointment_no" VALUE="<%=request.getParameter("appointment_no")%>">
             </td>
+          </tr>
+          <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td align="left"><div align="right"><font face="arial">Create Date :</font></div></td>
+              <td><INPUT TYPE="TEXT" NAME="createDate" readonly VALUE="<%=origDate%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td>
           </tr>
         </table>
 	</td></tr>
