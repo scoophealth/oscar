@@ -374,10 +374,10 @@ public class GenericIntakeManager {
             genericIntakeNodeDAO.updateNodeLabel(intakeNodeLabel);   
         }
 	
-	public void updateQuickIntakeAgency(Integer intakeNodeId) {
+	public void updateAgencyIntakeQuick(Integer intakeNodeId) {
 	    Agency agency = Agency.getLocalAgency();
 	    agency.setIntakeQuick(intakeNodeId);
-	    genericIntakeNodeDAO.updateQuickIntakeAgency(agency);
+	    genericIntakeNodeDAO.updateAgencyIntakeQuick(agency);
 	}
 	
         public IntakeNodeLabel getIntakeNodeLabel(Integer intakeNodeLabelId){

@@ -72,7 +72,7 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
         getHibernateTemplate().update(intakeNodeLabel);   
     }
     
-    public void updateQuickIntakeAgency(Agency agency){
+    public void updateAgencyIntakeQuick(Agency agency){
         getHibernateTemplate().update(agency);
     }
     

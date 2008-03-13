@@ -15,7 +15,7 @@
     copyIntakeNode(itn, nwItn);
     saveNodeLabels(itn, genericIntakeManager);
     genericIntakeManager.saveIntakeNode(nwItn);
-    genericIntakeManager.updateQuickIntakeAgency(nwItn.getId());
+    genericIntakeManager.updateAgencyIntakeQuick(nwItn.getId());
     
     session.removeAttribute("intakeNode");
     response.sendRedirect("close.jsp");
