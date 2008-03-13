@@ -49,6 +49,7 @@ import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.StaffEditProgramContainer;
 import org.oscarehr.PMmodule.web.formbean.StaffManagerViewFormBean;
+import org.oscarehr.util.SessionConstants;
 
 public class StaffManagerAction extends BaseAction {
 	private static Log log = LogFactory.getLog(StaffManagerAction.class);
@@ -96,10 +97,10 @@ public class StaffManagerAction extends BaseAction {
 		}
 		request.setAttribute("programs",sortProgramProviders(pp));
 		
-		List allPrograms = programManager.getProgramsByAgencyId("0");
-		List allProgramsInContainer = new ArrayList();
-		for(Iterator iter=allPrograms.iterator();iter.hasNext();) {
-			Program p = (Program)iter.next();
+		Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+		List<Program> allPrograms = programManager.getCommunityPrograms(facilityId);
+		List<StaffEditProgramContainer> allProgramsInContainer = new ArrayList<StaffEditProgramContainer>();
+		for(Program p : allPrograms) {
 			StaffEditProgramContainer container = new StaffEditProgramContainer(p,programManager.getProgramTeams(String.valueOf(p.getId())));
 			allProgramsInContainer.add(container);
 		}

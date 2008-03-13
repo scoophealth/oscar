@@ -223,6 +223,19 @@ public class ProgramDao extends HibernateDaoSupport {
         return rs;
     }
 
+    /**
+     * @param facilityId is allowed to be null
+     * @return a list of programs in the facility and any programs with no facility associated
+     */
+    public List<Program> getProgramsByFacilityId(Integer facilityId) {
+        String queryStr = "FROM Program p WHERE (p.facilityId = "+facilityId+" or p.facilityId is null) AND p.type != 'community' ORDER BY p.name";
+
+        @SuppressWarnings("unchecked")
+        List<Program> rs = getHibernateTemplate().find(queryStr);
+
+        return rs;
+    }
+
     @SuppressWarnings("unchecked")
     public Program[] getBedPrograms(Integer facilityId) {
         //List list = getHibernateTemplate().find("FROM Program p WHERE p.type = 'Bed' ORDER BY p.name");
