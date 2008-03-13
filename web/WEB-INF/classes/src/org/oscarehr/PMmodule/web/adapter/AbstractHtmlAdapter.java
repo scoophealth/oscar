@@ -18,6 +18,7 @@
  */
 package org.oscarehr.PMmodule.web.adapter;
 
+import java.util.List;
 import java.util.Set;
 
 import org.oscarehr.PMmodule.model.Intake;
@@ -101,6 +102,18 @@ abstract class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 	
 	protected boolean getMandatory() {
 		return node.getMandatory();
+	}
+	
+	protected Integer getPos() {
+		return node.getPos();
+	}
+	
+	protected Integer getNoOfSibling() {
+		return node.getParent().getChildren().size();
+	}
+	
+	protected IntakeNode getParent() {
+		return node.getParent();
 	}
 	
 	protected int getDistanceToQuestionLevel() {
