@@ -12,6 +12,10 @@
 <script>
 function submitForm(form) {
  var message = form.elements['healthsafety.message'].value;
+ if(message!=null && message.length==0){
+   alert("message can not be empty.");
+   return false;
+ }  
  if(message!=null && message.length>150){
    alert("message can not exceed 150 characters.");
    return false;
