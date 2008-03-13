@@ -353,6 +353,10 @@ public class ProgramManager {
         return this.programDao.search(criteria);
     }
 
+    public List searchByFacility(Program criteria, Integer facilityId){
+        return this.programDao.searchByFacility(criteria, facilityId);
+    }
+    
     public Program getHoldingTankProgram() {
         return this.programDao.getHoldingTankProgram();
     }
