@@ -176,14 +176,10 @@ public class AdmissionManager {
                 Program newProgram=programDao.getProgram(program.getId());
 			    fromTransfer=(oldProgram.getFacilityId()==newProgram.getFacilityId());			
 			    
-			    
-			    List<Long> oldProgramFacilities=facilityDAO.getDistinctFacilityIdsByProgramId(fullAdmission.getProgramId());
-                List<Long> newProgramFacilities=facilityDAO.getDistinctFacilityIdsByProgramId(program.getId());                
-			    hasIntersection=FacilityDAO.facilityHasIntersection(oldProgramFacilities, newProgramFacilities);				
-			    
+			     
 			    //discharge from old bed program to a new bed program which is in the different facility
 			    //This is called automatic discharge.
-			    if(!hasIntersection)
+			    if(!fromTransfer)
 			    	automaticDischarge = true;
 			    
 			    //processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "", null, fromTransfer);

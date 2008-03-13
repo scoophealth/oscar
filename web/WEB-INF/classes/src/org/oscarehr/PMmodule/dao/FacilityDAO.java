@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.web.FacilityDischargedClients;
 import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -43,7 +44,7 @@ public class FacilityDAO extends HibernateDaoSupport {
         getHibernateTemplate().refresh(facility);
     }
     
-   
+    
     public List<Long> getDistinctFacilityIdsByProgramId(int programId)
     {
         // select program_id,facility_id from room;
@@ -57,7 +58,7 @@ public class FacilityDAO extends HibernateDaoSupport {
     	return(SqlUtils.selectLongList(sqlCommand));
     }
     
-       
+    
     public static  boolean facilityHasIntersection(List<Long> providersFacilityIds, List<Long> noteFacilities) {
         for (Long id : noteFacilities) {
             if (providersFacilityIds.contains(id)) return(true);

@@ -21,13 +21,14 @@
 <%@ include file="/taglibs.jsp" %>
 <%@ page import="org.oscarehr.PMmodule.model.Intake" %>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean" %>
+<%@ page import="org.oscarehr.PMmodule.web.ProgramUtils" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="org.oscarehr.common.dao.IntakeRequiredFieldsDao" %>
 <%
     GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
     Intake intake = intakeEditForm.getIntake();
     String clientId = String.valueOf(intake.getClientId());
-
+   
 %>
 <html:html xhtml="true" locale="true">
 <head>
@@ -46,8 +47,10 @@
         var programMaleOnly =<%=session.getAttribute("programMaleOnly")%>;
         var programFemaleOnly =<%=session.getAttribute("programFemaleOnly")%>;
         var programTransgenderOnly =<%=session.getAttribute("programTransgenderOnly")%>;
-
+		
 		var RFQ_INTAKE_ADMISSION = <%=session.getAttribute("RFQ_INTAKE_ADMISSION")%>;		
+		
+		var oldProgramId = <%=session.getAttribute("intakeCurrentBedCommunityId")%>;
 		
 		<%=session.getAttribute("programAgeValidationMethod")%>
 		<%=session.getAttribute("admitToNewFacilityValidationMethod")%>
@@ -72,7 +75,8 @@
             window.open(page, "", windowprops);
         }
         
-        function init_intake() {   
+        function init_intake() {  
+        	        	 
         	if(RFQ_INTAKE_ADMISSION == false) {
         		alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
         	}	   	

@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
@@ -60,7 +61,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     private static Log LOG = LogFactory.getLog(GenericIntakeEditAction.class);
     private static FacilityDAO facilityDao=(FacilityDAO)SpringUtils.beanFactory.getBean("facilityDAO");    
-
+    private static ProgramDao programDao = (ProgramDao)SpringUtils.beanFactory.getBean("programDao");    
     // Forwards
     private static final String EDIT = "edit";
     private static final String PRINT = "print";
@@ -102,7 +103,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         
         ProgramUtils.addProgramRestrictions(request);
         
-        //request.getSession().setAttribute("RFQ_ADMIT", true);
+        //request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", true);
         request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
         
         return mapping.findForward(EDIT);
@@ -173,8 +174,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         request.getSession().setAttribute("intakeCurrentBedCommunityId",oldBedProgramId);
         
         ProgramUtils.addProgramRestrictions(request);
-
-        //request.getSession().setAttribute("RFQ_ADMIT", true);
+        
+        //request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", true);
         request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
         
         return mapping.findForward(EDIT);
@@ -211,8 +212,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         String intakeType = intake.getType();
         Demographic client = formBean.getClient();
         String providerNo = getProviderNo(request);
-
-        //request.getSession().setAttribute("RFQ_ADMIT", true);
+        
+        //request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", true);
         request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
         
         try { 
@@ -227,19 +228,17 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         		Integer newId = formBean.getSelectedBedCommunityProgramId();
         		
             	// RFQ feature request: intake admit, sign  and save
-            	// Don't allow to admit the client from one bed program to another bed program.
+            	// Don't allow to admit the client from one bed program to another bed program in different facililty.
             	// Only allow to admit the client from the community program to the bed program.
             	/*if("RFQ_admit".equals(saveWhich)) {
             		if(oldId!=null && programManager.isBedProgram(oldId.toString())){
             			if(oldId.intValue()!=newId.intValue() && programManager.isBedProgram(newId.toString())) {
-            				//request.getSession().setAttribute("RFQ_ADMIT", false);
-            				//setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),
-            		        //        getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()));
-            		              
-            				//return mapping.findForward(EDIT);
-            				
+            				if(!programDao.isInSameFacility(oldId, newId)) {            				
+            					request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", false);
+            					return mapping.findForward(EDIT);
+            				}
             			}
-            		}
+            		}   
             	}
         		*/
             	// RFQ : intake without admission , sign and save

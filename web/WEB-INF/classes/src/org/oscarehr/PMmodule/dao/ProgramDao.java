@@ -535,4 +535,18 @@ public class ProgramDao extends HibernateDaoSupport {
                 new Object[] { bedProgramId, clientId });
         return results;
     }
+    
+    public boolean isInSameFacility(Integer programId1, Integer programId2) {
+    	if (programId1 == null || programId1 <= 0) {
+            throw new IllegalArgumentException();
+        }
+    	
+    	if (programId2 == null || programId2 <= 0) {
+            throw new IllegalArgumentException();
+        }
+    	
+    	Program p1 = getProgram(programId1);
+    	Program p2 = getProgram(programId2);
+    	return(p1.getFacilityId()==p2.getFacilityId());
+    }
 }

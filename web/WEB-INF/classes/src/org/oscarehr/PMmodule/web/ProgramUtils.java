@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.util.SpringUtils;
 
@@ -59,9 +60,10 @@ public class ProgramUtils
     public static String admitToNewFacilityValidationMethod(HttpServletRequest request) {
         StringBuilder sb=new StringBuilder();
         
-        sb.append("function isNewFacility(programId)\n");
+        sb.append("function isNewFacility(newProgramId,oldProgramId)\n");
         sb.append("{\n");
         
+       /* 
         String oldProgramId = (String)request.getSession().getAttribute("intakeCurrentBedCommunityId");
         
         if(oldProgramId != null && !"".equals(oldProgramId)) {
@@ -70,7 +72,22 @@ public class ProgramUtils
             		sb.append("if (programId == "+pIds.intValue()+ ") { return(false); }\n");       
         		}
         	}
+        } else if(oldProgramId == null || oldProgramId=="" ) {
+        	sb.append("return(false);\n");
         }
+        */
+        sb.append("var oldIn=false; var newIn=false; \n");
+        sb.append("if(oldProgramId=='' || oldProgramId==null) {return false;}\n");
+        for(Facility facility : facilityDao.getFacilities()) {
+        	for(Program program : facilityDao.getAssociatedPrograms(facility.getId())) {
+        		sb.append("if(oldProgramId==" + program.getId()+") {oldIn=true;}\n ");
+        		sb.append("if(newProgramId==" + program.getId()+") {newIn=true;} \n");
+        	}
+        	sb.append("if(oldIn==true && newIn==true) {return(false);}\n");
+        	sb.append("else { oldIn=false; newIn=false; } \n");
+        }
+        
+        
         sb.append("return(true);\n");
         sb.append("}\n");
         

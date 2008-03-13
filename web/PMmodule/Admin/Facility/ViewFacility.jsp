@@ -97,6 +97,6 @@ while still admitted in this facility.
 
     
     <br>
-    Automatic discharges in the past 24 hours appear <color:red >red </color:red>
+    Automatic discharges in the past 24 hours appear red.
 </html:form>
 
