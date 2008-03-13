@@ -32,8 +32,8 @@ BEGIN
 END;
 -- update provider_facility's provider_no to varchar2(6) from int
 create table provider_facility_tmp as select * from provider_facility;
-truncate table provider_facility;
-alter table provider_facility modify provider_id varchar2(6);
+drop table provider_facility;
+create table provider_facility(provider_no varchar2(6), facility_id number, primary key (provider_no,facility_id));
 insert into provider_facility select * from provider_facility_tmp;
 drop table provider_facility_tmp;
 
