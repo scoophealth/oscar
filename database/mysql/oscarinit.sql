@@ -7271,7 +7271,7 @@ CREATE TABLE `providerbillcenter` (
 
 create table provider_facility
 (
-	provider_id int not null,
+	provider_no varchar(6) not null,
 	facility_id int not null,
 	unique (provider_id, facility_id),
 	index (facility_id)
