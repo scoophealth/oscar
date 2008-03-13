@@ -275,6 +275,91 @@ boolean dupServiceCode = false;
 
 </script>
 	
+<style type="text/css">
+div.wrapper{
+    background-color: #eeeeff;
+    margin-top:0px;
+    padding-top:0px;
+    margin-bottom:0px;
+    padding-bottom:0px;
+}
+
+div.wrapper br{
+    clear: left;
+}
+
+div.wrapper ul{
+    width: 80%;
+    background-color: #eeeeff;
+    list-style:none;
+    list-style-type:none;
+    list-style-position:outside;
+    padding-left:1px;
+    margin-left:1px;
+    margin-top:0px;
+    padding-top:1px;
+    margin-bottom:0px;
+    padding-bottom:0px;
+}
+
+div.wrapper ul li{
+    background-color: #eeeeff;
+}
+
+div.dxBox{
+    width:90%;
+    background-color: #eeeeff;
+    margin-top: 2px;
+    margin-left:3px;
+    margin-right:3px;
+    margin-bottom:0px;
+    padding-bottom:0px;
+    float: left;
+}
+
+
+div.dxBox h3 {
+    background-color: #ccccff;
+  /*font-size: 1.25em;*/
+    font-size: 10pt;
+    font-variant:small-caps;
+    font-weight: bold;
+    margin-top:0px;
+    padding-top:0px;
+    margin-bottom:0px;
+    padding-bottom:0px;
+}
+
+
+div.dxBox form {
+    margin-top:0px;
+    padding-top:0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+div.dxBox input {
+    margin-top:0px;
+    padding-top:0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+</style>
+<script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="../../../share/javascript/nifty.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css" href="../../../share/css/niftyPrint.css" media="print"/>
+
+<script type="text/javascript">
+window.onload=function(){
+          if(!NiftyCheck())
+                      return;
+          Rounded("div.dxBox","top","transparent","#CCCCFF","small border #CCCCFF");
+          Rounded("div.dxBox","bottom","transparent","#EEEEFF","small border #CCCCFF");
+}
+</script>
+
 </head>
 
 <body topmargin="0" onload="showtotal()">
