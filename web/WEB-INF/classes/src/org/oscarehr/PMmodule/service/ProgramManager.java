@@ -162,16 +162,26 @@ public class ProgramManager {
     }
 
     /**
-     * 
-     * @param facilityId
-     * @return
+      * facilityId can be null, it will return all community programs optionally filtering by facility id if filtering is enabled.
      */
     public List<Program> getCommunityPrograms(Integer facilityId) {
+        if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
+            return programDao.getCommunityProgramsByFacilityId(facilityId);
+        }
+        else {
+            return programDao.getProgramsByAgencyId("0");
+        }
+    }
+
+    /**
+      * facilityId can be null, it will return all programs optionally filtering by facility id if filtering is enabled.
+     */
+    public List<Program> getPrograms(Integer facilityId) {
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
             return programDao.getProgramsByFacilityId(facilityId);
         }
         else {
-            return programDao.getProgramsByAgencyId("0");
+            return programDao.getAllPrograms();
         }
     }
 

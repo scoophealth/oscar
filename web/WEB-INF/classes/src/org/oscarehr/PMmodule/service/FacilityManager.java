@@ -26,6 +26,7 @@ public class FacilityManager {
         return facilityDAO.getFacilities();
     }
 
+    @Deprecated
     public List<Program> getAssociatedPrograms(Integer facilityId) {
         return facilityDAO.getAssociatedPrograms(facilityId);
     }
