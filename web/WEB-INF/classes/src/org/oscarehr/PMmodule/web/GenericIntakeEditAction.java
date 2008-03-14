@@ -103,9 +103,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         
         ProgramUtils.addProgramRestrictions(request);
         
-        //request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", true);
-        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION","true");
-        
         return mapping.findForward(EDIT);
     }
 
@@ -175,9 +172,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         
         ProgramUtils.addProgramRestrictions(request);
         
-        //request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", true);
-        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION","true");
-        
         return mapping.findForward(EDIT);
     }
 
@@ -224,32 +218,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             	Integer oldId = getCurrentBedCommunityProgramId(client.getDemographicNo());
         		Integer newId = formBean.getSelectedBedCommunityProgramId();
         		
-            	// RFQ feature request: intake admit, sign  and save
-            	// Don't allow to admit the client from one bed program to another bed program in different facililty.
-            	// Only allow to admit the client from the community program to the bed program.
-            	/*if("RFQ_admit".equals(saveWhich)) {
-            		if(oldId!=null && programManager.isBedProgram(oldId.toString())){
-            			if(oldId.intValue()!=newId.intValue() && programManager.isBedProgram(newId.toString())) {
-            				if(!programDao.isInSameFacility(oldId, newId)) {            				
-            					request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", false);
-            					return mapping.findForward(EDIT);
-            				}
-            			}
-            		}   
-            	}
-        		*/
-            	// RFQ : intake without admission , sign and save
-            	if("RFQ_notAdmit".equals(saveWhich) ) {
-            		//no change in admission made for the client
-            		if( (oldId!=null && newId!=null && oldId.intValue() != newId.intValue()) ||
-            				(oldId==null && newId!=null) ||
-            				(oldId!=null && newId==null)) {
-            			request.getSession().setAttribute("RFQ_INTAKE_ADMISSION","false");            			    
-            			return mapping.findForward(EDIT);
-            		} 
-            	}           	
-            	
-            	
+            	            	
             	//Save 'external' program for RFQ.
             	admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
             	}
@@ -337,8 +306,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(client.getDemographicNo()));
         request.getSession().setAttribute("intakeCurrentBedCommunityId",oldBedProgramId);
       
-        //request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", true);
-        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION","true");
         return mapping.findForward(EDIT);
     }
     

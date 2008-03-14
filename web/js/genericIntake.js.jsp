@@ -404,6 +404,17 @@ function save_notAdmit() {
 	setMethod('save_notAdmit');
 }
 
+function isBedCommunityProgramChanged() {
+	var oldId = document.forms[0].elements['currentBedCommunityProgramId_old'].value;
+    var newId = document.forms[0].elements['bedCommunityProgramId'].value;
+    alert("oldId = "+oldId + ", newId="+newId);
+    if(oldId!=null && oldId!="null" && oldId!="" && oldId!=newId) {      	
+       return true;
+    } 
+    return false;
+}
+
+
 function check_mandatory() {
     var mquestSingle = new Array();
     var mquestMultiIdx = new Array();
@@ -561,13 +572,4 @@ function checkChar(checkString) {
 		return true;
 }
 
-function isBedCommunityProgramChanged() {
-	var oldId = document.forms[0].elements['currentBedCommunityProgramId_old'].value;
-    var newId = document.forms[0].elements['bedCommunityProgramId'].value;
-    
-    if(oldId!="" && oldId!=newId) {        	
-       return true;
-       //alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
-    }
-    return false;
-}
+
