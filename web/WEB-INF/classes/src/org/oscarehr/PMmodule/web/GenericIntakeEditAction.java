@@ -678,12 +678,15 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             
             formBean.setProgramsInDomain(getProgramsInDomain(providerPrograms));
            
-            String intakeLocation = String.valueOf(intake.getIntakeLocation());
+            String intakeLocation="";
+            if(intake!=null) {
+            	intakeLocation= String.valueOf(intake.getIntakeLocation());
+            }
             if(intakeLocation ==null || "".equals(intakeLocation) || "null".equals(intakeLocation)) {
             	formBean.setSelectedProgramInDomainId(0);
             } else {
             	formBean.setSelectedProgramInDomainId(Integer.valueOf(intakeLocation));
-            }
+            }            
         }
        
     }
