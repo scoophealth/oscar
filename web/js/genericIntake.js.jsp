@@ -135,10 +135,7 @@ function validateEdit() {
 			return error(year, "The birth date you entered is not a valid date.");
 		}
 	
-		if(isNewFacility(programId, oldProgramId) ) 
-		{							
-			return window.confirm("The client is currently admitted in another facility. Admitting into your facility will result in an automatic discharge from that other facility. As an alternative to this, it is recommended that you perform a temporary save of this intake or an intake without admission and contact the other facility so that they can make a discharge before you admit this client.\n Do you still wish to automatically discharge this client from the other facility and admit into this program? ");
-		} 
+		
 		
 	
 	<%
@@ -311,12 +308,16 @@ function validateEdit() {
 	}
 	document.forms[0].elements['client.ver'].value = healthCardVersion.value.toUpperCase();
 	
-	
+	if (!check_mandatory()) {
+	    return false;
+	}
+
 	if (!hasSelection(getElement('serviceProgramIds'))) {
 		return window.confirm("No service program has been selected.\nAre you sure you want to submit?");
 	}
 	
 	
+
 	return true;
 }
 
@@ -345,14 +346,14 @@ function copyRemote(agencyId, demographicId) {
 	setMethod('copyRemote');
 }
 
+
+
 function save() {
 	if(!validBedCommunityProgram()) {
 		alert( "Bed program is mandatory");
 		return false;
 	}
-	if (!check_mandatory()) {
-	    return false;
-	}
+	
 	setMethod('save');
 }
 
@@ -365,9 +366,12 @@ function save_temp() {
 		alert("You cannot make a temporary save without selecting an intake location.");
 		return false;
 	}
-	if (!check_mandatory()) {
-	    return false;
-	}
+		 
+    if(isBedCommunityProgramChanged()) {	       	
+       alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
+    	return false;
+    }
+	
 	setMethod('save_temp');
 }
 
@@ -376,9 +380,13 @@ function save_admit() {
 		alert( "Bed program is mandatory");		
 		return false;			
 	} 
-	if (!check_mandatory()) {
-	    return false;
-	}
+	
+	var programIdStr=getElement('bedCommunityProgramId').value;
+	var programId = Number(programIdStr);
+	if(isNewFacility(programId, oldProgramId) ) {							
+		return window.confirm("The client is currently admitted in another facility. Admitting into your facility will result in an automatic discharge from that other facility. As an alternative to this, it is recommended that you perform a temporary save of this intake or an intake without admission and contact the other facility so that they can make a discharge before you admit this client.\n Do you still wish to automatically discharge this client from the other facility and admit into this program? ");
+	} 
+	
 	setMethod('save_admit');
 }
 
@@ -387,9 +395,12 @@ function save_notAdmit() {
 		alert("You cannot save without selecting an intake location.");
 		return false;
 	}
-	if (!check_mandatory()) {
-	    return false;
-	}
+	if(isBedCommunityProgramChanged()) {	       	
+       alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
+    	return false;
+    }	
+
+	
 	setMethod('save_notAdmit');
 }
 
@@ -500,7 +511,7 @@ function hasSelection(checkBoxGroup) {
 		for (i = 0; i < checkBoxGroup.length; i++) {
 			if (checkBoxGroup[i].checked) {
 				return true;
-			}
+			} j
 		}
 	} else {
 		return checkBoxGroup.checked;
@@ -550,5 +561,13 @@ function checkChar(checkString) {
 		return true;
 }
 
-
-
+function isBedCommunityProgramChanged() {
+	var oldId = document.forms[0].elements['currentBedCommunityProgramId_old'].value;
+    var newId = document.forms[0].elements['bedCommunityProgramId'].value;
+    alert("old id = "+ oldId + "  , new id = " +newId);
+    if(oldId!="" && oldId!=newId) {        	
+       return true;
+       //alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
+    }
+    return false;
+}
