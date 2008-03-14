@@ -6,6 +6,7 @@
 <%
     WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
+    String published = request.getParameter("published");
     IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
     
     String frmLabel = itn.getLabelStr();
@@ -15,10 +16,11 @@
     copyIntakeNode(itn, nwItn);
     saveNodeLabels(itn, genericIntakeManager);
     genericIntakeManager.saveIntakeNode(nwItn);
-    genericIntakeManager.updateAgencyIntakeQuick(nwItn.getId());
-    
+    if (published!=null) {
+        genericIntakeManager.updateAgencyIntakeQuick(nwItn.getId());
+    }
     session.removeAttribute("intakeNode");
-    response.sendRedirect("close.jsp");
+    response.sendRedirect("close.jsp?id=" + nwItn.getId());
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
