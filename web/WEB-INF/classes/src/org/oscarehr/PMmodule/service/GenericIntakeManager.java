@@ -304,9 +304,13 @@ public class GenericIntakeManager {
 	
 	private Intake copyIntakeWithId(IntakeNode node, Integer clientId, Integer programId, String staffId) {
 		Intake source = genericIntakeDAO.getLatestIntake(node, clientId, programId);
-		Intake dest = createIntakeWithId(node, clientId, programId, staffId,source.getId(),source.getIntakeLocation());
-
+		
+		//Intake dest = createIntakeWithId(node, clientId, programId, staffId,source.getId(),source.getIntakeLocation());
+		Intake dest=null;
+		
 		if (source != null) {
+			dest = createIntakeWithId(node, clientId, programId, staffId,source.getId(),source.getIntakeLocation());
+			
 			for (IntakeAnswer answer : source.getAnswers()) {
 				dest.getAnswerMapped(answer.getNode().getIdStr()).setValue(answer.getValue());
 			}

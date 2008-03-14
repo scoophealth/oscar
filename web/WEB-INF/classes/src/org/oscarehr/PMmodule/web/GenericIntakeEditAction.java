@@ -206,7 +206,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         String intakeType = intake.getType();
         Demographic client = formBean.getClient();
         String providerNo = getProviderNo(request);
-                        
+        
+        Integer oldId=null ;
+        Integer newId=null;
         try { 
         	// save client information.
             saveClient(client, providerNo);
@@ -215,8 +217,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             if (OscarProperties.getInstance().isTorontoRFQ()) {
             	Integer clientId = client.getDemographicNo();
             	if(clientId !=null && !"".equals(clientId)) {
-            	Integer oldId = getCurrentBedCommunityProgramId(client.getDemographicNo());
-        		Integer newId = formBean.getSelectedBedCommunityProgramId();
+            		oldId = getCurrentBedCommunityProgramId(client.getDemographicNo());
+            		newId = formBean.getSelectedBedCommunityProgramId();
         		
             	            	
             	//Save 'external' program for RFQ.
@@ -246,13 +248,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             	intake.setFacilityId(currentFacilityId);
             }
             
-            //if("RFQ_admit".equals(saveWhich) || "normal".equals(saveWhich)) {
+           
             	admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich);
             
             	if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
             		admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
             	}
-           //}
+         
             
             if("normal".equals(saveWhich)) {
             	//normal intake saving . eg. seaton house
@@ -305,8 +307,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         
         String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(client.getDemographicNo()));
         request.getSession().setAttribute("intakeCurrentBedCommunityId",oldBedProgramId);
-      
-        return mapping.findForward(EDIT);
+        
+        if(("RFQ_admit".equals(saveWhich) || "RFQ_notAdmit".equals(saveWhich)) && oldId!=null) {
+        	return clientEdit(mapping, form, request,response);
+        } else {
+        	return mapping.findForward(EDIT);
+        }
     }
     
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
