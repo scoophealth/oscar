@@ -75,12 +75,6 @@
             window.open(page, "", windowprops);
         }
         
-        function init_intake() {  
-        	        	 
-        	if(RFQ_INTAKE_ADMISSION == false) {
-        		alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
-        	}	   	
-        }
     </script>
     <script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />"></script>
     <script type="text/javascript" src="<html:rewrite page="/js/AlphaTextBox.js" />"></script>
@@ -94,10 +88,11 @@
     <script type="text/javascript" src="<html:rewrite page="/js/checkDate.js" />"></script>
     <html:base/>
 </head>
-<body class="edit" onload="init_intake()">
+<body class="edit">
 
 <html:form action="/PMmodule/GenericIntake/Edit" onsubmit="return validateEdit()" >
 <html:hidden property="method"/>
+<input type="hidden" name="currentBedCommunityProgramId_old" value=<%=session.getAttribute("intakeCurrentBedCommunityId")%> />
 <div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
 <div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
     <c:out value="${sessionScope.genericIntakeEditForm.title}"/>
