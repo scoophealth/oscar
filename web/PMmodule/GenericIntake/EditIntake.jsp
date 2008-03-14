@@ -128,10 +128,10 @@
         session.setAttribute("intakeNode", iNode);
 	
 	out.write("<p>&nbsp;</p>");
-	out.write(" <input type=\"button\" value=\"Save Form\" onclick=\"saveform(publish.checked);\">");
+	out.write(" <input type=\"button\" value=\"Save Form\" onclick=\"saveform(publish.checked);\" />");
         out.write(" <input type=\"checkbox\" name=\"publish\">Publish this as the Registration Intake</input>");
         out.write("<br>");
-	out.write(" <input type=\"button\" value=\"Reset\" onclick=\"resetform();\">");
+	out.write(" <input type=\"button\" value=\"Reset\" onclick=\"resetform();\" />");
         %>
     </body>
 </html>
