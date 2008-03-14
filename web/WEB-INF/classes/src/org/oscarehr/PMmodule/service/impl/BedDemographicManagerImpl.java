@@ -131,7 +131,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 
 			Room room = roomDAO.getRoom(bed.getRoomId());
 			// check for facility filtering
-			if (facilityId!=null && room.getFacility()!=null && room.getFacilityId().intValue()!=facilityId.intValue()) return(null);
+			if (facilityId!=null && room.getFacilityId()!=null && room.getFacilityId().intValue()!=facilityId.intValue()) return(null);
 			bed.setRoom(room);
 
 			Integer programId = room.getProgramId();
