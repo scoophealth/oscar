@@ -28,19 +28,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.BedDAO;
 import org.oscarehr.PMmodule.dao.BedDemographicDAO;
-import org.oscarehr.PMmodule.dao.RoomDemographicDAO;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
-import org.oscarehr.PMmodule.model.Bed;
+import org.oscarehr.PMmodule.dao.RoomDemographicDAO;
 import org.oscarehr.PMmodule.model.BedDemographic;
-import org.oscarehr.PMmodule.model.RoomDemographic;
-import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
+import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
-import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 
 /**
  * Implementation of RoomDemographicManager interface
@@ -57,10 +53,8 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 	private BedDemographicDAO bedDemographicDAO;
 	private RoomDemographicDAO roomDemographicDAO;
 	private ProviderDao providerDAO;
-	private BedDAO bedDAO;
-	private ClientDao demographicDAO;
+	private ClientDao clientDao;
 	private RoomDAO roomDAO;
-	private ProgramDao programDAO;
 
 	public void setRoomDemographicDAO(RoomDemographicDAO roomDemographicDAO) {
 		this.roomDemographicDAO = roomDemographicDAO;
@@ -70,24 +64,16 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		this.providerDAO = providerDAO;
 	}
 
-	public void setBedDAO(BedDAO bedDAO) {
-		this.bedDAO = bedDAO;
-	}
-
 	public void setBedDemographicDAO(BedDemographicDAO bedDemographicDAO) {
 		this.bedDemographicDAO = bedDemographicDAO;
 	}
 
-	public void setDemographicDAO(ClientDao demographicDAO) {
-		this.demographicDAO = demographicDAO;
+	public void setClientDao(ClientDao clientDao) {
+		this.clientDao = clientDao;
 	}
 
 	public void setRoomDAO(RoomDAO roomDAO) {
 		this.roomDAO = roomDAO;
-	}
-
-	public void setProgramDAO(ProgramDao programDAO) {
-		this.programDAO = programDAO;
 	}
 
 	/**
@@ -220,7 +206,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 	}
 
 	void validateDemographic(Integer demographicNo) {
-		if (!demographicDAO.clientExists(demographicNo)) {
+		if (!clientDao.clientExists(demographicNo)) {
 			handleException(new IllegalArgumentException("no demographic with id : " + demographicNo));
 		}
 	}
