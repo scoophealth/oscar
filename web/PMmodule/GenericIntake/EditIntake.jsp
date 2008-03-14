@@ -133,6 +133,8 @@
         out.write(" <input type=\"checkbox\" name=\"publish\">Publish this as the Registration Intake</input>");
         out.write("<br>");
 	out.write(" <input type=\"button\" value=\"Reset\" onclick=\"resetform();\" />");
+        out.write("<p>&nbsp;</p>");
+        out.write(" <input type=\"button\" value=\"Close\" onclick=\"window.close();\" />");
         %>
         </form>
     </body>
