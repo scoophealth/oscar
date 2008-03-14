@@ -650,7 +650,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     private void saveUpdateIntake(Intake intake, Integer clientId) {
         intake.setClientId(clientId);
-System.err.println("---------- "+intake.getAnswers().getClass().getName());
+
         genericIntakeManager.saveUpdateIntake(intake);
     }
     
