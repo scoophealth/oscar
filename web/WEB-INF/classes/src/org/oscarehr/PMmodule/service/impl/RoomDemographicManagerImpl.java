@@ -52,7 +52,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 
 	private BedDemographicDAO bedDemographicDAO;
 	private RoomDemographicDAO roomDemographicDAO;
-	private ProviderDao providerDAO;
+	private ProviderDao providerDao;
 	private ClientDao clientDao;
 	private RoomDAO roomDAO;
 
@@ -60,8 +60,8 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		this.roomDemographicDAO = roomDemographicDAO;
 	}
 
-	public void setProviderDAO(ProviderDao providerDAO) {
-		this.providerDAO = providerDAO;
+	public void setProviderDao(ProviderDao providerDao) {
+		this.providerDao = providerDao;
 	}
 
 	public void setBedDemographicDAO(BedDemographicDAO bedDemographicDAO) {
@@ -178,7 +178,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 //		roomDemographic.setAssignEnd(duration);
 
 		String providerNo = roomDemographic.getProviderNo();
-		roomDemographic.setProvider(providerDAO.getProvider(providerNo));
+		roomDemographic.setProvider(providerDao.getProvider(providerNo));
 	}
 
 	void validate(RoomDemographic roomDemographic) {
@@ -194,7 +194,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 	}
 
 	void validateProvider(String providerId) {
-		if (!providerDAO.providerExists(providerId)) {
+		if (!providerDao.providerExists(providerId)) {
 			handleException(new IllegalArgumentException("no provider with id : " + providerId));
 		}
 	}
