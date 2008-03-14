@@ -34,8 +34,11 @@
                popup('300','400',eURL,'rodrnode');
             }
             
-            function saveform(){
+            function saveform(published){
                var eURL = "SaveForm.jsp";
+               if (published) {
+                  eURL += "?published=1";
+               }
                popup('200','300',eURL,'sveform');
             }
 	    
@@ -111,9 +114,11 @@
 	
         if (lis != null){%>
 	<select>
-	    <%for (IntakeNode i: lis){%>
-	    <option <%=i.getId()==iNum?"selected":""%> onclick="location.href='EditIntake.jsp?id=<%=i.getId()%>'"> - <%=i.getLabelStr()%> - </option>
-	    <%}%>
+                    <% int n=1;
+                       for (IntakeNode i: lis){ %>
+	    <option <%=i.getId()==iNum?"selected":""%> onclick="location.href='EditIntake.jsp?id=<%=i.getId()%>'"> - <%=n%>. <%=i.getLabelStr()%> - </option>
+                    <%     n++;
+                       } %>
 	</select>
 	<%}
 	IntakeNode iNode = (IntakeNode) session.getAttribute("intakeNode");
@@ -123,7 +128,9 @@
         session.setAttribute("intakeNode", iNode);
 	
 	out.write("<p>&nbsp;</p>");
-	out.write(" <input type=\"button\" value=\"Save Form\" onclick=\"saveform();\">");
+	out.write(" <input type=\"button\" value=\"Save Form\" onclick=\"saveform(publish.checked);\">");
+        out.write(" <input type=\"checkbox\" name=\"publish\">Publish this as the Registration Intake</input>");
+        out.write("<br>");
 	out.write(" <input type=\"button\" value=\"Reset\" onclick=\"resetform();\">");
         %>
     </body>
