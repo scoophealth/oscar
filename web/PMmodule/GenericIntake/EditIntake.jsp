@@ -101,6 +101,7 @@
         
     </head>
     <body>
+        <form>
         <%
         
         WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
@@ -133,6 +134,7 @@
         out.write("<br>");
 	out.write(" <input type=\"button\" value=\"Reset\" onclick=\"resetform();\" />");
         %>
+        </form>
     </body>
 </html>
 
