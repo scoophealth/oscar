@@ -26,6 +26,8 @@
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ page import="java.util.*"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <script>
     function resetClientFields() {
         var form = document.clientManagerForm;
@@ -90,6 +92,7 @@
 <%
 	boolean allowTerminateEarly=false;
 	ProgramClientRestriction temp=null;
+	ProviderDao providerDao=(ProviderDao)SpringUtils.beanFactory.getBean("providerDao");
 %>
     <display:setProperty name="paging.banner.placement" value="bottom" />
     <display:column property="program.name" sortable="true" title="Program Name" />
@@ -102,7 +105,11 @@
     		temp=(ProgramClientRestriction)service_restriction;
     		String status="";
     		allowTerminateEarly=false;
-    		if (temp.getEarlyTerminationProvider()!=null) status="terminated early";
+    		if (temp.getEarlyTerminationProvider()!=null)
+    		{
+    			Provider providerTermination=providerDao.getProvider(temp.getEarlyTerminationProvider());
+    			status="terminated early by "+providerTermination.getFormattedName();
+    		}
     		else if (temp.getEndDate().getTime()<System.currentTimeMillis()) status="completed";
     		else if (temp.getStartDate().getTime()<=System.currentTimeMillis() && temp.getEndDate().getTime()>=System.currentTimeMillis())
     		{
