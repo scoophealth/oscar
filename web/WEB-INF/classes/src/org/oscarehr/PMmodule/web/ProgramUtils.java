@@ -63,9 +63,9 @@ public class ProgramUtils
         sb.append("function isNewFacility(newProgramId,oldProgramId)\n");
         sb.append("{\n");
         
-       /* 
+        /*
         String oldProgramId = (String)request.getSession().getAttribute("intakeCurrentBedCommunityId");
-        
+       
         if(oldProgramId != null && !"".equals(oldProgramId)) {
          	for (Long fId : facilityDao.getDistinctFacilityIdsByProgramId(Integer.valueOf(oldProgramId).intValue())) {
             	for(Long pIds : facilityDao.getDistinctProgramIdsByFacilityId(fId.intValue())) {  
@@ -80,15 +80,21 @@ public class ProgramUtils
         sb.append("if(oldProgramId=='' || oldProgramId==null) {return false;}\n");
         for(Facility facility : facilityDao.getFacilities()) {
         	for(Program program : facilityDao.getAssociatedPrograms(facility.getId())) {
+        		
         		sb.append("if(oldProgramId==" + program.getId()+") {oldIn=true;}\n ");
         		sb.append("if(newProgramId==" + program.getId()+") {newIn=true;} \n");
         	}
         	sb.append("if(oldIn==true && newIn==true) {return(false);}\n");
+        	
         	sb.append("else { oldIn=false; newIn=false; } \n");
         }
-        
-        
-        sb.append("return(true);\n");
+        for(Program program : programDao.getCommunityPrograms()){
+        	if(program.isCommunity()) {
+        		sb.append("if(oldProgramId=="+program.getId()+") {return(false);} \n");
+        		sb.append("if(newProgramId=="+program.getId()+") {return(false);} \n");
+        	}
+        }
+        sb.append(" return(true);\n");
         sb.append("}\n");
         
         return(sb.toString());

@@ -99,12 +99,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(
                 intakeType), null, null, null);
         
-        request.getSession().setAttribute("intakeCurrentBedCommunityId","");
+        request.getSession().setAttribute("intakeCurrentBedCommunityId",null);
         
         ProgramUtils.addProgramRestrictions(request);
         
         //request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", true);
-        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
+        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION","true");
         
         return mapping.findForward(EDIT);
     }
@@ -176,7 +176,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         ProgramUtils.addProgramRestrictions(request);
         
         //request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", true);
-        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
+        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION","true");
         
         return mapping.findForward(EDIT);
     }
@@ -212,10 +212,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         String intakeType = intake.getType();
         Demographic client = formBean.getClient();
         String providerNo = getProviderNo(request);
-        
-        //request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", true);
-        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",true);
-        
+                        
         try { 
         	// save client information.
             saveClient(client, providerNo);
@@ -242,16 +239,16 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             	}
         		*/
             	// RFQ : intake without admission , sign and save
-            	if("RFQ_notAdmit".equals(saveWhich) || "RFQ_temp".equals(saveWhich)) {
+            	if("RFQ_notAdmit".equals(saveWhich) ) {
             		//no change in admission made for the client
             		if( (oldId!=null && newId!=null && oldId.intValue() != newId.intValue()) ||
             				(oldId==null && newId!=null) ||
             				(oldId!=null && newId==null)) {
-            			request.getSession().setAttribute("RFQ_INTAKE_ADMISSION",false);            			    
+            			request.getSession().setAttribute("RFQ_INTAKE_ADMISSION","false");            			    
             			return mapping.findForward(EDIT);
-            		}
+            		} 
             	}           	
-            	 
+            	
             	
             	//Save 'external' program for RFQ.
             	admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
@@ -280,13 +277,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             	intake.setFacilityId(currentFacilityId);
             }
             
-            if("RFQ_admit".equals(saveWhich) || "normal".equals(saveWhich)) {
+            //if("RFQ_admit".equals(saveWhich) || "normal".equals(saveWhich)) {
             	admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich);
             
             	if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
             		admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
             	}
-            }
+           //}
             
             if("normal".equals(saveWhich)) {
             	//normal intake saving . eg. seaton house
@@ -339,7 +336,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         
         String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(client.getDemographicNo()));
         request.getSession().setAttribute("intakeCurrentBedCommunityId",oldBedProgramId);
-        
+      
+        //request.getSession().setAttribute("RFQ_IN_SAME_FACILITY", true);
+        request.getSession().setAttribute("RFQ_INTAKE_ADMISSION","true");
         return mapping.findForward(EDIT);
     }
     
