@@ -1550,17 +1550,17 @@
 
         <action path="/Lookup/LookupTableList" type="org.springframework.web.struts.DelegatingActionProxy" 
               name="lookupTableListForm" scope="request" validate="false" parameter="method">
-            <forward name="list" path="page.admin.lookup.tablelist" />
+            <forward name="list" path="/PMmodule/lookup/LookupTableList.jsp" />
         </action>
 
         <action path="/Lookup/LookupCodeList" type="org.springframework.web.struts.DelegatingActionProxy"
               name="lookupCodeListForm" scope="request" validate="false" parameter="method">
-            <forward name="list" path="page.admin.lookup.codelist" />
+            <forward name="list" path="/PMmodule/lookup/LookupCodeList.jsp" />
         </action>
 
         <action path="/Lookup/LookupCodeEdit" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" 
               name="lookupCodeEditForm" scope="session" validate="false" input="/PMmodule/lookup/LookupCodeEdit.jsp">
-            <forward name="edit" path="page.admin.lookup.codeedit" />
+            <forward name="edit" path="/PMmodule/lookup/LookupCodeEdit.jsp" />
         </action>
 
         <action path="/PMmodule/Reports/ProgramActivityReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="activityReportForm" scope="request" validate="false">
