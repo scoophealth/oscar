@@ -20,7 +20,7 @@
         genericIntakeManager.updateAgencyIntakeQuick(nwItn.getId());
     }
     session.removeAttribute("intakeNode");
-    response.sendRedirect("close.jsp?id=" + nwItn.getId());
+    response.sendRedirect("close.jsp");
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
