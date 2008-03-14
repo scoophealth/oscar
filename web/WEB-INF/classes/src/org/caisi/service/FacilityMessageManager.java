@@ -43,6 +43,8 @@ public class FacilityMessageManager {
 	public FacilityMessage getMessage(String messageId) {
 		return dao.getMessage(Long.valueOf(messageId));
 	}
+	
+	
 	public void setFacilityMessageDAO(FacilityMessageDAO dao) {
 		this.dao = dao;
 	}
@@ -55,4 +57,7 @@ public class FacilityMessageManager {
 		return dao.getMessages();
 	}
 
+	public List getMessagesByFacilityId(Long facilityId) {
+		return dao.getMessagesByFacilityId(facilityId);
+	}
 }

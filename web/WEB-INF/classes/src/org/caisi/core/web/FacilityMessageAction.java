@@ -22,6 +22,7 @@
 
 package org.caisi.core.web;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +41,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.caisi.model.FacilityMessage;
 import org.caisi.service.FacilityMessageManager;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
+import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.service.FacilityManager;
 
 public class FacilityMessageAction extends DispatchAction {
@@ -67,7 +69,12 @@ public class FacilityMessageAction extends DispatchAction {
 	}
 		
 	public ActionForward list(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		List activeMessages = mgr.getMessages();
+		//List activeMessages = mgr.getMessages();
+		Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
+		Long facilityId = Long.valueOf(facility.getId().longValue());
+		
+		List activeMessages = mgr.getMessagesByFacilityId(facilityId);
+		
 		request.setAttribute("ActiveFacilityMessages",activeMessages);
 		return mapping.findForward("list");
 	}
@@ -78,7 +85,10 @@ public class FacilityMessageAction extends DispatchAction {
 		
 		String providerNo = (String)request.getSession().getAttribute("user");
 		
-		List facilities = programProviderDAO.getFacilitiesInProgramDomain(providerNo);
+		//List facilities = programProviderDAO.getFacilitiesInProgramDomain(providerNo);
+		List<Facility> facilities = new ArrayList();
+		facilities.add((Facility)request.getSession().getAttribute("currentFacility"));
+		
 		request.getSession().setAttribute("facilities", facilities);
 		
 		if(messageId != null) {
@@ -114,9 +124,12 @@ public class FacilityMessageAction extends DispatchAction {
 	}
 	
 	public ActionForward view(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		//List messages = mgr.getMessages();
-		String providerNo = (String)request.getSession().getAttribute("user");
-		List messages = programProviderDAO.getFacilityMessagesInProgramDomain(providerNo);
+		
+		//String providerNo = (String)request.getSession().getAttribute("user");
+		//List messages = programProviderDAO.getFacilityMessagesInProgramDomain(providerNo);
+		Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
+		Integer facilityId = facility.getId();
+		List messages = programProviderDAO.getFacilityMessagesByFacilityId(facilityId);
 		if(messages.size()>0) {
 			request.setAttribute("FacilityMessages",messages);
 		}

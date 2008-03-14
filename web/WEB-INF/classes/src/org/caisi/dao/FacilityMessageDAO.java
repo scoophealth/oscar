@@ -46,4 +46,7 @@ public class FacilityMessageDAO extends HibernateDaoSupport  {
 		this.getHibernateTemplate().saveOrUpdate(mesg);
 	}
 
+	public List getMessagesByFacilityId(Long facilityId) {
+		return this.getHibernateTemplate().find("from FacilityMessage fm where facilityId=? order by fm.expiry_date desc", facilityId);
+	}
 }
