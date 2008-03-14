@@ -391,6 +391,10 @@ function save_admit() {
 }
 
 function save_notAdmit() {
+	if(!validBedCommunityProgram()) {
+		alert( "Bed program is mandatory");
+		return false;
+	}
 	if(!validIntakeLocation()) {
 		alert("You cannot save without selecting an intake location.");
 		return false;
@@ -407,7 +411,7 @@ function save_notAdmit() {
 function isBedCommunityProgramChanged() {
 	var oldId = document.forms[0].elements['currentBedCommunityProgramId_old'].value;
     var newId = document.forms[0].elements['bedCommunityProgramId'].value;
-    alert("oldId = "+oldId + ", newId="+newId);
+    
     if(oldId!=null && oldId!="null" && oldId!="" && oldId!=newId) {      	
        return true;
     } 
