@@ -1,8 +1,5 @@
 alter table facility change id id int auto_increment;
 
-
-
-
 insert into `secObjectName` values('_admin.provider');
 insert into `secObjectName` values('_admin.security');
 insert into `secObjectName` values('_admin.securityLogReport');
@@ -25,3 +22,5 @@ insert into `secObjPrivilege` values('doctor','_admin.lookupFieldEditor','|*|',0
 insert into `secObjPrivilege` values('doctor','_admin.issueEditor','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_admin.caisiRoles','|*|',0,999998);
 insert into `secObjPrivilege` values('doctor','_admin.userCreatedForms','|*|',0,999998);alter table facility change id id int auto_increment;
+
+
