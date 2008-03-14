@@ -564,7 +564,7 @@ function checkChar(checkString) {
 function isBedCommunityProgramChanged() {
 	var oldId = document.forms[0].elements['currentBedCommunityProgramId_old'].value;
     var newId = document.forms[0].elements['bedCommunityProgramId'].value;
-    alert("old id = "+ oldId + "  , new id = " +newId);
+    
     if(oldId!="" && oldId!=newId) {        	
        return true;
        //alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
