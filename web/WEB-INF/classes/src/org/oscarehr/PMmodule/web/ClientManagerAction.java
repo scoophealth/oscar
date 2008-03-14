@@ -540,6 +540,15 @@ public class ClientManagerAction extends BaseAction {
         return mapping.findForward("edit");
     }
 
+    public ActionForward terminate_early(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+
+        int programClientRestrictionId=Integer.parseInt(request.getParameter("restrictionId"));
+        Provider provider = getProvider(request);
+        clientRestrictionManager.terminateEarly(programClientRestrictionId, provider.getProviderNo());
+        
+        return(edit(mapping, form, request, response));
+    }
+
     public ActionForward override_restriction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaActionForm clientForm = (DynaActionForm) form;
         ProgramClientRestriction restriction = (ProgramClientRestriction) clientForm.get("serviceRestriction");

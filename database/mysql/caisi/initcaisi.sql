@@ -2150,7 +2150,8 @@ create table `program_client_restriction` (
     `is_enabled` tinyint(1) NOT NULL default TRUE,
     `start_date` datetime not null,
     `end_date` datetime not null,
-    PRIMARY KEY (`id`),    
+    early_termination_provider varchar(6),
+	PRIMARY KEY (`id`),    
     CONSTRAINT `FK_pcr_program` FOREIGN KEY (`program_id`) REFERENCES `program` (`id`),
     CONSTRAINT `FK_pcr_provider` FOREIGN KEY (`provider_no`) REFERENCES `provider` (`provider_no`),
     CONSTRAINT `FK_pcr_demographic` FOREIGN KEY (`demographic_no`) REFERENCES `demographic` (`demographic_no`)

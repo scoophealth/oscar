@@ -65,6 +65,17 @@
         form.method.value='service_restrict';
         form.submit();
     }
+    
+    function terminateEarly(restrictionId)
+    {
+    	if (confirm('Do you wish to terminate this service restriction?'))
+    	{
+	        var form = document.clientManagerForm;
+	        form.method.value='terminate_early';
+	        form.restrictionId.value=restrictionId;
+	        form.submit();
+    	}
+    }
 </script>
 <div class="tabs" id="tabs">
     <table cellpadding="3" cellspacing="0" border="0">
@@ -73,7 +84,13 @@
         </tr>
     </table>
 </div>
+
+<input type="hidden" name="restrictionId" value="" />
 <display:table class="simple" cellspacing="2" cellpadding="3" id="service_restriction" name="serviceRestrictions" export="false" pagesize="0" requestURI="/PMmodule/ClientManager.do">
+<%
+	boolean allowTerminateEarly=false;
+	ProgramClientRestriction temp=null;
+%>
     <display:setProperty name="paging.banner.placement" value="bottom" />
     <display:column property="program.name" sortable="true" title="Program Name" />
     <display:column property="provider.formattedName" sortable="true" title="Restricted By"/>
@@ -82,12 +99,21 @@
     <display:column property="endDate" sortable="true" title="End date" />
     <display:column sortable="true" title="Status">
     	<%
-    		ProgramClientRestriction temp=(ProgramClientRestriction)service_restriction;
+    		temp=(ProgramClientRestriction)service_restriction;
     		String status="";
-    		if (temp.getEndDate().getTime()<System.currentTimeMillis()) status="completed";
-    		else if (temp.getStartDate().getTime()<=System.currentTimeMillis() && temp.getEndDate().getTime()>=System.currentTimeMillis()) status="in progress";
+    		allowTerminateEarly=false;
+    		if (temp.getEarlyTerminationProvider()!=null) status="terminated early";
+    		else if (temp.getEndDate().getTime()<System.currentTimeMillis()) status="completed";
+    		else if (temp.getStartDate().getTime()<=System.currentTimeMillis() && temp.getEndDate().getTime()>=System.currentTimeMillis())
+    		{
+    			status="in progress";
+    			allowTerminateEarly=true;
+    		}
     	%>
     	<%=status%>
+    </display:column>
+    <display:column sortable="true" title="">
+    	<input type="button" <%=allowTerminateEarly?"":"disabled=\"disabled\""%> value="Terminate Early" onclick="terminateEarly(<%=temp.getId()%>)" />
     </display:column>
 </display:table>
 <br/>

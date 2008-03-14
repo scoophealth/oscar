@@ -30,6 +30,7 @@
         <property name="startDate" column="start_date" type="timestamp" not-null="true"/>
         <property name="endDate" column="end_date" type="timestamp" not-null="true"/>
         <property name="enabled" column="is_enabled" type="boolean" not-null="true"/>
+        <property name="earlyTerminationProvider" column="early_termination_provider" />
     </class>
 </hibernate-mapping>
 

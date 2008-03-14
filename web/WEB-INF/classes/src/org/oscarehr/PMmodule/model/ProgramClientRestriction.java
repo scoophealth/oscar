@@ -17,7 +17,8 @@ public class ProgramClientRestriction implements Serializable {
     private Date startDate;
     private Date endDate;
     private boolean enabled;
-
+    private String earlyTerminationProvider;
+    
     private Program program;
     private Demographic client;
     private Provider provider;
@@ -152,5 +153,15 @@ public class ProgramClientRestriction implements Serializable {
 	public void setCommentId(String commentId) {
 		this.commentId = commentId;
 	}
+
+    public String getEarlyTerminationProvider() {
+        return earlyTerminationProvider;
+    }
+
+    public void setEarlyTerminationProvider(String earlyTerminationProvider) {
+        this.earlyTerminationProvider = earlyTerminationProvider;
+    }
+
+    
 
 }
