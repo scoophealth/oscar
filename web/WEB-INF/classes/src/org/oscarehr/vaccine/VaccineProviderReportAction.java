@@ -90,6 +90,8 @@ public class VaccineProviderReportAction extends BaseAction {
 	public ActionForward show_report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String clientId = request.getParameter("id");
 			
+        Integer facilityId=(Integer)request.getSession().getAttribute("currentFacilityId");
+        
 		Demographic client = clientManager.getClientByDemographicNo(clientId);
 		
 		if(client == null) {
@@ -111,7 +113,7 @@ public class VaccineProviderReportAction extends BaseAction {
 		//List allergies = this.caseManagementManager.getAllergies(clientId);
 		//request.setAttribute("allergies",allergies);
 		
-		Intake quickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.parseInt(clientId));
+		Intake quickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.parseInt(clientId), facilityId);
 		Map<String,String> answerMap = quickIntake.getAnswerKeyValues();
 		String allergies = answerMap.get("Allergies");
 		request.setAttribute("allergies", allergies);

@@ -53,6 +53,7 @@ import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
+import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -140,6 +141,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
+        Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        
         // [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
         List genders = lookupManager.LoadCodeList("GEN",true,null,null);
         formBean.setGenders(genders);
@@ -152,13 +155,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         Intake intake = null;
 
         if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
-            intake = genericIntakeManager.copyQuickIntake(clientId, providerNo);
+            intake = genericIntakeManager.copyQuickIntake(clientId, providerNo, facilityId);
         }
         else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
-            intake = genericIntakeManager.copyIndepthIntake(clientId, providerNo);
+            intake = genericIntakeManager.copyIndepthIntake(clientId, providerNo, facilityId);
         }
         else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
-            intake = genericIntakeManager.copyProgramIntake(clientId, getProgramId(request), providerNo);
+            intake = genericIntakeManager.copyProgramIntake(clientId, getProgramId(request), providerNo, facilityId);
         }
 
         setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(
@@ -178,6 +181,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
+        Integer facilityId=(Integer)request.getSession().getAttribute("currentFacilityId");
+        
         String intakeType = getType(request);
         Integer clientId = getClientId(request);
         String providerNo = getProviderNo(request);
@@ -185,13 +190,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         Intake intake = null;
 
         if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
-            intake = genericIntakeManager.getMostRecentQuickIntake(clientId);
+            intake = genericIntakeManager.getMostRecentQuickIntake(clientId, facilityId);
         }
         else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
-            intake = genericIntakeManager.getMostRecentIndepthIntake(clientId);
+            intake = genericIntakeManager.getMostRecentIndepthIntake(clientId, facilityId);
         }
         else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
-            intake = genericIntakeManager.getMostRecentProgramIntake(clientId, getProgramId(request));
+            intake = genericIntakeManager.getMostRecentProgramIntake(clientId, getProgramId(request), facilityId);
         }
 
         setBeanProperties(formBean, intake, getClient(clientId), providerNo, false, false, false, null, null, null);
