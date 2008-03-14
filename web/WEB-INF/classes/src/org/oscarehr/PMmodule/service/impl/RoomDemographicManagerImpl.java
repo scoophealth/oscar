@@ -113,15 +113,15 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		}
 		RoomDemographic roomDemographic = roomDemographicDAO.getRoomDemographicByDemographic(demographicNo);
 
-		// filter in facility
-		if (facilityId!=null)
-		{
-		    Room room=roomDAO.getRoom(roomDemographic.getRoomId());
-		    if (room.getFacilityId()!=null && facilityId.intValue()!=room.getFacilityId().intValue()) return(null);
-		}
-		
 		if (roomDemographic != null) {			
-			setAttributes(roomDemographic);
+	        // filter in facility
+	        if (facilityId!=null)
+	        {
+	            Room room=roomDAO.getRoom(roomDemographic.getRoomId());
+	            if (room.getFacilityId()!=null && facilityId.intValue()!=room.getFacilityId().intValue()) return(null);
+	        }
+
+	        setAttributes(roomDemographic);
 		}
 		return roomDemographic;
 	}
