@@ -73,7 +73,7 @@
 	<display:setProperty name="basic.msg.empty_list" value="No programs found." />
 	
 	<display:column sortable="false" title="">
-		<a onclick="return ConfirmDelete('<c:out value="${program.name}"/>')" href="<html:rewrite action="/PMmodule/ProgramManager.do"/>?method=delete&id=<c:out value="${program.id}"/>&name=<c:out value="${program.name}"/>"> Delete </a>
+		<a onclick="return ConfirmDelete('<c:out value="${program.nameJs}"/>')" href="<html:rewrite action="/PMmodule/ProgramManager.do"/>?method=delete&id=<c:out value="${program.id}"/>&name=<c:out value="${program.name}"/>"> Delete </a>
 	</display:column>
 	
 	<c:choose>

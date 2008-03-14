@@ -388,7 +388,10 @@ public class Program implements Serializable {
     public String getName() {
         return name;
     }
-
+    public String getNameJs()
+    {	
+    	return oscar.Misc.getStringJs(name);
+    }
     /**
      * Set the value related to the column: name
      * 

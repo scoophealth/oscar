@@ -473,6 +473,11 @@ public static String space(int i) {
     	if (s==null) return "";
     	return (String) s;
     }
+    public static String getStringJs(Object s)
+    {
+    	if (s==null) return "";
+    	return ((String) s).replace("'", "\\'");
+    }
 
     public static String encryptPIN(String sPin){
         StringBuilder sb = new StringBuilder();

@@ -36,6 +36,9 @@ public class Facility implements Serializable {
     public String getName() {
         return name;
     }
+    public String getNameJs() {
+        return oscar.Misc.getStringJs(name);
+    }
 
     public void setName(String name) {
         this.name = name;
