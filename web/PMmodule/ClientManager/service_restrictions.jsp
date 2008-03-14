@@ -80,6 +80,15 @@
     <display:column property="comments" sortable="true" title="Comments" />
     <display:column property="startDate" sortable="true" title="Start date" />
     <display:column property="endDate" sortable="true" title="End date" />
+    <display:column sortable="true" title="Status">
+    	<%
+    		ProgramClientRestriction temp=(ProgramClientRestriction)service_restriction;
+    		String status="";
+    		if (temp.getEndDate().getTime()<System.currentTimeMillis()) status="completed";
+    		else if (temp.getStartDate().getTime()<=System.currentTimeMillis() && temp.getEndDate().getTime()>=System.currentTimeMillis()) status="in progress";
+    	%>
+    	<%=status%>
+    </display:column>
 </display:table>
 <br/>
 <br/>
