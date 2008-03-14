@@ -66,7 +66,7 @@ function validateEdit() {
 		{
 			%>
 				var firstName = getElement('client.firstName');
-				if (isEmpty(firstName.value)) {
+				if (firstName!=null && isEmpty(firstName.value)) {
 					return error(firstName, "First name is mandatory");
 				}
 			<%
@@ -76,7 +76,7 @@ function validateEdit() {
 		{
 			%>
 				var lastName = getElement('client.lastName');
-				if (isEmpty(lastName.value)) {
+				if (lastName!=null && isEmpty(lastName.value)) {
 					return error(lastName, "Last name is mandatory");
 				}
 			<%
@@ -88,7 +88,7 @@ function validateEdit() {
 		if (IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_GENDER))
 		{
 			%>
-				if (isEmpty(gender.value)) {
+				if (gender!=null && isEmpty(gender.value)) {
 					return error(gender, "Gender is mandatory");
 				}
 			<%
@@ -159,7 +159,7 @@ function validateEdit() {
 			%>
 				var email = getElement('client.email');
 				
-				if (!isEmpty(email.value) && !dojo.validate.isEmailAddress(email.value)) {
+				if (email!=null && !isEmpty(email.value) && !dojo.validate.isEmailAddress(email.value)) {
 					return error(email, email.value + " is not a valid email address");
 				}				
 			<%
@@ -170,7 +170,7 @@ function validateEdit() {
 			%>
 				var phoneNumber = getElement('client.phone');
 			
-				if (!isEmpty(phoneNumber.value) && !dojo.validate.us.isPhoneNumber(phoneNumber.value)) {
+				if (phoneNumber!=null && !isEmpty(phoneNumber.value) && !dojo.validate.us.isPhoneNumber(phoneNumber.value)) {
 					return error(phoneNumber, phoneNumber.value + " is not a valid phone number");
 				}
 			<%
@@ -181,7 +181,7 @@ function validateEdit() {
 			%>
 				var secondaryPhoneNumber = getElement('client.phone2');
 			
-				if (!isEmpty(secondaryPhoneNumber.value) && !dojo.validate.us.isPhoneNumber(secondaryPhoneNumber.value)) {
+				if (secondaryPhoneNumber!=null && !isEmpty(secondaryPhoneNumber.value) && !dojo.validate.us.isPhoneNumber(secondaryPhoneNumber.value)) {
 					return error(secondaryPhoneNumber, secondaryPhoneNumber.value + " is not a valid phone number");
 				}
 			<%
@@ -191,7 +191,7 @@ function validateEdit() {
 		{
 			%>
 				var address = getElement('client.address');
-				if (isEmpty(address.value)) {
+				if (address!=null && isEmpty(address.value)) {
 					return error(address, "Street is mandatory");
 				}
 			<%
@@ -201,7 +201,7 @@ function validateEdit() {
 		{
 			%>
 				var city = getElement('client.city');
-				if (isEmpty(city.value)) {
+				if (city!=null && isEmpty(city.value)) {
 					return error(city, "City is mandatory");
 				}
 			<%
@@ -211,7 +211,7 @@ function validateEdit() {
 		{
 			%>
 				var province = getElement('client.province');
-				if (isEmpty(province.value)) {
+				if (province!=null && isEmpty(province.value)) {
 					return error(province, "Province is mandatory");
 				}
 			<%
@@ -221,7 +221,7 @@ function validateEdit() {
 		{
 			%>
 				var postal = getElement('client.postal');
-				if (isEmpty(postal.value)) {
+				if (postal!=null && isEmpty(postal.value)) {
 					return error(postal, "Postal Code is mandatory");
 				}
 			<%
@@ -231,7 +231,7 @@ function validateEdit() {
 		{
 			%>
 				var alias = getElement('client.alias');
-				if (isEmpty(alias.value)) {
+				if (alias!=null && isEmpty(alias.value)) {
 					return error(alias, "Alias is mandatory");
 				}
 			<%
@@ -241,7 +241,7 @@ function validateEdit() {
 		{
 			%>
 				var citizenship = getElement('client.citizenship');
-				if (isEmpty(citizenship.value)) {
+				if (citizenship!=null && isEmpty(citizenship.value)) {
 					return error(citizenship, "Citizenship is mandatory");
 				}
 			<%
@@ -251,7 +251,7 @@ function validateEdit() {
 		{
 			%>
 				var children = getElement('client.children');
-				if (isEmpty(children.value)) {
+				if (children!=null && isEmpty(children.value)) {
 					return error(children, "Children is mandatory");
 				}
 			<%
@@ -261,7 +261,7 @@ function validateEdit() {
 		{
 			%>
 				var previousAddress = getElement('client.previousAddress');
-				if (isEmpty(previousAddress.value)) {
+				if (previousAddress!=null && isEmpty(previousAddress.value)) {
 					return error(previousAddress, "Previous Address is mandatory");
 				}
 			<%
@@ -271,7 +271,7 @@ function validateEdit() {
 		{
 			%>
 				var sourceOfIncome = getElement('client.sourceOfIncome');
-				if (isEmpty(sourceOfIncome.value)) {
+				if (sourceOfIncome!=null && isEmpty(sourceOfIncome.value)) {
 					return error(sourceOfIncome, "Source Of Income is mandatory");
 				}
 			<%
@@ -281,7 +281,7 @@ function validateEdit() {
 		{
 			%>
 				var sin = getElement('client.sin');
-				if (isEmpty(sin.value)) {
+				if (sin!=null && isEmpty(sin.value)) {
 					return error(sin, "Social Insurance Number is mandatory");
 				}
 			<%
