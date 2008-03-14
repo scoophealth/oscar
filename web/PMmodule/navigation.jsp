@@ -327,11 +327,13 @@
                     <div>
                         <a HREF="#" ONCLICK="popupPage2('<%=request.getContextPath()%>/admin/admin.jsp', 'Admin');return false;">Admin Page</a>
                     </div>
+<!--
                    	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
                    	<div>	
                    		<html:link action="/Lookup/LookupTableList.do">Lookup Field Editor</html:link>
                   	</div>
                     </caisi:isModuleLoad>
+-->
                 </div>
         </security:oscarSec>
 <!--         
