@@ -152,7 +152,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         Intake intake = null;
 
         if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
-            intake = genericIntakeManager.copyQuickIntake(clientId, providerNo);
+            // Annie seemed to think it should be updating the existing intake, not copying it. So... it's been changed. If the requirements are to copy then we can change it back.
+            // intake = genericIntakeManager.copyQuickIntake(clientId, providerNo);
+            intake = genericIntakeManager.getMostRecentQuickIntake(clientId);
         }
         else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
             intake = genericIntakeManager.copyIndepthIntake(clientId, providerNo);
@@ -648,6 +650,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     private void saveUpdateIntake(Intake intake, Integer clientId) {
         intake.setClientId(clientId);
+System.err.println("---------- "+intake.getAnswers().getClass().getName());
         genericIntakeManager.saveUpdateIntake(intake);
     }
     
