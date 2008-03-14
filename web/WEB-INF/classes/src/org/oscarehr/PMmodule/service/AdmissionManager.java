@@ -379,7 +379,7 @@ public class AdmissionManager {
 		
 		if(roomManager != null  &&  roomManager.isRoomOfDischargeProgramAssignedToClient(demographicNo, programId)){
 			if(roomDemographicManager != null){
-				RoomDemographic roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo);
+				RoomDemographic roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo, facilityId);
 				if(roomDemographic != null){
 					roomDemographicManager.deleteRoomDemographic(roomDemographic);
 				}

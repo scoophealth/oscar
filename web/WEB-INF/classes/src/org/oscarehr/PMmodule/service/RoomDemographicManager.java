@@ -57,12 +57,13 @@ public interface RoomDemographicManager {
 
 	/**
 	 * Get RoomDemographic relationship object with given demographic identifier
-	 * 
+	 *
+	 * @param facilityId can be null
 	 * @param demographicNo
 	 *            demographic identifier
 	 * @return RoomDemographic relationship object
 	 */
-	public RoomDemographic getRoomDemographicByDemographic(Integer demographicNo);
+	public RoomDemographic getRoomDemographicByDemographic(Integer demographicNo, Integer facilityId);
 
 	/**
 	 * Save RoomDemographic relationship object

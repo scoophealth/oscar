@@ -49,19 +49,18 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
+import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.beans.factory.annotation.Required;
-import org.oscarehr.PMmodule.service.SurveyManager;
-import org.oscarehr.PMmodule.model.Facility;
 
 public class ProgramManagerViewAction extends BaseAction {
 
@@ -761,7 +760,9 @@ public class ProgramManagerViewAction extends BaseAction {
         Date assignEnd1 = null;
         Date today = DateTimeFormatUtils.getToday();
         //List<Integer> familyList = new ArrayList<Integer>();
-    	
+
+        Integer facilityId= (Integer)request.getSession().getAttribute("currentFacilityId");
+
     	String switchBed1 = formBean.getSwitchBed1();
     	String switchBed2 = formBean.getSwitchBed2();
     	
@@ -836,8 +837,8 @@ public class ProgramManagerViewAction extends BaseAction {
 			//System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyDependent1 = " + isFamilyDependent1);    	
 			//System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyDependent2 = " + isFamilyDependent2);    	
 		
-   			RoomDemographic roomDemographic1 = roomDemographicManager.getRoomDemographicByDemographic(client1);
-   			RoomDemographic roomDemographic2 = roomDemographicManager.getRoomDemographicByDemographic(client2);
+   			RoomDemographic roomDemographic1 = roomDemographicManager.getRoomDemographicByDemographic(client1, facilityId);
+   			RoomDemographic roomDemographic2 = roomDemographicManager.getRoomDemographicByDemographic(client2, facilityId);
    			
    			if(roomDemographic1 == null  ||  roomDemographic2 == null){
    	            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.check.error"));

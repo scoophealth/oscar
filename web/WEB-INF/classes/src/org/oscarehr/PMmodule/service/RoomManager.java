@@ -42,6 +42,7 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.JointAdmission;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.RoomType;
@@ -357,7 +358,8 @@ public class RoomManager {
     	if(demographicNo == null  ||  programId == null){
     		return false;
     	}
-    	RoomDemographic roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo);
+    	Program program=programDao.getProgram(programId);
+    	RoomDemographic roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo, (int)program.getFacilityId());
     	if(roomDemographic != null){
  	    	Room room = getRoom(roomDemographic.getId().getRoomId());
 	    	if(room != null  &&  programId.intValue() == room.getProgramId().intValue()){

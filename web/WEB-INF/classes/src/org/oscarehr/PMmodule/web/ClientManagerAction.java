@@ -680,7 +680,7 @@ public class ClientManagerAction extends BaseAction {
 
 		}else {//check whether client is familyHead or independent client
 			//create roomDemographic from bedDemographic
-			roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(demographicNo);
+			roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(demographicNo, facilityId);
 			if(roomDemographic == null) {//demographicNo (familyHead or independent) has no record in 'room_demographic'
 				roomDemographic = RoomDemographic.create(demographicNo, bedDemographic.getProviderNo());
 			}
@@ -870,7 +870,7 @@ public class ClientManagerAction extends BaseAction {
 								clientId = new Integer(((JointAdmission)dependentList.get(i)).getClientId().intValue());
 								
 								if( clientId != null ){
-									roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic( clientId  );
+									roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(clientId, facilityId);
 									bedDemographic.getId().setDemographicNo(clientId); //change to dependent member
 								
 									//assigning both room & bed (different ones) for all dependents
@@ -1400,7 +1400,7 @@ public class ClientManagerAction extends BaseAction {
         BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(Integer.valueOf(demographicNo), facilityId);
         request.setAttribute("bedDemographic", bedDemographic);
         
-        RoomDemographic roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(Integer.valueOf(demographicNo));
+        RoomDemographic roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(Integer.valueOf(demographicNo), facilityId);
 
 		if(roomDemographic != null){
 			Integer roomIdInt = roomDemographic.getId().getRoomId();
