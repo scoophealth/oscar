@@ -1274,9 +1274,7 @@ public class ClientManagerAction extends BaseAction {
 
         ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
 
-        String facilityId="0";
-        Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
-        if(facility!=null) facilityId= facility.getId().toString(); 
+        Integer facilityId=(Integer)request.getSession().getAttribute("currentFacilityId");
         
         request.setAttribute("id", demographicNo);
         request.setAttribute("client", clientManager.getClientByDemographicNo(demographicNo));
@@ -1336,12 +1334,12 @@ public class ClientManagerAction extends BaseAction {
 
         if (tabBean.getTab().equals("Summary")) {
             /* survey module */
-            request.setAttribute("survey_list", surveyManager.getAllForms(Integer.valueOf(facilityId)));
-            request.setAttribute("surveys", surveyManager.getFormsByFacility(demographicNo, Integer.valueOf(facilityId)));
+            request.setAttribute("survey_list", surveyManager.getAllForms(facilityId));
+            request.setAttribute("surveys", surveyManager.getFormsByFacility(demographicNo, facilityId));
 
             // request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
             // only allow bed/service programs show up.(not external program)
-            List currentAdmissionList = admissionManager.getCurrentAdmissionsByFacility(Integer.valueOf(demographicNo), Integer.valueOf(facilityId));
+            List currentAdmissionList = admissionManager.getCurrentAdmissionsByFacility(Integer.valueOf(demographicNo), facilityId);
             List bedServiceList = new ArrayList();
             for (Iterator ad = currentAdmissionList.iterator(); ad.hasNext();) {
                 Admission admission1 = (Admission) ad.next();
@@ -1352,7 +1350,7 @@ public class ClientManagerAction extends BaseAction {
             }
             request.setAttribute("admissions", bedServiceList);
 
-            Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntakeByFacility(Integer.valueOf(demographicNo), Integer.valueOf(facilityId));
+            Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntakeByFacility(Integer.valueOf(demographicNo), facilityId);
             request.setAttribute("mostRecentQuickIntake", mostRecentQuickIntake);
 
             HealthSafety healthsafety = healthSafetyManager.getHealthSafetyByDemographic(Long.valueOf(demographicNo));
@@ -1378,13 +1376,13 @@ public class ClientManagerAction extends BaseAction {
                 }
             }
 
-            request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, facilityId));
+            request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, String.valueOf(facilityId)));
         }
 
         /* history */
         if (tabBean.getTab().equals("History")) {
-            request.setAttribute("admissionHistory", admissionManager.getAdmissionsByFacility(Integer.valueOf(demographicNo), Integer.valueOf(facilityId)));
-            request.setAttribute("referralHistory", clientManager.getReferralsByFacility(demographicNo, Integer.valueOf(facilityId)));
+            request.setAttribute("admissionHistory", admissionManager.getAdmissionsByFacility(Integer.valueOf(demographicNo), facilityId));
+            request.setAttribute("referralHistory", clientManager.getReferralsByFacility(demographicNo, facilityId));
         }
 
         List<?> currentAdmissions = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));
@@ -1504,19 +1502,19 @@ public class ClientManagerAction extends BaseAction {
             request.setAttribute("programsWithIntake", genericIntakeManager.getProgramsWithIntake(Integer.valueOf(demographicNo)));
 
             /* survey module */
-            request.setAttribute("survey_list", surveyManager.getAllForms(Integer.valueOf(facilityId)));
-            request.setAttribute("surveys", surveyManager.getFormsByFacility(demographicNo, Integer.valueOf(facilityId)));
+            request.setAttribute("survey_list", surveyManager.getAllForms(facilityId));
+            request.setAttribute("surveys", surveyManager.getFormsByFacility(demographicNo, facilityId));
         }
 
         /* refer */
         if (tabBean.getTab().equals("Refer")) {
-            request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, facilityId));
+            request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, String.valueOf(facilityId)));
         }
 
         /* service restrictions */
         if (tabBean.getTab().equals("Service Restrictions")) {
 //            request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), new Date()));
-            request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), Integer.valueOf(facilityId), new Date()));
+            request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), facilityId, new Date()));
 
             request.setAttribute("serviceRestrictionList",lookupManager.LoadCodeList("SRT",true, null, null));
         }
@@ -1534,7 +1532,7 @@ public class ClientManagerAction extends BaseAction {
 
         /* Relations */
         DemographicRelationship demoRelation = new DemographicRelationship();
-        ArrayList<Hashtable> relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo, Integer.valueOf(facilityId));
+        ArrayList<Hashtable> relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo, facilityId);
         List<JointAdmission> list = clientManager.getDependents(new Long(demographicNo));
         JointAdmission clientsJadm = clientManager.getJointAdmission(new Long(demographicNo));
         int familySize = list.size() + 1;
