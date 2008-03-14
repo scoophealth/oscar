@@ -268,7 +268,7 @@
                     <span><a href='<%=request.getContextPath()%>/PMmodule/EditIntake.do'>Registration Editor</a></span>
                 </div>
                 <div>
-                    <span><a href='<%=request.getContextPath()%>/PMmodule/GenericIntake/EditIntake.jsp?id=1'>Intake Form Editor</a></span>
+                    <span><a href="javascript:void(0)" onclick="window.open('<%=request.getContextPath()%>/PMmodule/GenericIntake/EditIntake.jsp?id=1');">Intake Form Editor</a></span>
                 </div>
             </caisi:isModuleLoad>
             <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
