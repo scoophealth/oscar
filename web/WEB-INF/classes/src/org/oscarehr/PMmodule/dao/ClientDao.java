@@ -39,12 +39,14 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wsif.schema.Restriction;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
@@ -164,44 +166,64 @@ public class ClientDao extends HibernateDaoSupport {
 			}
 		    return results;
 		}
-		
 		if (firstName.length() > 0) {
-			if (isOracle) {
-				sql = "(LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
-				criteria.add(Restrictions.or(Restrictions.or(Restrictions.ilike("FirstName", firstNameL), Restrictions.sqlRestriction(sql)),
-						     Restrictions.ilike("Alias", firstNameL)));
-				
-			}
+			sql = "(LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
+/*			if (isOracle) { */
+				criteria.add(
+						(Restrictions.or
+								(Restrictions.or
+										(Restrictions.ilike("FirstName", firstNameL), 
+										 Restrictions.sqlRestriction(sql)
+										),
+										Restrictions.ilike("Alias", firstNameL)
+								)
+						)
+				);
+/*			}
 			else
 			{
-				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name like '" + firstName + "%'))";
+				sql += " OR (first_name like '" + firstNameL + "'))";
 				//criteria.add(Restrictions.sqlRestriction(sql));
-				
-				sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (alias like '%" + firstName + "%'))";
+				if (lastName.length()>0) {
+					sql += " OR (alias like '" + firstNameL + "')" +  " OR (alias like '" + lastNameL + "'))";
+				}
+				else
+				{
+					sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (alias like '" + firstNameL + "'))";
+				}
 				criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
-			
 			}
-		}	
+*/		}	
 		if (lastName.length() > 0) {
-			if(isOracle) {
+/*			if(isOracle) { */
 				sql = "(LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))";
-				criteria.add(Restrictions.or(Restrictions.or(Restrictions.ilike("LastName", lastNameL), Restrictions.sqlRestriction(sql)),
-						     Restrictions.ilike("Alias", lastNameL)));
+				criteria.add(
+						(Restrictions.or
+								(Restrictions.or
+										(Restrictions.ilike("LastName", firstNameL), 
+										 Restrictions.sqlRestriction(sql)
+										),
+										Restrictions.ilike("Alias", lastNameL)
+								)
+						)
+				);
 			
-				//sql = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4)))";
-				//criteria.add(Restrictions.or(Restrictions.ilike("Alias",lastName + "%" ), Restrictions.sqlRestriction(sql)));
-			
-			}
+/*			}
 			else
 			{
-				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '%" + lastName + "%'))";
+				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '" + lastNameL + "'))";
 				//criteria.add(Restrictions.sqlRestriction(sql));
-							
-				sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (alias like '%" + lastName + "%'))";
-				criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
+				if (firstName.length()>0) {			
+					criteria.add(Restrictions.sqlRestriction(sql));
+				}
+				else
+				{
+					sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (alias like '" + lastNameL + "'))";
+					criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
+				}
 			
 			}
-		}
+*/		}
 		
 		if (bean.getDob() != null && bean.getDob().length() > 0) {
 			criteria.add(Expression.eq("YearOfBirth", bean.getYearOfBirth()));
