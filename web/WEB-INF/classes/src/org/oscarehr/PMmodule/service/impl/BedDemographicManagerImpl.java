@@ -115,7 +115,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	/**
 	 * @see org.oscarehr.PMmodule.service.BedDemographicManager#getBedDemographicByDemographic(java.lang.Integer)
 	 */
-	public BedDemographic getBedDemographicByDemographic(Integer demographicNo) {
+	public BedDemographic getBedDemographicByDemographic(Integer demographicNo, Integer facilityId) {
 		if (demographicNo == null) {
 			handleException(new IllegalArgumentException("demographicNo must not be null"));
 		}
@@ -130,6 +130,8 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 			bedDemographic.setBed(bed);
 
 			Room room = roomDAO.getRoom(bed.getRoomId());
+			// check for facility filtering
+			if (facilityId!=null && room.getFacility()!=null && room.getFacilityId().intValue()!=facilityId.intValue()) return(null);
 			bed.setRoom(room);
 
 			Integer programId = room.getProgramId();

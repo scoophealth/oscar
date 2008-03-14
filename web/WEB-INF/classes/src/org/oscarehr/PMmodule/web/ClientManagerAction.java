@@ -635,6 +635,8 @@ public class ClientManagerAction extends BaseAction {
         bedDemographic.setReservationStart(today);
         bedDemographic.setRoomId(Integer.valueOf(roomId));
         
+        Integer facilityId= (Integer)request.getSession().getAttribute("currentFacilityId");
+
         Integer bedId = bedDemographic.getBedId();
         Integer demographicNo = bedDemographic.getId().getDemographicNo();
         boolean isBedSelected = (bedDemographic.getBedId() != null && bedDemographic.getBedId().intValue() != 0);
@@ -847,7 +849,7 @@ public class ClientManagerAction extends BaseAction {
 							getRoomDemographicManager().saveRoomDemographic(roomDemographic);
 	
 							if(isBedSelected) {
-								BedDemographic bdHeadDelete = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo());
+								BedDemographic bdHeadDelete = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), facilityId);
 								if(bdHeadDelete != null){
 									bedDemographicManager.deleteBedDemographic(bdHeadDelete);
 								}
@@ -874,7 +876,7 @@ public class ClientManagerAction extends BaseAction {
 									//assigning both room & bed (different ones) for all dependents
 									if( isBedSelected  &&  correctedAvailableBedIdList.size() >= dependentList.size()){
 	
-										BedDemographic bdDependent = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo());
+										BedDemographic bdDependent = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), facilityId);
 										bedDemographic.getId().setBedId(correctedAvailableBedIdList.get(i));
 										
 										if (roomDemographic == null) {
@@ -1024,11 +1026,9 @@ public class ClientManagerAction extends BaseAction {
 
         Program criteria = (Program) clientForm.get("program");
 
-        int facilityId=0;
-        Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
-        if(facility!=null) facilityId=facility.getId();
+        Integer facilityId= (Integer)request.getSession().getAttribute("currentFacilityId");
         if(facilityId>0){
-           request.setAttribute("programs", programManager.searchByFacility(criteria, new Integer(facilityId)));
+           request.setAttribute("programs", programManager.searchByFacility(criteria, facilityId));
         }else{
            request.setAttribute("programs", programManager.search(criteria));
         }
@@ -1397,7 +1397,7 @@ public class ClientManagerAction extends BaseAction {
         }
 
         /* bed reservation view */
-        BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(Integer.valueOf(demographicNo));
+        BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(Integer.valueOf(demographicNo), facilityId);
         request.setAttribute("bedDemographic", bedDemographic);
         
         RoomDemographic roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(Integer.valueOf(demographicNo));

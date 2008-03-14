@@ -626,6 +626,8 @@ public class ProgramManagerViewAction extends BaseAction {
         boolean isClientDependent = false; 
         boolean isClientFamilyHead = false; 
 
+        Integer facilityId= (Integer)request.getSession().getAttribute("currentFacilityId");
+
         for (int i=0; reservedBeds != null  &&  i < reservedBeds.length; i++) {
             Bed reservedBed = reservedBeds[i];
 
@@ -662,7 +664,7 @@ public class ProgramManagerViewAction extends BaseAction {
                 			for(int k=0; familyList != null  &&  k < familyList.size(); k++){
                 				bedDemographic.getId().setDemographicNo(familyList.get(k));
                 				
-                				BedDemographic dependentBD = bedDemographicManager.getBedDemographicByDemographic(familyList.get(k));
+                				BedDemographic dependentBD = bedDemographicManager.getBedDemographicByDemographic(familyList.get(k), facilityId);
                 				
                 				if(dependentBD != null){
                 					bedDemographic.getId().setBedId(dependentBD.getId().getBedId());

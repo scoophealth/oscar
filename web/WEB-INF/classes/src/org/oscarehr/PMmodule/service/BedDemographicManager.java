@@ -49,11 +49,12 @@ public interface BedDemographicManager {
 	/**
 	 * Get BedDemographic relationship object with given demographic identifier
 	 * 
+	 * @param facilityId can be null
 	 * @param demographicNo
 	 *            demographic identifier
 	 * @return BedDemographic relationship object
 	 */
-	public BedDemographic getBedDemographicByDemographic(Integer demographicNo);
+	public BedDemographic getBedDemographicByDemographic(Integer demographicNo, Integer facilityId);
 
 	/**
 	 * Get default BedDemographic status

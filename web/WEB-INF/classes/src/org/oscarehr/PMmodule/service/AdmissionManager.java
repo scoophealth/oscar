@@ -360,6 +360,10 @@ public class AdmissionManager {
 	
 		Admission fullAdmission = getCurrentAdmission(String.valueOf(programId), demographicNo);
 	
+		Program program=programDao.getProgram(programId);
+        Integer facilityId=null;
+        if (program!=null) facilityId=(int)program.getFacilityId();
+		
 		if (fullAdmission == null) {
 			throw new AdmissionException("Admission Record not found");
 		}
@@ -384,7 +388,7 @@ public class AdmissionManager {
 		
 		if(bedManager != null  &&  bedManager.isBedOfDischargeProgramAssignedToClient(demographicNo, programId)){
 			if(bedDemographicManager != null){
-				BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(demographicNo);
+				BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(demographicNo, facilityId);
 				if(bedDemographic != null){
 					bedDemographicManager.deleteBedDemographic(bedDemographic);
 				}
@@ -405,10 +409,14 @@ public class AdmissionManager {
 	public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes, String radioDischargeReason,List<Long> dependents) throws AdmissionException {
 		Admission currentBedAdmission = getCurrentBedProgramAdmission(demographicNo);
 
+        Program program=programDao.getProgram(communityProgramId);
+        Integer facilityId=null;
+        if (program!=null) facilityId=(int)program.getFacilityId();
+        
 		if (currentBedAdmission != null) {
 			processDischarge(currentBedAdmission.getProgramId(), demographicNo, notes, radioDischargeReason);
 			
-			BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(demographicNo);
+			BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(demographicNo, facilityId);
 			
 			if (bedDemographic != null) {
 				bedDemographicManager.deleteBedDemographic(bedDemographic);

@@ -30,6 +30,7 @@ import java.util.Iterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.BedDAO;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProgramTeamDAO;
 import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.exception.BedReservedException;
@@ -38,6 +39,7 @@ import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.BedType;
 import org.oscarehr.PMmodule.model.JointAdmission;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 
@@ -56,6 +58,7 @@ public class BedManager {
     private RoomDAO roomDAO;
     private ProgramTeamDAO teamDAO;
     private BedDemographicManager bedDemographicManager;
+    private ProgramDao programDao;
 
     public void setBedDAO(BedDAO bedDAO) {
         this.bedDAO = bedDAO;
@@ -67,6 +70,10 @@ public class BedManager {
 
     public void setTeamDAO(ProgramTeamDAO teamDAO) {
         this.teamDAO = teamDAO;
+    }
+    
+    public void setProgramDao(ProgramDao programDao) {
+        this.programDao = programDao;
     }
 
     public void setBedDemographicManager(BedDemographicManager bedDemographicManager) {
@@ -377,7 +384,12 @@ public class BedManager {
     	if(demographicNo == null  ||  programId == null){
     		return false;
     	}
-    	BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(demographicNo);
+        
+    	Program program=programDao.getProgram(programId);
+        Integer facilityId=null;
+        if (program!=null) facilityId=(int)program.getFacilityId();
+
+        BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(demographicNo, facilityId);
     	if(bedDemographic != null){
 	    	Bed bed = getBed(bedDemographic.getId().getBedId());
 	    	if(bed != null){
