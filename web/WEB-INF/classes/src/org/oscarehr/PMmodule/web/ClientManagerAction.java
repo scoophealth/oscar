@@ -1461,7 +1461,7 @@ public class ClientManagerAction extends BaseAction {
 
             clientForm.set("bedDemographic", bedDemographic);
 
-            Room[] availableRooms = getRoomManager().getAvailableRooms(null, bedProgramId, Boolean.TRUE, demographicNo);
+            Room[] availableRooms = getRoomManager().getAvailableRooms(facilityId, bedProgramId, Boolean.TRUE, demographicNo);
             
             request.setAttribute("availableRooms", availableRooms);
 
