@@ -23,20 +23,12 @@
  * Ontario, Canada 
  */
 -->
-<%@ page import="java.util.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%
-    String id = request.getParameter("id");
-%>
+
 <html:html locale="true">
     <head>
         <script language=javascript>
-    <% if (id!=null) { %>
-          var loca = self.opener.location.href;
-          var mrk = loca.lastIndexOf('=')+1;
-          self.opener.location.href = loca + "<%=id%>";
-    <% } %>
           self.close();
           self.opener.location.reload();      
         </script>
