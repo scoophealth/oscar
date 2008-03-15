@@ -1,3 +1,4 @@
+<%@ include file="/taglibs.jsp" %>
 <%@ include file="/ticklerPlus/header.jsp"%>
 
 <%@ page import="java.util.Calendar"%>
@@ -82,7 +83,11 @@
         function printTickler() {
         	window.open
         }
-        
+        function sortByDate()
+        {
+			document.ticklerForm.method.value='filter';
+			document.ticklerForm.submit();
+        }
         
         function clearClientFilter() {
             document.ticklerForm.elements['filter.demographic_no'].value = "";
@@ -224,10 +229,7 @@
 				<% session.setAttribute( "filter_order", "DESC");
 			}		
 			%>
-			<th class=noprint><b><input type="button" value="           Date           "
-			onclick="this.form.method.value='filter';this.form.submit();" class=noprint/></b></th>
-
-	
+			<th class=noprint><a href="javascript:sortByDate();" class=noprint>Date</a></th>
 
 			<th class=noprint>Priority</th>
 			<th class=noprint>Task Assigned To</th>
