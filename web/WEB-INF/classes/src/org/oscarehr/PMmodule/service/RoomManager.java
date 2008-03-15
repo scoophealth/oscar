@@ -102,6 +102,16 @@ public class RoomManager {
         return rooms;
     }
 
+    public Room[] getRooms(Integer facilityId, Integer programId, Boolean active) {
+        Room[] rooms = roomDAO.getRooms(facilityId, programId, active);
+        if(rooms!=null){
+          for (Room room : rooms) {
+            setAttributes(room);
+          }
+        }
+        return rooms;
+    }
+
     /**
      * Get rooms
      * @return array of rooms that have beds assigned to them.

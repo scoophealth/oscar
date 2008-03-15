@@ -328,7 +328,7 @@ public class BedManagerAction extends BaseAction {
         if(roomFilteredProgram.intValue() == 0){
         	roomFilteredProgram = null;
         }
-        Room[] filteredRooms = roomManager.getAssignedBedRooms(facilityId, roomFilteredProgram, roomStatusBoolean);
+        Room[] filteredRooms = roomManager.getRooms(facilityId, roomFilteredProgram, roomStatusBoolean);
         
         bForm.setRooms(filteredRooms);
         form = bForm;
