@@ -9,13 +9,11 @@
     function roomFilter(){
 		document.forms[0].action = '<html:rewrite action="/PMmodule/BedManager.do?method=doRoomFilter" />';
 		document.forms[0].submit();
-    	
     }
     
     function bedFilter(){
 		document.forms[0].action = '<html:rewrite action="/PMmodule/BedManager.do?method=doBedFilter" />';
 		document.forms[0].submit();
-    	
     }
     
     function addBeds(){
@@ -77,6 +75,23 @@
         bedManagerForm.submit();
       }  
     }    
+    
+    function deleteRoom(){
+    	var doDelete = confirm("Are you sure you want to delete the room?");
+    	if(doDelete){
+			document.forms[0].action = '<html:rewrite action="/PMmodule/BedManager.do?method=deleteRoom" />';
+			document.forms[0].submit();
+    	}
+    }
+    function deleteBed(){
+ 		var doDelete = confirm("Are you sure you want to delete the bed?");
+ 		if(doDelete){
+			document.forms[0].action = '<html:rewrite action="/PMmodule/BedManager.do?method=deleteBed" />';
+			document.forms[0].submit();
+ 		}
+ 	}
+    
+    
 </script>
 <%@ include file="/common/messages.jsp"%>
 <div class="tabs" id="tabs">
@@ -216,8 +231,8 @@
             </display:column>
             
             <display:column title="Delete" sortable="true">
-                 <input type="submit" name="submit.deleteRoom"  value="Delete"
-            		onclick='bedManagerForm.roomToDelete.value="<c:out value="${room.id}"/>"'  />
+                 <input type="button" name="submit.deleteRoom"  value="Delete"
+            		onclick='bedManagerForm.roomToDelete.value="<c:out value="${room.id}"/>"; deleteRoom();'  />
             </display:column>
             
         </display:table>
@@ -251,7 +266,7 @@
             </table>
         </div>
         
-<!-- begin bed status & bed program filter -->        
+<!-- begin bed status & bedRoom filter -->        
 		<table width="100%">
 			<tr>
 				<td width="40%">
@@ -270,7 +285,7 @@
 				</td>
 			</tr>
 		</table>
-<!-- end bed status & bed program filter -->           
+<!-- end bed status & bedRoom filter -->           
         
         <display:table class="simple" name="sessionScope.bedManagerForm.beds" uid="bed" requestURI="/PMmodule/BedManager.do" summary="Edit beds">
 
@@ -326,8 +341,8 @@
             </display:column>
             
             <display:column title="Delete" sortable="true">
-            	<input type="submit" name="submit.deleteBed"  value="Delete"
-            		   onclick='bedManagerForm.bedToDelete.value="<c:out value="${bed.id}"/>"'  />
+                 <input type="button" name="submit.deleteBed"  value="Delete"
+            		onclick='bedManagerForm.bedToDelete.value="<c:out value="${bed.id}"/>"; deleteBed();'  />
             </display:column>
             
         </display:table>
