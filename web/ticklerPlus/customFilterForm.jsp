@@ -136,7 +136,7 @@
               </tr>
               
               <tr>
-              <td class="fieldText">Program: </td>
+              <td class="fieldTitle">Program: </td>
               <td class="fieldValue">
               	<html:select property="filter.programId" >
 					<option value="All Programs">All Programs</option>
