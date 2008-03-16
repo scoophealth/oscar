@@ -346,7 +346,9 @@
             </props>
         </property>
     </bean>
-    <bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.TicklerManager" autowire="byName" /> 
+    <bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.TicklerManager" autowire="byName" > 
+    	
+    </bean>
     <bean id="ClientImageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="ClientImageManagerTarget"/>
@@ -413,6 +415,8 @@
         <property name="ticklerDAO" ref="ticklerDAOT"/>
         <property name="customFilterDAO" ref="customFilterDAOT"/>
         <property name="programManager" ref="programManager"/>
+        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO"/>
     </bean>
 
     <bean id="demographicManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">

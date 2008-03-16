@@ -11,11 +11,13 @@
         <property name="preparedTicklerManager" ref="preparedTicklerManagerT"/>
         <property name="consultationManager" ref="consultationManager"/>
         <property name="chartManager" ref="chartManagerT"/>
+        <property name="programManager" ref="programManager"/>       
     </bean>
     <bean name="/CustomFilter" class="org.caisi.tickler.web.CustomFilterAction" singleton="false">
         <property name="ticklerManager" ref="ticklerManagerT"/>
         <property name="demographicManager" ref="demographicManagerT"/>
         <property name="providerManager" ref="providerManager"/>
+        <property name="programManager" ref="programManager"/>
     </bean>
     <bean name="/UnreadTickler" class="org.caisi.tickler.web.UnreadTicklerAction" singleton="false">
         <property name="ticklerManager" ref="ticklerManagerT"/>
