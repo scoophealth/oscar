@@ -136,7 +136,7 @@
 			<tr>
 				<th width="20%">Until</th>
 				<td>
-					<input type="text" name="bedDemographic.strReservationEnd" id="strReservationEnd_field" readonly="readonly" value="<c:out value="${clientManagerForm.map.bedDemographic.strReservationEnd}"/>" />
+					<input type="text" name="" id="strReservationEnd_field" readonly="readonly" value="" />
 					<img align="top" src="<html:rewrite page="/images/calendar.gif" />" id="strReservationEnd_field-button" alt="Reserve Until Calendar" title="Reserve Until Calendar" />
 					
 					<script type="text/javascript">
