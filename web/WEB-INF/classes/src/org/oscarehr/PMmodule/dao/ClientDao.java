@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.SpringLayout.Constraints;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -166,64 +168,35 @@ public class ClientDao extends HibernateDaoSupport {
 			}
 		    return results;
 		}
+		LogicalExpression condAlias1 = null;
+		LogicalExpression condAlias2 = null;
+		LogicalExpression condFirstName = null;
+		LogicalExpression condLastName = null;
 		if (firstName.length() > 0) {
 			sql = "(LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
-/*			if (isOracle) { */
-				criteria.add(
-						(Restrictions.or
-								(Restrictions.or
-										(Restrictions.ilike("FirstName", firstNameL), 
-										 Restrictions.sqlRestriction(sql)
-										),
-										Restrictions.ilike("Alias", firstNameL)
-								)
-						)
-				);
-/*			}
-			else
-			{
-				sql += " OR (first_name like '" + firstNameL + "'))";
-				//criteria.add(Restrictions.sqlRestriction(sql));
-				if (lastName.length()>0) {
-					sql += " OR (alias like '" + firstNameL + "')" +  " OR (alias like '" + lastNameL + "'))";
-				}
-				else
-				{
-					sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (alias like '" + firstNameL + "'))";
-				}
-				criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
-			}
-*/		}	
+			sql2 = "(LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
+			condFirstName = Restrictions.or(Restrictions.ilike("FirstName", firstNameL), Restrictions.sqlRestriction(sql));
+			condAlias1 = Restrictions.or(Restrictions.ilike("Alias", firstNameL),Restrictions.sqlRestriction(sql2));
+		}
 		if (lastName.length() > 0) {
-/*			if(isOracle) { */
 				sql = "(LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))";
-				criteria.add(
-						(Restrictions.or
-								(Restrictions.or
-										(Restrictions.ilike("LastName", firstNameL), 
-										 Restrictions.sqlRestriction(sql)
-										),
-										Restrictions.ilike("Alias", lastNameL)
-								)
-						)
-				);
-			
-/*			}
-			else
-			{
-				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '" + lastNameL + "'))";
-				//criteria.add(Restrictions.sqlRestriction(sql));
-				if (firstName.length()>0) {			
-					criteria.add(Restrictions.sqlRestriction(sql));
-				}
-				else
-				{
-					sql2 = "((LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (alias like '" + lastNameL + "'))";
-					criteria.add(Restrictions.or(Restrictions.sqlRestriction(sql),Restrictions.sqlRestriction(sql2)));
-				}
-			
-			}
-*/		}
+				sql2 = "(LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4))";
+				condLastName = Restrictions.or(Restrictions.ilike("LastName", lastNameL), Restrictions.sqlRestriction(sql));
+				condAlias2 = Restrictions.or(Restrictions.ilike("Alias", lastNameL),Restrictions.sqlRestriction(sql2));
+		}
+		if (firstName.length() > 0 && lastName.length()>0)
+		{
+			criteria.add(Restrictions.or(Restrictions.and(condFirstName, condLastName),  Restrictions.or(condAlias1, condAlias2)));
+		}
+		else if (firstName.length() > 0)
+		{
+			criteria.add(Restrictions.or(condFirstName,condAlias1));
+		}
+		else if (lastName.length()>0)
+		{
+			criteria.add(Restrictions.or(condLastName,condAlias2));
+		}
+		
 		
 		if (bean.getDob() != null && bean.getDob().length() > 0) {
 			criteria.add(Expression.eq("YearOfBirth", bean.getYearOfBirth()));
