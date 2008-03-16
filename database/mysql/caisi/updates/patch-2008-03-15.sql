@@ -1,0 +1,1 @@
+alter table custom_filter add column programId varchar(10) after demographic_no;
