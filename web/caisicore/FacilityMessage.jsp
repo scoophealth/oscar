@@ -26,7 +26,7 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
-<c:if test="${not empty messages}">
+<c:if test="${not empty FacilityMessages}">
 	<table width="100%">
 		<c:forEach var="message" items="${FacilityMessages}">
 			<c:if test="${message.active eq 'true'}">

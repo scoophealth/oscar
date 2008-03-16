@@ -100,7 +100,7 @@ function openBrWindow(theURL,winName,features) {
 						pageContext.setAttribute("issue_role",role);
 					%>
 			        <select name="facility_message.facilityId">
-			             <option value="">&nbsp;</option>
+			             <option value="0">&nbsp;</option>
 			             <c:forEach var="facility" items="${facilities}" varStatus="status">
 			             <c:choose>
 			             <c:when test="${facility.id == facilityMessageForm.map.facility_message.facilityId}">
