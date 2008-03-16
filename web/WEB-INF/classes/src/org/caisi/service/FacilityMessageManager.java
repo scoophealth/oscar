@@ -58,6 +58,9 @@ public class FacilityMessageManager {
 	}
 
 	public List getMessagesByFacilityId(Long facilityId) {
+		if (facilityId == null || facilityId == null) {           
+        	return null;
+        }
 		return dao.getMessagesByFacilityId(facilityId);
 	}
 }

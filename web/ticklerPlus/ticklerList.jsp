@@ -159,6 +159,15 @@
 			<html:options collection="providers" property="provider_no"
 				labelProperty="formattedName" />
 		</html:select></td>
+		
+		<td class="blueText">Program: <html:select
+			property="filter.programId"
+			onchange="return checkTicklerDate();">
+			<option value="All Programs">All Programs</option>
+			<html:options collection="programs" property="id"
+				labelProperty="name" />
+		</html:select></td>
+		
 	</tr>
 	<tr>
 		<td colspan="2" class="blueText">Client: 
@@ -213,7 +222,7 @@
 			<th></th>
 			<th>Demographic Name</th>
 			<th class=noprint>Provider Name</th>
-
+			
 			
 			 
 			<%
@@ -235,6 +244,7 @@
 			<th class=noprint>Task Assigned To</th>
 			<th class=noprint>Status</th>
 			<th>Message</th>
+			<th>Program</th>
 		</tr>
 
 		<tr>
@@ -259,6 +269,7 @@ if (index++ % 2 != 0) {
 String demographic_name = "";
 			String provider_name = "";
 			String assignee_name = "";
+			String program_name = "";
 			String status = "Active";
 			String late_status = "b";			
 			Tickler temp = (Tickler) pageContext.getAttribute("tickler");
@@ -278,6 +289,12 @@ String demographic_name = "";
 					assignee_name = assignee.getLastName() + ","
 							+ assignee.getFirstName();
 				}
+				
+				Program program = (Program) temp.getProgram();
+				if (program != null) {
+					program_name = program.getName();
+				}
+				
 				switch (temp.getStatus()) {
 				case 'A':
 					status = "Active";
@@ -323,6 +340,7 @@ String style = "";
 					<td style="<%=style%>" class=noprint><%=status%></td>
 					<td style="<%=style%>" align="left"><c:out escapeXml="false"
 						value="${tickler.message}" /></td>
+					<td style="<%=style%>" class=noprint><%=program_name%></td>
 				</tr>
 			</c:forEach>
 		</tr>

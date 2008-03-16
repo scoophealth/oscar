@@ -44,7 +44,9 @@ import org.caisi.service.ProviderManagerTickler;
 import org.caisi.service.TicklerManager;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.util.SessionConstants;
 
 public class CustomFilterAction extends DispatchAction {
 	
@@ -52,7 +54,13 @@ public class CustomFilterAction extends DispatchAction {
 	private TicklerManager ticklerMgr = null;
 	private ProviderManager providerMgr = null;
 	private DemographicManagerTickler demographicMgr = null;
+	private ProgramManager programMgr = null;
 	
+	
+	public void setProgramManager(ProgramManager programMgr) {
+		this.programMgr = programMgr;
+	}
+
 	public void setTicklerManager(TicklerManager ticklerManager) {
 		this.ticklerMgr = ticklerManager;
 	}
@@ -145,6 +153,7 @@ public class CustomFilterAction extends DispatchAction {
 		log.debug("edit");
 		
 		String id = request.getParameter("id");
+		String providerId = (String)request.getSession().getAttribute("user");
 		if(id != null && !id.equals("")) {
 			CustomFilter filter = ticklerMgr.getCustomFilterById(Integer.valueOf(id));
 			/* get the demographic */
@@ -176,6 +185,9 @@ public class CustomFilterAction extends DispatchAction {
 		request.setAttribute("priorityList",CustomFilter.priorityList);
 		request.setAttribute("statusList",CustomFilter.statusList);
 		
+		//request.setAttribute("programs", programMgr.getProgramDomain(providerId));
+		Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);  
+		request.setAttribute("programs", programMgr.getProgramDomainInFacility(providerId,Long.valueOf(currentFacilityId)));
 		return mapping.findForward("customFilterForm");
 	}
 	

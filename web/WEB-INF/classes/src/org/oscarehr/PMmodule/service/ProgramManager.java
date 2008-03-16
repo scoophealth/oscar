@@ -383,6 +383,18 @@ public class ProgramManager {
         return programDomain;
     }
 
+    public List<Program> getProgramDomainInFacility(String providerNo, Long facilityId) {
+    	List<Program> programs = getProgramDomain(providerNo);
+    	List<Program> results = new ArrayList<Program>();
+    	if(facilityId==null) 
+    		return null;
+    	for(Iterator<Program> itr =programs.iterator(); itr.hasNext();) {
+    		Program p = itr.next();
+    		if(p.getFacilityId()==facilityId)
+    			results.add(p);
+    	}
+    	return results;
+    }
     public Program[] getCommunityPrograms() {
         return programDao.getCommunityPrograms();
     }

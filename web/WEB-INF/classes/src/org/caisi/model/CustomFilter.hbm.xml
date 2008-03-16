@@ -33,9 +33,11 @@
 		<set name="assignees" table="custom_filter_assignees" lazy="false">
 			<key column="filter_id" />
 			<many-to-many column="provider_no" class="org.oscarehr.PMmodule.model.Provider" />
-		</set>
+		</set>			
+		<many-to-one name="program" class="org.oscarehr.PMmodule.model.Program" column="programId" update="false" insert="false" lazy="false" not-found="ignore" />	
 		<property name="demographic_no" />
+		<property name="programId" />
 		<property name="priority" />
-                <property name="shortcut" />
+        <property name="shortcut" />
 	</class>
 </hibernate-mapping>

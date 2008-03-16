@@ -124,7 +124,8 @@ public class TicklerDAO extends HibernateDaoSupport {
             boolean includeStatusClause = true;
             boolean includeClientClause = true;
             boolean includeDemographicClause = true;
-
+            boolean includeProgramClause = true;
+            
             if (filter.getStartDate() == null || filter.getStartDate().length() == 0) {
                 filter.setStartDate("1900-01-01");
             }
@@ -132,6 +133,9 @@ public class TicklerDAO extends HibernateDaoSupport {
                 filter.setEndDate("8888-12-31");
             }
              
+            if( filter.getProgramId() == null || filter.getProgramId().equals("All Programs")) {
+            		includeProgramClause = false;
+            }
             if (filter.getProvider() == null || filter.getProvider().equals("All Providers")) {
                     includeProviderClause=false;
             }
@@ -182,7 +186,11 @@ public class TicklerDAO extends HibernateDaoSupport {
                     }
                     query += ")";
             }
-
+            
+            if(includeProgramClause) {
+            		query = query + " and t.program_id = ?" ;
+            		paramList.add(Integer.valueOf(filter.getProgramId()));
+            }
             if(includeStatusClause) {
                     query = query + " and t.status = ?";
                     paramList.add(String.valueOf(filter.getStatus()));

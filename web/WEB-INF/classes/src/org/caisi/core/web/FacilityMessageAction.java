@@ -71,11 +71,13 @@ public class FacilityMessageAction extends DispatchAction {
 	public ActionForward list(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		//List activeMessages = mgr.getMessages();
 		Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
-		Long facilityId = Long.valueOf(facility.getId().longValue());
+		Long facilityId = null;
+		if(facility!=null)
+			facilityId = Long.valueOf(facility.getId().longValue());
 		
 		List activeMessages = mgr.getMessagesByFacilityId(facilityId);
-		
-		request.setAttribute("ActiveFacilityMessages",activeMessages);
+		if(activeMessages!=null && activeMessages.size() >0)
+			request.setAttribute("ActiveFacilityMessages",activeMessages);
 		return mapping.findForward("list");
 	}
 	
@@ -112,7 +114,9 @@ public class FacilityMessageAction extends DispatchAction {
 		FacilityMessage msg = (FacilityMessage)userForm.get("facility_message");
 		msg.setCreation_date(new Date());
 		Integer facilityId = msg.getFacilityId().intValue();
-		String facilityName = facilityMgr.getFacility(facilityId).getName();
+		String facilityName = "";
+		if(facilityId!=null && facilityId.intValue()!=0)
+			facilityName = facilityMgr.getFacility(facilityId).getName();
 		msg.setFacilityName(facilityName);
 		mgr.saveFacilityMessage(msg);
 		
@@ -128,9 +132,11 @@ public class FacilityMessageAction extends DispatchAction {
 		//String providerNo = (String)request.getSession().getAttribute("user");
 		//List messages = programProviderDAO.getFacilityMessagesInProgramDomain(providerNo);
 		Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
-		Integer facilityId = facility.getId();
+		Integer facilityId = null;
+		if(facility!=null) 
+			facilityId = facility.getId();
 		List messages = programProviderDAO.getFacilityMessagesByFacilityId(facilityId);
-		if(messages.size()>0) {
+		if(messages!=null && messages.size()>0) {
 			request.setAttribute("FacilityMessages",messages);
 		}
 		return mapping.findForward("view");

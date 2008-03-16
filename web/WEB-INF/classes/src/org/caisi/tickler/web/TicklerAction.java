@@ -23,6 +23,7 @@
 package org.caisi.tickler.web;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +49,9 @@ import org.caisi.service.EChartManager;
 import org.caisi.service.TicklerManager;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
+import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.util.SessionConstants;
 
@@ -62,7 +65,8 @@ public class TicklerAction extends DispatchAction {
     private ConsultationManager consultationMgr = null;
     private DemographicManagerTickler demographicMgr = null;
     private EChartManager chartMgr = null;
-
+    private ProgramManager programMgr = null;
+    
     public void setTicklerManager(TicklerManager ticklerManager) {
         this.ticklerMgr = ticklerManager;
     }
@@ -87,7 +91,11 @@ public class TicklerAction extends DispatchAction {
         this.chartMgr = eChartManager;
     }
 
-    String getProviderNo(HttpServletRequest request) {
+    public void setProgramManager(ProgramManager programMgr) {
+		this.programMgr = programMgr;
+	}
+
+	String getProviderNo(HttpServletRequest request) {
         return (String) request.getSession().getAttribute("user");
     }
 
@@ -105,15 +113,22 @@ public class TicklerAction extends DispatchAction {
         return from;
     }
 
+        
     /* show all ticklers */
     public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.debug("list");
-        List ticklers = ticklerMgr.getTicklers();
+        String providerId = (String)request.getSession().getAttribute("user");
+        List ticklers = ticklerMgr.getTicklers(); 
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         request.setAttribute("demographics", demographicMgr.getDemographics());
         request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
-        request.setAttribute("from", getFrom(request));
+        
+        //request.setAttribute("programs",programMgr.getProgramDomain(providerId));
+        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);  
+		request.setAttribute("programs", programMgr.getProgramDomainInFacility(providerId,Long.valueOf(currentFacilityId)));
+        
+		request.setAttribute("from", getFrom(request));
         return mapping.findForward("list");
     }
 
@@ -137,7 +152,9 @@ public class TicklerAction extends DispatchAction {
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
         
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
-        List<Tickler> ticklers = ticklerMgr.getTicklers(filter, currentFacilityId);
+        String providerId = (String)request.getSession().getAttribute("user");
+        String programId = "";
+        List<Tickler> ticklers = ticklerMgr.getTicklers(filter, currentFacilityId,providerId, programId);
 
         List cf = ticklerMgr.getCustomFilters(this.getProviderNo(request));
         // make my tickler filter
@@ -161,6 +178,7 @@ public class TicklerAction extends DispatchAction {
             myfilter.setAssignee((String) request.getSession().getAttribute("user"));
             myfilter.setDemographic_webName("");
             myfilter.setDemographic_no("");
+            myfilter.setProgramId("");
             ticklerMgr.saveCustomFilter(myfilter);
         }
 
@@ -168,7 +186,11 @@ public class TicklerAction extends DispatchAction {
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         request.setAttribute("demographics", demographicMgr.getDemographics());
-        request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
+        
+        //request.setAttribute("programs", programMgr.getProgramDomain(providerId));          
+		request.setAttribute("programs", programMgr.getProgramDomainInFacility(providerId,Long.valueOf(currentFacilityId)));
+        
+		request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
         request.setAttribute("from", getFrom(request));
         request.getSession().setAttribute("filter_order", filter_order);
         return mapping.findForward("list");
@@ -188,12 +210,19 @@ public class TicklerAction extends DispatchAction {
         filter.setClient(null);
         filter.setAssignee((String) request.getSession().getAttribute("user"));
         filter.setDemographic_webName(null);
+        filter.setProgramId(null);
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
-        List ticklers = ticklerMgr.getTicklers(filter, currentFacilityId);
+        String providerId = (String)request.getSession().getAttribute("user");
+        String programId = "";
+        List ticklers = ticklerMgr.getTicklers(filter, currentFacilityId,providerId,programId);
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         request.setAttribute("demographics", demographicMgr.getDemographics());
-        request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
+        
+        //request.setAttribute("programs",programMgr.getProgramDomain(providerId));
+		request.setAttribute("programs", programMgr.getProgramDomainInFacility(providerId,Long.valueOf(currentFacilityId)));
+        
+		request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
         request.setAttribute("from", getFrom(request));
         return mapping.findForward("list");
     }

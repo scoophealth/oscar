@@ -843,7 +843,7 @@ public class CaseManagementManager {
         return filteredNotes;
     }
 
-    private boolean isRoleIncludedInAccess(ProgramAccess pa, Role role) {
+    public boolean isRoleIncludedInAccess(ProgramAccess pa, Role role) {
         boolean result = false;
 
         for (Iterator iter = pa.getRoles().iterator(); iter.hasNext();) {
@@ -855,7 +855,8 @@ public class CaseManagementManager {
         return result;
     }
 
-    private Map convertProgramAccessListToMap(List paList) {
+    //private Map convertProgramAccessListToMap(List paList) {
+    public Map convertProgramAccessListToMap(List paList) {
         Map map = new HashMap();
 
         for (Iterator iter = paList.iterator(); iter.hasNext();) {

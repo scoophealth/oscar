@@ -199,7 +199,8 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     
     public List getFacilityMessagesByFacilityId(Integer facilityId) {
         if (facilityId == null || facilityId == null) {
-            throw new IllegalArgumentException();
+            //throw new IllegalArgumentException();
+        	return null;
         }
         List results = this.getHibernateTemplate().find("select distinct fm from FacilityMessage fm where fm.facilityId = ?", Long.valueOf(facilityId));
 

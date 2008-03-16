@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
 
 /**
@@ -55,6 +56,7 @@ public class CustomFilter extends BaseObject {
 	
 	private Set providers;
 	private Set assignees;
+	private Program program;
 	
 	private String custom;
 	
@@ -63,10 +65,10 @@ public class CustomFilter extends BaseObject {
 	public static List statusList;
 	public static List priorityList;
 	
-	private String provider_no;
-        
-        private boolean shortcut;
 	
+	private String provider_no;        
+    private boolean shortcut;
+	private String programId;
 	
 	static {
 		priorityList = new ArrayList();
@@ -114,6 +116,14 @@ public class CustomFilter extends BaseObject {
 	}
 	public void setProviders(Set providers) {
 		this.providers = providers;
+	}	
+
+	public Program getProgram() {
+		return program;
+	}
+
+	public void setProgram(Program program) {
+		this.program = program;
 	}
 
 	public String getStatus() {
@@ -269,4 +279,14 @@ public class CustomFilter extends BaseObject {
     public void setShortcut(boolean shortcut) {
         this.shortcut = shortcut;
     }
+
+	public String getProgramId() {
+		return programId;
+	}
+
+	public void setProgramId(String programId) {
+		this.programId = programId;
+	}
+    
+    
 }

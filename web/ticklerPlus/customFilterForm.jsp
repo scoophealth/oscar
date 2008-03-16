@@ -134,6 +134,19 @@
                      	</html:select>
 	                 </td>
               </tr>
+              
+              <tr>
+              <td class="fieldText">Program: </td>
+              <td class="fieldValue">
+              	<html:select property="filter.programId" >
+					<option value="All Programs">All Programs</option>
+					<html:options collection="programs" property="id" labelProperty="name" />
+				</html:select>
+				</td>
+			  </tr>
+             
+              
+              
 			  <tr>
                       <td class="fieldTitle">Provider:</td>
                       <td class="fieldValue">

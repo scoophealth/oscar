@@ -72,7 +72,9 @@ public class UnreadTicklerAction extends DispatchAction {
         CustomFilter filter = new CustomFilter();
         filter.setAssignee(providerNo);
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
-        Collection coll = ticklerMgr.getTicklers(filter, currentFacilityId);
+        String providerId = (String)request.getSession().getAttribute("user");
+        String programId = "";
+        Collection coll = ticklerMgr.getTicklers(filter, currentFacilityId, providerId, programId);
         if(oldNum != -1 && (coll.size() > oldNum)) {
         	request.setAttribute("difference",new Integer(coll.size() - oldNum));
         }

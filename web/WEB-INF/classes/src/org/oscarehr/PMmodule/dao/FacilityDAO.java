@@ -58,7 +58,7 @@ public class FacilityDAO extends HibernateDaoSupport {
     	return(SqlUtils.selectLongList(sqlCommand));
     }
     
-    
+   
     public static  boolean facilityHasIntersection(List<Long> providersFacilityIds, List<Long> noteFacilities) {
         for (Long id : noteFacilities) {
             if (providersFacilityIds.contains(id)) return(true);

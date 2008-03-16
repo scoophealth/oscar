@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
 
 public class Tickler extends BaseObject {
@@ -48,6 +49,7 @@ public class Tickler extends BaseObject {
 	private Demographic demographic;
 	private Provider provider;
 	private Provider assignee;
+	private Program program;
 	
 	private String demographic_webName;
 	
@@ -135,6 +137,14 @@ public class Tickler extends BaseObject {
 	}
 	public void setAssignee(Provider assignee) {
 		this.assignee = assignee;
+	}
+	
+	
+	public Program getProgram() {
+		return program;
+	}
+	public void setProgram(Program program) {
+		this.program = program;
 	}
 	
 	/* have to do this */
