@@ -97,8 +97,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
         }
 
+
+        Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        
         setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(
-                intakeType), null, null, null);
+                intakeType), null, null, null,facilityId);
         
         request.getSession().setAttribute("intakeCurrentBedCommunityId",null);
         
@@ -125,8 +128,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
         }
 
+
+        Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        
         setBeanProperties(formBean, intake, getRemoteClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency()
-                .areExternalProgramsVisible(intakeType), null, null, null);
+                .areExternalProgramsVisible(intakeType), null, null, null,facilityId);
         formBean.setRemoteAgency(getRemoteAgency(request));
         formBean.setRemoteAgencyDemographicNo(getRemoteAgencyDemographicNo(request));
 
@@ -163,9 +169,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
             intake = genericIntakeManager.copyProgramIntake(clientId, getProgramId(request), providerNo, facilityId);
         }
-
+      
         setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(
-                intakeType), getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId), getCurrentExternalProgramId(clientId));
+                intakeType), getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId), getCurrentExternalProgramId(clientId),facilityId);
 
         // UCF -- intake accessment : please don't remove the following line
         request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
@@ -181,7 +187,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
-        Integer facilityId=(Integer)request.getSession().getAttribute("currentFacilityId");
+        Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
         
         String intakeType = getType(request);
         Integer clientId = getClientId(request);
@@ -198,15 +204,16 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
             intake = genericIntakeManager.getMostRecentProgramIntake(clientId, getProgramId(request), facilityId);
         }
-
-        setBeanProperties(formBean, intake, getClient(clientId), providerNo, false, false, false, null, null, null);
+        
+        setBeanProperties(formBean, intake, getClient(clientId), providerNo, false, false, false, null, null, null,facilityId);
 
         return mapping.findForward(PRINT);
     }
 
     public ActionForward save_all(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, String saveWhich) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
-
+        Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        
         Intake intake = formBean.getIntake();
         String intakeType = intake.getType();
         Demographic client = formBean.getClient();
@@ -308,7 +315,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         }
 
         setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),
-                getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()));
+                getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()),facilityId);
         
         String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(client.getDemographicNo()));
         request.getSession().setAttribute("intakeCurrentBedCommunityId",oldBedProgramId);
@@ -657,16 +664,35 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         genericIntakeManager.saveUpdateIntake(intake);
     }
     
+    private Set<Program> getActiveProviderProgramsInFacility(String providerNo, Integer facilityId) {
+        Set<Program> programs = new HashSet<Program>();
+        Set<Program> programsInDomain = getActiveProviderPrograms(providerNo);
+        
+        for(Program p : programManager.getProgramDomainInFacility(providerNo, Long.valueOf(facilityId)))
+        		 {
+        	if(programsInDomain.contains(p)) {
+        		programs.add(p);
+        	}
+        }
+        
+        return programs;
+    }
+    
     // Bean
 
     private void setBeanProperties(GenericIntakeEditFormBean formBean, Intake intake, Demographic client, String providerNo, boolean bedCommunityProgramsVisible, boolean serviceProgramsVisible, boolean externalProgramsVisible,
-            Integer currentBedCommunityProgramId, SortedSet<Integer> currentServiceProgramIds, Integer currentExternalProgramId) {
+            Integer currentBedCommunityProgramId, SortedSet<Integer> currentServiceProgramIds, Integer currentExternalProgramId, Integer facilityId) {
         formBean.setIntake(intake);
         formBean.setClient(client);
 
         if (bedCommunityProgramsVisible || serviceProgramsVisible || externalProgramsVisible) {
             Set<Program> providerPrograms = getActiveProviderPrograms(providerNo);
-
+            if (OscarProperties.getInstance().isTorontoRFQ()) {        		
+        		providerPrograms = getActiveProviderProgramsInFacility(providerNo,facilityId);
+        	} else {
+        		providerPrograms = getActiveProviderPrograms(providerNo);
+        	}
+        	
             if (bedCommunityProgramsVisible) {
                 formBean.setBedCommunityPrograms(getBedPrograms(providerPrograms, providerNo), getCommunityPrograms());
                 formBean.setSelectedBedCommunityProgramId(currentBedCommunityProgramId);
