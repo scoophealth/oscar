@@ -207,7 +207,7 @@
          -->
     </bean>
     
-    <!-- bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
+    <bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
           lazy-init="default"  dependency-check="default">
         <property name="timerTask">
             <bean class="org.oscarehr.PMmodule.task.BedProgramDischargeTask" lazy-init="default"
@@ -219,7 +219,7 @@
         </property>
         <property name="delay" value="120000"/>
         <property name="period" value="3600000"/>
-    </bean -->
+    </bean>
     
     <bean id="scheduledErProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
           lazy-init="default"  dependency-check="default">
@@ -248,7 +248,7 @@
         <property name="scheduledTimerTasks">
             <list>
                 <ref bean="scheduledIntegratorUpdateTask"/>
-                <!-- ref bean="scheduledBedProgramDischargeTask"/ -->
+                <ref bean="scheduledBedProgramDischargeTask"/>
                 <ref bean="scheduledErProgramDischargeTask"/>
                 <ref bean="scheduledPopulationReportTask"/>
             </list>
