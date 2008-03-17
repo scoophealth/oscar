@@ -78,9 +78,8 @@ public class ProgramUtils
         */
         sb.append("var oldIn=false; var newIn=false; \n");
         sb.append("if(oldProgramId=='' || oldProgramId==null) {return false;}\n");
-        for(Facility facility : facilityDao.getFacilities()) {
-        	for(Program program : facilityDao.getAssociatedPrograms(facility.getId())) {
-        		
+        for(Facility facility : facilityDao.getFacilities()) {        	
+        	for(Program program : programDao.getProgramsByFacilityId(facility.getId())) {	
         		sb.append("if(oldProgramId==" + program.getId()+") {oldIn=true;}\n ");
         		sb.append("if(newProgramId==" + program.getId()+") {newIn=true;} \n");
         	}
