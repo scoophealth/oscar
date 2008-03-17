@@ -192,6 +192,7 @@ public final class LoginAction extends DispatchAction {
                 // set current facility
                 Facility facility=facilityDAO.getFacility(facilityIds.get(0));
                 request.getSession().setAttribute("currentFacility", facility);
+                request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, facility.getId());
                 LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIds.get(0), ip);
             }
             else {
