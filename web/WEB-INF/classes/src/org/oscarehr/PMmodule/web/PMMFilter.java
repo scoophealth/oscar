@@ -27,7 +27,6 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -44,9 +43,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * pre set some session variables!
- * 
- * @author marc
  */
 public class PMMFilter implements Filter {
 
@@ -57,7 +53,7 @@ public class PMMFilter implements Filter {
 	private ProviderManager providerManager;
 	private FilterConfig config;
 
-	public void setProviderManager(HttpServletRequest request) {
+	private void setProviderManager() {
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext());
 
 		agencyManager = (AgencyManager) wac.getBean("agencyManager");
@@ -73,7 +69,7 @@ public class PMMFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) baseRequest;
 		HttpSession session = request.getSession();
 		
-		setProviderManager(request);
+		setProviderManager();
 
 		String oscarUser = (String) session.getAttribute("user");
 		if (oscarUser == null || oscarUser.length() == 0) {
