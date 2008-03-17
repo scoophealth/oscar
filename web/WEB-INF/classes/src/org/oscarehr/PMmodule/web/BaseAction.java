@@ -39,7 +39,6 @@ import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ConsentManager;
 import org.oscarehr.PMmodule.service.FormsManager;
-import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
 import org.oscarehr.PMmodule.service.IntakeCManager;
 import org.oscarehr.PMmodule.service.IntegratorManager;
