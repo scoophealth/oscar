@@ -35,7 +35,10 @@
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN, "You do not have the required roles to access this resource.");
 			// as a result we'll manually print a forbidden.
 			%>
-				<span>You do not have the required roles to access this resource.</span>
+				<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.PMmodule.service.AdmissionManager"%>
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<span>You do not have the required roles to access this resource.</span>
 			<%
 			return;
 		}
@@ -117,10 +120,13 @@
 			<td style="background-color: #555;"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=ClientManagerFormBean.tabs[x] %>'); return false;"><%=ClientManagerFormBean.tabs[x]%></a></td>
 			<%
 				} else {
-					Boolean activeInFacility=(Boolean)request.getAttribute("activeInFacility");
+			        Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+			        int demographicId=Integer.parseInt((String)request.getAttribute("id"));
+					AdmissionManager admissionManager=(AdmissionManager)SpringUtils.beanFactory.getBean("admissionManager");
+					boolean activeInFacility=admissionManager.isActiveInFacility(facilityId, demographicId);
 					boolean requireActiveTab="Refer".equals(ClientManagerFormBean.tabs[x]) || "Discharge".equals(ClientManagerFormBean.tabs[x]);
 					
-					if (requireActiveTab && activeInFacility!=null && !activeInFacility)
+					if (requireActiveTab && !activeInFacility)
 					{
 						%>
 						<td style="color:silver"><%=ClientManagerFormBean.tabs[x]%></td>

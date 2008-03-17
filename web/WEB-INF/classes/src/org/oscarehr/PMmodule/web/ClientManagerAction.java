@@ -82,6 +82,7 @@ import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
+import org.oscarehr.util.SessionConstants;
 import org.springframework.beans.factory.annotation.Required;
 
 import oscar.oscarDemographic.data.DemographicRelationship;
@@ -329,7 +330,6 @@ public class ClientManagerAction extends BaseAction {
         Demographic demographic = clientManager.getClientByDemographicNo(id);
         request.getSession().setAttribute("clientGender", demographic.getSex());
         request.getSession().setAttribute("clientAge", demographic.getAge());
-        request.setAttribute("activeInFacility", isActiveInFacility(facilityId, Integer.parseInt(id)));
 
         return mapping.findForward("edit");
     }
@@ -1276,7 +1276,7 @@ public class ClientManagerAction extends BaseAction {
 
         ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
 
-        Integer facilityId=(Integer)request.getSession().getAttribute("currentFacilityId");
+        Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
         
         request.setAttribute("id", demographicNo);
         request.setAttribute("client", clientManager.getClientByDemographicNo(demographicNo));
@@ -1589,16 +1589,6 @@ public class ClientManagerAction extends BaseAction {
             request.setAttribute("relationSize", familySize);
 
         }
-    }
-
-    public boolean isActiveInFacility(Integer facilityId, int demographicId)
-    {
-        if (facilityId==null) return(true);
-        
-        List<Admission> results=admissionManager.getCurrentAdmissionsByFacility(demographicId, facilityId);
-        if (results!=null && results.size()>0) return(true);
-        
-        return(false);
     }
     
     @Required

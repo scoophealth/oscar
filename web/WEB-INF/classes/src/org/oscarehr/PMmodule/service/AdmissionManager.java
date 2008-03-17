@@ -501,5 +501,13 @@ public class AdmissionManager {
         this.roomDemographicManager = roomDemographicManager;
     }
 
-
+    public boolean isActiveInFacility(Integer facilityId, int demographicId)
+    {
+        if (facilityId==null) return(true);
+        
+        List<Admission> results=getCurrentAdmissionsByFacility(demographicId, facilityId);
+        if (results!=null && results.size()>0) return(true);
+        
+        return(false);
+    }
 }
