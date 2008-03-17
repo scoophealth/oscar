@@ -162,12 +162,30 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
             intake = genericIntakeManager.copyQuickIntake(clientId, providerNo, facilityId);
+            if (intake==null)
+            {
+                intake = genericIntakeManager.createQuickIntake(providerNo);;
+                intake.setClientId(clientId);
+                intake.setFacilityId(facilityId);
+            }
         }
         else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
             intake = genericIntakeManager.copyIndepthIntake(clientId, providerNo, facilityId);
+            if (intake==null)
+            {
+                intake = genericIntakeManager.createIndepthIntake(providerNo);;
+                intake.setClientId(clientId);
+                intake.setFacilityId(facilityId);
+            }
         }
         else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
             intake = genericIntakeManager.copyProgramIntake(clientId, getProgramId(request), providerNo, facilityId);
+            if (intake==null)
+            {
+                intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
+                intake.setClientId(clientId);
+                intake.setFacilityId(facilityId);
+            }
         }
       
         setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(
