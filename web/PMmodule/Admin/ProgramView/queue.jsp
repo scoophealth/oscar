@@ -235,8 +235,19 @@
         <c:if test="${requestScope.current_admission != null}">
             <tr>
                 <td colspan="2"><b style="color:red">Warning:<br />
-                    This client is currently admitted to a bed program (<c:out value="${current_program.name}" />).<br />
-                    By completing this admission, you will be discharging them from this current program.</b></td>
+			        <c:choose>
+			        	<c:when test="${requestScope.sameFacility}" >
+		                    This client is currently admitted to a bed program (<c:out value="${current_program.name}" />).<br />
+		                    By completing this admission, you will be discharging them from this current program.
+			        	</c:when>
+			        	<c:otherwise>
+		                    This client is currently admitted to a bed program in another facility.<br />
+		                    By completing this admission, you will be discharging them from this other<br />
+		                    facility. Please check with the other facility before processing this <br />
+		                    automatic discharge and admission.
+			        	</c:otherwise>
+			        </c:choose>
+			     </b></td>
             </tr>
             <tr class="b">
                 <td width="20%">Discharge Notes:</td>

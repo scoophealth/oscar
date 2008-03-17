@@ -601,7 +601,10 @@ public class ProgramManagerViewAction extends BaseAction {
             if (currentAdmission != null) {
                 log.warn("client already in a bed program..doing a discharge/admit if proceeding");
                 request.setAttribute("current_admission", currentAdmission);
-                request.setAttribute("current_program", programManager.getProgram(String.valueOf(currentAdmission.getProgramId())));
+                Program currentProgram=programManager.getProgram(String.valueOf(currentAdmission.getProgramId()));
+                request.setAttribute("current_program", currentProgram);
+                
+                request.setAttribute("sameFacility", program.getFacilityId()==currentProgram.getFacilityId());
             }
         }
         request.setAttribute("do_admit", Boolean.TRUE);
