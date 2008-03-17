@@ -667,6 +667,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     private Set<Program> getActiveProviderProgramsInFacility(String providerNo, Integer facilityId) {
         Set<Program> programs = new HashSet<Program>();
         Set<Program> programsInDomain = getActiveProviderPrograms(providerNo);
+        if(facilityId==null) 
+        	return programs;
         
         for(Program p : programManager.getProgramDomainInFacility(providerNo, Long.valueOf(facilityId)))
         		 {
