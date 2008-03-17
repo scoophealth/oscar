@@ -1,0 +1,137 @@
+pg1_patientName	: left, 75, 49, 0, BaseFont.HELVETICA, 8 
+pg1_formDate	: left, 288, 49, 0, BaseFont.HELVETICA, 8
+pg1_phn         : left, 142, 63, 0, BaseFont.HELVETICA, 8 
+pg1_phone	: left, 288, 63, 0, BaseFont.HELVETICA, 8 
+pg1_emergContact	: left, 121, 76, 0, BaseFont.HELVETICA, 8 
+pg1_emergContactPhone	: left, 288, 76, 0, BaseFont.HELVETICA, 8 
+pg1_allergies	: left, 56, 91, 0, BaseFont.HELVETICA, 8 
+pg1_md          : left, 35, 106, 0, BaseFont.HELVETICA, 8 
+pg1_msp 	: left, 237, 106, 0, BaseFont.HELVETICA, 8 
+pg1_mdPhone 	: left, 288, 106, 0, BaseFont.HELVETICA, 8 
+pg1_livingWillY	: left, 173, 121, 0, BaseFont.HELVETICA, 8, X
+pg1_livingWillN	: left, 197, 121, 0, BaseFont.HELVETICA, 8, X
+ 
+pg1_diabetes 	: left, 18, 163, 0, BaseFont.HELVETICA, 8, X
+pg1_atrialFib 	: left, 90, 163, 0, BaseFont.HELVETICA, 8, X
+pg1_coronary	: left, 198, 163, 0, BaseFont.HELVETICA, 8, X
+pg1_highBP 	: left, 338, 163, 0, BaseFont.HELVETICA, 8, X
+pg1_chf 	: left, 18, 176, 0, BaseFont.HELVETICA, 8, X
+pg1_stroke 	: left, 90, 176, 0, BaseFont.HELVETICA, 8, X
+pg1_kidneyDisease	: left, 198, 176, 0, BaseFont.HELVETICA, 8, X
+pg1_lowGFR	: left, 305, 176, 0, BaseFont.HELVETICA, 8
+pg1_asthma 	: left, 338, 176, 0, BaseFont.HELVETICA, 8, X
+pg1_copd 	: left, 18, 191, 0, BaseFont.HELVETICA, 8, X
+pg1_co2retainer	: left, 90, 191, 0, BaseFont.HELVETICA, 8, X
+pg1_cancer	: left, 198, 191, 0, BaseFont.HELVETICA, 8, X
+pg1_cancerSpec	: left, 238, 189, 0, BaseFont.HELVETICA, 8
+pg1_other	: left, 18, 204, 0, BaseFont.HELVETICA, 8, X
+pg1_otherSpec	: left, 50, 203, 0, BaseFont.HELVETICA, 8
+pg1_majorSurg	: left, 18, 218, 0, BaseFont.HELVETICA, 8, X
+pg1_majorSurgSpec   : left, 75, 216, 0, BaseFont.HELVETICA, 8
+
+pg1_date1       : left, 22, 271, 0, BaseFont.HELVETICA, 8
+pg1_medName1    : left, 83, 271, 0, BaseFont.HELVETICA, 8
+pg1_dose1       : left, 206, 271, 0, BaseFont.HELVETICA, 8
+pg1_howOften1   : left, 259, 271, 0, BaseFont.HELVETICA, 8
+pg1_reason1     : left, 312, 271, 0, BaseFont.HELVETICA, 8
+pg1_date2       : left, 22, 287, 0, BaseFont.HELVETICA, 8
+pg1_medName2    : left, 83, 287, 0, BaseFont.HELVETICA, 8
+pg1_dose2       : left, 206, 287, 0, BaseFont.HELVETICA, 8
+pg1_howOften2   : left, 259, 287, 0, BaseFont.HELVETICA, 8
+pg1_reason2     : left, 312, 287, 0, BaseFont.HELVETICA, 8
+pg1_date3       : left, 22, 302, 0, BaseFont.HELVETICA, 8
+pg1_medName3    : left, 83, 302, 0, BaseFont.HELVETICA, 8
+pg1_dose3       : left, 206, 302, 0, BaseFont.HELVETICA, 8
+pg1_howOften3   : left, 259, 302, 0, BaseFont.HELVETICA, 8
+pg1_reason3     : left, 312, 302, 0, BaseFont.HELVETICA, 8
+pg1_date4       : left, 22, 318, 0, BaseFont.HELVETICA, 8
+pg1_medName4    : left, 83, 318, 0, BaseFont.HELVETICA, 8
+pg1_dose4       : left, 206, 318, 0, BaseFont.HELVETICA, 8
+pg1_howOften4   : left, 259, 318, 0, BaseFont.HELVETICA, 8
+pg1_reason4     : left, 312, 318, 0, BaseFont.HELVETICA, 8
+pg1_date5       : left, 22, 333, 0, BaseFont.HELVETICA, 8
+pg1_medName5    : left, 83, 333, 0, BaseFont.HELVETICA, 8
+pg1_dose5       : left, 206, 333, 0, BaseFont.HELVETICA, 8
+pg1_howOften5   : left, 259, 333, 0, BaseFont.HELVETICA, 8
+pg1_reason5     : left, 312, 333, 0, BaseFont.HELVETICA, 8
+pg1_date6       : left, 22, 349, 0, BaseFont.HELVETICA, 8
+pg1_medName6    : left, 83, 349, 0, BaseFont.HELVETICA, 8
+pg1_dose6       : left, 206, 349, 0, BaseFont.HELVETICA, 8
+pg1_howOften6   : left, 259, 349, 0, BaseFont.HELVETICA, 8
+pg1_reason6     : left, 312, 349, 0, BaseFont.HELVETICA, 8
+pg1_date7       : left, 22, 365, 0, BaseFont.HELVETICA, 8
+pg1_medName7    : left, 83, 365, 0, BaseFont.HELVETICA, 8
+pg1_dose7       : left, 206, 365, 0, BaseFont.HELVETICA, 8
+pg1_howOften7   : left, 259, 365, 0, BaseFont.HELVETICA, 8
+pg1_reason7     : left, 312, 365, 0, BaseFont.HELVETICA, 8
+pg1_date8       : left, 22, 381, 0, BaseFont.HELVETICA, 8
+pg1_medName8    : left, 83, 381, 0, BaseFont.HELVETICA, 8
+pg1_dose8       : left, 206, 381, 0, BaseFont.HELVETICA, 8
+pg1_howOften8   : left, 259, 381, 0, BaseFont.HELVETICA, 8
+pg1_reason8     : left, 312, 381, 0, BaseFont.HELVETICA, 8
+pg1_date9       : left, 22, 396, 0, BaseFont.HELVETICA, 8
+pg1_medName9    : left, 83, 396, 0, BaseFont.HELVETICA, 8
+pg1_dose9       : left, 206, 396, 0, BaseFont.HELVETICA, 8
+pg1_howOften9   : left, 259, 396, 0, BaseFont.HELVETICA, 8
+pg1_reason9     : left, 312, 396, 0, BaseFont.HELVETICA, 8
+pg1_date10      : left, 22, 412, 0, BaseFont.HELVETICA, 8
+pg1_medName10   : left, 83, 412, 0, BaseFont.HELVETICA, 8
+pg1_dose10      : left, 206, 412, 0, BaseFont.HELVETICA, 8
+pg1_howOften10  : left, 259, 412, 0, BaseFont.HELVETICA, 8
+pg1_reason10    : left, 312, 412, 0, BaseFont.HELVETICA, 8
+pg1_date11      : left, 22, 428, 0, BaseFont.HELVETICA, 8
+pg1_medName11   : left, 83, 428, 0, BaseFont.HELVETICA, 8
+pg1_dose11      : left, 206, 428, 0, BaseFont.HELVETICA, 8
+pg1_howOften11  : left, 259, 428, 0, BaseFont.HELVETICA, 8
+pg1_reason11    : left, 312, 428, 0, BaseFont.HELVETICA, 8
+pg1_date12      : left, 22, 444, 0, BaseFont.HELVETICA, 8
+pg1_medName12   : left, 83, 444, 0, BaseFont.HELVETICA, 8
+pg1_dose12      : left, 206, 444, 0, BaseFont.HELVETICA, 8
+pg1_howOften12  : left, 259, 444, 0, BaseFont.HELVETICA, 8
+pg1_reason12    : left, 312, 444, 0, BaseFont.HELVETICA, 8
+pg1_date13      : left, 22, 459, 0, BaseFont.HELVETICA, 8
+pg1_medName13   : left, 83, 459, 0, BaseFont.HELVETICA, 8
+pg1_dose13      : left, 206, 459, 0, BaseFont.HELVETICA, 8
+pg1_howOften13  : left, 259, 459, 0, BaseFont.HELVETICA, 8
+pg1_reason13    : left, 312, 459, 0, BaseFont.HELVETICA, 8
+pg1_date14      : left, 22, 474, 0, BaseFont.HELVETICA, 8
+pg1_medName14   : left, 83, 474, 0, BaseFont.HELVETICA, 8
+pg1_dose14      : left, 206, 474, 0, BaseFont.HELVETICA, 8
+pg1_howOften14  : left, 259, 474, 0, BaseFont.HELVETICA, 8
+pg1_reason14    : left, 312, 474, 0, BaseFont.HELVETICA, 8
+
+pg1_fluDate1    : left, 81, 524, 0, BaseFont.HELVETICA, 6
+pg1_fluDate2    : left, 121, 524, 0, BaseFont.HELVETICA, 6
+pg1_fluDate3    : left, 160, 524, 0, BaseFont.HELVETICA, 6
+pg1_fluDate4    : left, 199, 524, 0, BaseFont.HELVETICA, 6
+pg1_fluDate5    : left, 238, 524, 0, BaseFont.HELVETICA, 6
+pg1_fluDate6    : left, 276, 524, 0, BaseFont.HELVETICA, 6
+pg1_fluDate7    : left, 315, 524, 0, BaseFont.HELVETICA, 6
+
+pg1_pneumoVaccDate1    : left, 81, 537, 0, BaseFont.HELVETICA, 6
+pg1_pneumoVaccDate2    : left, 121, 537, 0, BaseFont.HELVETICA, 6
+
+pg1_tdDate1     : left, 81, 550, 0, BaseFont.HELVETICA, 6
+pg1_tdDate2     : left, 121, 550, 0, BaseFont.HELVETICA, 6
+pg1_tdDate3     : left, 160, 550, 0, BaseFont.HELVETICA, 6
+pg1_tdDate4     : left, 199, 550, 0, BaseFont.HELVETICA, 6
+pg1_tdDate5     : left, 238, 550, 0, BaseFont.HELVETICA, 6
+
+pg1_hepaDate1   : left, 81, 562, 0, BaseFont.HELVETICA, 6
+pg1_hepaDate2   : left, 121, 562, 0, BaseFont.HELVETICA, 6
+pg1_hepaDate3   : left, 160, 562, 0, BaseFont.HELVETICA, 6
+
+pg1_hepbDate1   : left, 81, 575, 0, BaseFont.HELVETICA, 6
+pg1_hepbDate2   : left, 121, 575, 0, BaseFont.HELVETICA, 6
+pg1_hepbDate3   : left, 160, 575, 0, BaseFont.HELVETICA, 6
+
+pg1_otherVac    : left, 22, 588, 0, BaseFont.HELVETICA, 8
+pg1_otherDate1  : left, 81, 588, 0, BaseFont.HELVETICA, 6
+pg1_otherDate2  : left, 121, 588, 0, BaseFont.HELVETICA, 6
+pg1_otherDate3  : left, 160, 588, 0, BaseFont.HELVETICA, 6
+pg1_otherDate4  : left, 199, 588, 0, BaseFont.HELVETICA, 6
+pg1_otherDate5  : left, 238, 588, 0, BaseFont.HELVETICA, 6
+pg1_otherDate6  : left, 276, 588, 0, BaseFont.HELVETICA, 6
+pg1_otherDate7  : left, 315, 588, 0, BaseFont.HELVETICA, 6
+
+forms_promotext : left, 395, 611, 0, BaseFont.HELVETICA, 8

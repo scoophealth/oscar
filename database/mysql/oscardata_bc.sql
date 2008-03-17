@@ -15,6 +15,7 @@ INSERT INTO encounterForm VALUES ('BC-NewBorn','../form/formbcnewborn.jsp?demogr
 INSERT INTO encounterForm values ('BC-WCB','../billing/CA/BC/viewformwcb.do?demographic_no=','wcb','0');
 INSERT INTO encounterForm values ('BC-INR','../form/formbcinr.jsp?demographic_no=','formBCINR','0');
 insert into encounterForm values ('Chart Checklist', '../form/formbcclientchartchecklist.jsp?demographic_no=', 'formBCClientChartChecklist', 0);                                       
+INSERT INTO encounterForm VALUES ('BC Health Passport','../form/formbchp.jsp?demographic_no=','formBCHP', '1');
 
 INSERT INTO billinglocation VALUES ('00','ABBOTSFORD','BC');
 INSERT INTO billinglocation VALUES ('00','AGASSIZ/HARRISON','BC');

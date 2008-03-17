@@ -1,0 +1,89 @@
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+
+.Head {
+    background-color:#BBBBBB;
+    padding-top:3px;
+    padding-bottom:3px;
+    width:100%;
+    font-size:12pt;
+}
+
+.Head INPUT {
+    width: 100px;
+}
+
+.Head A {
+    font-size:12pt;
+}
+
+.headline {
+    font-size:12pt;
+}
+
+  input,select,textarea{ background-color: #F4EaD7; border: 1 solid #0097cf; readonly; disable;}
+
+BODY {
+    font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
+    background-color: #c4c9c6;
+}
+
+TABLE {
+    font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
+	font-size: 10pt;
+}
+
+.title {
+    background-color: #486ebd;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: centre;
+}
+
+.shrinkMe {
+    font-size: 9pt;
+}
+
+.small9 {
+    font-size: 9pt;
+}
+
+.small8 {
+    font-size: 8pt;
+}
+
+.small10 {
+    font-size: 10pt;
+}
+
+.comment  {
+    color: #000033; 
+    background-color: silver; 
+    layer-background-color: #cccccc;
+    position: absolute;
+    z-index: 99; 
+    visibility: hidden;
+    font-size: 11px;
+    border: 1px solid black;
+}
