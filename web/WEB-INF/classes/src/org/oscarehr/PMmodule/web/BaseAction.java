@@ -58,11 +58,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.quatro.service.LookupManager;
 
-/**
- * Base action is a very very bad idea and the whole concept of it should not be used.
- * It is excessively inefficient and defeats the purpose of spring to begin with. 
- */
-@Deprecated
 public abstract class BaseAction extends DispatchAction {
 	
 	protected static final String PARAM_START = "?";
