@@ -1,13 +1,10 @@
 package org.oscarehr.PMmodule.service;
 
-import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import java.util.List;
+
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.model.Facility;
-import org.oscarehr.PMmodule.model.Program;
 import org.springframework.beans.factory.annotation.Required;
-
-import java.util.List;
 
 /**
  * Manager for facilities
@@ -15,8 +12,6 @@ import java.util.List;
 public class FacilityManager {
 
     private FacilityDAO facilityDAO;
-    private ClientDao demographicDAO;
-    private AdmissionDao admissionDao;
     
     public Facility getFacility(Integer facilityId) {
         return facilityDAO.getFacility(facilityId);
@@ -26,11 +21,6 @@ public class FacilityManager {
         return facilityDAO.getFacilities();
     }
 
-    @Deprecated
-    public List<Program> getAssociatedPrograms(Integer facilityId) {
-        return facilityDAO.getAssociatedPrograms(facilityId);
-    }
-    
     public void saveFacility(Facility facility) {
         facilityDAO.saveFacility(facility);
     }
