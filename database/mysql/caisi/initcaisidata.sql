@@ -16321,58 +16321,118 @@ values (2,'Assault of staff',1,20);
 insert into lst_service_restriction(id,description,isactive,displayorder)
 values (3,'Other',1,30);    
 
+insert into lst_admission_status(code,description, isactive, displayorder)
+values ('current','Current', 1, 10);
+insert into lst_admission_status(code,description, isactive, displayorder)
+values ('discharged','Discharged', 1, 20);
+
+insert into lst_program_type values('01','BED',1,1);
+insert into lst_program_type values('02','SERVICE',1,2);
+insert into lst_program_type values('03','EXTERNAL',1,3);
 
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('BTY', '1', 'BED_TYPE', 'Bed Type', 0, 0, 1);
+values ('PRM', '1', 'program', 'Program', 0, 0, 1);
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('ORG', '2', 'AGENCY', 'Organization', 0, 0, 1);
+values ('BTY', '4', 'bed_type', 'Bed Type', 0, 0, 1);
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('ROL', '4', 'SECROLE', 'System Role', 0, 0, 1);
+values ('ISS', '2', 'issue', 'Issue', 0, 0, 1);
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('QGV', '5', 'REPORT_QGVIEWSUMMARY', 'List of Views', 0, 0, 1);
+values ('IGP', '2', 'issuegroup', 'Issue Group', 0, 0, 1);
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('RPG', '5', 'REPORT_LK_REPORTGROUP', 'Report Group', 0, 0, 1);
+values ('LKT', '1', 'app_lookuptable', 'Available Fields in the system', 0, 0, 1);
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('LKT', '4', 'APP_LOOKUPTABLE', 'Lookup fields in the system', 0, 0, 1);
+values ('FCT', '1', 'lst_field_category', 'Field Category', 0, 0, 1);
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('ROC', '4', 'CAISI_ROLE', 'Program Management Role', 0, 0, 1);
+values ('GEN', '4', 'lst_gender', 'Gender', 0, 0, 1);
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('ISS', '1', 'ISSUE', 'Issue', 0, 0, 1);
+values ('SEC', '2', 'lst_sector', 'Sector', 0, 0, 1);
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('IGP', '1', 'ISSUEGROUP', 'Issue Group', 0, 0, 1);
+values ('OGN', '2', 'lst_organization', 'Organization', 0, 0, 1);
 insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
-values ('RMT', '1', 'ROOM_TYPE', 'Room Type', 0, 0, 1);
+values ('DRN', '5', 'lst_discharge_reason', 'Discharge Reason', 0, 0, 1);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
+values ('DR2', '5', 'lst_discharge_reason_secondary', 'Discharge Reason, Secondary', 0, 0, 0);
+insert into app_lookuptable (tableid, moduleid, table_name, description, istree, treecode_length, activeyn)
+values ('SRT', '3', 'lst_service_restriction', 'Service Restriction', 0, 0, 1);
 
-
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('BTY', 'BED_TYPE_ID', 'Bed Type Id', '0', 'N', null, 'BED_TYPE_ID', 1, 1);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('BTY', 'NAME', 'Description', '1', 'S', null, 'NAME', 2, 0);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('BTY', 'DFLT', 'Default Capacity', '1', 'N', null, 'DFLT', 3, 0);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('ISS', 'ISSUE_ID', 'Issue Id', '0', 'N', null, 'ISSUE_ID', 1, 1);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('ISS', 'CODE', 'Code', '1', 'S', null, 'CODE', 2, 1);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('ISS', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 3, 0);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('ISS', 'ROLE', 'Role', '1', 'S', 'ROL', 'ROLE', 4, 0);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('ISS', 'UPDATE_DATE', 'Update Date', '1', 'D', null, 'UPDATE_DATE', 6, 0);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('ISS', 'PRIORITY', 'Priority', '1', 'S', null, 'PRIORITY', 5, 0);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('IGP', 'ID', 'Id', '0', 'N', null, 'ID', 1, 1);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('IGP', 'NAME', 'Name', '1', 'S', null, 'NAME', 2, 0);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('RMT', 'ROOM_TYPE_ID', 'Room Type Id', '0', 'S', null, 'ROOM_TYPE_ID', 1, 1);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('RMT', 'NAME', 'Name', '1', 'S', null, 'NAME', 2, 0);
-insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn)
-values ('RMT', 'DFLT', 'Default', '1', 'N', null, 'DFLT', 3, 0);
-
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('FCT', 'ID', 'Id', '0', 'N', null, 'ID', 1, 1, 1, 1);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('FCT', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('FCT', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('BTY', 'BED_TYPE_ID', 'Id', '1', 'N', null, 'BED_TYPE_ID', 1, 1, 1, 1);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('BTY', 'NAME', 'Name', '1', 'S', null, 'NAME', 2, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('BTY', 'DFLT', 'Default Capacity', '1', 'N', null, 'DFLT', 3, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('LKT', 'TABLEID', 'Id', '0', 'S', null, 'TABLEID', 1, 1, 1, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('LKT', 'MODULEID', 'Category', '1', 'S', 'FCT', 'MODULEID', 2, 0, 2, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('LKT', 'TABLE_NAME', 'Table Name', '1', 'S', null, 'TABLE_NAME', 3, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('LKT', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 4, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('LKT', 'ISTREE', 'Is Tree Structured?', '1', 'B', null, 'ISTREE', 5, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('LKT', 'TREECODE_LENGTH', 'Tree Code Length (if is tree)', '1', 'N', null, 'TREECODE_LENGTH', 6, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('LKT', 'ACTIVEYN', 'Active?', '1', 'B', null, 'ACTIVEYN', 7, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('FCT', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('GEN', 'CODE', 'Code', '1', 'S', null, 'CODE', 1, 1, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('GEN', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('GEN', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('GEN', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('SEC', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 1, 1);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('SEC', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('SEC', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('SEC', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('OGN', 'ID', 'Id', '0', 'N', null, 'ID', 1, 1, 1, 1);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('OGN', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('OGN', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('OGN', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('DRN', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 1, 1);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('DRN', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('DRN', 'NEEDSECONDARY', 'Has Associated Secondary Reason?', '1', 'N', null, 'NEEDSECONDARY', 3, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('DRN', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 4, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('DRN', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 5, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('DR2', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 1, 1);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('DR2', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('DR2', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('DR2', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('SRT', 'ID', 'Id', '1', 'N', null, 'ID', 1, 1, 1, 1);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('SRT', 'DESCRIPTION', 'Description', '1', 'S', null, 'DESCRIPTION', 2, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('SRT', 'ISACTIVE', 'Active?', '1', 'B', null, 'ISACTIVE', 3, 0, 0, 0);
+insert into app_lookuptable_fields (tableid, fieldname, fielddesc, edityn, fieldtype, lookuptable, fieldsql, fieldindex, uniqueyn, genericidx, autoyn)
+values ('SRT', 'DISPLAYORDER', 'Dispaly Order', '1', 'N', null, 'DISPLAYORDER', 4, 0, 0, 0);
 
 
 insert into app_module (module_id, description)
