@@ -117,10 +117,10 @@
 			<td style="background-color: #555;"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=ClientManagerFormBean.tabs[x] %>'); return false;"><%=ClientManagerFormBean.tabs[x]%></a></td>
 			<%
 				} else {
-					boolean activeInFacility=(Boolean)request.getAttribute("activeInFacility");
+					Boolean activeInFacility=(Boolean)request.getAttribute("activeInFacility");
 					boolean requireActiveTab="Refer".equals(ClientManagerFormBean.tabs[x]) || "Discharge".equals(ClientManagerFormBean.tabs[x]);
 					
-					if (requireActiveTab && !activeInFacility)
+					if (requireActiveTab && activeInFacility!=null && !activeInFacility)
 					{
 						%>
 						<td style="color:silver"><%=ClientManagerFormBean.tabs[x]%></td>
