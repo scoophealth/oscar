@@ -49,6 +49,7 @@ import org.oscarehr.PMmodule.common.PassIntakeFormVars;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.IntakeCManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -85,6 +86,8 @@ public class IntakeCReport1Action extends BaseAction {
     protected CaseManagementManager caseManagementManager;
 
     protected AdmissionManager admissionManager;
+
+    protected GenericIntakeManager genericIntakeManager;
 
 	/**
      * excute
@@ -3820,5 +3823,9 @@ public class IntakeCReport1Action extends BaseAction {
 
     public void setAdmissionManager(AdmissionManager mgr) {
     	this.admissionManager = mgr;
+    }
+
+    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+        this.genericIntakeManager = genericIntakeManager;
     }
 }//end of class IntakeCReport1Action

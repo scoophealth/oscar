@@ -23,35 +23,32 @@
 	package org.oscarehr.PMmodule.web;
 
 	import java.io.BufferedWriter;
-	import java.io.File;
-	import java.io.FileWriter;
-	import java.io.IOException;
-	import java.io.PrintWriter;
-	import java.math.BigDecimal;
-	import java.text.ParseException;
-	import java.text.SimpleDateFormat;
-	import java.util.Calendar;
-	import java.util.Date;
-	import java.util.Iterator;
-	import java.util.List;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
-	import javax.servlet.ServletException;
-	import javax.servlet.http.HttpServletRequest;
-	import javax.servlet.http.HttpServletResponse;
-	import javax.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-	import org.apache.commons.logging.Log;
-	import org.apache.commons.logging.LogFactory;
-	import org.apache.struts.action.ActionForm;
-	import org.apache.struts.action.ActionForward;
-	import org.apache.struts.action.ActionMapping;
-
-	import org.oscarehr.PMmodule.common.PassIntakeFormVars;
-	import org.oscarehr.PMmodule.model.Demographic;
-	import org.oscarehr.PMmodule.model.Formintakec;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.oscarehr.PMmodule.common.PassIntakeFormVars;
+import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.service.AdmissionManager;
-import org.oscarehr.PMmodule.service.GenericIntakeManager;
-	import org.oscarehr.PMmodule.service.IntakeCManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 
@@ -63,9 +60,6 @@ import com.quatro.service.LookupManager;
 	 */
 	public class IntakeCMentalHealthReportAction extends BaseAction {
 		private static Log log = LogFactory.getLog(IntakeCReport1Action.class);
-
-	    private IntakeCManager intakeCMgr = null;
-	    private GenericIntakeManager genericIntakeMgr = null;
 
 	    private static final String SDF_PATTERN = "yyyy-MM-dd";
 
@@ -132,21 +126,7 @@ import com.quatro.service.LookupManager;
 		            request.setAttribute("hasMsg", "intakeCReport1Form.startDateNotFound");
 		            return  (mapping.findForward(target));
 		        }
-
-		        //intakeCMgr = getIntakeCManager();
-		        genericIntakeMgr = getGenericIntakeManager();
-		        
-		        /*
-		        if(intakeCMgr == null) {
-		            target = "error";
-		            return  (mapping.findForward(target));
-		        }
-		        */
-		        if(genericIntakeMgr == null) {
-		        	target = "error";
-		        	return mapping.findForward(target);
-		        }
-		        
+		        		        
 		        dataList = initDataList(dataList);
 
 		        dateList = getDateList(startDate, dateList);
@@ -247,7 +227,7 @@ import com.quatro.service.LookupManager;
 		 * @return String[][]
 		 * @throws ParseException 
 		 */
-	    private String[][] getDataList(Date[] dateList, String[][] dataList) throws ParseException {
+	    private String[][] getDataList(Date[] dateList, String[][] dataList) {
 
 	        int row = 0;
 
@@ -1847,7 +1827,6 @@ import com.quatro.service.LookupManager;
 				Demographic demographic = new Demographic();
 				Object[] cohort = (Object[]) rsList.get(idx);
 				int row = 0;
-				boolean preAdmission = false;
 				
 				demographic = (Demographic) cohort[1];  			
 				formintakec = (Formintakec)cohort[0];
@@ -1865,7 +1844,6 @@ import com.quatro.service.LookupManager;
 	            if (CHECKBOX_ON.equals(formintakec.getCboxPreAdmission())) {
 	            	row++;
 	            	dataList[row][col] = Integer.toString(Integer.parseInt(dataList[row][col]) + 1);
-	            	preAdmission=true;
 	            } else {
 	            	dataList[row][col] = Integer.toString(Integer.parseInt(dataList[row][col]) + 1);
 	    			row++;
@@ -3783,5 +3761,6 @@ import com.quatro.service.LookupManager;
         public void setAdmissionManager(AdmissionManager mgr) {
         	this.admissionManager = mgr;
         }
+
 	}
 	

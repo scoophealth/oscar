@@ -47,6 +47,7 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.StaffEditProgramContainer;
 import org.oscarehr.PMmodule.web.formbean.StaffManagerViewFormBean;
@@ -65,6 +66,8 @@ public class StaffManagerAction extends BaseAction {
     protected CaseManagementManager caseManagementManager;
 
     protected AdmissionManager admissionManager;
+
+    protected GenericIntakeManager genericIntakeManager;
 	
 	public void setFacilityDAO(FacilityDAO facilityDAO) {
         this.facilityDAO = facilityDAO;
@@ -292,5 +295,9 @@ public class StaffManagerAction extends BaseAction {
 
     public void setAdmissionManager(AdmissionManager mgr) {
     	this.admissionManager = mgr;
+    }
+
+    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+        this.genericIntakeManager = genericIntakeManager;
     }
 }

@@ -32,6 +32,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.LazyValidatorForm;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 
 import com.quatro.service.LookupManager;
@@ -40,6 +41,7 @@ public class ratingStaticsAction extends BaseAction {
 	protected LookupManager lookupManager;
     protected CaseManagementManager caseManagementManager;
     protected AdmissionManager admissionManager;
+    protected GenericIntakeManager genericIntakeManager;
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -63,5 +65,9 @@ public class ratingStaticsAction extends BaseAction {
 
     public void setAdmissionManager(AdmissionManager mgr) {
     	this.admissionManager = mgr;
+    }
+
+    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+        this.genericIntakeManager = genericIntakeManager;
     }
 }

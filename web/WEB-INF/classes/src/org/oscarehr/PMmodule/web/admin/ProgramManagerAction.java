@@ -49,6 +49,7 @@ import org.oscarehr.PMmodule.model.ProgramSignature;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -57,6 +58,7 @@ public class ProgramManagerAction extends BaseAction {
     private ClientRestrictionManager clientRestrictionManager;
     private FacilityDAO facilityDAO=null;
     private AdmissionManager admissionManager;
+    protected GenericIntakeManager genericIntakeManager;
         
     public void setFacilityDAO(FacilityDAO facilityDAO) {
         this.facilityDAO = facilityDAO;
@@ -1062,5 +1064,9 @@ public class ProgramManagerAction extends BaseAction {
 
     public void setAdmissionManager(AdmissionManager mgr) {
     	this.admissionManager = mgr;
+    }
+
+    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+        this.genericIntakeManager = genericIntakeManager;
     }
 }

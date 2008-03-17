@@ -70,7 +70,6 @@ public abstract class BaseAction extends DispatchAction {
 	protected ClientManager clientManager;
 	protected ConsentManager consentManager;
 	protected FormsManager formsManager;
-	protected GenericIntakeManager genericIntakeManager;
 	protected IntakeAManager intakeAManager;
 	protected IntakeCManager intakeCManager;
 	protected IntegratorManager integratorManager;
@@ -119,10 +118,6 @@ public abstract class BaseAction extends DispatchAction {
 		return (ClientManager) getAppContext().getBean("clientManager");
 	}
 
-	public GenericIntakeManager getGenericIntakeManager() {
-	    return genericIntakeManager;
-    }
-	
 	public IntakeAManager getIntakeAManager() {
 		return (IntakeAManager) getAppContext().getBean("intakeAManager");
 	}
@@ -191,10 +186,6 @@ public abstract class BaseAction extends DispatchAction {
 	public void setFormsManager(FormsManager mgr) {
 		this.formsManager = mgr;
 	}
-	
-	public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
-	    this.genericIntakeManager = genericIntakeManager;
-    }
 	
 	public void setIntakeAManager(IntakeAManager mgr) {
 		this.intakeAManager = mgr;

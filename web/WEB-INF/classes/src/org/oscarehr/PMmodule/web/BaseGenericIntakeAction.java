@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 
@@ -42,6 +43,8 @@ abstract class BaseGenericIntakeAction extends BaseAction {
     protected CaseManagementManager caseManagementManager;
 
     protected AdmissionManager admissionManager;
+
+    protected GenericIntakeManager genericIntakeManager;
 	
 	// Parameter Accessors
 	
@@ -102,6 +105,10 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 
     public void setAdmissionManager(AdmissionManager mgr) {
     	this.admissionManager = mgr;
+    }
+
+    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+        this.genericIntakeManager = genericIntakeManager;
     }
 
 

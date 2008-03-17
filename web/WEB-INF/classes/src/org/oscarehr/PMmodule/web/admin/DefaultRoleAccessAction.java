@@ -33,6 +33,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 
@@ -43,6 +44,7 @@ public class DefaultRoleAccessAction extends  BaseAction {
     protected LookupManager lookupManager;
     protected CaseManagementManager caseManagementManager;
     protected AdmissionManager admissionManager;
+    protected GenericIntakeManager genericIntakeManager;
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return list(mapping,form,request,response);
@@ -115,6 +117,10 @@ public class DefaultRoleAccessAction extends  BaseAction {
 
     public void setAdmissionManager(AdmissionManager mgr) {
     	this.admissionManager = mgr;
+    }
+
+    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+        this.genericIntakeManager = genericIntakeManager;
     }
 	
 }

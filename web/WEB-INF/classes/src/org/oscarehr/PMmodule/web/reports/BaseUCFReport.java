@@ -31,6 +31,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -46,6 +47,7 @@ public class BaseUCFReport extends BaseAction {
     protected LookupManager lookupManager;
     protected CaseManagementManager caseManagementManager;
     protected AdmissionManager admissionManager;
+    protected GenericIntakeManager genericIntakeManager;
 
     public void setSurveyManager(SurveyManager mgr) {
         this.surveyManager = mgr;
@@ -107,5 +109,9 @@ public class BaseUCFReport extends BaseAction {
 
     public void setAdmissionManager(AdmissionManager mgr) {
     	this.admissionManager = mgr;
+    }
+
+    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+        this.genericIntakeManager = genericIntakeManager;
     }
 }

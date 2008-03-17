@@ -29,6 +29,7 @@ import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 
 import com.quatro.service.LookupManager;
@@ -44,6 +45,7 @@ public class ProviderInfoAction extends BaseAction {
     protected LookupManager lookupManager;
     protected CaseManagementManager caseManagementManager;
     protected AdmissionManager admissionManager;
+    protected GenericIntakeManager genericIntakeManager;
     
     public void setFacilityDAO(FacilityDAO facilityDAO) {
         this.facilityDAO = facilityDAO;
@@ -101,6 +103,10 @@ public class ProviderInfoAction extends BaseAction {
 
     public void setAdmissionManager(AdmissionManager mgr) {
     	this.admissionManager = mgr;
+    }
+
+    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+        this.genericIntakeManager = genericIntakeManager;
     }
 
 }
