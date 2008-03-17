@@ -21,8 +21,6 @@
 */
 package org.oscarehr.PMmodule.web;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.oscarehr.PMmodule.dao.FacilityDAO;
