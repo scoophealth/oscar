@@ -24,11 +24,15 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.FacilityManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.FacilityDischargedClients;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.beans.factory.annotation.Required;
+
+import com.quatro.service.LookupManager;
 
 /**
  */
@@ -39,6 +43,12 @@ public class FacilityManagerAction extends BaseAction {
     private AdmissionDao admissionDao;
     private ClientDao clientDao;
     private ProgramManager programManager;
+
+    protected LookupManager lookupManager;
+
+    protected CaseManagementManager caseManagementManager;
+
+    protected AdmissionManager admissionManager;
 
     public void setProgramManager(ProgramManager programManager) {
         this.programManager = programManager;
@@ -232,6 +242,18 @@ public class FacilityManagerAction extends BaseAction {
 
     public void setClientDao(ClientDao clientDao) {
         this.clientDao = clientDao;
+    }
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
     }
 
 }

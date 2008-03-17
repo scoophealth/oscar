@@ -56,7 +56,6 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.quatro.service.LookupManager;
 
 public abstract class BaseAction extends DispatchAction {
 	
@@ -64,9 +63,6 @@ public abstract class BaseAction extends DispatchAction {
 	protected static final String PARAM_EQUALS = "=";
 	protected static final String PARAM_AND = "&";
 	
-	protected LookupManager lookupManager;
-	protected CaseManagementManager caseManagementManager;
-	protected AdmissionManager admissionManager;
 	protected AgencyManager agencyManager;
 	protected BedCheckTimeManager bedCheckTimeManager;
 	protected RoomDemographicManager roomDemographicManager;
@@ -163,14 +159,6 @@ public abstract class BaseAction extends DispatchAction {
 
 	public RatePageManager getRateManager() {
 		return (RatePageManager) getAppContext().getBean("ratePageManager");
-	}
-
-	public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
-		this.caseManagementManager = caseManagementManager;
-	}
-	
-	public void setAdmissionManager(AdmissionManager mgr) {
-		this.admissionManager = mgr;
 	}
 
 	public void setAgencyManager(AgencyManager mgr) {
@@ -274,14 +262,6 @@ public abstract class BaseAction extends DispatchAction {
 		path.append(parameters);
 		
 		return new RedirectingActionForward(path.toString());
-	}
-
-	public LookupManager getLookupManager() {
-		return lookupManager;
-	}
-
-	public void setLookupManager(LookupManager lookupManager) {
-		this.lookupManager = lookupManager;
 	}
 
 }

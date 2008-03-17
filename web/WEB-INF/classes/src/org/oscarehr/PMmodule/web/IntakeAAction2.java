@@ -28,9 +28,13 @@ import org.apache.struts.action.*;
 import org.caisi.event.OscarCaisiEvent;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.*;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeAFormBean;
 import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import com.quatro.service.LookupManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +47,9 @@ import java.util.List;
 public class IntakeAAction2 extends BaseAction {
     private static Log log = LogFactory.getLog(IntakeAAction2.class);
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+    protected LookupManager lookupManager;
+    protected CaseManagementManager caseManagementManager;
+    protected AdmissionManager admissionManager;
 
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -402,6 +409,18 @@ public class IntakeAAction2 extends BaseAction {
         for (int x = 0; x < remoteDemographic.getExtras().length; x++) {
             clientManager.saveDemographicExt(demographicNo, remoteDemographic.getExtras()[x].getKey(), remoteDemographic.getExtras()[x].getValue());
         }
+    }
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
     }
 
 }

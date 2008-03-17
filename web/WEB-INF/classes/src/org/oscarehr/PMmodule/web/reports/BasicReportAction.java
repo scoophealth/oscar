@@ -36,7 +36,11 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.web.BaseAction;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+
+import com.quatro.service.LookupManager;
 
 /**
  * Will report some basic statistics out of the PMM
@@ -51,7 +55,11 @@ import org.oscarehr.PMmodule.web.BaseAction;
  */
 public class BasicReportAction extends BaseAction {
 	
-	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	protected LookupManager lookupManager;
+    protected CaseManagementManager caseManagementManager;
+    protected AdmissionManager admissionManager;
+
+    public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return form(mapping,form,request,response);
 	}
 	
@@ -104,4 +112,16 @@ public class BasicReportAction extends BaseAction {
 		*/
 		return map;
 	}
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
+    }
 }

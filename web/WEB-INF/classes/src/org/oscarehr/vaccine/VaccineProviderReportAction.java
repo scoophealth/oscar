@@ -15,7 +15,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
-import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
@@ -24,16 +23,18 @@ import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.er.ReceptionistReportAction;
 
+import com.quatro.service.LookupManager;
+
 public class VaccineProviderReportAction extends BaseAction {
 	private static Log log = LogFactory.getLog(ReceptionistReportAction.class);
 
-	private ProgramManager programManager;
 	private ClientManager clientManager;
-	private AdmissionManager admissionManager;
-	private CaseManagementManager caseManagementManager;
-	private ProviderManager providerManager;
 	private GenericIntakeManager genericIntakeManager;
-	
+
+    protected LookupManager lookupManager;
+
+    protected CaseManagementManager caseManagementManager;
+
 	public void setGenericIntakeManager(GenericIntakeManager mgr) {
 		this.genericIntakeManager = mgr;
 	}
@@ -44,14 +45,6 @@ public class VaccineProviderReportAction extends BaseAction {
 	
 	public void setClientManager(ClientManager mgr) {
 		this.clientManager = mgr;
-	}
-	
-	public void setAdmissionManager(AdmissionManager mgr) {
-		this.admissionManager = mgr;
-	}
-	
-	public void setCaseManagementManager(CaseManagementManager mgr) {
-		this.caseManagementManager = mgr;
 	}
 	
 	public void setProviderManager(ProviderManager mgr) {
@@ -125,5 +118,14 @@ public class VaccineProviderReportAction extends BaseAction {
 		}
 
 		return mapping.findForward("report");
-	}	
+	}
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
 }

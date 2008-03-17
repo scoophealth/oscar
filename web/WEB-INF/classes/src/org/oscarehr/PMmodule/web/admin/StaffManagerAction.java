@@ -46,15 +46,25 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.StaffEditProgramContainer;
 import org.oscarehr.PMmodule.web.formbean.StaffManagerViewFormBean;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.util.SessionConstants;
+
+import com.quatro.service.LookupManager;
 
 public class StaffManagerAction extends BaseAction {
 	private static Log log = LogFactory.getLog(StaffManagerAction.class);
 	
 	private FacilityDAO facilityDAO=null;
+
+    protected LookupManager lookupManager;
+
+    protected CaseManagementManager caseManagementManager;
+
+    protected AdmissionManager admissionManager;
 	
 	public void setFacilityDAO(FacilityDAO facilityDAO) {
         this.facilityDAO = facilityDAO;
@@ -271,4 +281,16 @@ public class StaffManagerAction extends BaseAction {
 		providerForm.set("program_provider",new ProgramProvider());
 		return mapping.findForward("edit");
 	}
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
+    }
 }

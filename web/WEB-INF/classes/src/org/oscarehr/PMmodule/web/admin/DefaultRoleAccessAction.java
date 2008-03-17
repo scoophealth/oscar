@@ -32,10 +32,17 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.web.BaseAction;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+
+import com.quatro.service.LookupManager;
 
 public class DefaultRoleAccessAction extends  BaseAction {
 	private static Log log = LogFactory.getLog(DefaultRoleAccessAction.class);
+    protected LookupManager lookupManager;
+    protected CaseManagementManager caseManagementManager;
+    protected AdmissionManager admissionManager;
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return list(mapping,form,request,response);
@@ -97,5 +104,17 @@ public class DefaultRoleAccessAction extends  BaseAction {
 		
 		return mapping.findForward("rlist");
 	}
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
+    }
 	
 }

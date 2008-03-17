@@ -38,13 +38,20 @@ import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.PreIntakeForm;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+
+import com.quatro.service.LookupManager;
 
 public class IntakeAction extends BaseAction {
 
     private static Log log = LogFactory.getLog(IntakeAction.class);
+    protected LookupManager lookupManager;
+    protected CaseManagementManager caseManagementManager;
+    protected AdmissionManager admissionManager;
 
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -170,5 +177,17 @@ public class IntakeAction extends BaseAction {
             value = "intakec";
         }
         return value;
+    }
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
     }
 }

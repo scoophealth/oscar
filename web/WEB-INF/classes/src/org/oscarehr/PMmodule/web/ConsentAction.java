@@ -41,10 +41,17 @@ import org.oscarehr.PMmodule.model.Consent;
 import org.oscarehr.PMmodule.model.ConsentInterview;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.IntegratorManager;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+
+import com.quatro.service.LookupManager;
 
 public class ConsentAction extends BaseAction {
 	private static Log log = LogFactory.getLog(ConsentAction.class);
+    protected LookupManager lookupManager;
+    protected CaseManagementManager caseManagementManager;
+    protected AdmissionManager admissionManager;
 
 
 	public ActionForward unspecified(ActionMapping mapping,	ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -173,6 +180,21 @@ public class ConsentAction extends BaseAction {
 //		return "formB";
         return "formA";
 	}
+
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
+    }
 }
 
 

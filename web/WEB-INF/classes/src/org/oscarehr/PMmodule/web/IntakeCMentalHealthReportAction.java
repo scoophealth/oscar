@@ -49,9 +49,13 @@
 	import org.oscarehr.PMmodule.common.PassIntakeFormVars;
 	import org.oscarehr.PMmodule.model.Demographic;
 	import org.oscarehr.PMmodule.model.Formintakec;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 	import org.oscarehr.PMmodule.service.IntakeCManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+
+import com.quatro.service.LookupManager;
 
 	/**
 	 * create IntakeCReport1 Action
@@ -78,6 +82,12 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 		BigDecimal avgAgeCount;
 
 		BigDecimal avgAgeSize;
+
+        protected LookupManager lookupManager;
+
+        protected CaseManagementManager caseManagementManager;
+
+        protected AdmissionManager admissionManager;
 
 		/**
 	     * excute
@@ -3761,5 +3771,17 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 	    		e.printStackTrace();
 	    	}
 	    }
+
+        public void setLookupManager(LookupManager lookupManager) {
+        	this.lookupManager = lookupManager;
+        }
+
+        public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+        	this.caseManagementManager = caseManagementManager;
+        }
+
+        public void setAdmissionManager(AdmissionManager mgr) {
+        	this.admissionManager = mgr;
+        }
 	}
 	

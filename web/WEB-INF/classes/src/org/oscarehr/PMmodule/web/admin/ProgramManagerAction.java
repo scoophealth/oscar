@@ -22,23 +22,41 @@
 
 package org.oscarehr.PMmodule.web.admin;
 
-import org.apache.struts.action.*;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
-import org.oscarehr.PMmodule.model.*;
-import org.oscarehr.PMmodule.service.ClientRestrictionManager;
-import org.oscarehr.PMmodule.web.BaseAction;
-import org.springframework.beans.factory.annotation.Required;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.DynaActionForm;
+import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.BedCheckTime;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramAccess;
+import org.oscarehr.PMmodule.model.ProgramClientRestriction;
+import org.oscarehr.PMmodule.model.ProgramClientStatus;
+import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.model.ProgramQueue;
+import org.oscarehr.PMmodule.model.ProgramSignature;
+import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.ClientRestrictionManager;
+import org.oscarehr.PMmodule.web.BaseAction;
+import org.springframework.beans.factory.annotation.Required;
+
 public class ProgramManagerAction extends BaseAction {
 
-    protected ClientRestrictionManager clientRestrictionManager;
+    private ClientRestrictionManager clientRestrictionManager;
     private FacilityDAO facilityDAO=null;
+    private AdmissionManager admissionManager;
         
     public void setFacilityDAO(FacilityDAO facilityDAO) {
         this.facilityDAO = facilityDAO;
@@ -1040,5 +1058,9 @@ public class ProgramManagerAction extends BaseAction {
     @Required
     public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
         this.clientRestrictionManager = clientRestrictionManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
     }
 }

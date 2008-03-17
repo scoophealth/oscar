@@ -29,10 +29,18 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.LazyValidatorForm;
+import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+
+import com.quatro.service.LookupManager;
 
 public class ratePageAction extends BaseAction {
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
+	protected LookupManager lookupManager;
+    protected CaseManagementManager caseManagementManager;
+    protected AdmissionManager admissionManager;
+
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 		
 		LazyValidatorForm dynaForm = (LazyValidatorForm) form;
@@ -43,4 +51,16 @@ public class ratePageAction extends BaseAction {
 		return mapping.findForward("OK");
 		
 	}
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
+    }
 }

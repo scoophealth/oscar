@@ -45,18 +45,28 @@ import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeCAddress;
 import org.oscarehr.PMmodule.web.formbean.IntakeCContact;
 import org.oscarehr.PMmodule.web.formbean.IntakeCFormBean;
 import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 import org.oscarehr.PMmodule.web.formbean.IntakeCIdentification;
 import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+
+import com.quatro.service.LookupManager;
 
 public class IntakeCAction2 extends BaseAction {
 
 	private static final Log log = LogFactory.getLog(IntakeAAction2.class);
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+
+    protected LookupManager lookupManager;
+
+    protected CaseManagementManager caseManagementManager;
+
+    protected AdmissionManager admissionManager;
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return form(mapping, form, request, response);
@@ -646,5 +656,17 @@ public class IntakeCAction2 extends BaseAction {
 			clientManager.saveDemographicExt(demographicNo, remoteDemographic.getExtras()[x].getKey(), remoteDemographic.getExtras()[x].getValue());
 		}
 	}
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
+    }
 
 }

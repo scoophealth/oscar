@@ -32,11 +32,18 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.IntakeRequiredFieldsDao;
+
+import com.quatro.service.LookupManager;
 
 public class EditIntakeAction extends BaseAction {
 
     private static Logger logger = LogManager.getLogger(EditIntakeAction.class);
+    protected LookupManager lookupManager;
+    protected CaseManagementManager caseManagementManager;
+    protected AdmissionManager admissionManager;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return view(mapping, form, request, response);
@@ -72,5 +79,17 @@ public class EditIntakeAction extends BaseAction {
         }
 
         return mapping.findForward("view");
+    }
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
     }
 }

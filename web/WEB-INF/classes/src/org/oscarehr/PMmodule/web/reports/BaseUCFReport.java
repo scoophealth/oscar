@@ -30,15 +30,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.BaseAction;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.survey.SurveyReport;
 import org.oscarehr.survey.SurveyReportEntry;
 import org.oscarehr.surveymodel.SurveyDocument.Survey;
 
+import com.quatro.service.LookupManager;
+
 public class BaseUCFReport extends BaseAction {
 
     protected SurveyManager surveyManager;
+    protected LookupManager lookupManager;
+    protected CaseManagementManager caseManagementManager;
+    protected AdmissionManager admissionManager;
 
     public void setSurveyManager(SurveyManager mgr) {
         this.surveyManager = mgr;
@@ -89,4 +96,16 @@ public class BaseUCFReport extends BaseAction {
 		
 		return mapping.findForward("report");
 	}
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
+    }
 }

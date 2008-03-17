@@ -28,6 +28,10 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+
+import com.quatro.service.LookupManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +41,9 @@ import java.util.List;
 public class ProviderInfoAction extends BaseAction {
 
     private FacilityDAO facilityDAO=null;
+    protected LookupManager lookupManager;
+    protected CaseManagementManager caseManagementManager;
+    protected AdmissionManager admissionManager;
     
     public void setFacilityDAO(FacilityDAO facilityDAO) {
         this.facilityDAO = facilityDAO;
@@ -82,6 +89,18 @@ public class ProviderInfoAction extends BaseAction {
         request.setAttribute("facilityDomain", facilities);
 
         return mapping.findForward("view");
+    }
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
     }
 
 }

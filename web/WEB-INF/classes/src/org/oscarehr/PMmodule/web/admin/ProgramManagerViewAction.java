@@ -55,12 +55,16 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.RoomDemographic;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.beans.factory.annotation.Required;
+
+import com.quatro.service.LookupManager;
 
 public class ProgramManagerViewAction extends BaseAction {
 
@@ -70,6 +74,12 @@ public class ProgramManagerViewAction extends BaseAction {
     protected SurveyManager surveyManager;
 
     private FacilityDAO facilityDAO=null;
+
+    protected LookupManager lookupManager;
+
+    protected CaseManagementManager caseManagementManager;
+
+    protected AdmissionManager admissionManager;
     
     public void setFacilityDAO(FacilityDAO facilityDAO) {
         this.facilityDAO = facilityDAO;
@@ -917,5 +927,17 @@ public class ProgramManagerViewAction extends BaseAction {
     @Required
     public void setSurveyManager(SurveyManager surveyManager) {
         this.surveyManager = surveyManager;
+    }
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
     }
 }

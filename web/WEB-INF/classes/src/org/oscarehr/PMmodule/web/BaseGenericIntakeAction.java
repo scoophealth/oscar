@@ -7,7 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+
+import com.quatro.service.LookupManager;
 
 abstract class BaseGenericIntakeAction extends BaseAction {
 	
@@ -32,6 +36,12 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 	
 	// Session Attributes
 	protected static final String CLIENT = "client";
+
+    protected LookupManager lookupManager;
+
+    protected CaseManagementManager caseManagementManager;
+
+    protected AdmissionManager admissionManager;
 	
 	// Parameter Accessors
 	
@@ -81,6 +91,18 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 		Demographic client = (Demographic) getSessionAttribute(request, CLIENT);
 		return (client != null) ? client : new Demographic();
 	}
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
+    }
 
 
 }

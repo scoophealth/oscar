@@ -59,10 +59,10 @@ import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Consent;
-import org.oscarehr.PMmodule.model.Facility;
-import org.oscarehr.PMmodule.model.HealthSafety;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
+import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.PMmodule.model.HealthSafety;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
@@ -73,6 +73,7 @@ import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.Demographic.ConsentGiven;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.service.HealthSafetyManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
@@ -87,8 +88,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import oscar.oscarDemographic.data.DemographicRelationship;
 
-import com.crystaldecisions.reports.reportdefinition.fa;
-import com.quatro.service.*;
+import com.quatro.service.LookupManager;
 
 public class ClientManagerAction extends BaseAction {
 
@@ -96,7 +96,6 @@ public class ClientManagerAction extends BaseAction {
 
     protected HealthSafetyManager healthSafetyManager;
     protected ClientRestrictionManager clientRestrictionManager;
-    protected CaseManagementManager caseManagementManager;
     
     private ClientReferralDAO clientReferralDAO;
 
@@ -105,6 +104,12 @@ public class ClientManagerAction extends BaseAction {
     }
 
     protected SurveyManager surveyManager;
+
+    protected LookupManager lookupManager;
+
+    protected CaseManagementManager caseManagementManager;
+
+    protected AdmissionManager admissionManager;
 
     public void setSurveyManager(SurveyManager mgr) {
         this.surveyManager = mgr;
@@ -1591,12 +1596,19 @@ public class ClientManagerAction extends BaseAction {
         this.clientRestrictionManager = clientRestrictionManager;
     }
 
-    @Required
-    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
-        this.caseManagementManager = caseManagementManager;
-    }
-
 	public void setHealthSafetyManager(HealthSafetyManager healthSafetyManager) {
 		this.healthSafetyManager = healthSafetyManager;
 	}
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
+    }
 }

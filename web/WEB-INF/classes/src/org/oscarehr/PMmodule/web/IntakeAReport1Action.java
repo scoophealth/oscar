@@ -42,11 +42,15 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.common.PassIntakeFormVars;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakea;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
 import org.oscarehr.PMmodule.utility.DateUtils;
 import org.oscarehr.PMmodule.utility.UtilDateUtilities;
 import org.oscarehr.PMmodule.utility.Utility;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+
+import com.quatro.service.LookupManager;
 
 //###############################################################################
 public class IntakeAReport1Action extends BaseAction
@@ -57,6 +61,12 @@ public class IntakeAReport1Action extends BaseAction
     
     private ClientManager clientMgr = null;
     private IntakeAManager intakeAMgr = null;
+
+    protected LookupManager lookupManager;
+
+    protected CaseManagementManager caseManagementManager;
+
+    protected AdmissionManager admissionManager;
 
 //################################################################################
 public ActionForward execute(ActionMapping mapping, ActionForm form,
@@ -1035,6 +1045,15 @@ private List calculateNumOfClientsAdmittedInPeriod(
 
 
 	return intakeA4Stats;
+}
+public void setLookupManager(LookupManager lookupManager) {
+	this.lookupManager = lookupManager;
+}
+public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+	this.caseManagementManager = caseManagementManager;
+}
+public void setAdmissionManager(AdmissionManager mgr) {
+	this.admissionManager = mgr;
 }
 
 //################################################################################

@@ -16,9 +16,13 @@ import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.FacilityManager;
 import org.oscarehr.PMmodule.web.BaseAction;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.beans.factory.annotation.Required;
+
+import com.quatro.service.LookupManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +35,12 @@ public class BedManagerAction extends BaseAction {
     private static final String FORWARD_MANAGE = "manage";
 
     private FacilityManager facilityManager;
+
+    protected LookupManager lookupManager;
+
+    protected CaseManagementManager caseManagementManager;
+
+    protected AdmissionManager admissionManager;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         // dispatch to correct method based on which button was selected
@@ -383,5 +393,17 @@ public class BedManagerAction extends BaseAction {
     @Required    
     public void setFacilityManager(FacilityManager facilityManager) {
         this.facilityManager = facilityManager;
+    }
+
+    public void setLookupManager(LookupManager lookupManager) {
+    	this.lookupManager = lookupManager;
+    }
+
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+    	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAdmissionManager(AdmissionManager mgr) {
+    	this.admissionManager = mgr;
     }
 }
