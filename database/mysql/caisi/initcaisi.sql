@@ -560,6 +560,7 @@ CREATE TABLE `custom_filter` (
   `status` char(1) NOT NULL default '',
   `priority` varchar(20) NOT NULL default '',
   `demographic_no` varchar(20) NOT NULL default '',
+  `programId` varchar(10) default '',
   `name` varchar(255) NOT NULL default '',
   `shortcut` tinyint(1) default '0',
   PRIMARY KEY  (`id`)
