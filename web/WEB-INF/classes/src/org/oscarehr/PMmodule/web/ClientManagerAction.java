@@ -1028,12 +1028,7 @@ public class ClientManagerAction extends BaseAction {
 
         Program criteria = (Program) clientForm.get("program");
 
-        Integer facilityId= (Integer)request.getSession().getAttribute("currentFacilityId");
-        if(facilityId>0){
-           request.setAttribute("programs", programManager.searchByFacility(criteria, facilityId));
-        }else{
-           request.setAttribute("programs", programManager.search(criteria));
-        }
+        request.setAttribute("programs", programManager.search(criteria));
 
         ProgramUtils.addProgramRestrictions(request);
 
