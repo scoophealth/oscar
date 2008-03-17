@@ -85,6 +85,8 @@ import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.springframework.beans.factory.annotation.Required;
 
 import oscar.oscarDemographic.data.DemographicRelationship;
+
+import com.crystaldecisions.reports.reportdefinition.fa;
 import com.quatro.service.*;
 
 public class ClientManagerAction extends BaseAction {
@@ -283,6 +285,7 @@ public class ClientManagerAction extends BaseAction {
 
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
+        Integer facilityId= (Integer)request.getSession().getAttribute("currentFacilityId");
 
         if (id == null || id.equals("")) {
             Object o = request.getAttribute("demographicNo");
@@ -326,6 +329,7 @@ public class ClientManagerAction extends BaseAction {
         Demographic demographic = clientManager.getClientByDemographicNo(id);
         request.getSession().setAttribute("clientGender", demographic.getSex());
         request.getSession().setAttribute("clientAge", demographic.getAge());
+        request.setAttribute("activeInFacility", isActiveInFacility(facilityId, Integer.parseInt(id)));
 
         return mapping.findForward("edit");
     }
@@ -356,9 +360,7 @@ public class ClientManagerAction extends BaseAction {
         referral.setProgramId((long) programId);
         referral.setProviderNo(providerId);
 
-        int facilityId=0;
-        Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
-        if(facility!=null) facilityId=facility.getId();
+        Integer facilityId= (Integer)request.getSession().getAttribute("currentFacilityId");
         referral.setFacilityId(facilityId);
         
         referral.setReferralDate(new Date());
@@ -1589,6 +1591,16 @@ public class ClientManagerAction extends BaseAction {
         }
     }
 
+    public boolean isActiveInFacility(Integer facilityId, int demographicId)
+    {
+        if (facilityId==null) return(true);
+        
+        List<Admission> results=admissionManager.getCurrentAdmissionsByFacility(demographicId, facilityId);
+        if (results!=null && results.size()>0) return(true);
+        
+        return(false);
+    }
+    
     @Required
     public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
         this.clientRestrictionManager = clientRestrictionManager;

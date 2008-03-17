@@ -200,7 +200,7 @@ public class AdmissionDao extends HibernateDaoSupport {
 
     }
 
-    public List getCurrentAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
+    public List<Admission> getCurrentAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
         if (demographicNo == null || demographicNo <= 0) {
             throw new IllegalArgumentException();
         }

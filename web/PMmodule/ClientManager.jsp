@@ -117,9 +117,21 @@
 			<td style="background-color: #555;"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=ClientManagerFormBean.tabs[x] %>'); return false;"><%=ClientManagerFormBean.tabs[x]%></a></td>
 			<%
 				} else {
-			%>
-			<td><a href="javascript:void(0)" onclick="javascript:clickTab('<%=ClientManagerFormBean.tabs[x] %>');return false;"><%=ClientManagerFormBean.tabs[x]%></a></td>
-			<%
+					boolean activeInFacility=(Boolean)request.getAttribute("activeInFacility");
+					boolean requireActiveTab="Refer".equals(ClientManagerFormBean.tabs[x]) || "Discharge".equals(ClientManagerFormBean.tabs[x]);
+					
+					if (requireActiveTab && !activeInFacility)
+					{
+						%>
+						<td style="color:silver"><%=ClientManagerFormBean.tabs[x]%></td>
+						<%
+					}
+					else
+					{
+						%>
+						<td><a href="javascript:void(0)" onclick="javascript:clickTab('<%=ClientManagerFormBean.tabs[x] %>');return false;"><%=ClientManagerFormBean.tabs[x]%></a></td>
+						<%
+					}
 				}
 			}
 			%>
