@@ -28,6 +28,13 @@
 <title>Lookup Code Edit</title>
 <head>
 <script type="text/javascript" src='<html:rewrite page="/js/quatroLookup.js" />'></script>
+<script type="text/javascript">
+	function submitForm()
+	{
+		document.forms[0].method.value="save";
+		document.forms[0].submit();
+	}
+</script>
 </head>
 <body>
 <html:form action="/Lookup/LookupCodeEdit">
@@ -45,8 +52,8 @@
  <table cellpadding="3" cellspacing="0" border="0" width="100%" class="toolgroup">
      <tr>
      <td  align="left">
-		<html:submit property="method" style="width:1px;height:1px;" value="save"></html:submit>
-		<a href="javascript:document.forms(0).method.click();">
+		<input type="hidden" id="method" name="method"></input>
+		<a href="javascript:submitForm();">
 			<img src="../images/Save16.png" border="0"/> Save </a> &nbsp;|&nbsp;
 		<html:link action="/Lookup/LookupCodeList.do" paramId="id" paramName="lookupCodeEditForm" paramProperty="tableDef.tableId"> <img src="../images/Back16.png" border="0"/> Back to Code List</html:link>
 </td></tr>
