@@ -68,7 +68,6 @@
   param[16]=new DBPreparedHandlerParam(request.getParameter("provider_activity"));
   param[17]=new DBPreparedHandlerParam(request.getParameter("provider_no"));
   
-  
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>

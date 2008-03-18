@@ -61,7 +61,7 @@ function onsub() {
      alert("<bean:message key="global.msgInputKeyword"/>");
      return false;
   } 
-  if(!(document.searchprovider.provider_no.value=="- new -" || document.searchprovider.provider_no.value.match(/^\d+$/))){
+  if(!(document.searchprovider.provider_no.value=="-new-" || document.searchprovider.provider_no.value.match(/^\d+$/))){
   		alert("Provider No. must be a number.");
   		return false;
   }
@@ -90,7 +90,7 @@ function upCaseCtrl(ctrl) {
         <td width="50%" align="right"><bean:message key="admin.provider.formProviderNo"/><font color="red">:</font> </td>
         <td>
           <%if(OscarProperties.getInstance().isProviderNoAuto()){ %>
-	          <input type="text" name="provider_no" maxlength="6" readonly="readonly" value="- new -">
+	          <input type="text" name="provider_no" maxlength="6" readonly="readonly" value="-new-">
 	      <%} else {%>
 	          <input type="text" name="provider_no" maxlength="6">
 		 <%}%>	      

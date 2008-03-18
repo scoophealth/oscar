@@ -54,11 +54,12 @@
 boolean isOk = false;
 int retry = 0;
 String curUser_no = (String)session.getAttribute("user");
-  String[] param =new String[18];
+String [] param = new String[18];
   param[0]=request.getParameter("provider_no");
   param[1]=request.getParameter("last_name");
   param[2]=request.getParameter("first_name");
   param[3]=request.getParameter("provider_type");
+  if (!OscarProperties.getInstance().isTorontoRFQ()) {
   param[4]=request.getParameter("specialty");
   param[5]=request.getParameter("team");
   param[6]=request.getParameter("sex");
@@ -75,10 +76,12 @@ String curUser_no = (String)session.getAttribute("user");
   param[15]=request.getParameter("status");
   param[16]=SxmlMisc.createXmlDataString(request,"xml_p");
   param[17]=request.getParameter("provider_activity");
-
-DBHelp dbObj = new DBHelp();
-DBPreparedHandlerParam[] param2= new DBPreparedHandlerParam[1];
-param2[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));
+}
+for(int i=0; i< 18; i++) 
+{
+	if (param[i] == null) param[i] = "";
+}
+DBPreparedHandler dbObj = new DBPreparedHandler();
 while ((!isOk) && retry < 3) {
   // check if the provider no need to be auto generated
   if (OscarProperties.getInstance().isProviderNoAuto()) 
@@ -104,9 +107,11 @@ while ((!isOk) && retry < 3) {
 	sql += "'" + param[15] + "',";
 	sql += "'" + param[16] + "',";
 	sql += "'" + param[17] + "')";
+	DBPreparedHandlerParam[] param2= new DBPreparedHandlerParam[1];
+	param2[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));
+	isOk = (dbObj.queryExecuteUpdate(sql, param2)>0);
 	//System.out.println(sql);
 	
-	isOk = (dbObj.updateDBRecord(sql, param2)>0);
 	retry ++;
 }
 if (isOk) {
