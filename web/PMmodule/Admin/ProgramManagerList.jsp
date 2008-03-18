@@ -47,6 +47,7 @@
 				<html:option value="Service" />
 				<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
 				<html:option value="External"/>
+				<html:option value="community">Community</html:option>
 				</caisi:isModuleLoad>
 			</html:select>
 	</td>
