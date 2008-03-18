@@ -24,14 +24,11 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.service.AdmissionManager;
-import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.FacilityManager;
-import org.oscarehr.PMmodule.service.GenericIntakeManager;
+import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.FacilityDischargedClients;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.quatro.service.LookupManager;
@@ -45,20 +42,8 @@ public class FacilityManagerAction extends BaseAction {
     private AdmissionDao admissionDao;
     private ClientDao clientDao;
     private ProgramManager programManager;
-
-    protected LookupManager lookupManager;
-
-    protected CaseManagementManager caseManagementManager;
-
-    protected AdmissionManager admissionManager;
-
-    protected GenericIntakeManager genericIntakeManager;
-
-    protected AgencyManager agencyManager;
-
-    public void setProgramManager(ProgramManager programManager) {
-        this.programManager = programManager;
-    }
+    private LookupManager lookupManager;
+    private LogManager logManager;
 
     private static final String FORWARD_EDIT = "edit";
     private static final String FORWARD_VIEW = "view";
@@ -251,23 +236,15 @@ public class FacilityManagerAction extends BaseAction {
     }
 
     public void setLookupManager(LookupManager lookupManager) {
-    	this.lookupManager = lookupManager;
+        this.lookupManager = lookupManager;
     }
 
-    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
-    	this.caseManagementManager = caseManagementManager;
+    public void setLogManager(LogManager mgr) {
+        this.logManager = mgr;
     }
 
-    public void setAdmissionManager(AdmissionManager mgr) {
-    	this.admissionManager = mgr;
-    }
-
-    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
-        this.genericIntakeManager = genericIntakeManager;
-    }
-
-    public void setAgencyManager(AgencyManager mgr) {
-    	this.agencyManager = mgr;
+    public void setProgramManager(ProgramManager mgr) {
+        this.programManager = mgr;
     }
 
 }

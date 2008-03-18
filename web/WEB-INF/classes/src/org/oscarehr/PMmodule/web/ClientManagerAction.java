@@ -75,9 +75,25 @@ import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.Demographic.ConsentGiven;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.AgencyManager;
+import org.oscarehr.PMmodule.service.BedCheckTimeManager;
+import org.oscarehr.PMmodule.service.BedDemographicManager;
+import org.oscarehr.PMmodule.service.BedManager;
+import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
+import org.oscarehr.PMmodule.service.ConsentManager;
+import org.oscarehr.PMmodule.service.FormsManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.HealthSafetyManager;
+import org.oscarehr.PMmodule.service.IntakeAManager;
+import org.oscarehr.PMmodule.service.IntakeCManager;
+import org.oscarehr.PMmodule.service.IntegratorManager;
+import org.oscarehr.PMmodule.service.LogManager;
+import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.PMmodule.service.ProgramQueueManager;
+import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.PMmodule.service.RoleManager;
+import org.oscarehr.PMmodule.service.RoomDemographicManager;
+import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
@@ -116,6 +132,38 @@ public class ClientManagerAction extends BaseAction {
     protected GenericIntakeManager genericIntakeManager;
 
     protected AgencyManager agencyManager;
+
+    protected BedCheckTimeManager bedCheckTimeManager;
+
+    protected RoomDemographicManager roomDemographicManager;
+
+    protected BedDemographicManager bedDemographicManager;
+
+    protected BedManager bedManager;
+
+    protected ClientManager clientManager;
+
+    protected ConsentManager consentManager;
+
+    protected FormsManager formsManager;
+
+    protected IntakeAManager intakeAManager;
+
+    protected IntakeCManager intakeCManager;
+
+    protected IntegratorManager integratorManager;
+
+    protected LogManager logManager;
+
+    protected ProgramManager programManager;
+
+    protected ProviderManager providerManager;
+
+    protected ProgramQueueManager programQueueManager;
+
+    protected RoleManager roleManager;
+
+    protected RoomManager roomManager;
 
     public void setSurveyManager(SurveyManager mgr) {
         this.surveyManager = mgr;
@@ -1624,5 +1672,69 @@ public class ClientManagerAction extends BaseAction {
 
     public void setAgencyManager(AgencyManager mgr) {
     	this.agencyManager = mgr;
+    }
+
+    public void setBedCheckTimeManager(BedCheckTimeManager bedCheckTimeManager) {
+        this.bedCheckTimeManager = bedCheckTimeManager;
+    }
+
+    public void setBedDemographicManager(BedDemographicManager demographicBedManager) {
+    	this.bedDemographicManager = demographicBedManager;
+    }
+
+    public void setRoomDemographicManager(RoomDemographicManager roomDemographicManager) {
+    	this.roomDemographicManager = roomDemographicManager;
+    }
+
+    public void setBedManager(BedManager bedManager) {
+    	this.bedManager = bedManager;
+    }
+
+    public void setClientManager(ClientManager mgr) {
+    	this.clientManager = mgr;
+    }
+
+    public void setConsentManager(ConsentManager mgr) {
+    	this.consentManager = mgr;
+    }
+
+    public void setFormsManager(FormsManager mgr) {
+    	this.formsManager = mgr;
+    }
+
+    public void setIntakeAManager(IntakeAManager mgr) {
+    	this.intakeAManager = mgr;
+    }
+
+    public void setIntakeCManager(IntakeCManager mgr) {
+    	this.intakeCManager = mgr;
+    }
+
+    public void setIntegratorManager(IntegratorManager mgr) {
+    	this.integratorManager = mgr;
+    }
+
+    public void setLogManager(LogManager mgr) {
+    	this.logManager = mgr;
+    }
+
+    public void setProgramManager(ProgramManager mgr) {
+    	this.programManager = mgr;
+    }
+
+    public void setProgramQueueManager(ProgramQueueManager mgr) {
+    	this.programQueueManager = mgr;
+    }
+
+    public void setProviderManager(ProviderManager mgr) {
+    	this.providerManager = mgr;
+    }
+
+    public void setRoleManager(RoleManager mgr) {
+    	this.roleManager = mgr;
+    }
+
+    public void setRoomManager(RoomManager roomManager) {
+    	this.roomManager = roomManager;
     }
 }
