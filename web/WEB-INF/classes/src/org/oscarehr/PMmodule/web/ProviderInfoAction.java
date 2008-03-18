@@ -71,6 +71,20 @@ public class ProviderInfoAction extends BaseAction {
 
         List<ProgramProvider> programDomain = new ArrayList<ProgramProvider>();
 
+        int facilityId1=0;
+        Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
+        if(facility!=null) facilityId1=facility.getId();
+        
+        for (ProgramProvider programProvider : providerManager.getProgramDomainByFacility(providerNo, new Integer(facilityId1))) {
+            Program program = programManager.getProgram(programProvider.getProgramId());
+
+            if (program.getProgramStatus().equals("active")) {
+                programProvider.setProgram(program);
+                programDomain.add(programProvider);
+            }
+        }
+        
+/*
         for (ProgramProvider programProvider : providerManager.getProgramDomain(providerNo)) {
             Program program = programManager.getProgram(programProvider.getProgramId());
 
@@ -79,7 +93,8 @@ public class ProviderInfoAction extends BaseAction {
                 programDomain.add(programProvider);
             }
         }
-
+       
+*/        
         List<Integer> facilityIds = ProviderDao.getFacilityIds(providerNo);
         ArrayList<Facility> facilities=new ArrayList<Facility>();
         for (Integer facilityId : facilityIds){

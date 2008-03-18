@@ -88,6 +88,10 @@ public class ProviderManager
 		return programProviderDAO.getProgramDomain(providerNo);
 	}
 
+    public List<ProgramProvider> getProgramDomainByFacility(String providerNo, Integer facilityId) {
+		return programProviderDAO.getProgramDomainByFacility(providerNo, facilityId);
+	}
+
     public List<Facility> getFacilitiesInProgramDomain(String providerNo) {
         return programProviderDAO.getFacilitiesInProgramDomain(providerNo);
     }
