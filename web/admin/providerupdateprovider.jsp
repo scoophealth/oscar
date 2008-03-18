@@ -108,6 +108,7 @@ function setfocus() {
           <% } %>
      </td>
   </tr> 
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSpecialty"/>: </td>
     <td><input type="text" name="specialty" value="<%= apptMainBean.getString(rs,"specialty") %>" maxlength="20"></td>
@@ -218,6 +219,7 @@ function setfocus() {
   <% } else { %>
      <input type="hidden" name="provider_activity" value="">
   <% }  %>
+</caisi:isModuleLoad>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSlpUsername"/>: </td>
     <td>
