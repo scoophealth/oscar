@@ -163,7 +163,6 @@
 		<td class="blueText">Program: <html:select
 			property="filter.programId"
 			onchange="return checkTicklerDate();">
-			<option value="All Programs">All Programs</option>
 			<html:options collection="programs" property="id"
 				labelProperty="name" />
 		</html:select></td>
