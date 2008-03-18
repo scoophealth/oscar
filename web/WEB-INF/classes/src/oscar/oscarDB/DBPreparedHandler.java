@@ -355,5 +355,25 @@ public class DBPreparedHandler {
     {
     	return oscar.Misc.getString(rs, columnIndex);
     }
+    public synchronized String getNewProviderNo()
+    {
+    	try {
+	    	String pno = oscar.Misc.getRandomNumber(6);
+	    	String sql = "select count(*) from provider where provider_no= '" + pno + "'";
+	    	ResultSet rs = queryResults(sql);
+	    	while (rs.next()) {
+	    		if (rs.getInt(1)> 0) {
+	    			pno = oscar.Misc.getRandomNumber(6);
+	    			sql = "select count(*) from prvider where provider_no= '" + pno + "'";
+	    			rs= queryResults(sql);
+	    		}
+	    	}
+	    	return pno;
+    	}
+    	catch(Exception ex)
+    	{
+    		return "";
+    	}
+    }
 
 }
