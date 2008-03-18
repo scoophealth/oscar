@@ -272,32 +272,50 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <%-- -add by caisi--%>
       
       <caisi:isModuleLoad moduleName="caisi">      
-      
+      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi" rights="r" reverse="<%=false%>" >	      
 	  <div class="adminBox">
 	      <h3>&nbsp;<bean:message key="admin.admin.caisi"/></h3>
 	      <ul>
-	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.systemMessage" rights="r" reverse="<%=false%>" >
+	      <li><html:link action="/SystemMessage.do"><bean:message key="admin.admin.systemMessage"/></html:link></li>
+		  <li><html:link action="/FacilityMessage.do?">Facilities Messages</html:link></li>
+		  
+<!-- 		  <li><html:link action="/CaisiEditor.do?method=list">Caisi List Editor</html:link></li>  -->
+         <li><html:link action="/Lookup/LookupTableList.do"> Lookup Field Editor</html:link></li>
+		  <li><html:link action="/issueAdmin.do?method=list"><bean:message key="admin.admin.issueEditor"/></html:link></li>
+		  <li><html:link action="/CaisiRole.do"><bean:message key="admin.admin.caisiRole"/></html:link></li>         
+		  <li><html:link action="/SurveyManager.do"><bean:message key="admin.admin.surveyManager"/></html:link></li>         
+	      </ul>
+	  </div>
+	  </security:oscarSec>	  
+	  
+	  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi" rights="r" reverse="<%=true%>" >	      
+	  
+	  <div class="adminBox">
+	      <h3>&nbsp;<bean:message key="admin.admin.caisi"/></h3>
+	      <ul>
+	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.systemMessage" rights="r" reverse="<%=false%>" >
 		  <li><html:link action="/SystemMessage.do"><bean:message key="admin.admin.systemMessage"/></html:link></li>
 		  </security:oscarSec>
-		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.facilityMessage" rights="r" reverse="<%=false%>" >
+		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.facilityMessage" rights="r" reverse="<%=false%>" >
 		  <li><html:link action="/FacilityMessage.do?">Facilities Messages</html:link></li>
 		  </security:oscarSec>
 <!-- 		  <li><html:link action="/CaisiEditor.do?method=list">Caisi List Editor</html:link></li>  -->
-          <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.lookupFieldEditor" rights="r">
+          <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.lookupFieldEditor" rights="r">
           <li><html:link action="/Lookup/LookupTableList.do"> Lookup Field Editor</html:link></li>
 		  </security:oscarSec>		  
-		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.issueEditor" rights="r">
+		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.issueEditor" rights="r">
 		  <li><html:link action="/issueAdmin.do?method=list"><bean:message key="admin.admin.issueEditor"/></html:link></li>
 		  </security:oscarSec>		  
-		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.caisiRoles" rights="r">
+		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisiRoles" rights="r">
 		  <li><html:link action="/CaisiRole.do"><bean:message key="admin.admin.caisiRole"/></html:link></li>         
 		  </security:oscarSec>
-		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi,_admin.userCreatedForms" rights="r">
+		  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.userCreatedForms" rights="r">
 		  <li><html:link action="/SurveyManager.do"><bean:message key="admin.admin.surveyManager"/></html:link></li>         
 	      </security:oscarSec>
 	      </ul>
 	  </div>
-	
+	  </security:oscarSec>
+	  
       </caisi:isModuleLoad>     
       <%-- -add by caisi end--%>
     
