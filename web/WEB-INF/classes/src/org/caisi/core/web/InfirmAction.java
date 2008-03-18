@@ -87,7 +87,7 @@ public class InfirmAction extends BaseAction
             facilityId = (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
         }        
 
-		programBean=manager.getProgramBeansByFacility(providerNo, facilityId);		
+		programBean=manager.getProgramBeans(providerNo, facilityId);		
 		se.setAttribute("infirmaryView_programBeans",programBean );
 				
 		

@@ -36,7 +36,6 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.springframework.beans.factory.annotation.Required;
 
 import java.util.*;
-import org.oscarehr.PMmodule.model.Facility;
 
 public class InfirmBedProgramManager {
     private BedProgramDao bedProgramDao;
@@ -91,10 +90,8 @@ public class InfirmBedProgramManager {
         return pList;
     }
 
-    
-    public List getProgramBeans(String providerNo) {
+    public List getProgramBeans(String providerNo, Integer facilityId) {
         if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList();
-        
         Iterator iter = programProviderDAOT.getProgramProvidersByProvider(providerNo).iterator();
         ArrayList pList = new ArrayList();
         while (iter.hasNext()) {
@@ -102,22 +99,9 @@ public class InfirmBedProgramManager {
             if (p != null && p.getProgramId() != null && p.getProgramId().longValue() > 0) {
                 //logger.debug("programName="+p.getProgram().getName()+"::"+"programId="+p.getProgram().getId().toString());
                 Program program = programDao.getProgram(new Integer(p.getProgramId().intValue()));
-                if (program.getProgramStatus() != null && program.getProgramStatus().equals("active")) pList.add(new LabelValueBean(program.getName(), program.getId().toString()));
-            }
-        }
-        return pList;
-    }
-
-    public List getProgramBeansByFacility(String providerNo, Integer facilityId) {
-        if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList();
-        
-        Iterator iter = programProviderDAOT.getProgramProvidersByProviderAndFacility(providerNo, facilityId).iterator();
-        ArrayList pList = new ArrayList();
-        while (iter.hasNext()) {
-            ProgramProvider p = (ProgramProvider)iter.next();
-            if (p != null && p.getProgramId() != null && p.getProgramId().longValue() > 0) {
-                //logger.debug("programName="+p.getProgram().getName()+"::"+"programId="+p.getProgram().getId().toString());
-                Program program = programDao.getProgram(new Integer(p.getProgramId().intValue()));
+                
+                if (facilityId!=null && program.getFacilityId()!=facilityId.intValue()) continue;
+                
                 if (program.getProgramStatus() != null && program.getProgramStatus().equals("active")) pList.add(new LabelValueBean(program.getName(), program.getId().toString()));
             }
         }
