@@ -61,6 +61,21 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         return results;
     }
 
+    public List getProgramProvidersByProviderAndFacility(String providerNo, Integer facilityId) {
+        if (providerNo == null || Integer.valueOf(providerNo) <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        String queryStr = "from ProgramProvider pp where pp.ProviderNo = ? and pp.ProgramId in " +
+                      "(select s.id from Program s where s.facilityId=? or s.facilityId is null)";
+        List results = getHibernateTemplate().find(queryStr, new Object[] { providerNo, new Long(facilityId.longValue()) });
+        
+        if (log.isDebugEnabled()) {
+            log.debug("getProgramProvidersByProviderAndFacility: providerNo=" + providerNo + ",# of results=" + results.size());
+        }
+        return results;
+    }
+    
     public ProgramProvider getProgramProvider(Long id) {
         if (id == null || id.intValue() <= 0) {
             throw new IllegalArgumentException();
