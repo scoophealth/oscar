@@ -41,6 +41,8 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.PMmodule.model.Facility;
 
+import oscar.OscarProperties;
+
 public class InfirmAction extends BaseAction
 {
 	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
@@ -78,18 +80,16 @@ public class InfirmAction extends BaseAction
 		}
 		*/
 		InfirmBedProgramManager manager=getInfirmBedProgramManager();
-        int facilityId=0;
-        Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
-        if(facility!=null) facilityId=facility.getId();
-		programBean=manager.getProgramBeansByFacility(providerNo, new Integer(facilityId));
+		Integer facilityId=null;
+		
+		// facility filtering
+        if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {         
+            facilityId = (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        }        
 
+		programBean=manager.getProgramBeansByFacility(providerNo, facilityId);		
 		se.setAttribute("infirmaryView_programBeans",programBean );
 				
-		
-		
-		
-		
-		
 		
 		//set default program
 		int defaultprogramId=getInfirmBedProgramManager().getDefaultProgramId(providerNo);
