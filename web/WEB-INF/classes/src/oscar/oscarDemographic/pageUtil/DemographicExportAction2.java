@@ -28,27 +28,52 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
-import java.util.*;
-import java.util.zip.*;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.apache.xmlbeans.GDateBuilder;
 import org.apache.xmlbeans.XmlCalendar;
 import org.oscarehr.util.SessionConstants;
 
 import oscar.appt.AppointmentDAO;
-import oscar.appt.AppointmentDAO.Appointment;
 import oscar.appt.ApptStatusData;
+import oscar.appt.AppointmentDAO.Appointment;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarClinic.ClinicData;
-import oscar.oscarDemographic.data.*;
+import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarDemographic.data.DemographicExt;
+import oscar.oscarDemographic.data.DemographicRelationship;
 import oscar.oscarEncounter.data.EctEChartBean;
 import oscar.oscarLab.ca.on.CommonLabTestValues;
-import oscar.oscarPrevention.*;
+import oscar.oscarPrevention.PreventionData;
+import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarReport.data.RptDemographicQueryBuilder;
 import oscar.oscarReport.data.RptDemographicQueryLoader;

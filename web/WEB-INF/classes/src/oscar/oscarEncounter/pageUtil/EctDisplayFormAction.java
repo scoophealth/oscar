@@ -25,26 +25,20 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import oscar.util.*;
-import oscar.oscarEncounter.data.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.MessageResources;
+
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.struts.util.MessageResources;
+
+import oscar.oscarEncounter.data.EctFormData;
+import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 
 
 public class EctDisplayFormAction extends EctDisplayAction {

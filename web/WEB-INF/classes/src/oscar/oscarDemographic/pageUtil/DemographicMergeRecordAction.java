@@ -10,10 +10,18 @@
 package oscar.oscarDemographic.pageUtil;
 
 import java.sql.SQLException;
-import java.util.*;
-import javax.servlet.http.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
-import org.apache.struts.action.*;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import oscar.oscarDemographic.data.DemographicMerged;
 
 /**

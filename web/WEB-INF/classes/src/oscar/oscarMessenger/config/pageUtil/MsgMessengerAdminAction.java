@@ -25,18 +25,20 @@
 package oscar.oscarMessenger.config.pageUtil;
 
 
-import oscar.oscarDB.DBHandler;
-import oscar.oscarMessenger.data.*;
-
 import java.io.IOException;
 import java.util.ResourceBundle;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarMessenger.data.MsgAddressBookMaker;
 
 public class MsgMessengerAdminAction extends Action {
 

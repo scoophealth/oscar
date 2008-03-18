@@ -17,8 +17,8 @@ import org.apache.commons.httpclient.HttpException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import oscar.*;
-import oscar.oscarLab.ca.bc.PathNet.Communication.*;
+import oscar.OscarProperties;
+import oscar.oscarLab.ca.bc.PathNet.Communication.HTTP;
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.

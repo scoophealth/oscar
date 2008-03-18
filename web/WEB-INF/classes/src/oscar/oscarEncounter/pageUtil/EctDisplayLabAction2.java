@@ -25,25 +25,21 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import org.apache.commons.collections.MultiHashMap;
-import org.apache.log4j.Logger;
-import oscar.OscarProperties;
-import oscar.util.*;
-import oscar.oscarLab.ca.on.*;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.*;
-import javax.servlet.ServletException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
+
+import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.lang.StringEscapeUtils;
+
+import oscar.OscarProperties;
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarLab.ca.on.LabResultData;
+import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 

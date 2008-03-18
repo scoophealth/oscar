@@ -29,10 +29,14 @@
 package oscar.oscarLab.ca.bc.PathNet;
 
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+
 import org.apache.log4j.Logger;
-import oscar.oscarDB.*;
-import oscar.oscarLab.ca.on.*;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.UtilDateUtilities;
 
 /**

@@ -24,11 +24,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
 import java.util.Collection;
+import java.util.Vector;
+
 import oscar.oscarDB.DBHandler;
 
 public class EctTypeDisplayNameBeanHandler {

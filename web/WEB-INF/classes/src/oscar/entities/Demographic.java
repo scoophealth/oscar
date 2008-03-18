@@ -24,7 +24,7 @@
 
 package oscar.entities;
 
-import java.util.*;
+import java.util.Date;
 
 public class Demographic {
   private Integer demographic_no;

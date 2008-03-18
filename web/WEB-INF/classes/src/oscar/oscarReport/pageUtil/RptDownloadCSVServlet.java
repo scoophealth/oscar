@@ -12,7 +12,6 @@
 
 package oscar.oscarReport.pageUtil;
 
-import com.Ostermiller.util.CSVPrinter;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,7 +35,8 @@ import oscar.login.DBHelp;
 import oscar.oscarReport.data.RptReportConfigData;
 import oscar.oscarReport.data.RptReportCreator;
 import oscar.oscarReport.data.RptReportItem;
-import oscar.util.UtilMisc;
+
+import com.Ostermiller.util.CSVPrinter;
 
 public class RptDownloadCSVServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;

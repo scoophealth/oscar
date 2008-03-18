@@ -25,21 +25,20 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import oscar.oscarMessenger.util.MsgDemoMap;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.util.MessageResources;
+
 import oscar.oscarMessenger.data.MsgMessageData;
+import oscar.oscarMessenger.util.MsgDemoMap;
 import oscar.util.DateUtils;
 import oscar.util.StringUtils;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.Vector;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.util.MessageResources;
-import org.apache.commons.lang.StringEscapeUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 

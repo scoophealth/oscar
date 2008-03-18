@@ -27,7 +27,6 @@
  */
 package oscar.billing.fat.model;
 
-import java.util.*;
 import java.util.Date;
 
 /**

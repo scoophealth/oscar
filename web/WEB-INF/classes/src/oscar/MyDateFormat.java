@@ -23,9 +23,10 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
-import java.lang.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class MyDateFormat {
 	//private int aDateTime;

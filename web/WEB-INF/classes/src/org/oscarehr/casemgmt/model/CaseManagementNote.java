@@ -22,15 +22,15 @@
 
 package org.oscarehr.casemgmt.model;
 
-import org.caisi.model.BaseObject;
-import org.oscarehr.PMmodule.model.Provider;
-
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Set;
+
+import org.caisi.model.BaseObject;
+import org.oscarehr.PMmodule.model.Provider;
 
 
 public class CaseManagementNote extends BaseObject {

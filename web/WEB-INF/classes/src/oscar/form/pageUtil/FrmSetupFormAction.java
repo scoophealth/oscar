@@ -20,37 +20,41 @@
 
 package oscar.form.pageUtil;
 
-import java.io.*;
-import java.util.*;
-import java.lang.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.validator.*;
-import org.apache.struts.action.*;
-import org.apache.struts.validator.*;
-import org.apache.struts.util.MessageResources;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
-import oscar.form.data.*;
-import oscar.form.util.*;
-import oscar.oscarDB.DBHandler;
-import oscar.oscarMessenger.util.MsgStringQuote;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
-import oscar.oscarEncounter.data.EctEChartBean;
+
 import oscar.OscarProperties;
-import oscar.oscarEncounter.oscarMeasurements.bean.*;
-import oscar.oscarEncounter.oscarMeasurements.prop.*;
-import oscar.oscarEncounter.oscarMeasurements.util.*;
-import oscar.oscarRx.data.*;
+import oscar.form.data.FrmVTData;
+import oscar.form.util.FrmXml2VTData;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarEncounter.data.EctEChartBean;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
+import oscar.oscarEncounter.oscarMeasurements.util.EctFindMeasurementTypeUtil;
+import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.oscarRx.data.RxAllergyData;
+import oscar.oscarRx.data.RxPatientData;
+import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.util.UtilDateUtilities;
 
 

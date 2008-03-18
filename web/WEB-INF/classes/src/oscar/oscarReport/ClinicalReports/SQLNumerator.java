@@ -31,6 +31,7 @@ package oscar.oscarReport.ClinicalReports;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
+
 import oscar.oscarDB.DBHandler;
 
 /**

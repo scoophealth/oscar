@@ -22,6 +22,13 @@
 
 package org.caisi.service;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.dao.BedProgramDao;
@@ -34,8 +41,6 @@ import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.springframework.beans.factory.annotation.Required;
-
-import java.util.*;
 
 public class InfirmBedProgramManager {
     private BedProgramDao bedProgramDao;

@@ -22,9 +22,9 @@
 
 package org.oscarehr.PMmodule.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import java.io.Serializable;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -32,7 +32,6 @@ public class Bed implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Integer DEFAULT_ROOM_ID = null;
     private static final String DEFAULT_NAME = "";
     private static final boolean DEFAULT_ACTIVE = true;
     public static String REF = "Bed";

@@ -9,15 +9,21 @@
 
 package oscar.oscarLab.ca.all;
 
-import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.*;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import org.apache.log4j.Logger;
-import oscar.oscarDB.*;
+
+import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
-import oscar.oscarLab.ca.on.*;
+import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.UtilDateUtilities;
 
 /**

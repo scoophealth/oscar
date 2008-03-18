@@ -28,15 +28,19 @@
 
 package oscar.oscarLab.ca.on.CML;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import oscar.oscarDB.*;
-import oscar.oscarLab.ca.on.*;
-import oscar.util.*;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.util.UtilDateUtilities;
 
 /**
  *

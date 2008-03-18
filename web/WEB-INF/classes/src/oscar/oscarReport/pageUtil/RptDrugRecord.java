@@ -24,8 +24,6 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarReport.pageUtil;
 
-import java.io.PrintStream;
-import java.util.*;
 
 public class RptDrugRecord{
 

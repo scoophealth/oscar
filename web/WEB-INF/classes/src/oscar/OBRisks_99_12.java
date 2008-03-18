@@ -1,10 +1,15 @@
 package oscar;
 
-import org.xml.sax.*;
-import javax.xml.parsers.*;
 import java.io.IOException;
-import org.xml.sax.helpers.*;
-import java.util.*;
+import java.util.Properties;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 public class OBRisks_99_12 {
 

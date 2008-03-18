@@ -1,6 +1,7 @@
 package com.quatro.model;
 
 import java.util.ArrayList;
+
 import com.quatro.util.KeyValueBean;
 
 public class ReportTempCriValue {

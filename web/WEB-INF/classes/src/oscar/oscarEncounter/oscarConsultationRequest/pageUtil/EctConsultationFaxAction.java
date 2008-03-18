@@ -24,34 +24,28 @@
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import oscar.oscarDB.DBHandler;
-//import oscar.oscarEncounter.util.StringQuote;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
-import oscar.oscarFax.client.*;
-import  oscar.oscarClinic.*;
-import javax.xml.soap.*;
-import java.net.URL;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.soap.SOAPElement;
 
-import javax.mail.internet.*;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
-//import javax.xml.transform.*;
-//import javax.xml.transform.stream.*;
-
-import org.dom4j.*;
-import java.awt.*;
-import javax.xml.parsers.*;
-import oscar.oscarFax.client.*;
 import oscar.OscarProperties;
+import oscar.oscarClinic.ClinicData;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarFax.client.FaxClientLog;
+import oscar.oscarFax.client.OSCARFAXClient;
+import oscar.oscarFax.client.OSCARFAXSOAPMessage;
 
 public class EctConsultationFaxAction extends Action {
    

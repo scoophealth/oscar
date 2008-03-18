@@ -9,11 +9,16 @@
 
 package oscar.oscarLab.ca.all.upload;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
+
 import oscar.OscarProperties;
 import oscar.oscarLab.ForwardingRules;
-import java.sql.*;
 
 /**
  *

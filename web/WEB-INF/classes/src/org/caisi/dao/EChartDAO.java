@@ -24,7 +24,6 @@ package org.caisi.dao;
 
 import java.util.List;
 
-import org.caisi.dao.EChartDAO;
 import org.caisi.model.EChart;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

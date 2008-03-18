@@ -24,19 +24,22 @@
 
 package oscar.oscarBilling.ca.bc.MSP;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
-import oscar.oscarBilling.ca.bc.data.*;
-import oscar.oscarBilling.ca.bc.data.BillingFormData.*;
-import oscar.oscarDB.*;
-import oscar.oscarDemographic.data.DemographicData.*;
+import oscar.oscarBilling.ca.bc.data.BillingFormData.BillingService;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarDemographic.data.DemographicData.Demographic;
 import oscar.util.DateUtils;
 import oscar.util.SqlUtils;
-import java.text.SimpleDateFormat;
-import java.text.*;
 import oscar.util.UtilMisc;
-import java.math.BigDecimal;
 
 /**
  *

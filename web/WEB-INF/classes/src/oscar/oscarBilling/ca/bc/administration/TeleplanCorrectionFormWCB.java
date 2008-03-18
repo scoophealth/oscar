@@ -1,9 +1,10 @@
 package oscar.oscarBilling.ca.bc.administration;
 
-import java.sql.*;
+import java.sql.ResultSet;
 
-import oscar.*;
-import oscar.oscarDemographic.data.*;
+import oscar.Misc;
+import oscar.MyDateFormat;
+import oscar.oscarDemographic.data.DemographicData;
 
 /*
 

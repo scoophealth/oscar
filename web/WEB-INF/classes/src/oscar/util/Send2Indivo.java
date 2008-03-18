@@ -26,50 +26,38 @@
 
 package oscar.util;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.GregorianCalendar;
-import java.util.Calendar;
-import java.util.ResourceBundle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 
 import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.client.TalkClient;
 import org.indivo.client.TalkClientImpl;
-import org.indivo.xml.talk.AuthenticateResultType;
-
-import org.indivo.xml.phr.urns.ContentTypeQNames;
-import org.indivo.xml.phr.urns.DocumentClassificationUrns;
-
-import org.indivo.xml.phr.contact.NameType;
-import org.indivo.xml.phr.contact.ConciseContactInformationType;
-
-import org.indivo.xml.phr.binarydata.BinaryDataType;
 import org.indivo.xml.phr.binarydata.BinaryData;
-import org.indivo.xml.phr.binarydata.ObjectFactory;
-
-import org.indivo.xml.phr.document.IndivoDocumentType;
-import org.indivo.xml.phr.document.DocumentHeaderType;
+import org.indivo.xml.phr.binarydata.BinaryDataType;
+import org.indivo.xml.phr.contact.ConciseContactInformationType;
+import org.indivo.xml.phr.contact.NameType;
 import org.indivo.xml.phr.document.ContentDescriptionType;
+import org.indivo.xml.phr.document.DocumentHeaderType;
 import org.indivo.xml.phr.document.DocumentVersionType;
+import org.indivo.xml.phr.document.IndivoDocumentType;
 import org.indivo.xml.phr.document.VersionBodyType;
-
 import org.indivo.xml.phr.medication.Medication;
 import org.indivo.xml.phr.medication.MedicationType;
-
-import org.indivo.xml.phr.types.CodedValueType;
-import org.indivo.xml.phr.types.CodingSystemReferenceType;
-
+import org.indivo.xml.phr.urns.ContentTypeQNames;
+import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.indivo.xml.talk.AddDocumentResultType;
+import org.indivo.xml.talk.AuthenticateResultType;
 import org.indivo.xml.talk.ReadDocumentResultType;
-
 import org.w3c.dom.Element;
 
 import oscar.oscarRx.data.RxPrescriptionData.Prescription;

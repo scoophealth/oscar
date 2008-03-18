@@ -24,13 +24,13 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarResearch.oscarDxResearch.bean;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
 import java.util.Collection;
-import oscar.oscarDB.DBHandler;
+import java.util.Vector;
+
 import oscar.OscarProperties;
+import oscar.oscarDB.DBHandler;
 
 public class dxQuickListBeanHandler {
     

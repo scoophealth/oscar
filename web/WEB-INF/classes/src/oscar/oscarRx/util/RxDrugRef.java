@@ -30,10 +30,18 @@ package oscar.oscarRx.util;
  */
 
 
-import java.util.*;
-import org.apache.xmlrpc.*;
-import java.text.*;
-import oscar.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.apache.xmlrpc.Base64;
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcClientLite;
+import org.apache.xmlrpc.XmlRpcException;
+
+import oscar.OscarProperties;
 
 /**
  *

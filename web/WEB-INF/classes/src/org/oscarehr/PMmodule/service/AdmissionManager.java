@@ -28,7 +28,6 @@ import java.util.List;
 
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.dao.ProgramClientStatusDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProgramQueueDao;
@@ -49,7 +48,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 public class AdmissionManager {
 
-    private FacilityDAO facilityDAO=null;
 	private AdmissionDao dao;
 	private ProgramDao programDao;
 	private ProgramQueueDao programQueueDao;
@@ -60,10 +58,6 @@ public class AdmissionManager {
 	private RoomManager roomManager;
 	private BedManager bedManager;
 	private RoomDemographicManager roomDemographicManager;
-
-    public void setFacilityDAO(FacilityDAO facilityDAO) {
-        this.facilityDAO = facilityDAO;
-    }
 
     public List getAdmissions_archiveView(String programId, Integer demographicNo) {
 		return dao.getAdmissions_archiveView(Integer.valueOf(programId), demographicNo);

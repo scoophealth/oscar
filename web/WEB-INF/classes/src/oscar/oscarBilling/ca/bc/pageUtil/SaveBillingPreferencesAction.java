@@ -23,10 +23,16 @@
 
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.*;
-import oscar.oscarBilling.ca.bc.data.*;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import oscar.oscarBilling.ca.bc.data.BillingPreference;
+import oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO;
 
 /**
  * Saves the values in the ActionForm into the BillingPreferences record

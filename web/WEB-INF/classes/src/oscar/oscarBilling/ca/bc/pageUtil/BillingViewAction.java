@@ -24,18 +24,27 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.io.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.*;
-import oscar.oscarBilling.ca.bc.data.*;
-import oscar.oscarDemographic.data.*;
-import oscar.util.*;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import oscar.entities.Provider;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
+import oscar.oscarBilling.ca.bc.data.BillRecipient;
+import oscar.oscarBilling.ca.bc.data.BillingPreference;
+import oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO;
 
 public final class BillingViewAction
     extends Action {

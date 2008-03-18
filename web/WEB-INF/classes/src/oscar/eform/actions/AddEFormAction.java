@@ -29,11 +29,20 @@
 
 package oscar.eform.actions;
 
-import org.apache.struts.action.*;
-import oscar.eform.data.*;
-import oscar.eform.*;
-import javax.servlet.http.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessages;
+
+import oscar.eform.EFormUtil;
+import oscar.eform.data.EForm;
 
 public class AddEFormAction extends Action {
     

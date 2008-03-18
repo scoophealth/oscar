@@ -24,24 +24,18 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
-import java.io.*;
-import java.util.*;
-import java.lang.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import org.apache.struts.validator.*;
-import org.apache.commons.validator.*;
-import org.apache.struts.util.MessageResources;
-import oscar.oscarDB.DBHandler;
-import oscar.oscarMessenger.util.MsgStringQuote;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
-import oscar.OscarProperties;
-import oscar.oscarEncounter.oscarMeasurements.bean.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import oscar.oscarEncounter.oscarMeasurements.bean.EctStyleSheetBeanHandler;
 
 public final class EctSetupStyleSheetListAction extends Action {
 

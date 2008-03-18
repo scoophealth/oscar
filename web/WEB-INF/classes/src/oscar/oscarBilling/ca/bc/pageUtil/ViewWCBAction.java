@@ -24,14 +24,22 @@
 
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.util.*;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import oscar.*;
-import oscar.entities.*;
-import oscar.oscarBilling.ca.bc.data.*;
-import oscar.util.*;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import oscar.Misc;
+import oscar.entities.Demographic;
+import oscar.oscarBilling.ca.bc.data.BillingFormData;
+import oscar.util.SqlUtils;
 
 /**
  *

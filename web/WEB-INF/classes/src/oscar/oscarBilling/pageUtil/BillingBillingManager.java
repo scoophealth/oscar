@@ -23,11 +23,11 @@
  */
 package oscar.oscarBilling.pageUtil;
 
-import java.util.*;
-import java.lang.*;
-import java.math.*;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import oscar.oscarDB.DBHandler;
 
 

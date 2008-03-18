@@ -23,7 +23,6 @@ package org.caisi.dao;
 
 import java.util.List;
 
-import org.caisi.dao.ConsultationDAO;
 import org.caisi.model.Consultation;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

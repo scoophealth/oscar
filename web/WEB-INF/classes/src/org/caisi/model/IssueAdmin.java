@@ -23,8 +23,6 @@
 package org.caisi.model;
 
 import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.text.ParsePosition;
 
 public class IssueAdmin extends BaseObject {
   private Long id;

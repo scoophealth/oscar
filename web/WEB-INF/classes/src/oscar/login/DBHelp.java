@@ -4,12 +4,14 @@
  */
 package oscar.login;
 
-import org.apache.log4j.Logger;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import oscar.oscarDB.*;
+import org.apache.log4j.Logger;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarDB.DBPreparedHandler;
+import oscar.oscarDB.DBPreparedHandlerParam;
 
 /**
  * @author yilee18

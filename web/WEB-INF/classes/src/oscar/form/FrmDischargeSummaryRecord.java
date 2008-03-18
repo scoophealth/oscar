@@ -20,7 +20,6 @@ import java.util.Properties;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
-import oscar.util.UtilMisc;
 
 public class FrmDischargeSummaryRecord extends FrmRecord {
 		

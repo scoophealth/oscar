@@ -23,18 +23,15 @@
  */
 package oscar.billing.dao;
 
-import oscar.billing.model.Diagnostico;
-
-import oscar.oscarDB.DBHandler;
-
-import oscar.util.DAO;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import oscar.billing.model.Diagnostico;
+import oscar.oscarDB.DBHandler;
+import oscar.util.DAO;
 
 
 public class DiagnosticoDAO extends DAO {

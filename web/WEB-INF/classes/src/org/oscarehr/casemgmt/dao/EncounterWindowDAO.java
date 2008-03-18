@@ -25,8 +25,8 @@
 
 package org.oscarehr.casemgmt.dao;
 
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.oscarehr.casemgmt.model.EncounterWindow;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 /**
  *
  * @author rjonasz

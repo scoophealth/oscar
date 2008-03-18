@@ -45,8 +45,10 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.sql.*;
+
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarDB.DBHandler;

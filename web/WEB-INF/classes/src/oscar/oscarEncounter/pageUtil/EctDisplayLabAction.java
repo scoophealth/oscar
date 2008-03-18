@@ -25,23 +25,18 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import oscar.util.*;
-import oscar.oscarLab.ca.on.*;
-import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Date;
-import javax.servlet.ServletException;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
+
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.lang.StringEscapeUtils;
+
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarLab.ca.on.LabResultData;
+import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 

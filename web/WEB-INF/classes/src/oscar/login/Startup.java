@@ -27,14 +27,19 @@
  */
 package oscar.login;
 
-import java.util.*;
-import java.io.*;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import oscar.oscarDB.*;
-import oscar.oscarSurveillance.SurveillanceMaster;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarSurveillance.SurveillanceMaster;
 
 /**
  * This ContextListener is used to Initialize classes at startup - Initialize the DBConnection Pool.

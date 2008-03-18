@@ -25,9 +25,6 @@
 package oscar.oscarResearch.oscarDxResearch.util;
 
 import oscar.OscarProperties;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 
 public class dxResearchCodingSystem{
 

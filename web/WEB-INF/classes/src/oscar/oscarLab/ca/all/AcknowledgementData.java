@@ -11,7 +11,9 @@ package oscar.oscarLab.ca.all;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMDS.data.ReportStatus;
 

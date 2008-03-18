@@ -22,12 +22,30 @@
 
 package org.oscarehr.PMmodule.web;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.DynaActionForm;
 import org.caisi.event.OscarCaisiEvent;
 import org.oscarehr.PMmodule.exception.IntegratorException;
-import org.oscarehr.PMmodule.model.*;
+import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Formintakea;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
@@ -37,14 +55,6 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.quatro.service.LookupManager;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 public class IntakeAAction2 extends BaseAction {
     private static Log log = LogFactory.getLog(IntakeAAction2.class);

@@ -1,15 +1,15 @@
 package org.oscarehr.PMmodule.dao;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.dao.DemographicDAO;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  */

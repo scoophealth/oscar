@@ -23,12 +23,12 @@
  */
 package oscar.oscarReport.pageUtil;
 
-import java.io.PrintStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import org.apache.struts.action.*;
-import oscar.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import org.apache.struts.action.ActionForm;
+
+import oscar.util.DateUtils;
 
 public final class RptViewAllQueryByExamplesForm extends ActionForm {
 

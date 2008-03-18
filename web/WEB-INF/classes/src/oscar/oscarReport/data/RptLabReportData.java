@@ -27,10 +27,14 @@
  */
 package oscar.oscarReport.data;
 
-import oscar.oscarDB.*;
-import java.sql.*;
-import java.text.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Hashtable;
+
+import oscar.oscarDB.DBHandler;
 /**
  * This classes main function ConsultReportGenerate collects a group of patients with consults in the last specified date
  * Could use a rewrite

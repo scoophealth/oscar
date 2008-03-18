@@ -9,23 +9,36 @@
 
 package oscar.oscarLab.ca.all.pageUtil;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.sql.ResultSet;
-import javax.servlet.http.*;
-import org.apache.log4j.Logger;
-import org.apache.struts.action.*;
-import org.apache.struts.upload.*;
-import oscar.oscarDB.*;
-
-import java.security.*;
-import java.security.spec.*;
 import java.util.ArrayList;
-import javax.crypto.*;
-import javax.crypto.spec.*;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.FormFile;
+
+import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.FileUploadCheck;
-import oscar.oscarLab.ca.all.upload.*;
+import oscar.oscarLab.ca.all.upload.HandlerClassFactory;
 import oscar.oscarLab.ca.all.upload.handlers.MessageHandler;
 import oscar.oscarLab.ca.all.util.Utilities;
 

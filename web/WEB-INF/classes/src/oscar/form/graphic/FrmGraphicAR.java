@@ -28,9 +28,11 @@
 
 package oscar.form.graphic;
 
-import java.io.*;
-import java.util.*;
-import oscar.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import oscar.util.UtilDateUtilities;
 
 /**
  * Class FrmGraphicAR : ar2 week-height plot data

@@ -13,7 +13,6 @@
  */
 package oscar.login;
 
-import java.io.FileInputStream;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;

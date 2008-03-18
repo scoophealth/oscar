@@ -30,8 +30,9 @@
 
 package oscar.oscarLab.ca.all.parsers;
 
-import ca.uhn.hl7v2.HL7Exception;
 import java.util.ArrayList;
+
+import ca.uhn.hl7v2.HL7Exception;
 
 /**
  *  When implementing this class a global variable 'msg' should be created as 

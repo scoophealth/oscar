@@ -40,7 +40,6 @@ import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.caisi.model.CustomFilter;
 import org.caisi.service.DemographicManagerTickler;
-import org.caisi.service.ProviderManagerTickler;
 import org.caisi.service.TicklerManager;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Provider;

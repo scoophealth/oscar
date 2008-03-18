@@ -24,11 +24,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarBilling.ca.on.bean;
 
-import java.io.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Vector;
-import oscar.oscarDB.DBHandler;
 
 public class BillingClaimsErrorReportBeanHandler {
     

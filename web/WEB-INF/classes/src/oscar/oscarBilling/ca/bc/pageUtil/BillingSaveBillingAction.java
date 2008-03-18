@@ -34,9 +34,9 @@ import java.util.GregorianCalendar;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -44,12 +44,12 @@ import org.apache.struts.action.ActionMapping;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.MSPBillingNote;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
+import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingNote;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarEncounter.data.EChartDAO;
 import oscar.oscarEncounter.data.Echart;
-import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 public class BillingSaveBillingAction
     extends Action {

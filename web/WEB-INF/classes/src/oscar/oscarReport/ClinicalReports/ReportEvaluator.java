@@ -31,6 +31,7 @@ package oscar.oscarReport.ClinicalReports;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+
 import oscar.oscarMDS.data.ProviderData;
 
 /**

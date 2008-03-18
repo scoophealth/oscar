@@ -28,7 +28,7 @@
 
 package oscar.oscarRx.data;
 
-import java.util.*;
+import java.util.Vector;
 
 import org.oscarehr.util.DbConnectionFilter;
 

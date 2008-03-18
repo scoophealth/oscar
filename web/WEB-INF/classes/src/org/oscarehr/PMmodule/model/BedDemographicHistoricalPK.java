@@ -22,8 +22,8 @@
 
 package org.oscarehr.PMmodule.model;
 
-import java.util.Date;
 import java.io.Serializable;
+import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 

@@ -28,19 +28,29 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import java.lang.reflect.*;
-import java.util.*;
-import javax.servlet.http.*;
-import noNamespace.*;
-import org.apache.struts.action.*;
-import org.apache.xmlbeans.*;
-import org.jdom.*;
-import org.jdom.output.*;
-import oscar.oscarDemographic.data.*;
-import oscar.oscarLab.ca.on.*;
-import oscar.oscarPrevention.*;
-import oscar.oscarReport.data.*;
-import oscar.util.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Hashtable;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+
+import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarDemographic.data.DemographicExt;
+import oscar.oscarLab.ca.on.CommonLabTestValues;
+import oscar.oscarPrevention.PreventionData;
+import oscar.oscarPrevention.PreventionDisplayConfig;
+import oscar.oscarReport.data.DemographicSets;
+import oscar.util.UtilDateUtilities;
 
 /**
  *

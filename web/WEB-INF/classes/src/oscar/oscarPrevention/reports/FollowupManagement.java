@@ -32,8 +32,10 @@ package oscar.oscarPrevention.reports;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import oscar.oscarEncounter.oscarMeasurements.util.WriteNewMeasurements;
 import oscar.util.UtilDateUtilities;
 

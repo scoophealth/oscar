@@ -24,7 +24,8 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.pageUtil;
 
-import java.util.*;
+import java.util.Hashtable;
+
 import oscar.oscarDB.DBHandler;
 
 public class MsgDisplayMessagesBean {

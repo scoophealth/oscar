@@ -1,9 +1,8 @@
 package com.quatro.web.report;
 
-import java.util.*;
+import java.util.List;
+
 import org.apache.struts.action.ActionForm;
-import com.quatro.util.*;
-import com.quatro.model.*;
 
 public class QuatroReportListForm extends ActionForm{
 	List reportGroups;

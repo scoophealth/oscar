@@ -27,9 +27,7 @@
  */
 package oscar.eform.data;
 
-import org.apache.struts.action.*;
-import java.util.*;
-import oscar.eform.EFormUtil;
+import org.apache.struts.action.ActionForm;
 
 public class AddToGroupForm extends ActionForm {
     private String fid;

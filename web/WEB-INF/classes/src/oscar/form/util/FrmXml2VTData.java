@@ -3,19 +3,17 @@
  */
 package oscar.form.util;
 
-import org.apache.log4j.Logger;
-import org.apache.commons.lang.WordUtils;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Calendar;
-import java.util.Hashtable;
 import java.util.Properties;
-import java.util.Vector;
 
 import noNamespace.SitePatientVisitRecordsDocument;
 import noNamespace.SitePatientVisitRecordsDocument.SitePatientVisitRecords;
+
+import org.apache.commons.lang.WordUtils;
+import org.apache.log4j.Logger;
 
 import oscar.form.data.FrmVTData;
 

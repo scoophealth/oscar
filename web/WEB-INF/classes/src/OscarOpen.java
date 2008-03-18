@@ -22,11 +22,16 @@
 // * Ontario, Canada 
 // *
 // -----------------------------------------------------------------------------------------------------------------------
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class OscarOpen extends HttpServlet {
   public void doGet(HttpServletRequest req, HttpServletResponse res)throws IOException {

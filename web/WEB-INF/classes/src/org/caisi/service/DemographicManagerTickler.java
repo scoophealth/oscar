@@ -25,7 +25,6 @@ package org.caisi.service;
 import java.util.List;
 
 import org.caisi.dao.DemographicDAO;
-import org.caisi.service.DemographicManagerTickler;
 import org.oscarehr.PMmodule.model.Demographic;
 
 /**

@@ -24,9 +24,13 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.data;
 
+import javax.servlet.jsp.JspWriter;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import oscar.oscarDB.DBHandler;
-import org.w3c.dom.*;
-import javax.servlet.jsp.*;
 
 /**
  * <p>Title: </p>

@@ -1,11 +1,12 @@
 package com.quatro.model;
 
-import java.sql.Blob;
-import java.io.Serializable; 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.io.InputStream;
+import java.io.Serializable;
+import java.sql.Blob;
+import java.sql.SQLException;
+
 import org.hibernate.Hibernate;
 
 public class DocTextValue implements Serializable{

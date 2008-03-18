@@ -1,7 +1,10 @@
 package oscar.oscarBilling.ca.bc.MSP;
 
-import org.apache.struts.action.*;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
 
 public class CreateBillingReportActionForm extends ActionForm {
   private String docFormat;

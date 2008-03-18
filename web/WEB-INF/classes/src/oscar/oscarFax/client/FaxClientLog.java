@@ -27,10 +27,10 @@
  * Created on February 17, 2003, 12:08 PM
  */
 package oscar.oscarFax.client;
-import java.io.*;
-import oscar.oscarDB.*;
-import java.util.*;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import oscar.oscarDB.DBHandler;
 /**
  *
  * @author  Jay

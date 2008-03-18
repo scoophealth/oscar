@@ -9,12 +9,14 @@
 
 package org.oscarehr.phr.taglib;
 
-import java.util.Calendar;
 import java.util.Date;
+
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.log4j.Logger;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
+
 import oscar.OscarProperties;
 
 /**

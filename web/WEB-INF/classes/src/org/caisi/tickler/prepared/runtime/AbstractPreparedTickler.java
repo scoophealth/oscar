@@ -26,7 +26,6 @@ package org.caisi.tickler.prepared.runtime;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.caisi.service.ConsultationManager;
 import org.caisi.tickler.prepared.PreparedTickler;
 
 public abstract class AbstractPreparedTickler implements PreparedTickler {

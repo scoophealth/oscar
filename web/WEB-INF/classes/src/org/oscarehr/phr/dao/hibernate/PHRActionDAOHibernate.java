@@ -29,21 +29,22 @@
 
 package org.oscarehr.phr.dao.hibernate;
 
-import java.util.List;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.model.PHRAction;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  *

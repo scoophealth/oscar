@@ -25,20 +25,20 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import oscar.oscarPrevention.*;
-import oscar.util.DateUtils;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
-import java.util.Collections;
-import oscar.util.StringUtils;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.util.MessageResources;
+
+import oscar.oscarPrevention.Prevention;
+import oscar.oscarPrevention.PreventionDS;
+import oscar.oscarPrevention.PreventionData;
+import oscar.oscarPrevention.PreventionDisplayConfig;
+import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 
 /**
  *  Creates DAO for left navbar of encounter form

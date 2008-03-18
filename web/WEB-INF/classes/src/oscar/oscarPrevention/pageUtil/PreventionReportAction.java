@@ -29,16 +29,27 @@
 package oscar.oscarPrevention.pageUtil;
 
 
-import java.util.*;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Hashtable;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import oscar.oscarPrevention.reports.PreventionReport;
 import oscar.oscarPrevention.reports.PreventionReportFactory;
-import oscar.oscarReport.data.*;
+import oscar.oscarReport.data.RptDemographicQueryBuilder;
+import oscar.oscarReport.data.RptDemographicQueryLoader;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
-import oscar.util.*;
+import oscar.util.UtilDateUtilities;
 
 /**
  *

@@ -23,13 +23,12 @@
  */
 package oscar.form;
 
-import java.util.Date;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
+
 import oscar.oscarDB.DBHandler;
-import oscar.util.*;
+import oscar.util.UtilDateUtilities;
 
 public class FrmImmunAllergyRecord extends FrmRecord {
 	//FrmRecordHelp recordHlp = null;

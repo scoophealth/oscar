@@ -20,6 +20,12 @@
  */
 package org.oscarehr.PMmodule.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -34,11 +40,6 @@ import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 
 import com.quatro.service.LookupManager;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProviderInfoAction extends BaseAction {
 

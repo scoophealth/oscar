@@ -30,8 +30,10 @@
 package org.oscarehr.phr.taglib;
 
 import java.io.IOException;
+
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
 import org.springframework.context.ApplicationContext;

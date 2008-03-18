@@ -6,9 +6,10 @@
 
 package oscar.oscarLab.ca.bc.PathNet;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import oscar.oscarDB.*;
+import oscar.oscarDB.DBHandler;
 
 /**
  *

@@ -28,8 +28,14 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import cds.*;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,26 +44,34 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.zip.*;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
-import org.apache.xmlbeans.XmlException;
-import org.codehaus.xfire.service.binding.RPCBinding;
 import org.jdom.Element;
+
 import oscar.appt.AppointmentDAO;
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
-import oscar.oscarDemographic.data.*;
-import oscar.oscarEncounter.data.*;
+import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarDemographic.data.DemographicExt;
+import oscar.oscarDemographic.data.DemographicRelationship;
+import oscar.oscarEncounter.data.EChartDAO;
+import oscar.oscarEncounter.data.Echart;
 import oscar.oscarLab.ca.on.LabResultImport;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarRx.data.RxAllergyImport;
-import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionImport;
 import oscar.util.UtilDateUtilities;
-import oscar.util.UtilMisc;
 
 /**
  *

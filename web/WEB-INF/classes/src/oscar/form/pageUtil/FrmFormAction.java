@@ -21,35 +21,40 @@
 
 package oscar.form.pageUtil;
 
-import java.io.*;
-import java.util.*;
-import java.lang.*;
-import java.net.MalformedURLException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
+import java.util.Vector;
+
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import org.apache.struts.validator.*;
-import org.apache.commons.validator.*;
-import org.apache.commons.lang.StringEscapeUtils.*;
-import org.apache.struts.util.MessageResources;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.validator.GenericValidator;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
-import oscar.form.*;
-import oscar.form.data.*;
-import oscar.form.util.*;
+
+import oscar.OscarProperties;
+import oscar.form.FrmRecordHelp;
+import oscar.form.data.FrmData;
+import oscar.form.util.FrmToXMLUtil;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicData;
-import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.data.EctFormData;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBean;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
-import oscar.oscarEncounter.oscarMeasurements.bean.*;
-import oscar.oscarEncounter.oscarMeasurements.prop.*;
-import oscar.oscarEncounter.oscarMeasurements.util.*;
-import oscar.OscarProperties;
+import oscar.oscarEncounter.oscarMeasurements.prop.EctFormProp;
+import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.util.UtilDateUtilities;
 
 

@@ -25,9 +25,17 @@
 package oscar.oscarMessenger.docxfer.send;
 
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import oscar.oscarDB.DBHandler;
-import java.sql.*;
-import org.w3c.dom.*;
 import oscar.oscarMessenger.docxfer.util.MsgCommxml;
 
 public class MsgGenerate {

@@ -24,11 +24,16 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
 
-import oscar.oscarDB.*;
-import oscar.util.*;
-import javax.servlet.http.HttpServletRequest;
-import java.sql.*;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+
+import oscar.oscarDB.DBPreparedHandler;
+import oscar.oscarDB.DBPreparedHandlerParam;
+import oscar.util.UtilDict;
 
 public class AppointmentMainBean {
 

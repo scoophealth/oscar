@@ -6,12 +6,16 @@
 
 package oscar.oscarLab.ca.bc.PathNet;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import oscar.oscarDB.*;
-import oscar.*;
-import oscar.oscarLab.ca.bc.PathNet.HL7.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Properties;
+
+import oscar.OscarProperties;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.ca.bc.PathNet.HL7.Message;
 
 /**
  *

@@ -23,10 +23,13 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import oscar.oscarDB.*;
+import oscar.oscarDB.DBHandler;
 
 /**
  *

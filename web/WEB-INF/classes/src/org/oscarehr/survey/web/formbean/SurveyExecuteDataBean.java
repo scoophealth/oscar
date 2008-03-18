@@ -22,9 +22,9 @@
 
 package org.oscarehr.survey.web.formbean;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.Serializable;
 
 public class SurveyExecuteDataBean implements Serializable {
 	private Map values = null;

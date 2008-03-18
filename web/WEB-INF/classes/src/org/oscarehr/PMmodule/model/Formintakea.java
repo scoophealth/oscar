@@ -22,9 +22,9 @@
 
 package org.oscarehr.PMmodule.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import java.io.Serializable;
 
 /**
  * This is the object class that relates to the formintakea table.

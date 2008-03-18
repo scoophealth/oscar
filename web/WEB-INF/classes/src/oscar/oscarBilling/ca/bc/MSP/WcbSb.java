@@ -1,10 +1,11 @@
 package oscar.oscarBilling.ca.bc.MSP;
 
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.ResultSet;
+
 import oscar.Misc;
-import oscar.*;
-import oscar.oscarDB.*;
+import oscar.OscarProperties;
+import oscar.oscarDB.DBHandler;
 
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *

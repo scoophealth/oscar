@@ -25,9 +25,8 @@
 
 package org.oscarehr.casemgmt.dao;
 
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  *

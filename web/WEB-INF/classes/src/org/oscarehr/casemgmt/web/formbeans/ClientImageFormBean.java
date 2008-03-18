@@ -23,8 +23,6 @@
 package org.oscarehr.casemgmt.web.formbeans;
 
 
-import java.io.File;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.upload.FormFile;
 

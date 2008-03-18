@@ -1,15 +1,21 @@
 package oscar.oscarDemographic;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.util.HashMap;
 
-import org.apache.struts.action.*;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.DbConnectionFilter;
 
-import oscar.*;
-import java.io.*;
+import oscar.OscarAction;
+import oscar.OscarDocumentCreator;
 
 public class PrintDemoAddressLabelAction extends OscarAction {
     public PrintDemoAddressLabelAction() {

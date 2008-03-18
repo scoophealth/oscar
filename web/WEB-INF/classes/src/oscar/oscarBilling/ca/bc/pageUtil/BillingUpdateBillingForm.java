@@ -6,7 +6,7 @@
 
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionForm;
 
 /**
  *

@@ -24,8 +24,9 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.util;
 
-import java.util.Properties;
 import java.util.Enumeration;
+import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 
 public final class UtilDict extends Properties {

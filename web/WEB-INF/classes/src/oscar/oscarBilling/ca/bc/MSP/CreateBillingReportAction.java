@@ -36,18 +36,25 @@
 
 package oscar.oscarBilling.ca.bc.MSP;
 
-import java.io.*;
+import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Properties;
 
-import org.apache.struts.action.*;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.DbConnectionFilter;
 
-import oscar.*;
-import oscar.entities.*;
-import oscar.oscarBilling.ca.bc.MSP.MSPReconcile.*;
+import oscar.OscarAction;
+import oscar.OscarDocumentCreator;
+import oscar.entities.MSPBill;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile.BillSearch;
 import oscar.oscarBilling.ca.bc.data.PayRefSummary;
 
 /**

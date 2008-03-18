@@ -26,7 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.AgencyDao;
 import org.oscarehr.PMmodule.model.Agency;
-import org.oscarehr.PMmodule.service.AgencyManager;
 
 public class AgencyManager {
 	

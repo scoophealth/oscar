@@ -24,9 +24,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
 
-import java.util.Properties;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.Properties;
 
 //import com.ibm.io.file.exception.FileNotFoundException;
 

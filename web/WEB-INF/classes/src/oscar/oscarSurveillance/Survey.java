@@ -31,11 +31,17 @@
 package oscar.oscarSurveillance;
 
 
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Random;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import oscar.oscarDB.*;
+
+import oscar.oscarDB.DBHandler;
 
 /**
  *

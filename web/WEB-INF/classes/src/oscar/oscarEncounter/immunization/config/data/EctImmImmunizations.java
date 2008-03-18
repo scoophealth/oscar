@@ -24,7 +24,6 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.immunization.config.data;
 
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Vector;
 

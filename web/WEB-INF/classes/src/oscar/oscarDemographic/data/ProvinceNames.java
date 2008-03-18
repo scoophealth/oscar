@@ -23,8 +23,9 @@
  */
 package oscar.oscarDemographic.data;
 
-import oscar.OscarProperties;
 import java.util.ArrayList;
+
+import oscar.OscarProperties;
 
 public class ProvinceNames extends ArrayList {
         

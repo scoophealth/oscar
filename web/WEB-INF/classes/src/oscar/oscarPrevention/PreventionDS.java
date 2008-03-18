@@ -28,14 +28,17 @@
 
 package oscar.oscarPrevention;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
 
-import java.net.*;
-import org.drools.*;
-import org.drools.io.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import oscar.*;
+import org.drools.RuleBase;
+import org.drools.WorkingMemory;
+import org.drools.io.RuleBaseLoader;
+
+import oscar.OscarProperties;
 
 /**
  *

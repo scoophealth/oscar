@@ -23,7 +23,7 @@
  */
 package oscar.oscarBilling.pageUtil;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class BillingSessionBean {
     private String apptProviderNo = null;

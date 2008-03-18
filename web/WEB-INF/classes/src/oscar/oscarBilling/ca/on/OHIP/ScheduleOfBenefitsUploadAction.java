@@ -28,20 +28,28 @@
 
 package oscar.oscarBilling.ca.on.OHIP;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.http.*;
-import org.apache.log4j.*;
-import org.apache.struts.action.*;
-import org.apache.struts.upload.*;
-import oscar.*;
-import oscar.oscarDB.*;
-import oscar.oscarLab.*;
-import oscar.oscarLab.ca.bc.PathNet.*;
-import oscar.oscarLab.ca.bc.PathNet.HL7.*;
-import oscar.oscarLab.ca.bc.PathNet.pageUtil.*;
-import oscar.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.FormFile;
+
+import oscar.OscarProperties;
+import oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadForm;
 
 
 

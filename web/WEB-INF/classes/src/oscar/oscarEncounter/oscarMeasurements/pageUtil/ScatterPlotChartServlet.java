@@ -26,26 +26,40 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 
-import org.jCharts.axisChart.*;
-import org.jCharts.chartData.*;
-import org.jCharts.encoders.ServletEncoderHelper;
-import org.jCharts.properties.*;
-import org.jCharts.properties.util.ChartFont;
-import org.jCharts.test.TestDataGenerator;
-import org.jCharts.types.ChartType;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Paint;
+import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.io.IOException;
-import java.lang.*;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.jCharts.axisChart.AxisChart;
+import org.jCharts.axisChart.ScatterPlotAxisChart;
+import org.jCharts.chartData.AxisChartDataSet;
+import org.jCharts.chartData.DataSeries;
+import org.jCharts.chartData.ScatterPlotDataSeries;
+import org.jCharts.chartData.ScatterPlotDataSet;
+import org.jCharts.encoders.ServletEncoderHelper;
+import org.jCharts.properties.AxisProperties;
+import org.jCharts.properties.ChartProperties;
+import org.jCharts.properties.DataAxisProperties;
+import org.jCharts.properties.LegendProperties;
+import org.jCharts.properties.LineChartProperties;
+import org.jCharts.properties.PointChartProperties;
+import org.jCharts.properties.ScatterPlotProperties;
+import org.jCharts.properties.util.ChartFont;
+import org.jCharts.types.ChartType;
+
 import oscar.oscarDB.DBHandler;
-import oscar.OscarProperties;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 
 public class ScatterPlotChartServlet extends HttpServlet

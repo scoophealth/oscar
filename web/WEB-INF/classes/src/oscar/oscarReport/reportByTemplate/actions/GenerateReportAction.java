@@ -26,15 +26,24 @@
 package oscar.oscarReport.reportByTemplate.actions;
 
 
-import org.apache.struts.action.*;
-import javax.servlet.http.*;
-import java.util.*;
-import oscar.oscarReport.reportByTemplate.*;
-import java.sql.*;
-import java.io.*;
+import java.io.StringWriter;
+import java.sql.ResultSet;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarReport.data.RptResultStruct;
+import oscar.oscarReport.reportByTemplate.ReportManager;
+import oscar.oscarReport.reportByTemplate.ReportObject;
 import oscar.util.UtilMisc;
+
 import com.Ostermiller.util.CSVPrinter;
 /**
  * Created on December 21, 2006, 10:47 AM

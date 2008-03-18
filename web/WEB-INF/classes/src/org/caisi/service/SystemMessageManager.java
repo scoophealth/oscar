@@ -29,7 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.dao.SystemMessageDAO;
 import org.caisi.model.SystemMessage;
-import org.caisi.service.SystemMessageManager;
 
 public class SystemMessageManager {
 

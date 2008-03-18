@@ -11,11 +11,17 @@ package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
 import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
-import org.apache.struts.action.*;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
 
 /**

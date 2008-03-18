@@ -28,13 +28,18 @@
 
 package oscar.oscarLab.ca.bc.PathNet;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
-import oscar.oscarDB.*;
-import oscar.oscarLab.ca.on.*;
-import oscar.util.*;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.util.UtilDateUtilities;
 
 /**
  *

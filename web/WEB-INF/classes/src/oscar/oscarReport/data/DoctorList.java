@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import oscar.oscarDB.DBHandler;
-
 import oscar.oscarProvider.bean.ProviderNameBean;
 
 public class DoctorList {

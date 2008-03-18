@@ -27,10 +27,8 @@
  */
 package oscar.eform.data;
 
-import org.apache.struts.action.*;
-import org.apache.struts.upload.*;
-import javax.servlet.http.*;
-import oscar.eform.EFormUtil;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.upload.FormFile;
 
 public class HtmlEditForm extends ActionForm {
     private FormFile uploadFile = null;

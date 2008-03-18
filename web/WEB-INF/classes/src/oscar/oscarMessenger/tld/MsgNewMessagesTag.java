@@ -23,12 +23,11 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.tld;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
+
 import oscar.oscarDB.DBHandler;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.io.*;
-import java.sql.*;
-import org.apache.struts.action.ActionForm;
 
 
 

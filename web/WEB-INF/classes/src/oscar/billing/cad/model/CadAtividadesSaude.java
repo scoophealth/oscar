@@ -28,7 +28,6 @@
 package oscar.billing.cad.model;
 
 import oscar.billing.fat.model.FatBpa;
-
 import oscar.billing.model.Provider;
 
 

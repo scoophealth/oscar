@@ -28,10 +28,16 @@
 
 package oscar.oscarEncounter.data;
 
-import java.sql.*;
-import java.util.*;
-import oscar.oscarDB.*;
-import oscar.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 
 /**
  *

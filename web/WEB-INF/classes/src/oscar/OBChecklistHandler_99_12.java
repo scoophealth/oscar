@@ -1,11 +1,13 @@
 package oscar;
 
-import org.xml.sax.*;
-import javax.xml.parsers.*;
-import java.io.IOException;
-import org.xml.sax.helpers.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.Properties;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class OBChecklistHandler_99_12 extends DefaultHandler {
 

@@ -5,7 +5,6 @@ import java.util.List;
 import org.caisi.model.RedirectLink;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 public class RedirectLinkDao extends AbstractDao{

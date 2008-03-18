@@ -24,11 +24,10 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 
-import java.io.PrintStream;
-import java.util.Vector;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import java.util.ResourceBundle;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class EctConTitlebar
 {

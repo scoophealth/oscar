@@ -8,15 +8,14 @@
  */
 package oscar.oscarLab.ca.all.upload;
 
-import java.io.*;
-import java.sql.ResultSet;
+import java.io.InputStream;
 import java.util.List;
-import org.jdom.*;
-import org.jdom.input.*;
-import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 
 import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+
 import oscar.oscarLab.ca.all.upload.handlers.DefaultHandler;
 import oscar.oscarLab.ca.all.upload.handlers.MessageHandler;
 

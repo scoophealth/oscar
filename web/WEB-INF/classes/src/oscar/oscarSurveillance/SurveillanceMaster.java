@@ -30,13 +30,16 @@
 
 package oscar.oscarSurveillance;
 
-import java.io.*;
-import java.util.*;
-import org.apache.commons.digester.*;
-import org.xml.sax.*;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Hashtable;
+
+import org.apache.commons.digester.Digester;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import oscar.*;
+import org.xml.sax.SAXException;
+
+import oscar.OscarProperties;
 
 /**
  * Manages Surveys currently loaded

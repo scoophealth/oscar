@@ -28,7 +28,7 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionForm;
 
 /**
  *

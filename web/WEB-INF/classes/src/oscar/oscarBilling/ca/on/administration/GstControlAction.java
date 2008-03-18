@@ -10,21 +10,20 @@
 package oscar.oscarBilling.ca.on.administration;
 
 import java.io.IOException;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.*;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import oscar.oscarDB.DBHandler;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 
 public class GstControlAction extends Action{
     

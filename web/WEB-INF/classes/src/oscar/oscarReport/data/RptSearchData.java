@@ -26,7 +26,7 @@
 package oscar.oscarReport.data;
 
 
-import oscar.oscarDB.*;
+import oscar.oscarDB.DBHandler;
 /**
  *
  * @author  McMaster

@@ -24,7 +24,8 @@
 
 package oscar.util;
 
-import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.oscarehr.util.DbConnectionFilter;
 

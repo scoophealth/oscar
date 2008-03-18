@@ -27,11 +27,9 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts.util.LabelValueBean;
-
+import org.caisi.service.InfirmBedProgramManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import org.caisi.service.InfirmBedProgramManager;
 /**
  *
  * @author rjonasz

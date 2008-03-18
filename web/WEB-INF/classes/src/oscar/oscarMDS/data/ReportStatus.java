@@ -24,7 +24,8 @@
 package oscar.oscarMDS.data;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class ReportStatus {
 

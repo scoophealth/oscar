@@ -25,8 +25,6 @@ package org.oscarehr.PMmodule.web.admin;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -46,8 +44,6 @@ import org.springframework.scheduling.timer.ScheduledTimerTask;
 import com.quatro.service.LookupManager;
 
 public class AgencyManagerAction extends BaseAction {
-
-    private static final Log log = LogFactory.getLog(AgencyManagerAction.class);
 
     private static final String FORWARD_EDIT = "edit";
     private static final String FORWARD_VIEW = "view";
@@ -73,7 +69,6 @@ public class AgencyManagerAction extends BaseAction {
     }
 
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        DynaActionForm agencyForm = (DynaActionForm) form;
 
         boolean integratorEnabled = integratorManager.isEnabled();
 

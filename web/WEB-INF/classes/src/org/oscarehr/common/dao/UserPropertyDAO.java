@@ -26,8 +26,9 @@
 package org.oscarehr.common.dao;
 
 import java.util.List;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
 import org.oscarehr.common.model.UserProperty;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  *

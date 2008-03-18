@@ -31,7 +31,7 @@ package oscar.oscarBilling.ca.bc.data;
 
 import java.sql.SQLException;
 import java.util.List;
-import oscar.entities.Billing;
+
 import oscar.entities.Billingmaster;
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;

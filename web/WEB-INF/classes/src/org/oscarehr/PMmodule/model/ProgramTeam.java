@@ -21,8 +21,8 @@
 */
 package org.oscarehr.PMmodule.model;
 
-import java.util.List;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * This is the object class that relates to the program_team table. Any customizations belong here.

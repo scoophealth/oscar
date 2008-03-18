@@ -23,16 +23,12 @@
  */
 package oscar.form;
 
-import oscar.oscarDB.*;
-import oscar.oscarEncounter.data.*;
-import oscar.util.*;
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.*;
-import java.sql.*;
-import java.io.*;
-import java.lang.String;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
+
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 
 public class FrmAnnualRecord  extends FrmRecord {
     public Properties getFormRecord(int demographicNo, int existingID)

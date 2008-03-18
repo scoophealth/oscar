@@ -27,10 +27,15 @@
 
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import javax.servlet.http.*;
-import org.apache.commons.beanutils.*;
-import org.apache.struts.action.*;
-import oscar.oscarBilling.ca.bc.data.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import oscar.oscarBilling.ca.bc.data.ReferralBillingData;
 
 /**
  *

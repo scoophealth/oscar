@@ -27,11 +27,10 @@
  */
 package oscar.eform.data;
 
-import oscar.util.*;
 import java.util.Properties;
-import oscar.OscarProperties;
-import oscar.util.UtilDateUtilities;
+
 import oscar.util.StringBufferUtils;
+import oscar.util.UtilDateUtilities;
 
 public class EFormBase {
     protected final String imageMarker = "${oscar_image_path}";

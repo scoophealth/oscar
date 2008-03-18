@@ -26,10 +26,12 @@ package oscar.util;
 
 
 import java.sql.SQLException;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
-import oscar.oscarProvider.data.ProviderMyOscarIdData;
+
 import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 /** Tag class for checking if provider and demographic have Indivo Ids
  * If they do, the jsp code will be included in the page.

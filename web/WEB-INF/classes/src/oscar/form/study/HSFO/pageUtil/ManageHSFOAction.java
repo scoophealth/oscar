@@ -36,6 +36,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,7 +49,6 @@ import oscar.Misc;
 import oscar.form.study.HSFO.HSFODAO;
 import oscar.form.study.HSFO.PatientData;
 import oscar.form.study.HSFO.PatientList;
-//import oscar.form.study.HSFO.RecordList;
 import oscar.form.study.HSFO.VisitData;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.UtilDateUtilities;

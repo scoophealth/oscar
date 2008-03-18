@@ -24,10 +24,8 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarWaitingList;
 
-import java.util.Properties;
-import java.io.*;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import oscar.oscarDB.DBHandler;
 /*
  * This class is an interface with the file WEB-INF/classes

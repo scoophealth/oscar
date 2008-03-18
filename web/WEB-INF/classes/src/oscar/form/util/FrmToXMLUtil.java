@@ -22,20 +22,26 @@
  */
 package oscar.form.util;
 
-import java.util.*;
-import java.io.*;
-import java.lang.reflect.*;
-import java.text.*;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.apache.xmlbeans.*;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Properties;
+import java.util.Vector;
+
+import noNamespace.SitePatientVisitRecordsDocument;
+
 import org.apache.xmlbeans.XmlCalendar;
+import org.apache.xmlbeans.XmlOptions;
+
 import oscar.oscarDB.DBHandler;
-import oscar.oscarEncounter.oscarMeasurements.bean.*;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 import oscar.oscarProvider.data.ProviderData;
-import oscar.oscarRx.data.*;
+import oscar.oscarRx.data.RxPatientData;
+import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.util.UtilDateUtilities;
-import noNamespace.*;
 
 /**
  *

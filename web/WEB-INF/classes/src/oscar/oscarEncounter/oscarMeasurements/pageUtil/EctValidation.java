@@ -24,17 +24,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
-import java.io.*;
-import java.util.*;
-import java.lang.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import org.apache.struts.validator.*;
-import org.apache.commons.validator.*;
-import oscar.oscarDB.DBHandler;
+
 import oscar.OscarProperties;
+import oscar.oscarDB.DBHandler;
 
 public class EctValidation{
 

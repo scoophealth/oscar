@@ -24,11 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
-import java.io.PrintStream;
-import java.util.*;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionForm;
 
 public final class EctAddMeasurementGroupForm extends ActionForm {
 

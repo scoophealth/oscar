@@ -1,7 +1,5 @@
 package com.quatro.service;
 
-import org.caisi.dao.TicklerDAO;
-
 import com.quatro.dao.ScratchPadDao;
 
 public class ScratchPadManager {

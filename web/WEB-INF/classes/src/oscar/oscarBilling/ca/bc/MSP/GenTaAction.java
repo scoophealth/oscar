@@ -34,16 +34,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.ResultSet;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import oscar.AppointmentMainBean;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBPreparedHandler;
 

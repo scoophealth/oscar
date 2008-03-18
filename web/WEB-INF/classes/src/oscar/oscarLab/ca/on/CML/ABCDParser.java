@@ -28,10 +28,15 @@
 
 package oscar.oscarLab.ca.on.CML;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.util.logging.*;
+import java.io.BufferedReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.logging.Logger;
+
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 

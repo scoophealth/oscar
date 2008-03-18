@@ -24,10 +24,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.immunization.config.data;
 
-import java.io.PrintStream;
 import java.util.Vector;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
 import oscar.util.UtilXML;
 
 public class EctImmImmunizationSetWriter

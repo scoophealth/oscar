@@ -24,8 +24,8 @@
 
 package oscar.entities;
 
-import java.util.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class PrivateBillTransaction {
   private int id;

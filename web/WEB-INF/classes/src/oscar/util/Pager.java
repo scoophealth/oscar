@@ -23,7 +23,7 @@
  */
 package oscar.util;
 
-import java.util.*;
+import java.util.ResourceBundle;
 
 
 public class Pager {

@@ -40,7 +40,8 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
-import com.quatro.service.*;
+
+import com.quatro.service.LookupManager;
 
 public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 

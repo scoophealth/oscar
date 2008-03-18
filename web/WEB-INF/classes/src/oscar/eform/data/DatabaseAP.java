@@ -27,7 +27,7 @@
  */
 package oscar.eform.data;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class DatabaseAP {
     private String apName = null;

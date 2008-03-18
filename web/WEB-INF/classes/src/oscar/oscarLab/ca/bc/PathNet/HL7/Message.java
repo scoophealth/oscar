@@ -7,16 +7,18 @@
 package oscar.oscarLab.ca.bc.PathNet.HL7;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.*;
-import java.util.*;
-import org.apache.commons.lang.*;
-import org.apache.log4j.*;
-import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarLab.ca.bc.PathNet.HL7.V2_3.MSH;
 import oscar.oscarLab.ca.bc.PathNet.HL7.V2_3.PID;
-import oscar.oscarDB.DBHandler;
-import oscar.util.*;
 
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *

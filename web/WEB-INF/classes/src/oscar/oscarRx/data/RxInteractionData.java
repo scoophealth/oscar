@@ -28,7 +28,8 @@
 
 package oscar.oscarRx.data;
 
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  *

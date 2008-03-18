@@ -18,7 +18,6 @@
  */
 package org.oscarehr.PMmodule.web.adapter;
 
-import java.util.List;
 import java.util.Set;
 
 import org.oscarehr.PMmodule.model.Intake;

@@ -28,10 +28,12 @@
 
 package oscar.oscarDB;
 
-import org.apache.commons.lang.*;
-import java.sql.*;
-import org.jdom.*;
-import org.jdom.output.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.jdom.Document;
+import org.jdom.output.XMLOutputter;
 
 /**
  * This class is used to archive deleted or updated rows that won't be used again.

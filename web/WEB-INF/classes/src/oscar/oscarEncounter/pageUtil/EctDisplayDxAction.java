@@ -25,16 +25,20 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Vector;
-import java.util.Date;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.util.MessageResources;
-import oscar.oscarResearch.oscarDxResearch.bean.*;
-import oscar.util.StringUtils;
+
+import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBean;
+import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler;
 import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 
 /**
  *

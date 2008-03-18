@@ -30,14 +30,15 @@
 package oscar.eform.actions;
 
 import java.io.File;
+
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.activation.MimetypesFileTypeMap;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DownloadAction;
-import org.apache.struts.actions.DownloadAction.FileStreamInfo;
-import org.apache.struts.actions.DownloadAction.StreamInfo;
+
 import oscar.OscarProperties;
 
 /**

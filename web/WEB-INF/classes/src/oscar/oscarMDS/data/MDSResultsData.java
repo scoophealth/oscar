@@ -23,13 +23,17 @@
  */
 package oscar.oscarMDS.data;
 
-import org.apache.log4j.Logger;
-import oscar.oscarDB.*;
-import java.util.*;
 import java.sql.ResultSet;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import oscar.oscarLab.ca.on.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarDB.DBPreparedHandler;
+import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.UtilDateUtilities;
 
 

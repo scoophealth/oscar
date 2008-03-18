@@ -24,10 +24,10 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.search.data;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+
 import oscar.oscarDB.DBHandler;
 
 public class EctSearchDemographicData

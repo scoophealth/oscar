@@ -23,10 +23,7 @@
  */
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
-import java.io.PrintStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionForm;
 
 public final class EctConsultationFaxForm extends ActionForm {
 

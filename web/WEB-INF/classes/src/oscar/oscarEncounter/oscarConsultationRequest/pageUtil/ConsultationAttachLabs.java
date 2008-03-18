@@ -24,10 +24,12 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
-import oscar.oscarLab.ca.on.*;
-import oscar.oscarDB.DBHandler;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.sql.*;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarLab.ca.on.LabResultData;
 
 /**
  *

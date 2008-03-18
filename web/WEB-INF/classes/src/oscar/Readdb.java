@@ -23,8 +23,10 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
-import java.io.*;
-// input the read file name
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 class Readdb {
 	String strMonth[] = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};

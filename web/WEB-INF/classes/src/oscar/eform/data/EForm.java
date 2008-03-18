@@ -27,15 +27,19 @@
  */
 package oscar.eform.data;
 
-import oscar.eform.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import oscar.util.StringBufferUtils;
-import oscar.util.UtilDateUtilities;
+import org.apache.struts.action.ActionMessages;
+
+import oscar.eform.EFormLoader;
+import oscar.eform.EFormUtil;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 import oscar.oscarEncounter.oscarMeasurements.util.WriteNewMeasurements;
-import org.apache.struts.action.*;
+import oscar.util.StringBufferUtils;
+import oscar.util.UtilDateUtilities;
 
 public class EForm extends EFormBase {
     private static Log log = LogFactory.getLog(EForm.class);

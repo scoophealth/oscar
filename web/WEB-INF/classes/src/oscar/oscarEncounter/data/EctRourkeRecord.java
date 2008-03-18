@@ -24,17 +24,14 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.data;
 
-import oscar.oscarDB.*;
-import oscar.oscarEncounter.data.*;
-import oscar.util.* ;
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Locale;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.Date;
-import java.util.*;
-import java.sql.*;
-import java.io.*;
-import java.lang.String;
+import java.util.Properties;
+
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 
 public class EctRourkeRecord {
     public Properties getRourkeRecord(int demographicNo, int existingID)

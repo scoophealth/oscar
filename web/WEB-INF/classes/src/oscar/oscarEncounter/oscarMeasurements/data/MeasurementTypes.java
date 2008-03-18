@@ -31,8 +31,10 @@ package oscar.oscarEncounter.oscarMeasurements.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 

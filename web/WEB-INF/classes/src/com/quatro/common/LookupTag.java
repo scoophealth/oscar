@@ -7,9 +7,11 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts.taglib.html.*;
 */
-import org.apache.struts.taglib.html.*;
-import org.apache.struts.taglib.TagUtils;
 import javax.servlet.jsp.JspException;
+
+import org.apache.struts.taglib.TagUtils;
+import org.apache.struts.taglib.html.BaseInputTag;
+
 import oscar.Misc;
 
 

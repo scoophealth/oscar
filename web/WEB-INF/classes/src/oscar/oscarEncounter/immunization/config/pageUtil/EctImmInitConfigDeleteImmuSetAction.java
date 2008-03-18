@@ -28,11 +28,13 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import oscar.oscarEncounter.immunization.config.data.*;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import oscar.oscarEncounter.immunization.config.data.EctImmImmunizationSetData;
 
 public class EctImmInitConfigDeleteImmuSetAction extends Action {
 

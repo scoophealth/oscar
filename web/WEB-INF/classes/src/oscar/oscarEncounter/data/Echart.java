@@ -24,9 +24,9 @@
 
 package oscar.oscarEncounter.data;
 
-import java.util.*;
+import java.util.Date;
 
-import oscar.util.*;
+import oscar.util.UtilDateUtilities;
 
 public class Echart {
   private Date eChartTimeStamp = new Date();

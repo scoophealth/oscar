@@ -26,16 +26,24 @@ package oscar.oscarEncounter.immunization.pageUtil;
 
 import java.io.IOException;
 import java.util.Locale;
+
 import javax.servlet.ServletException;
-//import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import oscar.oscarEncounter.immunization.data.EctImmImmunizationData;
+import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.util.UtilMisc;
 import oscar.util.UtilXML;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 
 public final class EctImmSaveScheduleAction extends Action {
    

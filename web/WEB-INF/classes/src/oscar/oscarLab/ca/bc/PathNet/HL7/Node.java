@@ -8,7 +8,8 @@ package oscar.oscarLab.ca.bc.PathNet.HL7;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
-import org.apache.log4j.*;
+
+import org.apache.log4j.Logger;
 
 import oscar.oscarDB.DBHandler;
 /*

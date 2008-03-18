@@ -24,7 +24,6 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 
-import java.io.PrintStream;
 import org.apache.struts.action.ActionForm;
 
 public final class EctConShowAllServicesForm extends ActionForm

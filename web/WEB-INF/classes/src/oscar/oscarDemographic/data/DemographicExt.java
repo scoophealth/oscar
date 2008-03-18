@@ -50,9 +50,15 @@ hidden char(1) default 0
 
 package oscar.oscarDemographic.data;
 
-import java.sql.*;
-import java.util.*;
-import oscar.oscarDB.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import oscar.oscarDB.DBHandler;
 
 /**
  * This class is used to interface with the DemographicExt table.

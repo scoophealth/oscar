@@ -1,25 +1,21 @@
 package com.quatro.web.lookup;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import com.quatro.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.service.TicklerManager;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import java.sql.*;
+import com.quatro.model.FieldDefValue;
+import com.quatro.model.LookupTableDefValue;
 import com.quatro.service.LookupManager;
-import com.quatro.model.*;
+import com.quatro.util.Utility;
 
 public class LookupCodeEditAction extends DispatchAction {
     private LookupManager lookupManager=null;

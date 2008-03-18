@@ -1,9 +1,14 @@
 package com.quatro.web.report;
 
 import java.util.ArrayList;
+
 import org.apache.struts.action.ActionForm;
-import com.quatro.util.*;
-import com.quatro.model.*;
+
+import com.quatro.model.ReportFilterValue;
+import com.quatro.model.ReportTempCriValue;
+import com.quatro.model.ReportValue;
+import com.quatro.util.HTMLPropertyBean;
+import com.quatro.util.KeyValueBean;
 
 public class QuatroReportRunnerForm extends ActionForm {
 

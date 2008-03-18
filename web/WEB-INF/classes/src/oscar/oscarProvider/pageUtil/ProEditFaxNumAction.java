@@ -23,8 +23,15 @@
  */
 package oscar.oscarProvider.pageUtil;
 
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
+
 import oscar.oscarProvider.data.ProviderFaxUpdater;
 
 

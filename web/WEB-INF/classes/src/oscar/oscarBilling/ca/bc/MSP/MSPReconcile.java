@@ -24,20 +24,37 @@ package oscar.oscarBilling.ca.bc.MSP;
  * Ontario, Canada
  */
 
-import java.io.*;
-import java.math.*;
-import java.sql.*;
-import java.text.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import oscar.entities.*;
-import oscar.oscarBilling.ca.bc.data.*;
-import oscar.oscarDB.*;
-import oscar.util.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import oscar.entities.MSPBill;
+import oscar.entities.Provider;
+import oscar.oscarBilling.ca.bc.data.BillRecipient;
+import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
+import oscar.oscarDB.DBHandler;
+import oscar.util.BeanUtilHlp;
+import oscar.util.SqlUtils;
+import oscar.util.StringUtils;
+import oscar.util.UtilMisc;
 
 public class MSPReconcile {
   private static Log log = LogFactory.getLog(MSPReconcile.class);

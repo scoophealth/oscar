@@ -39,7 +39,6 @@ import org.caisi.service.InfirmBedProgramManager;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.util.SessionConstants;
-import org.oscarehr.PMmodule.model.Facility;
 
 import oscar.OscarProperties;
 

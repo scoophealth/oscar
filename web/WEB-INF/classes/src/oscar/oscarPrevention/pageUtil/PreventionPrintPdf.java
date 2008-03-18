@@ -9,24 +9,25 @@
 
 package oscar.oscarPrevention.pageUtil;
 
-import javax.servlet.http.*;
 import java.awt.Color;
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import oscar.OscarProperties;
+import oscar.oscarClinic.ClinicData;
+
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
 import com.lowagie.text.Font;
+import com.lowagie.text.HeaderFooter;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Phrase;
-import com.lowagie.text.HeaderFooter;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
-import oscar.OscarProperties;
-
-import oscar.oscarClinic.ClinicData;
 /**
  *
  * @author rjonasz

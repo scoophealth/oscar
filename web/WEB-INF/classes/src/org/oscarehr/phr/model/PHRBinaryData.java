@@ -11,9 +11,11 @@ package org.oscarehr.phr.model;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+
 import org.indivo.IndivoException;
 import org.indivo.xml.JAXBUtils;
 import org.indivo.xml.phr.DocumentGenerator;
@@ -30,6 +32,7 @@ import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.w3c.dom.Element;
+
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarProvider.data.ProviderData;

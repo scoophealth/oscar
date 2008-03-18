@@ -8,17 +8,15 @@
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
-import java.util.StringTokenizer;
+import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.io.*;
-import java.sql.*;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import org.apache.commons.codec.binary.Base64;
-
-import oscar.oscarDB.*;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 import oscar.oscarLab.ca.all.util.Utilities;
 

@@ -29,9 +29,11 @@
 package oscar.oscarEncounter.oscarMeasurements.data;
 
 import java.util.Vector;
+
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBeanHandler;

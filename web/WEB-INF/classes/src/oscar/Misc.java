@@ -24,12 +24,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.Vector;
-
-import java.sql.ResultSet; // for conversions
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 public class Misc {
 

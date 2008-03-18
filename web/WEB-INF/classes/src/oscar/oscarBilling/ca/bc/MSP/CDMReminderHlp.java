@@ -24,15 +24,15 @@
 
 package oscar.oscarBilling.ca.bc.MSP;
 
-import java.sql.*;
-import java.util.*;
-
-import oscar.oscarDB.*;
-import oscar.oscarTickler.*;
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
-import java.text.*;
-import oscar.util.DateUtils;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+
+import oscar.oscarTickler.TicklerCreator;
 import oscar.util.SqlUtils;
 
 public class CDMReminderHlp {

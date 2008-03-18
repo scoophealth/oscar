@@ -28,7 +28,7 @@
 
 package oscar.oscarDemographic.data;
 
-import java.util.*;
+import java.util.Hashtable;
 
 /**
  * 

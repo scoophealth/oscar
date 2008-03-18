@@ -27,7 +27,6 @@
  */
 package oscar.billing.cad.model;
 
-import java.util.*;
 import oscar.billing.fat.model.FatBpa;
 
 /**

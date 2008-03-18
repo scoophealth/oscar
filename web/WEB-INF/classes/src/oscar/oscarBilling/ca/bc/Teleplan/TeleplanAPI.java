@@ -32,6 +32,7 @@ package oscar.oscarBilling.ca.bc.Teleplan;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpState;
@@ -44,6 +45,7 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import oscar.OscarProperties;
 
 /**

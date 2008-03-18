@@ -48,10 +48,15 @@ package oscar.oscarBilling.ca.bc.pageUtil;
  */
 
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.*;
-import oscar.util.*;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+
+import oscar.util.StringUtils;
 
 public final class BillingReProcessBillForm extends ActionForm {
     String billingmasterNo = null;

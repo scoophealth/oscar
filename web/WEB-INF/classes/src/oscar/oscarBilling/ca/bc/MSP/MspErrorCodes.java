@@ -32,9 +32,11 @@
 
 package oscar.oscarBilling.ca.bc.MSP;
 
-import java.io.*;
-import java.util.*;
-import oscar.*;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Properties;
+
+import oscar.OscarProperties;
 
 public class MspErrorCodes extends Properties{
    

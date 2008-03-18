@@ -27,11 +27,10 @@ package oscar;
 *
 * Description - BillingDataServlet
 */
-import java.io.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import oscar.BillingDataBean;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 
 
 public class BillingDataServlet extends HttpServlet implements java.io.Serializable

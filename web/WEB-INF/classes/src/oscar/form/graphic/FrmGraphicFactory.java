@@ -24,8 +24,6 @@
 
 package oscar.form.graphic;
 
-import java.io.IOException;
-import java.lang.reflect.*;
 
 /**
  *

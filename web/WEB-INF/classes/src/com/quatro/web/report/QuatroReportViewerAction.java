@@ -1,26 +1,37 @@
 package com.quatro.web.report;
 
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import com.quatro.model.*;
-import com.quatro.service.QuatroReportManager;
-import com.quatro.util.*;
-import oscar.OscarProperties;
-
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 
-import com.crystaldecisions.sdk.occa.report.exportoptions.ReportExportFormat;
-import java.util.*;
-//import java.io.ByteArrayInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import com.crystaldecisions.reports.sdk.*;
-import com.crystaldecisions.sdk.occa.report.reportsource.*;
-import com.crystaldecisions.sdk.occa.report.data.*;
-import com.crystaldecisions.sdk.occa.report.lib.*;
-import com.crystaldecisions.report.web.viewer.*;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import com.crystaldecisions.report.web.viewer.CrPrintMode;
+import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
+import com.crystaldecisions.reports.sdk.ReportClientDocument;
+import com.crystaldecisions.sdk.occa.report.data.Fields;
+import com.crystaldecisions.sdk.occa.report.data.ParameterField;
+import com.crystaldecisions.sdk.occa.report.data.ParameterFieldDiscreteValue;
+import com.crystaldecisions.sdk.occa.report.data.Values;
+import com.crystaldecisions.sdk.occa.report.exportoptions.ReportExportFormat;
+import com.crystaldecisions.sdk.occa.report.lib.ReportSDKException;
+import com.crystaldecisions.sdk.occa.report.reportsource.IReportSource;
+import com.quatro.model.DataViews;
+import com.quatro.model.ReportFilterValue;
+import com.quatro.model.ReportOptionValue;
+import com.quatro.model.ReportTempCriValue;
+import com.quatro.model.ReportTempValue;
+import com.quatro.model.ReportValue;
+import com.quatro.service.QuatroReportManager;
+import com.quatro.util.Utility;
 
 public class QuatroReportViewerAction extends Action {
 	ReportValue _rptValue;

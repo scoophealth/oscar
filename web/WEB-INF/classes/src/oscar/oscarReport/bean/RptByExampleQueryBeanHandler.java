@@ -24,13 +24,14 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarReport.bean;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
 import java.util.Collection;
-import oscar.oscarDB.DBHandler;
+import java.util.Vector;
+
 import org.apache.commons.lang.StringEscapeUtils;
+
+import oscar.oscarDB.DBHandler;
 
 public class RptByExampleQueryBeanHandler {
     

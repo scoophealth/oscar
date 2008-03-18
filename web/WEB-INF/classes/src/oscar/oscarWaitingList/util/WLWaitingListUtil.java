@@ -26,23 +26,10 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarWaitingList.util;
 
-import java.io.*;
-import java.text.DateFormat;
-import java.util.*;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import org.apache.commons.lang.StringEscapeUtils;
+
 import oscar.oscarDB.DBHandler;
-import oscar.OscarProperties;
-import oscar.oscarWaitingList.bean.*;
-import oscar.oscarProvider.bean.*;
-import oscar.util.*;
 
 public class WLWaitingListUtil {
     //Modified this method in Feb 2007 to ensure that all records cannot be deleted except hidden.    

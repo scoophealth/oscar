@@ -1,8 +1,8 @@
 package com.quatro.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.text.SimpleDateFormat;
 
 public class Utility {
     public static boolean IsEmpty(String pStr)

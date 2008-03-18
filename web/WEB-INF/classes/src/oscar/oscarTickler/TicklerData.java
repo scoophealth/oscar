@@ -28,9 +28,12 @@
 
 package oscar.oscarTickler;
 
-import java.sql.*;
-import org.apache.commons.lang.*;
-import oscar.oscarDB.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
+import oscar.oscarDB.DBHandler;
 
 /**
  *

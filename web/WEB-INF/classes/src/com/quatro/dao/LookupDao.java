@@ -1,23 +1,23 @@
 package com.quatro.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import com.quatro.model.*;
-import com.quatro.util.*;
-import java.sql.*;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.oscarehr.PMmodule.model.Program;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.MyDateFormat;
 import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
 
-import com.quatro.util.*;
+import com.quatro.model.FieldDefValue;
+import com.quatro.model.LookupCodeValue;
+import com.quatro.model.LookupTableDefValue;
+import com.quatro.util.Utility;
 public class LookupDao extends HibernateDaoSupport {
 
 	public List LoadCodeList(String tableId, boolean activeOnly, String code, String codeDesc)

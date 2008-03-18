@@ -24,10 +24,9 @@
  */
 
 package oscar.oscarReport.data;
-import oscar.oscarReport.pageUtil.*;
 import oscar.oscarDB.DBHandler;
-import java.sql.*;
-import oscar.util.*;
+import oscar.oscarReport.pageUtil.RptDemographicReportForm;
+import oscar.util.UtilDateUtilities;
 
 
 public class RptDemographicQueryBuilder {

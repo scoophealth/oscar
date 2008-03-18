@@ -22,9 +22,6 @@
 
 
 package org.caisi.core.web;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,7 +35,6 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.caisi.model.CaisiEditor;
-import org.caisi.service.CaisiRoleManager;
 import org.caisi.service.CaisiEditorManager;
 
 // use your IDE to handle imports

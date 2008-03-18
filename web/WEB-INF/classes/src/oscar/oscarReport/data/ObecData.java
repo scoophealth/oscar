@@ -23,10 +23,17 @@
  */
 package oscar.oscarReport.data;
 
-import oscar.oscarDB.*;
-import java.sql.*;
-import java.util.*;
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Properties;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarDB.DBPreparedHandler;
 
 
 /**

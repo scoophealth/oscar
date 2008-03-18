@@ -24,10 +24,10 @@
 
 package oscar.oscarProvider.data;
 
-import oscar.oscarDB.*;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import oscar.oscarDB.DBHandler;
 
 /**
  * Manages Fax number for provider 

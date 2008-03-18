@@ -23,14 +23,16 @@
  */
 package oscar.billing.popup;
 
-import org.apache.struts.action.*;
-
-import oscar.billing.cad.model.CadProcedimentos;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+
+import oscar.billing.cad.model.CadProcedimentos;
 
 
 public class ProcedimentoForm extends ActionForm {

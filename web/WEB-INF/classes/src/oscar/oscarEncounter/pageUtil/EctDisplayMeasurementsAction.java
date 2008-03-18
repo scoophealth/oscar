@@ -25,20 +25,18 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import oscar.oscarEncounter.oscarMeasurements.*;
-import oscar.oscarResearch.oscarDxResearch.bean.*;
-import oscar.OscarProperties;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.util.MessageResources;
+
+import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
+import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler;
 import oscar.util.DateUtils;
 import oscar.util.StringUtils;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Vector;
-import java.util.Date;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.util.MessageResources;
-import org.apache.commons.lang.StringEscapeUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 

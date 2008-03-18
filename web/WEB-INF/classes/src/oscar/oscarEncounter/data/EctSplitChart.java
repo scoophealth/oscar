@@ -28,10 +28,14 @@
 
 package oscar.oscarEncounter.data;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import oscar.oscarDB.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Vector;
+
+import oscar.oscarDB.DBHandler;
 
 /**
  *

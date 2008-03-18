@@ -28,17 +28,19 @@
  */
 
 package oscar.oscarReport.reportByTemplate;
-import java.util.*;
-import java.sql.*;
-import oscar.oscarDB.DBHandler;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
-import java.io.*;
-import oscar.oscarReport.reportByTemplate.*;
+
+import oscar.oscarDB.DBHandler;
 import oscar.util.UtilXML;
-import org.apache.commons.lang.StringEscapeUtils;
 /**
  * Created on December 27, 2006, 10:54 AM
  * @apavel (Paul)

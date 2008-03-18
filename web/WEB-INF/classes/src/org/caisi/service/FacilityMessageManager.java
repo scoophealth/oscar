@@ -29,8 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.dao.FacilityMessageDAO;
 import org.caisi.model.FacilityMessage;
-import org.caisi.service.FacilityMessageManager;
-import org.oscarehr.PMmodule.service.FacilityManager;
 
 
 public class FacilityMessageManager {

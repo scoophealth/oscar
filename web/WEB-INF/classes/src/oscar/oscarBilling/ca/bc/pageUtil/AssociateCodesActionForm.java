@@ -23,11 +23,14 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import javax.servlet.http.*;
-
-import org.apache.struts.action.*;
 import java.util.List;
-import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 public class AssociateCodesActionForm
     extends ActionForm {

@@ -38,8 +38,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import oscar.oscarEncounter.immunization.config.data.EctImmImmunizationSetData;
 import oscar.oscarEncounter.immunization.data.EctImmImmunizationData;

@@ -48,19 +48,12 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
-import java.io.PrintStream;
-
 import java.sql.ResultSet;
-
 import java.sql.SQLException;
-
 import java.util.Vector;
 
-import java.util.Date;
-
 import oscar.oscarDB.DBHandler;
-
-import oscar.util.*;
+import oscar.util.UtilDateUtilities;
 
 public class EctConsultationFormRequestUtil {
 

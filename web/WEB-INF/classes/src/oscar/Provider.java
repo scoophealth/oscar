@@ -24,8 +24,9 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
 
-import java.sql.*;
-import java.io.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import org.oscarehr.util.DbConnectionFilter;
 

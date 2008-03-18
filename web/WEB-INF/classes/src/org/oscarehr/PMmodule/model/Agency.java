@@ -20,8 +20,8 @@
  */
 package org.oscarehr.PMmodule.model;
 
-import java.util.Map;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * This is the object class that relates to the agency table. Any customizations belong here.

@@ -27,7 +27,8 @@
  */
 package oscar.billing.fat.model;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.TreeSet;
 
 
 /**

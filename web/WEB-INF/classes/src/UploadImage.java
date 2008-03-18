@@ -22,8 +22,16 @@
 // * Ontario, Canada 
 // *
 // -----------------------------------------------------------------------------------------------------------------------
-import java.io.*;
-import javax.servlet.*;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 public class UploadImage extends GenericServlet
 {

@@ -31,7 +31,7 @@ package oscar.util;
 
 
 /*
- * $Id: ConcatPDF.java,v 1.1 2006-07-30 20:57:59 jaygallagher Exp $
+ * $Id: ConcatPDF.java,v 1.2 2008-03-18 19:41:35 tedleung Exp $
  * $Name:  $
  *
  * This code is free software. It may only be copied or modified
@@ -51,12 +51,17 @@ package oscar.util;
  * @author Mark Thompson
  */
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.lowagie.text.Document;
-import com.lowagie.text.pdf.*;
-import java.util.List;
-import java.util.ArrayList;
+import com.lowagie.text.pdf.PRAcroForm;
+import com.lowagie.text.pdf.PdfCopy;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.SimpleBookmark;
 
 public class ConcatPDF {
     

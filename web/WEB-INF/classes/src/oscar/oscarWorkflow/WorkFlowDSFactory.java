@@ -32,8 +32,10 @@ package oscar.oscarWorkflow;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
+
 import org.drools.RuleBase;
 import org.drools.io.RuleBaseLoader;
+
 import oscar.OscarProperties;
 
 /**

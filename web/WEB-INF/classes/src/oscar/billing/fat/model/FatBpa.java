@@ -27,8 +27,8 @@
  */
 package oscar.billing.fat.model;
 
-import java.util.*;
 import java.util.Date;
+
 import oscar.billing.cad.model.CadAtividadesSaude;
 import oscar.billing.cad.model.CadFaixasEtaria;
 import oscar.billing.cad.model.CadGrupoAtendimento;

@@ -23,17 +23,14 @@
  */
 package oscar.billing.dao;
 
-import oscar.billing.model.Provider;
-
-import oscar.oscarDB.DBHandler;
-
-import oscar.util.DAO;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.Properties;
+
+import oscar.billing.model.Provider;
+import oscar.oscarDB.DBHandler;
+import oscar.util.DAO;
 
 
 public class ProviderDAO extends DAO {

@@ -23,12 +23,15 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.data;
-import oscar.oscarDB.DBPreparedHandler;
-import oscar.OscarProperties;
-import org.w3c.dom.*;
-import  oscar.oscarMessenger.util.*;
-
 import java.sql.ResultSet;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import oscar.oscarDB.DBPreparedHandler;
+import oscar.oscarMessenger.util.Msgxml;
 
 public class MsgMessageData {
 

@@ -24,10 +24,12 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
-import java.sql.*;
-import java.util.*;
-import oscar.oscarDB.*;
-import oscar.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import oscar.oscarDB.DBHandler;
+import oscar.util.SqlUtils;
 
 /**
  * Responsible for CRUD operation a user Billing Module Preferences

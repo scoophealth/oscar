@@ -28,8 +28,8 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import org.apache.struts.action.*;
-import org.apache.struts.upload.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.upload.FormFile;
 
 /**
  *

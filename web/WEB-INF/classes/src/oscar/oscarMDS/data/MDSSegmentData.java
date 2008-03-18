@@ -23,11 +23,17 @@
  */
 package oscar.oscarMDS.data;
 
-import org.apache.log4j.Logger;
-import oscar.oscarDB.*;
-import java.util.*;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.Hashtable;
+import java.util.Locale;
+
+import org.apache.log4j.Logger;
+
+import oscar.oscarDB.DBHandler;
 
 
 public class MDSSegmentData {

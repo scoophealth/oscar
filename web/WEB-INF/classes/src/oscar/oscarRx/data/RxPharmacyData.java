@@ -31,9 +31,11 @@
 
 package oscar.oscarRx.data;
 
-import java.sql.*;
-import java.util.*;
-import oscar.oscarDB.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import oscar.oscarDB.DBHandler;
 
 /**
  *

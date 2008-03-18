@@ -9,19 +9,22 @@
 
 package oscar.oscarLab.ca.all.parsers;
 
-import ca.uhn.hl7v2.model.Message;
-import ca.uhn.hl7v2.util.Terser;
-import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.parser.*;
-import ca.uhn.hl7v2.validation.impl.NoValidation;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 
 import oscar.util.UtilDateUtilities;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.text.*;
+import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.parser.Parser;
+import ca.uhn.hl7v2.parser.PipeParser;
+import ca.uhn.hl7v2.util.Terser;
+import ca.uhn.hl7v2.validation.impl.NoValidation;
 
 /**
  *

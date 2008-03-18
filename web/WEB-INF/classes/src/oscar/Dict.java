@@ -25,6 +25,7 @@
 package oscar;
 
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class Dict extends Properties {

@@ -29,9 +29,10 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import oscar.oscarDB.*;
+import java.sql.ResultSet;
 import java.util.Properties;
-import java.sql.*;
+
+import oscar.oscarDB.DBHandler;
 
 /**
  *

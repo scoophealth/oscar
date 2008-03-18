@@ -25,10 +25,7 @@
 
 package oscar.oscarRx.data;
 
-import oscar.oscarDB.*;
-import oscar.oscarRx.util.*;
-import java.util.*;
-import java.sql.*;
+import java.util.Hashtable;
 
 public class RxAllergyData {
     public Allergy getAllergy(String DESCRIPTION, int HICL_SEQNO, int HIC_SEQNO,

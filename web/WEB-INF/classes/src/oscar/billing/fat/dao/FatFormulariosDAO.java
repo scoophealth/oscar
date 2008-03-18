@@ -23,19 +23,16 @@
  */
 package oscar.billing.fat.dao;
 
-import oscar.billing.fat.model.FatFormularioProcedimento;
-import oscar.billing.fat.model.FatFormularios;
-
-import oscar.oscarDB.DBHandler;
-
-import oscar.util.DAO;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import oscar.billing.fat.model.FatFormularioProcedimento;
+import oscar.billing.fat.model.FatFormularios;
+import oscar.oscarDB.DBHandler;
+import oscar.util.DAO;
 
 
 public class FatFormulariosDAO extends DAO {

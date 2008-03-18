@@ -24,9 +24,11 @@
 
 package oscar.oscarEncounter.data;
 
-import java.sql.*;
-import oscar.oscarDB.*;
-import oscar.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilMisc;
 
 /**
  *

@@ -24,8 +24,6 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
-import java.io.PrintStream;
-import java.util.*;
 
 public class EctValidationParameter{
 

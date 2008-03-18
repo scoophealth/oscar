@@ -25,17 +25,20 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import oscar.eform.*;
-import oscar.util.DateUtils;
-import oscar.util.StringUtils;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.sql.Date;
+
 import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.util.MessageResources;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.util.MessageResources;
+
+import oscar.eform.EFormUtil;
+import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 

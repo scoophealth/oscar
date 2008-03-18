@@ -23,6 +23,7 @@
 package org.oscarehr.casemgmt.web;
 
 import java.io.Serializable;
+
 import org.oscarehr.casemgmt.model.Issue;
 
 

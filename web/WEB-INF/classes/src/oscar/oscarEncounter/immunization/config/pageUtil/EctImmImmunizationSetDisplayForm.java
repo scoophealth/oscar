@@ -24,7 +24,6 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.immunization.config.pageUtil;
 
-import java.io.PrintStream;
 import org.apache.struts.action.ActionForm;
 
 public final class EctImmImmunizationSetDisplayForm extends ActionForm

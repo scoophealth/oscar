@@ -27,7 +27,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import oscar.SxmlMisc;
 import oscar.login.DBHelp;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;

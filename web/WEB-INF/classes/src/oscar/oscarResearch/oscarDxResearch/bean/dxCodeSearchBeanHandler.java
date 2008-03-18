@@ -24,13 +24,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarResearch.oscarDxResearch.bean;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
-import java.util.Collection;
+
 import oscar.oscarDB.DBHandler;
-import oscar.oscarResearch.oscarDxResearch.util.*;
 
 public class dxCodeSearchBeanHandler {
     

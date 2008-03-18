@@ -23,10 +23,14 @@
  */
 package oscar.oscarMDS.data;
 
-import oscar.oscarDB.*;
-import java.util.*;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
+import oscar.oscarDB.DBHandler;
 
 public class PatientData
 {

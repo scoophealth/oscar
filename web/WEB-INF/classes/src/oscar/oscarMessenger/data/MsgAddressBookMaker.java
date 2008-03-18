@@ -25,10 +25,15 @@
 package oscar.oscarMessenger.data;
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import oscar.oscarDB.DBHandler;
-import org.w3c.dom.*;
-import java.sql.*;
-import oscar.oscarMessenger.docxfer.util.*;
+import oscar.oscarMessenger.docxfer.util.MsgCommxml;
+import oscar.oscarMessenger.docxfer.util.MsgUtil;
 
 // This is a modified version of oscar.comm.client.AddressBook
 public class MsgAddressBookMaker

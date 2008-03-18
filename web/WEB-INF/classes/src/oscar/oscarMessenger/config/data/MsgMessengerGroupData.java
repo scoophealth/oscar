@@ -26,10 +26,12 @@ package oscar.oscarMessenger.config.data;
 
 
 
-import oscar.oscarDB.DBHandler;
-import javax.servlet.jsp.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import javax.servlet.jsp.JspWriter;
+
+import oscar.oscarDB.DBHandler;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

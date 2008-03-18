@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.caisi.dao.FacilityMessageDAO;
 import org.caisi.model.FacilityMessage;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

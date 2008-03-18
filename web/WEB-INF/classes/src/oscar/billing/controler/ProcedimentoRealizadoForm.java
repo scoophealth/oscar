@@ -23,19 +23,19 @@
  */
 package oscar.billing.controler;
 
-import org.apache.struts.action.*;
-
-import oscar.billing.cad.model.CadProcedimentos;
-
-import oscar.billing.fat.model.FatFormularios;
-
-import oscar.billing.model.Appointment;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+
+import oscar.billing.cad.model.CadProcedimentos;
+import oscar.billing.fat.model.FatFormularios;
+import oscar.billing.model.Appointment;
 
 
 public class ProcedimentoRealizadoForm extends ActionForm {

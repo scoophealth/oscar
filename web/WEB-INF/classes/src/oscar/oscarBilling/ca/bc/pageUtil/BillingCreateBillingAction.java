@@ -23,22 +23,35 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
 import java.util.ArrayList;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
-import org.apache.struts.action.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import oscar.*;
-import oscar.entities.*;
-import oscar.oscarBilling.ca.bc.MSP.*;
-import oscar.oscarBilling.ca.bc.data.*;
-import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.*;
-import oscar.oscarDemographic.data.*;
+
+import oscar.OscarProperties;
+import oscar.entities.PaymentType;
+import oscar.oscarBilling.ca.bc.MSP.AgeValidator;
+import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
+import oscar.oscarBilling.ca.bc.MSP.SexValidator;
+import oscar.oscarBilling.ca.bc.data.BillingFormData;
+import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
+import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.SqlUtils;
-import java.math.BigDecimal;
 
 public class BillingCreateBillingAction
     extends Action {

@@ -1,7 +1,8 @@
 package com.quatro.model;
 
-import org.caisi.model.BaseObject;
 import java.util.Date;
+
+import org.caisi.model.BaseObject;
 
 public class ReportDateValue extends BaseObject{
 	private String sessionId;

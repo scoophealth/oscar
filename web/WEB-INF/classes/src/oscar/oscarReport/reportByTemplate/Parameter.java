@@ -31,7 +31,7 @@ package oscar.oscarReport.reportByTemplate;
  * @author apavel (Paul)
  */
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class Parameter {
     public static final String LIST = "list";

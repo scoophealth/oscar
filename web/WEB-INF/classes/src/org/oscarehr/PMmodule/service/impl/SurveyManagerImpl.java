@@ -36,10 +36,10 @@ import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
 import org.oscarehr.survey.model.oscar.OscarFormDataTmpsave;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
+import org.oscarehr.survey.model.oscar.OscarFormInstanceTmpsave;
 import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.Section;
-import org.oscarehr.survey.model.oscar.OscarFormInstanceTmpsave;
 import org.oscarehr.surveymodel.SurveyDocument;
 
 public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource {

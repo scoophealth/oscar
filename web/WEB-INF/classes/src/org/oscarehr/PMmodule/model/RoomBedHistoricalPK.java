@@ -22,9 +22,9 @@
 
 package org.oscarehr.PMmodule.model;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import java.io.Serializable;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class RoomBedHistoricalPK implements Serializable {
 

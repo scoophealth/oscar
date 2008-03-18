@@ -1,9 +1,9 @@
 package oscar.oscarEncounter.oscarMeasurements.util;
 
+import java.util.ArrayList;
+
 import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementInfo;
-
-import java.util.ArrayList;
 
 /**
  */

@@ -29,16 +29,17 @@
 
 package oscar;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.util.Properties;
 
-import org.apache.struts.action.*;
-import org.oscarehr.util.DbConnectionFilter;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import oscar.oscarDB.*;
+import org.apache.struts.action.Action;
+
+import oscar.oscarDB.DBPreparedHandler;
 
 public class OscarAction
     extends Action {

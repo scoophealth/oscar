@@ -23,15 +23,19 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import oscar.entities.*;
-import oscar.oscarBilling.ca.bc.MSP.*;
-import oscar.oscarBilling.ca.bc.data.*;
-import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.*;
-import oscar.oscarDB.*;
-import oscar.util.*;
+import oscar.entities.PaymentType;
+import oscar.oscarBilling.ca.bc.MSP.MSPBillingNote;
+import oscar.oscarBilling.ca.bc.data.BillRecipient;
+import oscar.oscarBilling.ca.bc.data.BillingNote;
+import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
+import oscar.oscarDB.DBHandler;
+import oscar.util.SqlUtils;
 
 public class BillingViewBean {
   private String apptProviderNo = null;

@@ -23,14 +23,8 @@
  */
 package oscar.form;
 
-import java.io.PrintStream;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Properties;
-import oscar.oscarDB.DBHandler;
-import oscar.util.*;
 
 public abstract class FrmRecord {
     public abstract Properties getFormRecord(int demographicNo, int existingID) throws SQLException  ;

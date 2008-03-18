@@ -25,10 +25,15 @@ package oscar.oscarEncounter.immunization.config.pageUtil;
 
 import java.io.IOException;
 import java.util.Locale;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.*;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 
 public final class EctImmInitConfigAction extends Action {

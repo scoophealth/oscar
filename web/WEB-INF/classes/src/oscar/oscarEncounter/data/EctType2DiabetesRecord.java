@@ -24,15 +24,14 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.data;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Date;
 import java.util.Properties;
+
 import oscar.oscarDB.DBHandler;
-import oscar.util.*;
+import oscar.util.UtilDateUtilities;
 
 public class EctType2DiabetesRecord {
     public Properties getType2DiabetesRecord(int demographicNo, int existingID)

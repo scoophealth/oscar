@@ -3,7 +3,6 @@ package com.quatro.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.quatro.model.ScratchPad;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ScratchPadDao extends HibernateDaoSupport {

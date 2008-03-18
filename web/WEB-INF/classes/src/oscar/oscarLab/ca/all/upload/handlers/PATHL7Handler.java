@@ -8,22 +8,16 @@
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
-import java.io.*;
-import java.sql.*;
+import java.io.FileInputStream;
 
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.log4j.Logger;
-import org.w3c.dom.*;
-import org.apache.commons.codec.binary.Base64;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.Message;
-import ca.uhn.hl7v2.parser.*;
-import ca.uhn.hl7v2.util.Terser;
-
-import ca.uhn.hl7v2.model.v23.segment.*;
-
-import oscar.oscarDB.*;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 
 /**

@@ -30,15 +30,16 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
 import oscar.OscarProperties;
-import oscar.dms.EDocUtil;
-import oscar.dms.EDoc;
 import oscar.util.ConcatPDF;
 import oscar.util.UtilDateUtilities;
 

@@ -28,10 +28,14 @@
 
 package oscar.oscarDemographic.data;
 
-import java.sql.*;
-import java.util.*;
-import oscar.oscarDB.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import org.apache.commons.lang.StringEscapeUtils;
+
+import oscar.oscarDB.DBHandler;
 
 /**
  *

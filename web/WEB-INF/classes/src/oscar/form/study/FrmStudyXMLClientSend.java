@@ -47,25 +47,27 @@ java oscar.form.study.FrmStudyXMLClientSend c:\\root\\oscar_sfhc.properties http
 
 package oscar.form.study;
 
-import java.io.*;
-import java.util.*;
-import java.sql.*;
-import javax.xml.soap.*;
-import javax.xml.messaging.*;
-import java.net.URL;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import oscar.oscarDB.*;
-import oscar.util.*;
-import org.w3c.dom.*;
-import org.xml.sax.InputSource;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
+import java.io.FileInputStream;
+import java.sql.ResultSet;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Properties;
+import java.util.Vector;
+
+import javax.xml.messaging.URLEndpoint;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPBodyElement;
+import javax.xml.soap.SOAPConnection;
+import javax.xml.soap.SOAPConnectionFactory;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPHeaderElement;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
+
+import oscar.oscarDB.DBHandler;
 
 
 public class FrmStudyXMLClientSend {

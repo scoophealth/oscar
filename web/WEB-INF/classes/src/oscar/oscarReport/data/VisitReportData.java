@@ -25,10 +25,9 @@ package oscar.oscarReport.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
-//import oscar.oscarEncounter.util.StringQuote;
-//import oscar.oscarMessenger.util.*;
 
 
 public class VisitReportData {

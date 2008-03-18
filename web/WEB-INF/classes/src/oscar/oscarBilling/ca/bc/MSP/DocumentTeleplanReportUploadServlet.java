@@ -23,15 +23,26 @@
  */
 package oscar.oscarBilling.ca.bc.MSP;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.zip.*;
-import org.apache.commons.fileupload.*;
-import oscar.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUpload;
+import org.apache.commons.fileupload.FileUploadException;
+
 import oscar.DocumentBean;
+import oscar.OscarProperties;
 
 public class DocumentTeleplanReportUploadServlet extends HttpServlet{
     final static int BUFFER = 2048;

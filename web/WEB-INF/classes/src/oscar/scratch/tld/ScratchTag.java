@@ -24,14 +24,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.scratch.tld;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.servlet.jsp.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import oscar.oscarDB.DBHandler;
 
 public class ScratchTag extends TagSupport {
 

@@ -24,9 +24,9 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarConsultation.data;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import oscar.oscarDB.DBHandler;
 
 public class EctConProviderData

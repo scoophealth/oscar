@@ -9,12 +9,15 @@
 
 package oscar.oscarLab.ca.all.util;
 
-import java.security.*;
-import java.sql.*;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
-import oscar.oscarDB.*;
-import org.apache.commons.codec.binary.Base64;
+import oscar.oscarDB.DBHandler;
 
 
 

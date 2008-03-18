@@ -1,13 +1,19 @@
 package com.quatro.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import com.quatro.dao.QuatroReportDao;
-import com.quatro.model.*;
-
 import java.util.Date;
-import java.io.*;
-import java.sql.Blob;
+import java.util.List;
+
+import com.quatro.dao.QuatroReportDao;
+import com.quatro.model.DocTextValue;
+import com.quatro.model.ReportEXValue;
+import com.quatro.model.ReportFilterValue;
+import com.quatro.model.ReportGroupValue;
+import com.quatro.model.ReportTempValue;
+import com.quatro.model.ReportValue;
 
 public class QuatroReportManager {
 

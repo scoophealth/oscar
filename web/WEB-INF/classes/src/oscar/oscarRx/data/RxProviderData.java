@@ -24,10 +24,10 @@
  */
 package oscar.oscarRx.data;
 
-import oscar.oscarDB.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import java.util.*;
-import java.sql.*;
+import oscar.oscarDB.DBHandler;
 
 public class RxProviderData {
     public Provider getProvider(String providerNo) {

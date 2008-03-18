@@ -25,13 +25,13 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
 import java.util.Vector;
+
 import oscar.oscarDB.DBHandler;
-import oscar.util.*;
+import oscar.util.UtilDateUtilities;
 
 public class EctViewConsultationRequestsUtil {         
    

@@ -3,13 +3,9 @@ package oscar.oscarBilling.ca.on.pageUtil;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
 import oscar.oscarBilling.ca.on.data.JdbcBilling3rdPartImpl;
 
 public class Billing3rdPartPrep {
-	private static final Logger _logger = Logger
-			.getLogger(Billing3rdPartPrep.class);
 
 	JdbcBilling3rdPartImpl dbObj = new JdbcBilling3rdPartImpl();
 

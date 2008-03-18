@@ -1,13 +1,6 @@
 package org.oscarehr.PMmodule.web.formbean;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-
 import org.apache.struts.util.LabelValueBean;
-
-import oscar.oscarDB.DBHandler;
 
 public class GenericIntakeConstants {
 

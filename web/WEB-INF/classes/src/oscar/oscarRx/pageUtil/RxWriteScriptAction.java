@@ -23,21 +23,24 @@
  */
 package oscar.oscarRx.pageUtil;
 
-import oscar.oscarRx.data.*;
-import oscar.oscarRx.util.*;
-
 import java.io.IOException;
 import java.util.Locale;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
+
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.oscarRx.data.RxDrugData;
+import oscar.oscarRx.data.RxPrescriptionData;
+import oscar.oscarRx.util.RxUtil;
 
 
 public final class RxWriteScriptAction extends Action {

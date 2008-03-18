@@ -23,14 +23,14 @@
  */
 package oscar.form.study;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
+
 import oscar.oscarDB.DBHandler;
-import oscar.util.*;
+import oscar.util.UtilDateUtilities;
 
 public class FrmStudydiabetes2subjectRecord extends FrmStudyRecord {
     public Properties getFormRecord(int demographicNo, int existingID) throws SQLException    {

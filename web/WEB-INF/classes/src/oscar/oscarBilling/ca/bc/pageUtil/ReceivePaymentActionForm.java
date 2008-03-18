@@ -24,11 +24,16 @@
 
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.util.*;
-import javax.servlet.http.*;
+import java.util.List;
 
-import org.apache.struts.action.*;
-import oscar.util.*;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+
+import oscar.util.StringUtils;
 
 public class ReceivePaymentActionForm
     extends ActionForm {

@@ -25,12 +25,15 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.sql.SQLException;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.util.MessageResources;
-import oscar.util.StringUtils;
+
 import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 
 /**
  *

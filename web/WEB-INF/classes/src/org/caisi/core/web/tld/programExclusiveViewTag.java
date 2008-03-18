@@ -9,11 +9,12 @@
 
 package org.caisi.core.web.tld;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.jsp.*;
+
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import oscar.oscarDB.DBHandler;
 
 /**

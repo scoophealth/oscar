@@ -24,10 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.pageUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionForward;
 
 public final class MsgViewAttachmentForm extends ActionForm {
 

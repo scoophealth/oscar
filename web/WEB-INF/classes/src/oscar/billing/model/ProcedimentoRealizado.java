@@ -27,10 +27,10 @@
  */
 package oscar.billing.model;
 
+import java.util.Date;
+
 import oscar.billing.cad.model.CadProcedimentos;
 import oscar.billing.cad.model.CadTiposAtendimento;
-
-import java.util.Date;
 
 
 /**

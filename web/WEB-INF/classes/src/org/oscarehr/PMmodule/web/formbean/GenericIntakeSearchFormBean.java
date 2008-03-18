@@ -18,13 +18,12 @@
  */
 package org.oscarehr.PMmodule.web.formbean;
 
+import java.util.Collection;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.util.LabelValueBean;
-import org.caisi.integrator.model.Client;
 import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.oscarehr.PMmodule.model.Demographic;
-
-import java.util.Collection;
 
 public class GenericIntakeSearchFormBean extends ActionForm {
 

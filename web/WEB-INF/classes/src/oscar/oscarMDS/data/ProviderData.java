@@ -23,9 +23,10 @@
  */
 package oscar.oscarMDS.data;
 
-import oscar.oscarDB.DBHandler;
-import java.sql.*;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+
+import oscar.oscarDB.DBHandler;
 
 public class ProviderData {
     

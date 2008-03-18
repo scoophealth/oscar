@@ -24,8 +24,9 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
 
-import java.util.*;
-//import java.net.*;
+import java.util.Enumeration;
+import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class SxmlMisc extends Properties {

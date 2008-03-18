@@ -24,14 +24,9 @@
  */
 package oscar.oscarRx.data;
 
-import oscar.oscarDB.*;
-import oscar.oscarRx.util.*;
-import oscar.oscarProvider.data.*;
-import oscar.OscarProperties;
+import java.sql.SQLException;
 
-import java.util.*;
-import java.sql.*;
-import org.apache.commons.lang.*;
+import oscar.oscarDB.DBHandler;
 
 public class RxPrescriptionImport {
     String providerNo = "";

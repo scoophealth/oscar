@@ -22,15 +22,15 @@
 
 package org.oscarehr.PMmodule.service;
 
-import org.oscarehr.PMmodule.dao.ProgramClientRestrictionDAO;
-import org.oscarehr.PMmodule.exception.ClientAlreadyRestrictedException;
-import org.oscarehr.PMmodule.model.ProgramClientRestriction;
-import org.springframework.beans.factory.annotation.Required;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import org.oscarehr.PMmodule.dao.ProgramClientRestrictionDAO;
+import org.oscarehr.PMmodule.exception.ClientAlreadyRestrictedException;
+import org.oscarehr.PMmodule.model.ProgramClientRestriction;
+import org.springframework.beans.factory.annotation.Required;
 
 /**
  * Manage client restrictions

@@ -34,14 +34,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,12 +52,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import oscar.OscarDocumentCreator;
+
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.eform.APExecute;
-import oscar.log.LogAction;
-import oscar.log.LogConst;
 import oscar.oscarPrevention.reports.FollowupManagement;
 import oscar.oscarReport.data.ManageLetters;
 import oscar.util.ConcatPDF;

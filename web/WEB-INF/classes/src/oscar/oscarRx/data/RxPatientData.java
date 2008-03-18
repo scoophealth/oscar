@@ -24,11 +24,14 @@
 
 package oscar.oscarRx.data;
 
-import oscar.oscarDB.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
-import java.util.*;
-
-import java.sql.*;
+import oscar.oscarDB.DBHandler;
 
 public class RxPatientData {
    

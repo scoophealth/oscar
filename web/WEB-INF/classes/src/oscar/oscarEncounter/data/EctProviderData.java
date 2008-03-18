@@ -24,12 +24,12 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.data;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import oscar.oscarDB.DBHandler;
-import oscar.oscarClinic.ClinicData;
+
 import oscar.SxmlMisc;
+import oscar.oscarClinic.ClinicData;
+import oscar.oscarDB.DBHandler;
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 public class EctProviderData {

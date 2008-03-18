@@ -29,10 +29,12 @@
 
 package oscar.oscarBilling.ca.bc.MSP;
 
-import java.sql.*;
-import oscar.*;
-import oscar.oscarDB.*;
-import oscar.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import oscar.Misc;
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilMisc;
 
 /**
  *

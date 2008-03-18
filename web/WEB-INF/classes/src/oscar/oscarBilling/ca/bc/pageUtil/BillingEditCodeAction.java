@@ -24,8 +24,6 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.IOException;
-import java.sql.*;
-import java.util.*;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
@@ -36,9 +34,8 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import oscar.*;
-import oscar.oscarBilling.ca.bc.data.*;
-import oscar.oscarDB.*;
+
+import oscar.oscarBilling.ca.bc.data.BillingCodeData;
 
 public final class BillingEditCodeAction extends Action {
 

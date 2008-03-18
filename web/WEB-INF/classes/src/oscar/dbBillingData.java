@@ -24,10 +24,12 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
 
-import oscar.oscarDB.*;
-import java.sql.*;
-import java.util.*;
-import java.security.*;
+import java.security.MessageDigest;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
+
+import oscar.oscarDB.DBPreparedHandler;
 
 public class dbBillingData {
   private String username="";

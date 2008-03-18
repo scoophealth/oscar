@@ -27,9 +27,9 @@
  */
 package oscar.eform.data;
 
-import oscar.eform.*;
-import java.sql.*;
-import java.util.*;
+import java.util.Hashtable;
+
+import oscar.eform.EFormUtil;
 
 public class EFormCheck extends EFormBase {
     

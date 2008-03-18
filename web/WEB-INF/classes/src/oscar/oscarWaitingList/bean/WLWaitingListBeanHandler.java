@@ -27,12 +27,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarWaitingList.bean;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarWaitingList.util.WLWaitingListUtil;
 

@@ -25,9 +25,9 @@ package oscar.oscarProvider.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import oscar.oscarDB.DBHandler;
-//import oscar.oscarEncounter.util.StringQuote;
-import oscar.oscarMessenger.util.*;
+import oscar.oscarMessenger.util.MsgStringQuote;
 
 
 public class ProSignatureData {

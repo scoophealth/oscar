@@ -26,14 +26,14 @@ package oscar.oscarBilling.ca.bc.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import oscar.oscarDB.DBHandler;
-import oscar.entities.PaymentType;
-import java.util.List;
-import oscar.util.SqlUtils;
-import oscar.entities.BillingStatusType;
-import java.util.Properties;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+
+import oscar.entities.BillingStatusType;
+import oscar.entities.PaymentType;
+import oscar.oscarDB.DBHandler;
+import oscar.util.SqlUtils;
 
 
 public class BillingFormData {

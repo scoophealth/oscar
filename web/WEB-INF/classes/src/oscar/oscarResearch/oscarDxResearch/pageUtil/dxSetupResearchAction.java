@@ -24,15 +24,19 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarResearch.oscarDxResearch.pageUtil;
 
-import java.io.*;
-import java.util.*;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import oscar.oscarMessenger.util.MsgStringQuote;
-import oscar.oscarResearch.oscarDxResearch.bean.*;
-import oscar.oscarResearch.oscarDxResearch.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListBeanHandler;
+import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListItemsHandler;
+import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler;
+import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
 
 public final class dxSetupResearchAction extends Action {
 

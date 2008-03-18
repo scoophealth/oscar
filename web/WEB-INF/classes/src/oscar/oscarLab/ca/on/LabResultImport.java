@@ -24,9 +24,12 @@
 
 package oscar.oscarLab.ca.on;
 
-import oscar.oscarDB.*;
-import java.util.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import oscar.oscarDB.DBHandler;
 
 public class LabResultImport {
    

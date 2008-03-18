@@ -24,16 +24,11 @@
  */
 package oscar.oscarRx.data;
 
-import oscar.util.UtilXML;
-import oscar.oscarDB.*;
-import oscar.oscarRx.util.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Vector;
+
 import oscar.oscarRx.util.RxDrugRef;
-
-import java.util.*;
-import java.sql.*;
-
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
 
 public class RxDrugData {
     

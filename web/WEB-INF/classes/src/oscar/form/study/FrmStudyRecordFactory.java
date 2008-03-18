@@ -24,7 +24,6 @@
 package oscar.form.study;
 
 import java.io.IOException;
-import java.lang.reflect.*;
 
 public class FrmStudyRecordFactory {
     public FrmStudyRecord factory (String which) throws IOException {

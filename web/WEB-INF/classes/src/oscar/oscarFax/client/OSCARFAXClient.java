@@ -27,19 +27,16 @@
  * Created on February 17, 2003, 12:08 PM
  */
 package oscar.oscarFax.client;
-import java.io.*;
+import java.util.Iterator;
 
-import javax.xml.soap.*;
-import java.net.URL;
-
-import javax.mail.internet.*;
-
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-
-import org.dom4j.*;
-import javax.xml.parsers.*; 
-import java.util.*;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPConnection;
+import javax.xml.soap.SOAPConnectionFactory;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 /**
  *
  * @author  Jay

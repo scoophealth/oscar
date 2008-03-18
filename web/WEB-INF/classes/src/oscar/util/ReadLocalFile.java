@@ -24,8 +24,9 @@
 
 package oscar.util;
 
-import java.io.*;
-import javax.servlet.jsp.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class ReadLocalFile {
     public static String getStringFromFile(String fileName) {

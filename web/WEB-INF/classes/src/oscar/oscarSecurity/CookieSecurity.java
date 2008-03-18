@@ -24,9 +24,10 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarSecurity;
 
-import javax.servlet.http.Cookie;
 import java.util.Random;
 import java.util.zip.Adler32;
+
+import javax.servlet.http.Cookie;
 
 public class CookieSecurity
 {

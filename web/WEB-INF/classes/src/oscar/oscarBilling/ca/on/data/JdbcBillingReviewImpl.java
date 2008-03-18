@@ -23,7 +23,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import oscar.oscarDB.*;
+import oscar.oscarDB.DBPreparedHandler;
+import oscar.oscarDB.DBPreparedHandlerParam;
 
 public class JdbcBillingReviewImpl {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingReviewImpl.class);

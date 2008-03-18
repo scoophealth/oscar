@@ -28,9 +28,15 @@
 
 package oscar.oscarTickler.pageUtil;
 
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import oscar.oscarTickler.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import oscar.oscarTickler.TicklerData;
 
 /**
  *

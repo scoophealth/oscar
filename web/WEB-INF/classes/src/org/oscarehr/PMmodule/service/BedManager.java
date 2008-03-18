@@ -23,9 +23,8 @@
 package org.oscarehr.PMmodule.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,7 +40,6 @@ import org.oscarehr.PMmodule.model.BedType;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
-import org.oscarehr.PMmodule.service.BedDemographicManager;
 
 /**
  * Implementation of BedManager interface

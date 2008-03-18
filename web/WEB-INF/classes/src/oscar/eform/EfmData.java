@@ -28,9 +28,11 @@
 
 package oscar.eform;
 
-import java.sql.*;
-import java.util.*;
-import oscar.oscarDB.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Hashtable;
+
+import oscar.oscarDB.DBHandler;
 
 /**
  * 

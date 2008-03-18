@@ -9,17 +9,19 @@
  
 package oscar.oscarLab.ca.all.upload;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.text.*;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarLab.ForwardingRules;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.Factory;
-import oscar.oscarLab.ca.all.parsers.MDSHandler;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.util.UtilDateUtilities;
 

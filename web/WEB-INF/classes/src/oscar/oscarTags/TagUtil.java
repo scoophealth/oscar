@@ -1,9 +1,11 @@
 
 package oscar.oscarTags;
 
-import oscar.util.*;
-import java.util.*;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import oscar.util.SqlUtilBaseS;
 
 public class TagUtil extends SqlUtilBaseS {
     

@@ -27,7 +27,7 @@
  */
 package oscar.eform.data;
 
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionForm;
 
 public class ViewGroupForm extends ActionForm {
     private String groupView;

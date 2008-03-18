@@ -27,10 +27,16 @@
  */
 package oscar.eform.actions;
 
-import org.apache.struts.action.*;
-import javax.servlet.http.*;
-import oscar.eform.data.AddToGroupForm;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import oscar.eform.EFormUtil;
+import oscar.eform.data.AddToGroupForm;
 
 public class AddToGroupAction extends Action {
    

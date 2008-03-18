@@ -24,8 +24,6 @@ package org.caisi.model;
 
 import java.util.Date;
 
-import org.apache.commons.beanutils.BeanUtils;
-
 public class EChart extends BaseObject {
 	private Long id;
 	private Date timeStamp;

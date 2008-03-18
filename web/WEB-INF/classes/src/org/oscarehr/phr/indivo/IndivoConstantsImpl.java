@@ -28,8 +28,8 @@
 
 package org.oscarehr.phr.indivo;
 
-import org.oscarehr.phr.PHRConstants;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
+import org.oscarehr.phr.PHRConstants;
 /**
  *
  * @author Paul

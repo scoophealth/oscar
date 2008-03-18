@@ -28,23 +28,20 @@
  */
 package oscar.billing.cad.dao;
 
-import oscar.billing.cad.model.CadProcedimentos;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
+import oscar.billing.cad.model.CadProcedimentos;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandlerAdvanced;
-
 import oscar.util.DAO;
 import oscar.util.FieldTypes;
 import oscar.util.SqlUtils;
 import oscar.util.StringUtils;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 
 /**

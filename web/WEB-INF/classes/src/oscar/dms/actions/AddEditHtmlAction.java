@@ -23,14 +23,20 @@
 
 package oscar.dms.actions;
 
-import java.io.*;
-import org.apache.struts.action.*;
-import org.apache.struts.upload.*;
-import javax.servlet.http.*;
-import oscar.dms.data.*;
-import java.util.*;
-import oscar.util.*;
-import oscar.dms.*;
+import java.util.Hashtable;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionRedirect;
+
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
+import oscar.dms.data.AddEditDocumentForm;
 
 public class AddEditHtmlAction extends Action {
     

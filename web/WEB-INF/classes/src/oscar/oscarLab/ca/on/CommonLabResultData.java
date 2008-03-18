@@ -29,15 +29,21 @@
 
 package oscar.oscarLab.ca.on;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
-import oscar.*;
-import oscar.oscarDB.*;
-import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
-import oscar.oscarLab.ca.bc.PathNet.*;
-import oscar.oscarMDS.data.*;
+
+import oscar.OscarProperties;
+import oscar.oscarDB.ArchiveDeletedRecords;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
+import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
+import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
+import oscar.oscarMDS.data.MDSResultsData;
+import oscar.oscarMDS.data.ReportStatus;
 /**
  *
  * @author Jay Gallagher

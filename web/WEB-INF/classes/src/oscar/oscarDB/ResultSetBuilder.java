@@ -1,6 +1,6 @@
 /*--
 
- $Id: ResultSetBuilder.java,v 1.1 2005-12-02 02:26:42 jaygallagher Exp $
+ $Id: ResultSetBuilder.java,v 1.2 2008-03-18 19:41:43 tedleung Exp $
 
  Copyright (C) 2000-2004 Jason Hunter & Brett McLaughlin.
  All rights reserved.
@@ -56,12 +56,19 @@
 
 package oscar.oscarDB;
 
-import java.io.*;
-import java.sql.*;
-import java.text.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.text.DateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.jdom.*;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
 
 /**
  * <p><code>ResultSetBuilder</code> builds a JDOM tree from a 

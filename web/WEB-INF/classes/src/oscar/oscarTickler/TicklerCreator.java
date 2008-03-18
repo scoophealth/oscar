@@ -27,13 +27,12 @@
  */
 package oscar.oscarTickler;
 
-import java.sql.*;
-import java.util.*;
-
-import oscar.oscarDB.*;
-import oscar.util.DateUtils;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import oscar.util.UtilDateUtilities;
+import java.util.List;
+
+import oscar.oscarDB.DBHandler;
 
 public class TicklerCreator {
   public TicklerCreator() {

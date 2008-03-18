@@ -24,11 +24,12 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 
-import java.io.PrintStream;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.action.*;
-import java.util.ResourceBundle;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 public final class EctConAddSpecialistForm extends ActionForm {
    String fName;

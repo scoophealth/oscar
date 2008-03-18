@@ -9,12 +9,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
 
 import net.sf.cookierevolver.CRFactory;
 import net.sf.cookierevolver.service.RolesProvider;
+
+import org.apache.log4j.Logger;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;

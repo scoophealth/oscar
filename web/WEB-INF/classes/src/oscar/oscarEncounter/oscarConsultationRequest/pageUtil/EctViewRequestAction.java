@@ -50,17 +50,14 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
 
-import java.io.PrintStream;
-
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.ServletRequest;
-
-import javax.servlet.http.*;
-
-import org.apache.struts.action.*;
-
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 public class EctViewRequestAction
     extends Action {

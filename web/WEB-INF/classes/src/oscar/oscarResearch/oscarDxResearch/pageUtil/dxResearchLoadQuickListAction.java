@@ -23,22 +23,19 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarResearch.oscarDxResearch.pageUtil;
-import java.io.*;
-import java.util.*;
-import java.lang.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.IOException;
+
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import org.apache.struts.validator.*;
-import org.apache.commons.validator.*;
-import oscar.oscarDB.DBHandler;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
-import oscar.OscarProperties;
-import oscar.util.*;
-import oscar.oscarResearch.oscarDxResearch.bean.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListBeanHandler;
 
 
 public class dxResearchLoadQuickListAction extends Action {

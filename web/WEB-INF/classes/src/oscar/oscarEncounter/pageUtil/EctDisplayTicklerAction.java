@@ -26,21 +26,17 @@
 package oscar.oscarEncounter.pageUtil;
 
  
+import java.net.URLEncoder;
+import java.sql.ResultSet;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.util.MessageResources;
+
 import oscar.oscarTickler.TicklerData;
 import oscar.util.DateUtils;
 import oscar.util.StringUtils;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.net.URLEncoder;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.util.MessageResources;
-import org.apache.commons.lang.StringEscapeUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 

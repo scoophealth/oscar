@@ -24,7 +24,8 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
-import java.text.*;
+import java.text.NumberFormat;
+
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 /**

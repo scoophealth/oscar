@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.caisi.dao.ConsultationDAO;
 import org.caisi.model.Consultation;
-import org.caisi.service.ConsultationManager;
 
 /**
  */

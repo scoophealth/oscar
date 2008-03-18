@@ -28,13 +28,15 @@
 
 package oscar.oscarLab;
 
-import java.io.*;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-import org.apache.commons.lang.*;
-import oscar.oscarDB.*;
-import oscar.util.*;
+import java.util.Hashtable;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
+import oscar.oscarDB.DBHandler;
+import oscar.util.MD5;
 
 /**
  *

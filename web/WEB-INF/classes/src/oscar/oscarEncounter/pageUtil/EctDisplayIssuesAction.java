@@ -25,20 +25,19 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
-import java.sql.SQLException;
-import org.apache.struts.util.MessageResources;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import oscar.util.StringUtils;
-import oscar.util.DateUtils;
-
+import org.apache.struts.util.MessageResources;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
-import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.util.SessionConstants;
+
+import oscar.util.StringUtils;
 
 /**
  *

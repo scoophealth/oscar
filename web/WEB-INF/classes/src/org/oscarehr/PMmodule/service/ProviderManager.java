@@ -22,14 +22,18 @@
 
 package org.oscarehr.PMmodule.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.oscarehr.PMmodule.dao.AgencyDao;
 import org.oscarehr.PMmodule.dao.OscarSecurityDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.PMmodule.model.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.oscarehr.PMmodule.model.Agency;
+import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.model.SecUserRole;
 
 
 public class ProviderManager

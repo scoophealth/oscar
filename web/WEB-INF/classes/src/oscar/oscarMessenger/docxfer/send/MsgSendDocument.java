@@ -25,9 +25,10 @@
 package oscar.oscarMessenger.docxfer.send;
 
 
-import oscar.oscarDB.DBHandler;
-import java.sql.*;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import oscar.oscarMessenger.docxfer.util.MsgCommxml;
 
 public class MsgSendDocument

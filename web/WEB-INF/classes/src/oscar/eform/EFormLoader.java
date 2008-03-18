@@ -27,12 +27,14 @@
  */
 package oscar.eform;
 
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.Vector;
+
+import org.apache.commons.digester.Digester;
+
 import oscar.eform.data.DatabaseAP;
-import org.apache.commons.digester.*;
 
 public class EFormLoader {
     static private EFormLoader _instance;

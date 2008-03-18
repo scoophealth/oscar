@@ -31,14 +31,17 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.File;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+
 import oscar.OscarProperties;
 import oscar.entities.Billactivity;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanAPI;
@@ -114,7 +117,7 @@ public class ManageTeleplanAction extends DispatchAction {
            if (codes != null){
                for(String code: codes){
                   System.out.println(code);
-                  String[] codeval = code.split("À");   //="<%=h.get("code")%>|<%=h.get("fee")%>|<%=h.get("desc")%>"
+                  String[] codeval = code.split("ï¿½");   //="<%=h.get("code")%>|<%=h.get("fee")%>|<%=h.get("desc")%>"
                   BillingCodeData bcd = new BillingCodeData();
                   if (bcd.getBillingCodeByCode(codeval[0]) == null){ //NEW CODE
                     bcd.addBillingCode(codeval[0],codeval[2],codeval[1]);

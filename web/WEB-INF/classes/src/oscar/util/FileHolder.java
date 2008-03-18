@@ -32,9 +32,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
 /**
  */
 public class FileHolder implements Serializable {

@@ -28,15 +28,22 @@
 
 package oscar.oscarLab.ca.on;
 
-import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.*;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
+
 import org.apache.log4j.Logger;
+
 import oscar.OscarProperties;
-import oscar.oscarDB.*;
-import oscar.oscarLab.ca.all.parsers.*;
-import oscar.util.*;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.ca.all.parsers.Factory;
+import oscar.oscarLab.ca.all.parsers.MessageHandler;
+import oscar.util.UtilDateUtilities;
 
 /**
  *

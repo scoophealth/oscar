@@ -31,8 +31,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import oscar.oscarDB.DBHandler;
-import oscar.util.UtilXML;
 import oscar.util.UtilMisc;
+import oscar.util.UtilXML;
 
 class Messages {
     private DBHandler db;

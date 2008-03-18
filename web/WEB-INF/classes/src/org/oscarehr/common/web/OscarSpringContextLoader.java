@@ -20,6 +20,8 @@
  */
 package org.oscarehr.common.web;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.util.SpringUtils;
@@ -31,9 +33,8 @@ import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
-import oscar.OscarProperties;
 
-import javax.servlet.ServletContext;
+import oscar.OscarProperties;
 
 /**
  * @author rjonasz

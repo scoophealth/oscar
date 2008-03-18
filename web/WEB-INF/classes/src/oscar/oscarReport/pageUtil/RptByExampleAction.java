@@ -22,27 +22,23 @@
  * Ontario, Canada 
  */
 package oscar.oscarReport.pageUtil;
-import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Properties;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Properties;
-import java.util.Collection;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
-
-import org.apache.struts.action.*;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
-import oscar.oscarReport.data.*;
-import oscar.oscarReport.bean.*;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.oscarReport.bean.RptByExampleQueryBeanHandler;
 
 
 public class RptByExampleAction extends Action {

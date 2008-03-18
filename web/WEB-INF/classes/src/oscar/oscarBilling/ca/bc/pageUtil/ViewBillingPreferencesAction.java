@@ -24,16 +24,19 @@
 
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionForm;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.ActionForward;
+
 import org.apache.struts.action.Action;
-import oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO;
-import oscar.oscarBilling.ca.bc.data.BillingPreference;
-import java.util.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
+import oscar.oscarBilling.ca.bc.data.BillingPreference;
+import oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO;
 
 /**
  * Forwards flow of control to Billing Preferences Screen

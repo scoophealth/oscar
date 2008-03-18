@@ -27,14 +27,22 @@
 
 package oscar.oscarPrevention;
 
-import java.io.*;
-import java.util.*;
-import org.jdom.*;
-import org.jdom.input.*;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import oscar.*;
-import oscar.oscarDemographic.data.*;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+
+import oscar.OscarProperties;
+import oscar.oscarDemographic.data.DemographicData;
 
 /**
  *

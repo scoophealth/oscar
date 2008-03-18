@@ -24,9 +24,10 @@
 
 package oscar.entities;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Enumeration;
 
-import oscar.util.*;
+import oscar.util.UtilDateUtilities;
 
 /**
  *

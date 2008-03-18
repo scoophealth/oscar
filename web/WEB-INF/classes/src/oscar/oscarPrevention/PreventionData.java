@@ -28,15 +28,20 @@
 
 package oscar.oscarPrevention;
 
-import java.sql.*;
-import java.util.*;
-import oscar.oscarDB.*;
-import oscar.oscarDemographic.data.*;
-import oscar.util.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.util.UtilDateUtilities;
 
 /**
  *

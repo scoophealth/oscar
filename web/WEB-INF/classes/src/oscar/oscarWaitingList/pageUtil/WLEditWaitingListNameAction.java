@@ -26,18 +26,20 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarWaitingList.pageUtil;
 
-import java.util.*;
-import java.util.Collection;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.apache.struts.action.*;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.LazyValidatorForm;
 
-import oscar.oscarWaitingList.bean.*;
+import oscar.oscarWaitingList.bean.WLWaitingListNameBeanHandler;
 import oscar.oscarWaitingList.util.WLWaitingListNameUtil;
-import oscar.oscarWaitingList.util.WLWaitingListUtil;
-import oscar.oscarProvider.bean.*;
-import oscar.util.*;
+import oscar.util.UtilDateUtilities;
 
 public final class WLEditWaitingListNameAction extends Action {
 

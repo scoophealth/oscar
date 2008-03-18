@@ -26,7 +26,8 @@ package oscar.util;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import org.apache.struts.action.*;
+
+import org.apache.struts.action.ActionForward;
 
 
 public final class ParameterActionForward extends ActionForward {

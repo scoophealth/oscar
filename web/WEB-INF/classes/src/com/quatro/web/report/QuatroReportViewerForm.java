@@ -1,7 +1,9 @@
 package com.quatro.web.report;
 
 import java.util.ArrayList;
+
 import org.apache.struts.action.ActionForm;
+
 import com.quatro.util.KeyValueBean;
 
 public class QuatroReportViewerForm extends ActionForm {

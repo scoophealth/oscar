@@ -29,9 +29,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
+
 import oscar.oscarDB.DBHandler;
-//import oscar.oscarEncounter.util.Util;
-import oscar.util.*;
+import oscar.util.UtilDateUtilities;
 
 public class EctARRecord {
 

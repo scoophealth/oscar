@@ -22,9 +22,8 @@
  */
 package oscar.dms.data;
 
-import org.apache.struts.action.*;
-import org.apache.struts.upload.*;
-import javax.servlet.http.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.upload.FormFile;
 
 public class AddEditDocumentForm extends ActionForm {
     private String function = "";

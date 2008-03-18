@@ -23,13 +23,22 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.io.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
-import org.apache.struts.action.*;
-import oscar.oscarBilling.ca.bc.MSP.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+
+import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
 import oscar.util.SqlUtils;
 
 public final class BillingAction

@@ -9,10 +9,12 @@
 
 package oscar.util;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
-import java.sql.*;
 
 public class SqlUtilBaseS {
            //------------------private

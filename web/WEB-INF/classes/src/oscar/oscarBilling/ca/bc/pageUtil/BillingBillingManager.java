@@ -23,13 +23,12 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.math.*;
-import java.sql.*;
-import java.util.*;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
-import oscar.oscarDB.*;
-import oscar.oscarBilling.ca.bc.data.PrivateBillTransactionsDAO;
-import oscar.entities.PrivateBillTransaction;
+import oscar.oscarDB.DBHandler;
 
 public class BillingBillingManager {
   private String billTtype;

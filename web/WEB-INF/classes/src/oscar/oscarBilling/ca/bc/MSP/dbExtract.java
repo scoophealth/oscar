@@ -24,11 +24,12 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarBilling.ca.bc.MSP;
 
-import java.sql.*;
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import java.lang.*;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.oscarehr.util.DbConnectionFilter;
 

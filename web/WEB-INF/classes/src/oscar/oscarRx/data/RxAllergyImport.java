@@ -24,9 +24,9 @@
 
 package oscar.oscarRx.data;
 
-import oscar.oscarDB.*;
-import java.util.*;
-import java.sql.*;
+import java.sql.SQLException;
+
+import oscar.oscarDB.DBHandler;
 
 public class RxAllergyImport {
    

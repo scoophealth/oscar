@@ -23,9 +23,6 @@
 
 package org.oscarehr.casemgmt.common;
 
-import javax.servlet.jsp.tagext.TagSupport;
-
-import org.oscarehr.casemgmt.service.CaseManagementManager;
 
 public class SecurLevel extends BasicTag
 {

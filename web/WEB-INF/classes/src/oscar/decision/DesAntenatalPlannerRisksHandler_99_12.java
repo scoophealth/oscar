@@ -24,11 +24,12 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.decision;
 
-import org.xml.sax.*;
-import javax.xml.parsers.*;
-import java.io.IOException;
-import org.xml.sax.helpers.*;
-import java.util.*;
+import java.util.Properties;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
 

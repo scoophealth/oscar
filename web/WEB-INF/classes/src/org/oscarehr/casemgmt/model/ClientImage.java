@@ -22,7 +22,6 @@
 
 package org.oscarehr.casemgmt.model;
 
-import java.sql.Blob;
 import java.util.Date;
 
 import org.apache.commons.codec.binary.Base64;

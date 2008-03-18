@@ -28,13 +28,17 @@
 
 package oscar.oscarSurveillance;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import oscar.*;
-import oscar.oscarDB.*;
+
+import oscar.OscarProperties;
+import oscar.oscarDB.DBHandler;
 
 /**
  *

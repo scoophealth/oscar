@@ -23,12 +23,11 @@
  */
 package oscar.oscarReport.oscarMeasurements.data;
 
-import oscar.oscarDB.*;
-import java.sql.*;
-import java.util.*;
-import javax.servlet.http.*;
-import org.apache.struts.util.MessageResources;
-import org.apache.struts.action.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import oscar.oscarDB.DBHandler;
 /**
 *This classes main function ConsultReportGenerate collects a group of patients with consults in the last specified date
 */

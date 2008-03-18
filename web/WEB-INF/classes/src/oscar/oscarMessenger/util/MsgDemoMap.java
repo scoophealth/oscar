@@ -6,11 +6,11 @@
 
 package oscar.oscarMessenger.util;
 
-import oscar.oscarDB.DBHandler;
-
 import java.sql.ResultSet;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import oscar.oscarDB.DBHandler;
 /**
  *
  * @author root

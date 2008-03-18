@@ -22,12 +22,18 @@
  */
 package oscar.oscarEncounter.oscarMeasurements.util;
 //used by eforms for writing measurements
-import org.apache.struts.action.*;
-import oscar.oscarEncounter.oscarMeasurements.pageUtil.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+
 import oscar.oscarDB.DBHandler;
-import java.sql.*;
-import java.util.*;
-import oscar.util.*;
+import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
+import oscar.util.UtilDateUtilities;
 
 public class WriteNewMeasurements {
     public static ActionMessages addMeasurements(ArrayList names, ArrayList values, String demographicNo, String providerNo) {

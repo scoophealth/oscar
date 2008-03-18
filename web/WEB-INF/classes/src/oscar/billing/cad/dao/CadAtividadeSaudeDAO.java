@@ -28,18 +28,15 @@
  */
 package oscar.billing.cad.dao;
 
-import oscar.billing.cad.model.CadAtividadesSaude;
-
-import oscar.oscarDB.DBHandler;
-
-import oscar.util.DAO;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import oscar.billing.cad.model.CadAtividadesSaude;
+import oscar.oscarDB.DBHandler;
+import oscar.util.DAO;
 
 
 /**

@@ -25,8 +25,9 @@
 
 package oscar.util;
 
-import org.apache.commons.beanutils.BeanUtils;
 import java.lang.reflect.InvocationTargetException;
+
+import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * <p>Title:BeanUtil </p>

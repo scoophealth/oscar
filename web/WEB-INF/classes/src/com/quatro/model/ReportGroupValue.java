@@ -1,5 +1,5 @@
 package com.quatro.model;
-import java.util.*;
+import java.util.List;
 public class ReportGroupValue {
 	int reportGroupId;
 	String description;

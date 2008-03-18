@@ -27,10 +27,17 @@
  */
 package oscar.eform.actions;
 
-import org.apache.struts.action.*;
-import java.io.*;
+import java.io.File;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import oscar.OscarProperties;
-import javax.servlet.http.*;
 
 public class DelImageAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,

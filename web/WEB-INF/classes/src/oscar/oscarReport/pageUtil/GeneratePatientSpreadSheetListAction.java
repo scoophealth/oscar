@@ -29,12 +29,9 @@
 
 package oscar.oscarReport.pageUtil;
 
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Paragraph;
-import java.io.FileOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.poi.hssf.usermodel.HSSFCell;
+
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -42,9 +39,13 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import oscar.oscarDemographic.data.DemographicData.Demographic;
+
 import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarDemographic.data.DemographicData.Demographic;
 import oscar.util.UtilDateUtilities;
+
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Paragraph;
 
 /**
  *

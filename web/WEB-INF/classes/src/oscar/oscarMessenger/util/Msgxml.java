@@ -24,16 +24,19 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.util;
 
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.InputSource;
+import java.io.StringReader;
+import java.io.StringWriter;
 
-import java.io.*;
-import java.util.*;
-
-import javax.xml.transform.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 
 public class Msgxml
 {

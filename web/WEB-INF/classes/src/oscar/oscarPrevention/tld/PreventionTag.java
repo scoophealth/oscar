@@ -28,15 +28,15 @@
 
 package oscar.oscarPrevention.tld;
 
-import java.io.PrintStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
-import javax.servlet.http.*;
-import javax.servlet.jsp.*;
+import java.util.ArrayList;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-import org.apache.struts.util.*;
-import oscar.oscarPrevention.*;
+
+import oscar.oscarPrevention.Prevention;
+import oscar.oscarPrevention.PreventionDS;
+import oscar.oscarPrevention.PreventionData;
 
 
 /**

@@ -1,13 +1,23 @@
 package com.quatro.dao;
 
-import java.util.*;
-
-import com.quatro.model.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.hibernate.Transaction;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import com.quatro.model.DocTextValue;
+import com.quatro.model.LookupCodeValue;
+import com.quatro.model.ReportDateSPValue;
+import com.quatro.model.ReportDateValue;
+import com.quatro.model.ReportFilterValue;
+import com.quatro.model.ReportTempCriValue;
+import com.quatro.model.ReportTempOrgValue;
+import com.quatro.model.ReportTempValue;
+import com.quatro.model.ReportValue;
 
 public class QuatroReportDao extends HibernateDaoSupport {
 

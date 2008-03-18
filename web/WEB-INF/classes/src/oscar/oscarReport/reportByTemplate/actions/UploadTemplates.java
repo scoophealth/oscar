@@ -34,12 +34,18 @@
 package oscar.oscarReport.reportByTemplate.actions;
 
 
-import org.apache.struts.action.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
-import java.util.*;
-import oscar.oscarReport.reportByTemplate.*;
-import java.io.*;
+
+import oscar.oscarReport.reportByTemplate.ReportManager;
 
 /**
  *

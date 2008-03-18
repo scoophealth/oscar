@@ -27,12 +27,11 @@
  */
 package oscar.billing.cad.model;
 
+import java.util.Date;
+
 import oscar.billing.fat.model.FatBpa;
 import oscar.billing.fat.model.FatFormularioProcedimento;
-
 import oscar.billing.model.ProcedimentoRealizado;
-
-import java.util.Date;
 
 
 /**

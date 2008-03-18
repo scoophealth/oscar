@@ -31,7 +31,9 @@ package oscar.oscarBilling.ca.on.data;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Hashtable;
+
 import org.apache.commons.lang.StringEscapeUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**

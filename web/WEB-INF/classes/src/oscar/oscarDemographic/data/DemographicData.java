@@ -23,16 +23,18 @@
  */
 package oscar.oscarDemographic.data;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.*;
-import java.util.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import oscar.oscarDB.DBHandler;
-//import oscar.oscarMessenger.util.*;
 
-import oscar.util.*;
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 public class DemographicData {     
    
    

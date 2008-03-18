@@ -24,14 +24,20 @@
  */
 package oscar.oscarRx.data;
 
-import oscar.oscarDB.*;
-import oscar.oscarRx.util.*;
-import oscar.oscarProvider.data.*;
-import oscar.OscarProperties;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Vector;
 
-import java.util.*;
-import java.sql.*;
-import org.apache.commons.lang.*;
+import org.apache.commons.lang.StringEscapeUtils;
+
+import oscar.OscarProperties;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarProvider.data.ProSignatureData;
+import oscar.oscarRx.util.RxUtil;
 
 public class RxPrescriptionData {
     public Prescription getPrescription(int drugId) {

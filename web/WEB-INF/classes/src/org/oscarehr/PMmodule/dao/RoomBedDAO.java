@@ -22,16 +22,12 @@
 
 package org.oscarehr.PMmodule.dao;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.RoomBed;
 import org.oscarehr.PMmodule.model.RoomBedPK;
-import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**

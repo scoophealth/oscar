@@ -12,10 +12,12 @@ package org.oscarehr.phr.model;
 import java.io.StringReader;
 import java.util.Date;
 import java.util.List;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
 import org.apache.log4j.Logger;
 import org.indivo.xml.phr.document.IndivoDocumentType;
 

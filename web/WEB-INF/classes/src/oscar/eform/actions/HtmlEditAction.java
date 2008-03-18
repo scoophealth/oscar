@@ -27,14 +27,20 @@
  */
 package oscar.eform.actions;
 
-import java.io.*;
-import org.apache.struts.action.*;
-import org.apache.struts.upload.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.*;
+import java.util.Hashtable;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.FormFile;
+
 import oscar.eform.EFormUtil;
-import oscar.eform.data.*;
+import oscar.eform.data.EFormBase;
+import oscar.eform.data.HtmlEditForm;
 import oscar.util.StringUtils;
 
 public class HtmlEditAction extends Action {

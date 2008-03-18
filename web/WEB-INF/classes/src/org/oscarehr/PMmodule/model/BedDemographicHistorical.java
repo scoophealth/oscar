@@ -22,10 +22,10 @@
 
 package org.oscarehr.PMmodule.model;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
-
-import java.io.Serializable;
 
 public class BedDemographicHistorical implements Serializable {
 

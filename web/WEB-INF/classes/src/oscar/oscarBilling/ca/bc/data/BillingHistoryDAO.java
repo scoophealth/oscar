@@ -24,12 +24,15 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
-import java.sql.*;
-import java.util.*;
-import oscar.entities.*;
-import oscar.oscarDB.*;
-import oscar.util.SqlUtils;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import oscar.entities.BillHistory;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
+import oscar.oscarDB.DBHandler;
+import oscar.util.SqlUtils;
 
 /**
  * BillingHistoryDAO is responsible for providing database CRUD operations

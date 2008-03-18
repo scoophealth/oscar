@@ -24,7 +24,6 @@
 package oscar.form;
 
 import java.util.Properties;
-import oscar.util.*;
 
 public class FrmLabReqPreSet {
 

@@ -25,8 +25,8 @@ package oscar.oscarEncounter.pageUtil;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -34,19 +34,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
-import oscar.util.UtilDateUtilities;
-import oscar.OscarProperties;
 import oscar.oscarSurveillance.SurveillanceMaster;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import oscar.util.UtilDateUtilities;
 
 public class EctSaveEncounterAction
     extends Action {

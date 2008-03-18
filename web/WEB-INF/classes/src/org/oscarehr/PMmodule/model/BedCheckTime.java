@@ -21,9 +21,9 @@
 */
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
-
 import java.io.Serializable;
+
+import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 
 public class BedCheckTime implements Serializable {
 

@@ -28,10 +28,13 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
-import java.sql.*;
-import java.util.*;
-import org.apache.commons.lang.*;
-import oscar.oscarDB.*;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Hashtable;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
+import oscar.oscarDB.DBHandler;
 
 /**
  *+--------------------+-------------+------+-----+---------+----------------+

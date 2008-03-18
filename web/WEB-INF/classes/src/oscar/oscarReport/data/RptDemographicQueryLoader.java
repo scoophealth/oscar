@@ -24,11 +24,13 @@
  */
 
 package oscar.oscarReport.data;
-import oscar.oscarReport.pageUtil.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import oscar.oscarDB.DBHandler;
-import java.sql.*;
-import org.w3c.dom.*;
 import oscar.oscarMessenger.docxfer.util.MsgCommxml;
+import oscar.oscarReport.pageUtil.RptDemographicReportForm;
 
 
 public class RptDemographicQueryLoader {

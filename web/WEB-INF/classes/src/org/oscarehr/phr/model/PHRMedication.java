@@ -30,9 +30,11 @@
 package org.oscarehr.phr.model;
 
 import java.util.ResourceBundle;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+
 import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.xml.JAXBUtils;
@@ -42,13 +44,12 @@ import org.indivo.xml.phr.document.IndivoDocument;
 import org.indivo.xml.phr.document.IndivoDocumentType;
 import org.indivo.xml.phr.medication.Medication;
 import org.indivo.xml.phr.medication.MedicationType;
-import org.indivo.xml.phr.types.CodedValueType;
-import org.indivo.xml.phr.types.CodingSystemReferenceType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.w3c.dom.Element;
+
 import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarRx.data.RxPrescriptionData;
 

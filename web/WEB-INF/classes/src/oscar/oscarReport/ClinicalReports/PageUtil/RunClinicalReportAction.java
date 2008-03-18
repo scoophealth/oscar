@@ -29,16 +29,18 @@
 package oscar.oscarReport.ClinicalReports.PageUtil;
 
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
 import oscar.oscarReport.ClinicalReports.ClinicalReportManager;
 import oscar.oscarReport.ClinicalReports.Denominator;
 import oscar.oscarReport.ClinicalReports.Numerator;

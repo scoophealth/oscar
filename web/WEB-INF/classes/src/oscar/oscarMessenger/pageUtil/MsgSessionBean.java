@@ -24,7 +24,6 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.pageUtil;
 
-import java.util.*;
 import oscar.oscarDB.DBHandler;
 
 public class MsgSessionBean

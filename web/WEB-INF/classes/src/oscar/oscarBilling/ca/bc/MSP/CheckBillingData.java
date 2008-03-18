@@ -32,10 +32,11 @@ package oscar.oscarBilling.ca.bc.MSP;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import oscar.util.SqlUtils;
+import java.util.Iterator;
 import java.util.List;
-import java.util.*;
+
 import oscar.entities.Billingmaster;
+import oscar.util.SqlUtils;
 
 public class CheckBillingData {
 

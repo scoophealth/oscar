@@ -25,7 +25,7 @@
 package oscar;
 
 //import java.sql.*;
-import java.util.*;
+import java.util.GregorianCalendar;
 
 public class LoginInfoBean {
 	

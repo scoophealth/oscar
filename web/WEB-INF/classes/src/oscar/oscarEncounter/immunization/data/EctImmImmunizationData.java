@@ -24,14 +24,18 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.immunization.data;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.xml.sax.SAXException;
-import oscar.oscarDB.DBHandler;
+
 import oscar.OscarProperties;
+import oscar.oscarDB.DBHandler;
 
 public class EctImmImmunizationData
 {

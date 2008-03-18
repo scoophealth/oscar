@@ -28,8 +28,9 @@
  */
 
 package oscar.oscarClinic;
-import oscar.oscarDB.*;
-import java.sql.*;
+import java.sql.SQLException;
+
+import oscar.oscarDB.DBHandler;
 /**
  *
  * @author  Oscar

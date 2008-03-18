@@ -23,10 +23,10 @@
  */
 package oscar.oscarEncounter.data;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import oscar.oscarDB.DBHandler;
 
 public class EctRemoteAttachments

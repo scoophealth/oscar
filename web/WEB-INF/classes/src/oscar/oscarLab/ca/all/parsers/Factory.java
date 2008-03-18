@@ -9,15 +9,19 @@
 
 package oscar.oscarLab.ca.all.parsers;
 
-import java.io.*;
-import java.sql.*;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.sql.ResultSet;
 import java.util.List;
-import org.apache.log4j.Logger;
-import org.jdom.*;
-import org.jdom.input.*;
+
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+
 import oscar.OscarProperties;
-import oscar.oscarDB.*;
+import oscar.oscarDB.DBHandler;
 
 /**
  *

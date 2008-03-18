@@ -44,11 +44,16 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import oscar.form.graphic.*;
+
+import org.apache.log4j.Logger;
+
 import oscar.OscarProperties;
+import oscar.form.graphic.FrmGraphicFactory;
+import oscar.form.graphic.FrmPdfGraphic;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -63,7 +68,6 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
-import org.apache.log4j.Logger;
 
 /**
  *

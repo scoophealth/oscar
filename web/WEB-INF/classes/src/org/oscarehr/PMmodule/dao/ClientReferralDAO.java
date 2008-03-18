@@ -31,7 +31,6 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
-import org.oscarehr.PMmodule.model.Facility;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ClientReferralDAO extends HibernateDaoSupport {

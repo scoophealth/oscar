@@ -18,10 +18,9 @@
  */
 package oscar.oscarEncounter.oscarMeasurements.prop;
 
-import java.util.Hashtable;
 import java.util.Vector;
 
-import oscar.oscarEncounter.oscarMeasurements.bean.*;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 
 
 public class EctFormProp {

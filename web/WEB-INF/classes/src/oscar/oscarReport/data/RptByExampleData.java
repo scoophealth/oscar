@@ -23,9 +23,11 @@
  */
 package oscar.oscarReport.data;
 
-import oscar.oscarDB.*;
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Properties;
+
+import oscar.oscarDB.DBPreparedHandler;
 
 
 /**

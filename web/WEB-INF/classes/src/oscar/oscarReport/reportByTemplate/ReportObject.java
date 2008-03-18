@@ -24,14 +24,8 @@
 
 
 package oscar.oscarReport.reportByTemplate;
+import java.util.ArrayList;
 import java.util.Map;
-/**
- * Created on December 19, 2006, 10:46 AM
- * This is an interface for classes representing each template 
- * @author apavel (Paul)
- */
-
-import java.util.*;
 public interface ReportObject {
     public String getTemplateId();
     public String getTitle();

@@ -24,7 +24,6 @@
 package oscar.form;
 
 import java.io.IOException;
-import java.lang.reflect.*;
 
 public class FrmRecordFactory {
     public FrmRecord factory (String which) throws IOException {

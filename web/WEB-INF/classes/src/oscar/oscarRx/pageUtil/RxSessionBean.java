@@ -23,10 +23,16 @@
  */
 package oscar.oscarRx.pageUtil;
 
-import oscar.OscarProperties;
-import oscar.oscarRx.data.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import java.util.*;
+import oscar.OscarProperties;
+import oscar.oscarRx.data.RxAllergyWarningWorker;
+import oscar.oscarRx.data.RxDrugData;
+import oscar.oscarRx.data.RxInteractionData;
+import oscar.oscarRx.data.RxPrescriptionData;
 
 public class RxSessionBean {
     private String providerNo = null;

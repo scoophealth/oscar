@@ -22,9 +22,9 @@
 
 package org.oscarehr.survey.web.formbean;
 
-import org.apache.struts.upload.FormFile;
-
 import java.io.Serializable;
+
+import org.apache.struts.upload.FormFile;
 
 public class SurveyManagerFormBean implements Serializable {
 	private String page;

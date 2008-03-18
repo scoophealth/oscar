@@ -18,6 +18,7 @@
  */
 package org.oscarehr.PMmodule.model;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-import java.io.Serializable;
 
 
 public class Intake implements Serializable {

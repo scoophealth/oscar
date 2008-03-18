@@ -29,23 +29,26 @@
 
 package oscar.oscarReport.pageUtil;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarDemographic.data.DemographicData.Demographic;
+import oscar.util.UtilDateUtilities;
+
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfWriter;
-import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import oscar.oscarDemographic.data.DemographicData.Demographic;
-import oscar.oscarDemographic.data.DemographicData;
-import oscar.oscarPrevention.reports.FollowupManagement;
-import oscar.util.UtilDateUtilities;
 
 /**
  *

@@ -9,10 +9,11 @@ package oscar.oscarLab.ca.bc.PathNet.HL7.V2_3;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import org.apache.log4j.*;
 
-import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
+import org.apache.log4j.Logger;
+
 import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.

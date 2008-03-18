@@ -23,16 +23,17 @@
  */
 package oscar.appt;
 
-import java.math.BigInteger;
-import java.sql.*;
-import java.text.FieldPosition;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
 import java.util.Properties;
+import java.util.Vector;
+
 import oscar.oscarDB.DBHandler;
-import oscar.oscarProvider.data.ProviderData;
 import oscar.util.DAO;
 
 

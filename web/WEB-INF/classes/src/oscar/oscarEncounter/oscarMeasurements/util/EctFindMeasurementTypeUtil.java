@@ -18,18 +18,18 @@
  */
 package oscar.oscarEncounter.oscarMeasurements.util;
 
-import java.io.*;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 
-import oscar.oscarDB.DBHandler;
-import oscar.oscarEncounter.oscarMeasurements.bean.*;
-import oscar.oscarEncounter.oscarMeasurements.prop.*;
-
 import org.apache.commons.digester.Digester;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBean;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBeanHandler;
+import oscar.oscarEncounter.oscarMeasurements.prop.EctFormProp;
 
 //import com.ibatis.common.resources.Resources;
 

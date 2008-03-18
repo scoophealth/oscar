@@ -18,10 +18,10 @@
  */
 package org.oscarehr.PMmodule.model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.io.Serializable;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;

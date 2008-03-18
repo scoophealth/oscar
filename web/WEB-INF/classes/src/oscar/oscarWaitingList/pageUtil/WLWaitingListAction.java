@@ -26,14 +26,16 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarWaitingList.pageUtil;
 
-import java.io.*;
-import java.util.*;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import org.apache.struts.action.*;
+import java.io.IOException;
+
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 public class WLWaitingListAction extends Action {
 

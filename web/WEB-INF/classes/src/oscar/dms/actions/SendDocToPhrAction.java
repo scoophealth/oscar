@@ -27,9 +27,9 @@
 
 package oscar.dms.actions;
 
-import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -37,9 +37,11 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
-import oscar.dms.*;
-import oscar.oscarProvider.data.ProviderData;
+
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
 import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarProvider.data.ProviderData;
 
 /**
  *

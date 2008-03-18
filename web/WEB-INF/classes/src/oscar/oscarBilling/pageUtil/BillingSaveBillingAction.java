@@ -23,33 +23,24 @@
  */
 package oscar.oscarBilling.pageUtil;
 
-import oscar.oscarDB.DBHandler;
-import java.io.*;
 import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Locale;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.text.*;
-import java.lang.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import oscar.oscarDB.DBHandler;
-import oscar.oscarBilling.pageUtil.*;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
-import oscar.*;
+
+import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
-import oscar.entities.BillHistory;
+import oscar.oscarDB.DBHandler;
 
 public class BillingSaveBillingAction
     extends Action {

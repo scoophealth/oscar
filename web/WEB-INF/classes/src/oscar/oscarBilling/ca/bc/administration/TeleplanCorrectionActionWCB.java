@@ -8,26 +8,20 @@ package oscar.oscarBilling.ca.bc.administration;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-
 import javax.servlet.http.HttpServletRequest;
-
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.struts.action.ActionForm;
-
 import org.apache.struts.action.ActionForward;
-
 import org.apache.struts.action.ActionMapping;
 
-import oscar.oscarDB.DBHandler;
-
 import oscar.AppointmentMainBean;
-
-import oscar.oscarProvider.data.*;
-import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
+import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarProvider.data.ProviderData;
 import oscar.util.StringUtils;
 
 /*

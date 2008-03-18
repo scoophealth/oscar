@@ -28,16 +28,31 @@
 
 package oscar.oscarLab.ca.on.CML.Upload;
 
-import java.io.*;
-import java.util.*;
-import javax.servlet.http.*;
-import org.apache.log4j.*;
-import org.apache.struts.action.*;
-import org.apache.struts.upload.*;
-import oscar.*;
-import oscar.oscarDB.*;
-import oscar.oscarLab.*;
-import oscar.oscarLab.ca.on.CML.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.FormFile;
+
+import oscar.OscarProperties;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.FileUploadCheck;
+import oscar.oscarLab.ca.on.CML.ABCDParser;
 
 /**
  *
