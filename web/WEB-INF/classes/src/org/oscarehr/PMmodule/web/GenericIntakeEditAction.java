@@ -39,8 +39,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
-import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
@@ -54,15 +52,12 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.util.SessionConstants;
-import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
 public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     private static Log LOG = LogFactory.getLog(GenericIntakeEditAction.class);
-    private static FacilityDAO facilityDao=(FacilityDAO)SpringUtils.beanFactory.getBean("facilityDAO");    
-    private static ProgramDao programDao = (ProgramDao)SpringUtils.beanFactory.getBean("programDao");    
     // Forwards
     private static final String EDIT = "edit";
     private static final String PRINT = "print";
