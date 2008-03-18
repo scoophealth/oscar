@@ -91,7 +91,7 @@ public class TicklerManager {
         	results = ticklerFacilityFiltering(currentFacilityId, results);
         	
         	//filter based on caisi role access
-            results = filterTicklersByAccess(results,currentFacilityId,providerNo,programId);
+            results = filterTicklersByAccess(results,providerNo,programId);
         }        
         
         return(results);
@@ -110,7 +110,7 @@ public class TicklerManager {
 
         return results;
     }
-    private List<Tickler> filterTicklersByAccess(List<Tickler> ticklers, Integer currentFacilityId,String providerNo, String programNo) {
+    private List<Tickler> filterTicklersByAccess(List<Tickler> ticklers, String providerNo, String programNo) {
     	List<Tickler> filteredTicklers = new ArrayList<Tickler>();
 
     	if (ticklers.isEmpty()) {
