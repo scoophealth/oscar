@@ -24,12 +24,12 @@
 
 <%@ include file="../../taglibs.jsp"%> 
 <%@ taglib uri="/WEB-INF/quatro-tag.tld" prefix="quatro" %>
-
+<html>
 <title>Lookup Code Edit</title>
 <head>
-<script type="text/javascript" src='<c:out value="${ctx}"/>/js/quatroLookup.js'></script>
+<script type="text/javascript" src='<html:rewrite page="/js/quatroLookup.js" />'></script>
 </head>
-<!-- html:form action="/caisiEditor" focus="caisiEditor.code" onsubmit="return validateIssueAdminForm(this)" -->
+<body>
 <html:form action="/Lookup/LookupCodeEdit">
 <html:hidden property="tableDef.tableId"/>
 <html:hidden property="tableDef.moduleId" />
@@ -115,3 +115,5 @@
 </table>
 </div>
 </html:form>
+</body>
+</html>
