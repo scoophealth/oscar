@@ -17,6 +17,7 @@ import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.FacilityManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.web.BaseAction;
@@ -44,6 +45,8 @@ public class BedManagerAction extends BaseAction {
     protected AdmissionManager admissionManager;
 
     protected GenericIntakeManager genericIntakeManager;
+
+    protected AgencyManager agencyManager;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         // dispatch to correct method based on which button was selected
@@ -412,5 +415,9 @@ public class BedManagerAction extends BaseAction {
 
     public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
         this.genericIntakeManager = genericIntakeManager;
+    }
+
+    public void setAgencyManager(AgencyManager mgr) {
+    	this.agencyManager = mgr;
     }
 }

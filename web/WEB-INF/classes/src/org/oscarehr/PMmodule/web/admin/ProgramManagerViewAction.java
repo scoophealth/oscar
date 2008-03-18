@@ -56,6 +56,7 @@ import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
@@ -83,6 +84,8 @@ public class ProgramManagerViewAction extends BaseAction {
     protected AdmissionManager admissionManager;
 
     protected GenericIntakeManager genericIntakeManager;
+
+    protected AgencyManager agencyManager;
     
     public void setFacilityDAO(FacilityDAO facilityDAO) {
         this.facilityDAO = facilityDAO;
@@ -946,5 +949,9 @@ public class ProgramManagerViewAction extends BaseAction {
 
     public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
         this.genericIntakeManager = genericIntakeManager;
+    }
+
+    public void setAgencyManager(AgencyManager mgr) {
+    	this.agencyManager = mgr;
     }
 }

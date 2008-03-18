@@ -61,7 +61,6 @@ public abstract class BaseAction extends DispatchAction {
 	protected static final String PARAM_EQUALS = "=";
 	protected static final String PARAM_AND = "&";
 	
-	protected AgencyManager agencyManager;
 	protected BedCheckTimeManager bedCheckTimeManager;
 	protected RoomDemographicManager roomDemographicManager;
 	protected BedDemographicManager bedDemographicManager;
@@ -153,10 +152,6 @@ public abstract class BaseAction extends DispatchAction {
 		return (RatePageManager) getAppContext().getBean("ratePageManager");
 	}
 
-	public void setAgencyManager(AgencyManager mgr) {
-		this.agencyManager = mgr;
-	}
-	
 	public void setBedCheckTimeManager(BedCheckTimeManager bedCheckTimeManager) {
 	    this.bedCheckTimeManager = bedCheckTimeManager;
     }

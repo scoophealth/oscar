@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -60,6 +61,7 @@ public class BasicReportAction extends BaseAction {
     protected CaseManagementManager caseManagementManager;
     protected AdmissionManager admissionManager;
     protected GenericIntakeManager genericIntakeManager;
+    protected AgencyManager agencyManager;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return form(mapping,form,request,response);
@@ -129,5 +131,9 @@ public class BasicReportAction extends BaseAction {
 
     public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
         this.genericIntakeManager = genericIntakeManager;
+    }
+
+    public void setAgencyManager(AgencyManager mgr) {
+    	this.agencyManager = mgr;
     }
 }

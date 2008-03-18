@@ -36,6 +36,7 @@ import org.apache.struts.action.DynaActionForm;
 import org.caisi.integrator.model.transfer.AgencyTransfer;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -63,6 +64,8 @@ public class AgencyManagerAction extends BaseAction {
     protected AdmissionManager admissionManager;
 
     protected GenericIntakeManager genericIntakeManager;
+
+    protected AgencyManager agencyManager;
 
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -216,6 +219,10 @@ public class AgencyManagerAction extends BaseAction {
 
     public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
         this.genericIntakeManager = genericIntakeManager;
+    }
+
+    public void setAgencyManager(AgencyManager mgr) {
+    	this.agencyManager = mgr;
     }
 
 }

@@ -46,6 +46,7 @@ import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeCAddress;
 import org.oscarehr.PMmodule.web.formbean.IntakeCContact;
@@ -70,6 +71,8 @@ public class IntakeCAction2 extends BaseAction {
     protected AdmissionManager admissionManager;
 
     protected GenericIntakeManager genericIntakeManager;
+
+    protected AgencyManager agencyManager;
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return form(mapping, form, request, response);
@@ -674,6 +677,10 @@ public class IntakeCAction2 extends BaseAction {
 
     public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
         this.genericIntakeManager = genericIntakeManager;
+    }
+
+    public void setAgencyManager(AgencyManager mgr) {
+    	this.agencyManager = mgr;
     }
 
 }

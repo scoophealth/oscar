@@ -43,6 +43,7 @@ import org.oscarehr.PMmodule.common.PassIntakeFormVars;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
@@ -70,6 +71,8 @@ public class IntakeAReport1Action extends BaseAction
     protected AdmissionManager admissionManager;
 
     protected GenericIntakeManager genericIntakeManager;
+
+    protected AgencyManager agencyManager;
 
 //################################################################################
 public ActionForward execute(ActionMapping mapping, ActionForm form,
@@ -1060,6 +1063,9 @@ public void setAdmissionManager(AdmissionManager mgr) {
 }
 public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
     this.genericIntakeManager = genericIntakeManager;
+}
+public void setAgencyManager(AgencyManager mgr) {
+	this.agencyManager = mgr;
 }
 
 //################################################################################

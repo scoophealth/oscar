@@ -29,6 +29,7 @@ import org.caisi.event.OscarCaisiEvent;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.*;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeAFormBean;
 import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
@@ -52,6 +53,7 @@ public class IntakeAAction2 extends BaseAction {
     protected CaseManagementManager caseManagementManager;
     protected AdmissionManager admissionManager;
     protected GenericIntakeManager genericIntakeManager;
+    protected AgencyManager agencyManager;
 
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -427,6 +429,10 @@ public class IntakeAAction2 extends BaseAction {
 
     public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
         this.genericIntakeManager = genericIntakeManager;
+    }
+
+    public void setAgencyManager(AgencyManager mgr) {
+    	this.agencyManager = mgr;
     }
 
 }

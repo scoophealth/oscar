@@ -49,6 +49,7 @@ import org.oscarehr.PMmodule.common.PassIntakeFormVars;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 
@@ -82,6 +83,8 @@ import com.quatro.service.LookupManager;
         protected CaseManagementManager caseManagementManager;
 
         protected AdmissionManager admissionManager;
+
+        protected AgencyManager agencyManager;
 
 		/**
 	     * excute
@@ -3760,6 +3763,10 @@ import com.quatro.service.LookupManager;
 
         public void setAdmissionManager(AdmissionManager mgr) {
         	this.admissionManager = mgr;
+        }
+
+        public void setAgencyManager(AgencyManager mgr) {
+        	this.agencyManager = mgr;
         }
 
 	}

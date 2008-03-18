@@ -15,6 +15,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
@@ -34,6 +35,8 @@ public class VaccineProviderReportAction extends BaseAction {
     protected LookupManager lookupManager;
 
     protected CaseManagementManager caseManagementManager;
+
+    protected AgencyManager agencyManager;
 
 	public void setGenericIntakeManager(GenericIntakeManager mgr) {
 		this.genericIntakeManager = mgr;
@@ -126,6 +129,10 @@ public class VaccineProviderReportAction extends BaseAction {
 
     public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
     	this.caseManagementManager = caseManagementManager;
+    }
+
+    public void setAgencyManager(AgencyManager mgr) {
+    	this.agencyManager = mgr;
     }
 
 }
