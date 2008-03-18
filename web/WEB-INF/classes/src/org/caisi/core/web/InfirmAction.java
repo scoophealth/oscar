@@ -39,6 +39,7 @@ import org.caisi.service.InfirmBedProgramManager;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.PMmodule.model.Facility;
 
 public class InfirmAction extends BaseAction
 {
@@ -77,7 +78,11 @@ public class InfirmAction extends BaseAction
 		}
 		*/
 		InfirmBedProgramManager manager=getInfirmBedProgramManager();
-		programBean=manager.getProgramBeans(providerNo);	
+        int facilityId=0;
+        Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
+        if(facility!=null) facilityId=facility.getId();
+		programBean=manager.getProgramBeansByFacility(providerNo, new Integer(facilityId));
+
 		se.setAttribute("infirmaryView_programBeans",programBean );
 				
 		
