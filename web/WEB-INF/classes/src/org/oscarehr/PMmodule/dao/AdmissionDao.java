@@ -173,7 +173,9 @@ public class AdmissionDao extends HibernateDaoSupport {
         Date sevenDaysAgo = calendar.getTime();
         
         String queryStr = "FROM Admission a WHERE a.ProgramId=? and a.AutomaticDischarge=? and a.DischargeDate>= ? ORDER BY a.DischargeDate DESC";
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { programId, automaticDischarge, sevenDaysAgo });
+
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { programId, automaticDischarge, sevenDaysAgo });
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissions for programId " + programId + ", # of admissions: " + rs.size());
@@ -209,7 +211,9 @@ public class AdmissionDao extends HibernateDaoSupport {
 
         String queryStr = "FROM Admission a WHERE a.ClientId=? and a.ProgramId in " +
            "(select s.id from Program s where s.facilityId=? or s.facilityId is null) AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, new Long(facilityId.longValue()) });
+
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, new Long(facilityId.longValue()) });
 
         if (log.isDebugEnabled()) {
             log.debug("getCurrentAdmissionsByFacility for clientId " + demographicNo + ", # of admissions: " + rs.size());
@@ -297,7 +301,8 @@ public class AdmissionDao extends HibernateDaoSupport {
     }
 
     // TODO: rewrite
-    public List getCurrentServiceProgramAdmission(ProgramDao programDAO, Integer demographicNo) {
+    @SuppressWarnings("unchecked")
+    public List<Admission> getCurrentServiceProgramAdmission(ProgramDao programDAO, Integer demographicNo) {
         if (programDAO == null) {
             throw new IllegalArgumentException();
         }
@@ -309,8 +314,8 @@ public class AdmissionDao extends HibernateDaoSupport {
         String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
 
         Admission admission = null;
-        List admissions = new ArrayList();
-        List rs = new ArrayList();
+        List<Admission> admissions = new ArrayList<Admission>();
+        List<Admission> rs = new ArrayList<Admission>();
         try{
           rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
         }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex){
@@ -457,7 +462,7 @@ public class AdmissionDao extends HibernateDaoSupport {
 
         Criteria criteria = getSession().createCriteria(Admission.class);
 
-        if (searchBean.getProviderNo() != null && searchBean.getProviderNo() > 0) {
+        if (searchBean.getProviderNo() != null && searchBean.getProviderNo().length()>0) {
             criteria.add(Restrictions.eq("ProviderNo", searchBean.getProviderNo()));
         }
 
