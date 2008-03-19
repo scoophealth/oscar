@@ -80,6 +80,11 @@ public class GenericIntakeManager {
 		return copyIntakeWithId(getQuickIntakeNode(), clientId, null, staffId, facilityId);
 	}
 
+	public Intake copyRegIntake(Integer clientId, String staffId, Integer facilityId) {
+		//return copyIntake(getQuickIntakeNode(), clientId, null, staffId);
+		return copyIntakeWithId(getLatestRegIntakeNodes(clientId), clientId, null, staffId, facilityId);
+	}
+
 	/**
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#copyIndepthIntake(java.lang.Integer, java.lang.String)
 	 */
@@ -132,6 +137,10 @@ public class GenericIntakeManager {
 		return genericIntakeDAO.getLatestIntake(getQuickIntakeNode(), clientId, null, facilityId);
 	}
 	
+	public Intake getRegIntakeById(Integer intakeId, Integer facilityId) {
+		return genericIntakeDAO.getIntakeById(getIntakeNodeByIntakeId(intakeId), intakeId, null, facilityId);
+	}
+	
 	/**
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getMostRecentIndepthIntake(java.lang.Integer)
 	 */
@@ -151,6 +160,10 @@ public class GenericIntakeManager {
 	 */
 	public List<Intake> getQuickIntakes(Integer clientId, Integer facilityId) {
 		return genericIntakeDAO.getIntakes(getQuickIntakeNode(), clientId, null, facilityId);
+	}
+
+	public List<Intake> getRegIntakes(Integer clientId, Integer facilityId) {
+		return genericIntakeDAO.getRegIntakes(getRegIntakeNodes(clientId), clientId, null, facilityId);
 	}
 
 	/**
@@ -341,6 +354,26 @@ public class GenericIntakeManager {
 		Integer quickIntakeNodeId = (agency != null) ? agency.getIntakeQuick() : null;
 
 		return getIntakeNode(quickIntakeNodeId);
+	}
+
+	private IntakeNode getIntakeNodeByIntakeId(Integer intakeId) {
+		Integer intakeNodeId = genericIntakeDAO.getIntakeNodeIdByIntakeId(intakeId);
+		return getIntakeNode(intakeNodeId);
+	}
+
+	private List<IntakeNode> getRegIntakeNodes(Integer clientId) {
+		List<Integer> nodeIds = genericIntakeDAO.getIntakeNodesIdByClientId(clientId);
+		List<IntakeNode> nodeList = new ArrayList();
+		for (Integer i : nodeIds) {
+		    nodeList.add(getIntakeNode(i));
+		}
+		return nodeList;
+	}
+
+	private IntakeNode getLatestRegIntakeNodes(Integer clientId) {
+		List<Integer> nodeIds = genericIntakeDAO.getIntakeNodesIdByClientId(clientId);
+		IntakeNode node = getIntakeNode(nodeIds.get(0));
+		return node;
 	}
 
 	private IntakeNode getIndepthIntakeNode() {
