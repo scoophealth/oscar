@@ -31,17 +31,11 @@ import java.util.Properties;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandler;
-import oscar.oscarDB.DBPreparedHandlerAdvanced;
 
 
 public class DAO {
-    private DBHandler dBHandler;
-    private DBPreparedHandler dBPreparedHandler;
-	private DBPreparedHandlerAdvanced dBPreparedHandlerAdvanced;
-    private Properties pvar;
 
     public DAO(Properties pvar) throws SQLException {
-		this.pvar = pvar;
 		oscar.oscarDB.DBHandler.init(pvar.getProperty("db_name"),pvar.getProperty("db_driver"),pvar.getProperty("db_uri"),pvar.getProperty("db_username"),pvar.getProperty("db_password")  ) ;
 		
     }
@@ -96,14 +90,7 @@ public class DAO {
      * @return
      */
     public DBHandler getDb() throws SQLException {
-		return dBHandler = new DBHandler(DBHandler.OSCAR_DATA);
-    }
-
-    /**
-     * @param handler
-     */
-    public void setDb(DBHandler handler) {
-        dBHandler = handler;
+        return new DBHandler(DBHandler.OSCAR_DATA);
     }
 
     /**
@@ -111,13 +98,6 @@ public class DAO {
      */
     public DBPreparedHandler getDBPreparedHandler() throws SQLException {
         return new DBPreparedHandler();
-    }
-
-	/**
-     * @param handler
-     */
-    public void setDBPreparedHandler(DBPreparedHandler handler) {
-        dBPreparedHandler = handler;
     }
 
     protected String getStrIn(String[] ids) {
