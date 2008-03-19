@@ -114,6 +114,76 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		return intakes;
 	}
 	
+	public List<Intake> getRegIntakes(List<IntakeNode> nodes, Integer clientId, Integer programId, Integer facilityId) {
+		if (nodes.isEmpty() || clientId == null) {
+			throw new IllegalArgumentException("Parameters nodes and clientId must be non-null");
+		}
+
+		List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and i.facilityId =? order by i.createdOn desc",
+				new Object[] { nodes.get(0), clientId, facilityId });
+		List<Intake> intakes = convertToIntakes(results, programId);
+		
+		for (int i=1; i<nodes.size(); i++) {
+		    results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and i.facilityId =? order by i.createdOn desc",
+				new Object[] { nodes.get(i), clientId, facilityId });
+		    intakes.addAll(convertToIntakes(results, programId));
+		}
+
+		LOG.info("get intakes: " + intakes.size());
+		return intakes;
+	}
+
+	public Intake getIntakeById(IntakeNode node, Integer intakeId, Integer programId, Integer facilityId) {
+		if (node == null || intakeId == null) {
+			throw new IllegalArgumentException("Parameters node and intakeId must be non-null");
+		}
+
+		List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.id = ? and i.facilityId =? order by i.createdOn desc",
+				new Object[] { node, intakeId, facilityId });
+		List<Intake> intakes = convertToIntakes(results, programId);
+		LOG.info("get intakes: " + intakes.size());
+		Intake intake = !intakes.isEmpty() ? intakes.get(0) : null;
+
+		return intake;
+	}
+
+	public Integer getIntakeNodeIdByIntakeId(Integer intakeId) {
+		if (intakeId == null) {
+			throw new IllegalArgumentException("Parameters intakeId must be non-null");
+		}
+
+		List<?> results = getHibernateTemplate().find("from Intake i where i.id = ? order by i.createdOn desc",
+				new Object[] { intakeId });
+		List<Intake> intakes = convertToIntakes(results, null);
+		LOG.info("get intakes: " + intakes.size());
+		Integer intakeNodeId = !intakes.isEmpty() ? intakes.get(0).getNode().getId() : null;
+
+		return intakeNodeId;
+	}
+
+	public List<Integer> getIntakeNodesIdByClientId(Integer clientId) {
+		if (clientId == null) {
+			throw new IllegalArgumentException("Parameters intakeId must be non-null");
+		}
+
+		List<?> results = getHibernateTemplate().find("from Intake i where i.clientId = ? order by i.createdOn desc",
+				new Object[] { clientId });
+		List<Intake> intakes = convertToIntakes(results, null);
+		LOG.info("get intakes: " + intakes.size());
+		
+		List<Integer> intakeNodeIds = new ArrayList();
+		for (Intake i : intakes) {
+		    intakeNodeIds.add(i.getNode().getId());
+		}
+		for (int i=1; i<intakeNodeIds.size(); i++) {
+		    if (intakeNodeIds.get(i).equals(intakeNodeIds.get(i-1))) {
+			intakeNodeIds.remove(i);
+			i--;
+		    }
+		}
+		return intakeNodeIds;
+	}
+
 	/**
 	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#saveIntake(org.oscarehr.PMmodule.model.Intake)
 	 */
