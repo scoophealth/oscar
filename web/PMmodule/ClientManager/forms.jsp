@@ -29,18 +29,18 @@ function updateProgramIntake(clientId) {
 	return false;
 }
 
-function printQuickIntake(clientId) {
-	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=quick&clientId=" + clientId;
+function printQuickIntake(clientId, intakeId) {
+	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=quick&intakeId=" + intakeId + "&clientId=" + clientId;
 	window.open(url, 'quickIntakePrint', 'width=1024,height=768,scrollbars=1');
 }
 
 function printIndepthIntake(clientId) {
-	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=indepth&clientId=" + clientId;
+	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=indepth&intakeId=-1&clientId=" + clientId;
 	window.open(url, 'indepthIntakePrint', 'width=1024,height=768,scrollbars=1');
 }
 
 function printProgramIntake(clientId, programId) {
-	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=program&clientId=" + clientId + "&programId=" + programId;
+	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=program&intakeId=-1&clientId=" + clientId + "&programId=" + programId;
 	window.open(url, 'programIntakePrint', 'width=1024,height=768,scrollbars=1');
 }
 
@@ -75,12 +75,12 @@ function openSurvey(methodId) {
 			<th>Actions</th>
 		</tr>
 	</thead>
-	<c:forEach var="intake" items="${quickIntakes}">
+	<c:forEach var="intake" items="${regIntakes}">
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
 			<td><c:out value="${intake.intakeStatus}"/></td>
-			<td><input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
+			<td><input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />','<c:out value="${intake.id}" />')" /></td>
 		</tr>
 	</c:forEach>
 	<tr>
