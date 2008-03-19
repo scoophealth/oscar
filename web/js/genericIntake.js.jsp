@@ -367,8 +367,9 @@ function save_temp() {
 		return false;
 	}
 		 
-    if(isBedCommunityProgramChanged()) {	       	
-       alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
+    if(isBedCommunityProgramChanged()) {	
+    	      	
+       	alert("You cannot make the changes to the admission. Use 'Admit Sign and Save' to change the admission program.");
     	return false;
     }
 	
@@ -380,7 +381,12 @@ function save_admit() {
 		alert( "Bed program is mandatory");		
 		return false;			
 	} 
-	
+	if(isBedCommunityProgramChanged()) {
+		if(isClientDependentOfFamily) {
+			alert("This client is a dependent. To make a bed program admission for this client you must admit the family head or have the dependent status removed.");
+			return false;
+		} 
+	}
 	var programIdStr=getElement('bedCommunityProgramId').value;
 	var programId = Number(programIdStr);
 	if(isNewFacility(programId, oldProgramId) ) {							

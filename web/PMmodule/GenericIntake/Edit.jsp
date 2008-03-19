@@ -24,6 +24,7 @@
 <%@ page import="org.oscarehr.PMmodule.web.ProgramUtils" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="org.oscarehr.common.dao.IntakeRequiredFieldsDao" %>
+<%@ page import="org.oscarehr.util.SessionConstants" %>
 <%
     GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
     Intake intake = intakeEditForm.getIntake();
@@ -49,6 +50,7 @@
         var programTransgenderOnly =<%=session.getAttribute("programTransgenderOnly")%>;
 				
 		var oldProgramId = <%=session.getAttribute("intakeCurrentBedCommunityId")%>;
+		var isClientDependentOfFamily = <%=session.getAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY)%>;
 		
 		<%=session.getAttribute("programAgeValidationMethod")%>
 		<%=session.getAttribute("admitToNewFacilityValidationMethod")%>

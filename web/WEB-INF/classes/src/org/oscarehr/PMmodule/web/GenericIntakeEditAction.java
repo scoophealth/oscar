@@ -91,12 +91,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
             intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
         }
-
-
-        Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        
+		Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
         
         setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(
                 intakeType), null, null, null,facilityId);
+        
+        request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
         
         request.getSession().setAttribute("intakeCurrentBedCommunityId",null);
         
@@ -191,6 +192,15 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         
         String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(clientId));
         request.getSession().setAttribute("intakeCurrentBedCommunityId",oldBedProgramId);
+        
+        if(clientManager.isClientFamilyHead(clientId)) {
+        	request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
+        } else {
+        	if(clientManager.isClientDependentOfFamily(clientId))
+        		request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, true);
+        	else 
+        		request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
+        } 
         
         ProgramUtils.addProgramRestrictions(request);
         
