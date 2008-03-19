@@ -157,7 +157,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         Intake intake = null;
 
         if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
-            intake = genericIntakeManager.copyQuickIntake(clientId, providerNo, facilityId);
+            intake = genericIntakeManager.copyRegIntake(clientId, providerNo, facilityId);
             if (intake==null)
             {
                 intake = genericIntakeManager.createQuickIntake(providerNo);;
@@ -213,13 +213,18 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
         
         String intakeType = getType(request);
-        Integer clientId = getClientId(request);
         String providerNo = getProviderNo(request);
+        Integer clientId = getClientId(request);
+	Integer intakeId = getIntakeId(request);
 
         Intake intake = null;
 
         if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
-            intake = genericIntakeManager.getMostRecentQuickIntake(clientId, facilityId);
+	    if (intakeId>-1) {
+		intake = genericIntakeManager.getRegIntakeById(intakeId, facilityId);
+	    } else {
+		intake = genericIntakeManager.getMostRecentQuickIntake(clientId, facilityId);
+	    }
         }
         else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
             intake = genericIntakeManager.getMostRecentIndepthIntake(clientId, facilityId);
