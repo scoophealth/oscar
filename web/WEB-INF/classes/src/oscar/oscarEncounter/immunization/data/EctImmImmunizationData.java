@@ -24,15 +24,9 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.immunization.data;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -41,7 +35,7 @@ public class EctImmImmunizationData
 {
 
     public String getImmunizations(String demographicNo)
-        throws SQLException, SAXException, ParserConfigurationException, IOException, FileNotFoundException
+        throws SQLException
     {
         String sRet = null;
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);

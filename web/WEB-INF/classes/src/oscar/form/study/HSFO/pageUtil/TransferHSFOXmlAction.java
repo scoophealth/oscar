@@ -1,14 +1,20 @@
 package oscar.form.study.HSFO.pageUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import noNamespace.HsfoHbpsDataDocument;
+
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.xmlbeans.XmlException;
+
 import oscar.oscarDemographic.data.DemographicData;
 
 public class TransferHSFOXmlAction extends Action

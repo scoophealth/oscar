@@ -537,7 +537,7 @@ public class BedManager {
         bedDAO.saveBed(bed);
     }
 
-    public void deleteBed(Bed bed) throws BedReservedException {
+    public void deleteBed(Bed bed) {
         
         bedDAO.deleteBed(bed);
     }

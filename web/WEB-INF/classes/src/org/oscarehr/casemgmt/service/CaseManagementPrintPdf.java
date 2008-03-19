@@ -80,7 +80,7 @@ public class CaseManagementPrintPdf {
     private final int NUMCOLS = 2;
     
     /** Creates a new instance of CaseManagementPrintPdf */
-    public CaseManagementPrintPdf(HttpServletRequest request,HttpServletResponse response) throws IOException, DocumentException {
+    public CaseManagementPrintPdf(HttpServletRequest request,HttpServletResponse response) {
         this.request = request;
         this.response = response;
         formatter = new SimpleDateFormat("dd-MMM-yyyy");          

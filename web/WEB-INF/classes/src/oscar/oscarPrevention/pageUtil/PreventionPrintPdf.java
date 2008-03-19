@@ -192,7 +192,7 @@ public class PreventionPrintPdf {
         document.close();
     }
     
-    private boolean breakPage(boolean pageBreak, float upperYcoord) throws DocumentException {
+    private boolean breakPage(boolean pageBreak, float upperYcoord) {
         
         if( pageBreak ) {
             ct.showTextAligned(cb, Phrase.ALIGN_CENTER, new Phrase("-" + curPage + "-"), document.right()/2f, document.bottom()-(document.bottomMargin()/2f), 0f);
@@ -218,7 +218,7 @@ public class PreventionPrintPdf {
         return pageBreak;
     }
     
-    private boolean checkColumnFill(ColumnText ct, String preventionHeader, Font font, boolean pageBreak) throws DocumentException {
+    private boolean checkColumnFill(ColumnText ct, String preventionHeader, Font font, boolean pageBreak) {
         if( linesWritten + linesToBeWritten > maxLines ) {
             
             //reset upperYcoord for pages 2 and above

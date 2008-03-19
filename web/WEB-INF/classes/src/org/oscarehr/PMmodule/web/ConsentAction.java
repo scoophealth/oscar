@@ -22,7 +22,6 @@
 
 package org.oscarehr.PMmodule.web;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Map;
 
@@ -196,7 +195,7 @@ public class ConsentAction extends BaseAction {
 	}
 	
 	
-	public ActionForward agency_list(ActionMapping mapping,	ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public ActionForward agency_list(ActionMapping mapping,	ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		
 		Map agencyMap = Agency.getAgencyMap();
 		if(agencyMap == null) {
