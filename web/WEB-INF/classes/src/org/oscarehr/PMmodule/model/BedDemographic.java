@@ -35,6 +35,7 @@ import org.oscarehr.common.dao.Auditable;
 public class BedDemographic implements Auditable, Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static String INFINITE_DATE = "2100-12-31";
     public static String REF = "BedDemographic";
     public static String PROP_PROVIDER_NO = "providerNo";
     public static String PROP_RESERVATION_START = "reservationStart";
@@ -52,6 +53,7 @@ public class BedDemographic implements Auditable, Serializable {
     private boolean latePass;
     private Date reservationStart;
     private Date reservationEnd;
+    private String infiniteDate = INFINITE_DATE;
     private BedDemographicStatus bedDemographicStatus;
     private Provider provider;
     private Bed bed;
@@ -70,7 +72,8 @@ public class BedDemographic implements Auditable, Serializable {
 		Date today = DateTimeFormatUtils.getToday();
 		
 		bedDemographic.setReservationStart(today);
-		bedDemographic.setReservationEnd(DateTimeFormatUtils.getFuture(today, bedDemographicStatus.getDuration()));
+		//bedDemographic.setReservationEnd(DateTimeFormatUtils.getFuture(today, bedDemographicStatus.getDuration()));
+		bedDemographic.setReservationEnd(DateTimeFormatUtils.getDateFromString(INFINITE_DATE));
 
 		return bedDemographic;
 	}
@@ -353,4 +356,14 @@ public class BedDemographic implements Auditable, Serializable {
         }
         return this.hashCode;
     }
+
+	public String getInfiniteDate() {
+		return infiniteDate;
+	}
+
+
+	public void setInfiniteDate(String infiniteDate) {
+		this.infiniteDate = infiniteDate;
+	}
+    
 }
