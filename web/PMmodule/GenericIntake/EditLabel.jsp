@@ -9,16 +9,23 @@
   IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
     ArrayList nodes = new ArrayList();
     buildNodes(itn, nodes);
-        
+    
     String lblEdit = request.getParameter("lbledit");
     String id = request.getParameter("id");
+    String mandatory = request.getParameter("mandatory");
+    
+    IntakeNode theNode = findNode(Integer.parseInt(id), nodes);
+    boolean hasMandatory = (theNode.isQuestion() || theNode.isAnswerCompound());
     
     if (lblEdit != null){
         IntakeNodeLabel iLabel = new IntakeNodeLabel();
         iLabel.setId(Integer.parseInt(id));
         iLabel.setLabel(lblEdit);
-        //genericIntakeManager.updateNodeLabel(iLabel);
+        
 	writeLabel(iLabel, nodes);
+	if (hasMandatory) {
+	    writeMandatory(mandatory, theNode);
+	}
 	
         response.sendRedirect("close.jsp");
         return;
@@ -49,8 +56,10 @@
         <input type="text" name="lbledit" value="<%=val%>"/>
         <input type="hidden" name="id" value="<%=id%>"/>
         
-        
         <input type="submit" value="update"/>
+     <%	if (hasMandatory) { %>
+	<br><input type="checkbox" name="mandatory" value="true" <%=theNode.getMandatory() ? "checked" : ""%>>Mandatory</input>
+     <%	} %>
     </form>
     
     </body>
@@ -87,6 +96,14 @@ IntakeNodeLabel findLabel(Integer labelId, ArrayList nodes) {
 void writeLabel(IntakeNodeLabel iLabel, ArrayList nodes) {
     IntakeNode iNode = findNode(iLabel.getId(), nodes);
     iNode.setLabel(iLabel);
+}
+
+void writeMandatory(String mand, IntakeNode iNode) {
+    boolean mandatoryFlag = false;
+    if (mand!=null) {
+	mandatoryFlag = mand.equals("true") ? true : false;
+    }
+    iNode.setMandatory(mandatoryFlag);
 }
 
 %>
