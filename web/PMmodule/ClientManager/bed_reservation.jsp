@@ -136,10 +136,21 @@
 			<tr>
 				<th width="20%">Until</th>
 				<td>
-					<input type="text" name="" id="strReservationEnd_field" readonly="readonly" value="<c:out value="${clientManagerForm.map.bedDemographic.strReservationEnd}"/>" />
+                <c:choose>
+					<c:when test="${clientManagerForm.map.bedDemographic.strReservationEnd == clientManagerForm.map.bedDemographic.infiniteDate}">
+						<c:set var="endDate" value="" />
+					</c:when>
+					<c:otherwise>
+						<c:set var="endDate" value="${clientManagerForm.map.bedDemographic.strReservationEnd}" />
+					</c:otherwise>
+				</c:choose>
+
+					<input type="hidden" name="bedDemographic.strReservationEnd" id="strReservationEnd_field_hidden" value="<c:out value="${clientManagerForm.map.bedDemographic.strReservationEnd}"/>" />
+					<input type="text" name="" id="strReservationEnd_field" readonly="readonly" value="<c:out value="${endDate}"/>"  onchange="setEndDate();" />
 					<img align="top" src="<html:rewrite page="/images/calendar.gif" />" id="strReservationEnd_field-button" alt="Reserve Until Calendar" title="Reserve Until Calendar" />
-					
+				
 					<script type="text/javascript">
+					
 						Calendar.setup(
 							{
 								inputField :  'strReservationEnd_field',
@@ -150,6 +161,10 @@
 								firstDay :    1
 							}
 						);
+						
+						function setEndDate(){
+							document.getElementById('strReservationEnd_field_hidden').value = document.getElementById('strReservationEnd_field').value;
+						}
 					</script>
 				</td>
 			</tr>
