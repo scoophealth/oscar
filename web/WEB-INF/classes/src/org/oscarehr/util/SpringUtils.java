@@ -16,11 +16,16 @@ public class SpringUtils {
      */
     public static BeanFactory beanFactory = null;
 
+    public static Object getBean(String beanName)
+    {
+        return(beanFactory.getBean(beanName));
+    }
+    
     /**
      * This method should only be called by DbConnectionFilter, everyone else should use that to obtain a connection. 
      */
     protected static Connection getDbConnection() throws SQLException {
-        BasicDataSource ds = (BasicDataSource)SpringUtils.beanFactory.getBean("dataSource");
+        BasicDataSource ds = (BasicDataSource)SpringUtils.getBean("dataSource");
         Connection c=ds.getConnection();
         c.setAutoCommit(true);
         return(c);

@@ -122,7 +122,7 @@
 				} else {
 			        Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 			        int demographicId=Integer.parseInt((String)request.getAttribute("id"));
-					AdmissionManager admissionManager=(AdmissionManager)SpringUtils.beanFactory.getBean("admissionManager");
+					AdmissionManager admissionManager=(AdmissionManager)SpringUtils.getBean("admissionManager");
 					boolean activeInFacility=admissionManager.isActiveInFacility(facilityId, demographicId);
 					boolean requireActiveTab="Refer".equals(ClientManagerFormBean.tabs[x]) || "Discharge".equals(ClientManagerFormBean.tabs[x]);
 					

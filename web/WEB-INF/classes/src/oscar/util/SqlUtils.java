@@ -600,7 +600,7 @@ public class SqlUtils {
     }
 
     private static DatabaseTypes getDatabaseType() {
-        BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.beanFactory.getBean("dataSource");
+        BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
         String driverName = basicDataSource.getDriverClassName();
 
         if (driverName.startsWith("com.mysql.")) return(DatabaseTypes.MYSQL);

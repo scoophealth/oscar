@@ -63,7 +63,7 @@ public class EDocUtil extends SqlUtilBaseS {
 
     public static final String DMS_DATE_FORMAT = "yyyy/MM/dd";
 
-    private static ProgramManager programManager = (ProgramManager) SpringUtils.beanFactory.getBean("programManager");
+    private static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 
     public static ArrayList getCurrentDocs(String tag) {
         // return TagUtil.getObjects(tag, "EDoc");

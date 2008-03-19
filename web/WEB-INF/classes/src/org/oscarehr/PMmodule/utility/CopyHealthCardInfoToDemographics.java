@@ -41,8 +41,8 @@ public class CopyHealthCardInfoToDemographics {
     	int totalUpdated = 0;
     	int totalWarnings = 0;
     	
-    	IntakeAManager intakeMgr = (IntakeAManager)SpringUtils.beanFactory.getBean("intakeAManager");
-    	ClientManager clientMgr = (ClientManager)SpringUtils.beanFactory.getBean("clientManager");
+    	IntakeAManager intakeMgr = (IntakeAManager)SpringUtils.getBean("intakeAManager");
+    	ClientManager clientMgr = (ClientManager)SpringUtils.getBean("clientManager");
     	
     	Statement stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement();
     	stmt.execute("SELECT demographic_no FROM demographic");

@@ -46,8 +46,8 @@ public final class LoginAction extends DispatchAction {
     private static final Logger _logger = Logger.getLogger(LoginAction.class);
     private static final String LOG_PRE = "Login!@#$: ";
 
-    private ProviderManager providerManager = (ProviderManager) SpringUtils.beanFactory.getBean("providerManager");
-    private FacilityDAO facilityDAO = (FacilityDAO) SpringUtils.beanFactory.getBean("facilityDAO");
+    private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
+    private FacilityDAO facilityDAO = (FacilityDAO) SpringUtils.getBean("facilityDAO");
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

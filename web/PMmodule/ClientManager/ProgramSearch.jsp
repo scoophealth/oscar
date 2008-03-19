@@ -139,7 +139,7 @@ if (!Array.prototype.indexOf)
 		</display:table>
 
 		<%
-			IntegratorManager integratorManager=(IntegratorManager)SpringUtils.beanFactory.getBean("integratorManager");
+			IntegratorManager integratorManager=(IntegratorManager)SpringUtils.getBean("integratorManager");
 			if (integratorManager.isEnabled())
 			{
 				%>

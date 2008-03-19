@@ -31,8 +31,8 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProgramUtils
 {
-    private static ProgramDao programDao=(ProgramDao)SpringUtils.beanFactory.getBean("programDao");
-    private static FacilityDAO facilityDao=(FacilityDAO)SpringUtils.beanFactory.getBean("facilityDAO");    
+    private static ProgramDao programDao=(ProgramDao)SpringUtils.getBean("programDao");
+    private static FacilityDAO facilityDao=(FacilityDAO)SpringUtils.getBean("facilityDAO");    
 
     /**
      * This method stores the program ids as javascript arrays of numbers in the session space grouped

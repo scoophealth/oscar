@@ -176,7 +176,7 @@
 <br />
 <br />
 <%
-	IntegratorManager integratorManager=(IntegratorManager)SpringUtils.beanFactory.getBean("integratorManager");
+	IntegratorManager integratorManager=(IntegratorManager)SpringUtils.getBean("integratorManager");
 	GetReferralResponseTransfer getReferralResponseTransfer = null;
 	AgencyTransfer agencyTransfer=null;
 	Demographic demographic=null;

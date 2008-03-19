@@ -224,7 +224,7 @@ public class AgencyManagerAction extends BaseAction {
 
     public ActionForward refresh_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
-        ScheduledTimerTask tt=(ScheduledTimerTask)SpringUtils.beanFactory.getBean("scheduledIntegratorUpdateTask");
+        ScheduledTimerTask tt=(ScheduledTimerTask)SpringUtils.getBean("scheduledIntegratorUpdateTask");
         
         Thread t=new Thread(tt.getTimerTask());
         t.start();

@@ -92,7 +92,7 @@
 <%
 	boolean allowTerminateEarly=false;
 	ProgramClientRestriction temp=null;
-	ProviderDao providerDao=(ProviderDao)SpringUtils.beanFactory.getBean("providerDao");
+	ProviderDao providerDao=(ProviderDao)SpringUtils.getBean("providerDao");
 %>
     <display:setProperty name="paging.banner.placement" value="bottom" />
     <display:column property="program.name" sortable="true" title="Program Name" />
