@@ -25,7 +25,7 @@ package org.oscarehr.PMmodule.model;
 import java.util.Date;
 
 public class AdmissionSearchBean {
-	private Long providerNo;
+	private String providerNo;
 	private String admissionStatus;
 	private Long clientId;
 	private Date startDate;
@@ -56,10 +56,10 @@ public class AdmissionSearchBean {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	public Long getProviderNo() {
+	public String getProviderNo() {
 		return providerNo;
 	}
-	public void setProviderNo(Long providerNo) {
+	public void setProviderNo(String providerNo) {
 		this.providerNo = providerNo;
 	}
 	public Date getStartDate() {
