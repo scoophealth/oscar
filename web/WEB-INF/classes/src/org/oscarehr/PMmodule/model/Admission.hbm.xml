@@ -34,10 +34,7 @@
 			type="java.lang.Long" />
 		<property
 			column="provider_no"
-			length="11"
-			name="ProviderNo"
-			not-null="true"
-			type="java.lang.Long" />
+			name="ProviderNo" />
 		<property
 			column="admission_status"
 			length="24"

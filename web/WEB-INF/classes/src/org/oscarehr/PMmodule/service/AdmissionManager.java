@@ -203,7 +203,7 @@ public class AdmissionManager {
 		newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
 		newAdmission.setClientId(demographicNo);
 		newAdmission.setProgramId(program.getId());
-		newAdmission.setProviderNo(Long.valueOf(providerNo));
+		newAdmission.setProviderNo(providerNo);
 		newAdmission.setTeamId(0);
 		newAdmission.setAgencyId(new Long(0));
 		newAdmission.setTemporaryAdmission(tempAdmission);
@@ -283,7 +283,7 @@ public class AdmissionManager {
 		newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
 		newAdmission.setClientId(demographicNo);
 		newAdmission.setProgramId(program.getId());
-		newAdmission.setProviderNo(Long.valueOf(providerNo));
+		newAdmission.setProviderNo(providerNo);
 		newAdmission.setTeamId(0);
 		newAdmission.setAgencyId(new Long(0));
 		saveAdmission(newAdmission);
@@ -430,7 +430,7 @@ public class AdmissionManager {
 		admission.setAdmissionStatus(Admission.STATUS_CURRENT);
 		admission.setClientId(demographicNo);
 		admission.setProgramId(communityProgramId);
-		admission.setProviderNo(Long.valueOf(providerNo));
+		admission.setProviderNo(providerNo);
 		admission.setTeamId(0);
 		admission.setAgencyId(0L);
 		admission.setTemporaryAdmission(false);

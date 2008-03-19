@@ -592,7 +592,7 @@ public class ProgramManagerViewAction extends BaseAction {
                     newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
                     newAdmission.setClientId(admission.getClientId());
                     newAdmission.setProgramId(Integer.valueOf(admitToProgramId));
-                    newAdmission.setProviderNo(Long.valueOf(getProviderNo(request)));
+                    newAdmission.setProviderNo(getProviderNo(request));
                     newAdmission.setTeamId(0);
                     newAdmission.setAgencyId(admission.getAgencyId());
 

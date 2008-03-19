@@ -1277,8 +1277,8 @@ public class ClientManagerAction extends BaseAction {
         Admission admission = admissionManager.getAdmission(Long.valueOf(admissionId));
         Agency agency = agencyManager.getAgency("" + admission.getAgencyId());
         Demographic client = clientManager.getClientByDemographicNo("" + admission.getClientId());
-        Long providerNo = admission.getProviderNo();
-        Provider provider = providerManager.getProvider("" + providerNo);
+        String providerNo = admission.getProviderNo();
+        Provider provider = providerManager.getProvider(providerNo);
 
         DynaActionForm clientForm = (DynaActionForm) form;
         clientForm.set("admission", admission);
