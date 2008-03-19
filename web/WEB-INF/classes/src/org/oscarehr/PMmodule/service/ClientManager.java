@@ -149,7 +149,7 @@ public class ClientManager {
             queue.setClientId(referral.getClientId());
             queue.setNotes(referral.getNotes());
             queue.setProgramId(referral.getProgramId());
-            queue.setProviderNo(referral.getProviderNo());
+            queue.setProviderNo(Long.parseLong(referral.getProviderNo()));
             queue.setReferralDate(referral.getReferralDate());
             queue.setStatus(ProgramQueue.STATUS_ACTIVE);
             queue.setReferralId(referral.getId());

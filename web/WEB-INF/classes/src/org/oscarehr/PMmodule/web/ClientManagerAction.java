@@ -411,7 +411,7 @@ public class ClientManagerAction extends BaseAction {
         long clientId = Long.parseLong(request.getParameter("id"));
         long agencyId = p.getAgencyId();
         int programId = p.getId();
-        long providerId = Long.valueOf(getProviderNo(request));
+        String providerId =getProviderNo(request);
 
         referral.setAgencyId(agencyId);
         referral.setSourceAgencyId(-1l);
@@ -1179,7 +1179,7 @@ public class ClientManagerAction extends BaseAction {
             referral.setClientId(new Long(demographicNo));
             referral.setNotes("ER Automated referral\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason());
             referral.setProgramId(program.getProgramId().longValue());
-            referral.setProviderNo(Long.valueOf(getProviderNo(request)));
+            referral.setProviderNo(getProviderNo(request));
             referral.setReferralDate(new Date());
             referral.setSourceAgencyId((long) 0);
             referral.setStatus(ClientReferral.STATUS_ACTIVE);
@@ -1259,8 +1259,8 @@ public class ClientManagerAction extends BaseAction {
         Agency agency = agencyManager.getAgency("" + referral.getAgencyId());
         Demographic client = clientManager.getClientByDemographicNo("" + referral.getClientId());
 
-        Long providerNo = referral.getProviderNo();
-        Provider provider = providerManager.getProvider("" + providerNo);
+        String providerNo = referral.getProviderNo();
+        Provider provider = providerManager.getProvider(providerNo);
         DynaActionForm clientForm = (DynaActionForm) form;
 
         clientForm.set("referral", referral);

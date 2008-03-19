@@ -388,7 +388,7 @@ CREATE TABLE `client_referral` (
   `client_id` bigint(20) NOT NULL default '0',
   `facility_id` int(10) NOT NULL default '0',
   `referral_date` datetime default NULL,
-  `provider_no` bigint(20) NOT NULL default '0',
+  `provider_no` varchar(6) NOT NULL,
   `notes` text default NULL,
   `program_id` bigint(20) NOT NULL default '0',
   `status` varchar(30) default NULL,
