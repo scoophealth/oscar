@@ -46,6 +46,7 @@ public class JdbcBilling3rdPartImpl {
 				retval.setProperty("clinic_city", rs.getString("clinic_city"));
 				retval.setProperty("clinic_province", rs
 						.getString("clinic_province"));
+                                retval.setProperty("clinic_postal", rs.getString("clinic_postal")); 
 				retval.setProperty("clinic_fax", rs.getString("clinic_fax"));
 				retval
 						.setProperty("clinic_phone", rs
