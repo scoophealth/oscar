@@ -66,9 +66,9 @@ public class RptFluReportData {
 			String eDate = reportYear + "-12-31";
 			try {
 				DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
-				String s1 = "select b.billing_no, b.billing_date from billing b, billingdetail bd where b.demographic_no='"
+				String s1 = "select b.id, b.billing_date from billing_on_cheader1 b, billing_on_item bd where b.demographic_no='"
 						+ demoNo
-						+ "' and bd.billing_no=b.billing_no and (bd.service_code='G590A' or bd.service_code='G591A') and b.billing_date >= '"
+						+ "' and bd.ch1_id=b.id and (bd.service_code='G590A' or bd.service_code='G591A') and b.billing_date >= '"
 						+ sDate
 						+ "' and b.billing_date <= '"
 						+ eDate
