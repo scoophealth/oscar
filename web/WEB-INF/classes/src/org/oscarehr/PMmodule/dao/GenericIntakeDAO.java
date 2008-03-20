@@ -119,12 +119,12 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 			throw new IllegalArgumentException("Parameters nodes and clientId must be non-null");
 		}
 
-		List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and i.facilityId =? order by i.createdOn desc",
+		List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and (i.facilityId=? or i.facilityId is null) order by i.createdOn desc",
 				new Object[] { nodes.get(0), clientId, facilityId });
 		List<Intake> intakes = convertToIntakes(results, programId);
 		
 		for (int i=1; i<nodes.size(); i++) {
-		    results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and i.facilityId =? order by i.createdOn desc",
+		    results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and (i.facilityId=? or i.facilityId is null) order by i.createdOn desc",
 				new Object[] { nodes.get(i), clientId, facilityId });
 		    intakes.addAll(convertToIntakes(results, programId));
 		}
@@ -138,7 +138,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 			throw new IllegalArgumentException("Parameters node and intakeId must be non-null");
 		}
 
-		List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.id = ? and i.facilityId =? order by i.createdOn desc",
+		List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.id = ? and (i.facilityId=? or i.facilityId is null) order by i.createdOn desc",
 				new Object[] { node, intakeId, facilityId });
 		List<Intake> intakes = convertToIntakes(results, programId);
 		LOG.info("get intakes: " + intakes.size());
