@@ -7273,8 +7273,8 @@ create table provider_facility
 (
 	provider_no varchar(6) not null,
 	facility_id int not null,
-	unique (provider_id, facility_id),
+	unique (provider_no, facility_id),
 	index (facility_id)
---	foreign key (provider_id) references provider(provider_no),
+--	foreign key (provider_no) references provider(provider_no),
 --	foreign key (facility_id) references facility(id),
 );
