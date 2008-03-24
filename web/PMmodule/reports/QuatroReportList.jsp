@@ -1,4 +1,15 @@
 <%@ include file="/taglibs.jsp"%>
+<html>
+<head>
+<script language="JavaScript">
+	function submitForm(mthd)
+	{
+		document.forms[0].method.value=mthd;
+		document.forms[0].submit();
+	}
+</script>
+</head>
+<body>
 <html:form action="/QuatroReport/ReportList.do">
 <div class="tabs" id="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
@@ -11,8 +22,7 @@
 <table cellpadding="3" cellspacing="0" border="0" width="100%" class="toolgroup">
 <tr><td align="left">
 <img src="../images/Delete16.gif"/>
-<a href="javascript:quatroReportListForm.Delete.click();">Delete Template(s)</a>&nbsp;|&nbsp;
-<html:submit property="Delete" style="width:1px;height:1px;">Delete Template(s)</html:submit>
+<a href="javascript:submitForm('delete');">Delete Template(s)</a>&nbsp;|&nbsp;
 </td></tr>
 </table>
 <table width="100%">
@@ -42,3 +52,5 @@
 </td></tr>
  </table>
 </html:form>
+</body>
+</html>

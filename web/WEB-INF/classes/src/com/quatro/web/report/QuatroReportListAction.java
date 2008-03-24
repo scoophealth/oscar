@@ -15,15 +15,14 @@ import com.quatro.service.QuatroReportManager;
 
 public class QuatroReportListAction extends DispatchAction {
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		QuatroReportListForm myForm = (QuatroReportListForm)form;
-		if((String)request.getParameter("Delete")!=null) btnDelete_Click(myForm, request);
 		return reportlist(mapping,form,request,response);
 	}
 
-	public void btnDelete_Click(QuatroReportListForm myForm, HttpServletRequest request)
+	public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
 	{
+		QuatroReportListForm myForm = (QuatroReportListForm) form;
 		String chkNo= myForm.getChkDel();
-		if(chkNo==null) return;
+		if(chkNo==null) return reportlist(mapping,form,request,response);
 		
 		QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
         		getServlet().getServletContext()).getBean("quatroReportManager");
@@ -43,7 +42,7 @@ public class QuatroReportListAction extends DispatchAction {
 			  reportManager.DeleteReportTemplates(templateNo);
 		  }
 		}  
-		
+		return reportlist(mapping,form,request,response);
 	}
 	
 	public ActionForward reportlist(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

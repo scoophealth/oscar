@@ -45,9 +45,9 @@ function saveTemplate(url){
 </logic:equal>
 <script language="JavaScript">
 function CriteriaChanged(obj){
-  quatroReportRunnerForm.onCriteriaChange.value=obj.name;
-  getOrgList();
-  quatroReportRunnerForm.submit();
+  	document.forms[0].method.value=obj.name;
+	getOrgList();
+  	document.forms[0].submit();
 }
 
 function getOrgList(){
@@ -71,9 +71,15 @@ function getOrgList(){
   }
   return true;
 }
+function submitForm(mthd)
+{
+	document.forms[0].method.value=mthd;
+	document.forms[0].submit();
+}
 </script>
 
 <html:form action="/QuatroReport/ReportRunner.do" onsubmit="return getOrgList();">
+<input type="hidden" id="method" name="method" />
 <div class="tabs" id="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
@@ -85,12 +91,10 @@ function getOrgList(){
 <table width="100%" class="toolgroup">
 <tr><td align="left">
 <img src="../images/Save16.png"/>
-<a href="javascript:quatroReportRunnerForm.Save.click();">Save Template</a>&nbsp;|&nbsp;
-<html:submit property="Save" style="width:1px;height:1px;">Save Template</html:submit>
+<a href="javascript:submitForm('Save');">Save Template</a>&nbsp;|&nbsp;
 <img src="../images/Print16x16.gif"/>
-<html:submit property="Run"	style="width:1px;height:1px;">Run Report</html:submit>
 
-<a href="javascript:quatroReportRunnerForm.Run.click();">Run Report</a>&nbsp;|&nbsp;
+<a href="javascript:submitForm('Run');">Run Report</a>&nbsp;|&nbsp;
 <img src="../images/Back16.png"/>&nbsp;<html:link action="/QuatroReport/ReportList.do">QuatroShelter Reports</html:link>
 </td></tr>
 </table>
@@ -198,18 +202,14 @@ function getOrgList(){
 		       <td class="clsDataGridList" width="100%">
 	           </td>
 	         </tr>
-	         <tr>
-                <td class="clsButtonBarText" width="100%">
-                    &nbsp;&nbsp;<html:submit property="AddTplCri">Add</html:submit>&nbsp;&nbsp;&nbsp;|
-                        &nbsp;&nbsp;<html:submit property="InsertTplCri">Insert</html:submit>&nbsp;&nbsp;&nbsp;|
-                        &nbsp;&nbsp;<html:submit property="RemoveTplCri">Remove</html:submit>
-	                </td>     
-	            </tr>
-<tr><td>
+	     </table>
+	     </td>
+	</tr>
+<tr><td colspan="2" width="100%">
 <TABLE align="center" class="simple" width="100%"><!--  722px-->
 <thead>
    	<TR><th class="sortable">Select</th>
-    	<th class="sortable">Relation<input type="hidden" id="onCriteriaChange" name="onCriteriaChange" value=""  /></TH>
+    	<th class="sortable">Relation</TH>
 		<TH class="sortable">Field Name</TH>
       	<TH class="sortable">Operator</TH>
 		<TH class="sortable">Value(s)</TH></TR></thead>
@@ -273,7 +273,8 @@ function getOrgList(){
             <logic:notEmpty name="tplCriteria" property="filter.lookupTable">
               <html:hidden name="tplCriteria" property="filter.lookupTable" indexed="true" />
               <quatro:lookupTag name="tplCriteria" tableName="<%=((ReportTempCriValue)tplCriteria).getFilter().getLookupTable()%>" indexed="true" formProperty="quatroReportRunnerForm" 
-                 codeProperty ="val" bodyProperty="valdesc" codeValue="<%=((ReportTempCriValue)tplCriteria).getVal()%>" bodyValue="<%=((ReportTempCriValue)tplCriteria).getValDesc()%>"></quatro:lookupTag>
+                 codeProperty ="val" bodyProperty="valdesc" codeValue="<%=((ReportTempCriValue)tplCriteria).getVal()%>" 
+                 bodyValue="<%=((ReportTempCriValue)tplCriteria).getValDesc()%>"></quatro:lookupTag>
             </logic:notEmpty>
           </logic:equal>  
           <logic:equal name="tplCriteria" property="filter.fieldType" value="D">
@@ -288,13 +289,17 @@ function getOrgList(){
    	</logic:iterate>
 </TABLE>
 </td></tr>
-
+<tr><td colspan="2" width="100%">
+           <table width="100%">
+	         <tr>
+                <td class="clsButtonBarText" width="100%">
+                    &nbsp;&nbsp;<a href="javascript:submitForm('AddTplCri');">Add</a>&nbsp;&nbsp;&nbsp;|
+                        &nbsp;&nbsp;<a href="javascript:submitForm('InsertTplCri');">Insert</a>&nbsp;&nbsp;&nbsp;|
+                        &nbsp;&nbsp;<a href="javascript:submitForm('RemoveTplCri');">Remove</a>
+	                </td>     
+	            </tr>
             </table>
         </td>
     </tr>	
-</table>
-
-
-</td></tr>
 </table>
 </html:form>

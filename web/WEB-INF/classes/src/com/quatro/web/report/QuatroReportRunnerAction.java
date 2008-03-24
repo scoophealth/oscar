@@ -79,27 +79,28 @@ public class QuatroReportRunnerAction extends Action {
 		{
 			rptNo=Integer.parseInt(myForm.getReportNo());
             //
-			if((String)request.getParameter("Run")!=null)
+			String method = (String)request.getParameter("method");
+			if("Run".equals(method))
 			{
 				btnRun_Click(rptNo, myForm, request);
 			}
-			if((String)request.getParameter("Save")!=null)
+			else if("Save".equals(method))
 			{
 				btnSave_Click(rptNo, myForm, request);
 			}
-			else if((String)request.getParameter("AddTplCri")!=null)
+			else if("AddTplCri".equals(method))
 			{
 				btnAddTplCri_Click(rptNo, myForm, request);
 			}
-			else if((String)request.getParameter("InsertTplCri")!=null)
+			else if("InsertTplCri".equals(method))
 			{
 				btnInsertTplCri_Click(rptNo, myForm, request);
 			}
-			else if((String)request.getParameter("RemoveTplCri")!=null)
+			else if("RemoveTplCri".equals(method))
 			{
 				btnRemoveTplCri_Click(rptNo, myForm, request);
 			}
-			else if(!((String)request.getParameter("onCriteriaChange")).equals(""))
+			else if("onCriteriaChange".equals(method))
 			{
 				OnCriteriaTextChangedHandler(rptNo, myForm, request);
 			}
@@ -289,6 +290,7 @@ public class QuatroReportRunnerAction extends Action {
 			myForm.setStartField(rptTempVal.getStartPayPeriod());
 			myForm.setEndField(rptTempVal.getEndPayPeriod());
 		}
+		request.getSession().setAttribute(DataViews.REPORT_CRI, rptTempVal.getTemplateCriteria());
 		
 		myForm.setOrgSelectionList(rptTempVal.getOrgCodes());
 		myForm.setReportOption(String.valueOf(rptTempVal.getReportOptionID()));
