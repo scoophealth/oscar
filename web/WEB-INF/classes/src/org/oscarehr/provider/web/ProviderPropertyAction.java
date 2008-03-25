@@ -95,6 +95,84 @@ public class ProviderPropertyAction extends DispatchAction {
      }
     
     
+    /////
+    
+    public ActionForward viewMyDrugrefId(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+                               
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         //System.out.println("provider # "+provider);
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.MYDRUGREF_ID);
+         //String propertyToSet = "";
+         //if( prop != null ) {             
+         //   propertyToSet = prop.getValue();
+         //    System.out.println("prop was not null "+prop.getValue());
+         //}else{
+         //    prop = new UserProperty();
+         //    System.out.println("PROP WAS NULL");
+         //}
+         
+         //request.setAttribute("propert",propertyToSet);
+         request.setAttribute("dateProperty",prop);
+         
+         
+         request.setAttribute("providertitle","provider.setmyDrugrefId.title"); //=Set myDrugref ID
+         request.setAttribute("providermsgPrefs","provider.setmyDrugrefId.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setmyDrugrefId.msgProvider"); //=myDrugref ID
+         request.setAttribute("providermsgEdit","provider.setmyDrugrefId.msgEdit"); //=Enter your desired login for myDrugref
+         request.setAttribute("providerbtnSubmit","provider.setmyDrugrefId.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setmyDrugrefId.msgSuccess"); //=myDrugref Id saved
+         request.setAttribute("method","saveMyDrugrefId");
+         
+         frm.set("dateProperty", prop);
+         return actionmapping.findForward("gen");
+     }
+
+    
+    public ActionForward saveMyDrugrefId(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+         String provider = (String) request.getSession().getAttribute("user");
+         //System.out.println("provider # "+provider);
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");         
+         String drugrefId = "";
+
+         if (UdrugrefId != null){
+             drugrefId = UdrugrefId.getValue();
+         }   
+         
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.MYDRUGREF_ID);
+         
+         if (prop ==null){
+             prop = new UserProperty();
+             prop.setName(UserProperty.MYDRUGREF_ID);
+             prop.setProvider_no(provider);
+         }
+         prop.setValue(drugrefId);
+         
+         this.userPropertyDAO.saveProp(prop);
+         
+         request.setAttribute("status", "success");
+         request.setAttribute("dateProperty",prop);
+         request.setAttribute("providertitle","provider.setmyDrugrefId.title"); //=Set myDrugref ID
+         request.setAttribute("providermsgPrefs","provider.setmyDrugrefId.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setmyDrugrefId.msgProvider"); //=myDrugref ID
+         request.setAttribute("providermsgEdit","provider.setmyDrugrefId.msgEdit"); //=Enter your desired login for myDrugref
+         request.setAttribute("providerbtnSubmit","provider.setmyDrugrefId.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setmyDrugrefId.msgSuccess"); //=myDrugref Id saved
+         request.setAttribute("method","saveMyDrugrefId");
+         return actionmapping.findForward("gen");
+     }
+    /////
+    
+    
+    
+    
     /**
      * Creates a new instance of ProviderPropertyAction
      */
