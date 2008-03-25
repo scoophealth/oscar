@@ -540,6 +540,12 @@
         <action input="/oscarRx/SearchDrug.jsp" name="FrmForm" path="/oscarRx/SendToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
             <forward name="finished" path="/phr/response.jsp"></forward>
         </action>
+        <action input="/oscarRx/MyDrugrefDisplay.jsp" name="FrmForm" path="/oscarRx/GetmyDrugrefInfo" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxMyDrugrefInfoAction">
+            <forward name="success" path="/oscarRx/MyDrugrefDisplay.jsp"></forward>
+        </action>
+        
+        
+        
         <action input="/SegmentDisplay.jsp" path="/oscarMDS/UpdateStatus" scope="request" type="oscar.oscarMDS.pageUtil.ReportStatusUpdateAction">
             <forward name="failure" path="/errorpage.jsp" />
             <forward name="success" path="/oscarMDS/Close.jsp" />
@@ -969,6 +975,7 @@
         </action>
         <action path="/setProviderStaleDate" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/provider/setNoteStaleDate.jsp" name="setProviderNoteStaleDateForm">
             <forward name="success" path="/provider/setNoteStaleDate.jsp" />
+            <forward name="gen"     path="/provider/setGenProperty.jsp"/>
         </action>
         <action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
             <forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
