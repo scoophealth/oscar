@@ -34,7 +34,8 @@ import java.io.Serializable;
 public class UserProperty implements Serializable {
     
     public final static String STALE_NOTEDATE = "cme_note_date";
-    
+    public final static String MYDRUGREF_ID = "mydrugref_id";
+   
     private long id;
     private String name;
     private String value;
