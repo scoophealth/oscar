@@ -1444,45 +1444,15 @@ int i;
                new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true}); 
          } 
           callReplacementWebService("InteractionDisplay.jsp",'interactionsRx');
-          <%--
+          <oscar:oscarPropertiesCheck property="MYDRUGREF_DF" value="yes">
+          callReplacementWebService("GetmyDrugrefInfo.do",'interactionsRxMyD');
+          </oscar:oscarPropertiesCheck>
+         
+          <%--  OLD CALLS TO THE WEB SERVICES
           callReplacementWebService("InteractionDisplayMyD.jsp",'interactionsRxMyD');
           callReplacementWebService("WarningDisplayMyD.jsp",'warningsRxMyD');
           callReplacementWebService("BulletinDisplayMyD.jsp",'bulletinsRxMyD');
-         
-         function getInteraction(origRequest){
-               var url = "InteractionDisplay.jsp";
-               var ran_number=Math.round(Math.random()*1000000);
-               var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode=<%=atcCode%>&rand="+ran_number;  //hack to get around ie caching the page
-               new Ajax.Updater('interactionsRx',url, {method:'get',parameters:params,asynchronous:true}); 
-         }
-         getInteraction();
-         
-         function getInteractionMyD(origRequest){
-               var url = "InteractionDisplayMyD.jsp";
-               var ran_number=Math.round(Math.random()*1000000);
-               var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode=<%=atcCode%>&rand="+ran_number;  //hack to get around ie caching the page
-               new Ajax.Updater('interactionsRxMyD',url, {method:'get',parameters:params,asynchronous:true}); 
-         }
-         
-         
-         function getWarningMyD(origRequest){
-               var url = "WarningDisplayMyD.jsp";
-               var ran_number=Math.round(Math.random()*1000000);
-               var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode=<%=atcCode%>&rand="+ran_number;  //hack to get around ie caching the page
-               new Ajax.Updater('warningsRxMyD',url, {method:'get',parameters:params,asynchronous:true}); 
-         }
-
-         function getBulletinMyD(origRequest){
-               var url = "BulletinDisplayMyD.jsp";
-               var ran_number=Math.round(Math.random()*1000000);
-               var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode=<%=atcCode%>&rand="+ran_number;  //hack to get around ie caching the page
-               new Ajax.Updater('bulletinsRxMyD',url, {method:'get',parameters:params,asynchronous:true}); 
-         }
-         getBulletinMyD();
-         getWarningMyD();
-         getInteractionMyD();
-       
-         --%>
+          --%>
         </script>
         
         </td>
