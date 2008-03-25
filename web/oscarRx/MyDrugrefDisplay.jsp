@@ -60,7 +60,7 @@ trusted truejava.lang.Boolean ? i think
             System.out.println("\nDrug: "+ht.get("name")+"\nEvidence: "+ht.get("evidence")+"\nSignificance: "+ht.get("significance")+"\nATC: "+ht.get("atc")+"\nReference: "+ht.get("reference")+"\nWarning: "+ht.get("body"));%>
             
             <div style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
-                <span style="float:right;"><a href="javascript:void(0);" onclick="HideW('<%=ht.get("id")%>','<%=getTime(ht.get("updated_at"))%>')" >Hide</a></span><b><%=ht.get("name")%></b>  <br/>
+                <!--<span style="float:right;"><a href="javascript:void(0);" onclick="HideW('<%=ht.get("id")%>','<%=getTime(ht.get("updated_at"))%>')" >Hide</a></span>--> <b><%=ht.get("name")%></b>  <br/>
                 
             <%=ht.get("body")%><br/> <% String ref = (String)ht.get("reference");%>
                 (<%=ht.get("evidence")%>) &nbsp;Reference: <a href="<%=ht.get("reference")%>"target="_blank"><%= StringUtils.maxLenString(ref, 51, 50, "...") %></a>
