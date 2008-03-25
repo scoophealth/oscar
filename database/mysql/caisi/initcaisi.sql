@@ -36,7 +36,9 @@ CREATE TABLE `admission` (
   `clientstatus_id` bigint(20) DEFAULT 0,
   `automatic_discharge` tinyint(1) default 0,
   PRIMARY KEY  (`am_id`),
-  KEY `FK1A21809DAA8624B` (`team_id`)
+  KEY `FK1A21809DAA8624B` (`team_id`),
+	index (program_id),
+	index (client_id)
 );
 
 --
@@ -312,7 +314,6 @@ CREATE TABLE `casemgmt_issue_notes` (
   `id` int(10) NOT NULL default '0',
   `note_id` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`,`note_id`),
-  KEY `FK5876108D1DA7C976` (`id`),
   KEY `FK5876108D40188B8` (`note_id`)
 );
 
@@ -344,7 +345,8 @@ CREATE TABLE `casemgmt_note` (
   PRIMARY KEY  (`note_id`),
   KEY `FKA8D537806CCA0FC` (`provider_no`),
 	index(demographic_no),
-	index(uuid)
+	index(uuid),
+	index(program_no)
 );
 
 --
@@ -1655,7 +1657,8 @@ CREATE TABLE `issue` (
   `role` varchar(100) NOT NULL default '',
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `priority` CHAR(10) DEFAULT NULL,
-  PRIMARY KEY  (`issue_id`)
+  PRIMARY KEY  (`issue_id`),
+	index(code)
 );
 
 --

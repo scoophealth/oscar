@@ -7220,7 +7220,7 @@ create table RedirectLink (id int primary key auto_increment, url varchar(255) n
 create table RedirectLinkTracking (redirectDate datetime not null, provider_no varchar(6) not null, redirectLinkId int not null, index(redirectLinkId,redirectDate));
 
 create table IssueGroup (id int primary key auto_increment, name varchar(255) not null);
-create table IssueGroupIssues (issueGroupId int not null, issue_id int not null, unique(issueGroupId,issue_id));
+create table IssueGroupIssues (issueGroupId int not null, issue_id int not null, unique(issueGroupId,issue_id), index(issue_id));
 
 --
 -- Table structure for table `demographic_merged`
