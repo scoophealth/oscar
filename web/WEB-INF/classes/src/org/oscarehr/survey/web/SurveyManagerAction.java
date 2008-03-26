@@ -1105,12 +1105,13 @@ public class SurveyManagerAction extends AbstractSurveyAction {
         }
 	}
 	
-	
+@Deprecated	
 public ActionForward getUcfReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		
 		Long id = Long.valueOf(request.getParameter("formId"));
+		
 		this.oscarFormManager.convertFormXMLToDb(Long.valueOf(id));
-		request.setAttribute("ucfReports", oscarFormManager.getFormReport(id));
+		//request.setAttribute("ucfReports", oscarFormManager.getFormReport(id, startDate, endDate));
 		
 		return mapping.findForward("ucfReport");
 		

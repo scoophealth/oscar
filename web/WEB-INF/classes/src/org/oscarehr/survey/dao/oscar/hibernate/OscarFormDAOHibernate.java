@@ -28,6 +28,7 @@ import java.io.StringReader;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -42,6 +43,7 @@ import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.survey.model.oscar.OscarFormQuestion;
 import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.Question;
+import org.oscarehr.surveymodel.Section;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.surveymodel.SelectDocument.Select;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -307,6 +309,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 			section=0;
 			
 			for(Page.QContainer container:p.getQContainerArray()) {
+				
 				if(container.isSetQuestion()) {
 					Question q = container.getQuestion();
 					id = page + "_" + section + "_"+ q.getId();	
@@ -331,6 +334,8 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 					//}
 				} else {
 					for(Question q:container.getSection().getQuestionArray()) {
+						Section s = container.getSection();
+						section = s.getId();
 						id = page + "_" + section + "_"+ q.getId();
 						/*
 						if(q.getType().isSetSelect()) {
@@ -352,7 +357,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 							keyMap.put(id,q.getDescription());
 						//}
 					}
-					section++;
+					//section++;
 				}
 			}		
 			page++;
@@ -375,7 +380,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		return "N/A";
 	}
 	
-	public Map<String[],String> getFormReport(Long formId) {
+	public Map<String[],String> getFormReport(Long formId, Date startDate, Date endDate) {
 		Map<String[],String> questionAnswers = new LinkedHashMap();
 		List<OscarFormQuestion> questions = this.getHibernateTemplate().find("select ofq from OscarFormQuestion ofq where formId=?",formId);
 		if(questions!=null) {			
@@ -389,16 +394,21 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 				String type = questions.get(x).getType();
 				
 				//count checkbox, select , and radio
-				if("checkbox".equalsIgnoreCase(type)|| "select".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
-										
-					String queryStr = "select distinct d from OscarFormInstance i, OscarFormData d where i.formId=? and i.id=d.instanceId and d.pageNumber=? and d.sectionId=? and d.questionId= ? group by d.key, d.value";
-					List rs = getHibernateTemplate().find(queryStr, new Object[] { formId, pageId, sectionId, questionId} );
+				String queryStr="";
+				if( "select".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
+					queryStr = "select distinct d from OscarFormInstance i, OscarFormData d where i.formId=? and i.dateCreated>=? and i.dateCreated<=? and i.id=d.instanceId and d.pageNumber=? and d.sectionId=? and d.questionId= ? group by d.key, d.value";
+				} else if("checkbox".equalsIgnoreCase(type))	{
+					queryStr = "select distinct d from OscarFormInstance i, OscarFormData d where i.formId=? and i.dateCreated>=? and i.dateCreated<=? and i.id=d.instanceId and d.pageNumber=? and d.sectionId=? and d.questionId= ? group by d.value";
+				} else {
+					continue;
+				}
+					List rs = getHibernateTemplate().find(queryStr, new Object[] { formId, startDate, endDate, pageId, sectionId, questionId} );
 					if(!rs.isEmpty()) {
 						Iterator it = rs.iterator();
 						while(it.hasNext()) {
 							OscarFormData data = (OscarFormData)it.next();
 							String value = data.getValue();
-							int count = countAnswersByQuestioins(formId,pageId,sectionId,questionId, value);
+							int count = countAnswersByQuestioins(formId,startDate, endDate, pageId,sectionId,questionId, value);
 							String answers[] = new String[2];
 							answers[0]=description;
 							answers[1]=value;
@@ -407,15 +417,15 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 										
 						}
 					}
-				}
+				
 			}
 		}
 		return questionAnswers;		
 	}
 	
-	public int countAnswersByQuestioins(Long formId,Long pageId,Long sectionId,Long questionId, String value) {
-		String queryStr = "select count(d.value) from OscarFormInstance i, OscarFormData d where d.value=? and i.formId=? and i.id=d.instanceId and d.pageNumber=? and d.sectionId=? and d.questionId= ?";
-		Long results = (Long)getHibernateTemplate().find(queryStr, new Object[] { value, formId, pageId, sectionId, questionId} ).get(0);
+	public int countAnswersByQuestioins(Long formId,Date startDate, Date endDate, Long pageId,Long sectionId,Long questionId, String value) {
+		String queryStr = "select count(d.value) from OscarFormInstance i, OscarFormData d where d.value=? and i.formId=? and i.dateCreated>=? and i.dateCreated<=? and i.id=d.instanceId and d.pageNumber=? and d.sectionId=? and d.questionId= ?";
+		Long results = (Long)getHibernateTemplate().find(queryStr, new Object[] { value, formId, startDate, endDate, pageId, sectionId, questionId} ).get(0);
 		if(results!=null) {
 			return results.intValue();
 		} else

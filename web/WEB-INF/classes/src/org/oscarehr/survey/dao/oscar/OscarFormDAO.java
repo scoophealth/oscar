@@ -23,6 +23,7 @@
 package org.oscarehr.survey.dao.oscar;
 
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -46,5 +47,5 @@ public interface OscarFormDAO {
 	
 	public void generateCSV(Long formId, OutputStream out);
 	public void convertFormXMLToDb(Long formId);
-	public Map<String[],String> getFormReport(Long formId) ;
+	public Map<String[],String> getFormReport(Long formId, Date startDate, Date endDate) ;
 }
