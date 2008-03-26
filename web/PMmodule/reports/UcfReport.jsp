@@ -37,6 +37,10 @@
 	Long formId=Long.parseLong(request.getParameter("formId"));
 	String startDateString=request.getParameter("startDate");
 	String endDateString=request.getParameter("endDate");
+	if(startDateString==null || "".equals(startDateString))
+		startDateString = "1900-01-01";
+	if(endDateString==null || "".equals(endDateString)) 
+		endDateString = "9998-12-31";
 	SimpleDateFormat dateFormatter=new SimpleDateFormat("yyyy-MM-dd");
 	Date startDate=null;
 	Date endDate=null;
@@ -60,7 +64,7 @@
 	
 	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 	OscarFormDAOHibernate caisiForms = (OscarFormDAOHibernate) applicationContext.getBean("oscarFormDAO");
-	Map data = caisiForms.getFormReport(formId);
+	Map data = caisiForms.getFormReport(formId,startDate,endDate);
 	OscarForm form = caisiForms.getOscarForm(formId);
 	
 	/*PopulationReportUIBean populationReportUIBean=new PopulationReportUIBean(applicationContext, formId, startDate, endDate);
