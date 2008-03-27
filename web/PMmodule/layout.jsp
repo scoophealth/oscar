@@ -18,11 +18,15 @@
 <html:html locale="true">
 	<head>
 		<title>Program Management Module</title>
-		<style type="text/css">
+	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/tigris.css" />' />
+	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/displaytag.css" />' />
+	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />' />
+
+		<!--   style type="text/css">
 			@import "<html:rewrite page="/css/tigris.css" />";
 			@import "<html:rewrite page="/css/displaytag.css" />";
 			@import "<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />";
-		</style>
+		</style -->
 		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar.js" />" /></script>
 		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/lang/calendar-en.js" />"></script>
 		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar-setup.js" />"></script>
