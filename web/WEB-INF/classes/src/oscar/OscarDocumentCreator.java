@@ -18,7 +18,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
-
 public class OscarDocumentCreator {
   public static final String PDF = "pdf";
   public static final String CSV = "csv";
@@ -53,6 +52,11 @@ public class OscarDocumentCreator {
         JRDataSource ds = new JRResultSetDataSource( (ResultSet) dataSrc);
         print = JasperFillManager.fillReport(jasperReport, parameters,
                                              ds);
+      }
+      else
+      {
+          JRDataSource ds = (JRDataSource)dataSrc;
+          print = JasperFillManager.fillReport(jasperReport, parameters,ds);
       }
       if (docType.equals(this.PDF)) {
         JasperExportManager.exportReportToPdfStream(print, sos);
