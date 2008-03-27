@@ -17,29 +17,25 @@ import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
-
-
-import java.io.File;
-
+import net.sourceforge.*;
+import net.sourceforge.barbecue.*;
 import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
-import net.sf.jasperreports.engine.JasperRunManager;
-import net.sf.jasperreports.engine.export.JExcelApiExporter;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRRtfExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
-import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
-import net.sf.jasperreports.engine.util.JRLoader;
 
-public class PrintDemoLabelAction extends OscarAction {
-	
-    public PrintDemoLabelAction() {
+public class PrintBarcodeAction extends OscarAction {
+	private static final String TASK_FILL = "fill";
+	private static final String TASK_PRINT = "print";
+	private static final String TASK_PDF = "pdf";
+	private static final String TASK_XML = "xml";
+	private static final String TASK_XML_EMBED = "xmlEmbed";
+	private static final String TASK_HTML = "html";
+	private static final String TASK_RTF = "rtf";
+	private static final String TASK_XLS = "xls";
+	private static final String TASK_JXL = "jxl";
+	private static final String TASK_CSV = "csv";
+	private static final String TASK_ODT = "odt";
+	private static final String TASK_RUN = "run";
+
+    public PrintBarcodeAction() {
     }
 
     public ActionForward execute(ActionMapping actionMapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
@@ -55,7 +51,7 @@ public class PrintDemoLabelAction extends OscarAction {
         InputStream ins = null;
         try {
             ServletContext context = getServlet().getServletContext();
-            ins = getClass().getResourceAsStream("/oscar/oscarDemographic/label.xml");
+            ins = getClass().getResourceAsStream("/oscar/oscarDemographic/barcode.jrxml");
 //            ins = context.getResourceAsStream("/label.xml");
 //            ins = new FileInputStream(System.getProperty("user.home") + "/label.xml");
         }
@@ -73,9 +69,10 @@ public class PrintDemoLabelAction extends OscarAction {
         response.setHeader("Content-disposition", getHeader(response).toString());
         OscarDocumentCreator osc = new OscarDocumentCreator();
         try {
-            osc.fillDocumentStream(parameters, sos, "pdf", ins, DbConnectionFilter.getThreadLocalDbConnection());
+//            osc.fillDocumentStream( parameters, sos, "pdf", ins, DbConnectionFilter.getThreadLocalDbConnection());
+            osc.fillDocumentStream( parameters, sos, "pdf", ins, new JREmptyDataSource());
         }
-        catch (SQLException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
 
