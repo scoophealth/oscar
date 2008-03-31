@@ -318,7 +318,13 @@ var maxYear=9900;
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
  <tr bgcolor="#486ebd">
-      <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Sherbourne Health Centre</font></th>
+    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Sherbourne Health Centre Infirmary</font></th>
+ </tr>
+ <tr bgcolor="#486ebd">
+ 	<th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">(ph) 416-324-4163</font></th>
+ </tr>
+ <tr bgcolor="#486ebd">
+ 	<th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">(fax)416-324-4181</font></th>
  </tr>
 <tr>
 <td align="center" bgcolor="#CCCCCC" ><b><font face="Verdana, Arial, Helvetica, sans-serif">MULTI-DISCIPLINARY TEAM DISCHARGE SUMMARY
