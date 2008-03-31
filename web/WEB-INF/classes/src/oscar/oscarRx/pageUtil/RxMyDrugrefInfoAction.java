@@ -25,41 +25,38 @@ package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.Locale;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 import java.util.*;
-import oscar.oscarRx.data.*;
-import oscar.oscarRx.pageUtil.*;
-import java.io.*;
+import org.apache.struts.actions.DispatchAction;
 import org.apache.xmlrpc.*;
 import oscar.oscarRx.util.MyDrugrefComparator;
-import oscar.util.StringUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
 
 
-public final class RxMyDrugrefInfoAction extends Action {
+public final class RxMyDrugrefInfoAction extends DispatchAction {
     
     
-    public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+    public ActionForward view(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
         
         String provider = (String) request.getSession().getAttribute("user");
         
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
         UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
+        UserDSMessagePrefsDAO  dsmessageDAO =  (UserDSMessagePrefsDAO) ctx.getBean("UserDSMessagePrefsDAO");
+        if (request.getSession().getAttribute("hideResources") == null){
+            Hashtable dsPrefs = dsmessageDAO.getHashofMessages(provider,UserDSMessagePrefs.MYDRUGREF);
+            request.getSession().setAttribute("hideResources",dsPrefs);
+        }
+        
         UserProperty prop = propDAO.getProp(provider, UserProperty.MYDRUGREF_ID);
         String myDrugrefId = null;
         if (prop != null){
@@ -81,6 +78,7 @@ public final class RxMyDrugrefInfoAction extends Action {
                     all.addAll(v);
                 }
             }catch(Exception e){
+                System.out.println("command :"+command+" "+e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -89,6 +87,50 @@ public final class RxMyDrugrefInfoAction extends Action {
         ///////
         return mapping.findForward("success");
     }
+    
+    
+    public ActionForward setWarningToHide(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+         
+        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
+        UserDSMessagePrefsDAO  dsmessageDAO =  (UserDSMessagePrefsDAO) ctx.getBean("UserDSMessagePrefsDAO");
+        
+        
+        
+        String provider = (String) request.getSession().getAttribute("user");
+        String postId = request.getParameter("resId");
+        String date = request.getParameter("updatedat");
+        
+        long datel = Long.parseLong(date);
+        Date updatedatId = new Date();
+        updatedatId.setTime(datel);
+        
+        System.out.println("post Id "+postId+"  date "+date);
+        
+        
+        if (request.getSession().getAttribute("hideResources") == null){
+            Hashtable dsPrefs = dsmessageDAO.getHashofMessages(provider,UserDSMessagePrefs.MYDRUGREF);
+            request.getSession().setAttribute("hideResources",dsPrefs);
+        }
+        Hashtable h = (Hashtable) request.getSession().getAttribute("hideResources");
+        
+        h.put("mydrugref"+postId,date);
+        
+        UserDSMessagePrefs pref = new UserDSMessagePrefs();
+        
+        pref.setProviderNo(provider);
+        pref.setRecordCreated(new Date());
+        pref.setResourceId(postId);
+        pref.setResourceType(UserDSMessagePrefs.MYDRUGREF);
+        pref.setResourceUpdatedDate(updatedatId);
+        
+       
+       
+        dsmessageDAO.saveProp(pref);
+        
+        return null;//"<div> GOnezo</div>";
+        //return mapping.findForward("success");
+    }
+    
     
     public static void removeNullFromVector(Vector v){
         while(v != null && v.contains(null)){
@@ -106,6 +148,7 @@ public final class RxMyDrugrefInfoAction extends Action {
         if (myDrugrefId != null && !myDrugrefId.trim().equals("")){
             System.out.println("putting >"+myDrugrefId+ "< in the request");
             params.addElement(myDrugrefId);
+            //params.addElement("true");
         }
         
         Vector vec = new Vector();
@@ -217,6 +260,7 @@ public final class RxMyDrugrefInfoAction extends Action {
         System.out.println("#CALLDRUGREF-"+procedureName);
         Object object = null;
         String server_url = "http://dev2.mydrugref.org/backend/api";
+        //String server_url = "http://130.113.106.87:3000/backend/api";
         try{
             System.out.println("server_url :"+server_url);
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);

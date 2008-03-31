@@ -40,6 +40,9 @@ trusted truejava.lang.Boolean ? i think
  
  TODO:
  -track id, updated_at.  Allow someone to hide warnings they no longer require but reshow them if the updated_at date changes
+ 
+ if we add the id+update_at timestamp to a table. we could use that as a way to see if that had been used already.
+ 
  -check for trusted key and hide if not trusted.
  
  
@@ -47,31 +50,84 @@ trusted truejava.lang.Boolean ? i think
 <%@page pageEncoding="UTF-8"%>
 <%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils" %>
 <%
-    Vector warnings = (Vector)request.getAttribute("warnings");
-     //warnings = (Vector) warnings.get(0);
-    Object[] warningsArray = warnings.toArray();
-    System.out.println("numb warnings "+warnings.size());
-    if ( warningsArray != null && warningsArray.length > 0){
-        for (int i=0; i < warningsArray.length; i++){
-            System.out.println("type "+warningsArray[i].getClass().getName());
-            Hashtable ht = (Hashtable) warningsArray[i]; 
+    Vector<Hashtable> warnings = (Vector)request.getAttribute("warnings");    
+    Hashtable hiddenResources = (Hashtable) request.getSession().getAttribute("hideResources");
+    
+    if ( warnings != null && warnings.size() > 0){
+        System.out.println("numb warnings "+warnings.size());
+    
+        int untrustedRes = 0;
+        int hiddenRes = 0;
+        for (Hashtable ht: warnings){    
+            System.out.println("\nDrug: "+ht.get("name")+"\nEvidence: "+ht.get("evidence")+"\nSignificance: "+ht.get("significance")+"\nATC: "+ht.get("atc")+"\nReference: "+ht.get("reference")+"\nWarning: "+ht.get("body")+" trusted "+ht.get("trusted"));
+            boolean trustedResource = trusted(ht.get("trusted"));
+            boolean hideResource = false;
             
+            if (hiddenResources != null ) {
+                hideResource = hiddenResources.containsKey("mydrugref"+ht.get("id"));
+            }
             
-            System.out.println("\nDrug: "+ht.get("name")+"\nEvidence: "+ht.get("evidence")+"\nSignificance: "+ht.get("significance")+"\nATC: "+ht.get("atc")+"\nReference: "+ht.get("reference")+"\nWarning: "+ht.get("body"));%>
+            String hidden ="";
+            if (!trustedResource){
+                untrustedRes++;
+                hidden ="display:none;";
+            }
+            if (hideResource){
+                hiddenRes++;
+                hidden ="display:none;";
+            }
             
-            <div style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
-                <!--<span style="float:right;"><a href="javascript:void(0);" onclick="HideW('<%=ht.get("id")%>','<%=getTime(ht.get("updated_at"))%>')" >Hide</a></span>--> <b><%=ht.get("name")%></b>  <br/>
+            %>
+            
+            <div id="<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>"  <%=outputHtmlClass(trustedResource,hideResource)%> style="<%=hidden%>background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
+                <span style="float:right;"><a href="javascript:void(0);" onclick="HideW('<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>','<%=ht.get("id")%>','<%=getTime(ht.get("updated_at"))%>')" >Hide</a></span> <b><%=ht.get("name")%></b>  <br/>
                 
             <%=ht.get("body")%><br/> <% String ref = (String)ht.get("reference");%>
                 (<%=ht.get("evidence")%>) &nbsp;Reference: <a href="<%=ht.get("reference")%>"target="_blank"><%= StringUtils.maxLenString(ref, 51, 50, "...") %></a>
             </div>
 
-      <%}
+      <%
+        }
+        if (untrustedRes > 0 ){ %>
+        <div><a href="javascript:void(0);" onclick="showUntrustedRes();" ><span id="showUntrustedResWord">show</span> <%=untrustedRes%> untrusted resources</a></div>
+        <%}
+        
+        if (hiddenRes > 0){ %>
+        <div><a href="javascript:void(0);" onclick="showHiddenRes();" ><span id="showHiddenResWord">show</span> <%=hiddenRes%> hidden resources</a></div>
+        <%}
+        
     }else if(warnings == null){ %>
         <div>MyDrug to MyDrug Warning Service not available</div>                          
 <%  }   %>
+
+
+
+
+
 <%!
         
+       String outputHtmlClass(boolean trustedResource, boolean hideResource){
+           if (!trustedResource && hideResource){
+               return "class=\"untrustedResource hiddenResource\"";
+           }else if (trustedResource && hideResource){
+               return "class=\"hiddenResource\"";
+           }else if (!trustedResource && !hideResource){
+               return "class=\"untrustedResource\"";
+           }
+           return "";
+       }
+       
+       
+       boolean trusted(Object o){
+           boolean b = false;
+           if (o != null && o instanceof Boolean){
+              Boolean c  = (Boolean) o;
+              b = c.booleanValue();
+              System.out.println(b);
+           }
+           return b;
+       }
+       
        long getTime(Object o){
             Date d = (Date) o;
             return d.getTime();
@@ -146,5 +202,18 @@ trusted truejava.lang.Boolean ? i think
        if (retval == null) {retval = "Unknown";}
        return retval;
    }
+   
+   String displayKeys(Hashtable ht) {
+       StringBuffer sb = new StringBuffer();
+       if (ht != null){
+            for (Object o :ht.keySet()){
+                String s  = "key:"+o+" val "+ht.get(o)+"  class : "+ht.get(o).getClass().getName();
+                sb.append(s);
+                System.out.println(s);
+            }
+       }
+       return sb.toString();
+   }
+  
     
 %>
