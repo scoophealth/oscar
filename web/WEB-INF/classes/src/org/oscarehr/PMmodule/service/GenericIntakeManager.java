@@ -364,8 +364,12 @@ public class GenericIntakeManager {
 	private List<IntakeNode> getRegIntakeNodes(Integer clientId) {
 		List<Integer> nodeIds = genericIntakeDAO.getIntakeNodesIdByClientId(clientId);
 		List<IntakeNode> nodeList = new ArrayList();
-		for (Integer i : nodeIds) {
-		    nodeList.add(getIntakeNode(i));
+		if (nodeIds.size()>0) {
+		    for (Integer i : nodeIds) {
+			nodeList.add(getIntakeNode(i));
+		    }
+		} else {
+		    nodeList.add(getQuickIntakeNode());
 		}
 		return nodeList;
 	}
