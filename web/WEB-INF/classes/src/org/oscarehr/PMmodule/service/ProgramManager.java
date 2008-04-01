@@ -31,7 +31,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.DefaultRoleAccessDAO;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramClientStatusDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
@@ -66,11 +65,6 @@ public class ProgramManager {
     private DefaultRoleAccessDAO defaultRoleAccessDAO;
     private ProgramClientStatusDAO clientStatusDAO;
     private ProgramSignatureDao programSignatureDao;
-    private FacilityDAO facilityDAO = null;
-
-    public void setFacilityDAO(FacilityDAO facilityDAO) {
-        this.facilityDAO = facilityDAO;
-    }
 
     private boolean enabled;
 
@@ -132,21 +126,6 @@ public class ProgramManager {
 
     public Program getProgram(Long programId) {
         return programDao.getProgram(new Integer(programId.intValue()));
-    }
-
-    public Program getProgram(Long agencyId, String programId) {
-        return getProgram(agencyId, new Integer(programId));
-    }
-
-    /**
-     * @return a program from the integrator or null upon error.
-     */
-    public Program getProgram(Long agencyId, Integer programId) {
-        // if (integratorManager != null) {
-        // return integratorManager.getProgram(agencyId, new Long(programId.longValue()));
-        // }
-
-        return null;
     }
 
     public String getProgramName(String programId) {

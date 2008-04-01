@@ -31,70 +31,22 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
-import org.caisi.integrator.model.transfer.AgencyTransfer;
 import org.oscarehr.PMmodule.model.Agency;
-import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.AgencyManager;
-import org.oscarehr.PMmodule.service.BedCheckTimeManager;
-import org.oscarehr.PMmodule.service.BedDemographicManager;
-import org.oscarehr.PMmodule.service.BedManager;
-import org.oscarehr.PMmodule.service.ClientManager;
-import org.oscarehr.PMmodule.service.ConsentManager;
-import org.oscarehr.PMmodule.service.FormsManager;
-import org.oscarehr.PMmodule.service.GenericIntakeManager;
-import org.oscarehr.PMmodule.service.IntakeAManager;
-import org.oscarehr.PMmodule.service.IntakeCManager;
-import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.service.LogManager;
-import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.PMmodule.service.ProgramQueueManager;
-import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.service.RoleManager;
-import org.oscarehr.PMmodule.service.RoomDemographicManager;
-import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.web.BaseAction;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.scheduling.timer.ScheduledTimerTask;
-
-import com.quatro.service.LookupManager;
 
 public class AgencyManagerAction extends BaseAction {
 
     private static final String FORWARD_EDIT = "edit";
     private static final String FORWARD_VIEW = "view";
-    private static final String FORWARD_EDIT_INTEGRATOR = "edit_integrator";
-    private static final String FORWARD_VIEW_INTEGRATOR = "view_integrator";
-    private static final String FORWARD_VIEW_COMMUNITY = "view_community";
 
     private static final String BEAN_AGENCY = "agency";
 
-    protected LookupManager lookupManager;
-
-    protected CaseManagementManager caseManagementManager;
-
-    protected AdmissionManager admissionManager;
-
-    protected GenericIntakeManager genericIntakeManager;
-
-    protected AgencyManager agencyManager;
-    protected BedCheckTimeManager bedCheckTimeManager;
-    protected RoomDemographicManager roomDemographicManager;
-    protected BedDemographicManager bedDemographicManager;
-    protected BedManager bedManager;
-    protected ClientManager clientManager;
-    protected ConsentManager consentManager;
-    protected FormsManager formsManager;
-    protected IntakeAManager intakeAManager;
-    protected IntakeCManager intakeCManager;
-    protected IntegratorManager integratorManager;
-    protected LogManager logManager;
-    protected ProgramManager programManager;
-    protected ProviderManager providerManager;
-    protected ProgramQueueManager programQueueManager;
-    protected RoleManager roleManager;
-    protected RoomManager roomManager;
-
+    private AgencyManager agencyManager;
+    private LogManager logManager;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return view(mapping, form, request, response);
@@ -102,43 +54,9 @@ public class AgencyManagerAction extends BaseAction {
 
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
-        boolean integratorEnabled = integratorManager.isEnabled();
-
         request.setAttribute(BEAN_AGENCY, agencyManager.getLocalAgency());
-
-        request.setAttribute("integrator_enabled", integratorEnabled);
-
-        if (integratorEnabled) request.setAttribute("integrator_version", integratorManager.getIntegratorVersion());
 
         return mapping.findForward(FORWARD_VIEW);
-    }
-
-    public ActionForward view_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        boolean integratorEnabled = integratorManager.isEnabled();
-
-        AgencyTransfer[] agencyList = integratorManager.getAgencies();
-
-        request.setAttribute("agencies", agencyList);
-        request.setAttribute(BEAN_AGENCY, agencyManager.getLocalAgency());
-        request.setAttribute("integrator_enabled", integratorEnabled);
-
-        if (integratorEnabled) request.setAttribute("integrator_version", integratorManager.getIntegratorVersion());
-
-        return mapping.findForward(FORWARD_VIEW_INTEGRATOR);
-    }
-
-    public ActionForward view_community(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        boolean integratorEnabled = integratorManager.isEnabled();
-
-        AgencyTransfer[] agencyList = integratorManager.getAgencies();
-
-        request.setAttribute("agencies", agencyList);
-        request.setAttribute(BEAN_AGENCY, agencyManager.getLocalAgency());
-        request.setAttribute("integrator_enabled", integratorEnabled);
-
-        if (integratorEnabled) request.setAttribute("integrator_version", integratorManager.getIntegratorVersion());
-
-        return mapping.findForward(FORWARD_VIEW_COMMUNITY);
     }
 
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -149,24 +67,8 @@ public class AgencyManagerAction extends BaseAction {
         agencyForm.set(BEAN_AGENCY, localAgency);
 
         request.setAttribute("id", localAgency.getId());
-        request.setAttribute("integratorEnabled", localAgency.isIntegratorEnabled());
-        request.setAttribute("integrator_enabled", integratorManager.isEnabled());
 
         return mapping.findForward(FORWARD_EDIT);
-    }
-
-    public ActionForward edit_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        DynaActionForm agencyForm = (DynaActionForm) form;
-
-        Agency localAgency = agencyManager.getLocalAgency();
-
-        agencyForm.set(BEAN_AGENCY, localAgency);
-
-        request.setAttribute("id", localAgency.getId());
-        request.setAttribute("integratorEnabled", localAgency.isIntegratorEnabled());
-        request.setAttribute("integrator_enabled", integratorManager.isEnabled());
-
-        return mapping.findForward(FORWARD_EDIT_INTEGRATOR);
     }
 
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -232,88 +134,11 @@ public class AgencyManagerAction extends BaseAction {
         return view(mapping, form, request, response);
     }
 
-    public void setLookupManager(LookupManager lookupManager) {
-    	this.lookupManager = lookupManager;
-    }
-
-    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
-    	this.caseManagementManager = caseManagementManager;
-    }
-
-    public void setAdmissionManager(AdmissionManager mgr) {
-    	this.admissionManager = mgr;
-    }
-
-    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
-        this.genericIntakeManager = genericIntakeManager;
-    }
-
     public void setAgencyManager(AgencyManager mgr) {
     	this.agencyManager = mgr;
-    }
-
-    public void setBedCheckTimeManager(BedCheckTimeManager bedCheckTimeManager) {
-        this.bedCheckTimeManager = bedCheckTimeManager;
-    }
-
-    public void setBedDemographicManager(BedDemographicManager demographicBedManager) {
-    	this.bedDemographicManager = demographicBedManager;
-    }
-
-    public void setRoomDemographicManager(RoomDemographicManager roomDemographicManager) {
-    	this.roomDemographicManager = roomDemographicManager;
-    }
-
-    public void setBedManager(BedManager bedManager) {
-    	this.bedManager = bedManager;
-    }
-
-    public void setClientManager(ClientManager mgr) {
-    	this.clientManager = mgr;
-    }
-
-    public void setConsentManager(ConsentManager mgr) {
-    	this.consentManager = mgr;
-    }
-
-    public void setFormsManager(FormsManager mgr) {
-    	this.formsManager = mgr;
-    }
-
-    public void setIntakeAManager(IntakeAManager mgr) {
-    	this.intakeAManager = mgr;
-    }
-
-    public void setIntakeCManager(IntakeCManager mgr) {
-    	this.intakeCManager = mgr;
-    }
-
-    public void setIntegratorManager(IntegratorManager mgr) {
-    	this.integratorManager = mgr;
     }
 
     public void setLogManager(LogManager mgr) {
     	this.logManager = mgr;
     }
-
-    public void setProgramManager(ProgramManager mgr) {
-    	this.programManager = mgr;
-    }
-
-    public void setProgramQueueManager(ProgramQueueManager mgr) {
-    	this.programQueueManager = mgr;
-    }
-
-    public void setProviderManager(ProviderManager mgr) {
-    	this.providerManager = mgr;
-    }
-
-    public void setRoleManager(RoleManager mgr) {
-    	this.roleManager = mgr;
-    }
-
-    public void setRoomManager(RoomManager roomManager) {
-    	this.roomManager = roomManager;
-    }
-
 }

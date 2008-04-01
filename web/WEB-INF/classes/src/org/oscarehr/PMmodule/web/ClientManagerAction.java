@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -44,8 +43,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
-import org.caisi.integrator.model.Client;
-import org.caisi.integrator.model.transfer.ProgramTransfer;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
@@ -75,23 +72,17 @@ import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.Demographic.ConsentGiven;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.AgencyManager;
-import org.oscarehr.PMmodule.service.BedCheckTimeManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.service.ConsentManager;
-import org.oscarehr.PMmodule.service.FormsManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.HealthSafetyManager;
-import org.oscarehr.PMmodule.service.IntakeAManager;
-import org.oscarehr.PMmodule.service.IntakeCManager;
-import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
@@ -112,8 +103,8 @@ public class ClientManagerAction extends BaseAction {
 
     private static Log log = LogFactory.getLog(ClientManagerAction.class);
 
-    protected HealthSafetyManager healthSafetyManager;
-    protected ClientRestrictionManager clientRestrictionManager;
+    private HealthSafetyManager healthSafetyManager;
+    private ClientRestrictionManager clientRestrictionManager;
     
     private ClientReferralDAO clientReferralDAO;
 
@@ -121,49 +112,37 @@ public class ClientManagerAction extends BaseAction {
         this.clientReferralDAO = clientReferralDAO;
     }
 
-    protected SurveyManager surveyManager;
+    private SurveyManager surveyManager;
 
-    protected LookupManager lookupManager;
+    private LookupManager lookupManager;
 
-    protected CaseManagementManager caseManagementManager;
+    private CaseManagementManager caseManagementManager;
 
-    protected AdmissionManager admissionManager;
+    private AdmissionManager admissionManager;
 
-    protected GenericIntakeManager genericIntakeManager;
+    private GenericIntakeManager genericIntakeManager;
 
-    protected AgencyManager agencyManager;
+    private AgencyManager agencyManager;
 
-    protected BedCheckTimeManager bedCheckTimeManager;
+    private RoomDemographicManager roomDemographicManager;
 
-    protected RoomDemographicManager roomDemographicManager;
+    private BedDemographicManager bedDemographicManager;
 
-    protected BedDemographicManager bedDemographicManager;
+    private BedManager bedManager;
 
-    protected BedManager bedManager;
+    private ClientManager clientManager;
 
-    protected ClientManager clientManager;
+    private ConsentManager consentManager;
 
-    protected ConsentManager consentManager;
+    private LogManager logManager;
 
-    protected FormsManager formsManager;
+    private ProgramManager programManager;
 
-    protected IntakeAManager intakeAManager;
+    private ProviderManager providerManager;
 
-    protected IntakeCManager intakeCManager;
+    private ProgramQueueManager programQueueManager;
 
-    protected IntegratorManager integratorManager;
-
-    protected LogManager logManager;
-
-    protected ProgramManager programManager;
-
-    protected ProviderManager providerManager;
-
-    protected ProgramQueueManager programQueueManager;
-
-    protected RoleManager roleManager;
-
-    protected RoomManager roomManager;
+    private RoomManager roomManager;
 
     public void setSurveyManager(SurveyManager mgr) {
         this.surveyManager = mgr;
@@ -394,12 +373,6 @@ public class ClientManagerAction extends BaseAction {
     }
 
     public ActionForward getLinks(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        String id = request.getParameter("id");
-
-        if (id != null && integratorManager.isEnabled()) {
-            Client client = integratorManager.getClient(integratorManager.getLocalAgency().getIntegratorUsername(), Long.valueOf(id));
-            request.setAttribute("client", client);
-        }
         return mapping.findForward("links");
     }
 
@@ -428,32 +401,12 @@ public class ClientManagerAction extends BaseAction {
         if (agencyId == 0) {
             referToLocalAgencyProgram(request, clientForm, referral, p);
         }
-        else {
-            referToRemoteAgencyProgram(request, referral);
-        }
 
         setEditAttributes(form, request, String.valueOf(clientId));
         clientForm.set("program", new Program());
         clientForm.set("referral", new ClientReferral());
 
         return mapping.findForward("edit");
-    }
-
-    private void referToRemoteAgencyProgram(HttpServletRequest request, ClientReferral referral) {
-
-        referral.setStatus(ClientReferral.STATUS_UNKNOWN);
-
-        boolean referred = integratorManager.makeReferral(referral);
-
-        ActionMessages messages = new ActionMessages();
-        if (referred) {
-            clientReferralDAO.saveClientReferral(referral);
-            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.success"));
-        }
-        else {
-            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.failed"));
-        }
-        saveMessages(request, messages);
     }
 
     private void referToLocalAgencyProgram(HttpServletRequest request, DynaActionForm clientForm, ClientReferral referral, Program p) {
@@ -516,12 +469,6 @@ public class ClientManagerAction extends BaseAction {
             Program program = programManager.getProgram(programId);
             p.setName(program.getName());
             request.setAttribute("program", program);
-        }
-        else {
-            ProgramTransfer programTransfer = integratorManager.getProgramByAgencyAndId(agencyId, programId);
-            p.setName(programTransfer.getName());
-            p.mergeFromProgramTransfer(programTransfer);
-            request.setAttribute("program", p);
         }
 
         request.setAttribute("do_refer", true);
@@ -1091,64 +1038,7 @@ public class ClientManagerAction extends BaseAction {
 
         ProgramUtils.addProgramRestrictions(request);
 
-        List<ProgramTransfer> remotePrograms = getRemoteProgramsFiltered(criteria);
-        if (remotePrograms != null) request.setAttribute("remotePrograms", remotePrograms);
-
         return mapping.findForward("search_programs");
-    }
-
-    /**
-     * @return null if integrator is disabled or upon error.
-     */
-    private List<ProgramTransfer> getRemoteProgramsFiltered(Program criteria) {
-        ProgramTransfer[] remotePrograms = integratorManager.getOtherAgenciesPrograms();
-        if (remotePrograms == null) return(null);
-
-        ArrayList<ProgramTransfer> remoteProgramsFiltered = new ArrayList<ProgramTransfer>();
-
-        for (ProgramTransfer programTransfer : remotePrograms) {
-            if (matchCriteria(criteria, programTransfer)) {
-                remoteProgramsFiltered.add(programTransfer);
-            }
-        }
-
-        return(remoteProgramsFiltered);
-    }
-
-    /**
-     * @param criteria
-     * @param programTransfer
-     * @return true if the program matches the criteria, false otherwise
-     */
-    private boolean matchCriteria(Program criteria, ProgramTransfer programTransfer) {
-
-        String temp = StringUtils.trimToNull(criteria.getName());
-        if (temp != null) if (!programTransfer.getName().equalsIgnoreCase(temp)) return(false);
-
-        temp = StringUtils.trimToNull(criteria.getType());
-        if (temp != null) if (!programTransfer.getType().equalsIgnoreCase(temp)) return(false);
-
-        temp = StringUtils.trimToNull(criteria.getManOrWoman());
-        if (temp != null) if (!programTransfer.getManOrWoman().equalsIgnoreCase(temp)) return(false);
-
-        if (criteria.isTransgender()) if (!programTransfer.isTransgender()) return(false);
-
-        if (criteria.isFirstNation()) if (!programTransfer.isFirstNation()) return(false);
-
-        if (criteria.isBedProgramAffiliated()) if (!programTransfer.isBedProgramAffiliated()) return(false);
-
-        if (criteria.isAlcohol()) if (!programTransfer.isAlcohol()) return(false);
-
-        temp = StringUtils.trimToNull(criteria.getAbstinenceSupport());
-        if (temp != null) if (!programTransfer.getAbstinenceSupport().equalsIgnoreCase(temp)) return(false);
-
-        if (criteria.isPhysicalHealth()) if (!programTransfer.isPhysicalHealth()) return(false);
-
-        if (criteria.isMentalHealth()) if (!programTransfer.isMentalHealth()) return(false);
-
-        if (criteria.isHousing()) if (!programTransfer.isHousing()) return(false);
-
-        return(true);
     }
 
     public ActionForward submit_erconsent(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -1675,10 +1565,6 @@ public class ClientManagerAction extends BaseAction {
     	this.agencyManager = mgr;
     }
 
-    public void setBedCheckTimeManager(BedCheckTimeManager bedCheckTimeManager) {
-        this.bedCheckTimeManager = bedCheckTimeManager;
-    }
-
     public void setBedDemographicManager(BedDemographicManager demographicBedManager) {
     	this.bedDemographicManager = demographicBedManager;
     }
@@ -1699,22 +1585,6 @@ public class ClientManagerAction extends BaseAction {
     	this.consentManager = mgr;
     }
 
-    public void setFormsManager(FormsManager mgr) {
-    	this.formsManager = mgr;
-    }
-
-    public void setIntakeAManager(IntakeAManager mgr) {
-    	this.intakeAManager = mgr;
-    }
-
-    public void setIntakeCManager(IntakeCManager mgr) {
-    	this.intakeCManager = mgr;
-    }
-
-    public void setIntegratorManager(IntegratorManager mgr) {
-    	this.integratorManager = mgr;
-    }
-
     public void setLogManager(LogManager mgr) {
     	this.logManager = mgr;
     }
@@ -1729,10 +1599,6 @@ public class ClientManagerAction extends BaseAction {
 
     public void setProviderManager(ProviderManager mgr) {
     	this.providerManager = mgr;
-    }
-
-    public void setRoleManager(RoleManager mgr) {
-    	this.roleManager = mgr;
     }
 
     public void setRoomManager(RoomManager roomManager) {

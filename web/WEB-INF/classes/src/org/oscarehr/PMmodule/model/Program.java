@@ -23,9 +23,6 @@ package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
 
-import org.caisi.integrator.model.transfer.ProgramTransfer;
-import org.oscarehr.util.BeanCopyUtil;
-
 /**
  * This is the object class that relates to the program table. Any customizations belong here.
  */
@@ -684,19 +681,4 @@ public class Program implements Serializable {
         return super.toString();
     }
     
-    public ProgramTransfer getProgramTransfer()
-    {
-        ProgramTransfer programTransfer=new ProgramTransfer();
-        BeanCopyUtil.copyProperties(this, programTransfer, null, false);
-        programTransfer.setNumberOfMembers(numOfMembers);
-        programTransfer.setRemoteProgramId(id);
-        return(programTransfer);
-    }
-    
-    public void mergeFromProgramTransfer(ProgramTransfer programTransfer)
-    {
-        BeanCopyUtil.copyProperties(programTransfer, this, null, false);
-        numOfMembers=programTransfer.getNumberOfMembers();   
-    }
-
 }

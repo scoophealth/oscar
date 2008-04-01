@@ -124,10 +124,7 @@
 	<br />
 	<c:if test="${requestScope.clients != null}">
 		<p>The following possible matches were found in the system. If your client is not one of these matches, choose the 'New Client' button, otherwise, you can update the existing client file.</p>
-		<b>Search Type:&nbsp; <c:choose>
-			<c:when test="${localSearch == false}">Integrator</c:when>
-			<c:otherwise>Agency</c:otherwise>
-		</c:choose> </b>
+		<b>Search Type:&nbsp; Agency</b>
 		<p><input type="button" value="New Client" onclick="this.form.action.value='new_client';this.form.submit();" /> <display:table class="simple" cellspacing="2" cellpadding="3" id="client" name="clients" export="false" pagesize="10" requestURI="/PMmodule/Intake.do">
 			<display:setProperty name="paging.banner.placement" value="bottom" />
 			<display:setProperty name="basic.msg.empty_list" value="No clients found." />
@@ -163,8 +160,5 @@
 				<span style="text-decoration:underline" title="<c:out value="${client.formattedLinks}"/>"><c:out value="${client.numLinks}" /></span>
 			</display:column>
 		</display:table> <br />
-		<c:if test="${localSearch == false}">
-			<h5>We cannot provide any assurance that the information enclosed is accurate, complete, or up-to-date for any particular purpose. Please verify this information before relying upon it. We do not assume responsibility for the consequences of any reliance on this information.</h5>
-		</c:if>
 	</c:if>
 </html:form>

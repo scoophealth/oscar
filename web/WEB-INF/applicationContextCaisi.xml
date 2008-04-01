@@ -6,9 +6,6 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
         default-autowire="no">
 
-    <!-- import the xfire spring bits -->
-    <import resource="classpath:org/codehaus/xfire/spring/xfire.xml"/>
-    
     <!-- configure the available measurement flow sheets -->
     <bean id="measurementTemplateFlowSheet" class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
         <property name="flowSheets">

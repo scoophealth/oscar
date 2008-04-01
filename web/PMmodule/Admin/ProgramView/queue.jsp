@@ -1,11 +1,8 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.oscarehr.PMmodule.model.ProgramQueue" %>
-<%@ page import="org.caisi.integrator.model.transfer.*" %>
 <%@ page import="java.net.URLEncoder" %>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
-<%@page import="org.oscarehr.PMmodule.service.IntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.caisi.integrator.model.transfer.AgencyTransfer"%>
 <%@page import="org.oscarehr.PMmodule.model.Demographic"%>
 
 <!--
@@ -54,26 +51,6 @@
         form.submit();
     }
     
-    function remove_from_integrator(remote_referral_id) {
-        if(!confirm('Are you sure you would like to remove the referral from this list?')) {
-            return;
-        }
-        var form = document.programManagerViewForm;
-        form.elements['remoteReferralId'].value=remote_referral_id;
-        form.method.value='remove_from_integrator';
-        form.submit();
-    }
-
-    function accept_from_integrator(remote_referral_id) {
-        if(!confirm('This feature is currently a manual process, you will be forwarded to the new client page where you need to admit the client and enter them into the program. Afterwards you should return here and remove them from the queue.')) {
-            return;
-        }
-        var form = document.programManagerViewForm;
-        form.elements['remoteReferralId'].value=remote_referral_id;
-        form.method.value='accept_from_integrator';
-        form.submit();
-    }
-
     function select_client(client_id,action,queue_id) {
         var form = document.programManagerViewForm;
         form.elements['clientId'].value=client_id;
@@ -175,60 +152,6 @@
 </display:table>
 <br />
 <br />
-<%
-	IntegratorManager integratorManager=(IntegratorManager)SpringUtils.getBean("integratorManager");
-	GetReferralResponseTransfer getReferralResponseTransfer = null;
-	AgencyTransfer agencyTransfer=null;
-	Demographic demographic=null;
-	if (integratorManager.isEnabled())
-	{
-%>
-		<h3>Referrals from other agencies</h3>
-
-		<display:table class="simple" cellspacing="2" cellpadding="3" id="queue_entry" name="remoteReferrals" export="false" pagesize="0" requestURI="/PMmodule/ProgramManagerView.do">
-		    <display:setProperty name="paging.banner.placement" value="bottom" />
-		    <display:setProperty name="basic.msg.empty_list" value="Queue is empty." />
-			<display:column sortable="false">
-				<%
-			    	getReferralResponseTransfer = (GetReferralResponseTransfer) queue_entry;
-			    	agencyTransfer=integratorManager.getAgencyById(getReferralResponseTransfer.getSourceAgencyId());
-			    	demographic=integratorManager.getDemographic(agencyTransfer.getUsername(), getReferralResponseTransfer.getSourceDemographicNo());
-				%>
-		        <input type="button" value="Admit" onclick="accept_from_integrator('<%=getReferralResponseTransfer.getId()%>')" />
-			</display:column>
-		    <display:column sortable="false">
-		        <input type="button" value="Remove or Reject" onclick="remove_from_integrator('<%=getReferralResponseTransfer.getId()%>')" />
-		    </display:column>
-		    
-		    <display:column sortable="true" property="sourceDemographicNo" title="Remote Client No"/>
-		    <display:column sortable="true" title="Name">
-			    <%
-			    	String name="n/a";
-			    	if (demographic!=null)
-			    	{
-			    		if (demographic.getFormattedName()!=null) name=demographic.getFormattedName();
-			    	}
-			    %>
-			    <%=name%>
-		    </display:column>
-		    <display:column sortable="true" title="From Agency">
-		    	<%=agencyTransfer.getName() %>
-		    </display:column>
-		    <display:column sortable="true" title="Referral Date">
-				<%
-					String referralDate=DateFormatUtils.ISO_DATETIME_FORMAT.format(getReferralResponseTransfer.getReferralDate());
-			    %>
-			    <%=referralDate%>
-		    </display:column>
-		    <display:column property="sourceProviderInfo" sortable="true" title="Referring Provider" />
-		    <display:column property="reasonForReferral" sortable="true" title="Reason for referral" />
-		    <display:column property="presentingProblem" sortable="true" title="Present problems"/>
-		</display:table>
-	<br />
-	<br />
-<%
-	}
-%>
 
 <c:if test="${requestScope.do_admit != null}">
     <table width="100%" border="1" cellspacing="2" cellpadding="3">

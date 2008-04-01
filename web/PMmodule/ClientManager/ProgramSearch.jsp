@@ -24,10 +24,7 @@
 
 <%@ include file="/taglibs.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@page import="org.oscarehr.PMmodule.service.IntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.caisi.integrator.model.transfer.ProgramTransfer"%>
-<%@page import="org.caisi.integrator.model.transfer.AgencyTransfer"%>
 <html:html locale="true">
 	<head>
 		<title>Program Search</title>
@@ -138,32 +135,5 @@ if (!Array.prototype.indexOf)
 			<display:column property="descr" sortable="false" title="Description"></display:column>
 		</display:table>
 
-		<%
-			IntegratorManager integratorManager=(IntegratorManager)SpringUtils.getBean("integratorManager");
-			if (integratorManager.isEnabled())
-			{
-				%>
-				<p />
-				<h3>Programs at other Agencies</h3>
-				<display:table class="simple" cellspacing="2" cellpadding="3" id="remoteProgram" name="remotePrograms" pagesize="200" requestURI="/PMmodule/ClientManager.do">
-					<display:setProperty name="paging.banner.placement" value="bottom" />
-					<display:column sortable="true" title="Name">
-						<%
-							ProgramTransfer programTransfer=(ProgramTransfer)remoteProgram;
-							AgencyTransfer remoteAgency=integratorManager.getAgencyById(programTransfer.getAgencyId());
-							String agencyName="n/a";
-							if (remoteAgency!=null) agencyName=remoteAgency.getName();
-						%>
-						<a href="#javascript:void(0);" onclick="selectProgram('<c:out value="${remoteProgram.agencyId}" />','<c:out value="${remoteProgram.remoteProgramId}" />','<c:out value="${remoteProgram.type}" />');"><c:out value="${remoteProgram.name}" /></a> (<%=agencyName%>)
-					</display:column>
-					<display:column property="type" sortable="true" title="Type"></display:column>
-					<display:column sortable="false" title="Participation">
-						<c:out value="${remoteProgram.numberOfMembers}" />/<c:out value="${remoteProgram.maxAllowed}" />
-					</display:column>
-					<display:column property="description" sortable="false" title="Description"></display:column>
-				</display:table>
-				<%
-			}
-		%>
 	</body>
 </html:html>

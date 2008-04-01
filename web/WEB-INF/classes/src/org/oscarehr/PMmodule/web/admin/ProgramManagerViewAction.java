@@ -39,7 +39,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.caisi.integrator.model.transfer.GetReferralResponseTransfer;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
@@ -56,85 +55,46 @@ import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.service.AdmissionManager;
-import org.oscarehr.PMmodule.service.AgencyManager;
-import org.oscarehr.PMmodule.service.BedCheckTimeManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
-import org.oscarehr.PMmodule.service.ConsentManager;
-import org.oscarehr.PMmodule.service.FormsManager;
-import org.oscarehr.PMmodule.service.GenericIntakeManager;
-import org.oscarehr.PMmodule.service.IntakeAManager;
-import org.oscarehr.PMmodule.service.IntakeCManager;
-import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
-import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
-import org.oscarehr.PMmodule.service.RoomManager;
-import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.quatro.service.LookupManager;
-
 public class ProgramManagerViewAction extends BaseAction {
 
     private static final Log log = LogFactory.getLog(ProgramManagerViewAction.class);
 
-    protected ClientRestrictionManager clientRestrictionManager;
-    protected SurveyManager surveyManager;
+    private ClientRestrictionManager clientRestrictionManager;
 
     private FacilityDAO facilityDAO=null;
 
-    protected LookupManager lookupManager;
+    private CaseManagementManager caseManagementManager;
 
-    protected CaseManagementManager caseManagementManager;
+    private AdmissionManager admissionManager;
 
-    protected AdmissionManager admissionManager;
+    private RoomDemographicManager roomDemographicManager;
 
-    protected GenericIntakeManager genericIntakeManager;
+    private BedDemographicManager bedDemographicManager;
 
-    protected AgencyManager agencyManager;
+    private BedManager bedManager;
 
-    protected BedCheckTimeManager bedCheckTimeManager;
+    private ClientManager clientManager;
 
-    protected RoomDemographicManager roomDemographicManager;
+    private LogManager logManager;
 
-    protected BedDemographicManager bedDemographicManager;
+    private ProgramManager programManager;
 
-    protected BedManager bedManager;
+    private ProgramQueueManager programQueueManager;
 
-    protected ClientManager clientManager;
-
-    protected ConsentManager consentManager;
-
-    protected FormsManager formsManager;
-
-    protected IntakeAManager intakeAManager;
-
-    protected IntakeCManager intakeCManager;
-
-    protected IntegratorManager integratorManager;
-
-    protected LogManager logManager;
-
-    protected ProgramManager programManager;
-
-    protected ProviderManager providerManager;
-
-    protected ProgramQueueManager programQueueManager;
-
-    protected RoleManager roleManager;
-
-    protected RoomManager roomManager;
-    
     public void setFacilityDAO(FacilityDAO facilityDAO) {
         this.facilityDAO = facilityDAO;
     }
@@ -171,9 +131,6 @@ public class ProgramManagerViewAction extends BaseAction {
         List<ProgramQueue> queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
         request.setAttribute("queue", queue);
 
-        GetReferralResponseTransfer[] remoteReferrals=integratorManager.getRemoteReferrals();
-        request.setAttribute("remoteReferrals", remoteReferrals);
-        
         HashSet<Long> genderConflict = new HashSet<Long>();
         HashSet<Long> ageConflict = new HashSet<Long>();
         for (ProgramQueue programQueue : queue) {
@@ -206,7 +163,7 @@ public class ProgramManagerViewAction extends BaseAction {
         request.setAttribute("ageConflict", ageConflict);
 
         if (formBean.getTab() == null || formBean.getTab().equals("")) {
-            if ((queue!=null && queue.size() > 0) || (remoteReferrals!=null && remoteReferrals.length>0)) {
+            if (queue!=null && queue.size() > 0) {
                 formBean.setTab("Queue");
             }
             else {
@@ -631,19 +588,6 @@ public class ProgramManagerViewAction extends BaseAction {
         return view(mapping, form, request, response);
     }
 
-    public ActionForward remove_from_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        String remoteReferralId = request.getParameter("remoteReferralId");
-
-        integratorManager.removeReferral(Integer.parseInt(remoteReferralId));
-
-        return view(mapping, form, request, response);
-    }
-
-    public ActionForward accept_from_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-
-        return(mapping.findForward("searchForm"));
-    }
-
     public ActionForward select_client_for_admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String programId = request.getParameter("id");
         String clientId = request.getParameter("clientId");
@@ -978,33 +922,12 @@ public class ProgramManagerViewAction extends BaseAction {
         this.clientRestrictionManager = clientRestrictionManager;
     }
 
-    @Required
-    public void setSurveyManager(SurveyManager surveyManager) {
-        this.surveyManager = surveyManager;
-    }
-
-    public void setLookupManager(LookupManager lookupManager) {
-    	this.lookupManager = lookupManager;
-    }
-
     public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
     	this.caseManagementManager = caseManagementManager;
     }
 
     public void setAdmissionManager(AdmissionManager mgr) {
     	this.admissionManager = mgr;
-    }
-
-    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
-        this.genericIntakeManager = genericIntakeManager;
-    }
-
-    public void setAgencyManager(AgencyManager mgr) {
-    	this.agencyManager = mgr;
-    }
-
-    public void setBedCheckTimeManager(BedCheckTimeManager bedCheckTimeManager) {
-        this.bedCheckTimeManager = bedCheckTimeManager;
     }
 
     public void setBedDemographicManager(BedDemographicManager demographicBedManager) {
@@ -1023,26 +946,6 @@ public class ProgramManagerViewAction extends BaseAction {
     	this.clientManager = mgr;
     }
 
-    public void setConsentManager(ConsentManager mgr) {
-    	this.consentManager = mgr;
-    }
-
-    public void setFormsManager(FormsManager mgr) {
-    	this.formsManager = mgr;
-    }
-
-    public void setIntakeAManager(IntakeAManager mgr) {
-    	this.intakeAManager = mgr;
-    }
-
-    public void setIntakeCManager(IntakeCManager mgr) {
-    	this.intakeCManager = mgr;
-    }
-
-    public void setIntegratorManager(IntegratorManager mgr) {
-    	this.integratorManager = mgr;
-    }
-
     public void setLogManager(LogManager mgr) {
     	this.logManager = mgr;
     }
@@ -1053,17 +956,5 @@ public class ProgramManagerViewAction extends BaseAction {
 
     public void setProgramQueueManager(ProgramQueueManager mgr) {
     	this.programQueueManager = mgr;
-    }
-
-    public void setProviderManager(ProviderManager mgr) {
-    	this.providerManager = mgr;
-    }
-
-    public void setRoleManager(RoleManager mgr) {
-    	this.roleManager = mgr;
-    }
-
-    public void setRoomManager(RoomManager roomManager) {
-    	this.roomManager = roomManager;
     }
 }

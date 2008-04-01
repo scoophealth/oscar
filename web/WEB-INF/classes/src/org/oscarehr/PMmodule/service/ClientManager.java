@@ -28,8 +28,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.caisi.integrator.model.transfer.AgencyTransfer;
-import org.caisi.integrator.model.transfer.ProgramTransfer;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.JointAdmissionDAO;
@@ -54,7 +52,6 @@ public class ClientManager {
     private ClientReferralDAO referralDAO;
     private JointAdmissionDAO jointAdmissionDAO;
     private ProgramQueueManager queueManager;
-    private IntegratorManager integratorManager;
     private AdmissionManager admissionManager;
     private ClientRestrictionManager clientRestrictionManager;
 
@@ -110,25 +107,6 @@ public class ClientManager {
     public List<ClientReferral> getActiveReferrals(String clientId, String sourceFacilityId) {
         List<ClientReferral> results = referralDAO.getActiveReferrals(Long.valueOf(clientId), Integer.valueOf(sourceFacilityId));
 
-        for (ClientReferral referral : results) {
-            if (referral.getAgencyId().longValue() > 0) {
-                referral.setProgramName("<Remote and Unavailable>");
-
-                try {
-                    ProgramTransfer programTransfer = integratorManager.getProgramByAgencyAndId(referral.getAgencyId(), referral.getProgramId());
-                    if (programTransfer!=null){
-                        referral.setProgramName(programTransfer.getName());
-                        referral.setProgramType(programTransfer.getType());
-                    }
-                    
-                    AgencyTransfer agencyTransfer=integratorManager.getAgencyById(referral.getAgencyId());
-                    if (agencyTransfer!=null) referral.setProgramName(referral.getProgramName()+" ("+agencyTransfer.getName()+")");
-                }
-                catch (Exception ex) {
-                    log.error(ex);
-                }
-            }
-        }
         return results;
     }
 
@@ -324,11 +302,6 @@ public class ClientManager {
     @Required
     public void setAdmissionManager(AdmissionManager mgr) {
         this.admissionManager = mgr;
-    }
-
-    @Required
-    public void setIntegratorManager(IntegratorManager mgr) {
-        this.integratorManager = mgr;
     }
 
     @Required

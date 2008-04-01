@@ -83,45 +83,6 @@
     </display-el:table>
 
 </c:if>
-<c:if test="${not empty requestScope.genericIntakeSearchForm.remoteMatches}">
-    <h5>Remote matches</h5>
-    <p>The following matches were found by using the Integrator.
-        We cannot provide any assurance that the information enclosed is accurate, complete, or up-to-date for any particular purpose.
-        Please verify this information before relying upon it.
-        We do not assume responsibility for the consequences of any reliance on this information.
-    </p>
-    <display-el:table class="simple" name="requestScope.genericIntakeSearchForm.remoteMatches" id="client" pagesize="5">
-        <display-el:setProperty name="paging.banner.placement" value="bottom" />
-
-
-        <c:set var="nestedName" value="requestScope.genericIntakeSearchForm.remoteMatches[${client_rowNum - 1}].demographics" />
-
-        <display-el:column sortable="true" title="Client #" property="id" style="width: 10%"/>
-        <display-el:column>
-            <display-el:table class="simple sublist" name="${nestedName}" id="demographic">
-                <display-el:column style="width: 10%">
-                    <c:if test="${demographic.agency.username != requestScope.genericIntakeSearchForm.localAgencyUsername}">
-                        <html-el:submit onclick="copyRemote('${demographic.agency.username}', '${demographic.agencyDemographicNo}')">Copy Remote</html-el:submit>
-                    </c:if>                   
-                </display-el:column>
-
-                <display-el:column property="agency.name" sortable="true" title="Agency" />
-                <display-el:column sortable="true" title="Name">
-                    <c:out value="${demographic.lastName}"/>, <c:out value="${demographic.firstName}"/>
-                </display-el:column>
-
-                <display-el:column sortable="true" title="Date of Birth">
-                    <c:out value="${demographic.yearOfBirth}"/>-<c:out value="${demographic.monthOfBirth}"/>-<c:out value="${demographic.dateOfBirth}"/>
-                </display-el:column>
-            </display-el:table>
-        </display-el:column>
-    </display-el:table>
-    <h5>
-        We cannot provide any assurance that the information enclosed is accurate, complete, or up-to-date for any particular purpose.
-        Please verify this information before relying upon it.
-        We do not assume responsibility for the consequences of any reliance on this information.
-    </h5>
-</c:if>
 <c:if test="${requestScope.genericIntakeSearchForm.searchPerformed}">
     <br />
     <p><html:submit onclick="createLocal()">New Client</html:submit></p>

@@ -18,8 +18,6 @@
  */
 package org.oscarehr.PMmodule.web;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,10 +28,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.caisi.integrator.model.transfer.ClientTransfer;
-import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.SurveyManager;
@@ -70,22 +64,10 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
-        intakeSearchBean.setLocalAgencyUsername(integratorManager.getLocalAgency().getIntegratorUsername());
         
         //UCF
 		request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
 		
-        Collection<ClientTransfer> remoteMatches = new ArrayList<ClientTransfer>();
-
-        // search for remote matches if integrator enabled
-        if (integratorManager.isEnabled()) {
-            remoteMatches = remoteSearch(intakeSearchBean);
-            if (remoteMatches!=null) {
-                intakeSearchBean.setRemoteMatches(remoteMatches.toArray(new ClientTransfer[remoteMatches.size()]));
-            }
-        }
-
-
         boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
         List<Demographic> localMatches = localSearch(intakeSearchBean, allowOnlyOptins);
         intakeSearchBean.setLocalMatches(localMatches);
@@ -94,7 +76,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
         
         // if matches found display results, otherwise create local intake
-        if (!localMatches.isEmpty() || !remoteMatches.isEmpty()) {
+        if (!localMatches.isEmpty()) {
             return mapping.findForward(FORWARD_SEARCH_FORM);
         } else {
             return createLocal(mapping, form, request, response);
@@ -116,25 +98,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     public ActionForward copyRemote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
-        try {
-            return forwardIntakeEditCreateBasedOnRemote(mapping, request, intakeSearchBean.getRemoteAgency(), intakeSearchBean.getRemoteAgencyDemographicNo());
-        } catch (IntegratorException e) {
-            ActionMessages messages = new ActionMessages();
-            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("integrator.error", e.getMessage()));
-            saveErrors(request, messages);
-
-            return mapping.findForward(FORWARD_SEARCH_FORM);
-        }
-    }
-
-    private Collection<ClientTransfer> remoteSearch(GenericIntakeSearchFormBean intakeSearchBean) {
-        try {
-            return integratorManager.matchClient(createClient(intakeSearchBean, false));
-        } catch (IntegratorException e) {
-            LOG.error(e);
-
-            return new ArrayList<ClientTransfer>();
-        }
+        return forwardIntakeEditCreateBasedOnRemote(mapping, request, intakeSearchBean.getRemoteAgency(), intakeSearchBean.getRemoteAgencyDemographicNo());
     }
 
     private List<Demographic> localSearch(GenericIntakeSearchFormBean intakeSearchBean, boolean allowOnlyOptins) {

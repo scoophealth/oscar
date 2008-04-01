@@ -22,7 +22,6 @@ import java.util.Collection;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.util.LabelValueBean;
-import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.oscarehr.PMmodule.model.Demographic;
 
 public class GenericIntakeSearchFormBean extends ActionForm {
@@ -46,7 +45,6 @@ public class GenericIntakeSearchFormBean extends ActionForm {
     private boolean searchPerformed = false;
 
     private Collection<Demographic> localMatches;
-    private ClientTransfer[] remoteMatches;
 
     private String localAgencyUsername;
 
@@ -155,14 +153,6 @@ public class GenericIntakeSearchFormBean extends ActionForm {
 
     public void setLocalMatches(Collection<Demographic> localMatches) {
         this.localMatches = localMatches;
-    }
-
-    public ClientTransfer[] getRemoteMatches() {
-        return remoteMatches;
-    }
-
-    public void setRemoteMatches(ClientTransfer[] remoteMatches) {
-        this.remoteMatches = remoteMatches;
     }
 
     public String getRemoteAgency() {

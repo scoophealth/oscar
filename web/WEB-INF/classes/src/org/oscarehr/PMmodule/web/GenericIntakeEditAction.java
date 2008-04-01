@@ -127,17 +127,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
         
-        setBeanProperties(formBean, intake, getRemoteClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency()
+        setBeanProperties(formBean, intake, null, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency()
                 .areExternalProgramsVisible(intakeType), null, null, null,facilityId);
         formBean.setRemoteAgency(getRemoteAgency(request));
         formBean.setRemoteAgencyDemographicNo(getRemoteAgencyDemographicNo(request));
 
         
         return mapping.findForward(EDIT);
-    }
-
-    private Demographic getRemoteClient(HttpServletRequest request) {
-        return integratorManager.getDemographic(getRemoteAgency(request), getRemoteAgencyDemographicNo(request));
     }
 
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -274,7 +270,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             			if(programManager.isBedProgram(selectedBedCommunityProgramId.toString())) {           			
             				intakeLocationId = selectedBedCommunityProgramId;
             			} else {
-            				intakeLocationId = Integer.valueOf(formBean.getProgramInDomainId());
+            				if (formBean.getProgramInDomainId()!=null && formBean.getProgramInDomainId().trim().length()>0) intakeLocationId = Integer.valueOf(formBean.getProgramInDomainId());
             			}
             		}
             	} else {
@@ -315,13 +311,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             		intake.setId(null);
             		saveIntake(intake, client.getDemographicNo());
             	}
-            }
-            
-            
-            // don't move updateRemote up...this method has the problem needs to be fixed
-            if (integratorManager.isEnabled()) {
-            	updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
-            }
+            }            
         }
         catch (ProgramFullException e) {
             ActionMessages messages = new ActionMessages();
@@ -372,10 +362,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     	return save_all(mapping,form,request,response,"RFQ_notAdmit");
     }
     
-    private void updateRemote(Demographic client, String remoteAgency, Long remoteAgencyDemographicNo) {
-        integratorManager.saveClient(client, remoteAgency, remoteAgencyDemographicNo);
-    }
-
     public ActionForward clientEdit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 

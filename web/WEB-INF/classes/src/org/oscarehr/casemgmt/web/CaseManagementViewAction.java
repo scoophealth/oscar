@@ -43,12 +43,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.caisi.integrator.message.demographics.GetIssuesNotesResponse;
 import org.caisi.model.CustomFilter;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
-import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -64,12 +62,6 @@ import oscar.oscarRx.pageUtil.RxSessionBean;
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
     private static Log log = LogFactory.getLog(CaseManagementViewAction.class);
-
-    private IntegratorManager integratorManager = null;
-
-    public void setIntegratorManager(IntegratorManager integratorManager) {
-        this.integratorManager = integratorManager;
-    }
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
@@ -298,14 +290,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             request.setAttribute("survey_list", surveyMgr.getAllForms(currentFacilityId));
             // request.setAttribute("surveys", surveyManager.getForms(demographicNo));
 
-            // remote issues
-            GetIssuesNotesResponse issuesAndNotes = integratorManager.getIssueNotes(Long.parseLong(demoNo));
-            if (issuesAndNotes == null) {
-                request.setAttribute("remoteIssues", null);
-            }
-            else {
-                request.setAttribute("remoteIssues", issuesAndNotes.getIssues());
-            }
         }
 
         CaseManagementCPP cpp = this.caseManagementMgr.getCPP(this.getDemographicNo(request));

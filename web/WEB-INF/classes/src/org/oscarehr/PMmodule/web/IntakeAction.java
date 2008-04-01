@@ -22,7 +22,6 @@
 
 package org.oscarehr.PMmodule.web;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,60 +33,20 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
-import org.caisi.integrator.model.transfer.ClientTransfer;
-import org.oscarehr.PMmodule.exception.IntegratorException;
-import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
 import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.service.AdmissionManager;
-import org.oscarehr.PMmodule.service.AgencyManager;
-import org.oscarehr.PMmodule.service.BedCheckTimeManager;
-import org.oscarehr.PMmodule.service.BedDemographicManager;
-import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ClientManager;
-import org.oscarehr.PMmodule.service.ConsentManager;
-import org.oscarehr.PMmodule.service.FormsManager;
-import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
 import org.oscarehr.PMmodule.service.IntakeCManager;
-import org.oscarehr.PMmodule.service.IntegratorManager;
-import org.oscarehr.PMmodule.service.LogManager;
-import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.PMmodule.service.ProgramQueueManager;
-import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.service.RoleManager;
-import org.oscarehr.PMmodule.service.RoomDemographicManager;
-import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.PreIntakeForm;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
-
-import com.quatro.service.LookupManager;
 
 public class IntakeAction extends BaseAction {
 
     private static Log log = LogFactory.getLog(IntakeAction.class);
-    protected LookupManager lookupManager;
-    protected CaseManagementManager caseManagementManager;
-    protected AdmissionManager admissionManager;
-    protected GenericIntakeManager genericIntakeManager;
-    protected AgencyManager agencyManager;
-    protected BedCheckTimeManager bedCheckTimeManager;
-    protected RoomDemographicManager roomDemographicManager;
-    protected BedDemographicManager bedDemographicManager;
-    protected BedManager bedManager;
-    protected ClientManager clientManager;
-    protected ConsentManager consentManager;
-    protected FormsManager formsManager;
-    protected IntakeAManager intakeAManager;
-    protected IntakeCManager intakeCManager;
-    protected IntegratorManager integratorManager;
-    protected LogManager logManager;
-    protected ProgramManager programManager;
-    protected ProviderManager providerManager;
-    protected ProgramQueueManager programQueueManager;
-    protected RoleManager roleManager;
-    protected RoomManager roomManager;
+    private ClientManager clientManager;
+    private IntakeAManager intakeAManager;
+    private IntakeCManager intakeCManager;
 
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -100,12 +59,9 @@ public class IntakeAction extends BaseAction {
         DynaActionForm preIntakeForm = (DynaActionForm) form;
         PreIntakeForm formBean = (PreIntakeForm) preIntakeForm.get("form");
         request.getSession().setAttribute("demographic", null);
-        boolean doLocalSearch = false;
-
 
         Demographic[] results = new Demographic[0];
 
-        /* here we want to switch to the integrator, if available */
         Demographic d = new Demographic();
         d.setFirstName(formBean.getFirstName());
         d.setLastName(formBean.getLastName());
@@ -115,33 +71,19 @@ public class IntakeAction extends BaseAction {
         d.setHin(formBean.getHealthCardNumber());
         d.setVer(formBean.getHealthCardVersion());
 
-        try {
-            Collection<ClientTransfer> demographicCollection = integratorManager.matchClient(d);
-            log.debug("integrator found " + demographicCollection.size() + " match(es)");
-        } catch (IntegratorNotEnabledException e) {
-            log.info(e);
-            doLocalSearch = true;
-        } catch (Throwable e) {
-            log.error(e);
-            doLocalSearch = true;
-        }
-        if (doLocalSearch) {
-            ClientSearchFormBean searchBean = new ClientSearchFormBean();
-            searchBean.setFirstName(formBean.getFirstName());
-            searchBean.setLastName(formBean.getLastName());
-            searchBean.setSearchOutsideDomain(true);
-            searchBean.setSearchUsingSoundex(true);
+        ClientSearchFormBean searchBean = new ClientSearchFormBean();
+        searchBean.setFirstName(formBean.getFirstName());
+        searchBean.setLastName(formBean.getLastName());
+        searchBean.setSearchOutsideDomain(true);
+        searchBean.setSearchUsingSoundex(true);
 
-            boolean allowOnlyOptins = UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
+        boolean allowOnlyOptins = UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
 
-            List resultList = clientManager.search(searchBean, allowOnlyOptins);
-            results = (Demographic[]) resultList.toArray(new Demographic[resultList.size()]);
-            log.debug("local search found " + results.length + " match(es)");
-
-        }
+        List resultList = clientManager.search(searchBean, allowOnlyOptins);
+        results = (Demographic[]) resultList.toArray(new Demographic[resultList.size()]);
+        log.debug("local search found " + results.length + " match(es)");
 
         if (results != null && results.length > 0) {
-            request.setAttribute("localSearch", new Boolean(doLocalSearch));
             request.setAttribute("clients", results);
             return mapping.findForward("pre-intake");
         }
@@ -150,12 +92,8 @@ public class IntakeAction extends BaseAction {
     }
 
     /*
-      * There can be a new client in 2 scenerios
+      * There can be a new client in 1 scenerio
       * 1) new client button was clicked.
-      * 2) new client, but they are being linked to a record already
-      * 		existing on the integrator; in which case the session variable
-      * 		'demographic' will be set.
-      *
       */
     public ActionForward new_client(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaActionForm preIntakeForm = (DynaActionForm) form;
@@ -166,20 +104,7 @@ public class IntakeAction extends BaseAction {
             return mapping.findForward(getIntakeForward());
         }
 
-
         Demographic demographic = null;
-        if (!integratorManager.getLocalAgency().getIntegratorUsername().equals(formBean.getAgencyId())) {
-            //integrator
-            try {
-                demographic = integratorManager.getDemographic(formBean.getAgencyId(), Long.valueOf(formBean.getDemographicId()));
-            } catch (IntegratorException e) {
-                log.error(e);
-            }
-        } else {
-            //local...can this even happen?
-            //demographic = clientManager.getClientByDemographicNo(formBean.getDemographicId());
-        }
-
         request.getSession().setAttribute("demographic", demographic);
 
         return mapping.findForward(getIntakeForward());
@@ -215,52 +140,8 @@ public class IntakeAction extends BaseAction {
         return value;
     }
 
-    public void setLookupManager(LookupManager lookupManager) {
-    	this.lookupManager = lookupManager;
-    }
-
-    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
-    	this.caseManagementManager = caseManagementManager;
-    }
-
-    public void setAdmissionManager(AdmissionManager mgr) {
-    	this.admissionManager = mgr;
-    }
-
-    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
-        this.genericIntakeManager = genericIntakeManager;
-    }
-
-    public void setAgencyManager(AgencyManager mgr) {
-    	this.agencyManager = mgr;
-    }
-
-    public void setBedCheckTimeManager(BedCheckTimeManager bedCheckTimeManager) {
-        this.bedCheckTimeManager = bedCheckTimeManager;
-    }
-
-    public void setBedDemographicManager(BedDemographicManager demographicBedManager) {
-    	this.bedDemographicManager = demographicBedManager;
-    }
-
-    public void setRoomDemographicManager(RoomDemographicManager roomDemographicManager) {
-    	this.roomDemographicManager = roomDemographicManager;
-    }
-
-    public void setBedManager(BedManager bedManager) {
-    	this.bedManager = bedManager;
-    }
-
     public void setClientManager(ClientManager mgr) {
     	this.clientManager = mgr;
-    }
-
-    public void setConsentManager(ConsentManager mgr) {
-    	this.consentManager = mgr;
-    }
-
-    public void setFormsManager(FormsManager mgr) {
-    	this.formsManager = mgr;
     }
 
     public void setIntakeAManager(IntakeAManager mgr) {
@@ -269,33 +150,5 @@ public class IntakeAction extends BaseAction {
 
     public void setIntakeCManager(IntakeCManager mgr) {
     	this.intakeCManager = mgr;
-    }
-
-    public void setIntegratorManager(IntegratorManager mgr) {
-    	this.integratorManager = mgr;
-    }
-
-    public void setLogManager(LogManager mgr) {
-    	this.logManager = mgr;
-    }
-
-    public void setProgramManager(ProgramManager mgr) {
-    	this.programManager = mgr;
-    }
-
-    public void setProgramQueueManager(ProgramQueueManager mgr) {
-    	this.programQueueManager = mgr;
-    }
-
-    public void setProviderManager(ProviderManager mgr) {
-    	this.providerManager = mgr;
-    }
-
-    public void setRoleManager(RoleManager mgr) {
-    	this.roleManager = mgr;
-    }
-
-    public void setRoomManager(RoomManager roomManager) {
-    	this.roomManager = roomManager;
     }
 }

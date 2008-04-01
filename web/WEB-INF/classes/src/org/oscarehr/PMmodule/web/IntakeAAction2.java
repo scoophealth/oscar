@@ -40,64 +40,31 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.caisi.event.OscarCaisiEvent;
-import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
-import org.oscarehr.PMmodule.service.AgencyManager;
-import org.oscarehr.PMmodule.service.BedCheckTimeManager;
-import org.oscarehr.PMmodule.service.BedDemographicManager;
-import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ClientManager;
-import org.oscarehr.PMmodule.service.ConsentManager;
-import org.oscarehr.PMmodule.service.FormsManager;
-import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
-import org.oscarehr.PMmodule.service.IntakeCManager;
-import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.service.RoleManager;
-import org.oscarehr.PMmodule.service.RoomDemographicManager;
-import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeAFormBean;
 import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import com.quatro.service.LookupManager;
 
 public class IntakeAAction2 extends BaseAction {
     private static Log log = LogFactory.getLog(IntakeAAction2.class);
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-    protected LookupManager lookupManager;
-    protected CaseManagementManager caseManagementManager;
-    protected AdmissionManager admissionManager;
-    protected GenericIntakeManager genericIntakeManager;
-    protected AgencyManager agencyManager;
-    protected BedCheckTimeManager bedCheckTimeManager;
-    protected RoomDemographicManager roomDemographicManager;
-    protected BedDemographicManager bedDemographicManager;
-    protected BedManager bedManager;
-    protected ClientManager clientManager;
-    protected ConsentManager consentManager;
-    protected FormsManager formsManager;
-    protected IntakeAManager intakeAManager;
-    protected IntakeCManager intakeCManager;
-    protected IntegratorManager integratorManager;
-    protected LogManager logManager;
-    protected ProgramManager programManager;
-    protected ProviderManager providerManager;
-    protected ProgramQueueManager programQueueManager;
-    protected RoleManager roleManager;
-    protected RoomManager roomManager;
-
-
+    private AdmissionManager admissionManager;
+    private ClientManager clientManager;
+    private IntakeAManager intakeAManager;
+    private LogManager logManager;
+    private ProgramManager programManager;
+    private ProviderManager providerManager;
+    
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
     }
@@ -310,23 +277,6 @@ public class IntakeAAction2 extends BaseAction {
         WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext()).publishEvent(ev);
         // end-event-code
 
-        try {
-            /* if client is based on one from a remote agency */
-            if (!integratorManager.getLocalAgency().getIntegratorUsername().equals(intakeFormBean.getAgencyId())) {
-                //integrator-add/merge
-                Demographic demographic = clientManager.getClientByDemographicNo(String.valueOf(intakea.getDemographicNo()));
-                integratorManager.saveClient(demographic);
-                integratorManager.mergeClient(demographic.getDemographicNo(), intakeFormBean.getAgencyId(), intakeFormBean.getDemographicId());
-                //saveClientExtras(demographic.getDemographicNo().intValue(),(Demographic)request.getSession().getAttribute("demographic"));
-            } else {
-                //new client
-                integratorManager.saveClient(clientManager.getClientByDemographicNo(String.valueOf(intakea.getDemographicNo())));
-            }
-
-        } catch (IntegratorException e) {
-            log.error(e);
-        }
-
         request.getSession().setAttribute("demographic", null);
 
         return mapping.findForward("success");
@@ -457,64 +407,16 @@ public class IntakeAAction2 extends BaseAction {
         }
     }
 
-    public void setLookupManager(LookupManager lookupManager) {
-    	this.lookupManager = lookupManager;
-    }
-
-    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
-    	this.caseManagementManager = caseManagementManager;
-    }
-
     public void setAdmissionManager(AdmissionManager mgr) {
     	this.admissionManager = mgr;
-    }
-
-    public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
-        this.genericIntakeManager = genericIntakeManager;
-    }
-
-    public void setAgencyManager(AgencyManager mgr) {
-    	this.agencyManager = mgr;
-    }
-
-    public void setBedCheckTimeManager(BedCheckTimeManager bedCheckTimeManager) {
-        this.bedCheckTimeManager = bedCheckTimeManager;
-    }
-
-    public void setBedDemographicManager(BedDemographicManager demographicBedManager) {
-    	this.bedDemographicManager = demographicBedManager;
-    }
-
-    public void setRoomDemographicManager(RoomDemographicManager roomDemographicManager) {
-    	this.roomDemographicManager = roomDemographicManager;
-    }
-
-    public void setBedManager(BedManager bedManager) {
-    	this.bedManager = bedManager;
     }
 
     public void setClientManager(ClientManager mgr) {
     	this.clientManager = mgr;
     }
 
-    public void setConsentManager(ConsentManager mgr) {
-    	this.consentManager = mgr;
-    }
-
-    public void setFormsManager(FormsManager mgr) {
-    	this.formsManager = mgr;
-    }
-
     public void setIntakeAManager(IntakeAManager mgr) {
     	this.intakeAManager = mgr;
-    }
-
-    public void setIntakeCManager(IntakeCManager mgr) {
-    	this.intakeCManager = mgr;
-    }
-
-    public void setIntegratorManager(IntegratorManager mgr) {
-    	this.integratorManager = mgr;
     }
 
     public void setLogManager(LogManager mgr) {
@@ -525,20 +427,7 @@ public class IntakeAAction2 extends BaseAction {
     	this.programManager = mgr;
     }
 
-    public void setProgramQueueManager(ProgramQueueManager mgr) {
-    	this.programQueueManager = mgr;
-    }
-
     public void setProviderManager(ProviderManager mgr) {
     	this.providerManager = mgr;
     }
-
-    public void setRoleManager(RoleManager mgr) {
-    	this.roleManager = mgr;
-    }
-
-    public void setRoomManager(RoomManager roomManager) {
-    	this.roomManager = roomManager;
-    }
-
 }

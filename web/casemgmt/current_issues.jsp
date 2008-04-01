@@ -26,13 +26,11 @@
 
 <%@ page import="org.oscarehr.casemgmt.model.*" %>
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.*" %>
-<%@page import="org.oscarehr.PMmodule.service.IntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 
 
 Issue Filter Create Report View:
 
-<%@page import="org.caisi.integrator.model.transfer.IssueTransfer"%>
 <table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
 	<tr class="title">
 		<td></td>
@@ -100,47 +98,3 @@ Issue Filter Create Report View:
 	<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.hideActiveIssue.value='true';document.caseManagementViewForm.method.value='setHideActiveIssues';document.caseManagementViewForm.submit(); return false;" >hide resolved issues</span>
 </logic:notEqual>
 
-<%
-	IntegratorManager integratorManager=(IntegratorManager)SpringUtils.getBean("integratorManager");
-	if (integratorManager.isEnabled())
-	{
-		%>
-			<br />
-			<a id="showRemoteIssuesLink" href="" onclick="document.getElementById('remoteIssues').style.display='block';document.getElementById('showRemoteIssuesLink').style.display='none';document.getElementById('hideRemoteIssuesLink').style.display='inline';return(false);" >show issues from other agencies</a>
-			<a id="hideRemoteIssuesLink" href="" style="display:none" onclick="document.getElementById('remoteIssues').style.display='none'; document.getElementById('showRemoteIssuesLink').style.display='inline';document.getElementById('hideRemoteIssuesLink').style.display='none';return(false);" >hide issues from other agencies</a>
-			<br />
-			<table id="remoteIssues" style="display:none;background-color:white;width:100%;border:solid gray 1px;border-collapse:collapse" cellpadding="2" cellspacing="2">
-				<tr class="title">
-					<td style="border:solid gray 1px">Agency</td>
-					<td style="border:solid gray 1px">Issue</td>
-					<td style="border:solid gray 1px">Acute</td>
-					<td style="border:solid gray 1px">Certain</td>
-					<td style="border:solid gray 1px">Major</td>
-					<td style="border:solid gray 1px">Resolved</td>
-					<td style="border:solid gray 1px">type</td>
-				</tr>
-				<%
-					IssueTransfer[] remoteIssues=(IssueTransfer[])request.getAttribute("remoteIssues");
-					if (remoteIssues!=null)
-					{
-						for (IssueTransfer issueTransfer : remoteIssues)
-						{
-							String remoteAgencyName=integratorManager.getAgencyById(issueTransfer.getAgencyId()).getName();
-							%>
-								<tr>
-									<td style="border:solid gray 1px"><%=remoteAgencyName%></td>
-									<td style="border:solid gray 1px"><%=issueTransfer.getIssue()%></td>
-									<td style="border:solid gray 1px"><%=issueTransfer.isAcute()%></td>
-									<td style="border:solid gray 1px"><%=issueTransfer.isCertain()%></td>
-									<td style="border:solid gray 1px"><%=issueTransfer.isMajor()%></td>
-									<td style="border:solid gray 1px"><%=issueTransfer.isResolved()%></td>
-									<td style="border:solid gray 1px"><%=issueTransfer.getRole()%></td>
-								</tr>
-							<%
-						}
-					}
-				%>
-			</table>
-		<%
-	}
-%>

@@ -43,13 +43,7 @@ public class IntegratorUpdateTask extends TimerTask {
         log.debug("IntegratorUpdateTask starting");
 
         try {
-            if (!integratorManager.isEnabled()) {
-                log.debug("integrator is not enabled");
-                return;
-            }
 
-            integratorManager.publishPrograms();
-            integratorManager.publishClients();
         }
         catch (Exception e){
             log.error("unexpected error occurred", e);
