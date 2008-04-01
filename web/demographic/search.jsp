@@ -53,7 +53,7 @@
 			if(document.titlesearch.search_mode[0].checked) {
 				var keyword = document.titlesearch.keyword.value; 
       			var keywordLowerCase = keyword.toLowerCase();
-      			document.titlesearch.keyword.value = keywordLowerCase;		alert("keyword + "+	keywordLowerCase);
+      			document.titlesearch.keyword.value = keywordLowerCase;		
 			}
 			
           if(document.titlesearch.search_mode[2].checked) {
