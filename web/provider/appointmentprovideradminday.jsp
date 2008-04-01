@@ -50,7 +50,7 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end ffffffffffffff-->
 
-<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*, org.oscarehr.util.*" %>
+<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" %>
 <%@ page import="org.apache.commons.lang.*" %>
 
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -205,6 +205,8 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../phr/phr.js"></script>
 <script language="JavaScript">
+
+
 
 
 function confirmPopupPage(height, width, queryString, doConfirm){
@@ -403,7 +405,12 @@ function phrAsyncGo2() {
     alert("executing");
     new Ajax.Request('../phrAsync.do', { method:'get' });
     phrAsyncActivate();
-}*/
+}
+
+
+
+
+*/
 
 </SCRIPT>
 
@@ -838,7 +845,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 <logic:equal name="infirmaryView_isOscar" value="false">
 	<%String prID="1"; %> 	
 	<logic:present name="infirmaryView_programId">
-	<%prID=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID); %>
+	<%prID=(String)session.getAttribute("infirmaryView_programId"); %>
 	</logic:present>
 	<logic:iterate id="pb" name="infirmaryView_programBeans" type="org.apache.struts.util.LabelValueBean">
 	  	<%if (pb.getValue().equals(prID)) {%>
@@ -1129,7 +1136,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 <logic:equal name="infirmaryView_isOscar" value="false">
 	<%String prID="1"; %> 
 	<logic:present name="infirmaryView_programId">
-	<%prID=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID); %>
+	<%prID=(String)session.getAttribute("infirmaryView_programId"); %>
 	</logic:present>
 	<logic:iterate id="pb" name="infirmaryView_programBeans" type="org.apache.struts.util.LabelValueBean">
 	  	<%if (pb.getValue().equals(prID)) {%>
@@ -1178,6 +1185,39 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 	</td></tr>
 </table>
 </body>
+<script language="JavaScript">
+
+document.onkeydown=function(e){
+evt = e || window.event;  // window.event is the IE equivalent
+	if (evt.altKey) {
+		switch(evt.keyCode) {
+			case 65 : popupPage2('../admin/admin.jsp', 'Admin');  break;  //run code for 'A'dmin
+			case 66 : popupPage2('../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;  //code for 'B'illing
+			case 67 : popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../provider/providercontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>&param=<%=URLEncoder.encode("&view=0&displaymode=day&dboperation=searchappointmentday","UTF-8")%>');  return false;  //run code for 'C'alendar
+			case 68 : popup('700', '1000', '../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');  return false;  //run code for e'D'oc
+			case 72 : popupPage(600,750,'<%=resourcebaseurl+"Support"%>');  return false;  //run code for 'H'elp
+			case 73 : popupPage2('../Tickler.do','<bean:message key="global.tickler"/>');  return false;  //run code for t'I'ckler
+			case 76 : popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');  return false;  //run code for 'L'ab
+			case 77 : popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>'); return false;  //run code for 'M'essage
+			case 79 : popupOscarRx(625,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>');  return false;  //run code for c'O'nsultation
+			case 80 : popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>');  return false;  //run code for 'P'references  **note that there may be 2 of em!**
+			case 82 : popupPage2('../report/reportindex.jsp','reportPage');  return false;  //run code for Reports
+			case 83 : popupPage2('../demographic/search.jsp');  return false;  //run code for 'S'earch
+			case 84 : window.open("providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday","_self") ;  return false;  //run code for 'T'oday                       
+			case 86 : review('1');  return false;  //all provider 'V'iew
+			default : return;
+               }
+	}
+	if (evt.ctrlKey) {
+               switch(evt.keyCode) {
+			case 81 : window.open('../logout.jsp','_self');  return false;  // 'Q'uit/log out
+			default : return;
+               }        
+
+        }
+}
+
+</script>
 </html:html>
 <%
 long finLoad = System.currentTimeMillis();
