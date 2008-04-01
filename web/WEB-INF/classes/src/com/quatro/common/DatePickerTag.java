@@ -12,9 +12,6 @@ import oscar.Misc;
 
 public class DatePickerTag extends BaseInputTag{
 	private TextTag dtTextTag = new TextTag();
-	private String name=null;
-	private String property=null;
-	private String value=null;
 	private String style=null;
 	private String styleClass=null;
 	private boolean indexed = false;
@@ -24,9 +21,6 @@ public class DatePickerTag extends BaseInputTag{
 	
 	public void release() {
 	   dtTextTag = null;
-	   name=null;
-	   property=null;
-	   value=null;
 	   style=null;
 	   styleClass=null;
 	   indexed = false;
@@ -68,7 +62,7 @@ public class DatePickerTag extends BaseInputTag{
         prepareAttribute(results, "name", sName);
         prepareAttribute(results, "maxlength", "10");
         prepareAttribute(results, "tabindex", getTabindex());
-        prepareValue(results, value);
+        prepareValue(results);
         results.append(this.prepareEventHandlers());
         results.append(this.prepareStyles());
         prepareOtherAttributes(results);
@@ -98,9 +92,14 @@ public class DatePickerTag extends BaseInputTag{
         return results.toString();
     }
     
-    protected void prepareValue(StringBuffer results, String value) throws JspException {
+    protected void prepareValue(StringBuffer results) throws JspException {
         results.append(" value=\"");
-        if (value != null) results.append(value);
+        if (value != null){
+        	results.append(value);
+        }else{
+            Object value = TagUtils.getInstance().lookup(pageContext, name, property, null);
+            results.append(this.formatValue(value));
+        }
         results.append('"');
      }
      
@@ -116,6 +115,11 @@ public class DatePickerTag extends BaseInputTag{
         return property;
      }
     
+     protected String formatValue(Object value) throws JspException {
+        if (value == null) return "";
+        return TagUtils.getInstance().filter(value.toString());
+     }
+     
 	public TextTag getDtTextTag() {
 		return dtTextTag;
 	}
@@ -128,18 +132,6 @@ public class DatePickerTag extends BaseInputTag{
 	public void setIndexed(boolean indexed) {
 		this.indexed = indexed;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getProperty() {
-		return property;
-	}
-	public void setProperty(String property) {
-		this.property = property;
-	}
 	public String getStyle() {
 		return style;
 	}
@@ -151,12 +143,6 @@ public class DatePickerTag extends BaseInputTag{
 	}
 	public void setStyleClass(String styleClass) {
 		this.styleClass = styleClass;
-	}
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
 	}
 	public String getWidth() {
 		return width;

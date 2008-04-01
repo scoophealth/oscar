@@ -16,7 +16,7 @@ import oscar.Misc;
 
 
 public class LookupTag extends BaseInputTag {
-	private String name=null;
+//	private String name=null;
 	private String formProperty=null;
 	private String codeProperty=null;
 	private String bodyProperty=null;
@@ -36,31 +36,8 @@ public class LookupTag extends BaseInputTag {
 	private String codeMaxlength=null;
 	private String bodyMaxlength=null;
 	private String tableName=null;
-	
     protected String accept = null;
 	
-/*
-	public int doStartTag() throws JspException {
-		try {
-//			HttpSession se = ((HttpServletRequest) pc.getRequest()).getSession();
-//			String p = (String) se.getAttribute("OscarPageURL");
-			
-		    String temps = "<div><html:text property='" + name + "' indexed='false' size='" + codeWidth + "' value='1234567890'></html:text>1234567</div>";
-				pageContext.getOut().print(temps);
-
-		} catch (Exception e) {
-			throw new JspTagException("An IOException occurred.");
-		}
-		
-		return SKIP_BODY;
-
-		if (reverse)
-			return EVAL_BODY_INCLUDE;
-		else
-			return SKIP_BODY;
-
-	}
-*/
     public int doStartTag() throws JspException {
         TagUtils.getInstance().write(this.pageContext, this.renderInputElement());
         return (EVAL_BODY_AGAIN);
@@ -100,7 +77,7 @@ public class LookupTag extends BaseInputTag {
         prepareAttribute(results, "accept", getAccept());
         prepareAttribute(results, "maxlength", getCodeMaxlength());
         prepareAttribute(results, "tabindex", getTabindex());
-        prepareValue(results, codeValue);
+        prepareCodeValue(results);
         results.append(this.prepareEventHandlers());
         results.append(this.prepareStyles());
         prepareOtherAttributes(results);
@@ -119,7 +96,7 @@ public class LookupTag extends BaseInputTag {
         prepareAttribute(results, "type", "text");
         prepareAttribute(results, "name", prepareName(bodyProperty, name));
         prepareAttribute(results, "maxlength", getBodyMaxlength());
-        prepareValue(results, bodyValue);
+        prepareBodyValue(results);
         results.append(this.prepareBodyStyles());
         results.append(" readonly ");
         results.append(this.getElementClose());
@@ -153,11 +130,32 @@ public class LookupTag extends BaseInputTag {
        return styles.toString();
     }
 
-    protected void prepareValue(StringBuffer results, String value) throws JspException {
+    protected void prepareCodeValue(StringBuffer results) throws JspException {
        results.append(" value=\"");
-       if (value != null) results.append(value);
+       if (codeValue != null){
+    	   results.append(codeValue);
+       }else{
+           Object value = TagUtils.getInstance().lookup(pageContext, name, codeProperty, null);
+           results.append(this.formatValue(value));
+       }
        results.append('"');
     }
+    
+    protected void prepareBodyValue(StringBuffer results) throws JspException {
+        results.append(" value=\"");
+        if (bodyValue != null){
+     	   results.append(bodyValue);
+        }else{
+            Object value = TagUtils.getInstance().lookup(pageContext, name, bodyProperty, null);
+            results.append(this.formatValue(value));
+        }
+        results.append('"');
+     }
+
+    protected String formatValue(Object value) throws JspException {
+        if (value == null) return "";
+        return TagUtils.getInstance().filter(value.toString());
+     }
     
     protected String prepareName(String property, String pre_name) throws JspException {
        if (property == null) return null;
@@ -208,14 +206,6 @@ public class LookupTag extends BaseInputTag {
 
 	public void setShowBody(boolean showBody) {
 		this.showBody = showBody;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getBodyProperty() {
