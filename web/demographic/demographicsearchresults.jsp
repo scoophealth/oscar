@@ -70,7 +70,7 @@ function checkTypeIn() {
   	if(document.titlesearch.search_mode[0].checked) {
 		var keyword = document.titlesearch.keyword.value; 
       	var keywordLowerCase = keyword.toLowerCase();
-      	document.titlesearch.keyword.value = keywordLowerCase;		alert("keyword + "+	keywordLowerCase);
+      	document.titlesearch.keyword.value = keywordLowerCase;		
 	}
   if(document.titlesearch.search_mode[2].checked) {
     if(dob.value.length==8) {
@@ -99,6 +99,17 @@ function popup(vheight,vwidth,varpage) {
   }
 }
 
+function popupEChart(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
+  var popup=window.open(page, "apptProvider", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self;
+    }    
+    popup.focus();
+  }
+}
 
 
 </SCRIPT>
@@ -123,8 +134,8 @@ function popup(vheight,vwidth,varpage) {
 <% if ( fromMessenger ) {%>
 	<! -- leave blank -->
 <%} else {%>
-
-<TH width="10%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>">Quick Links<sup>*</sup></a></b></font></TH>
+<TH width="10%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnDemoNo"/></a></b></TH>
+<TH >&nbsp;<!-- b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>">Links<sup>*</sup></a></b --></TH>
 
 <%}%>
 
@@ -243,7 +254,7 @@ function popup(vheight,vwidth,varpage) {
 %>
 
 <tr bgcolor="<%=bodd?"white":"#EEEEFF"%>">
-      <td align="center"> 
+      <td align="center" nowrap> 
 	    <%DemographicMerged dmDAO = new DemographicMerged();
             String dem_no = apptMainBean.getString(rs,"demographic_no");    
             String head = dmDAO.getHead(dem_no);
@@ -254,16 +265,19 @@ function popup(vheight,vwidth,varpage) {
 			<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name")+", "+apptMainBean.getString(rs,"first_name"))%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=apptMainBean.getString(rs,"demographic_no")%></a>	        
             <!-- Link to Oscar Message with display mode = edit ( default) -->
             <%}else{%>
-			<a title="Master Demo File" href="#" onclick="popup(600,900,'demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail')">M</a>
+			<a title="Master Demo File" href="#" onclick="popup(600,900,'demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail')"><%=dem_no%></a>
                         <!-- Rights -->
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
-	
-                        <a title="Encounter" href="#" onclick="popup(600,900,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=dem_no%>&curProviderNo=<%=rs.getString("provider_no")%>')">E</a>
-		</security:oscarSec>
-                        <!-- Rights -->
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r">
-                        <a title="Prescriptions" href="#" onclick="popup(600,900,'../oscarRx/choosePatient.do?providerNo=<%=rs.getString("provider_no")%>&demographicNo=<%=dem_no%>')">Rx</a>
-		</security:oscarSec>
+                        <td nowrap>
+                        
+                            <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
+                                
+                                <a title="Encounter" href="#" onclick="popupEChart(600,900,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=dem_no%>&curProviderNo=<%=rs.getString("provider_no")%>')">E</a>
+                            </security:oscarSec>
+                            <!-- Rights -->
+                            <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r">
+                                <a title="Prescriptions" href="#" onclick="popup(600,900,'../oscarRx/choosePatient.do?providerNo=<%=rs.getString("provider_no")%>&demographicNo=<%=dem_no%>')">Rx</a>
+                            </security:oscarSec>
+                        </td>
 	    <%}%>
       </td>
       <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%>, <%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
