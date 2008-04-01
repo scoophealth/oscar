@@ -845,7 +845,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 <logic:equal name="infirmaryView_isOscar" value="false">
 	<%String prID="1"; %> 	
 	<logic:present name="infirmaryView_programId">
-	<%prID=(String)session.getAttribute("infirmaryView_programId"); %>
+	<%prID=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID); %>
 	</logic:present>
 	<logic:iterate id="pb" name="infirmaryView_programBeans" type="org.apache.struts.util.LabelValueBean">
 	  	<%if (pb.getValue().equals(prID)) {%>
@@ -1136,7 +1136,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 <logic:equal name="infirmaryView_isOscar" value="false">
 	<%String prID="1"; %> 
 	<logic:present name="infirmaryView_programId">
-	<%prID=(String)session.getAttribute("infirmaryView_programId"); %>
+        <%prID=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID); %>
 	</logic:present>
 	<logic:iterate id="pb" name="infirmaryView_programBeans" type="org.apache.struts.util.LabelValueBean">
 	  	<%if (pb.getValue().equals(prID)) {%>
