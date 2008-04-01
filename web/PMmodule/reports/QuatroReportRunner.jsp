@@ -116,7 +116,7 @@ function submitForm(mthd)
            <td class="clsNameLabels" width="20%"><c:out value="${quatroReportRunnerForm.lblStartDate}"/></td>
            <td width="70%">
            <logic:equal name="quatroReportRunnerForm" property="startDateProperty.visible" value="visibility:visible;">
-             <quatro:datePickerTag property="startField" value="<%=startField%>" width="70%" style="<%=startDateProperty.getVisible()%>" openerForm="quatroReportRunnerForm"></quatro:datePickerTag>
+             <quatro:datePickerTag property="startField" width="70%" style="<%=startDateProperty.getVisible()%>" openerForm="quatroReportRunnerForm"></quatro:datePickerTag>
            </logic:equal>
            <logic:equal name="quatroReportRunnerForm" property="startTxtProperty.visible" value="visibility:visible;">
              <html:text property="startField" style="<%=startTxtProperty.getVisible()%>" value="<%=startField%>" />
@@ -128,7 +128,7 @@ function submitForm(mthd)
            <td class="clsNameLabels" width="20%"><c:out value="${quatroReportRunnerForm.lblEndDate}"/></td>
            <td width="70%">
            <logic:equal name="quatroReportRunnerForm" property="endDateProperty.visible" value="visibility:visible;">
-             <quatro:datePickerTag property="endField" width="70%" value="<%=endField%>" style="<%=endDateProperty.getVisible()%>" openerForm="quatroReportRunnerForm"></quatro:datePickerTag>
+             <quatro:datePickerTag property="endField" width="70%" style="<%=endDateProperty.getVisible()%>" openerForm="quatroReportRunnerForm"></quatro:datePickerTag>
            </logic:equal>
            <logic:equal name="quatroReportRunnerForm" property="endTxtProperty.visible" value="visibility:visible;">
              <html:text property="endField" style="<%=endTxtProperty.getVisible()%>" value="<%=endField%>" ></html:text>
@@ -273,8 +273,7 @@ function submitForm(mthd)
             <logic:notEmpty name="tplCriteria" property="filter.lookupTable">
               <html:hidden name="tplCriteria" property="filter.lookupTable" indexed="true" />
               <quatro:lookupTag name="tplCriteria" tableName="<%=((ReportTempCriValue)tplCriteria).getFilter().getLookupTable()%>" indexed="true" formProperty="quatroReportRunnerForm" 
-                 codeProperty ="val" bodyProperty="valdesc" codeValue="<%=((ReportTempCriValue)tplCriteria).getVal()%>" 
-                 bodyValue="<%=((ReportTempCriValue)tplCriteria).getValDesc()%>"></quatro:lookupTag>
+                 codeProperty ="val" bodyProperty="valDesc"></quatro:lookupTag>
             </logic:notEmpty>
           </logic:equal>  
           <logic:equal name="tplCriteria" property="filter.fieldType" value="D">
