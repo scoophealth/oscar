@@ -29,13 +29,13 @@
     <bean name="/PMmodule/ClientSearch2" class="org.oscarehr.PMmodule.web.ClientSearchAction2" singleton="false"  autowire="byName" />
     <bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false" autowire="byName">
         <property name="surveyManager" ref="oscarSurveyManager"/>        
-        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="caseManagementManager" ref="caseManagementManager"/>
         <property name="lookupManager" ref="lookupManager"/>       
     </bean>
     <bean name="/PMmodule/ProviderInfo" class="org.oscarehr.PMmodule.web.ProviderInfoAction" singleton="false" autowire="byName" />
     <bean name="/PMmodule/ProgramManager" class="org.oscarehr.PMmodule.web.admin.ProgramManagerAction" singleton="false"  autowire="byName" />
     <bean name="/PMmodule/ProgramManagerView" class="org.oscarehr.PMmodule.web.admin.ProgramManagerViewAction" singleton="false" autowire="byName" >
-        <property name="caseManagementManager" ref="CaseManagementManager"/>       
+        <property name="caseManagementManager" ref="caseManagementManager"/>       
     </bean>
     <bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false" autowire="byName" />
     <bean name="/PMmodule/FacilityManager" class="org.oscarehr.PMmodule.web.admin.FacilityManagerAction" singleton="false" autowire="byName" />
@@ -51,7 +51,7 @@
     <bean name="/PMmodule/Reports/ProgramActivityReport" class="org.oscarehr.PMmodule.web.reports.ActivityReportAction" singleton="false"  autowire="byName" />
     <bean name="/PMmodule/Forms/SurveyExecute" class="org.oscarehr.PMmodule.web.forms.SurveyExecuteAction" singleton="false">
         <property name="surveyManager" ref="oscarSurveyManager"/>
-        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="caseManagementManager" ref="caseManagementManager"/>
         <property name="clientManager" ref="clientManager"/>
         <property name="admissionManager" ref="admissionManager"/>
     </bean>
@@ -76,7 +76,7 @@
         <property name="programManager" ref="programManager"/>
         <property name="surveyManager" ref="oscarSurveyManager"/>
         <property name="lookupManager" ref="lookupManager"/>   
-        <property name="caseManagementManager" ref="CaseManagementManager"/>       
+        <property name="caseManagementManager" ref="caseManagementManager"/>       
     </bean>
     <bean name="/PMmodule/GenericIntake/Report" class="org.oscarehr.PMmodule.web.GenericIntakeReportAction" singleton="false"  autowire="byName" />
     <bean name="/PMmodule/EditIntake" class="org.oscarehr.PMmodule.web.EditIntakeAction" singleton="false" />
@@ -99,12 +99,12 @@
         <property name="programManager" ref="programManager"/>
         <property name="clientManager" ref="clientManager"/>
         <property name="admissionManager" ref="admissionManager"/>
-        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="caseManagementManager" ref="caseManagementManager"/>
         <property name="providerManager" ref="providerManager"/>
     </bean>
     <!--  CASE MANAGEMENT -->
     <bean name="/CaseManagementView" class="org.oscarehr.casemgmt.web.CaseManagementViewAction" singleton="false" autowire="byName">
-        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="caseManagementManager" ref="caseManagementManager"/>
         <property name="ticklerManager" ref="ticklerManager"/>
         <property name="clientImageManager" ref="ClientImageManager"/>
         <property name="roleManager" ref="roleManager"/>
@@ -113,7 +113,7 @@
         <property name="surveyManager" ref="oscarSurveyManager"/>
     </bean>
     <bean name="/CaseManagementEntry" class="org.oscarehr.casemgmt.web.CaseManagementEntryAction" singleton="false">
-        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="caseManagementManager" ref="caseManagementManager"/>
         <property name="providerManager" ref="providerManager"/>
     </bean>
     <bean name="/ClientImage" class="org.oscarehr.casemgmt.web.ClientImageAction" singleton="false">
@@ -123,7 +123,7 @@
         <property name="programManager" ref="programManager"/>
     </bean>
     <bean name="/oscarEncounter/displayIssues" class="oscar.oscarEncounter.pageUtil.EctDisplayIssuesAction" singleton="false">
-        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="caseManagementManager" ref="caseManagementManager"/>
     </bean>
 
     <!--  Vaccine -->
@@ -131,7 +131,7 @@
         <property name="programManager" ref="programManager"/>
         <property name="clientManager" ref="clientManager"/>
         <property name="admissionManager" ref="admissionManager"/>
-        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="caseManagementManager" ref="caseManagementManager"/>
         <property name="providerManager" ref="providerManager"/>
         <property name="genericIntakeManager" ref="genericIntakeManager"/>
     </bean>

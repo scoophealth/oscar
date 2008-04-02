@@ -297,16 +297,16 @@
             <bean class="org.oscarehr.PMmodule.service.BedManager" autowire="byName"/>
         </property>
     </bean>
-    <bean id="CaseManagementManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="caseManagementManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
-        <property name="target" ref="CaseManagementManagerTarget"/>
+        <property name="target" ref="caseManagementManagerTarget"/>
         <property name="transactionAttributes">
             <props>
                 <prop key="*">PROPAGATION_REQUIRED</prop>
             </props>
         </property>
     </bean>
-    <bean id="CaseManagementManagerTarget" class="org.oscarehr.casemgmt.service.CaseManagementManager">
+    <bean id="caseManagementManagerTarget" class="org.oscarehr.casemgmt.service.CaseManagementManager">
         <property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO"/>
         <property name="caseManagementIssueDAO" ref="CaseManagementIssueDAO"/>
         <property name="caseManagementCPPDAO" ref="CaseManagementCPPDAO"/>
@@ -416,7 +416,7 @@
         <property name="ticklerDAO" ref="ticklerDAOT"/>
         <property name="customFilterDAO" ref="customFilterDAOT"/>
         <property name="programManager" ref="programManager"/>
-        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="caseManagementManager" ref="caseManagementManager"/>
         <property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO"/>
     </bean>
 
