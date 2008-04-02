@@ -53,7 +53,6 @@
 </head>
 <body>
 <html:form action="/PMmodule/IntakeC.do">
-	<html:hidden property="bean.agencyId" />
 	<html:hidden property="bean.clientId" />
 	<html:hidden property="view2.tab" />
 	<input type="hidden" name="id" value="<c:out value="${requestScope.id}"/>" />

@@ -148,7 +148,7 @@ public class ProgramManager {
             return programDao.getCommunityProgramsByFacilityId(facilityId);
         }
         else {
-            return programDao.getProgramsByAgencyId("0");
+            return programDao.getPrograms();
         }
     }
 
@@ -164,8 +164,8 @@ public class ProgramManager {
         }
     }
 
-    public List<Program> getProgramsByAgencyId(String agencyId) {
-        return programDao.getProgramsByAgencyId(agencyId);
+    public List<Program> getPrograms() {
+        return programDao.getPrograms();
     }
 
     public Program[] getBedPrograms() {
@@ -342,13 +342,6 @@ public class ProgramManager {
 
     public ProgramAccess getProgramAccess(String programId, String accessTypeId) {
         return this.programAccessDAO.getProgramAccess(Long.valueOf(programId), Long.valueOf(accessTypeId));
-    }
-
-    // nys
-    public Long getAgencyIdByProgramId(String programId) {
-        Program p = programDao.getProgram(Integer.valueOf(programId));
-        Long pp = p.getAgencyId();
-        return pp;
     }
 
     public List<Program> getProgramDomain(String providerNo) {

@@ -216,26 +216,6 @@ public class ClientReferralDAO extends HibernateDaoSupport {
 
     }
 
-    public ClientReferral getReferralToRemoteAgency(long clientId, long agencyId, long programId) {
-        ClientReferral result = null;
-
-        if (clientId <= 0 || agencyId < 0 || programId <= 0) {
-            throw new IllegalArgumentException();
-        }
-
-        List results = this.getHibernateTemplate().find("from ClientReferral r where r.ClientId = ? and r.AgencyId = ? and r.ProgramId = ?", new Object[] {new Long(clientId), new Long(agencyId), new Long(programId)});
-
-        if (!results.isEmpty()) {
-            result = (ClientReferral)results.get(0);
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("getReferralToRemoteAgency: clientId=" + clientId + ",agencyId=" + agencyId + ",programId=" + programId + ",found=" + (result != null));
-        }
-
-        return result;
-    }
-
     public List search(ClientReferral referral) {
         Criteria criteria = getSession().createCriteria(ClientReferral.class);
 

@@ -49,7 +49,6 @@ public class CaseManagementNote extends BaseObject {
     private String billing_code = "";
 
     private String program_no;
-    private String agency_no;
     private String reporter_caisi_role;
     private String reporter_program_team;
     private String history;
@@ -221,18 +220,7 @@ public class CaseManagementNote extends BaseObject {
     public void setIncludeissue(boolean includeissue) {
         this.includeissue = includeissue;
     }
-
-
-    public String getAgency_no() {
-        return agency_no;
-    }
-
-
-    public void setAgency_no(String agency_no) {
-        this.agency_no = agency_no;
-    }
-
-
+    
     public String getReporter_caisi_role() {
         return reporter_caisi_role;
     }

@@ -48,9 +48,6 @@ public class GenericIntakeSearchFormBean extends ActionForm {
 
     private String localAgencyUsername;
 
-    private String remoteAgency;
-    private Long remoteAgencyDemographicNo;
-
     private Integer demographicId;
 
 	public GenericIntakeSearchFormBean() {
@@ -155,28 +152,12 @@ public class GenericIntakeSearchFormBean extends ActionForm {
         this.localMatches = localMatches;
     }
 
-    public String getRemoteAgency() {
-        return remoteAgency;
-    }
-
-    public void setRemoteAgency(String remoteAgency) {
-        this.remoteAgency = remoteAgency;
-    }
-
     public Integer getDemographicId() {
         return demographicId;
     }
 
     public void setDemographicId(Integer demographicId) {
         this.demographicId = demographicId;
-    }
-
-    public Long getRemoteAgencyDemographicNo() {
-        return remoteAgencyDemographicNo;
-    }
-
-    public void setRemoteAgencyDemographicNo(Long remoteAgencyDemographicNo) {
-        this.remoteAgencyDemographicNo = remoteAgencyDemographicNo;
     }
 
     public String getLocalAgencyUsername() {

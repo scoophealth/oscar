@@ -133,10 +133,6 @@
 				document.consentForm.elements['consent.exclusionString'].value='';
 			} 
 		}		
-		
-		function showListOfAgencies() {
-			window.open('<html:rewrite action="/PMmodule/Consent"/>?method=agency_list','appendixa','width=500,height=500');
-		}	
 	</script>
 </head>
 
@@ -302,8 +298,6 @@
 	<input type="button" value="Save the Form" onclick="submitConsent(document.consentForm,false)" />
 	<input type="button" value="Cancel"	onclick="window.close()" />
 	<input type="button" value="Print to Sign" onClick="window.print()" />
-	&nbsp;&nbsp;
-	<input type="button" value="List of Agencies" onclick="showListOfAgencies()"/>		
 	
 	</td>
 	</tr>

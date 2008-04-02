@@ -34,28 +34,10 @@ public class ProgramQueue implements Serializable {
     public static String STATUS_REMOVED = "removed";
     public static String STATUS_ACTIVE = "active";
 
-    private static final long serialVersionUID = 1L;
-
-    public static String PROP_STATUS = "Status";
-    public static String PROP_PROGRAM_NAME = "ProgramName";
-    public static String PROP_AGENCY_ID = "AgencyId";
-    public static String PROP_NOTES = "Notes";
-    public static String PROP_PROGRAM_ID = "ProgramId";
-    public static String PROP_CLIENT_FIRST_NAME = "ClientFirstName";
-    public static String PROP_PROVIDER_LAST_NAME = "ProviderLastName";
-    public static String PROP_CLIENT_ID = "ClientId";
-    public static String PROP_PROVIDER_NO = "ProviderNo";
-    public static String PROP_REFERRAL_ID = "ReferralId";
-    public static String PROP_PROVIDER_FIRST_NAME = "ProviderFirstName";
-    public static String PROP_ID = "Id";
-    public static String PROP_REFERRAL_DATE = "ReferralDate";
-    public static String PROP_TEMPORARY_ADMISSION = "TemporaryAdmission";
-    public static String PROP_CLIENT_LAST_NAME = "ClientLastName";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Long _id;// fields
-    private Long _agencyId;
     private Long _clientId;
     private java.util.Date _referralDate;
     private Long _providerNo;
@@ -91,13 +73,11 @@ public class ProgramQueue implements Serializable {
      */
     public ProgramQueue (
             Long _id,
-            Long _agencyId,
             Long _clientId,
             Long _providerNo,
             Long _programId) {
 
         this.setId(_id);
-        this.setAgencyId(_agencyId);
         this.setClientId(_clientId);
         this.setProviderNo(_providerNo);
         this.setProgramId(_programId);
@@ -131,21 +111,6 @@ public class ProgramQueue implements Serializable {
     public void setId (Long _id) {
         this._id = _id;
         this.hashCode = Integer.MIN_VALUE;
-    }
-
-    /**
-     * Return the value associated with the column: agency_id
-     */
-    public Long getAgencyId () {
-        return _agencyId;
-    }
-
-    /**
-     * Set the value related to the column: agency_id
-     * @param _agencyId the agency_id value
-     */
-    public void setAgencyId (Long _agencyId) {
-        this._agencyId = _agencyId;
     }
 
     /**

@@ -13,12 +13,11 @@
 <div class="tabs" id="tabs">
     <table cellpadding="3" cellspacing="0" border="0">
         <tr>
-            <th title="Facilities">Facilities management for agency "<c:out value="${agency.name}"/>"</th>
+            <th title="Facilities">Facilities management</th>
         </tr>
     </table>
 </div>
 <html:form action="/PMmodule/FacilityManager.do">
-    <html:hidden property="agencyId"/>
     <display:table class="simple" cellspacing="2" cellpadding="3" id="facility" name="facilities" export="false" pagesize="0" requestURI="/PMmodule/FacilityManager.do">
         <display:setProperty name="paging.banner.placement" value="bottom" />
         <display:setProperty name="paging.banner.item_name" value="agency" />

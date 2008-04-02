@@ -52,11 +52,6 @@
             </tr>
           
             <tr class="b">
-                <td width="20%">Agency:</td>
-                <td><c:out value="${agency.name}" /></td>              
-            </tr> 
-            
-            <tr class="b">
                 <td width="20%">Provider:</td>
                 <td><bean:write name="clientManagerForm" property="referral.providerFormattedName"/></td>
             </tr>
@@ -95,26 +90,6 @@
             </tr>
 
         </table>
-
-        <!--
-        public static String PROP_STATUS = "Status";
-        public static String PROP_PROGRAM_NAME = "ProgramName";
-        public static String PROP_AGENCY_ID = "AgencyId";
-        public static String PROP_NOTES = "Notes";
-        public static String PROP_PROGRAM_ID = "ProgramId";
-        public static String PROP_PROGRAM_TYPE = "programType";
-        public static String PROP_COMPLETION_NOTES = "CompletionNotes";
-        public static String PROP_PROVIDER_LAST_NAME = "ProviderLastName";
-        public static String PROP_CLIENT_ID = "ClientId";
-        public static String PROP_PROVIDER_NO = "ProviderNo";
-        public static String PROP_SOURCE_AGENCY_ID = "SourceAgencyId";
-        public static String PROP_PROVIDER_FIRST_NAME = "ProviderFirstName";
-        public static String PROP_COMPLETION_DATE = "CompletionDate";
-        public static String PROP_ID = "Id";
-        public static String PROP_REFERRAL_DATE = "ReferralDate";
-        public static String PROP_TEMPORARY_ADMISSION = "TemporaryAdmission";
-        -->
-
 
     </html:form>
     </body>

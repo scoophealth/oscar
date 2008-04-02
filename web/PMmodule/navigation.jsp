@@ -271,14 +271,6 @@
                     <span><a href="javascript:void(0)" onclick="window.open('<%=request.getContextPath()%>/PMmodule/GenericIntake/EditIntake.jsp?id=1');">Intake Form Editor</a></span>
                 </div>
             </caisi:isModuleLoad>
-            <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-                <div>
-                    <html:link action="/PMmodule/AgencyManager.do?method=view_integrator">Integrator</html:link>
-                </div>
-                <div>
-                    <html:link action="/PMmodule/AgencyManager.do?method=view_community">View Community</html:link>
-                </div>
-            </caisi:isModuleLoad>
         </div>
         
         <div>

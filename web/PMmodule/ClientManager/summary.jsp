@@ -497,35 +497,6 @@ function openSurvey() {
 	<br />
 </c:if>
 
-<c:if test="${not empty remote_consent}">
-	<div class="tabs">
-		<table cellpadding="3" cellspacing="0" border="0">
-			<tr>
-				<th>Consent (Remote)</th>
-			</tr>
-		</table>
-	</div>
-	
-	<table class="simple" cellspacing="2" cellpadding="3">
-		<thead>
-			<tr>
-				<th>Agency</th>
-				<th>Date</th>
-				<th>Status</th>
-				<th>Exclusions</th>
-			</tr>
-		</thead>
-		<tr>
-			<td><c:out value="${remote_consent_agency_name}" /></td>
-			<td><c:out value="${remote_consent_date.value}" /></td>
-			<td><c:out value="${remote_consent.value}" /></td>
-			<td><c:out value="${remote_consent_exclusions.value}" /></td>
-		</tr>
-	</table>
-	
-	<br />
-</c:if>
-
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>

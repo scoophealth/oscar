@@ -111,7 +111,7 @@
     {"search_demo_waiting_list", "select * from waitingList where demographic_no=? AND listID=?  AND is_history='N' "}, 
     {"search_future_appt", "select a.demographic_no, a.appointment_date from appointment a where a.appointment_date >= now() AND a.demographic_no=?"},
     {"search_hin", "select demographic_no, ver from demographic where hin=?"},
-    {"add2caisi_admission", "insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag, agency_id) Values(?,?,?,?,'current',0,0,0)"},
+    {"add2caisi_admission", "insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag) Values(?,?,?,?,'current',0,0)"},
     {"update_admission", "update admission set provider_no = ? where client_id = ?"},
    };
 
@@ -147,7 +147,7 @@
 //    {"search_demo_waiting_list", "select * from waitingList where demographic_no=? AND listID=?  AND is_history='N' "}, 
 //    {"search_future_appt", "select a.demographic_no, a.appointment_date from appointment a where a.appointment_date >= now() AND a.demographic_no=?"},
 //    {"search_hin", "select demographic_no, ver from demographic where hin=?"},
-//    {"add2caisi_admission", "insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag, agency_id) Values(?,?,?,?,'current',0,0,0)"},
+//    {"add2caisi_admission", "insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag) Values(?,?,?,?,'current',0,0)"},
 //    {"update_admission", "update admission set provider_no = ? where client_id = ?"},
 //   };
 

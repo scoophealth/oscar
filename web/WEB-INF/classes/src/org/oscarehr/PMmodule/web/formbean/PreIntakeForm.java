@@ -24,7 +24,6 @@ package org.oscarehr.PMmodule.web.formbean;
 
 public class PreIntakeForm {
 	
-	private String agencyId;
 	private String demographicId;
 	private String dayOfBirth;
 	private String firstName;
@@ -33,10 +32,6 @@ public class PreIntakeForm {
 	private String lastName;
 	private String monthOfBirth;
 	private String yearOfBirth;
-
-	public String getAgencyId() {
-		return agencyId;
-	}
 
 	public String getDemographicId() {
 		return demographicId;
@@ -68,10 +63,6 @@ public class PreIntakeForm {
 
 	public String getYearOfBirth() {
 		return yearOfBirth;
-	}
-
-	public void setAgencyId(String agencyId) {
-		this.agencyId = agencyId;
 	}
 
 	public void setDemographicId(String demographicId) {

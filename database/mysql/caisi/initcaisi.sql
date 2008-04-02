@@ -31,7 +31,6 @@ CREATE TABLE `admission` (
   `admission_status` varchar(24) default NULL,
   `team_id` int(10) default NULL,
   `temporary_admission_flag` tinyint(1) default NULL,
-  `agency_id` int(11) default '0',
   `radioDischargeReason` varchar(10) default '0',
   `clientstatus_id` bigint(20) DEFAULT 0,
   `automatic_discharge` tinyint(1) default 0,
@@ -335,7 +334,6 @@ CREATE TABLE `casemgmt_note` (
   `encounter_type` varchar(100) NOT NULL default '',
   `billing_code` varchar(100) NOT NULL default '',
   `program_no` varchar(20) NOT NULL default '',
-  `agency_no` varchar(20) NOT NULL default '',
   `reporter_caisi_role` varchar(20) NOT NULL default '',
   `reporter_program_team` varchar(20) NOT NULL default '',
   `history` mediumtext NOT NULL,
@@ -386,7 +384,6 @@ CREATE TABLE `client_image` (
 DROP TABLE IF EXISTS `client_referral`;
 CREATE TABLE `client_referral` (
   `referral_id` bigint(20) NOT NULL auto_increment,
-  `agency_id` bigint(20) NOT NULL default '0',
   `client_id` bigint(20) NOT NULL default '0',
   `facility_id` int(10) NOT NULL default '0',
   `referral_date` datetime default NULL,
@@ -397,7 +394,6 @@ CREATE TABLE `client_referral` (
   `completion_notes` text default NULL,
   `temporary_admission_flag` tinyint(1) default NULL,
   `completion_date` datetime default NULL,
-  `source_agency_id` bigint(20) default NULL,
   `present_problems` text default NULL,
   `radioRejectionReason` varchar(10) default '0',
   PRIMARY KEY  (`referral_id`)
@@ -1672,7 +1668,6 @@ CREATE TABLE `program` (
 index(facility_id),
 foreign key (facility_id) references facility(id),
   userDefined tinyint(1) not null,
-  `agency_id` bigint(11) NOT NULL default '0',
   `intake_program` integer unsigned,
   `name` varchar(70) NOT NULL default '',
   `descr` varchar(255) default NULL,
@@ -1788,7 +1783,6 @@ CREATE TABLE `program_provider_team` (
 DROP TABLE IF EXISTS `program_queue`;
 CREATE TABLE `program_queue` (
   `queue_id` bigint(20) NOT NULL auto_increment,
-  `agency_id` bigint(20) NOT NULL default '0',
   `client_id` bigint(20) NOT NULL default '0',
   `referral_date` datetime default NULL,
   `provider_no` bigint(20) NOT NULL default '0',
@@ -2614,8 +2608,7 @@ a.client_id client_id,
   r.name room_name,
   pc.name client_prog_st_name,
   d.last_name last_name,
-  d.first_name first_name,
-  p.agency_id orgCd
+  d.first_name first_name
 FROM
 	admission a left join program_clientstatus pc on a.program_id=pc.program_id  
 	join program p on a.program_id= p.program_id 	

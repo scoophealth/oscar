@@ -1415,9 +1415,6 @@
         <action path="/PMmodule/AgencyManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="agencyManagerForm" scope="session">
             <forward name="view" path="page.pmm.admin.agency.view" />
             <forward name="edit" path="page.pmm.admin.agency.edit" />
-            <forward name="view_community" path="page.pmm.admin.agency.view_community" />
-            <forward name="view_integrator" path="page.pmm.admin.agency.view_integrator" />
-            <forward name="edit_integrator" path="page.pmm.admin.agency.edit_integrator" />            
         </action>
         <action path="/PMmodule/BedManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="bedManagerForm" scope="session">
             <forward name="manage" path="page.pmm.admin.beds.manage"/>
@@ -1474,7 +1471,6 @@
             <forward name="formB" path="/PMmodule/Consent/consentFormB.jsp" />
             <forward name="interview" path="/PMmodule/Consent/consentInterview.jsp" />
             <forward name="success" path="/PMmodule/Consent/exit.jsp" />
-            <forward name="agency_list" path="/PMmodule/Consent/agencyList.jsp" />
         </action>
         <action path="/PMmodule/StaffManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="staffManagerForm" scope="request">
             <forward name="list" path="page.pmm.staff.list" />

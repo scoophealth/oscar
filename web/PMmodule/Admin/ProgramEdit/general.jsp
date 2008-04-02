@@ -30,7 +30,6 @@
 	}
 </script>
 <html:hidden property="program.numOfMembers" />
-<html:hidden property="program.agencyId" value="0" />
 <html:hidden property="program.id"/>
 <%
 Program p = (Program)request.getAttribute("oldProgram");

@@ -206,19 +206,11 @@ public class ProgramDao extends HibernateDaoSupport {
         return rs;
     }
  
-    public List<Program> getProgramsByAgencyId(String agencyId) {
-        if (agencyId == null || agencyId.length() <= 0) {
-            return null;
-        }
-
-        String queryStr = "FROM Program p WHERE p.agencyId = ? AND p.type != 'community' ORDER BY p.name";
+    public List<Program> getPrograms() {
+        String queryStr = "FROM Program p WHERE p.type != 'community' ORDER BY p.name";
 
         @SuppressWarnings("unchecked")
-        List<Program> rs = getHibernateTemplate().find(queryStr, Long.parseLong(agencyId));
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProgramsByAgencyId: # of programs: " + rs.size());
-        }
+        List<Program> rs = getHibernateTemplate().find(queryStr);
 
         return rs;
     }

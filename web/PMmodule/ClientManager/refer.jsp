@@ -55,7 +55,7 @@
 			url += '?method=search_programs&program.name=' + programName + '&program.type=' + programType;
 			url += '&program.manOrWoman='+manOrWoman+'&program.transgender='+transgender+'&program.firstNation='+firstNation+'&program.bedProgramAffiliated='+bedProgramAffiliated+'&program.alcohol='+alcohol+'&program.abstinenceSupport='+abstinenceSupport+'&program.physicalHealth='+physicalHealth+'&program.mentalHealth='+mentalHealth+'&program.housing='+housing;
 			//url += '&program.manOrWoman='+manOrWoman;
-			url += '&formName=clientManagerForm&formElementName=program.name&formElementId=program.id&formElementAgencyId=program.agencyId&formElementType=program.type&submit=true';
+			url += '&formName=clientManagerForm&formElementName=program.name&formElementId=program.id&formElementType=program.type&submit=true';
 		
 		window.open(url, "program_search", "width=800, height=600, scrollbars=1,location=1,status=1");
 	}
@@ -112,7 +112,6 @@
 	</tr>
 </table>
 </div>
-<html:hidden property="program.agencyId" />
 <html:hidden property="program.id" />
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">

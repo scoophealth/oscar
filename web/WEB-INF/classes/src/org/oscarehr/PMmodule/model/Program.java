@@ -54,7 +54,6 @@ public class Program implements Serializable {
     private String emergencyNumber;
     private String location;
     private String name;
-    private Long agencyId;
     private boolean holdingTank;
     private boolean allowBatchAdmission;
     private boolean allowBatchDischarge;
@@ -102,7 +101,7 @@ public class Program implements Serializable {
      * Constructor for required fields
      */
     public Program(Integer id, boolean isUserDefined, Integer maxAllowed, String address, String phone, String fax, String url, String email,
-            String emergencyNumber, String name, Long agencyId, boolean holdingTank, String programStatus) {
+            String emergencyNumber, String name, boolean holdingTank, String programStatus) {
 
         setId(id);
         setUserDefined(isUserDefined);
@@ -114,7 +113,6 @@ public class Program implements Serializable {
         setEmail(email);
         setEmergencyNumber(emergencyNumber);
         setName(name);
-        setAgencyId(agencyId);
         setHoldingTank(holdingTank);
         setProgramStatus(programStatus);
     }
@@ -398,24 +396,7 @@ public class Program implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    /**
-     * Return the value associated with the column: agency_id
-     */
-    public Long getAgencyId() {
-        return agencyId;
-    }
-
-    /**
-     * Set the value related to the column: agency_id
-     * 
-     * @param agencyId
-     *            the agency_id value
-     */
-    public void setAgencyId(Long agencyId) {
-        this.agencyId = agencyId;
-    }
-
+    
     /**
      * Return the value associated with the column: holding_tank
      */

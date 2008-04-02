@@ -371,9 +371,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         ProgramManager programManager = (ProgramManager) ctx.getBean("programManager");
         AdmissionManager admissionManager = (AdmissionManager) ctx.getBean("admissionManager");
 
-        // agency manager not implemented yet.
-        note.setAgency_no("0");
-
         String role = null;
         String team = null;
 

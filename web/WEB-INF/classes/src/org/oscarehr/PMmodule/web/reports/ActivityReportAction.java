@@ -71,7 +71,7 @@ public class ActivityReportAction extends DispatchAction {
 	}
 	
 	public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		request.setAttribute("programs",programManager.getProgramsByAgencyId("0"));
+		request.setAttribute("programs",programManager.getPrograms());
 		
 		return mapping.findForward("form");
 	}
@@ -92,7 +92,7 @@ public class ActivityReportAction extends DispatchAction {
 		
 		Map summaryMap = new LinkedHashMap();
 		
-		List programs = programManager.getProgramsByAgencyId("0");
+		List programs = programManager.getPrograms();
 		for(Iterator iter=programs.iterator();iter.hasNext();) {
 			Program p = (Program)iter.next();
 			searchBean.setProgramId(p.getId());

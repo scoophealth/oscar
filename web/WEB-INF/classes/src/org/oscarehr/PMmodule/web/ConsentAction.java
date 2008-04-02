@@ -23,7 +23,6 @@
 package org.oscarehr.PMmodule.web;
 
 import java.sql.Timestamp;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +34,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Consent;
 import org.oscarehr.PMmodule.model.ConsentInterview;
 import org.oscarehr.PMmodule.model.Demographic;
@@ -155,17 +153,6 @@ public class ConsentAction extends BaseAction {
 		return mapping.findForward("success");
 	}
 	
-	
-	public ActionForward agency_list(ActionMapping mapping,	ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		
-		Map agencyMap = Agency.getAgencyMap();
-		if(agencyMap == null) {
-			
-		}
-		request.setAttribute("agencies", agencyMap);
-		
-		return mapping.findForward("agency_list");
-	}
 	
 	private String getRandomForm() {
 		int d = (int)(Math.random()*2);

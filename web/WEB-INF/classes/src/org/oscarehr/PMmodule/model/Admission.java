@@ -51,9 +51,8 @@ public class Admission implements Serializable {
 	/**
 	 * Constructor for required fields
 	 */
-	public Admission(Long id, Long agencyId, String providerNo, Integer clientId, Integer programId) {
+	public Admission(Long id, String providerNo, Integer clientId, Integer programId) {
 		this.setId(id);
-		this.setAgencyId(agencyId);
 		this.setProviderNo(providerNo);
 		this.setClientId(clientId);
 		this.setProgramId(programId);
@@ -75,7 +74,6 @@ public class Admission implements Serializable {
 	private String programType;
 	private int hashCode = Integer.MIN_VALUE;
 	private Long id;
-	private Long agencyId;
 	private String providerNo;
 	private String admissionStatus;
 	private Integer clientId;
@@ -300,21 +298,6 @@ public class Admission implements Serializable {
     public void setId(Long id) {
     	this.id = id;
     	this.hashCode = Integer.MIN_VALUE;
-    }
-
-	/**
-     * Return the value associated with the column: agency_id
-     */
-    public Long getAgencyId() {
-    	return agencyId;
-    }
-
-	/**
-     * Set the value related to the column: agency_id
-     * @param agencyId the agency_id value
-     */
-    public void setAgencyId(Long agencyId) {
-    	this.agencyId = agencyId;
     }
 
 	/**

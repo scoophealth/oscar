@@ -97,7 +97,7 @@
 <div class="tabs" id="tabs">
     <table cellpadding="3" cellspacing="0" border="0">
         <tr>
-            <th title="Manage beds">Manage beds and rooms for facility "<c:out value="${sessionScope.bedManagerForm.facility.name}"/>" in agency "<c:out value="${agency.name}"/>"</th>
+            <th title="Manage beds">Manage beds and rooms for facility "<c:out value="${sessionScope.bedManagerForm.facility.name}"/>"</th>
         </tr>
     </table>
 </div>
@@ -370,7 +370,7 @@
 </tr>
 </table>
 <div>
-    <p><a href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=list&agencyId=<c:out value="${agency.id}"/>" />Return to facilities list</a></p>
+    <p><a href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=list" />Return to facilities list</a></p>
 </div>
 
 </html:form>

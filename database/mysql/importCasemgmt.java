@@ -71,8 +71,8 @@ public class importCasemgmt {
 
                         System.out.println("Creating OSCAR program");
                         
-			int result = stmt.executeUpdate("insert into program (agency_id,name,max_allowed,type,allow_batch_admission,allow_batch_discharge,hic) " + 
-                                "Values(0,'OSCAR','99999','Bed',0,0,0)", Statement.RETURN_GENERATED_KEYS);
+			int result = stmt.executeUpdate("insert into program (name,max_allowed,type,allow_batch_admission,allow_batch_discharge,hic) " + 
+                                "Values('OSCAR','99999','Bed',0,0,0)", Statement.RETURN_GENERATED_KEYS);
                         
                         rs = stmt.getGeneratedKeys();
                         
@@ -169,8 +169,7 @@ public class importCasemgmt {
                         
                         sql = "select demographic_no, date_joined, provider_no from demographic";
                         rs = stmt.executeQuery(sql);
-                        insert = con.prepareStatement("insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag," +
-                                "agency_id) Values(?,'" + programId +"',?,?,'current',0,0,0)");
+                        insert = con.prepareStatement("insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag) Values(?,'" + programId +"',?,?,'current',0,0)");
                         
                         int i = 1;
                         while( rs.next() ) {                            
@@ -198,9 +197,9 @@ public class importCasemgmt {
                                 "mx using(eChartId) where e.eChartId = mx.eChartId and e.subject != 'SPLIT CHART'";
                         
                         rs = stmt.executeQuery(sql);
-                        insert = con.prepareStatement("insert into casemgmt_note (update_date, demographic_no, provider_no, note,  signed, signing_provider_no, include_issue_innote, program_no, agency_no, " +
+                        insert = con.prepareStatement("insert into casemgmt_note (update_date, demographic_no, provider_no, note,  signed, signing_provider_no, include_issue_innote, program_no, " +
                                 "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,true,'doctor doe'," +
-                                "false,'" + programId + "','0','1','0',?,'','0',?,?)");
+                                "false,'" + programId + "','1','0',?,'','0',?,?)");
                         PreparedStatement cppInsert = con.prepareStatement("insert into casemgmt_cpp (demographic_no,provider_no,socialHistory,familyHistory,medicalHistory,ongoingConcerns," +
                                 "reminders,update_date) Values(?,?,?,?,?,?,?,?)");
                         UUID uuid;

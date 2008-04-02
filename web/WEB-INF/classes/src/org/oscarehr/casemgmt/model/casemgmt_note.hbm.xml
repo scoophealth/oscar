@@ -32,7 +32,6 @@
 		<property name="encounter_type" />
 		<property name="billing_code" />
 		<property name="program_no" />
-		<property name="agency_no" />
 		<property name="reporter_caisi_role" />
 		<property name="reporter_program_team" />
 		<property name="history" />
@@ -57,7 +56,7 @@
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
                 select casemgmt_note.note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
-                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, agency_no as {cmn.agency_no}, 
+                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, 
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
                     (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
@@ -70,7 +69,7 @@
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
                 select casemgmt_note.note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
-                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, agency_no as {cmn.agency_no}, 
+                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, 
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
                     (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
@@ -83,7 +82,7 @@
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
                     select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
-                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, agency_no as {cmn.agency_no}, 
+                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
                     (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
@@ -96,7 +95,7 @@
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
                 select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
-                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, agency_no as {cmn.agency_no}, 
+                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
                     (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
@@ -109,7 +108,7 @@
 <!-- generated sql
 select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, observation_date as observat3_82_0_, demographic_no as demograp4_82_0_, provider_no as provider5_82_0_, note as note82_0_,
                     signed as signed82_0_, include_issue_innote as include8_82_0_, signing_provider_no as signing9_82_0_,
-                    encounter_type as encounter10_82_0_, billing_code as billing11_82_0_, program_no as program12_82_0_, agency_no as agency13_82_0_, 
+                    encounter_type as encounter10_82_0_, billing_code as billing11_82_0_, program_no as program12_82_0_,
                     reporter_caisi_role as reporter14_82_0_, reporter_program_team as reporter15_82_0_, history as history82_0_,
                     uuid as uuid82_0_, password as password82_0_, locked as locked82_0_, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as formula16_0_,
                     (select p.name from program p where p.program_id = program_no) as formula17_0_, 
@@ -122,7 +121,7 @@ select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, obser
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
                     select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
-                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, agency_no as {cmn.agency_no}, 
+                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
                     (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
@@ -135,7 +134,7 @@ select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, obser
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
                 select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
-                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, agency_no as {cmn.agency_no}, 
+                    encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
                     (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 

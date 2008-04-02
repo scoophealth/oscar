@@ -71,23 +71,23 @@ if (!Array.prototype.indexOf)
 }
 
 
-		function selectProgram(agencyId,id,type) {
+		function selectProgram(id,type) {
 			var programId=Number(id);
-			if (agencyId==0 && gender == 'M')
+			if (gender == 'M')
 			{
 				if (programFemaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
 				{
 					return error("This gender not allowed in selected program.");
 				}
 			}
-			if (agencyId==0 && gender == 'F')
+			if (gender == 'F')
 			{
 				if (programMaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
 				{
 					return error("This gender not allowed in selected program.");
 				}
 			}
-			if (agencyId==0 && gender == 'T')
+			if (gender == 'T')
 			{
 				if (programFemaleOnly.indexOf(programId)>=0 ||  programMaleOnly.indexOf(programId)>=0)
 				{
@@ -95,13 +95,12 @@ if (!Array.prototype.indexOf)
 				}
 			}		
 		
-			if (agencyId==0 && !validAgeRangeForProgram(programId,age))
+			if (!validAgeRangeForProgram(programId,age))
 			{
 				return error("This client does not meet the age range requirements for this program.");
 			}
 		
 			opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("formElementId")%>'].value=id;
-			opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("formElementAgencyId")%>'].value=agencyId;
 			
 			<% if(request.getParameter("submit") != null && request.getParameter("submit").equals("true")) { %>
 				opener.document.<%=request.getParameter("formName")%>.submit();
@@ -126,7 +125,7 @@ if (!Array.prototype.indexOf)
 		<display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="programs" pagesize="200" requestURI="/PMmodule/ClientManager.do">
 			<display:setProperty name="paging.banner.placement" value="bottom" />
 			<display:column sortable="true" title="Name">
-				<a href="#javascript:void(0);" onclick="selectProgram('<c:out value="${program.agencyId}" />','<c:out value="${program.id}" />','<c:out value="${program.type}" />');"><c:out value="${program.name}" /></a>
+				<a href="#javascript:void(0);" onclick="selectProgram('<c:out value="${program.id}" />','<c:out value="${program.type}" />');"><c:out value="${program.name}" /></a>
 			</display:column>
 			<display:column property="type" sortable="true" title="Type"></display:column>
 			<display:column sortable="false" title="Participation">

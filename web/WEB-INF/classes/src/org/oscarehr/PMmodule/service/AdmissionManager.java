@@ -205,7 +205,6 @@ public class AdmissionManager {
 		newAdmission.setProgramId(program.getId());
 		newAdmission.setProviderNo(providerNo);
 		newAdmission.setTeamId(0);
-		newAdmission.setAgencyId(new Long(0));
 		newAdmission.setTemporaryAdmission(tempAdmission);
 		newAdmission.setAdmissionFromTransfer(fromTransfer);
 		
@@ -285,7 +284,6 @@ public class AdmissionManager {
 		newAdmission.setProgramId(program.getId());
 		newAdmission.setProviderNo(providerNo);
 		newAdmission.setTeamId(0);
-		newAdmission.setAgencyId(new Long(0));
 		saveAdmission(newAdmission);
 	}
 
@@ -432,7 +430,6 @@ public class AdmissionManager {
 		admission.setProgramId(communityProgramId);
 		admission.setProviderNo(providerNo);
 		admission.setTeamId(0);
-		admission.setAgencyId(0L);
 		admission.setTemporaryAdmission(false);
 		admission.setRadioDischargeReason(radioDischargeReason);
 		admission.setClientStatusId(0);

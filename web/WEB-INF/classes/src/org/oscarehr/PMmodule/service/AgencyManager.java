@@ -37,10 +37,6 @@ public class AgencyManager {
 		this.dao = dao;
 	}
 
-	public Agency getAgency(String agencyId) {
-		return dao.getAgency(Long.valueOf(agencyId));
-	}
-
 	public Agency getLocalAgency() {
 		Agency agency = dao.getLocalAgency();
 

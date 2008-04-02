@@ -95,12 +95,6 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         return forwardIntakeEditUpdate(mapping, intakeSearchBean.getDemographicId());
     }
 
-    public ActionForward copyRemote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
-
-        return forwardIntakeEditCreateBasedOnRemote(mapping, request, intakeSearchBean.getRemoteAgency(), intakeSearchBean.getRemoteAgencyDemographicNo());
-    }
-
     private List<Demographic> localSearch(GenericIntakeSearchFormBean intakeSearchBean, boolean allowOnlyOptins) {
         ClientSearchFormBean clientSearchBean = new ClientSearchFormBean();
         clientSearchBean.setFirstName(intakeSearchBean.getFirstName());
@@ -122,16 +116,6 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         StringBuilder parameters = new StringBuilder(PARAM_START);
         parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_CREATE).append(PARAM_AND);
         parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
-
-        return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
-    }
-
-    protected ActionForward forwardIntakeEditCreateBasedOnRemote(ActionMapping mapping, HttpServletRequest request, String remoteAgency, Long remoteAgencyDemographicNo) {
-        StringBuilder parameters = new StringBuilder(PARAM_START);
-        parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_CREATE_REMOTE).append(PARAM_AND);
-        parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
-        parameters.append(PARAM_AND).append(REMOTE_AGENCY).append(PARAM_EQUALS).append(remoteAgency);
-        parameters.append(PARAM_AND).append(REMOTE_AGENCY_DEMOGRAPHIC_NO).append(PARAM_EQUALS).append(remoteAgencyDemographicNo);
 
         return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
     }

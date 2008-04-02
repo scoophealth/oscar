@@ -36,7 +36,6 @@
 		<property name="emergencyNumber" column="emergency_number" type="string" not-null="false" length="255" />
 		<property name="location" column="location" type="string" not-null="false" length="70" />
 		<property name="name" column="name" type="string" not-null="true" length="70" />
-		<property name="agencyId" column="agency_id" type="java.lang.Long" not-null="true" length="11" />
 		<property name="holdingTank" column="holding_tank" type="boolean" not-null="true" length="1" />
 		<property name="allowBatchAdmission" column="allow_batch_admission" type="boolean" not-null="false" length="1" />
 		<property name="allowBatchDischarge" column="allow_batch_discharge" type="boolean" not-null="false" length="1" />

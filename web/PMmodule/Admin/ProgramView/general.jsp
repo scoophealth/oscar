@@ -51,10 +51,6 @@
 		<td><c:out value="${program.type}" /></td>
 	</tr>
 	<tr class="b">
-		<td width="20%">Agency:</td>
-		<td><c:out value="${agency.name}" /></td>
-	</tr>
-	<tr class="b">
 		<td width="20%">Location:</td>
 		<td><c:out value="${program.location}" /></td>
 	</tr>

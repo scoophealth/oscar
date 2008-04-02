@@ -106,7 +106,6 @@ public class IntakeAAction2 extends BaseAction {
         Demographic demographicInfo = (Demographic) request.getSession().getAttribute("demographic");
         if (demographicInfo != null) {
             log.debug("have demographic information from integrator/local");
-            intakeFormBean.setAgencyId(demographicInfo.getAgencyId());
             intakeFormBean.setDemographicId(demographicInfo.getDemographicNo().longValue());
             //request.getSession().setAttribute("demographic",null);
         }

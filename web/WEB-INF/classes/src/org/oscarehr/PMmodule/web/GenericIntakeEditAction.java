@@ -124,13 +124,10 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
         }
 
-
         Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
         
         setBeanProperties(formBean, intake, null, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency()
                 .areExternalProgramsVisible(intakeType), null, null, null,facilityId);
-        formBean.setRemoteAgency(getRemoteAgency(request));
-        formBean.setRemoteAgencyDemographicNo(getRemoteAgencyDemographicNo(request));
 
         
         return mapping.findForward(EDIT);

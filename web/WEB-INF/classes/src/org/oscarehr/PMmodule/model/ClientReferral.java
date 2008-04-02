@@ -34,29 +34,9 @@ public class ClientReferral implements Serializable {
     public static String STATUS_UNKNOWN = "unknown";
     public static String STATUS_PENDING = "pending";
 
-    private static final long serialVersionUID = 1L;
-    public static String PROP_STATUS = "Status";
-    public static String PROP_PROGRAM_NAME = "ProgramName";
-    public static String PROP_AGENCY_ID = "AgencyId";
-    public static String PROP_NOTES = "Notes";
-    public static String PROP_PROGRAM_ID = "ProgramId";
-    public static String PROP_PROGRAM_TYPE = "programType";
-    public static String PROP_COMPLETION_NOTES = "CompletionNotes";
-    public static String PROP_PROVIDER_LAST_NAME = "ProviderLastName";
-    public static String PROP_CLIENT_ID = "ClientId";
-    public static String PROP_PROVIDER_NO = "ProviderNo";
-    public static String PROP_SOURCE_AGENCY_ID = "SourceAgencyId";
-    public static String PROP_PROVIDER_FIRST_NAME = "ProviderFirstName";
-    public static String PROP_COMPLETION_DATE = "CompletionDate";
-    public static String PROP_ID = "Id";
-    public static String PROP_REFERRAL_DATE = "ReferralDate";
-    public static String PROP_TEMPORARY_ADMISSION = "TemporaryAdmission";
-
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Long _id;// fields
-    private Long _sourceAgencyId;
-    private Long _agencyId;
     private Long _clientId;
     private java.util.Date _referralDate;
     private String _providerNo;
@@ -90,11 +70,9 @@ public class ClientReferral implements Serializable {
     /**
      * Constructor for required fields
      */
-    public ClientReferral(Long _id, Long _sourceAgencyId, Long _agencyId, Long _clientId, String _providerNo, Long _programId) {
+    public ClientReferral(Long _id, Long _clientId, String _providerNo, Long _programId) {
 
         this.setId(_id);
-        this.setSourceAgencyId(_sourceAgencyId);
-        this.setAgencyId(_agencyId);
         this.setClientId(_clientId);
         this.setProviderNo(_providerNo);
         this.setProgramId(_programId);
@@ -126,40 +104,6 @@ public class ClientReferral implements Serializable {
     public void setId(Long _id) {
         this._id = _id;
         this.hashCode = Integer.MIN_VALUE;
-    }
-
-    /**
-     * Return the value associated with the column: source_agency_id
-     */
-    public Long getSourceAgencyId() {
-        return _sourceAgencyId;
-    }
-
-    /**
-     * Set the value related to the column: source_agency_id
-     * 
-     * @param _sourceAgencyId
-     *            the source_agency_id value
-     */
-    public void setSourceAgencyId(Long _sourceAgencyId) {
-        this._sourceAgencyId = _sourceAgencyId;
-    }
-
-    /**
-     * Return the value associated with the column: agency_id
-     */
-    public Long getAgencyId() {
-        return _agencyId;
-    }
-
-    /**
-     * Set the value related to the column: agency_id
-     * 
-     * @param _agencyId
-     *            the agency_id value
-     */
-    public void setAgencyId(Long _agencyId) {
-        this._agencyId = _agencyId;
     }
 
     /**

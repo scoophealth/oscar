@@ -8,8 +8,6 @@
 <html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateSearchForm()">
 <html:hidden property="method" />
 <html:hidden property="demographicId" />
-<html:hidden property="remoteAgency" />
-<html:hidden property="remoteAgencyDemographicNo" />
 
 <table id="genericIntakeSearch" width="50%">
     <tr>

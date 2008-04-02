@@ -6,7 +6,6 @@ import org.oscarehr.PMmodule.model.Facility;
 /**
  */
 public class FacilityManagerForm extends ActionForm {
-    Integer agencyId;
     private Facility facility;
 
     public Facility getFacility() {
@@ -16,13 +15,4 @@ public class FacilityManagerForm extends ActionForm {
     public void setFacility(Facility facility) {
         this.facility = facility;
     }
-
-    public Integer getAgencyId() {
-        return agencyId;
-    }
-
-    public void setAgencyId(Integer agencyId) {
-        this.agencyId = agencyId;
-    }
-
 }

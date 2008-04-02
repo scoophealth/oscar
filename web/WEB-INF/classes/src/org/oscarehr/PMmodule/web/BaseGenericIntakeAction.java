@@ -39,8 +39,6 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 	protected static final String TYPE = "type";
 	protected static final String CLIENT_ID = "clientId";
 	protected static final String INTAKE_ID = "intakeId";
-    protected static final String REMOTE_AGENCY = "remoteAgency";
-    protected static final String REMOTE_AGENCY_DEMOGRAPHIC_NO = "remoteAgencyDemographicNo";
     protected static final String CLIENT_EDIT_ID = "id";
 	protected static final String PROGRAM_ID = "programId";
 	protected static final String START_DATE = "startDate";
@@ -108,14 +106,6 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 	protected Integer getIntakeId(HttpServletRequest request) {
 		return Integer.valueOf(getParameter(request, INTAKE_ID));
 	}
-
-    protected Long getRemoteAgencyDemographicNo(HttpServletRequest request) {
-        return Long.valueOf(getParameter(request, REMOTE_AGENCY_DEMOGRAPHIC_NO));
-    }
-
-    protected String getRemoteAgency(HttpServletRequest request) {
-        return getParameter(request, REMOTE_AGENCY);
-    }
 
     protected Integer getProgramId(HttpServletRequest request) {
 		Integer programId = null;

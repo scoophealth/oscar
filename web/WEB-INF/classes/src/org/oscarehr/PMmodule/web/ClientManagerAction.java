@@ -382,12 +382,9 @@ public class ClientManagerAction extends BaseAction {
         Program p = (Program) clientForm.get("program");
 
         long clientId = Long.parseLong(request.getParameter("id"));
-        long agencyId = p.getAgencyId();
         int programId = p.getId();
         String providerId =getProviderNo(request);
 
-        referral.setAgencyId(agencyId);
-        referral.setSourceAgencyId(-1l);
         referral.setClientId(clientId);
         referral.setProgramId((long) programId);
         referral.setProviderNo(providerId);
@@ -398,9 +395,7 @@ public class ClientManagerAction extends BaseAction {
         referral.setReferralDate(new Date());
         referral.setProgramType(p.getType());
 
-        if (agencyId == 0) {
-            referToLocalAgencyProgram(request, clientForm, referral, p);
-        }
+        referToLocalAgencyProgram(request, clientForm, referral, p);
 
         setEditAttributes(form, request, String.valueOf(clientId));
         clientForm.set("program", new Program());
@@ -463,13 +458,10 @@ public class ClientManagerAction extends BaseAction {
         String id = request.getParameter("id");
         setEditAttributes(form, request, id);
 
-        long agencyId = p.getAgencyId();
         long programId = p.getId();
-        if (agencyId == 0) {
-            Program program = programManager.getProgram(programId);
-            p.setName(program.getName());
-            request.setAttribute("program", program);
-        }
+        Program program = programManager.getProgram(programId);
+        p.setName(program.getName());
+        request.setAttribute("program", program);
 
         request.setAttribute("do_refer", true);
         request.setAttribute("temporaryAdmission", programManager.getEnabled());
@@ -1065,13 +1057,11 @@ public class ClientManagerAction extends BaseAction {
             ProgramProvider program = (ProgramProvider) programDomain.get(0);
             // refer/admin client to service program associated with this user
             ClientReferral referral = new ClientReferral();
-            referral.setAgencyId((long) 0);
             referral.setClientId(new Long(demographicNo));
             referral.setNotes("ER Automated referral\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason());
             referral.setProgramId(program.getProgramId().longValue());
             referral.setProviderNo(getProviderNo(request));
             referral.setReferralDate(new Date());
-            referral.setSourceAgencyId((long) 0);
             referral.setStatus(ClientReferral.STATUS_ACTIVE);
 
             Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(program.getProgramId()), Integer.valueOf(demographicNo));
@@ -1146,7 +1136,6 @@ public class ClientManagerAction extends BaseAction {
     public ActionForward view_referral(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String referralId = request.getParameter("referralId");
         ClientReferral referral = clientManager.getClientReferral(referralId);
-        Agency agency = agencyManager.getAgency("" + referral.getAgencyId());
         Demographic client = clientManager.getClientByDemographicNo("" + referral.getClientId());
 
         String providerNo = referral.getProviderNo();
@@ -1154,7 +1143,6 @@ public class ClientManagerAction extends BaseAction {
         DynaActionForm clientForm = (DynaActionForm) form;
 
         clientForm.set("referral", referral);
-        clientForm.set("agency", agency);
         clientForm.set("client", client);
 
         clientForm.set("provider", provider);
@@ -1165,7 +1153,6 @@ public class ClientManagerAction extends BaseAction {
     public ActionForward view_admission(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String admissionId = request.getParameter("admissionId");
         Admission admission = admissionManager.getAdmission(Long.valueOf(admissionId));
-        Agency agency = agencyManager.getAgency("" + admission.getAgencyId());
         Demographic client = clientManager.getClientByDemographicNo("" + admission.getClientId());
         String providerNo = admission.getProviderNo();
         Provider provider = providerManager.getProvider(providerNo);
@@ -1173,7 +1160,6 @@ public class ClientManagerAction extends BaseAction {
         DynaActionForm clientForm = (DynaActionForm) form;
         clientForm.set("admission", admission);
         clientForm.set("client", client);
-        clientForm.set("agency", agency);
         clientForm.set("provider", provider);
 
         return mapping.findForward("view_admission");

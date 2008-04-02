@@ -23,15 +23,8 @@
 package org.oscarehr.PMmodule.web.formbean;
 
 public class IntakeFormBean {
-	private String agencyId;
 	private long demographicId;
 	
-	public String getAgencyId() {
-		return agencyId;
-	}
-	public void setAgencyId(String agencyId) {
-		this.agencyId = agencyId;
-	}
 	public long getDemographicId() {
 		return demographicId;
 	}

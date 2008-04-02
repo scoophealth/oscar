@@ -62,10 +62,6 @@
                 <td><bean:write name="clientManagerForm" property="admission.programType"/></td>
             </tr>
             <tr class="b">
-                <td width="20%">Agency:</td>
-                <td><c:out value="${agency.name}" /></td>
-            </tr>
-            <tr class="b">
                 <td width="20%">Client status:</td>
                 <td><bean:write name="clientManagerForm" property="admission.clientStatus"/></td>
             </tr>

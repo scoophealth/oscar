@@ -106,8 +106,6 @@ public class ReceptionistReportAction extends DispatchAction {
 	public ActionForward show_report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String clientId = request.getParameter("id");
 		
-		List programs = programManager.getProgramsByAgencyId("0");
-		
 		Demographic client = clientManager.getClientByDemographicNo(clientId);
 		
 		if(client == null) {

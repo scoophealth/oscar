@@ -123,7 +123,6 @@ public class ClientManager {
 
         if (referral.getStatus().equalsIgnoreCase(ClientReferral.STATUS_ACTIVE)) {
             ProgramQueue queue = new ProgramQueue();
-            queue.setAgencyId(referral.getAgencyId());
             queue.setClientId(referral.getClientId());
             queue.setNotes(referral.getNotes());
             queue.setProgramId(referral.getProgramId());
@@ -241,11 +240,6 @@ public class ClientManager {
 
     public void saveClient(Demographic client) {
         dao.saveClient(client);
-    }
-
-    public ClientReferral getReferralToRemoteAgency(long clientId, long agencyId, long programId) {
-        referralDAO.getReferralToRemoteAgency(clientId, agencyId, programId);
-        return null;
     }
 
     public DemographicExt getDemographicExt(String id) {

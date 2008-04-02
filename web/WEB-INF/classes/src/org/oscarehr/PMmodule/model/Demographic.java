@@ -78,7 +78,6 @@ public class Demographic implements Serializable {
     private String email;
     private String yearOfBirth;
     private Date effDate;
-    private String agencyId;
     private String links;
     private DemographicExt[] extras;
 
@@ -749,12 +748,9 @@ public class Demographic implements Serializable {
             String[] links = getLinks().split(",");
             for (int x = 0; x < links.length; x++) {
                 String components[] = links[x].split("/");
-                String agencyId = components[0];
                 if (response.length() > 0) {
                     response.append(",");
                 }
-                response.append(Agency.getAgencyName(Long.valueOf(agencyId)));
-
             }
         }
 
@@ -789,14 +785,6 @@ public class Demographic implements Serializable {
 
     public void setLinks(String links) {
         this.links = links;
-    }
-
-    public String getAgencyId() {
-        return agencyId;
-    }
-
-    public void setAgencyId(String agencyId) {
-        this.agencyId = agencyId;
     }
 
     public Integer getHeadRecord() {

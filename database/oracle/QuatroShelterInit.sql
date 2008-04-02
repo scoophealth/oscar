@@ -38,7 +38,6 @@ create table ADMISSION
   ADMISSION_STATUS         VARCHAR2(24),
   TEAM_ID                  NUMBER(10),
   TEMPORARY_ADMISSION_FLAG NUMBER(1),
-  AGENCY_ID                NUMBER(11) default '0',
   RADIODISCHARGEREASON     VARCHAR2(10) default '0',
   CLIENTSTATUS_ID          NUMBER(20) default 0
 )
@@ -958,7 +957,6 @@ create table CASEMGMT_NOTE
   ENCOUNTER_TYPE        VARCHAR2(100),
   BILLING_CODE          VARCHAR2(100),
   PROGRAM_NO            VARCHAR2(20),
-  AGENCY_NO             VARCHAR2(20),
   REPORTER_CAISI_ROLE   VARCHAR2(20),
   REPORTER_PROGRAM_TEAM VARCHAR2(20),
   HISTORY               VARCHAR2(4000) not null,
@@ -1014,7 +1012,6 @@ prompt
 create table CLIENT_REFERRAL
 (
   REFERRAL_ID              NUMBER(20) not null,
-  AGENCY_ID                NUMBER(20) default '0' not null,
   CLIENT_ID                NUMBER(20) default '0' not null,
   REFERRAL_DATE            DATE,
   PROVIDER_NO              NUMBER(20) default '0' not null,
@@ -1024,7 +1021,6 @@ create table CLIENT_REFERRAL
   COMPLETION_NOTES         VARCHAR2(4000),
   TEMPORARY_ADMISSION_FLAG NUMBER(1),
   COMPLETION_DATE          DATE,
-  SOURCE_AGENCY_ID         NUMBER(20),
   PRESENT_PROBLEMS         VARCHAR2(4000),
   RADIOREJECTIONREASON     VARCHAR2(10) default '0'
 )
@@ -11710,7 +11706,6 @@ create table PROGRAM
 (
   PROGRAM_ID               NUMBER(10) not null,
   USERDEFINED              NUMBER(1) not null,
-  AGENCY_ID                NUMBER(11) default '0' not null,
   INTAKE_PROGRAM           NUMBER,
   NAME                     VARCHAR2(70) default ' ' not null,
   DESCR                    VARCHAR2(255),
@@ -11895,7 +11890,6 @@ prompt
 create table PROGRAM_QUEUE
 (
   QUEUE_ID                 NUMBER(20) not null,
-  AGENCY_ID                NUMBER(20) default '0' not null,
   CLIENT_ID                NUMBER(20) default '0' not null,
   REFERRAL_DATE            DATE,
   PROVIDER_NO              NUMBER(20) default '0' not null,
@@ -13369,8 +13363,7 @@ a.client_id client_id,
   d.name room_name,
   e.name client_prog_st_name,
   f.last_name last_name,
-  f.first_name first_name,
-  b.agency_id orgCd
+  f.first_name first_name
 FROM
   admission a,
   program b,

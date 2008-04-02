@@ -61,7 +61,6 @@
   <body>		
 		<html:form action="/PMmodule/IntakeA.do">
 			<html:hidden property="intake.demographicNo"/>
-			<html:hidden property="bean.agencyId"/>
 			<html:hidden property="bean.clientId"/>			
 			<input type="hidden" name="method" value="save"/>
 

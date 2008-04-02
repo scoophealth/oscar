@@ -28,17 +28,15 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <script>
-	function new_client(agencyId,demographicId) {
+	function new_client(demographicId) {
 		var f = document.preIntakeForm;
-		f.elements['form.agencyId'].value = agencyId;
 		f.elements['form.demographicId'].value = demographicId;
 		f.action.value='new_client';
 		f.submit();
 	}
 
-	function update_client(agencyId,demographicId) {
+	function update_client(demographicId) {
 		var f = document.preIntakeForm;
-		f.elements['form.agencyId'].value = agencyId;
 		f.elements['form.demographicId'].value = demographicId;
 		f.action.value='update_client';
 		f.submit();
@@ -68,7 +66,6 @@
 <html:form action="/PMmodule/Intake" onsubmit="return validateSearchForm(this)">
 	<input type="hidden" name="action" value="do_intake" />
 	<html:hidden property="form.demographicId" />
-	<html:hidden property="form.agencyId" />
 	<table width="50%">
 		<tr>
 			<td>First Name</td>
@@ -129,30 +126,13 @@
 			<display:setProperty name="paging.banner.placement" value="bottom" />
 			<display:setProperty name="basic.msg.empty_list" value="No clients found." />
 			<display:column sortable="false" title="">
-				<c:choose>
-					<c:when test="${applicationScope.agency.id == client.agencyId or client.agencyId == 0}">
-						<!-- this is a local client -->
-						<span title="Update client intake form">
-							<a href="#" onclick="update_client('<c:out value="${client.agencyId}"/>','<c:out value="${client.demographicNo}"/>');return false;">
-								<img border="0" src="images/refresh.gif" />
-							</a>
-						</span>
-					</c:when>
-					<c:otherwise>
-						<!--  remote client -->
-						<span title="Create local file based on this remote file"><a href="#" onclick="new_client('<c:out value="${client.agencyId}"/>','<c:out value="${client.demographicNo}"/>');return false;"><img border="0" src="images/new.gif" /></a></span>
-					</c:otherwise>
-				</c:choose>
-				<!-- view basic info link -->
+				<span title="Update client intake form">
+					<a href="#" onclick="update_client('<c:out value="${client.demographicNo}"/>');return false;">
+						<img border="0" src="images/refresh.gif" />
+					</a>
+				</span>
 			</display:column>
 			<display:column property="formattedName" sortable="true" title="Name" />
-			<display:column sortable="true" title="Agency">
-				<%
-							Demographic c = (Demographic) pageContext.getAttribute("client");
-							String agencyName = Agency.getAgencyName(c.getAgencyId());
-				%>
-				<%=agencyName%>
-			</display:column>
 			<display:column sortable="true" title="Date of Birth">
 				<c:out value="${client.yearOfBirth}" />/<c:out value="${client.monthOfBirth}" />/<c:out value="${client.dateOfBirth}" />
 			</display:column>
