@@ -77,7 +77,7 @@ public abstract class BaseAction extends DispatchAction {
 	}
 
 	public CaseManagementManager getCaseManagementManager() {
-		return (CaseManagementManager)getAppContext().getBean("CaseManagementManager");
+		return (CaseManagementManager)getAppContext().getBean("caseManagementManager");
 	}
 
 	public AdmissionManager getAdmissionManager() {
