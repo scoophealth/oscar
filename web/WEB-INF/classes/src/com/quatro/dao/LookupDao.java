@@ -20,33 +20,19 @@ import com.quatro.model.LookupTableDefValue;
 import com.quatro.util.Utility;
 public class LookupDao extends HibernateDaoSupport {
 
+	/* Column property mappings defined by the generic idx 
+	 *  1 - Code 2 - Description 3 Active 
+	 *  4 - Display Order, aka LineId 5 - ParentCode 6 - Buf1
+	 */
+	
 	public List LoadCodeList(String tableId, boolean activeOnly, String code, String codeDesc)
 	{
-/*
-	   ArrayList paramList = new ArrayList();
-	   String sSQL="from LookupCodeValue s where s.prefix= ? order by s.orderByIndex,s.parentCode, s.description";		
-	   paramList.add(tableIdName);
-	   Object params[] = paramList.toArray(new Object[paramList.size()]);
-	   return getHibernateTemplate().find(sSQL ,params);
-*/	   
-       Criteria criteria = getSession().createCriteria(LookupCodeValue.class);
-       criteria.add(Restrictions.eq("prefix", tableId));
-       if(activeOnly) criteria.add(Restrictions.eq("active",true));
-	   if(!Utility.IsEmpty(code)) criteria.add(Restrictions.eq("code",code));
-	   if(!Utility.IsEmpty(codeDesc)) criteria.add(Restrictions.ilike("description", "%" + codeDesc + "%"));
-	   criteria.addOrder(Order.asc("orderByIndex"));
-	   criteria.addOrder(Order.asc("parentCode"));
-	   criteria.addOrder(Order.asc("description"));
-	   List lst = criteria.list();
-	   return lst;
+	   return LoadCodeList(tableId,activeOnly,"",code,codeDesc);
 	}
 	
 	public LookupCodeValue GetCode(String tableId,String code)
 	{
-        Criteria criteria = getSession().createCriteria(LookupCodeValue.class);
-        criteria.add(Restrictions.eq("prefix", tableId));
-		criteria.add(Restrictions.eq("code",code));
-		List lst = criteria.list();
+		List lst = LoadCodeList(tableId, true, "", code, "");
 		LookupCodeValue lkv = null;
 		if (lst.size()>0) 
 		{
@@ -55,27 +41,80 @@ public class LookupDao extends HibernateDaoSupport {
 		return lkv;
 	}
 
-	public List LoadCodeList(String tableIdName,boolean activeOnly,  String parentCode,String code, String codeDesc)
+	public List LoadCodeList(String tableId,boolean activeOnly,  String parentCode,String code, String codeDesc)
 	{
-        Criteria criteria = getSession().createCriteria(LookupCodeValue.class);
-        criteria.add(Restrictions.eq("prefix", tableIdName));
+		LookupTableDefValue tableDef = GetLookupTableDef(tableId);
+		List fields = LoadFieldDefList(tableId);
+		DBPreparedHandlerParam [] params = new DBPreparedHandlerParam[4];
+		String fieldNames [] = new String[6];
+		String sSQL="select ";
+		for (int i = 1; i <= 6; i++)
+		{
+			boolean ok = false;
+			for (int j = 0; j<fields.size(); j++)
+			{
+				FieldDefValue fdef = (FieldDefValue)fields.get(j);
+				if (fdef.getGenericIdx()== i)
+				{
+					sSQL += fdef.getFieldSQL() + ",";
+					fieldNames[i-1]=fdef.getFieldSQL();
+					ok = true;
+					break;
+				}
+			}
+			if (!ok) {
+				sSQL += " null field" + i + ",";
+				fieldNames[i-1] = "field" + i;
+			}
+		}
+		sSQL = sSQL.substring(0,sSQL.length()-1); 
+	    sSQL +=" from " + tableDef.getTableName() + " s where 1=1";
+	    int i= 0;
         if (activeOnly) {
-        	criteria.add(Restrictions.eq("active",true));
+	    	sSQL += " and " + fieldNames[2] + "=?"; 
+	    	params[i++] = new DBPreparedHandlerParam(1);
         }
 	   if (!Utility.IsEmpty(parentCode)) {
-		   	criteria.add(Restrictions.eq("parentCode",parentCode));
+	    	sSQL += " and " + fieldNames[4] + "=?"; 
+	    	params[i++]= new DBPreparedHandlerParam(parentCode);
 	   }
 	   if (!Utility.IsEmpty(code)) {
-		   	criteria.add(Restrictions.eq("code",code));
+	    	sSQL += " and " + fieldNames[0] + "=?"; 
+	    	params[i++] = new DBPreparedHandlerParam(code);
 	   }
 	   if (!Utility.IsEmpty(codeDesc)) {
-		   	criteria.add(Restrictions.ilike("code","%" + codeDesc + "%"));
+	    	sSQL += " and " + fieldNames[1] + " like ?"; 
+	    	params[i++]= new DBPreparedHandlerParam("%" + codeDesc + "%");
 	   }
-	   criteria.addOrder( Order.asc("orderByIndex"));
-	   criteria.addOrder( Order.asc("parentCode"));
-	   criteria.addOrder( Order.asc("description"));
+	   sSQL += " order by 4,5,2";
+	   DBPreparedHandlerParam [] pars = new DBPreparedHandlerParam[i];
+	   for(int j=0; j<i;j++)
+	   {
+		   pars[j] = params[j];
+	   }
 	   
-	   return criteria.list();
+	   DBPreparedHandler db = new DBPreparedHandler();
+	   ArrayList list = new ArrayList();
+	   try {
+		   ResultSet rs = db.queryResults(sSQL,pars);
+		   while (rs.next()) {
+			   LookupCodeValue lv = new LookupCodeValue();
+			   lv.setPrefix(tableId);
+			   lv.setCode(rs.getString(1));
+			   lv.setDescription(db.getString(rs, 2));
+			   lv.setActive(1 == Integer.valueOf("0" + db.getString(rs, 3)));
+			   lv.setLineId(Integer.valueOf("0" + db.getString(rs,4)));
+			   lv.setParentCode(db.getString(rs, 5));
+			   lv.setBuf1(db.getString(rs,6));
+			   list.add(lv);
+			}
+			rs.close();
+	   }
+	   catch(SQLException e)
+	   {
+		   System.out.println(e.getStackTrace().toString());
+	   }
+	   return list;
 	}
 
 	public LookupTableDefValue GetLookupTableDef(String tableId)
@@ -97,7 +136,8 @@ public class LookupDao extends HibernateDaoSupport {
 		ArrayList paramList = new ArrayList();
 	    paramList.add(tableId);
 	    Object params[] = paramList.toArray(new Object[paramList.size()]);
-		return getHibernateTemplate().find(sSql,params);
+		
+	    return getHibernateTemplate().find(sSql,params);
 	}
 	public List GetCodeFieldValues(LookupTableDefValue tableDef, String code)
 	{

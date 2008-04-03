@@ -73,7 +73,7 @@
  		</logic:equal>
  	</td>
  	<td>
- 		<bean:write name="lkCode" property="orderByIndex" />
+ 		<bean:write name="lkCode" property="lineId" />
  	</td>
 </tr> 	
 	</logic:iterate>
