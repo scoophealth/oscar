@@ -36,7 +36,7 @@ public class EDoc extends TagObject implements Comparable {
     private String fileName = "";
     private String html = "";
     private String creatorId = "";
-    private Integer programId=null;
+    private Integer programId=-1;
     private char status;
     private String module = "";
     private String moduleId = "";
