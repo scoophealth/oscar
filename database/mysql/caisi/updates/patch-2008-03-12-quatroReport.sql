@@ -252,6 +252,8 @@ create table app_lookuptable_fields
   fieldsql    VARCHAR(32),
   fieldindex  int(10),
   uniqueyn    int(10),
+  genericidx  int(10),
+  autoyn      tinyint(1),
   primary key (tableid, fieldname)
 );
 
