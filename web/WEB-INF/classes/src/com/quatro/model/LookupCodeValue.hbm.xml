@@ -3,7 +3,7 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.LookupCodeValue" table="v_lookup_table" mutable="false">
+	<class name="com.quatro.model.LookupCodeValue"  mutable="false">
 		<id name="code" />
 		<property name="prefix" />
         <property name="description" /> 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.quatro.model.security.UserAccessValue"  mutable="false">
+		<id name="id" column="id" />
+		<property name="orgCd" column="orgcd" />
+	</class>
+</hibernate-mapping>
