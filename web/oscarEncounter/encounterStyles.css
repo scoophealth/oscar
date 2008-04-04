@@ -284,10 +284,20 @@ TH {
     font-size: 9px;
 }
 
+div.topBox {
+    margin-top:2px;
+    background-color: #FFFFFF;
+/*    margin-left:3px;
+    margin-right:3px;*/
+    border-left: 1px solid #6699cc;   
+    border-right: 1px solid #6699cc;
+    border-bottom: 1px solid #6699cc;
+}
+
 div.leftBox{
    clear:both;
    width:100%;   
-   margin-top:2px;
+   margin-top:2px;   
    /*margin-left:3px;
    margin-right:1px;   
    /*float: left;
@@ -301,6 +311,45 @@ span.footnote {
     background-color: #ccccee;
     border: 1px solid #000;
     width: 4px;
+}
+
+div.topBox h3 a {
+    color: white;
+    text-decoration: none;
+}
+
+div.topBox h3 {  
+   background-color: #6699cc; 
+   /*font-size: 1.0em;*/
+   font-size: 9px;
+   /*font-variant:small-caps;*/
+   color: white;
+   font-weight:bold;
+   margin-top:0px;
+   padding-top:0px;
+   margin-bottom:0px;
+   padding-bottom:0px;
+   padding-left:5px;
+   /*padding-right:5px;*/
+}
+
+div.topBox ul{ 
+       /*border-top: 1px solid #F11;*/
+       /*border-bottom: 1px solid #F11;*/
+       /*font-size: 1.0em;*/
+       font-size: 9px;
+       list-style:circle inside;
+       padding-left:1px;
+       margin-left:1px;    
+       margin-top:0px;
+       padding-top:1px;
+       margin-bottom:0px;
+       padding-bottom:0px;	
+}
+
+div.topBox li {
+/*padding-right: 15px;*/
+white-space: nowrap;
 }
 
 div.leftBox h3 a {
