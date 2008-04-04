@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -52,11 +53,13 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
-import org.oscarehr.casemgmt.model.EncounterWindow;
+import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.SessionConstants;
 
+
+import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.pageUtil.RxSessionBean;
 
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
@@ -93,10 +96,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
             CaseManagementCPP cpp = caseForm.getCpp();
             cpp.setUpdate_date(new Date());
-            EncounterWindow ectWin = caseForm.getEctWin();
+            //EncounterWindow ectWin = caseForm.getEctWin();
             String providerNo = getProviderNo(request);
             caseManagementMgr.saveCPP(cpp, providerNo);
-            caseManagementMgr.saveEctWin(ectWin);
+            //caseManagementMgr.saveEctWin(ectWin);
         }
         else response.sendError(response.SC_FORBIDDEN);
 
@@ -166,7 +169,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         }
 
         // fetch and set cpp display dimensions
-        EncounterWindow ectWin = this.caseManagementMgr.getEctWin(providerNo);
+        /*EncounterWindow ectWin = this.caseManagementMgr.getEctWin(providerNo);
         if (ectWin == null) {
             ectWin = new EncounterWindow();
             ectWin.setProvider_no(providerNo);
@@ -175,6 +178,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         }
 
         caseForm.setEctWin(ectWin);
+         */
 
         String teamName = "";
         Admission admission = admissionMgr.getCurrentAdmission(programId, Integer.valueOf(demoNo));
@@ -369,6 +373,58 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         if (useNewCaseMgmt != null && useNewCaseMgmt.equals("true")) return mapping.findForward("page.newcasemgmt.view");
         else return mapping.findForward("page.casemgmt.view");
 
+    }
+    
+    public ActionForward listNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String providerNo = getProviderNo(request);
+        String demoNo = getDemographicNo(request);
+        List notes = null;
+
+        //set save url to be used by ajax editor
+        String identUrl = request.getQueryString();        
+        request.setAttribute("identUrl", identUrl);               
+        
+        // filter the notes by the checked issues and date if set
+        UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
+        String[] codes = request.getParameterValues("issue_code");
+        List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, codes);
+        
+        StringBuffer checked_issues = new StringBuffer();
+        String[] issueIds = new String[issues.size()];
+        int idx = 0;
+        for(Issue issue: issues) {
+            checked_issues.append("&issue_id="+String.valueOf(issue.getId()));            
+            issueIds[idx] = String.valueOf(issue.getId());
+        }                
+        
+        //set save Url        
+        String addUrl = request.getContextPath() + "/CaseManagementEntry.do?method=issueNoteSave&providerNo=" + providerNo + "&demographicNo=" + demoNo + checked_issues.toString() + "&noteId=";                
+        request.setAttribute("addUrl", addUrl);
+        
+        // need to apply issue filter        
+        notes = caseManagementMgr.getNotes(demoNo, issueIds, userProp);
+        notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
+
+        log.info("FETCHED " + notes.size() + " NOTES filtered by " + StringUtils.join(issueIds,","));
+        log.info("REFERER " + request.getRequestURL().toString() + "?" + request.getQueryString());
+        
+        String programId = (String) request.getSession().getAttribute("case_program_id");
+
+        if (programId == null || programId.length() == 0) {
+            programId = "0";
+        }
+         
+        Integer currentFacilityId= request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID) != null ? (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID):0; 
+        
+        notes = caseManagementMgr.filterNotes(notes, providerNo, programId, currentFacilityId);
+        this.caseManagementMgr.getEditors(notes);
+                
+        oscar.OscarProperties p = oscar.OscarProperties.getInstance();
+        String noteSort = p.getProperty("CMESort", "");
+        if (noteSort.trim().equalsIgnoreCase("UP")) request.setAttribute("Notes", sort_notes(notes, "update_date_asc"));
+        else request.setAttribute("Notes", notes);
+        
+        return mapping.findForward("listNotes");
     }
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
