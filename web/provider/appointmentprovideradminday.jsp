@@ -1186,9 +1186,33 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 </table>
 </body>
 <script language="JavaScript">
-
-document.onkeydown=function(e){
-evt = e || window.event;  // window.event is the IE equivalent
+if (navigator.appVersion.indexOf("Mac")!=-1) {
+	document.onkeydown=function(e){
+	evt = e || window.event;  // window.event is the IE equivalent
+	if (evt.metaKey) {
+		switch(evt.keyCode) {
+			case 65 : popupPage2('../admin/admin.jsp', 'Admin');  break;  //run code for 'A'dmin
+			case 66 : popupPage2('../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;  //code for 'B'illing
+			case 67 : popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../provider/providercontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>&param=<%=URLEncoder.encode("&view=0&displaymode=day&dboperation=searchappointmentday","UTF-8")%>');  return false;  //run code for 'C'alendar
+			case 68 : popup('700', '1000', '../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');  return false;  //run code for e'D'oc
+			case 72 : popupPage(600,750,'<%=resourcebaseurl+"Support"%>');  return false;  //run code for 'H'elp
+			case 73 : popupPage2('../Tickler.do','<bean:message key="global.tickler"/>');  return false;  //run code for t'I'ckler
+			case 76 : popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');  return false;  //run code for 'L'ab
+			case 77 : popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>'); return false;  //run code for 'M'essage
+			case 79 : popupOscarRx(625,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>');  return false;  //run code for c'O'nsultation
+			case 80 : popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>');  return false;  //run code for 'P'references  **note that there may be 2 of em!**
+			case 81 : window.open('../logout.jsp','_self');  return false;  // 'Q'uit/log out
+			case 82 : popupPage2('../report/reportindex.jsp','reportPage');  return false;  //run code for Reports
+			case 83 : popupPage2('../demographic/search.jsp');  return false;  //run code for 'S'earch
+			case 84 : window.open("providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday","_self") ;  return false;  //run code for 'T'oday                       
+			case 86 : review('1');  return false;  //all provider 'V'iew
+			default : return;
+               }
+	}
+	}
+} else {
+	document.onkeydown=function(e){
+	evt = e || window.event;  // window.event is the IE equivalent
 	if (evt.altKey) {
 		switch(evt.keyCode) {
 			case 65 : popupPage2('../admin/admin.jsp', 'Admin');  break;  //run code for 'A'dmin
@@ -1215,8 +1239,8 @@ evt = e || window.event;  // window.event is the IE equivalent
                }        
 
         }
+	}
 }
-
 </script>
 </html:html>
 <%
