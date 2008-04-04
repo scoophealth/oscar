@@ -104,6 +104,15 @@ public class CaseManagementManager {
     protected UserPropertyDAO userPropertyDAO;
    
     private boolean enabled;
+    
+    /*
+     *check to see if issue has been saved for this demo before
+     *if it has return issue; else return null
+     */
+    public CaseManagementIssue getIssueById(String demo, String issue_id) {
+        return this.caseManagementIssueDAO.getIssuebyId(demo,issue_id);
+    }
+    
 
     private ProgramManager programManager = null;
     public void setProgramManager(ProgramManager programManager) {
@@ -326,7 +335,7 @@ public class CaseManagementManager {
     public CaseManagementCPP getCPP(String demographic_no) {
         return this.caseManagementCPPDAO.getCPP(demographic_no);
     }
-
+    
     public List getAllergies(String demographic_no) {
         return this.allergyDAO.getAllergies(demographic_no);
     }
@@ -381,6 +390,15 @@ public class CaseManagementManager {
         echartDAO.saveCPPIntoEchart(cpp, providerNo);
     }
 
+    public List<Issue> getIssueInfoByCode(String providerNo, String[] codes) {
+        return issueDAO.findIssueByCode(codes);
+    }
+    
+    public List<Issue> getIssueInfoByCode(String providerNo, String code) {
+        String[] codes = {code};
+        return issueDAO.findIssueByCode(codes);
+    }    
+    
     public List getIssueInfoBySearch(String providerNo, String search, List accessRight) {
         List issList = issueDAO.findIssueBySearch(search);
         // filter the issue list by role
@@ -1121,7 +1139,7 @@ public class CaseManagementManager {
     public void setCaseManagementCPPDAO(CaseManagementCPPDAO dao) {
         this.caseManagementCPPDAO = dao;
     }
-
+    
     public void setAllergyDAO(AllergyDAO dao) {
         this.allergyDAO = dao;
     }
