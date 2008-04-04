@@ -15,7 +15,7 @@
 	<map loinc_code="718-7" name="HEMOGLOBIN" />
 	<map loinc_code="4544-3" name="HEMATOCRIT" />
         <map loinc_code="12227-5" name="WHITE BLOOD CELL COUNT" />
-        <map loinc_code="789-8" name="RED BLOOD CELL COUNT" />
+        <map loinc_code="789-8" name="RED BLOOD CELL COUNT" /> 
         <map loinc_code="787-2" name="MCV" />
         <map loinc_code="785-6" name="MCH" />
         <map loinc_code="786-4" name="MCHC" />
@@ -136,5 +136,6 @@
         <map loinc_code="13705-9" name="  MICROALBUMIN/CREATININE RATIO" />
         <map loinc_code="NULL" name="NULL" />
         <map loinc_code="1988-5" name="C-REACTIVE PROTEIN" />
+        <map loinc_code="2857-1" name="PSA" />
         
 </measurements>
