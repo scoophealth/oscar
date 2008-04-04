@@ -722,6 +722,49 @@ String regionalIdentifier="";
           popup.opener = self;
       popup.focus();
     }
+    
+    var resHidden = 0;
+    function showUntrustedRes(){
+        var list = $$('div.untrustedResource');
+        
+        if(resHidden == 0){
+          $('showUntrustedResWord').update('hide');
+          list.invoke('show');
+          resHidden = 1;
+        }else{
+          $('showUntrustedResWord').update('show');
+          list.invoke('hide');
+          resHidden = 0;  
+        }
+    }
+    
+    
+    function HideW(id,resourceId,updated){
+        var url = 'GetmyDrugrefInfo.do?method=setWarningToHide';
+        //callReplacementWebService("GetmyDrugrefInfo.do?method=setWarningToHide",'interactionsRxMyD');function callReplacementWebService(url,id){
+        var ran_number=Math.round(Math.random()*1000000);
+        var params = "resId="+resourceId+"&updatedat="+updated+"&rand="+ran_number;  //hack to get around ie caching the page
+        
+        console.log("params: "+params);
+        new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true}); 
+         
+    }
+    
+    
+    var resHidden2 = 0;
+    function showHiddenRes(){
+        var list = $$('div.hiddenResource');
+        
+        if(resHidden2 == 0){
+          list.invoke('show');
+          resHidden2 = 1;
+          $('showHiddenResWord').update('hide');
+        }else{
+          $('showHiddenResWord').update('show');
+          list.invoke('hide');
+          resHidden2 = 0;  
+        }
+    }
 </script>
 
 <style type="text/css">
@@ -748,6 +791,11 @@ String regionalIdentifier="";
             border-left: 2px solid #333333;
             border-bottom: 2px solid #cfcfcf;
             border-right: 2px solid #cfcfcf;
+        }
+        
+        div.untrustedResource{
+            //visibility: hidden;
+            //display:none;
         }
 
 </style>
@@ -1331,7 +1379,7 @@ int i;
                                 }
                             }
                         </script>
-                <table>
+                <table width="100%">
                     <tr>
                         <td width="60%" valign="top">
                         <table cellspacing=0 cellpadding=5 width="100%">
@@ -1444,8 +1492,8 @@ int i;
                new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true}); 
          } 
           callReplacementWebService("InteractionDisplay.jsp",'interactionsRx');
-          <oscar:oscarPropertiesCheck property="MYDRUGREF_DF" value="yes">
-          callReplacementWebService("GetmyDrugrefInfo.do",'interactionsRxMyD');
+          <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
+          callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
           </oscar:oscarPropertiesCheck>
          
           <%--  OLD CALLS TO THE WEB SERVICES
