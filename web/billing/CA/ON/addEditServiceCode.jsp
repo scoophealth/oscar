@@ -28,7 +28,7 @@
     response.sendRedirect("../logout.jsp");
   }
 %>
-  <%@ page errorPage="../appointment/errorpage.jsp"import="java.util.*,
+  <%@ page errorPage="../../../appointment/errorpage.jsp"import="java.util.*,
                                                            java.sql.*,
                                                            oscar.*,
                                                            java.text.*,
@@ -148,14 +148,19 @@
         String serviceCode = request.getParameter("service_code");
 		String	sql   = "select * from billingservice where service_code='" + serviceCode + "'";
 		ResultSet rs = dbObj.searchDBRecord(sql);
+                String tmp;
 System.out.println(sql);
 
 		if (rs.next()) {
 		    prop.setProperty("service_code", serviceCode);
-		    prop.setProperty("description", rs.getString("description"));
-		    prop.setProperty("value", rs.getString("value"));
-		    prop.setProperty("percentage", rs.getString("percentage"));
-		    prop.setProperty("billingservice_date", rs.getString("billingservice_date"));
+		    tmp = rs.getString("description") == null ? "" : rs.getString("description");
+                    prop.setProperty("description", tmp);
+                    tmp = rs.getString("value") == null ? "" : rs.getString("value");
+		    prop.setProperty("value", tmp);
+                    tmp = rs.getString("percentage") == null ? "" : rs.getString("percentage");
+		    prop.setProperty("percentage", tmp);                    
+                    tmp = rs.getString("billingservice_date") == null ? "" : rs.getString("billingservice_date");
+		    prop.setProperty("billingservice_date", tmp);
 		    msg = "You can edit the service code.";
 		    action = "edit" + serviceCode;
 
