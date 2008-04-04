@@ -322,13 +322,138 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             log.warn(e);
         }
     }
+    
+     public ActionForward issueNoteSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {            
+            String strNote = request.getParameter("value");
+            log.info("Saving: " + strNote);
+            if( strNote == null || strNote.equals("") )
+                return null;
+            
+            strNote = strNote.trim();
+            
+            String providerNo = getProviderNo(request);
+            Provider provider = getProvider(request);
+            String userName = provider != null?provider.getFullName():"";
 
-    public boolean noteSave(CaseManagementEntryFormBean cform, HttpServletRequest request) throws Exception {
+            String demo = getDemographicNo(request);
+                        
+            String noteId = request.getParameter("noteId");                                 
+            log.info("SAVING NOTE " + noteId + " STRING: " + strNote);
+            
+            CaseManagementNote note;
+            boolean newNote = false;
+            if( noteId.equals("0") ) {
+                note = new CaseManagementNote();
+                note.setDemographic_no(demo);
+                newNote = true;
+            }
+            else {
+                note = this.caseManagementMgr.getNote(noteId);
+                //if note has not changed don't save
+                if( strNote.equals(note.getNote()) )
+                    return null;
+            }
+            
+            note.setNote(strNote);
+            note.setSigning_provider_no(userName);
+            note.setSigned(true);
+            
+            note.setProvider_no(providerNo);		
+            if( provider != null )
+                note.setProvider(provider);                        
+            
+            String programId = (String)request.getSession().getAttribute("case_program_id");			
+            note.setProgram_no(programId);
+            
+            WebApplicationContext ctx = this.getSpringContext();
+
+            ProgramManager programManager= (ProgramManager)ctx.getBean("programManager");
+            AdmissionManager admissionManager= (AdmissionManager)ctx.getBean("admissionManager");
+            
+            String role=null;
+            String team=null;
+		
+            try {
+                role = String.valueOf((programManager.getProgramProvider(note.getProvider_no(),note.getProgram_no())).getRole().getId());
+            }catch(Throwable e) {
+                log.error(e);
+                role = "0";
+            }
+            
+            note.setReporter_caisi_role(role);
+		
+            try {
+                team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
+            }catch(Throwable e) {
+                log.error(e);
+                team = "0";
+            }
+            note.setReporter_program_team(team);
+                        
+            if( newNote ) {
+                Set issueSet = note.getIssues();
+                Set noteSet = new HashSet();;
+                String[] issue_id = request.getParameterValues("issue_id");
+                for( int idx = 0; idx < issue_id.length; ++idx ) {
+                    CaseManagementIssue cIssue = this.caseManagementMgr.getIssueById(demo,issue_id[idx]);
+                    if( cIssue == null ) {
+                        Issue issue = this.caseManagementMgr.getIssue(issue_id[idx]);
+                        cIssue = this.newIssueToCIssue(demo, issue, Integer.parseInt(programId));                    
+                        cIssue.setNotes(noteSet);                    
+                    }                
+                    issueSet.add(cIssue);
+                }
+                note.setIssues(issueSet);
+            }
+            
+            int revision;
+                
+            if( note.getRevision() != null ) {
+                revision = Integer.parseInt(note.getRevision());
+                ++revision;                   
+            }
+            else
+                revision = 1;
+
+            note.setRevision(String.valueOf(revision));
+            Date now = new Date();
+            if( note.getObservation_date() == null ) {                    
+                note.setObservation_date(now);
+            }
+
+            note.setUpdate_date(now);
+            if( note.getCreate_date() == null )
+                note.setCreate_date(now);
+            
+            /* save note including add signature */	
+            String lastSavedNoteString = (String) request.getSession().getAttribute("lastSavedNoteString");
+            String roleName=caseManagementMgr.getRoleName(providerNo,note.getProgram_no());
+            CaseManagementCPP cpp = this.caseManagementMgr.getCPP(demo);
+            if( cpp == null ) {
+                cpp = new CaseManagementCPP();
+                cpp.setDemographic_no(demo);
+            }
+            cpp = copyNote2cpp(cpp,note);
+            String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
+            caseManagementMgr.saveCPP(cpp, providerNo);
+            /* remember the str written into echart */
+            request.getSession().setAttribute("lastSavedNoteString", savedStr);
+            
+            caseManagementMgr.getEditors(note);
+            
+            ActionForward forward = mapping.findForward("listCPPNotes");
+            StringBuffer path = new StringBuffer(forward.getPath());
+            String reloadQuery = request.getParameter("reloadUrl");
+            path.append("?" + reloadQuery);
+            return new ActionForward(path.toString());
+        }
+
+    public long noteSave(CaseManagementEntryFormBean cform, HttpServletRequest request) throws Exception {
 
         // we don't want to save empty notes!
         CaseManagementNote note = (CaseManagementNote) cform.getCaseNote();
         String noteTxt = note.getNote();
-        if (noteTxt == null || noteTxt.equals("")) return false;
+        if (noteTxt == null || noteTxt.equals("")) return -1;
 
         String providerNo = getProviderNo(request);
         Provider provider = getProvider(request);
@@ -538,7 +663,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             log.warn(e);
         }
 
-        return true;
+        return note.getId();
     }
 
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -554,8 +679,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         request.setAttribute("demoAge", getDemoAge(demono));
         request.setAttribute("demoDOB", getDemoDOB(demono));
 
-        request.setAttribute("from", request.getParameter("from"));
-        boolean saved = noteSave(cform, request);
+        request.setAttribute("from", request.getParameter("from"));        
+        long noteId = noteSave(cform, request);
 
         /* prepare the message */
         ActionMessages messages = new ActionMessages();
@@ -565,7 +690,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         // are we in the new encounter and chaining actions?
         String chain = request.getParameter("chain");
         if (chain != null) {
-            request.getSession().setAttribute("newNote", !saved);
+            request.getSession().setAttribute("newNote", false);
             request.getSession().setAttribute("saveNote", new Boolean(true)); // tell CaseManagementView we have just saved note
             return mapping.findForward(chain);
         }
@@ -576,21 +701,159 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
     public ActionForward ajaxsave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
+        
+        String noteTxt = request.getParameter("noteTxt");
+        if( noteTxt == null || noteTxt.equals("") )
+            return null;
+        
+        log.info("Saving Note" + request.getParameter("nId"));
+        log.info("Text -- " + noteTxt);
+        String demo = getDemographicNo(request);
+        String providerNo = getProviderNo(request);
+        Provider provider = getProvider(request);
+        
+        CaseManagementNote note;
+        String history;
+        String noteId = request.getParameter("nId");
+        Date now = new Date();
+        if( noteId.substring(0,1).equals("0") ) {
+            note = new CaseManagementNote();
+            note.setDemographic_no(demo);          
+            history = "";
+        }
+        else {
+            note = this.caseManagementMgr.getNote(request.getParameter("nId"));
+            history = note.getHistory();
+            history = "---------History Record---------" + history;
+            
+        }
+        
+        history = noteTxt + "[[" + now + "]]" + history;
+        note.setNote(noteTxt);                
+        note.setHistory(history);
+        note.setSigning_provider_no("");
+        note.setSigned(false);       
+        
+        note.setProvider_no(providerNo);
+        if (provider != null) note.setProvider(provider);                
+        
+        String programId = (String) request.getSession().getAttribute("case_program_id");
+        note.setProgram_no(programId);
+        
+        WebApplicationContext ctx = this.getSpringContext();
+        ProgramManager programManager = (ProgramManager) ctx.getBean("programManager");
+        AdmissionManager admissionManager = (AdmissionManager) ctx.getBean("admissionManager");
 
+        String role = null;
+        try {
+            role = String.valueOf((programManager.getProgramProvider(note.getProvider_no(), note.getProgram_no())).getRole().getId());
+        }
+        catch (Throwable e) {
+            log.error(e);
+            role = "0";
+        }
+        
+        note.setReporter_caisi_role(role);
+
+        String team = null;
+        try {
+            team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
+        }
+        catch (Throwable e) {
+            log.error(e);
+            team = "0";
+        }
+        
+        note.setReporter_program_team(team);
+        
+        
+        List issuelist = new ArrayList();
+        Set issueset = new HashSet();
+        Set noteSet = new HashSet();
+        String ongoing = "";
+        int numIssues = Integer.parseInt(request.getParameter("numIssues"));
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
+        CheckBoxBean[] checkedlist = (CheckBoxBean[]) cform.getIssueCheckList();
+        for (int i = 0; i < numIssues; i++) {
+            if (!checkedlist[i].getIssue().isResolved()) ongoing = ongoing + checkedlist[i].getIssue().getIssue().getDescription() + "\n";
+            String ischecked = request.getParameter("issue" + i);
+            if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
+                checkedlist[i].setChecked("on");
+                CaseManagementIssue iss = checkedlist[i].getIssue();                
+                iss.setNotes(noteSet);
+                issueset.add(checkedlist[i].getIssue());
+            }
+            else {
+                checkedlist[i].setChecked("off");
+            }
+            issuelist.add(checkedlist[i].getIssue());
+        }
 
+        note.setIssues(issueset);
+        note.setIncludeissue(false);
+        caseManagementMgr.saveAndUpdateCaseIssues(issuelist);
+        
+        int revision;
+
+        if (note.getRevision() != null) {
+            revision = Integer.parseInt(note.getRevision());
+            ++revision;
+        }
+        else revision = 1;
+
+        note.setRevision(String.valueOf(revision));
+        
+        String observationDate = request.getParameter("obsDate");        
+        
+        if (observationDate != null && !observationDate.equals("")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm");
+            Date dateObserve = formatter.parse(observationDate);
+            note.setObservation_date(dateObserve);
+        }
+        else if (note.getObservation_date() == null) {
+            note.setObservation_date(now);
+        }
+
+        note.setUpdate_date(now);
+        if (note.getCreate_date() == null) note.setCreate_date(now);
+       
+        this.caseManagementMgr.saveNoteSimple(note);
+        this.caseManagementMgr.getEditors(note);
+        
+        try {
+            this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
+        }
+        catch (Throwable e) {
+            log.warn(e);
+        }
+        
+        request.getSession().setAttribute("newNote", false);
+        request.setAttribute("ajaxsave",note.getId());
+        request.setAttribute("origNoteId", noteId);
+        CaseManagementEntryFormBean newform = new CaseManagementEntryFormBean();
+        newform.setCaseNote(note);
+        newform.setIssueCheckList(checkedlist);
+        request.setAttribute("caseManagementEntryForm", newform);
+        log.info("OLD ID " + noteId + " NEW ID " + String.valueOf(note.getId()));
+        
+        return mapping.findForward("issueList_ajax");
+        /*CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
+       
         String oldId = cform.getCaseNote().getId() == null ? request.getParameter("newNoteIdx") : String.valueOf(cform.getCaseNote().getId());
-        if (noteSave(cform, request)) {
-            log.info("OLD ID " + oldId + " NEW ID " + String.valueOf(cform.getCaseNote().getId()));
+        long newId = noteSave(cform, request);
+        
+        if( newId > -1 ) {
+            log.info("OLD ID " + oldId + " NEW ID " + String.valueOf(newId));
             cform.setMethod("view");
             request.getSession().setAttribute("newNote", false);
             request.getSession().setAttribute("caseManagementEntryForm", cform);
-            request.setAttribute("ajaxsave", cform.getCaseNote().getId());
+            request.setAttribute("caseManagementEntryForm", cform);
+            request.setAttribute("ajaxsave", newId);
             request.setAttribute("origNoteId", oldId);
             return mapping.findForward("issueList_ajax");
         }
-
-        return null;
+        
+        return null;*/
     }
 
     public ActionForward saveAndExit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -1151,23 +1414,36 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String dob = getDemoDOB(demono);
         dob = convertDateFmt(dob);
         request.setAttribute("demoDOB", dob);
+        String providerNo = getProviderNo(request);
 
         String[] noteIds;
         if (ids.length() > 0) noteIds = ids.split(",");
         else noteIds = (String[]) Array.newInstance(String.class, 0);
 
-        ArrayList<CaseManagementNote> notes = new ArrayList<CaseManagementNote>();
+        List<CaseManagementNote> notes = new ArrayList<CaseManagementNote>();
         for (int idx = 0; idx < noteIds.length; ++idx)
             notes.add(this.caseManagementMgr.getNote(noteIds[idx]));
 
         // we're not guaranteed any ordering of notes given to us, so sort by observation date
         Collections.sort(notes, CaseManagementNote.getObservationComparator());
-
-        CaseManagementCPP cpp = null;
+        
+        List<CaseManagementNote> issueNotes;
+        HashMap<String,List<CaseManagementNote> >cpp = null; 
         if (request.getParameter("printCPP").equalsIgnoreCase("true")) {
-            cpp = this.caseManagementMgr.getCPP(demono);
+            cpp = new HashMap<String,List<CaseManagementNote> >();
+            String[] issueCodes = {"OMeds","SocHistory","MedHistory","Concerns","Reminders"};
+            for( int j = 0; j < issueCodes.length; ++j ) {
+                List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, issueCodes[j]);
+                String[] issueIds = new String[issues.size()];            
+                int idx = 0;
+                for( Issue i: issues) {
+                    issueIds[idx] = String.valueOf(i.getId());
+                    ++idx;
+                }
+                issueNotes = caseManagementMgr.getNotes(demono, issueIds);
+                cpp.put(issueCodes[j],issueNotes);
+            }
         }
-
         String demoNo = null;
         if (request.getParameter("printRx").equalsIgnoreCase("true")) {
             demoNo = demono;
@@ -1305,5 +1581,48 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
 
         return strNewDate;
+    }
+    
+    protected CaseManagementCPP copyNote2cpp( CaseManagementCPP cpp, CaseManagementNote note ) {
+        Set<CaseManagementIssue>issueSet = note.getIssues();
+        StringBuffer text = new StringBuffer();        
+        Date d = new Date();
+        String separator = "\n-----[[" + d + "]]-----\n";
+        for( CaseManagementIssue issue: issueSet) {
+            String code = issue.getIssue().getCode();
+            if( code.equals("OMeds") ) {
+                text.append(cpp.getFamilyHistory());
+                text.append(separator);
+                text.append(note.getNote());
+                cpp.setFamilyHistory(text.toString());
+                break;
+            }else if( code.equals("SocHistory") ) {
+                text.append(cpp.getSocialHistory());
+                text.append(separator);
+                text.append(note.getNote());
+                cpp.setSocialHistory(text.toString());
+                break;            
+            }else if( code.equals("MedHistory") ) {
+                text.append(cpp.getMedicalHistory());
+                text.append(separator);
+                text.append(note.getNote());
+                cpp.setMedicalHistory(text.toString());
+                break;            
+            }else if( code.equals("Concerns") ) {
+                text.append(cpp.getOngoingConcerns());
+                text.append(separator);
+                text.append(note.getNote());
+                cpp.setOngoingConcerns(text.toString());
+                break;            
+            }else if( code.equals("Reminders") ) {
+                text.append(cpp.getReminders());
+                text.append(separator);
+                text.append(note.getNote());
+                cpp.setReminders(text.toString());
+                break;
+            }
+        }               
+        
+        return cpp;
     }
 }
