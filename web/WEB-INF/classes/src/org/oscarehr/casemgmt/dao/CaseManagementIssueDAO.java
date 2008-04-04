@@ -45,6 +45,14 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
     public List<CaseManagementIssue> getActiveIssuesByDemographic(String demographic_no) {
         return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? and cmi.resolved=false", new Object[] {demographic_no});
     }
+    
+    public CaseManagementIssue getIssuebyId(String demo, String id) {
+        List<CaseManagementIssue> list = this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.issue_id = ? and demographic_no = ?",new Object[]{Long.parseLong(id),demo});
+        if( list != null && list.size() == 1 )
+            return list.get(0);
+        
+        return null;                    
+    }
 
     public void deleteIssueById(CaseManagementIssue issue) {
         getHibernateTemplate().delete(issue);
