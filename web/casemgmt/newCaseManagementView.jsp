@@ -341,6 +341,8 @@ function resetView(frm, error, e) {
     Element.observe(parent, 'click', unlockNote);
 }
 
+var updatedNoteId = -1;  //used to store id of ajax saved note used below
+var selectBoxes = new Object();
 function changeToView(id) {
     var parent = $(id).parentNode.id;
     var nId = parent.substr(1);
@@ -351,7 +353,7 @@ function changeToView(id) {
     var sumary;
     
     var sig = 'sig' + nId;
-        
+    //console.log("Original nId " + nId);    
     //check if case note has been changed
     //if so, warn user that changes will be lost if not saved    
     if( origCaseNote != $F(id)  || origObservationDate != $("observationDate").value) {
@@ -359,7 +361,7 @@ function changeToView(id) {
             return false;
         else {
             saving = true;
-            ajaxSaveNote(sig);
+            ajaxSaveNote(sig,nId,tmp);              
         }
    }
    
@@ -367,6 +369,7 @@ function changeToView(id) {
     //cancel updating of issues
     //IE destroys innerHTML of sig div when calling ajax update
     //so we have to restore it here if the ajax call is aborted
+    //this is buggy don't use
     /*if( ajaxRequest != undefined  && callInProgress(ajaxRequest.transport) ) {
         ajaxRequest.transport.abort();
         var siblings = $(id).siblings();
@@ -386,17 +389,13 @@ function changeToView(id) {
     
     //clear auto save
     clearTimeout(autoSaveTimer);
-    deleteAutoSave();
-    
-    //ajaxSave changes id to represent saved note id so we must update our vars here
-    parent = $(id).parentNode.id;
-    nId = parent.substr(1);
-    sig = 'sig' + nId;       
-    
+    deleteAutoSave();      
+       
+    //console.log("Updated nId " + nId);
     Element.remove("notePasswd");
     Element.stopObserving(id, 'keyup', monitorCaseNote);
     Element.stopObserving(id, 'click', getActiveText);
-    nId = parent.substr(1);
+   
     Element.remove(id);    
     
     //remove observation date input text box but preserve date if there is one
@@ -422,43 +421,88 @@ function changeToView(id) {
     if( $("noteIssues") != null )
         Element.remove("noteIssues"); 
         
-    if( $("encType") != null ) {
+    var selectEnc = "encTypeSelect" + nId;
+    
+    if( $(selectEnc) != null ) {
         var encTypeId = "encType" + nId;
-        var content = $F("encType");
+        var content = $F(selectEnc);
         var encType;
         if( content.length > 0 )
             encType = "&quot;" + content + "&quot;";
         else
             encType = "";
-        Element.remove("encType");
-        $(encTypeId).update(encType);        
+        Element.remove(selectEnc);
+        $(encTypeId).update(encType); 
+        
     }    
     //we can stop listening for add issue here
     Element.stopObserving('asgnIssues', 'click', addIssueFunc);
     if( tmp.length == 0 ) 
         tmp = "&nbsp;";
         
-    if( largeNote(tmp) ) {
-        var btmImg = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
+    if( !saving ) {
+        if( largeNote(tmp) ) {
+            var btmImg = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
+            new Insertion.Top(parent, btmImg); 
+        }
+
+        var input = "<span id='txt" + nId + "'>" + tmp.replace(/\n/g,"<br>") + "<\/span>";
+        new Insertion.Top(parent, input);
+        //$(txt).style.fontSize = normalFont;
+
+        //if we're not restoring a new note display print img
+        if( nId.substr(0,1) != "0" ) {
+            img = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>";
+            new Insertion.Top(parent, img);
+        }
+
+        var img = "<img title='Minimize' id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
+        new Insertion.Top(parent, img);    
+
+        $(parent).style.height = "auto";        
+        Element.observe(parent, 'click', editNote);    
+    }
+    return true;
+}
+
+function completeChangeToView(note,newId) {
+    //var newId = updatedNoteId;
+    //console.log("finishing updating " + newId);
+    //console.log("New note " + note);
+    var parent = "n" + newId;
+    
+    var selectEnc = "encTypeSelect" + newId;
+    if( $(selectEnc) != null ) {
+        var encTypeId = "encType" + newId;
+        var content = $F(selectEnc);
+        var encType;
+        if( content.length > 0 )
+            encType = "&quot;" + content + "&quot;";
+        else
+            encType = "";
+        Element.remove(selectEnc);
+        $(encTypeId).update(encType); 
+       
+    } 
+    
+    if( largeNote(note) ) {
+        var btmImg = "<img title='Minimize Display' id='bottomQuitImg" + newId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
         new Insertion.Top(parent, btmImg); 
     }
-    
-    var input = "<span id='txt" + nId + "'>" + tmp.replace(/\n/g,"<br>") + "<\/span>";
+
+    var input = "<span id='txt" + newId + "'>" + note.replace(/\n/g,"<br>") + "<\/span>";
     new Insertion.Top(parent, input);
-    //$(txt).style.fontSize = normalFont;
+    //$(txt).style.fontSize = normalFont    
     
-    //if we're not restoring a new note display print img
-    if( nId.substr(0,1) != "0" ) {
-        img = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>";
-        new Insertion.Top(parent, img);
-    }
-    
-    var img = "<img title='Minimize' id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
+    img = "<img title='Print' id='print" + newId + "' alt='Toggle Print Note' onclick='togglePrint(" + newId + ", event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>";
     new Insertion.Top(parent, img);    
-    
+
+    var img = "<img title='Minimize' id='quitImg" + newId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
+    new Insertion.Top(parent, img);    
+
     $(parent).style.height = "auto";        
-    Element.observe(parent, 'click', editNote);    
-    return true;
+    Element.observe(parent, 'click', editNote); 
+
 }
 
 function minView(e) {          
@@ -682,7 +726,7 @@ function editNote(e) {
     var txtId = "txt" + nId;    
     payload = $(txtId).innerHTML;    
     payload = payload.replace(/^\s+|\s+$/g,"");
-    payload = payload.replace(/<br>/g,"\n");
+    payload = payload.replace(/<br>/gi,"\n");
     payload += "\n";
     Element.remove(txtId);                       
     caseNote = "caseNote_note" + nId;                
@@ -855,7 +899,7 @@ function validDate() {
         return false;
 }
 
-function ajaxSaveNote(div) {
+function ajaxSaveNote(div,noteId,noteTxt) {
     if( $("observationDate") != undefined && $("observationDate").value.length > 0 && !validDate() ) {
         alert("Observation date must be in the past");
         return false;
@@ -870,18 +914,28 @@ function ajaxSaveNote(div) {
 
     document.forms["caseManagementEntryForm"].method.value = 'ajaxsave';
     
+    var idx = 0;
+    var issue = "noteIssue" + idx;
+    var issueParams = "";
+    while($(issue) != null) {        
+        issueParams += "&issue" + idx + "=" + $F(issue);
+        ++idx;
+        issue = "noteIssue" + idx;
+    }            
+    
+    var demoNo = "<c:out value="${demographicNo}"/>";
+    
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
     <c:url value="/CaseManagementEntry.do" var="saveAjaxURL" />
     var url = "<c:out value="${saveAjaxURL}" />";
-
+    var params = "method=ajaxsave&nId="+noteId+issueParams+"&demographicNo=" + demoNo +"&providerNo=<%=provNo%>&numIssues="+idx+"&obsDate="+$F("observationDate")+"&noteTxt="+encodeURI(noteTxt);
     var objAjax = new Ajax.Updater (
                     {success:div},
                     url,
                     {
                         method: 'post',                        
                         evalScripts: true,                         
-                        parameters: Form.serialize(caseMgtEntryfrm),
-                        asynchronous: false,
+                        postBody: params,                       
                         onFailure: function(request) {
                             if( request.status == 403 )
                                 alert("<bean:message key="oscarEncounter.error.msgExpired"/>");
@@ -889,7 +943,8 @@ function ajaxSaveNote(div) {
                                 alert("Error saving note " + request.status);
                         }                        
                      }
-                   );          
+                   );  
+                   
     return false;
 }
 
@@ -1589,7 +1644,7 @@ Version version = (Version) ctx.getBean("version");
             <input type="hidden" id="check_issue" name="check_issue">
             <!--Row One Headers -->
             
-                <div style="float:left; width:34%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >&nbsp;<bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
+                <%-- <div style="float:left; width:34%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >&nbsp;<bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
                 <div style="float:left; width:33%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >
                     <% if(oscarVariables.getProperty("otherMedications", "").length() > 1) {
                     out.print(oscarVariables.getProperty("otherMedications", ""));
@@ -1620,24 +1675,21 @@ Version version = (Version) ctx.getBean("version");
                     <bean:message key="oscarEncounter.Index.f"/></a> |
                     <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
                     <bean:message key="oscarEncounter.Index.r"/></a>
-                </div>
-            
-            <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
-            <div id="divR1" style="float:left; width:34%; border-width:0px; background-color:#CCCCFF;">
-                &nbsp;<html:textarea styleId="cpp.socialHistory" property="cpp.socialHistory" tabindex="1" styleClass="rowOne" rows="4" cols="28"/>
-            </div>
+                </div>                                  
+
+            <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->--%>
+            <div style="width:100%; height:70px; background-color:#FFFFFF;">
+                <div id="divR1I1" class="topBox" style="float:left; width:49%; margin-left:3px;">
+                    <%--&nbsp;<html:textarea styleId="cpp.socialHistory" property="cpp.socialHistory" tabindex="1" styleClass="rowOne" rows="4" cols="28"/>--%>
+                </div>    
                 
-            <!-- This is the Family History cell ...fh...-->
-            <div style="float:left; width:33%; border-width:0px; background-color:#CCCCFF;">
-                <html:textarea styleId="cpp.familyHistory" property="cpp.familyHistory" tabindex="2" styleClass="rowOne"  rows="4" cols="28"/>
-            </div>
-            
-            <!-- This is the Medical History cell ...mh...-->
-            <div style="clear:right; float:left; width:33%;  margin-right:-4px; border-width:0px; background-color:#CCCCFF;">
-                <html:textarea styleId="cpp.medicalHistory" property="cpp.medicalHistory" tabindex="3" styleClass="rowOne"  rows="4" cols="28"/>
-            </div>
-        
+                <!-- This is the Medical History cell ...mh...--> 
+                <div id="divR1I2" class="topBox" style="float:right; width:49%; margin-right:3px;">
+                    <%--<html:textarea styleId="cpp.medicalHistory" property="cpp.medicalHistory" tabindex="3" styleClass="rowOne"  rows="4" cols="28"/>--%>
+                </div>  
+            </div>        
             <!--2nd row headers -->
+            <%--
             <div style="float:left; width:50%; background-color:#CCCCFF;" class="RowTop" >
                 &nbsp;
                 <% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) {
@@ -1664,17 +1716,18 @@ Version version = (Version) ctx.getBean("version");
                 <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
                 <bean:message key="oscarEncounter.Index.r"/></a>
             </div>
-            
-            <!--Ongoing Concerns cell -->
-            <div style="float:left; width:50%; background-color:#CCCCFF;">
+            --%>
+            <div style="width:100%; height:70px; background-color:#FFFFFF;">
+                <!--Ongoing Concerns cell -->
+                <div id="divR2I1" class="topBox" style="clear:left; float:left; width:49%; margin-left:3px;">                
+                    
+                </div>     
                 
-                <html:textarea styleId="cpp.ongoingConcerns" property="cpp.ongoingConcerns" tabindex="4" styleClass="rowTwo"  rows="4" cols="44"/>
-            </div>     
-            
-            <!--Reminders cell -->
-            <div style="clear:right; float:left; width:50%; margin-right:-4px; background-color:#CCCCFF;">
-                <html:textarea styleId="cpp.reminders" property="cpp.reminders" tabindex="5" styleClass="rowTwo"  rows="4" cols="44"/>
-            </div> 
+                <!--Reminders cell -->
+                <div id="divR2I2" class="topBox" style="clear:right; float:right; width:49%; margin-right:3px;">
+                    
+                </div> 
+            </div>
         
         <div id="notCPP" style="height:70%; margin-left:2px; background-color:#FFFFFF;">
         <%--<div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white;"><jsp:include page="rightColumn.jsp" /></div>--%>
@@ -1738,17 +1791,18 @@ Version version = (Version) ctx.getBean("version");
                     Show View
                 </div>                
             </div>            
-            <div style="float:left; clear:both; margin-bottom:5px; width:100%; text-align:center;">                
+            <div style="float:left; clear:both; margin-bottom:5px; width:100%; text-align:center;">                                
                 <input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
-                <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index:1; display:none"></div>  
+                <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index:1; display:none">&nbsp</div>  
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <select id="channel" >
+                <select id="channel">
                     <option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                     <option value="http://www.google.com/search?q="><bean:message key="global.google"/></option>
                     <option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed"/></option>
                     <option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus"/></option>
                     <option value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&amp;searchButton=Search&amp;q="><bean:message key="global.BNF"/></option>
                 </select>
+                
                 <input type="text" id="keyword" name="keyword"  value=""  onkeypress="return grabEnter('searchButton',event)"/>
                 <input type="button" id="searchButton" name="button"  value="Search" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">       
                 
@@ -1900,9 +1954,9 @@ Version version = (Version) ctx.getBean("version");
                                     }
                                     if( issSet.size() > 0 ) {
                                     %>
-                                    
-                                    Assigned Issues
-                                    <ul style="list-style: circle inside none; margin:0px;">                            
+                                    <div style="display:block;">  
+                                    <span style="float:left;">Assigned Issues</span>
+                                    <ul style="float:left; list-style: circle inside none; margin:0px;">                            
                                         <% 
                                         Iterator i = issSet.iterator();
                                         while( i.hasNext() ) {
@@ -1911,7 +1965,9 @@ Version version = (Version) ctx.getBean("version");
                                         <li><%=iss.getIssue().getDescription().trim()%></li>
                                         <%
                                         }
-                                    %></ul>                                     
+                                    %></ul>  
+                                       <br style="clear:both;">
+                                    </div> 
                                     <%
                                     }
                                     %>
