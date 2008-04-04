@@ -8,7 +8,7 @@
 %>
 
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, oscar.oscarDemographic.data.DemographicMerged" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.URLEncoder, oscar.*, oscar.util.*, oscar.oscarDemographic.data.DemographicMerged" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
@@ -271,7 +271,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
                         
                             <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
                                 
-                                <a title="Encounter" href="#" onclick="popupEChart(600,900,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=dem_no%>&curProviderNo=<%=rs.getString("provider_no")%>')">E</a>
+                                <a title="Encounter" href="#" onclick="popupEChart(710,1024,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=dem_no%>&curProviderNo=<%=rs.getString("provider_no")%>&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>')">E</a>
                             </security:oscarSec>
                             <!-- Rights -->
                             <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r">
