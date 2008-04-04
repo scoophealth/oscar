@@ -31,6 +31,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 
+<%
+    oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
+    bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+    
+    pageContext.setAttribute("providerNo",bean.providerNo, pageContext.PAGE_SCOPE);
+%>
+
 <nested:define id="rowOneSize" name="caseManagementViewForm" property="ectWin.rowOneSize"/>
 <nested:define id="rowTwoSize" name="caseManagementViewForm" property="ectWin.rowTwoSize"/>
 <html:html locale="true">
@@ -79,6 +86,12 @@
     
     <style type="text/css">
         
+        /*CPP Format */
+        li.cpp {
+            color: #000000;         
+            font-family:arial,sans-serif;
+        }
+        
         /*Note format */
         div.newNote {
             color: #000000;         
@@ -100,7 +113,7 @@
         div.note {
             color: #000000;         
             font-family:arial,sans-serif;
-            margin: 5px 0px 5px 5px;
+            margin: 3px 0px 3px 5px;
             float:left;  
             width:98%;
         }
@@ -148,11 +161,23 @@
         span.measureCol3 {
             float: left;                        
         }
-        /* formatting for navbar */
-        .links {
+        
+        .topLinks  {
+            color: black;
+            text-decoration:none;
+            font-size:9px;                
+        }
+        
+        .topLinkhover { 
             color: blue;
             text-decoration: underline;
-            font-size:8px;
+        }
+        
+        /* formatting for navbar */               
+        .links {
+            color: blue;
+            text-decoration:none;
+            font-size:9px;
         }
         
         .linkhover { 
@@ -249,9 +274,47 @@
           color: #000000;
           
         }
+                
+        .showEdContainer {        
+            position: absolute;
+            display:none;
+            z-index:100;
+            right:100px;
+            bottom:200px;            
+            background-color:transparent;
+            font-size:8px;
+            /*border: thin ridge black;*/
+            text-align: center;
+        }
+        
+        .showEdPosition { 
+            display: table-cell;        
+            vertical-align: middle;            
+        }
+        
+        .showEdContent {            
+            /*border: thin ridge black;*/
+            background-color:#CCCCFF;
+            font-size:9px;
+                        
+            position: absolute;
+            display:none;
+            z-index:100;
+            right:100px;
+            bottom:200px;                                    
+            text-align: center;
+        }
+        
 
     </style>
-
+<!--[if IE]>
+    <style type=text/css>
+    
+        .showEdContent { 
+            width:450px;
+        }
+     </style>
+ <![endif]-->
     <html:base />
     <title>Case Management</title>
     <meta http-equiv="Cache-Control" content="no-cache">
@@ -332,6 +395,10 @@
    function listDisplay(Id, threshold) {
             if( threshold == 0 )
                 return;
+            
+            var saveThreshold = Id + "threshold";
+            if( $(saveThreshold) != undefined )
+                $(saveThreshold).value = threshold;
                 
             var listId = Id + "list";            
             var list = $(listId);
@@ -386,7 +453,8 @@
                 
                 imgfunc[lastName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
                 Element.observe(lastImage, "click", imgfunc[lastName]);                
-            }        
+            }   
+            
     
     }  
     
@@ -407,11 +475,11 @@ function grabEnter(id, event) {
     return true;
 }
 function setupNotes(){
-if(!NiftyCheck())
-    return;
+    if(!NiftyCheck())
+        return;
     
     Rounded("div.note","all","transparent","#CCCCCC","big border #000000");
-    
+        
     //need to set focus after rounded is called
     adjustCaseNote();    
     setCaretPosition($(caseNote), $(caseNote).value.length);
@@ -443,25 +511,42 @@ function init() {
     var navBars = new navBarLoader();
     navBars.load();  
     monitorNavBars(null);
+    showIssueNotes();
     Element.observe(window, "resize", monitorNavBars);
+    new Draggable("showEditNote");
+    
+    if(!NiftyCheck())
+        return;
+
+    Rounded("div.showEdContent","all","transparent","#CCCCCC","big border #000000");    
+    
+}
+
+/*
+ *Draw the cpp views
+ */
+function showIssueNotes() {
+    var issueNoteUrls = {
+        divR1I1:    "<c:out value="${ctx}"/>/CaseManagementView.do?hc=996633&method=listNotes&providerNo=<c:out value="${providerNo}"/>&demographicNo=<c:out value="${demographicNo}"/>&issue_code=SocHistory&title=Social%20History&cmd=divR1I1",
+        divR1I2:    "<c:out value="${ctx}"/>/CaseManagementView.do?hc=996633&method=listNotes&providerNo=<c:out value="${providerNo}"/>&demographicNo=<c:out value="${demographicNo}"/>&issue_code=MedHistory&title=Medical%20History&cmd=divR1I2",
+        divR2I1:    "<c:out value="${ctx}"/>/CaseManagementView.do?hc=996633&method=listNotes&providerNo=<c:out value="${providerNo}"/>&demographicNo=<c:out value="${demographicNo}"/>&issue_code=Concerns&title=Ongoing%20Concerns&cmd=divR2I1",
+        divR2I2:    "<c:out value="${ctx}"/>/CaseManagementView.do?hc=996633&method=listNotes&providerNo=<c:out value="${providerNo}"/>&demographicNo=<c:out value="${demographicNo}"/>&issue_code=Reminders&title=Reminders&cmd=divR2I2"
+    };
+    var limit = 5;
+    
+    for( idx in issueNoteUrls ) {
+        loadDiv(idx,issueNoteUrls[idx],limit);
+    }
 }
 
 function navBarLoader() {
-    $("leftNavBar").style.height = $("content").getHeight();
-    $("rightNavBar").style.height = $("content").getHeight();
+
+
+   $("leftNavBar").style.height = "660px";
+   $("rightNavBar").style.height = "660px";
     
-    /*
-     *is right navbar present?
-     *if so work with it
-     *if not, set max lines to 0
-     */
-    if( $("rightNavBar") != undefined ) {
-        $("rightNavBar").style.height = $("notCPP").getHeight();
-        this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 12);        
-    }
-    else
-        this.rightNumLines = 0;
-        
+    
+    this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 12);                    
     this.maxLeftNumLines = Math.floor($("leftNavBar").getHeight() / 12);    
     this.arrLeftDivs = new Array();
     this.arrRightDivs = new Array();
@@ -490,8 +575,9 @@ function navBarLoader() {
               
             var rightNavBar = {
                   allergies:    "<c:out value="${ctx}"/>/oscarEncounter/displayAllergy.do?hC=FF9933",
-                  Rx:           "<c:out value="${ctx}"/>/oscarEncounter/displayRx.do?hC=C3C3C3",
-                  issues:       "<c:out value="${ctx}"/>/oscarEncounter/displayIssues.do?hC=CC9900"
+                  Rx:           "<c:out value="${ctx}"/>/oscarEncounter/displayRx.do?hC=C3C3C3",                  
+                  issues:       "<c:out value="${ctx}"/>/oscarEncounter/displayIssues.do?hC=CC9900",
+                  OMeds:        "<c:out value="${ctx}"/>/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=<c:out value="${providerNo}"/>&demographicNo=<c:out value="${demographicNo}"/>&issue_code=OMeds&title=Other%20Meds&cmd=OMeds"
               };
           var URLs = new Array();
           URLs.push(leftNavBar);
@@ -508,7 +594,7 @@ function navBarLoader() {
             for( idx in URLs[j] ) {                                
                 var div = document.createElement("div");            
                 div.className = "leftBox";
-                div.style.display = "block";
+                div.style.display = "block";                
                 div.id = idx;
                 $(navbar).appendChild(div); 
                 
@@ -548,7 +634,7 @@ function navBarLoader() {
                                                 navBarObj.display(navBar,div);
                                            }, 
                                 onFailure: function(request) {
-                                                $(div).innerHTML = "<h3>Error:<\/h3>" + request.status;
+                                                $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
                                             }
                             }
 
@@ -597,6 +683,7 @@ function navBarLoader() {
             var num2reduce;
             var numLines;
             var threshold;
+            
             for( var idx = 0; idx < divs.length; ++idx ) {
                 numLines = parseInt($F(divs[idx].id + "num"));
                 num2reduce = Math.ceil(overflow * (numLines/total));
@@ -604,17 +691,167 @@ function navBarLoader() {
                     --num2reduce;
                 
                 threshold = numLines - num2reduce;
-                console.log(idx + " threshold " + threshold);
-                listDisplay(divs[idx].id, threshold);                
+                listDisplay(divs[idx].id, threshold);                  
             }        
         };
 
 }
 
+//display in place editor
+function showEdit(e,noteId, editors, date, revision, note, url, containerDiv, reloadUrl) {    
+    //Event.extend(e);
+    //e.stop();
+    
+    var limit = containerDiv + "threshold";
+    var editElem = "showEditNote";
+    var pgHeight = pageHeight();
+    var right = Math.round((pageWidth() - $(editElem).getWidth())/2);
+    var top = Event.pointerY(e);   
+    var height = $("showEditNote").getHeight();    
+    var gutterMargin = 150;            
+    
+    if( right < gutterMargin )
+        right = gutterMargin;
+                    
+               
+    $("noteEditTxt").value = note;
+    
+    var editorUl = "<ul style='list-style: none outside none; margin:0px;'>";
+    
+    if( editors.length > 0 ) {
+        var editorArray = editors.split(";");    
+        var idx;
+        for( idx = 0; idx < editorArray.length; ++idx ) {
+            if( idx % 2 == 0 )
+                editorUl += "<li>" + editorArray[idx];
+            else
+                editorUl += "; " + editorArray[idx] + "</li>";
+        }
+
+        if( idx % 2 == 0 )
+            editorUl += "</li>";
+    }    
+    editorUl += "</ul>";
+    
+    var noteInfo = "<div style='float:right;'><i>Date:&nbsp;" + date + "&nbsp;rev<a href='#' onclick='return showHistory(\"" + noteId + "\",event);'>"  + revision + "</a></i></div>" + 
+                    "<div><span style='float:left;'>Editors: </span>" + editorUl  + "</div><br style='clear:both;'>";                                                        
+                    
+    $("issueNoteInfo").update(noteInfo);
+    $("frmIssueNotes").action = url;   
+    $("reloadUrl").value = reloadUrl;
+    $("containerDiv").value = containerDiv;
+       
+    $(editElem).style.right = right + "px";
+    $(editElem).style.top = top + "px";
+    if( Prototype.Browser.IE ) {
+        //IE6 bug of showing select box    
+        $("channel").style.visibility = "hidden";
+        $(editElem).style.display = "block";        
+    }
+    else
+        $(editElem).style.display = "table"; 
+        
+    $("noteEditTxt").focus();
+    
+    return false;
+}
+
+function updateCPPNote() {
+   var url = $("frmIssueNotes").action;
+   var reloadUrl = $("reloadUrl").value;
+   var div = $("containerDiv").value;
+   
+   $('channel').style.visibility ='visible';
+   $('showEditNote').style.display='none';
+   var params = $("frmIssueNotes").serialize();   
+   var objAjax = new Ajax.Request (                        
+                          url,
+                            {
+                                method: 'post', 
+                                evalScripts: true,
+                                postBody: params,
+                                onSuccess: function(request) {   
+                                                if( request.responseText.length > 0 )
+                                                    $(div).update(request.responseText);
+                                           }, 
+                                onFailure: function(request) {
+                                                $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
+                                            }
+                            }
+
+                      );
+    return false;
+
+}
+
+function loadDiv(div,url,limit) {
+    
+    var objAjax = new Ajax.Request (                        
+                            url,
+                            {
+                                method: 'post', 
+                                evalScripts: true,
+                                /*onLoading: function() {                            
+                                                $(div).update("<p>Loading ...<\/p>");
+                                            },*/
+                                onSuccess: function(request) {                            
+                                                /*while( $(div).firstChild )
+                                                    $(div).removeChild($(div).firstChild);
+                                                */
+                                                
+                                                $(div).update(request.responseText);
+                                                //listDisplay(div,100);
+                                               
+                                           }, 
+                                onFailure: function(request) {
+                                                $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
+                                            }
+                            }
+
+                      );
+    return false;
+
+}
+
+/*
+ *Manage issues attached to notes
+ */
+ var expandedIssues = new Array();
+ function displayIssue(id) {
+        //if issue has been changed/deleted remove it from array and return
+        if( $(id) == null ) {
+            removeIssue(id);
+            return false;
+        }
+        var idx;
+        var parent = $(id).parentNode;
+        $(id).toggle();
+        if( $(id).style.display != "none" ) {            
+            parent.style.backgroundColor = "#dde3eb";
+            parent.style.border = "1px solid #464f5a";
+            
+            if( (idx = expandedIssues.indexOf(id)) == -1 )
+                expandedIssues.push(id);
+        }
+        else {
+            parent.style.backgroundColor = "";
+            parent.style.border = ""; 
+            
+            removeIssue(id);
+        }
+        return false;
+   }
+   
+   function removeIssue(id) {
+        var idx;
+        
+        if( (idx = expandedIssues.indexOf(id)) > -1 )
+            expandedIssues.splice(idx,1);
+   }
 </script>
   </head> 
   <body id="body" style="margin:0px;" onload="init()" onunload="onClosing()">
-      <div id="main">
+      <div id="main">          
           <div id="header">
               <tiles:insert attribute="header" />
           </div>
@@ -630,7 +867,19 @@ function navBarLoader() {
           <div id="rightNavBar" style="display:inline; float:right; width:20%; margin-left:-3px;">
               <tiles:insert attribute="rightNavigation" />
           </div>  
-
+          
+          <div id="showEditNote" class="showEdContent">
+              <form id="frmIssueNotes" action="" method="post" onsubmit="return updateCPPNote();">
+                  <input type="hidden" id="reloadUrl" name="reloadUrl" value="">
+                  <input type="hidden" id="containerDiv" name="containerDiv" value="">
+                  <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" wrap="soft"></textarea><br>
+                  <span style="float:right; margin-right:10px;">
+                      <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>
+                      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick="$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;" title='<bean:message key="global.btnExit"/>'>
+                  </span>
+                  <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
+              </form>
+          </div>
       </div>
   </body>
 </html:html>
