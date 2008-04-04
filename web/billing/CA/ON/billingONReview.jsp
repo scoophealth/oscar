@@ -268,7 +268,9 @@ boolean dupServiceCode = false;
                 function showtotal(){
                     var subtotal = document.getElementById("total").value;
                     //subtotal = subtotal * 1 + document.getElementById("gst").value * 1;
-                        document.getElementById("stotal").value = subtotal;
+                    var element = document.getElementById("stotal");
+                    if( element != null )
+                        element.value = subtotal;
                 }
 		
 	//-->
@@ -664,7 +666,8 @@ function onCheckMaster() {
 		//alert(stotal.length + " : " + stotal.indexOf("."));
 		stotal = stotal + "00".substring(0, (stotal.length - stotal.indexOf('.') - 1));
 	}
-	document.forms[0].total.value = stotal;
+        var num = new Number(stotal);
+	document.forms[0].total.value = num.toFixed(2);
 }
 	var ntotal = 0.00;
     for (var i =0; i <document.forms[0].elements.length; i++) {
@@ -682,7 +685,8 @@ function onCheckMaster() {
 		//alert(stotal.length + " : " + stotal.indexOf("."));
 		stotal = stotal + "00".substring(0, (stotal.length - stotal.indexOf('.') - 1));
 	}
-	document.forms[0].total.value = stotal; 
+        var num = new Number(stotal);
+	document.forms[0].total.value = num.toFixed(2); 
 
 -->
 </script>
@@ -801,7 +805,7 @@ if(props2.getProperty("clinicSatelliteCity") != null) {
                         <input type="hidden" name="provider_no" value="<%=request.getParameter("xml_provider").substring(0,request.getParameter("xml_provider").indexOf("|"))%>"/>
                         GST Billed:<input type="text" id="gst" name="gst" value="<%=gstTotal%>" size="6"/><br>
                         <input type="hidden" id="gstBilledTotal" name="gstBilledTotal" value="<%=gstbilledtotal%>" size="6" />
-                        Total:<input type="text" disabled id="stotal" name = "stotal" value="0.00" size="6" /><br>
+                        Total:<input type="text" id="stotal" disabled name = "stotal" value="0.00" size="6" /><br>
 			Payments:<input type="text" name="payment" value="0.00" size="6" onDblClick="settlePayment();" /><br/>
 			Refunds:<input type="text" name="refund" value="0.00" size="6"/>
 			</td>
