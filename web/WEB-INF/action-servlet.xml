@@ -110,7 +110,7 @@
         <property name="roleManager" ref="roleManager"/>
         <property name="programManager" ref="programManager"/>
         <property name="admissionManager" ref="admissionManager"/>
-        <property name="surveyManager" ref="oscarSurveyManager"/>
+        <property name="surveyManager" ref="oscarSurveyManager"/>        
     </bean>
     <bean name="/CaseManagementEntry" class="org.oscarehr.casemgmt.web.CaseManagementEntryAction" singleton="false">
         <property name="caseManagementManager" ref="caseManagementManager"/>
@@ -126,6 +126,10 @@
         <property name="caseManagementManager" ref="caseManagementManager"/>
     </bean>
 
+    <bean name="/oscarEncounter/displayOMeds" class="oscar.oscarEncounter.pageUtil.EctDisplayOtherMedsAction" singleton="false">
+        <property name="caseManagementManager" ref="CaseManagementManager"/>
+    </bean>
+    
     <!--  Vaccine -->
     <bean name="/VaccineProviderReport" class="org.oscarehr.vaccine.VaccineProviderReportAction" singleton="false">
         <property name="programManager" ref="programManager"/>
@@ -186,6 +190,7 @@
     <bean name="/phrExchange" class="org.oscarehr.phr.web.PHRExchangeAction" singleton="false">
         <property name="phrService" ref="phrService"/>
     </bean>
+    
 <!--
     <bean name="/PMmodule/Reports/CustomReport" class="org.oscarehr.PMmodule.web.reports.CustomReportAction" singleton="false" autowire="byName">
     </bean>
