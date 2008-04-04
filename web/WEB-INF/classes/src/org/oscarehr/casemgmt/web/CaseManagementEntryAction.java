@@ -1542,13 +1542,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             String encounterText = "";
             String apptDate = convertDateFmt(bean.appointmentDate);
             if (bean.eChartTimeStamp == null) {
-                encounterText = "\n[" + UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy H:mm", request.getLocale()) + " .: " + bean.reason + "] \n";
+                encounterText = "\n[" + UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy", request.getLocale()) + " .: " + bean.reason + "] \n";
                 // encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
             }
             else { // if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
                 // System.out.println("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
                 // encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
-                encounterText = "\n[" + ("".equals(bean.appointmentDate) ? UtilDateUtilities.getToday("dd-MMM-yyyy H:mm") : apptDate) + " .: " + bean.reason + "]\n";
+                encounterText = "\n[" + ("".equals(bean.appointmentDate) ? UtilDateUtilities.getToday("dd-MMM-yyyy") : apptDate) + " .: " + bean.reason + "]\n";
             } /*
                  * else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){ //encounterText
                  * +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"; encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n"; }
