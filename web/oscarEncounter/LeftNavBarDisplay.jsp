@@ -135,9 +135,11 @@
                         </span>
                 </li>
                 <%
-                } 
+                }
+                if( j == 0 ) {
                 %>
-                
+                <li>&nbsp;</li>
+                <%}%>
             </ul>   
         <input type="hidden" id="<%=request.getAttribute("navbarName")%>num" value="<%=j%>" />
     <%   
