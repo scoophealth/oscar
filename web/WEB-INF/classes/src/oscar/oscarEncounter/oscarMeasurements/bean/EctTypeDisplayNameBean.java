@@ -24,8 +24,10 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
+import java.io.Serializable;
 
-public class EctTypeDisplayNameBean{
+
+public class EctTypeDisplayNameBean implements Serializable{
 
        String typeDisplayName;
        
