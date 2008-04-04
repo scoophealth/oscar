@@ -87,7 +87,6 @@
 			 </html-el:select>
 		   </td>
 		   <td>
-<!-- 		   <quatro:lookupTag tableName="PRM" formProperty="staffManagerForm" bodyProperty="valdesc" codeProperty="val" codeWidth="1px"></quatro:lookupTag> -->
              <html-el:select property="programId" onchange="select_program(this);">
                <html-el:option value="0">Any</html-el:option>
                <c:forEach var="program" items="${programs}">
