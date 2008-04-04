@@ -31,8 +31,11 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
     <class name="org.oscarehr.casemgmt.model.HashAuditImpl" table="hash_audit">
-        <id name="signature" unsaved-value="0">            
-        </id>
+        <id name="pkid" column="pkid" unsaved-value="0">
+		<generator class="native" />
+	</id>
+        
+        <property name="signature"/>                    
         <property name="id" />
         <property name="type" />
         <property name="algorithm" />

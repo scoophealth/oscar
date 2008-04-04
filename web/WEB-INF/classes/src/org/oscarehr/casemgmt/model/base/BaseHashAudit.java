@@ -38,11 +38,20 @@ public abstract class BaseHashAudit implements Serializable {
     protected String type;
     protected String algorithm;
     private long id;
+    private long pkid;  //primary key
     
     /** Creates a new instance of BaseHashAudit */
     public BaseHashAudit() {
         this.signature = new StringBuffer();
         this.id = 0;
+    }
+    
+    public void setPkid(long pkid) {
+        this.pkid = pkid;
+    }
+    
+    public long getPkid() {
+        return this.pkid;
     }
     
     public String getSignature() {
