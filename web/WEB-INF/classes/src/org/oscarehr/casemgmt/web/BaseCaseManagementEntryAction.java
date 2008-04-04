@@ -225,16 +225,13 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		}
 		return rt + "]\n";
 	}
-
-	/**
-	 * @param programId is optional, can be null for none.
-	 */
-	protected CaseManagementIssue newIssueToCIssue(CaseManagementEntryFormBean cform, Issue iss, Integer programId) {
-		CaseManagementIssue cIssue = new CaseManagementIssue();
+        
+        protected CaseManagementIssue newIssueToCIssue(String demoNo, Issue iss, Integer programId) {
+            	CaseManagementIssue cIssue = new CaseManagementIssue();
 		// cIssue.setActive(true);
 		cIssue.setAcute(false);
 		cIssue.setCertain(false);
-		cIssue.setDemographic_no((String) cform.getDemoNo());
+		cIssue.setDemographic_no(demoNo);
 
 		cIssue.setIssue_id(iss.getId().longValue());
 
@@ -255,6 +252,13 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		// add new issues to ongoing concern
 		//caseManagementMgr.addNewIssueToConcern((String) cform.getDemoNo(), iss.getDescription());
 		return cIssue;
+        }
+
+	/**
+	 * @param programId is optional, can be null for none.
+	 */
+	protected CaseManagementIssue newIssueToCIssue(CaseManagementEntryFormBean cform, Issue iss, Integer programId) {
+            return newIssueToCIssue((String) cform.getDemoNo(),iss,programId);
 	}
 	
 	protected Map convertIssueListToMap(List issueList) {
