@@ -31,7 +31,9 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
-<% String noteIndex = ""; %>
+<% String noteIndex = "";
+   String encSelect = "encTypeSelect";
+%>
 <nested:empty name="caseManagementEntryForm" property="caseNote.id">
     <nested:notEmpty name="newNoteIdx">
         <% noteIndex = request.getParameter("newNoteIdx"); %>
@@ -45,7 +47,14 @@
     </nested:empty>
 </nested:empty>
 <nested:notEmpty name="caseManagementEntryForm" property="caseNote.id">   
-    <% noteIndex = String.valueOf(((CaseManagementEntryFormBean)session.getAttribute("caseManagementEntryForm")).getCaseNote().getId());%>
+    <% 
+       CaseManagementEntryFormBean frm = (CaseManagementEntryFormBean)request.getAttribute("caseManagementEntryForm");
+       if( frm == null )
+           frm = (CaseManagementEntryFormBean)session.getAttribute("caseManagementEntryForm");
+       
+       noteIndex = String.valueOf(frm.getCaseNote().getId());
+       
+    %>
     <div class="sig" id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
     <div id="observation<nested:write name="caseManagementEntryForm" property="caseNote.id" />" style="float:right;margin-right:3px;">
 </nested:notEmpty>
@@ -79,9 +88,10 @@
             <div style="margin:0px;">&nbsp;</div>
         </nested:equal>  
     </div>    
+    <% encSelect += noteIndex; %>
     <div style="clear:right;margin-right:3px; margin:0px; float:right;">Enc Type:&nbsp;<span id="encType<%=noteIndex%>">
         <nested:empty name="ajaxsave">
-                <html:select styleId="encType" styleClass="encTypeCombo" name="caseManagementEntryForm" property="caseNote.encounter_type">
+                <html:select styleId="<%=encSelect%>" styleClass="encTypeCombo" name="caseManagementEntryForm" property="caseNote.encounter_type">
                     <html:option value=""></html:option>
                     <html:option value="face to face encounter with client">face to face encounter with client</html:option>
                     <html:option value="telephone encounter with client">telephone encounter with client</html:option>
@@ -93,19 +103,22 @@
          </nested:notEmpty>
     </span></div>
     <nested:size id="numIssues" name="caseManagementEntryForm" property="caseNote.issues" />
-    <nested:equal name="numIssues" value="0">
+   <%-- <nested:equal name="numIssues" value="0">
         <div>&nbsp;</div>
-    </nested:equal>
+    </nested:equal> --%>
     <nested:greaterThan name="numIssues" value="0">
-        Assigned Issues
-        <ul style="list-style: circle outside none; margin:0px;">
-            <nested:iterate id="noteIssue" property="caseNote.issues" name="caseManagementEntryForm">
-                <li><c:out value="${noteIssue.issue.description}"/></li>
-            </nested:iterate>
-        </ul>
+        <div style="display:block;">  
+            <span style="float:left;">Assigned Issues</span>
+            <ul style="float:left; list-style: circle inside; margin:0px;">
+                <nested:iterate id="noteIssue" property="caseNote.issues" name="caseManagementEntryForm">
+                    <li><c:out value="${noteIssue.issue.description}"/></li>
+                </nested:iterate>
+            </ul>
+            <br style="clear:both;">
+        </div>
     </nested:greaterThan>
     <nested:equal name="numIssues" value="0">
-        <div style="margin:0px;">&nbsp;</div>
+        <div style="margin:0px;"><br style="clear:both;"></div>
     </nested:equal>    
 </div>
                             
@@ -171,7 +184,7 @@
 <script type="text/javascript">   
     
     //check to see if we need to update div containers to most recent note id
-   //this happens only when we're called thru ajaxsave
+   //this happens only when we're called thru ajaxsave  
    <nested:notEmpty name="ajaxsave">
         var origId = "<nested:write name="origNoteId" />";
         var newId = "<nested:write name="ajaxsave" />";  
@@ -184,6 +197,14 @@
             newDiv = prequel[idx] + newId;            
             $(oldDiv).id = newDiv;        
         }  
+       updatedNoteId = newId;
+       
+       <%
+            CaseManagementEntryFormBean form = (CaseManagementEntryFormBean)request.getAttribute("caseManagementEntryForm");
+            String noteTxt = form.getCaseNote().getNote();
+            noteTxt = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(noteTxt);
+       %>
+       completeChangeToView("<%=noteTxt%>",newId);
     </nested:notEmpty>
     
    if( $("toggleIssue") != null )
@@ -197,11 +218,12 @@
    
    //do we have a custom encounter type?  if so add an option to the encounter type select
    var encounterType = '<nested:write name="caseManagementEntryForm" property="caseNote.encounter_type"/>';
+   var selectEnc = "<%=encSelect%>";
    
-   if( $("encType") != null ) {
-   
-        if( $F("encType") == "" && encounterType != "" ) {
-            var select = document.getElementById("encType");
+   if( $(selectEnc) != null ) {        
+        
+        if( $F(selectEnc) == "" && encounterType != "" ) {
+            var select = document.getElementById(selectEnc);
             var newOption =document.createElement('option');        
             newOption.text = encounterType;
             newOption.value = encounterType;
@@ -218,40 +240,11 @@
             select.selectedIndex = select.options.length - 1;
         }
         
-        new Autocompleter.SelectBox('encType');
+        new Autocompleter.SelectBox(selectEnc);        
+        
    }     
    
-   function displayIssue(id) {
-        //if issue has been changed/deleted remove it from array and return
-        if( $(id) == null ) {
-            removeIssue(id);
-            return false;
-        }
-        var idx;
-        var parent = $(id).parentNode;
-        $(id).toggle();
-        if( $(id).style.display != "none" ) {            
-            parent.style.backgroundColor = "#dde3eb";
-            parent.style.border = "1px solid #464f5a";
-            
-            if( (idx = expandedIssues.indexOf(id)) == -1 )
-                expandedIssues.push(id);
-        }
-        else {
-            parent.style.backgroundColor = "";
-            parent.style.border = ""; 
-            
-            removeIssue(id);
-        }
-        return false;
-   }
-   
-   function removeIssue(id) {
-        var idx;
-        
-        if( (idx = expandedIssues.indexOf(id)) > -1 )
-            expandedIssues.splice(idx,1);
-   }      
+         
    //store observation date so we know if user changes it
    if( $("observationDate") != null ) {
         origObservationDate = $("observationDate").value;            
