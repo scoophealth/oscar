@@ -123,8 +123,7 @@ public class TeleplanCorrectionActionWCB
         if ("1".equals(data.getAdjType())) {
           dblAdj = dblAdj * -1.0;
         }
-        dao.createBillingHistoryArchive(data.getId(), dblAdj,
-                                        MSPReconcile.PAYTYPE_IA);
+        dao.createBillingHistoryArchive(data.getId(), dblAdj, MSPReconcile.PAYTYPE_IA);
         msp.settleIfBalanced(data.getId());
       }
       else {
@@ -134,6 +133,7 @@ public class TeleplanCorrectionActionWCB
         dao.createBillingHistoryArchive(data.getId());
 
       }
+      updateUnitValue(data.getBillingUnit(),data.getBillingNo());
 
       log.debug("sql_biling "+sql_biling+" ");
       bean.queryExecuteUpdate(data.getBillingForStatus(), sql_biling);
@@ -190,6 +190,16 @@ public class TeleplanCorrectionActionWCB
 
     return actionForward;
 
+  }
+  
+  private void updateUnitValue(String i,String billingno){
+     try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      db.RunSQL("update billingmaster set billing_unit = '"+i+"' WHERE billing_no ='" +billingno+ "'");
+      db.CloseConn();
+     }catch (java.sql.SQLException e) {
+        System.err.println(e.getMessage());
+     }
   }
 
   private String GetFeeItemAmount(String fee1, String fee2) {
