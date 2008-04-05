@@ -1,7 +1,7 @@
 <!--  
-/*
+/* 
  * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * Copyright (c) 2001-2008. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
@@ -335,11 +335,11 @@ function refreshTabAlerts(id) {
            </caisi:isModuleLoad>
         </li>
         <oscar:oscarPropertiesCheck property="WORKFLOW" value="yes">
-           <li><a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../oscarWorkflow/WorkFlowList.jsp','workflow')">WorkFlow</a></li> 
+           <li><a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../oscarWorkflow/WorkFlowList.jsp','<bean:message key="global.workflow"/>')"><bean:message key="global.btnworkflow"/></a></li> 
         </oscar:oscarPropertiesCheck>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
           <li>
-	     <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp', 'Admin');return false;">Admin</a>
+	     <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp', 'Admin');return false;"><bean:message key="global.admin"/></a>
           </li>
         </security:oscarSec>
          
@@ -612,4 +612,48 @@ function refreshTabAlerts(id) {
 </table>
 
 </body>
+<script language="JavaScript">
+
+document.onkeydown=function(e){
+	evt = e || window.event;  // window.event is the IE equivalent
+	if (evt.altKey) {
+		//use if (evt.altKey || evt.metaKey) Alt+A (and)/or for Mac when the browser supports it, Command+A
+		switch(evt.keyCode) {
+			case <bean:message key="global.adminShortcut"/> : popupPage2('../admin/admin.jsp', 'Admin');  break;  //run code for 'A'dmin
+			case <bean:message key="global.billingShortcut"/> : popupPage2('../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;  //code for 'B'illing
+			case <bean:message key="global.calendarShortcut"/> : popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../provider/providercontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>&param=<%=URLEncoder.encode("&view=0&displaymode=day&dboperation=searchappointmentday","UTF-8")%>');  return false;  //run code for 'C'alendar
+			case <bean:message key="global.edocShortcut"/> : popup('700', '1000', '../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');  return false;  //run code for e'D'oc
+			case <bean:message key="global.resourcesShortcut"/> : popupPage2('<%=resourcebaseurl%>'); return false; // code for R'e'sources
+			case <bean:message key="global.helpShortcut"/> : popupPage(600,750,'<%=resourcebaseurl+"Support"%>');  return false;  //run code for 'H'elp
+			case <bean:message key="global.ticklerShortcut"/> : popupPage2('../Tickler.do','<bean:message key="global.tickler"/>');  return false;  //run code for t'I'ckler  **to do allow for Tickler +**
+			case <bean:message key="global.labShortcut"/> : popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');  return false;  //run code for 'L'ab
+			case <bean:message key="global.msgShortcut"/> : popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>'); return false;  //run code for 'M'essage
+			case <bean:message key="global.monthShortcut"/> : window.open("providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth","_self"); return false ;  //run code for Mo'n'th
+			case <bean:message key="global.conShortcut"/> : popupOscarRx(625,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>');  return false;  //run code for c'O'nsultation
+			case <bean:message key="global.prefShortcut"/> : popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>');  return false;  //run code for 'P'references  **todo note that there may be 2 of em!**
+			case <bean:message key="global.reportShortcut"/> : popupPage2('../report/reportindex.jsp','reportPage');  return false;  //run code for 'R'eports
+			case <bean:message key="global.searchShortcut"/> : popupPage2('../demographic/search.jsp');  return false;  //run code for 'S'earch
+			case <bean:message key="global.dayShortcut"/> : window.open("providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday","_self") ;  return false;  //run code for 'T'oday                       
+			case <bean:message key="global.viewShortcut"/> : {
+				<% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>
+				         review('0');  return false; //scheduled providers 'V'iew 
+				<% } else {  %>
+				         review('1');  return false; //all providers 'V'iew 
+				<% } %>
+			}
+			case <bean:message key="global.workflowShortcut"/> : popup(700,1000,'../oscarWorkflow/WorkFlowList.jsp','<bean:message key="global.workflow"/>'); return false ; //code for 'W'orkflow
+			case <bean:message key="global.myoscarShortcut"/> : popup('600', '900','../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')
+			default : return;
+               }
+	}
+	if (evt.ctrlKey) {
+               switch(evt.keyCode) {
+			case <bean:message key="global.btnLogoutShortcut"/> : window.open('../logout.jsp','_self');  return false;  // 'Q'uit/log out
+			default : return;
+               }        
+
+        }
+}
+
+</script>
 </html:html>
