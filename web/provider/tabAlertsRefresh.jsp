@@ -36,10 +36,10 @@
 <oscar:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscar:newLab>
 <%  }
     if (tab.equals("oscar_new_msg")) { %>
-        <oscar:newMessage providerNo="<%=curUser_no%>">Msg</oscar:newMessage>
+        <oscar:newMessage providerNo="<%=curUser_no%>"><bean:message key="global.msg"/></oscar:newMessage>
 <%  }
     if (tab.equals("oscar_new_tickler")) { %>
-        <oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.tickler"/></oscar:newTickler>
+        <oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.btntickler"/></oscar:newTickler>
 <%  }
 
     if (!OscarProperties.getInstance().isTorontoRFQ() && tab.equals("oscar_scratch") ) { %>
