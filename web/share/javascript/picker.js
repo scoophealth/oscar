@@ -11,7 +11,7 @@ var TCP = new TColorPicker();
 function TCPopup(field, palette) {
 	this.field = field;
 	this.initPalette = !palette || palette > 3 ? 0 : palette;
-	var w = 194, h = 240,
+	var w = 194, h = 400,
 	move = screen ? 
 		',left=' + ((screen.width - w) >> 1) + ',top=' + ((screen.height - h) >> 1) : '', 
 	o_colWindow = window.open('picker.html', null, "help=no,status=no,scrollbars=no,resizable=no" + move + ",width=" + w + ",height=" + h + ",dependent=yes", true);
@@ -20,7 +20,7 @@ function TCPopup(field, palette) {
 }
 
 function TCBuildCell (R, G, B, w, h) {
-	return '<td bgcolor="#' + this.dec2hex((R << 16) + (G << 8) + B) + '"><a href="javascript:P.S(\'' + this.dec2hex((R << 16) + (G << 8) + B) + '\')" onmouseover="P.P(\'' + this.dec2hex((R << 16) + (G << 8) + B) + '\')"><img src="pixel.gif" width="' + w + '" height="' + h + '" border="0"></a></td>';
+	return '<td bgcolor="#' + this.dec2hex((R << 16) + (G << 8) + B) + '"><a href="javascript:P.S(\'' + this.dec2hex((R << 16) + (G << 8) + B) + '\')" onmouseover="P.P(\'' + this.dec2hex((R << 16) + (G << 8) + B) + '\')">&nbsp;&nbsp;</a></td>';
 }
 
 function TCSelect(c) {
