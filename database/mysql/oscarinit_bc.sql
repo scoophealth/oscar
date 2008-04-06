@@ -1652,6 +1652,22 @@ CREATE TABLE formBCAR2007(
   pg3_comment16 varchar(80),
   pg3_retIn16 varchar(8),
   pg3_signature varchar(60),
+  ar2_EPDS1 int(1),
+  ar2_EPDS2 int(1),
+  ar2_EPDS3 int(1),
+  ar2_EPDS4 int(1),
+  ar2_EPDS5 int(1),
+  ar2_EPDS6 int(1),
+  ar2_EPDS7 int(1),
+  ar2_EPDS8 int(1),
+  ar2_EPDS9 int(1),
+  ar2_EPDS10 int(1),
+  ar2_EPDSscore int(5),
+  ar2_tweakT int(2),
+  ar2_tweakW	varchar(3),
+  ar2_tweakE	varchar(3),
+  ar2_tweakA	varchar(3),
+  ar2_tweakK	varchar(3),
   PRIMARY KEY (ID)
 ) TYPE=MyISAM;
 

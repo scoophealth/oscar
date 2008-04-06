@@ -110,6 +110,13 @@ if (props.getProperty("ar2_age", "").equals("") ) 	props.setProperty("ar2_age", 
         z-index:99;  visibility:hidden;
         font-size: 11px;
         border: 1px solid black;}
+.epdsAnswer {
+        padding-left:20px;
+}
+.tweakcell{
+        border: 1px solid black;
+        padding: 10px
+}
         -->
     </style>
 </head>
@@ -234,7 +241,6 @@ function calcEDDAge(){
     }else if (DOB.value.length != 10){
         alert("Please enter a date of birth first.");
     }else{
-        alert("ok");
         var EDD_array = EDD.split("/");
         age = EDD_array[2] - DOB_array[2];
         if (EDD_array[1] < DOB_array[1]){
@@ -291,10 +297,28 @@ function calcBMIMetric() {
         }
        return ret;
     }
+    function onPrintScores() {
+        document.forms[0].submit.value="print"; 
+        var ret = checkAllDates();
+        if(ret==true)
+        {            
+            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Antenatal+Record+EPDS/TWEAK+Scores&__cfgfile=bcar2PrintCfgScores_2007&__template=EPDS_TWEAK";
+            document.forms[0].target="_blank";            
+        }
+       return ret;
+    }
+    function onPrint12() {
+        document.forms[0].submit.value="printAll"; 
+                
+        document.forms[0].action = "../form/formname.do?__title=British+Columbia+Antenatal+Record&__cfgfile=bcar1PrintCfgPg1_2007&__cfgfile=bcar2PrintCfgPg1_2007&__cfgGraphicFile=bcar2PrintGraphCfgPg1_2007&__graphicPage=2<%= props.getProperty("pg3_date1", "") == "" ? "&__template=bcarARs2_2007" : "&__cfgfile=bcar2PrintCfgPg2_2007&__graphicPage=3&__template=bcarARs1_2007" %>";
+        document.forms[0].target="_blank";            
+        
+        return true;
+    }
     function onPrintAll() {
         document.forms[0].submit.value="printAll"; 
                 
-        document.forms[0].action = "../form/formname.do?__title=British+Columbia+Antenatal+Record&__cfgfile=bcar1PrintCfgPg1_2007&__cfgfile=bcar2PrintCfgPg1_2007&__cfgGraphicFile=bcar2PrintGraphCfgPg1_2007&__graphicPage=2<%= props.getProperty("pg3_date1", "") == "" ? "&__cfgfile=bcar1PrintCfgPg2_2007&__template=bcarAll2_2007" : "&__cfgfile=bcar2PrintCfgPg2_2007&__graphicPage=3&__cfgfile=bcar1PrintCfgPg2_2007&__template=bcarAll1_2007" %>";
+        document.forms[0].action = "../form/formname.do?__title=British+Columbia+Antenatal+Record&__cfgfile=bcar1PrintCfgPg1_2007&__cfgfile=bcar2PrintCfgPg1_2007&__cfgGraphicFile=bcar2PrintGraphCfgPg1_2007&__graphicPage=2<%= props.getProperty("pg3_date1", "") == "" ? "&__cfgfile=bcar1PrintCfgPg2_2007&__cfgfile=bcar2PrintCfgScores_2007&__template=bcarAll2_2007" : "&__cfgfile=bcar2PrintCfgPg2_2007&__graphicPage=3&__cfgfile=bcar1PrintCfgPg2_2007&__cfgfile=bcar2PrintCfgScores_2007&__template=bcarAll1_2007" %>";
         document.forms[0].target="_blank";            
         
         return true;
@@ -693,11 +717,126 @@ function calToday(field) {
 	field.value = varDate + '/' + (varMonth) + '/' + calDate.getFullYear();
 }
 
+function calcTweakScore(){
+
+    var val = 0;
+    var tempVal = parseInt(document.forms[0].ar2_tweakT.value);
+    
+    if (tempVal > 2)
+        val = val + 2;
+        
+    tempVal = document.forms[0].ar2_tweakW.value;
+    if (tempVal == "Yes")
+        val = val + 2;
+        
+    tempVal = document.forms[0].ar2_tweakE.value;
+    if (tempVal == "Yes")
+        val = val + 1;
+        
+    tempVal = document.forms[0].ar2_tweakA.value;
+    if (tempVal == "Yes")
+        val = val + 1;
+        
+    tempVal = document.forms[0].ar2_tweakK.value;
+    if (tempVal == "Yes")
+        val = val + 1;
+
+    document.forms[0].pg1_tweakScore.value = val;
+}
+
+function calcEPDSscore(){
+    var val = 0;
+    val = val + getRadioButtonVal(document.forms[0].ar2_EPDS1);
+    val = val + getRadioButtonVal(document.forms[0].ar2_EPDS2);
+    val = val + getRadioButtonVal(document.forms[0].ar2_EPDS3);
+    val = val + getRadioButtonVal(document.forms[0].ar2_EPDS4);
+    val = val + getRadioButtonVal(document.forms[0].ar2_EPDS5);
+    val = val + getRadioButtonVal(document.forms[0].ar2_EPDS6);
+    val = val + getRadioButtonVal(document.forms[0].ar2_EPDS7);
+    val = val + getRadioButtonVal(document.forms[0].ar2_EPDS8);
+    val = val + getRadioButtonVal(document.forms[0].ar2_EPDS9);
+    val = val + getRadioButtonVal(document.forms[0].ar2_EPDS10);
+    
+    document.forms[0].ar2_EPDSscore.value = val;
+}
+
+function getRadioButtonVal(field){
+    var retVal = 0;
+    for (var i=0; i < field.length; i++){
+        if (field[i].checked){
+            retVal = field[i].value;
+            break;
+        }    
+    }
+    
+    return parseInt(retVal);
+}
+
+
+function setEPDSscores(){
+
+    var val = <%= props.getProperty("ar2_EPDS1", "'null'").equals("") ? "'null'" : props.getProperty("ar2_EPDS1", "'null'") %>;
+    if ( val != 'null' ){
+        document.forms[0].ar2_EPDS1[val].checked = true;
+    }
+    
+    val = <%= props.getProperty("ar2_EPDS2", "'null'").equals("") ? "'null'" : props.getProperty("ar2_EPDS2", "'null'") %>;
+    if ( val != 'null' ){
+        document.forms[0].ar2_EPDS2[val].checked = true;
+    }
+    
+    val = <%= props.getProperty("ar2_EPDS3", "'null'").equals("") ? "'null'" : props.getProperty("ar2_EPDS3", "'null'") %>;
+    if ( val != 'null' ){
+    val = 3 - val;
+        document.forms[0].ar2_EPDS3[val].checked = true;
+    }
+    
+    val = <%= props.getProperty("ar2_EPDS4", "'null'").equals("") ? "'null'" : props.getProperty("ar2_EPDS4", "'null'") %>;
+    if ( val != 'null' ){
+        document.forms[0].ar2_EPDS4[val].checked = true;
+    }
+    
+    val = <%= props.getProperty("ar2_EPDS5", "'null'").equals("") ? "'null'" : props.getProperty("ar2_EPDS5", "'null'") %>;
+    if ( val != 'null' ){
+        val = 3 - val;
+        document.forms[0].ar2_EPDS5[val].checked = true;
+    }
+    
+    val = <%= props.getProperty("ar2_EPDS6", "'null'").equals("") ? "'null'" : props.getProperty("ar2_EPDS6", "'null'") %>;
+    if ( val != 'null' ){
+        val = 3 - val;
+        document.forms[0].ar2_EPDS6[val].checked = true;
+    }
+    
+    val = <%= props.getProperty("ar2_EPDS7", "'null'").equals("") ? "'null'" : props.getProperty("ar2_EPDS7", "'null'") %>;
+    if ( val != 'null' ){
+        val = 3 - val;
+        document.forms[0].ar2_EPDS7[val].checked = true;
+    }
+    
+    val = <%= props.getProperty("ar2_EPDS8", "'null'").equals("") ? "'null'" : props.getProperty("ar2_EPDS8", "'null'") %>;
+    if ( val != 'null' ){
+        val = 3 - val;
+        document.forms[0].ar2_EPDS8[val].checked = true;
+    }
+    
+    val = <%= props.getProperty("ar2_EPDS9", "'null'").equals("") ? "'null'" : props.getProperty("ar2_EPDS9", "'null'") %>;
+    if ( val != 'null' ){
+        val = 3 - val;
+        document.forms[0].ar2_EPDS9[val].checked = true;
+    }
+    
+    val = <%= props.getProperty("ar2_EPDS10", "'null'").equals("") ? "'null'" : props.getProperty("ar2_EPDS10", "'null'") %>;
+    if ( val != 'null' ){
+        val = 3 - val;
+        document.forms[0].ar2_EPDS10[val].checked = true;
+    }
+}
 
 </script>
 
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="setEPDSscores();">
 <div ID="Langdiv" class="demo">
     <table bgcolor='silver' width='100%'>
         <tr><td align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('Langdiv',0); return false;">X</a></td></tr>
@@ -826,14 +965,16 @@ function calToday(field) {
             <%
             if (!bView) {
             %>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
+            <input type="submit" style="width:40px;" value="Save" onclick="javascript:return onSave();" />
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <%
             }
             %>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
-            <input type="submit" value="Print All" onclick="javascript:return onPrintAll();"/>
+            <input type="submit" style="width:40px;" value="Exit" onclick="javascript:return onExit();"/>
+            <input type="submit" style="width:50px;" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" style="width:125px;" value="Print EPDS/TWEAK" onclick="javascript:return onPrintScores();"/>
+            <input type="submit" value="Print AR1 & AR2" onclick="javascript:return onPrint12();"/>
+            <input type="submit" style="width:75px;" value="Print All" onclick="javascript:return onPrintAll();"/>
         </td>
         
         <%
@@ -1269,8 +1410,8 @@ function calToday(field) {
         <td width="45%">
             <select name="ar2_labGBSRes" style="width:100%">
                 <option value="" <%= props.getProperty("ar2_labGBSRes", "").equals("")?"selected":""%> ></option>
-                <option value="Yes" <%= props.getProperty("ar2_labGBSRes", "").equals("Yes")?"selected":""%> >Yes</option>
-                <option value="No" <%= props.getProperty("ar2_labGBSRes", "").equals("No")?"selected":""%> >No</option>
+                <option value="Pos" <%= props.getProperty("ar2_labGBSRes", "").equals("Pos")?"selected":""%> >Pos</option>
+                <option value="Neg" <%= props.getProperty("ar2_labGBSRes", "").equals("Neg")?"selected":""%> >Neg</option>
             </select>
         </td>
     </tr>
@@ -2280,14 +2421,16 @@ function calToday(field) {
             <%
             if (!bView) {
             %>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
+            <input type="submit" style="width:40px;" value="Save" onclick="javascript:return onSave();" />
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <%
             }
             %>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
-            <input type="submit" value="Print All" onclick="javascript:return onPrintAll();"/>
+            <input type="submit" style="width:40px;" value="Exit" onclick="javascript:return onExit();"/>
+            <input type="submit" style="width:50px;" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" style="width:125px;" value="Print EPDS/TWEAK" onclick="javascript:return onPrintScores();"/>
+            <input type="submit" value="Print AR1 & AR2" onclick="javascript:return onPrint12();"/>
+            <input type="submit" style="width:75px;" value="Print All" onclick="javascript:return onPrintAll();"/>
         </td>
         
         <%
@@ -2316,309 +2459,309 @@ function calToday(field) {
 
 
 
-<table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-        <th align="center">RISK IDENTIFICATION</th>
-    </tr><tr>
+<table width="100%" border="1"  cellspacing="0" cellpadding="5">
+    <tr valign="top">
         <td>
-            
-            <table width="100%" border="0"  cellspacing="0" cellpadding="0">
+            <table width="100%" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td valign="top">
-                        
-                        <table width="100%" border="0"  cellspacing="0" cellpadding="0">
-                            <tr>
-                                <th colspan="2" align="left">PAST OBSTETRICAL HISTORY</th>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskAbortion" <%= props.getProperty("ar2_riskAbortion", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Abortion (12 - 20 weeks)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskPriCesBirth" <%= props.getProperty("ar2_riskPriCesBirth", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Cesarean birth (uterine surgery)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskHabitAbort" <%= props.getProperty("ar2_riskHabitAbort", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Habitual abortion (3+)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskHypDisorder" <%= props.getProperty("ar2_riskHypDisorder", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Hypertensive disorders of pregnancy</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskPriIUGR" <%= props.getProperty("ar2_riskPriIUGR", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>IUGR baby</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskPriMacr" <%= props.getProperty("ar2_riskPriMacr", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Macrosomic baby</td>
-                            </tr><tr>
-                                <td valign="top">
-                                    <input type="checkbox" name="ar2_riskMajCongAnom" <%= props.getProperty("ar2_riskMajCongAnom", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Major congenital anomalies<br> (e.g. Cardiac, CNS, Down's Syndrome)</td>
-                            </tr><tr>
-                                <td width="1%">
-                                    <input type="checkbox" name="ar2_riskNeonDeath" <%= props.getProperty("ar2_riskNeonDeath", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Neonatal death</td>
-                            </tr><tr>
-                                <td width="1%">
-                                    <input type="checkbox" name="ar2_riskPlacAbruption" <%= props.getProperty("ar2_riskPlacAbruption", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Placental abruption</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskPPHemo" <%= props.getProperty("ar2_riskPPHemo", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Postpartum Hemorrhage</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskPriPretBirth20" <%= props.getProperty("ar2_riskPriPretBirth20", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Preterm birth (< 37 weeks)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskRhImmuY" <%= props.getProperty("ar2_riskRhImmuY", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Rh isoimmunization (affected infant)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskRhImmuN" <%= props.getProperty("ar2_riskRhImmuN", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Rh isoimmunization (unaffected infant)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskStillbirth" <%= props.getProperty("ar2_riskStillbirth", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Stillbirth</td>
-                            </tr>
-                        </table>
-                        
-                    </td><td valign="top">
-                        
-                        <table width="100%" border="0"  cellspacing="0" cellpadding="0">
-                            <tr>
-                                <th colspan="2" align="left">MEDICAL HISTORY RISK FACTORS</th>
-                            </tr><tr>
-                                <th colspan="2" align="left"><br><span class="small9">DIABETES</span></th>
-                            </tr><tr>
-                                <td width="1%">
-                                    <input type="checkbox" name="ar2_riskConDiet" <%= props.getProperty("ar2_riskConDiet", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Controlled by diet only</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskInsDepend" <%= props.getProperty("ar2_riskInsDepend", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Insulin dependent</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskRetDoc" <%= props.getProperty("ar2_riskRetDoc", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Retinopathy documented</td>
-                            </tr><tr>
-                                <th colspan="2" align="left"><span class="small9">HEART DISEASE</span></th>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskAsymt" <%= props.getProperty("ar2_riskAsymt", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Asymptomatic (no effect on daily living)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskSymt" <%= props.getProperty("ar2_riskSymt", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Symptomatic (affects daily living)</td>
-                            </tr><tr>
-                                <th colspan="2" align="left"><span class="small9">HYPERTENSION</span></th>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_risk14090" <%= props.getProperty("ar2_risk14090", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>140/90 or greater</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskHyperDrug" <%= props.getProperty("ar2_riskHyperDrug", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Anti-hypertensive drugs</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskChroRenalDisease" <%= props.getProperty("ar2_riskChroRenalDisease", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Chronic renal disease</td>
-                            </tr><tr>
-                                <th colspan="2" align="left"><span class="small9">OTHER</span></th>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskUnder18" <%= props.getProperty("ar2_riskUnder18", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Age under 18 at delivery</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskOver35" <%= props.getProperty("ar2_riskOver35", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Age 35 or over at delivery</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskAlcoDrug" <%= props.getProperty("ar2_riskAlcoDrug", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Alcohol and/or Drugs</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskUnderweight" <%= props.getProperty("ar2_riskUnderweight", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>BMI less than 18.5 (Underweight)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskObesity" <%= props.getProperty("ar2_riskObesity", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>BMI over 30 (Obesity)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskDepre" <%= props.getProperty("ar2_riskDepre", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Depression</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskH152" <%= props.getProperty("ar2_riskH152", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Height (under 152 cm or 5 ft. 0 in.)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskSmoking" <%= props.getProperty("ar2_riskSmoking", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Smoking</td>
-                            </tr><tr>
-                                <td valign="top">
-                                    <input type="checkbox" name="ar2_riskOtherMedical" <%= props.getProperty("ar2_riskOtherMedical", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Other medical/surgical disorders<br>e.g. epilepsy, severe asthma, Lupus etc.</td>
-                            </tr>
-                        </table>
-                        
-                        
-                        
-                    </td><td valign="top">
-                        
-                        <table width="100%" border="0"  cellspacing="0" cellpadding="0">
-                            <tr>
-                                <th colspan="2" align="left">PROBLEMS IN CURRENT PREGNANCY</th>
-                            </tr><tr>
-                                <td width="1%">
-                                    <input type="checkbox" name="ar2_riskAbnSerum" <%= props.getProperty("ar2_riskAbnSerum", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Abnormal maternal serum screening<br>(HCG or AFP > 2.0 MOM)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskAlcoDrugCur" <%= props.getProperty("ar2_riskAlcoDrugCur", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Alcohol and/or Drugs</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskAnemia" <%= props.getProperty("ar2_riskAnemia", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Anemia (< 100g per L) </td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskBleeding" <%= props.getProperty("ar2_riskBleeding", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Antepartum Bleeding</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskBloodAnti" <%= props.getProperty("ar2_riskBloodAnti", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Blood antibodies (Rh, Anti C, Anti K etc.) </td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskFetalMov" <%= props.getProperty("ar2_riskFetalMov", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Decreased fetal movement</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskDepreCur" <%= props.getProperty("ar2_riskDepreCur", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Depression</td>
-                            </tr><tr>
-                                <td width="1%">
-                                    <input type="checkbox" name="ar2_riskDiagLarge" <%= props.getProperty("ar2_riskDiagLarge", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Diagnosis of large for dates</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskDiagSmall" <%= props.getProperty("ar2_riskDiagSmall", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Diagnosis of small for dates (IUGR)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskGesDiabete" <%= props.getProperty("ar2_riskGesDiabete", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Gestational diabetes</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskPregIndHypert" <%= props.getProperty("ar2_riskPregIndHypert", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Hypertension disorders of pregnancy</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskMalpres" <%= props.getProperty("ar2_riskMalpres", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Malpresentation</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskMemRupt37" <%= props.getProperty("ar2_riskMemRupt37", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Membrane rupture before 37 weeks</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskMulPreg" <%= props.getProperty("ar2_riskMulPreg", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Multiple pregnancy</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskPolyhyd" <%= props.getProperty("ar2_riskPolyhyd", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Polyhydramnios or oligohydramnios</td>
-                            </tr><tr>
-                                <td valign="top">
-                                    <input type="checkbox" name="ar2_riskWtLoss" <%= props.getProperty("ar2_riskWtLoss", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Poor weight gain 26 - 36 weeks<br>(<0.5 kg/wk or weight loss)</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskPreg42W" <%= props.getProperty("ar2_riskPreg42W", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Pregnancy > 42 weeks</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskAdmPreterm" <%= props.getProperty("ar2_riskAdmPreterm", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Preterm labour</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskProte1" <%= props.getProperty("ar2_riskProte1", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Proteinura 1+ or greater</td>
-                            </tr><tr>
-                                <td>
-                                    <input type="checkbox" name="ar2_riskSmokingCur" <%= props.getProperty("ar2_riskSmokingCur", "") %> @oscar.formDB dbType="tinyint(1)" />
-                                       </td>
-                                <td>Smoking at any time during pregnancy</td>
-                            </tr>
-                        </table>
-                        
-                        
+                    <th align="left">Edinburgh Perinatal/Postnatal Depression Scale (EPDS)<br /><br /></th>
+                </tr>
+                <tr>
+                    <th align="center">SCORING GUIDE</th>
+                </tr>
+                <tr>
+                    <th align="left">In the past 7 days:</th>
+                </tr>
+                <tr>
+                    <td>
+                        1. I have been able to laugh and see the funny side of things<br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS1" value="0" onclick="calcEPDSscore()" />
+                        As much as I always could
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS1" value="1" onclick="calcEPDSscore()" />
+                        Not quite as much now
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS1" value="2" onclick="calcEPDSscore()" />
+                        Definitely not so much now
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS1"  value="3" onclick="calcEPDSscore()" />
+                        Not at all
+                        </span>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        2. I have looked forward with enjoyment to things<br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS2" value="0" onclick="calcEPDSscore()" />
+                        As much as I ever did
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS2" value="1" onclick="calcEPDSscore()" />
+                        Rather less than I used to
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS2" value="2" onclick="calcEPDSscore()" />
+                        Definitely less than I used to
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS2" value="3" onclick="calcEPDSscore()" />
+                        Hardly at all
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        3. I have blamed myself unnecessarily when things went wrong<br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS3" value="3" onclick="calcEPDSscore()" />
+                        Yes, most of the time
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS3" value="2" onclick="calcEPDSscore()" />
+                        Yes, some of the time
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS3" value="1" onclick="calcEPDSscore()" />
+                        Not very often
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS3" value="0" onclick="calcEPDSscore()" />
+                        No, never
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        4. I have been anxious or worried for no good reason<br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS4" value="0" onclick="calcEPDSscore()" />
+                        No, not at all
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS4" value="1" onclick="calcEPDSscore()" />
+                        Hardly ever
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS4" value="2" onclick="calcEPDSscore()" />
+                        Yes, sometimes
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS4" value="3" onclick="calcEPDSscore()" />
+                        Yes, very often
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        5. I have felt scared or panicky for no very good reason<br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS5" value="3" onclick="calcEPDSscore()" />
+                        Yes, quite a lot
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS5" value="2" onclick="calcEPDSscore()" />
+                        Yes, sometimes
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS5" value="1" onclick="calcEPDSscore()" />
+                        No, not much
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS5" value="0" onclick="calcEPDSscore()" />
+                        No, not at all
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        6. Things have been getting on top of me<br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS6" value="3" onclick="calcEPDSscore()" />
+                        Yes, most of the time I haven't been able to cope
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS6" value="2" onclick="calcEPDSscore()" />
+                        Yes, sometimes I haven't been coping as well as usual
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS6" value="1" onclick="calcEPDSscore()" />
+                        No, most of the time I have coped quite well
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS6" value="0" onclick="calcEPDSscore()" />
+                        No, I have been coping as well as ever
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        7. I have been so unhappy that I have had difficulty sleeping<br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS7" value="3" onclick="calcEPDSscore()" />
+                        Yes, most of the time
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS7" value="2" onclick="calcEPDSscore()" />
+                        Yes, sometimes
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS7" value="1" onclick="calcEPDSscore()" />
+                        Not very often
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS7" value="0" onclick="calcEPDSscore()" />
+                        No, not at all
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        8. I have felt sad or miserable<br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS8" value="3" onclick="calcEPDSscore()" />
+                        Yes, most of the time
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS8" value="2" onclick="calcEPDSscore()" />
+                        Yes, quite often
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS8" value="1" onclick="calcEPDSscore()" />
+                        Not very often
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS8" value="0" onclick="calcEPDSscore()" />
+                        No, not at all
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        9. I have been so unhappy that I have been crying<br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS9" value="3" onclick="calcEPDSscore();" />
+                        Yes, most of the time
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS9" value="2" onclick="calcEPDSscore();" />
+                        Yes, quite often
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS9" value="1" onclick="calcEPDSscore();" />
+                        Only occasionally
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS9" value="0" onclick="calcEPDSscore();" />
+                        No, not at all
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        10. The thought of harming myself has occured to me<br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS10" value="3" onclick="calcEPDSscore();" />
+                        Yes, quite often
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS10" value="2" onclick="calcEPDSscore();" />
+                        Sometimes
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS10" value="1" onclick="calcEPDSscore();" />
+                        Hardly ever
+                        </span><br />
+                        <span class="epdsAnswer"><input type="radio" name="ar2_EPDS10" value="0" onclick="calcEPDSscore();" />
+                        Never
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="small9">
+                        <b>A score of 1 - 3 to item 10 indicating a risk of self-harm, requires immediate mental health assessment and intervention as appropriate.</b><br /><br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Score: <input type="text" name="ar2_EPDSscore" readonly="true" size="3" value="<%= props.getProperty("ar2_EPDSscore", "")%>" />
+                    </td>
+                </tr>    
+                <tr>
+                    <td class="small9">
+                        <i>Scoring of 11 - 13 range, monitor, support, and offer education.</i>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="small9">
+                        <i>Scoring of 14 or higher, follow up with comprehensive bio-psychosocial diagnostic assessment for depression.</i><br /><br />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="small9">
+                        Source: Cox, JL, Holden, JM, Sagovsky, R (1987).<br />
+                        Department of Psychiatry, University of Edinburgh.
+                    </td>
+                </tr>
+            </table>           
+        </td>
+        <td>
+            <table width="100%" cellspacing="0" cellpadding="5">
+                <tr>
+                    <th align="center">TWEAK SCORING GUIDE<br /><br /></th>
+                </tr>    
             </table>
-            
-            
+            <table width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                    <th class="tweakcell" valign="top">T</th>
+                    <td class="tweakcell">
+                        <b>Tolerance:</b><br />
+                        "How many drinks does it take to make you feel high?" (Or this can be modified to "How many drinks can you hold?")<br />
+                        <i>Record number of drinks.</i>
+                    </td>
+                    <td class="tweakcell">
+                        <input type="text" name="ar2_tweakT" size="3" value="<%= props.getProperty("ar2_tweakT", "")%>" onchange="calcTweakScore();" />
+                    </td>
+                </tr>  
+                <tr>
+                    <th class="tweakcell" valign="top">W</th>
+                    <td class="tweakcell">
+                        <b>Worry:</b><br />
+                        "Have close friends or relatives worried or complained about your drinking in the past year?"
+                    </td>
+                    <td class="tweakcell">
+                        <select name="ar2_tweakW" style="width:100%" onchange="calcTweakScore();">
+                            <option value="" <%= props.getProperty("ar2_tweakW", "").equals("")?"selected":""%> ></option>
+                            <option value="Yes" <%= props.getProperty("ar2_tweakW", "").equals("Yes")?"selected":""%> >Yes</option>
+                            <option value="No" <%= props.getProperty("ar2_tweakW", "").equals("No")?"selected":""%> >No</option>
+                        </select>
+                    </td>
+                </tr>    
+                <tr>
+                    <th class="tweakcell" valign="top">E</th>
+                    <td class="tweakcell">
+                        <b>Eye-Opener:</b><br />
+                        "Do you sometimes have a drink in the morning when you first get up?"
+                    </td>
+                    <td class="tweakcell">
+                        <select name="ar2_tweakE" style="width:100%" onchange="calcTweakScore();">
+                            <option value="" <%= props.getProperty("ar2_tweakE", "").equals("")?"selected":""%> ></option>
+                            <option value="Yes" <%= props.getProperty("ar2_tweakE", "").equals("Yes")?"selected":""%> >Yes</option>
+                            <option value="No" <%= props.getProperty("ar2_tweakE", "").equals("No")?"selected":""%> >No</option>
+                        </select>
+                    </td>
+                </tr> 
+                <tr>
+                    <th class="tweakcell" valign="top">A</th>
+                    <td class="tweakcell">
+                        <b>Amnesia (Blackout):</b><br />
+                        "Has a friend or family member ever told you about things you said or did while you were drinking that you could not remember?"
+                    </td>
+                    <td class="tweakcell">
+                        <select name="ar2_tweakA" style="width:100%" onchange="calcTweakScore();">
+                            <option value="" <%= props.getProperty("ar2_tweakA", "").equals("")?"selected":""%> ></option>
+                            <option value="Yes" <%= props.getProperty("ar2_tweakA", "").equals("Yes")?"selected":""%> >Yes</option>
+                            <option value="No" <%= props.getProperty("ar2_tweakA", "").equals("No")?"selected":""%> >No</option>
+                        </select>
+                    </td>
+                </tr> 
+                <tr>
+                    <th class="tweakcell" valign="top">K<br />(C)</th>
+                    <td class="tweakcell">
+                        <b>Cut Down:</b><br />
+                        "Do you sometimes feel the need to cut down on your drinking?"
+                    </td>
+                    <td class="tweakcell">
+                        <select name="ar2_tweakK" style="width:100%" onchange="calcTweakScore();">
+                            <option value="" <%= props.getProperty("ar2_tweakK", "").equals("")?"selected":""%> ></option>
+                            <option value="Yes" <%= props.getProperty("ar2_tweakK", "").equals("Yes")?"selected":""%> >Yes</option>
+                            <option value="No" <%= props.getProperty("ar2_tweakK", "").equals("No")?"selected":""%> >No</option>
+                        </select>
+                    </td>
+                </tr> 
+                <tr>
+                    <td></td>
+                    <td colspan="2"><br />Score: <input type="text" name="pg1_tweakScore" readonly="true" size="3" value="<%= props.getProperty("pg1_tweakScore", "")%>" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2">
+                        <b><i>A score of 2 or more points indicates a risk of a drinking problem.</i></b>
+                    </td>
+                </tr>   
+                <tr>
+                    <td></td>
+                    <td colspan="2" class="small9">
+                        <br /><i>Source: Russell, M (1994). New Assessment tools for risk drinking during pregnancy:<br />
+                            T-ACE, TWEAK and others. Alcohol Health and Research World.</i>
+                    </td>
+                </tr>  
+            </table> 
         </td>
     </tr>
 </table>

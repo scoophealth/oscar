@@ -61,7 +61,8 @@ public class FrmBCAR2007Record extends FrmRecord {
                 props.setProperty("c_phn", rs.getString("hin"));
                 props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
                 props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
-                props.setProperty("c_phone", rs.getString("phone") + "  " + rs.getString("phone2"));
+                props.setProperty("c_phone", rs.getString("phone"));
+                props.setProperty("c_phoneAlt", rs.getString("phone2"));
                 props.setProperty("pg1_formDate", UtilDateUtilities
                         .DateToString(UtilDateUtilities.Today(), _dateFormat));
                 props.setProperty("pg2_formDate", UtilDateUtilities
@@ -91,7 +92,8 @@ public class FrmBCAR2007Record extends FrmRecord {
                 props.setProperty("c_province_cur", rs.getString("province"));
                 props.setProperty("c_postal_cur", rs.getString("postal"));
                 props.setProperty("c_phn_cur", rs.getString("hin"));
-                props.setProperty("c_phone_cur", rs.getString("phone") + "  " + rs.getString("phone2"));
+                props.setProperty("c_phone_cur", rs.getString("phone"));
+                props.setProperty("c_phone2_cur", rs.getString("phone2"));
             }
         }
         return props;

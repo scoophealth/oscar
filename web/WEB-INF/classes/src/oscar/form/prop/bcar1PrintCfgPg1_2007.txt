@@ -1,6 +1,6 @@
 c_hospital	: left, 40, 59, 0, BaseFont.HELVETICA, 6, _, 100, 40, 6
-pg1_priCare	: left, 126, 55, 0, BaseFont.HELVETICA, 8 
-pg1_famPhy	: left, 240, 55, 0, BaseFont.HELVETICA, 8 
+pg1_priCare	: left, 104, 55, 0, BaseFont.HELVETICA, 8 
+pg1_famPhy	: left, 215, 55, 0, BaseFont.HELVETICA, 8 
 
 pg1_moName	: left, 50, 79, 0, BaseFont.HELVETICA, 8 
 pg1_dateOfBirth	: left, 230, 79, 0, BaseFont.HELVETICA, 8 
@@ -27,6 +27,9 @@ c_province	: left, 430, 108, 0, BaseFont.HELVETICA, 8
 c_postal	: left, 510, 108, 0, BaseFont.HELVETICA, 8 
 c_phone		: left, 355, 132, 0, BaseFont.HELVETICA, 8 
 c_phn		: left, 480, 132, 0, BaseFont.HELVETICA, 8 
+__c_phoneAlt      : left, 348, 158, 0, BaseFont.HELVETICA, 8, Alternate phone number(s):
+c_phoneAlt1     : left, 450, 158, 0, BaseFont.HELVETICA, 8
+c_phoneAlt2     : left, 510, 158, 0, BaseFont.HELVETICA, 8
 
 pg1_allergyN	: left, 120, 171, 0, BaseFont.HELVETICA, 8 , X
 pg1_allergyY	: left, 44, 179, 0, BaseFont.HELVETICA, 8 , X

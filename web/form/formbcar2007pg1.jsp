@@ -33,6 +33,7 @@ if(!props.getProperty("c_surname_cur", "").equals("") && !(props.getProperty("c_
 && props.getProperty("c_postal_cur", "").equals(props.getProperty("c_postal", ""))
 && props.getProperty("c_phn_cur", "").equals(props.getProperty("c_phn", ""))
 && props.getProperty("c_phone_cur", "").trim().equals(props.getProperty("c_phone", "").trim())
+&& props.getProperty("c_phoneAlt_cur", "").trim().equals(props.getProperty("c_phoneAlt_cur", "").trim())
 )) {
     bSync = true;
 }
@@ -188,6 +189,7 @@ function syncDemo() {
     document.forms[0].c_postal.value = "<%=props.getProperty("c_postal_cur", "")%>";
     document.forms[0].c_phn.value = "<%=props.getProperty("c_phn_cur", "")%>";
     document.forms[0].c_phone.value = "<%=props.getProperty("c_phone_cur", "")%>";
+    document.forms[0].c_phoneAlt1.value = "<%=props.getProperty("c_phoneAlt_cur", "")%>";
 }
 
 function wtEnglish2Metric(obj) {
@@ -254,10 +256,18 @@ function calcBMIMetric() {
         }
         return ret;
     }
+    function onPrint12() {
+        document.forms[0].submit.value="printAll"; 
+                
+        document.forms[0].action = "../form/formname.do?__title=British+Columbia+Antenatal+Record&__cfgfile=bcar1PrintCfgPg1_2007&__cfgfile=bcar2PrintCfgPg1_2007&__cfgGraphicFile=bcar2PrintGraphCfgPg1_2007&__graphicPage=2<%= props.getProperty("pg3_date1", "") == "" ? "&__template=bcarARs2_2007" : "&__cfgfile=bcar2PrintCfgPg2_2007&__graphicPage=3&__template=bcarARs1_2007" %>";
+        document.forms[0].target="_blank";            
+        
+        return true;
+    }
     function onPrintAll() {
         document.forms[0].submit.value="printAll"; 
                 
-        document.forms[0].action = "../form/formname.do?__title=British+Columbia+Antenatal+Record&__cfgfile=bcar1PrintCfgPg1_2007&__cfgfile=bcar2PrintCfgPg1_2007&__cfgGraphicFile=bcar2PrintGraphCfgPg1_2007&__graphicPage=2<%= props.getProperty("pg3_date1", "") == "" ? "&__cfgfile=bcar1PrintCfgPg2_2007&__template=bcarAll2_2007" : "&__cfgfile=bcar2PrintCfgPg2_2007&__graphicPage=3&__cfgfile=bcar1PrintCfgPg2_2007&__template=bcarAll1_2007" %>";
+        document.forms[0].action = "../form/formname.do?__title=British+Columbia+Antenatal+Record&__cfgfile=bcar1PrintCfgPg1_2007&__cfgfile=bcar2PrintCfgPg1_2007&__cfgGraphicFile=bcar2PrintGraphCfgPg1_2007&__graphicPage=2<%= props.getProperty("pg3_date1", "") == "" ? "&__cfgfile=bcar1PrintCfgPg2_2007&__cfgfile=bcar2PrintCfgScores_2007&__template=bcarAll2_2007" : "&__cfgfile=bcar2PrintCfgPg2_2007&__graphicPage=3&__cfgfile=bcar1PrintCfgPg2_2007&__cfgfile=bcar2PrintCfgScores_2007&__template=bcarAll1_2007" %>";
         document.forms[0].target="_blank";            
         
         return true;
@@ -646,15 +656,16 @@ function calcAgeAtEDD(){
             <%
             if (!bView) {
             %>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
+            <input type="submit" style="width:40px;" value="Save" onclick="javascript:return onSave();" />
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <%
             }
             %>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
-            <input type="submit" value="Print Risk" onclick="javascript:return onPrintRisk();"/>
-            <input type="submit" value="Print All" onclick="javascript:return onPrintAll();"/>
+            <input type="submit" style="width:40px;" value="Exit" onclick="javascript:return onExit();"/>
+            <input type="submit" style="width:50px;" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" style="width:75px;" value="Print Risk" onclick="javascript:return onPrintRisk();"/>
+            <input type="submit" value="Print AR1 & AR2" onclick="javascript:return onPrint12();"/>
+            <input type="submit" style="width:75px;" value="Print All" onclick="javascript:return onPrintAll();"/>
         </td>
         <%
         if (!bView) {
@@ -1682,13 +1693,16 @@ function calcAgeAtEDD(){
             <%
             if (!bView) {
             %>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
+            <input type="submit" style="width:40px;" value="Save" onclick="javascript:return onSave();" />
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <%
             }
             %>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" style="width:40px;" value="Exit" onclick="javascript:return onExit();"/>
+            <input type="submit" style="width:50px;" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" style="width:75px;" value="Print Risk" onclick="javascript:return onPrintRisk();"/>
+            <input type="submit" value="Print AR1 & AR2" onclick="javascript:return onPrint12();"/>
+            <input type="submit" style="width:75px;" value="Print All" onclick="javascript:return onPrintAll();"/>
         </td>
         <%
         if (!bView) {
