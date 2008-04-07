@@ -11,6 +11,7 @@ public class LookupCodeValue {
     private boolean selectable;
 	private String parentCode;
 	private String buf1;
+	private String codeTree;
 	private String buf2;
 	
     private int orderByIndex;
@@ -33,6 +34,12 @@ public class LookupCodeValue {
 	}
 	public void setCode(String code) {
 		this.code = code;
+	}
+	public String getCodeTree() {
+		return codeTree;
+	}
+	public void setCodeTree(String codeTree) {
+		this.codeTree = codeTree;
 	}
 	public String getDescription() {
 		return description;

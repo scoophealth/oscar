@@ -7,5 +7,9 @@ top.childWin = window.open(url,"_blank","toolbar=yes,menubar= yes,resizable=yes,
 
 function removeSel(str) {
     var elSel= document.getElementsByName(str)[0]; 
-    elSel.remove(elSel.selectedIndex);
+    if(elSel.selectedIndex>=0){
+      elSel.remove(elSel.selectedIndex);
+    }else{
+      alert("Please select one item to remove.");
+    } 
 }

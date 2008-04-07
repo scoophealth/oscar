@@ -10,6 +10,7 @@
         <property name="parentCode"/>
         <property name="active" type="boolean"/>
         <property name="buf1" />
+        <property name="codeTree" />
         <property name="orderByIndex" column="lineid" />
 	</class>
 </hibernate-mapping>

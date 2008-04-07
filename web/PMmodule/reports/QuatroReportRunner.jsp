@@ -167,7 +167,7 @@ function submitForm(mthd)
            <td class="clsButtonBarText">
                <div style="<%=orgSelectionProperty.getVisible()%>">
                &nbsp;&nbsp;<!-- <a id="orgAdd" href="javascript:showOrgLookup('ORG')"> -->
-              <a id="orgAdd" href="javascript:showLookup('ORG', '', '', 'quatroReportRunnerForm','lstOrg','', true, '<c:out value="${ctx}"/>')">               
+              <a id="orgAdd" href="javascript:showLookupTree('ORG', '', '', 'quatroReportRunnerForm','lstOrg','', true, '<c:out value="${ctx}"/>')">               
                Add</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
                     <a href="javascript:removeSel('lstOrg')">Remove</a>
                 </div>

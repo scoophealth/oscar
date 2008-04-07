@@ -46,9 +46,10 @@ public class LookupDao extends HibernateDaoSupport {
 		LookupTableDefValue tableDef = GetLookupTableDef(tableId);
 		List fields = LoadFieldDefList(tableId);
 		DBPreparedHandlerParam [] params = new DBPreparedHandlerParam[4];
-		String fieldNames [] = new String[6];
-		String sSQL="select ";
-		for (int i = 1; i <= 6; i++)
+		String fieldNames [] = new String[7];
+		String sSQL1 = "";
+		String sSQL="select distinct ";
+		for (int i = 1; i <= 7; i++)
 		{
 			boolean ok = false;
 			for (int j = 0; j<fields.size(); j++)
@@ -56,7 +57,7 @@ public class LookupDao extends HibernateDaoSupport {
 				FieldDefValue fdef = (FieldDefValue)fields.get(j);
 				if (fdef.getGenericIdx()== i)
 				{
-					sSQL += fdef.getFieldSQL() + ",";
+					sSQL += "s." + fdef.getFieldSQL() + ",";
 					fieldNames[i-1]=fdef.getFieldSQL();
 					ok = true;
 					break;
@@ -67,8 +68,10 @@ public class LookupDao extends HibernateDaoSupport {
 				fieldNames[i-1] = "field" + i;
 			}
 		}
-		sSQL = sSQL.substring(0,sSQL.length()-1); 
-	    sSQL +=" from " + tableDef.getTableName() + " s where 1=1";
+		sSQL = sSQL.substring(0,sSQL.length()-1);
+	    sSQL +=" from " + tableDef.getTableName() ;
+		sSQL1 = sSQL.replace("s.", "a.") + " a,";	    
+		sSQL += " s where 1=1";
 	    int i= 0;
         if (activeOnly) {
 	    	sSQL += " and " + fieldNames[2] + "=?"; 
@@ -85,8 +88,14 @@ public class LookupDao extends HibernateDaoSupport {
 	   if (!Utility.IsEmpty(codeDesc)) {
 	    	sSQL += " and " + fieldNames[1] + " like ?"; 
 	    	params[i++]= new DBPreparedHandlerParam("%" + codeDesc + "%");
+	   }	
+	   
+	   if (tableDef.isTree()) {
+		 sSQL = sSQL1 + "(" + sSQL + ") b";
+		 sSQL += " where b." + fieldNames[6] + " like a." + fieldNames[6] + "||'%'";
 	   }
-	   sSQL += " order by 4,5,2";
+	   
+	   sSQL += " order by 7,4,5,2";
 	   DBPreparedHandlerParam [] pars = new DBPreparedHandlerParam[i];
 	   for(int j=0; j<i;j++)
 	   {
@@ -106,6 +115,7 @@ public class LookupDao extends HibernateDaoSupport {
 			   lv.setLineId(Integer.valueOf("0" + db.getString(rs,4)));
 			   lv.setParentCode(db.getString(rs, 5));
 			   lv.setBuf1(db.getString(rs,6));
+			   lv.setCodeTree(db.getString(rs, 7));
 			   list.add(lv);
 			}
 			rs.close();
