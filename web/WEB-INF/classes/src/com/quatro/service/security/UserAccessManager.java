@@ -10,22 +10,24 @@ import com.quatro.model.security.*;
 public class UserAccessManager
 {
     private UserAccessDao _dao=null;
-    HashTable _functionList; 
-    public void init(String providerNo)
+    public Hashtable getUserFunctionAceessList(String providerNo)
     {
     	// _list is ordered by Function, privilege (desc) and the org
+    	Hashtable functionList = new Hashtable();
         List <UserAccessValue>list = _dao.GetUserAccessList(providerNo);
+    	if (list.size()==0) return functionList;
+    	
     	int startIdx = 0;
     	List orgList = getAccessListForFunction(list,startIdx);
-    	_functionList = new HashTable();
-    	_functionList.put(list.get(startIdx).getFunctionCd(), list);
+    	functionList.put(list.get(startIdx).getFunctionCd(), list);
 
     	while(orgList != null && startIdx + orgList.size()<list.size())
     	{
     		startIdx += orgList.size();
         	orgList = getAccessListForFunction(list,startIdx);
-        	_functionList.put(list.get(startIdx).getFunctionCd(), orgList);
+        	functionList.put(list.get(startIdx).getFunctionCd(), orgList);
     	}
+    	return functionList;
     }
     private List getAccessListForFunction(List <UserAccessValue> list, int startIdx)
     {
@@ -47,15 +49,22 @@ public class UserAccessManager
     	}
     	return orgList;
     }
-    public String GetAccess(String functioncd, String orgcd)
+    public String GetAccess(Hashtable functionList, String functioncd, String orgcd)
     {
         String privilege = UserAccessValue.ACCESS_NONE;
         try
         {
-            List <UserAccessValue> orgList =  (List <UserAccessValue>) _functionList.get(functioncd);
+            List <UserAccessValue> orgList =  (List <UserAccessValue>) functionList.get(functioncd);
             for(UserAccessValue uav:orgList)
             {
-            	if (Utility.IsEmpty(uav.getOrgCd()) || orgcd.startsWith(uav.getOrgCd())){
+            	if (uav.isOrgApplicable()) {
+	            	if (Utility.IsEmpty(uav.getOrgCd()) || orgcd.startsWith(uav.getOrgCd())){
+	            		privilege = uav.getPrivilege();
+	            		break;
+	            	}
+            	}
+            	else
+            	{
             		privilege = uav.getPrivilege();
             		break;
             	}
@@ -68,9 +77,9 @@ public class UserAccessManager
         return privilege;
     }
 
-    public String GetAccess(String function)
+    public String GetAccess(Hashtable functionList,String function)
     {
-        return GetAccess(function, "");
+        return GetAccess(functionList,function, "");
     }
     public void setUserAccessDao(UserAccessDao dao)
     {

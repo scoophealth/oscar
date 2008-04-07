@@ -15,6 +15,7 @@ package oscar.login;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Hashtable;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -136,10 +137,11 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute("userrole", strAuth[4]);
             session.setAttribute("oscar_context_path", request.getContextPath());
             session.setAttribute("expired_days", strAuth[5]);
-
+            
             // initiate security manager
             com.quatro.service.security.UserAccessManager securityManager = (com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
-            securityManager.init(providerNo);
+            Hashtable userFunctionAccessList = securityManager.getUserFunctionAceessList(providerNo);
+            session.setAttribute("useraccess", userFunctionAccessList);
             
             String default_pmm = null;
             if (viewType.equalsIgnoreCase("receptionist") || viewType.equalsIgnoreCase("doctor")) {

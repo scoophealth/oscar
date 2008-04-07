@@ -150,7 +150,7 @@
 -->
     <div>
         <span>Client Management</span>
-		<security:oscarSec roleName="<%=roleName$%>"
+		<security:oscarSec 
                                objectName="_pmm.clientSearch"
                                rights="r">
         <div>

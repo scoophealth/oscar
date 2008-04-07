@@ -32,6 +32,7 @@ package oscar.login.tld;
 
 import java.util.Properties;
 import java.util.Vector;
+import java.util.Hashtable;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -170,7 +171,8 @@ public class SecurityTag implements Tag {
     {
     	com.quatro.service.security.UserAccessManager secManager =(com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
     	if (orgCd == null) orgCd = "";
-    	return secManager.GetAccess(objName, orgCd).compareToIgnoreCase(propPrivilege) >= 0;
+        Hashtable userFunctionAccessList = (Hashtable) pageContext.getSession().getAttribute("useraccess");
+    	return secManager.GetAccess(userFunctionAccessList,objName, orgCd).compareToIgnoreCase(propPrivilege) >= 0;
     }
     
     private boolean checkPrivilege(String roleName, Properties propPrivilege, Vector roleInObj) {

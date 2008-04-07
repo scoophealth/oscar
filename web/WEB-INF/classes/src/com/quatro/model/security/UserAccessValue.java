@@ -2,14 +2,18 @@ package com.quatro.model.security;
 import java.io.*;
 
 public class UserAccessValue implements Serializable {
-		public static final String ACCESS_NONE = "N";
-		public static final String ACCESS_READ = "R";
-		public static final String ACCESS_WRITE = "W";
+		public static final String ACCESS_NONE = "o";
+		public static final String ACCESS_READ = "r";
+		public static final String ACCESS_UPDATE = "u";
+		public static final String ACCESS_WRITE = "w";
+		public static final String ACCESS_ALL = "x";
 		
 		String providerNo;
 		String orgCd;
         String functionCd;
         String privilege;
+        boolean orgApplicable;
+        
 		public String getPrivilege() {
 			return privilege;
 		}
@@ -21,6 +25,12 @@ public class UserAccessValue implements Serializable {
 		}
 		public void setFunctionCd(String cd) {
 			functionCd = cd;
+		}
+		public boolean isOrgApplicable() {
+			return orgApplicable;
+		}
+		public void setOrgApplicable(boolean orgApplicable) {
+			this.orgApplicable = orgApplicable;
 		}
 		public String getOrgCd() {
 			return orgCd;
