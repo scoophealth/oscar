@@ -44,7 +44,7 @@ function searchAll() {
 }
 </script>
 
-<form method="post" name="titlesearch" action="demographiccontrol.jsp" onsubmit="return checkTypeIn()">
+<form method="get" name="titlesearch" action="demographiccontrol.jsp" onsubmit="return checkTypeIn()">
 <table BORDER="0" CELLPADDING="0" CELLSPACING="2" WIDTH="100%" bgcolor="#CCCCFF">
             <tr><td colspan="6" class="RowTop"><b><bean:message key="demographic.zdemographicfulltitlesearch.msgSearch"/></b></td></tr>
       <% String searchMode = request.getParameter("search_mode");
