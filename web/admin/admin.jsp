@@ -196,17 +196,14 @@ function popUpBillStatus(vheight,vwidth,varpage) {
      <% if(roleName$.equals("admin"+ "," +curProvider_no)) {%><html:link page="/admin/logout.jsp"><bean:message key="global.btnLogout"/></html:link>&nbsp;<% }%>
   </div>
 
-  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=false%>" >
-      
-      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.provider" rights="r">
-	  <div class="adminBox">
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq,_admin.provider" rights="r" reverse="<%=false%>" >
+    <div class="adminBox">
 	  <h3>&nbsp;<bean:message key="admin.admin.provider"/></h3>
 	  <ul>
 	      <li><html:link  page="/admin/provideraddarecordhtm.jsp"><bean:message key="admin.admin.btnAddProvider"/></html:link></li>
 	      <li><html:link page="/admin/providersearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchProvider"/></html:link></li>
 	  </ul>
-      </div>
-      </security:oscarSec>
+    </div>
   </security:oscarSec>
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>" >
       <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
@@ -227,9 +224,9 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 	  </div>
       </caisi:isModuleLoad>
   </security:oscarSec>      
-  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=false%>" >
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq,_admin.security" rights="r" reverse="<%=false%>" >
       
-      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.security" rights="r">
+      
       <div class="adminBox">
 	  <h3>&nbsp;<bean:message key="admin.admin.security"/></h3>
 	  <ul>
@@ -241,15 +238,15 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 	      <li><a href="#" onclick = 'popupPage(500,700,&quot;<html:rewrite page="/admin/providerRole.jsp"/>&quot;);return false;'>Assign Role to Provider</a></li>
 	      <li><a href="#" onclick = 'popupPage(500,800,&quot;<html:rewrite page="/admin/providerPrivilege.jsp"/>&quot;);return false;'>Assign Role/Rights to Object</a></li>
 	      
-	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.securityLogReport" rights="r">
+	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.securityLogReport" rights="r">
 	      <li><a href="#" onclick = 'popupPage(500,800,&quot;<html:rewrite page="/admin/logReport.jsp"/>?keyword=admin&quot;);return false;'>Security Log Report</a></li>
 	      </security:oscarSec>
-	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.unlockAccount" rights="r">
+	      <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.unlockAccount" rights="r">
 	      <li><a href="#" onclick = 'popupPage(500,800,&quot;<html:rewrite page="/admin/unLock.jsp" />&quot;);return false;'>Unlock Account</a></li>
 	      </security:oscarSec>
 	  </ul>
       </div>
-      </security:oscarSec>
+      
       
       <% if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled()){%>
       <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.cookieRevolver" rights="r">
