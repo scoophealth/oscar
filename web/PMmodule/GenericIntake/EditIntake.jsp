@@ -13,7 +13,7 @@
         <script type="text/javascript">
             function add(id,nodeTemplateId,parentId,pos,psize){
                var eURL = "AddToIntake.jsp?id="+id+"&node="+nodeTemplateId+"&parentId="+parentId+"&pos="+pos+"&pSize="+psize;
-               popup('220','330',eURL,'intakeAdd');
+               popup('230','330',eURL,'intakeAdd');
             }
             
             function del(id, pid){
@@ -235,11 +235,25 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         out.write("</h3>");
         exitElement = "</div>";
     } else if (node.isAnswerChoice()) {
-        out.write("<blockquote>");
-        out.write("<label><input type=\"checkbox\"/>"+in.getLabelStr()+ "</label>");
-	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
-        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
-        
+	if (node.isAnswerBoolean()) {
+	    out.write("<blockquote>");
+	    out.write("<label><input type=\"checkbox\"/>"+in.getLabelStr()+ "</label>");
+	    out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
+	    out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
+        } else {
+	    Set intakeAnswerElements = in.getNodeTemplate().getAnswerElements();
+	    Object[] elements = intakeAnswerElements.toArray();
+	    
+	    out.write("<blockquote>");
+	    out.write("<label>"+in.getLabelStr()+" <select>");
+	    for (int i=0; i<elements.length; i++) {
+		IntakeAnswerElement answerElement = (IntakeAnswerElement) elements[i];
+		out.write("<option>"+answerElement.getElement()+"</option>");
+	    }
+	    out.write("</select></label>");
+	    out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
+	    out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit label]</a>");
+	}
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
 //out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
         

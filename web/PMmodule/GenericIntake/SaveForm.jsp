@@ -11,15 +11,17 @@
     
     String frmLabel = itn.getLabelStr();
     
-    prepareIntakeNode(itn);
+    saveNodeLabels(itn, genericIntakeManager);
+    saveNodeTemplate(itn, genericIntakeManager);
     IntakeNode nwItn = new IntakeNode();
     copyIntakeNode(itn, nwItn);
-    saveNodeLabels(itn, genericIntakeManager);
     genericIntakeManager.saveIntakeNode(nwItn);
     if (published!=null) {
         genericIntakeManager.updateAgencyIntakeQuick(nwItn.getId());
     }
     session.removeAttribute("intakeNode");
+    session.removeAttribute("lastNodeId");
+    session.removeAttribute("lastTemplateId");
     response.sendRedirect("close.jsp");
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -38,10 +40,26 @@
 
 void saveNodeLabels(IntakeNode in, GenericIntakeManager gim) {
     if (in.getLabel()!=null) {
+	if (in.getLabel().getId()<0) {
+	    in.getLabel().setId(null);
+	}
 	gim.saveNodeLabel(in.getLabel());
     }
     for (IntakeNode iN : in.getChildren()) {
 	saveNodeLabels(iN, gim);
+    }
+}
+
+void saveNodeTemplate(IntakeNode in, GenericIntakeManager gim) {
+    if (in.getNodeTemplate()!=null) {
+	IntakeNodeTemplate iTemplate = in.getNodeTemplate();
+	if (iTemplate.getId()<0) {
+	    iTemplate.setId(null);
+	    gim.saveIntakeNodeTemplate(iTemplate);
+	}
+    }
+    for (IntakeNode iN : in.getChildren()) {
+	saveNodeTemplate(iN, gim);
     }
 }
 
@@ -59,19 +77,6 @@ void copyIntakeNode(IntakeNode org, IntakeNode cpy) {
 	children.add(child);
     }
     if (!children.isEmpty()) cpy.setChildren(children);
-}
-
-void prepareIntakeNode(IntakeNode in) {
-    if (in.getId()<0) {
-	in.setId(null);
-    }
-    IntakeNodeLabel iLabel = in.getLabel();
-    if (iLabel.getId()<0) {
-	iLabel.setId(null);
-    }
-    for (IntakeNode iN : in.getChildren()) {
-	prepareIntakeNode(iN);
-    }
 }
 
 %>

@@ -2,6 +2,7 @@
 <%@page pageEncoding="UTF-8"%>
 <%@page import="java.sql.*,oscar.oscarDB.*" %>
 <%@page import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*" %>
+<%@ include file="/taglibs.jsp" %>
 <%
 WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
@@ -31,17 +32,19 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     }
     
     IntakeNode intakeNode = new IntakeNode();
-    int iNodeId = -1;
-    String lastId = (String) session.getAttribute("lastId");
-    if (lastId!=null) {
-	iNodeId = Integer.parseInt(lastId)-1;
-    }
-    session.setAttribute("lastId", String.valueOf(iNodeId));
-    intakeNode.setId(iNodeId);
+    Integer lastNodeId = (Integer) session.getAttribute("lastNodeId");
+    lastNodeId = (lastNodeId==null) ? -1 : --lastNodeId;
+    intakeNode.setId(lastNodeId);
+    session.setAttribute("lastNodeId", lastNodeId);
     
-    IntakeNodeTemplate intakeNodeTemplate = new IntakeNodeTemplate();
-//    intakeNodeTemplate.setId(Integer.parseInt(eleType));
-    intakeNodeTemplate = (IntakeNodeTemplate) genericIntakeManager.getIntakeNodeTemplate(Integer.parseInt(eleType));
+    IntakeNodeTemplate intakeNodeTemplate = null;
+    if (eleType.equals("15")) {
+	intakeNodeTemplate = (IntakeNodeTemplate) session.getAttribute("intakeNodeTemplate_c");
+	session.removeAttribute("intakeNodeTemplate_c");
+    } else {
+	intakeNodeTemplate = (IntakeNodeTemplate) genericIntakeManager.getIntakeNodeTemplate(Integer.parseInt(eleType));
+    }
+    
     
     intakeNode.setNodeTemplate(intakeNodeTemplate);
     intakeNode.setLabel(intakeNodeLabel);
@@ -50,15 +53,9 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
 	intakeNode.setMandatory(true);
     }
     
-    
-    //IntakeNode parentNode = new IntakeNode();
-    //parentNode.setId(Integer.parseInt(parent_intake_node_id));
-    //System.out.println(" "+intakeNode.toString()+ " \n\n\n"+parentNode.getId());
-    
     IntakeNode parentNode = findNode(Integer.parseInt(parent_intake_node_id), nodes);
     intakeNode.setParent(parentNode);
     
-    //genericIntakeManager.saveIntakeNode(intakeNode);
     if (parentNode.getChildren()!=null) {
 	List p_children = parentNode.getChildren();
 	p_children.add(intakeNode);
@@ -93,7 +90,6 @@ String pSize        = request.getParameter("pSize");
 	<script type="text/javascript">
 	    function doMandatory() {
 		if (document.addToIntakeFrm.mandatorySet.value==0 && document.forms[0].mandatory.checked==true) {
-		    alert("Only Questions and Answer Compound can be set mandatory!");
 		    document.forms[0].mandatory.checked = false;
 		}
 	    }
@@ -102,7 +98,14 @@ String pSize        = request.getParameter("pSize");
 		document.addToIntakeFrm.mandatorySet.value=val;
 		doMandatory();
 	    }
+	    
+	    function makeDropbox() {
+		mandSet(0);
+		var eURL = "MakeDropbox.jsp";
+		popup('200','300',eURL,'mkdrpbx');
+	    }
 	</script>
+        <script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>" ></script>
     </head>
     <body>
         <form name="addToIntakeFrm" method="post" action="AddToIntake.jsp">
@@ -119,17 +122,11 @@ String pSize        = request.getParameter("pSize");
             <input type="hidden" name="elementType" value="4"/>
             <%}else if(nodeTemplate.equals("3") ){%>
             NADA
-            <%}else if(nodeTemplate.equals("4") ){%>
+            <%}else if(nodeTemplate.equals("4") || nodeTemplate.equals("5")){%>
             +<input type="radio" name="elementType" value="5" onclick="mandSet(1);">question</input><br/>
             +<input type="radio" name="elementType" value="6" onclick="mandSet(1);"> answer compound</input> <br/>
             +<input type="radio" name="elementType" value="7" onclick="mandSet(0);"> answer scalar choice</input> <br/>
-            +<input type="radio" name="elementType" value="8" onclick="mandSet(0);"> answer scalar text</input> <br/>
-            +<input type="radio" name="elementType" value="13" onclick="mandSet(0);"> answer scalar note</input><br/>
-            
-            <%}else if(nodeTemplate.equals("5") ){%>
-            +<input type="radio" name="elementType" value="5" onclick="mandSet(1);"> question</input><br/>
-            +<input type="radio" name="elementType" value="6" onclick="mandSet(1);"> answer compound</input> <br/>
-            +<input type="radio" name="elementType" value="7" onclick="mandSet(0);"> answer scalar choice</input> <br/>
+            +<input type="radio" name="elementType" value="15" onclick="makeDropbox();"> answer scalar choice (dropbox)</input> <br/>
             +<input type="radio" name="elementType" value="8" onclick="mandSet(0);"> answer scalar text</input> <br/>
             +<input type="radio" name="elementType" value="13" onclick="mandSet(0);"> answer scalar note</input><br/>
             <%}else if(nodeTemplate.equals("6") ){%>
