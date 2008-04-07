@@ -172,6 +172,7 @@
 	<!--  configure the scratch pad -->
     <bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
     <bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
+    <bean id="userAccessDao" class="com.quatro.dao.security.UserAccessDao" autowire="byName" />
 
     <bean id="scratchPadManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
         <property name="target" ref="scratchPadManagerTarget"/>
@@ -179,11 +180,11 @@
     <bean id="scratchPadManagerTarget" class="com.quatro.service.ScratchPadManager">
        <property name="scratchPadDao" ref="scratchPadDao"/>
     </bean>
-    <bean id="lookupManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
-        <property name="target" ref="lookupManagerTarget"/>
-    </bean>
-    <bean id="lookupManagerTarget" class="com.quatro.service.LookupManager">
+    <bean id="lookupManager" class="com.quatro.service.LookupManager"  autowire="byName">
         <property name="lookupDao" ref="lookupDao"/>
+    </bean>
+    <bean id="userAccessManager" class="com.quatro.service.security.UserAccessManager" autowire="byName">
+        <property name="userAccessDao" ref="userAccessDao"/>
     </bean>
 
     <!-- configure the available measurement flow sheets -->

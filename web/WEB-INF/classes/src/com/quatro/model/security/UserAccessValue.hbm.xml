@@ -3,8 +3,12 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.security.UserAccessValue"  mutable="false">
-		<id name="id" column="id" />
-		<property name="orgCd" column="orgcd" />
+	<class name="com.quatro.model.security.UserAccessValue" table="v_user_access" mutable="false">
+		<composite-id>
+			<key-property name="functionCd" column="objectname" />
+			<key-property name="orgCd" column="orgcd" />
+		</composite-id>
+		<property name="providerNo" column="provider_no" />
+		<property name="privilege" column="privilege" />
 	</class>
 </hibernate-mapping>

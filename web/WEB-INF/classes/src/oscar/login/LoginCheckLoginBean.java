@@ -183,7 +183,8 @@ public class LoginCheckLoginBean {
                 lastname = accessDB.getString(rs,"last_name");
                 profession = accessDB.getString(rs,"provider_type");
             }
-            sql = "select * from secUserRole where provider_no = '" + secBean.getProvider_no() + "'";
+
+            sql = "select role_name from secUserRole where activeyn=1 and provider_no = '" + secBean.getProvider_no() + "'";
             rs = accessDB.searchDBRecord(sql);
             while (rs.next()) {
                 if (rolename == null) {
@@ -192,6 +193,7 @@ public class LoginCheckLoginBean {
                     rolename += "," + accessDB.getString(rs,"role_name");
                 }
             }
+
             return secBean;
         //} catch (SQLException e) {
         // e.printStackTrace();

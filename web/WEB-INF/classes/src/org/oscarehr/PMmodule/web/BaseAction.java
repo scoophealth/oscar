@@ -46,7 +46,7 @@ import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
+import com.quatro.service.security.*;
 
 public abstract class BaseAction extends DispatchAction {
 	
@@ -102,6 +102,9 @@ public abstract class BaseAction extends DispatchAction {
 
 	public ProgramManager getProgramManager() {
 		return (ProgramManager) getAppContext().getBean("programManager");
+	}
+	public UserAccessManager getUserAccessManager() {
+		return (UserAccessManager) getAppContext().getBean("userAccessManager");
 	}
 
 	public ProgramQueueManager getProgramQueueManager() {

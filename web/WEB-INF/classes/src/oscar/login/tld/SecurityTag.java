@@ -37,16 +37,19 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class SecurityTag implements Tag {
     private PageContext pageContext;
     private Tag parentTag;
     private String roleName;
+    private String orgCd;
     private String objectName;
     private String rights = "r";
     private boolean reverse = false;
-
     //private Vector roleInObj = new Vector();
 
     public void setPageContext(PageContext arg0) {
@@ -68,12 +71,24 @@ public class SecurityTag implements Tag {
          */
         int ret = 0;
         Vector v = getPrivilegeProp(objectName);
-        //if (checkPrivilege(roleName, (Properties) getPrivilegeProp(objectName).get(0), (Vector) getPrivilegeProp(
+        // if (checkPrivilege(roleName, (Properties) getPrivilegeProp(objectName).get(0), (Vector) getPrivilegeProp(
         ///        objectName).get(1)))
-        if (checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1))){
-            ret = EVAL_BODY_INCLUDE;
-        }else{
-            ret = SKIP_BODY;
+    	/*TODO: temporily allow current security work, the if statement should be removed */
+        if (roleName == null) 
+        {
+        	if (checkPrivilege(objectName,orgCd, rights)) {
+	            ret = EVAL_BODY_INCLUDE;
+	        }else{
+	            ret = SKIP_BODY;
+	        }
+        }
+        else
+        {
+	        if (checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1))){
+	            ret = EVAL_BODY_INCLUDE;
+	        }else{
+	            ret = SKIP_BODY;
+	        }
         }
         //System.out.println("reverse: " + reverse);
         if (reverse) {
@@ -87,8 +102,7 @@ public class SecurityTag implements Tag {
 
     public int doEndTag() throws JspException {
         return EVAL_PAGE;
-    }
-
+    }    
     private Vector getPrivilegeProp(String objName) {
         Vector ret = new Vector();
         Properties prop = new Properties();
@@ -152,6 +166,12 @@ public class SecurityTag implements Tag {
         return vec;
     }
 
+    private boolean checkPrivilege(String objName, String orgCd, String propPrivilege)
+    {
+    	com.quatro.service.security.UserAccessManager secManager =(com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
+    	if (orgCd == null) orgCd = "";
+    	return secManager.GetAccess(objName, orgCd).compareToIgnoreCase(propPrivilege) >= 0;
+    }
     
     private boolean checkPrivilege(String roleName, Properties propPrivilege, Vector roleInObj) {
         boolean ret = false;
@@ -183,6 +203,7 @@ public class SecurityTag implements Tag {
 
     private boolean[] checkRights(String privilege, String rights1) {
         boolean[] ret = { false, false }; // (gotRights, break/continue)
+/*
         if ("*".equals(privilege)) {
             ret[0] = true;
         } else if (privilege.equals(rights1.toLowerCase())
@@ -194,6 +215,12 @@ public class SecurityTag implements Tag {
         } else if (privilege.equals("o")) { // for "o"
             ret[0] = false;
             ret[1] = true; // break
+        }
+*/
+        if ("x".equals(privilege)) {
+            ret[0] = true;
+        } else if (privilege.compareTo(rights1.toLowerCase()) >=0) {
+            ret[0] = true;
         }
         return ret;
     }
@@ -232,4 +259,8 @@ public class SecurityTag implements Tag {
     public void setReverse(boolean reverse) {
         this.reverse = reverse;
     }
+	public ApplicationContext getAppContext() {
+		return WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext());
+	}
+
 }

@@ -34,6 +34,8 @@ import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.OscarProperties;
 import oscar.log.LogAction;
@@ -126,7 +128,7 @@ public final class LoginAction extends DispatchAction {
 
             // get View Type
             String viewType = LoginViewTypeHlp.getInstance().getProperty(strAuth[3].toLowerCase());
-
+            String providerNo = strAuth[0];
             session.setAttribute("user", strAuth[0]);
             session.setAttribute("userfirstname", strAuth[1]);
             session.setAttribute("userlastname", strAuth[2]);
@@ -135,6 +137,10 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute("oscar_context_path", request.getContextPath());
             session.setAttribute("expired_days", strAuth[5]);
 
+            // initiate security manager
+            com.quatro.service.security.UserAccessManager securityManager = (com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
+            securityManager.init(providerNo);
+            
             String default_pmm = null;
             if (viewType.equalsIgnoreCase("receptionist") || viewType.equalsIgnoreCase("doctor")) {
                 // get preferences from preference table
@@ -216,4 +222,8 @@ public final class LoginAction extends DispatchAction {
 
         return mapping.findForward(where);
     }
+    
+	public ApplicationContext getAppContext() {
+		return WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext());
+	}
 }
