@@ -10,7 +10,7 @@ create table lst_orgcd
 )
 ;
 create index IDX_ORGCD_CODE on lst_orgcd (codetree);
--- add active yn flag in the role list
+-- add description in the role list
 alter table secrole add  description varchar2(60);
 ;
 
@@ -22,15 +22,14 @@ drop table secuserrole;
 create table secuserrole(
   id  NUMBER not null,  -- should be defined as auto increase in mysql
   provider_no VARCHAR2(6) not null,
-  role_no   VARCHAR2(30) not null,
-  orgcd       VARCHAR2(80),
+  role_name   VARCHAR2(30) not null,
+  orgcd       VARCHAR2(80) default 'R0000001',
   activeyn    NUMBER(1),
   primary key (id)
 );
-insert into secuserrole (id, provider_no, role_no, orgcd, activeyn)
-select hibernate_sequence.nextval, a.provider_no,b.role_no,'R0000001',1
-from secuserrole_tmp a, secrole b
-where a.role_name=b.role_name
+insert into secuserrole (id, provider_no, role_name, orgcd, activeyn)
+select hibernate_sequence.nextval, a.provider_no,a.role_name,'R0000001',1
+from secuserrole_tmp a
 ;
 drop table secuserrole_tmp;
 -- this is for oracle to handle the auto increase id field
@@ -45,6 +44,7 @@ BEGIN
         SELECT MAX(ID)+1 INTO IDX FROM SECUSERROLE;
         :new.ID := IDX;
      END IF;
+     :new.ORGCD := 'R0000001';
 END;
 
 -- add descriptions to the object list
