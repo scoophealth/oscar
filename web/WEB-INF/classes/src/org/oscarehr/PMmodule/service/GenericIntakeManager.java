@@ -408,7 +408,10 @@ public class GenericIntakeManager {
         public void saveIntakeNode(IntakeNode intakeNode){
             genericIntakeNodeDAO.saveIntakeNode(intakeNode);
         }
-        
+	
+	public void saveIntakeNodeTemplate(IntakeNodeTemplate intakeNodeTemplate) {
+	    genericIntakeNodeDAO.saveIntakeNodeTemplate(intakeNodeTemplate);
+	}
         
         ///
         public void updateNodeLabel(IntakeNodeLabel intakeNodeLabel){

@@ -97,6 +97,10 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
         getHibernateTemplate().save(intakeNode);
     }
     
+    public void saveIntakeNodeTemplate(IntakeNodeTemplate intakeNodeTemplate) {
+	getHibernateTemplate().save(intakeNodeTemplate);
+    }
+    
     private void getChildren(IntakeNode intakeNode) {
         HashSet<Integer> nodeIds = new HashSet<Integer>();
         nodeIds.add(intakeNode.getId());
