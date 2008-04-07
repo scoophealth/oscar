@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<MenuConfig>
+
+  <Displayers>
+    <Displayer   name="DropDown"
+                 type="net.sf.navigator.displayer.DropDownMenuDisplayer"/>
+    <Displayer   name="Simple"
+                 type="net.sf.navigator.displayer.SimpleMenuDisplayer"/>
+    <Displayer   name="CoolMenu"
+                 type="net.sf.navigator.displayer.CoolMenuDisplayer"/>
+    <Displayer   name="CoolMenu4"
+                 type="net.sf.navigator.displayer.CoolMenuDisplayer4"/>
+    <Displayer   name="MenuForm"
+                 type="net.sf.navigator.example.PermissionsFormMenuDisplayer"/>
+    <Displayer   name="ListMenu"
+                 type="net.sf.navigator.displayer.ListMenuDisplayer"/>
+    <Displayer   name="TabbedMenu"
+                 type="net.sf.navigator.displayer.TabbedMenuDisplayer"/>
+    <Displayer   name="XtreeMenu"
+                 type="net.sf.navigator.displayer.XtreeMenuDisplayer"/>
+    <Displayer   name="CSSListMenu"
+                 type="net.sf.navigator.displayer.CSSListMenuDisplayer"/>
+  </Displayers>
+
+  <Menus>
+
+    <Menu  name="ToDoListMenuFile"  title="FILE"  description="test" width="50">
+       <Item   name="TDLnew"   title="NEW">
+           <Item   name="TDLnewcase"   title="CASE" location="NewCase.jsp"/>
+           <Item   name="TDLnewitem"    title="ITEM" location="index.jsp"/>
+           <Item   name="TDLnewparty"   title="PARTY" location="index.jsp"/>
+       </Item>
+       <Item   name="TDLopen"   title="OPEN">
+           <Item   name="TDLopencase"    title="CASE" location="index.jsp"/>
+           <Item   name="TDLopenitem"   title="ITEM" location="index.jsp"/>
+           <Item   name="TDLopenparty"  title="PARTY" location="index.jsp"/>
+       </Item>
+       <Item    name="TDLexit"  title="EXIT" location="index.jsp"/>
+    </Menu>
+
+    <Menu  name="ToDoListMenuEdit"  title="EDIT">
+         <Item  name="TDLselect" title="SELECT_ALL" location="index.jsp" />
+         <Item  name="TDLprefs"  title="USER_PREFERENCES" location="index.jsp" />
+    </Menu>
+
+    <Menu  name="Permissions" title="Permissions">
+        <Item title="Change" location="permissionsForm.jsp"/>
+    </Menu>
+
+    <Menu name="Standalone" title="Standalone Test" location="?Self"/>
+
+  </Menus>
+
+</MenuConfig>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+  "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+
+  <!-- ============== Tag Library Description Elements ============= -->
+
+  <tlib-version>2.2-dev</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>menu</short-name>
+  <uri>http://struts-menu.sf.net/tag-el</uri>
+  <description>
+  	The struts-menu provides a XML configurable menu-ing system for your 
+  	Struts applications. This TLD is for the Expression Language enabled 
+  	version.  Also, this is a JSP 1.2 TLD whereas the regular tld is JSP 1.1.
+  </description>
+  
+    <tag>
+      <name>useMenuDisplayer</name>
+      <tag-class>net.sf.navigator.taglib.el.UseMenuDisplayerTag</tag-class>
+      <body-content>JSP</body-content>
+      <attribute>
+          <name>id</name>
+          <required>false</required>
+          <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+          <name>name</name>
+          <required>true</required>
+          <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+          <name>bundle</name>
+          <required>false</required>
+          <rtexprvalue>true</rtexprvalue>  
+      </attribute>
+      <attribute>
+          <name>config</name>
+          <required>false</required>
+          <rtexprvalue>true</rtexprvalue>  
+      </attribute>
+      <attribute>
+          <name>locale</name>
+          <required>false</required>
+          <rtexprvalue>true</rtexprvalue> 
+      </attribute>
+      <attribute>
+          <name>permissions</name>
+          <required>false</required>
+          <rtexprvalue>true</rtexprvalue> 
+      </attribute>
+      <attribute>
+          <name>repository</name>
+          <required>false</required>
+          <rtexprvalue>true</rtexprvalue>
+      </attribute>
+    </tag>
+    
+    <tag>
+      <name>displayMenu</name>
+      <tag-class>net.sf.navigator.taglib.el.DisplayMenuTag</tag-class>
+      <attribute>
+          <name>name</name>
+          <required>true</required>
+          <rtexprvalue>true</rtexprvalue>  
+      </attribute>
+      <attribute>
+          <name>target</name>
+          <required>false</required>
+          <rtexprvalue>false</rtexprvalue>  
+      </attribute>
+    </tag>
+
+</taglib>
