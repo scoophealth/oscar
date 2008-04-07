@@ -139,9 +139,9 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute("expired_days", strAuth[5]);
             
             // initiate security manager
-            com.quatro.service.security.UserAccessManager securityManager = (com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
-            Hashtable userFunctionAccessList = securityManager.getUserFunctionAceessList(providerNo);
-            session.setAttribute("useraccess", userFunctionAccessList);
+            com.quatro.service.security.UserAccessManager userAccessManager = (com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
+            com.quatro.service.security.SecurityManager secManager = userAccessManager.getUserUserSecurityManager(providerNo);
+            session.setAttribute("securitymanager", secManager);
             
             String default_pmm = null;
             if (viewType.equalsIgnoreCase("receptionist") || viewType.equalsIgnoreCase("doctor")) {

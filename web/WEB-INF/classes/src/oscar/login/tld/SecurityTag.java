@@ -169,10 +169,9 @@ public class SecurityTag implements Tag {
 
     private boolean checkPrivilege(String objName, String orgCd, String propPrivilege)
     {
-    	com.quatro.service.security.UserAccessManager secManager =(com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
+    	com.quatro.service.security.SecurityManager secManager =(com.quatro.service.security.SecurityManager)pageContext.getSession().getAttribute("securitymanager"); 
     	if (orgCd == null) orgCd = "";
-        Hashtable userFunctionAccessList = (Hashtable) pageContext.getSession().getAttribute("useraccess");
-    	return secManager.GetAccess(userFunctionAccessList,objName, orgCd).compareToIgnoreCase(propPrivilege) >= 0;
+    	return secManager.GetAccess(objName, orgCd).compareToIgnoreCase(propPrivilege) >= 0;
     }
     
     private boolean checkPrivilege(String roleName, Properties propPrivilege, Vector roleInObj) {

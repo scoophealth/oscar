@@ -2,11 +2,6 @@ package com.quatro.model.security;
 import java.io.*;
 
 public class UserAccessValue implements Serializable {
-		public static final String ACCESS_NONE = "o";
-		public static final String ACCESS_READ = "r";
-		public static final String ACCESS_UPDATE = "u";
-		public static final String ACCESS_WRITE = "w";
-		public static final String ACCESS_ALL = "x";
 		
 		String providerNo;
 		String orgCd;
