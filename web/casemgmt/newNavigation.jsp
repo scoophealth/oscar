@@ -34,6 +34,8 @@
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
         
 </script>
+<!--dummmy div to force browser to allocate space -->
+<div id="leftColLoader" class="leftBox" style="width:100%"><h3 style="width:100%; background-color:#CCCCFF;"><a href="#" onclick="return false;">Loading...</a></h3></div>
 
 <form style="display: none;" name="dummyForm" action="">
     <input type="hidden" id="reloadDiv" name="reloadDiv" value="none" onchange="updateDiv();">
