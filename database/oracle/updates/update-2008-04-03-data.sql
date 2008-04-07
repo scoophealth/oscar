@@ -7,83 +7,83 @@ values('O0000020','Salvation Army',1,30,'R0000001O0000020');
 -- update privilege table, 
 -- the privilge implies a hierachy o-r-u-w-x, in alphabetic order
 truncate table secprivilege;
-INSERT INTO secprivilege t (id,privilige, description)
+INSERT INTO secprivilege t (id,privilege, description)
   VALUES (1, 'o', 'No rights.');
-INSERT INTO secprivilege t (id,privilige, description)
+INSERT INTO secprivilege t (id,privilege, description)
   VALUES (2, 'r', 'Read');
-INSERT INTO secprivilege t (id,privilige, description)
+INSERT INTO secprivilege t (id,privilege, description)
   VALUES (3, 'u', 'Update');
-INSERT INTO secprivilege t (id,privilige, description)
+INSERT INTO secprivilege t (id,privilege, description)
   VALUES (4, 'w', 'Write');
-INSERT INTO secprivilege t (id,privilige, description)
+INSERT INTO secprivilege t (id,privilege, description)
   VALUES (5, 'x', 'All Rights');
 
 -- reserve current privilege settings
-update secobjprivilege set privilige='o' where privilege='|o|';
-update secobjprivilege set privilige='r' where privilege='|r|';
-update secobjprivilege set privilige='r' where privilege='|or|';
-update secobjprivilege set privilige='w' where privilege='|d|';
-update secobjprivilege set privilige='w' where privilege='|od|';
-update secobjprivilege set privilige='w' where privilege='|w|';
-update secobjprivilege set privilige='w' where privilege='|ow|';
-update secobjprivilege set privilige='x' where privilege='|*|';
+update secobjprivilege set privilege='o' where privilege='|o|';
+update secobjprivilege set privilege='r' where privilege='|r|';
+update secobjprivilege set privilege='r' where privilege='|or|';
+update secobjprivilege set privilege='w' where privilege='|d|';
+update secobjprivilege set privilege='w' where privilege='|od|';
+update secobjprivilege set privilege='w' where privilege='|w|';
+update secobjprivilege set privilege='w' where privilege='|ow|';
+update secobjprivilege set privilege='x' where privilege='|*|';
 
 -- initialize description fo roles
 update secrole set description=role_name;
 
 -- update description of objects
-UPDATE secobjectname set description = 'Administration'
+UPDATE secobjectname set description = 'Administration', orgapplicable=0
   WHERE objectname= '_admin';
-UPDATE secobjectname set description = 'Administration - Casi'
+UPDATE secobjectname set description = 'Administration - Casi', orgapplicable=0
   WHERE objectname= '_admin.caisi';
-UPDATE secobjectname set description = 'Administration - Manage Roles'
+UPDATE secobjectname set description = 'Administration - Manage Roles', orgapplicable=0
   WHERE objectname= '_admin.caisiRoles';
-UPDATE secobjectname set description = 'Administration - Setup Cookie Revolver'
+UPDATE secobjectname set description = 'Administration - Setup Cookie Revolver', orgapplicable=0
   WHERE objectname= '_admin.cookieRevolver';
-UPDATE secobjectname set description = 'Administration - Issue Editor'
+UPDATE secobjectname set description = 'Administration - Issue Editor', orgapplicable=0
   WHERE objectname= '_admin.issueEditor';
-UPDATE secobjectname set description = 'Administration - Lookup Field Editor'
+UPDATE secobjectname set description = 'Administration - Lookup Field Editor', orgapplicable=0
   WHERE objectname= '_admin.lookupFieldEditor';
-UPDATE secobjectname set description = 'Administration - Provider'
+UPDATE secobjectname set description = 'Administration - Provider', orgapplicable=1
   WHERE objectname= '_admin.provider';
-UPDATE secobjectname set description = 'Administration - Security'
+UPDATE secobjectname set description = 'Administration - Security', orgapplicable=0
   WHERE objectname= '_admin.security';
-UPDATE secobjectname set description = 'Administration - Security Log Report'
+UPDATE secobjectname set description = 'Administration - Security Log Report', orgapplicable=0
   WHERE objectname= '_admin.securityLogReport';
-UPDATE secobjectname set description = 'Administration - Unlock Account'
+UPDATE secobjectname set description = 'Administration - Unlock Account', orgapplicable=0
   WHERE objectname= '_admin.unlockAccount';
-UPDATE secobjectname set description = 'Administration - User Created Forms'
+UPDATE secobjectname set description = 'Administration - User Created Forms', orgapplicable=0
   WHERE objectname= '_admin.userCreatedForms';
-UPDATE secobjectname set description = 'Client Demographic Info'
+UPDATE secobjectname set description = 'Client Demographic Info', orgapplicable=1
   WHERE objectname= '_demographic';
-UPDATE secobjectname set description = 'eChart'
+UPDATE secobjectname set description = 'eChart', orgapplicable=0
   WHERE objectname= '_eChart';
-UPDATE secobjectname set description = 'Client Master Record'
+UPDATE secobjectname set description = 'Client Master Record', orgapplicable=1
   WHERE objectname= '_masterLink';
-UPDATE secobjectname set description = 'Client - Merge Record'
+UPDATE secobjectname set description = 'Client - Merge Record', orgapplicable=1
   WHERE objectname= '_pmm.mergeRecords';
-UPDATE secobjectname set description = 'Program - Access'
+UPDATE secobjectname set description = 'Program - Access', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.access';
-UPDATE secobjectname set description = 'Program - Bed Check'
+UPDATE secobjectname set description = 'Program - Bed Check', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.bedCheck';
-UPDATE secobjectname set description = 'Program - Client Status'
+UPDATE secobjectname set description = 'Program - Client Status', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.clientStatus';
-UPDATE secobjectname set description = 'Program - Clients'
+UPDATE secobjectname set description = 'Program - Clients', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.clients';
-UPDATE secobjectname set description = 'Program - User'
+UPDATE secobjectname set description = 'Program - User', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.functionUser';
-UPDATE secobjectname set description = 'Program - General'
+UPDATE secobjectname set description = 'Program - General', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.general';
-UPDATE secobjectname set description = 'Program - Queue'
+UPDATE secobjectname set description = 'Program - Queue', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.queue';
-UPDATE secobjectname set description = 'Program - Service Restriction'
+UPDATE secobjectname set description = 'Program - Service Restriction', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.serviceRestrictions';
-UPDATE secobjectname set description = 'Program - Staff'
+UPDATE secobjectname set description = 'Program - Staff', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.staff';
-UPDATE secobjectname set description = 'Program - Team'
+UPDATE secobjectname set description = 'Program - Team', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.teams';
-UPDATE secobjectname set description = 'Report Runer'
+UPDATE secobjectname set description = 'Report Runer', orgapplicable=0
   WHERE objectname= '_reportRunner';
-UPDATE secobjectname set description = 'Report Writer'
+UPDATE secobjectname set description = 'Report Writer', orgapplicable=0
   WHERE objectname= '_reportWriter';
 COMMIT;

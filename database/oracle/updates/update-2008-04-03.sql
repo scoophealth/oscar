@@ -49,3 +49,5 @@ END;
 
 -- add descriptions to the object list
 alter table secobjectname add description varchar2(60);
+alter table secobjectname add orgapplicable number(1);
+
