@@ -184,7 +184,7 @@ public class LoginCheckLoginBean {
                 profession = accessDB.getString(rs,"provider_type");
             }
 
-            sql = "select role_name from secUserRole where activeyn=1 and provider_no = '" + secBean.getProvider_no() + "'";
+            sql = "select b.role_name role_name from secUserRole a, secRole b where a.activeyn=1 and a.provider_no = '" + secBean.getProvider_no() + "' and a.role_no = b.role_no";
             rs = accessDB.searchDBRecord(sql);
             while (rs.next()) {
                 if (rolename == null) {
