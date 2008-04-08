@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-
+// where is guy goes
 public class ScratchPadDao extends HibernateDaoSupport {
 
 	public boolean isScratchFilled(String providerNo) {
