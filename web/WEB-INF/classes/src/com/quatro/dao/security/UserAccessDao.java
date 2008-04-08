@@ -10,6 +10,6 @@ public class UserAccessDao extends HibernateDaoSupport {
 		  String sSQL="from UserAccessValue s where s.providerNo= ? order by s.functionCd, s.privilege desc, s.orgCd";		
 	      paramList.add(providerNo);
 	      Object params[] = paramList.toArray(new Object[paramList.size()]);
-	      return getHibernateTemplate().find(sSQL ,params);
+	      return getHibernateTemplate().findByNamedQuery("user_access",params);
 	  }
 }
