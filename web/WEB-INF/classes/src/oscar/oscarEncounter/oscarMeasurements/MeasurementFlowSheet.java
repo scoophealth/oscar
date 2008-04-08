@@ -25,11 +25,13 @@
  * Created on January 29, 2006, 7:59 PM
  *
  */
-
 package oscar.oscarEncounter.oscarMeasurements;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,16 +49,13 @@ import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper;
 
-
-
 /**
  *
  * @author jay
  */
 public class MeasurementFlowSheet {
-    
+
     private static Log log = LogFactory.getLog(MeasurementFlowSheet.class);
-    
     ArrayList list = null;
     String name = null;
     private String displayName = null;
@@ -70,194 +69,215 @@ public class MeasurementFlowSheet {
     private String warningColour = null;
     private String recommendationColour = null;
     Hashtable indicatorHash = new Hashtable();
-
+    private String topHTMLFileName = null;
     private boolean universal;
     private boolean isMedical = true;
 
-    public void parseDxTriggers(String s){
+    public void parseDxTriggers(String s) {
         dxTriggers = s.split(","); //TODO: what do about different coding systems.
     }
-    
-    public String[] getDxTriggers(){
+
+    public String[] getDxTriggers() {
         return dxTriggers;
     }
-    
-    
-    
+
     /** Creates a new instance of MeasurementFlowSheet */
     public MeasurementFlowSheet() {
     }
-    
-    public void addMeasurement(String measurement){
-        if (list == null){
-           list = new ArrayList();    
+
+    public void addMeasurement(String measurement) {
+        if (list == null) {
+            list = new ArrayList();
         }
         list.add(measurement);
     }
-    
-    
-    public void addMeasurementInfo(String measurement,Object obj){
-        if ( measurementsInfo == null){
+
+    public void addMeasurementInfo(String measurement, Object obj) {
+        if (measurementsInfo == null) {
             measurementsInfo = new Hashtable();
         }
-        if(measurement!=null && obj!=null)
-        	measurementsInfo.put(measurement,obj) ;
+        if (measurement != null && obj != null) {
+            measurementsInfo.put(measurement, obj);
+        }
     }
-    
-    public void addMeasurementFlowSheetInfo(String measurement,Object obj){
-        if ( measurementsFlowSheetInfo == null){
+
+    public void addMeasurementFlowSheetInfo(String measurement, Object obj) {
+        if (measurementsFlowSheetInfo == null) {
             measurementsFlowSheetInfo = new Hashtable();
         }
-        if(measurement!=null && obj!=null){
-        	measurementsFlowSheetInfo.put(measurement,obj);
-                //SET UP DS now.
-                if ( ((Hashtable) obj).get("ds_rules") != null){
-                    addDSForMeasurement(measurement,(String) ((Hashtable) obj).get("ds_rules") );
-                }
+        if (measurement != null && obj != null) {
+            measurementsFlowSheetInfo.put(measurement, obj);
+            //SET UP DS now.
+            if (((Hashtable) obj).get("ds_rules") != null) {
+                addDSForMeasurement(measurement, (String) ((Hashtable) obj).get("ds_rules"));
+            }
         }
     }
-    
-    public Hashtable getMeasurementFlowSheetInfo(String measurement){
-        if ( measurementsFlowSheetInfo == null){
+
+    public Hashtable getMeasurementFlowSheetInfo(String measurement) {
+        if (measurementsFlowSheetInfo == null) {
             measurementsFlowSheetInfo = new Hashtable();
         }
-        return (Hashtable) measurementsFlowSheetInfo.get(measurement); 
+        return (Hashtable) measurementsFlowSheetInfo.get(measurement);
     }
-    
-    public EctMeasurementTypesBean getMeasurementInfo(String measurement){
-        if ( measurementsInfo == null){
+
+    public EctMeasurementTypesBean getMeasurementInfo(String measurement) {
+        if (measurementsInfo == null) {
             measurementsInfo = new Hashtable();
         }
-        return (EctMeasurementTypesBean) measurementsInfo.get(measurement); 
+        return (EctMeasurementTypesBean) measurementsInfo.get(measurement);
     }
-    
-    public ArrayList getMeasurementList(){
+
+    public ArrayList getMeasurementList() {
         return list;
     }
-    
-    
-    
-    
-    public String getName(){
-       return name;
+
+    public String getName() {
+        return name;
     }
-    public void setName(String s){
+
+    public void setName(String s) {
         name = s;
     }
-    
-    
     /////
-	   	                   
-      public void loadRuleBase(String string){
-      try{
-        boolean fileFound = false;
-        String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY");
-        
-        if ( measurementDirPath != null){
-        //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
-        File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY")+string);
-           if(file.isFile() || file.canRead()) {
-               log.debug("Loading from file "+file.getName());
-               FileInputStream fis = new FileInputStream(file);
-               ruleBase = RuleBaseLoader.loadFromInputStream(fis);
-               fileFound = true;
-           }
+    public String getTopHTMLStream() {
+        StringBuffer sb = new StringBuffer();
+        if (topHTMLFileName != null) {
+            try {
+                String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_HTML_DIRECTORY");
+                InputStream is = null;
+                if (measurementDirPath != null) {
+                    //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
+                    File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_HTML_DIRECTORY") + topHTMLFileName);
+                    if (file.isFile() || file.canRead()) {
+                        log.debug("Loading from file " + file.getName());
+                        is = new FileInputStream(file);
+                    }
+                }
+
+                if (is == null) {
+                   is = MeasurementFlowSheet.class.getResourceAsStream("/oscar/oscarEncounter/oscarMeasurements/flowsheets/html/" + topHTMLFileName);  
+                   log.debug("loading from stream " );
+                }
+                
+                if (is != null){
+                    BufferedReader bReader = new BufferedReader(new InputStreamReader(is));
+                    String str;
+                    while ((str = bReader.readLine()) != null) {
+                        sb.append(str);
+                    }
+                    bReader.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        
-        if (!fileFound){                  
-         URL url = MeasurementFlowSheet.class.getResource( "/oscar/oscarEncounter/oscarMeasurements/flowsheets/"+string );  //TODO: change this so it is configurable;
-         log.debug("loading from URL "+url.getFile());            
-         ruleBase = RuleBaseLoader.loadFromUrl( url );
-        }
-      }catch(Exception e){
-         e.printStackTrace();                
-      }
-      rulesLoaded = true;             
-   }
-   
-   public void loadRuleBase2(String string){                  
-      ruleBase = loadMeasurementRuleBase(string);
-      if(ruleBase != null){
-         rulesLoaded = true;  
-      }
-   }   
-      
-      
-      public RuleBase loadMeasurementRuleBase(String string){
-        RuleBase measurementRuleBase = null;
-        try{
+        return sb.toString();
+    }
+
+    public void loadRuleBase(String string) {
+        try {
             boolean fileFound = false;
             String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY");
 
-            if ( measurementDirPath != null){
-            //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
-            File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY")+string);
-               if(file.isFile() || file.canRead()) {
-                   log.debug("Loading from file "+file.getName());
-                   FileInputStream fis = new FileInputStream(file);
-                   ruleBase = RuleBaseLoader.loadFromInputStream(fis);
-                   fileFound = true;
-               }
+            if (measurementDirPath != null) {
+                //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
+                File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY") + string);
+                if (file.isFile() || file.canRead()) {
+                    log.debug("Loading from file " + file.getName());
+                    FileInputStream fis = new FileInputStream(file);
+                    ruleBase = RuleBaseLoader.loadFromInputStream(fis);
+                    fileFound = true;
+                }
             }
 
-            if (!fileFound){                  
-             URL url = MeasurementFlowSheet.class.getResource( "/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/"+string );  //TODO: change this so it is configurable;
-             log.debug("loading from URL "+url.getFile());            
-             measurementRuleBase = RuleBaseLoader.loadFromUrl( url );
+            if (!fileFound) {
+                URL url = MeasurementFlowSheet.class.getResource("/oscar/oscarEncounter/oscarMeasurements/flowsheets/" + string);  //TODO: change this so it is configurable;
+                log.debug("loading from URL " + url.getFile());
+                ruleBase = RuleBaseLoader.loadFromUrl(url);
             }
-        }catch(Exception e){
-            e.printStackTrace();                
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return measurementRuleBase;        
-   }
-      
-      
-   
-   private void addDSForMeasurement(String type,String dsRules){
-       RuleBase rb = loadMeasurementRuleBase(dsRules);
-       if (rb != null){
-          dsRulesHash.put(type,rb);
-       }
-   }    
-      
-   
-   public void runRulesForMeasurement(EctMeasurementsDataBean mdb) throws Exception{
-        
-      String type = mdb.getType() ;  
-      RuleBase rb = (RuleBase) dsRulesHash.get(type);
-      //Is there a rule base for this
-      if (rb != null){
-      
-          try{
-             WorkingMemory workingMemory = rb.newWorkingMemory();
-             workingMemory.assertObject(new MeasurementDSHelper(mdb));
-             workingMemory.fireAllRules();
-          }catch(Exception e){
-              e.printStackTrace(); 
-              //throw new Exception("ERROR: Drools ",e);
-          }
-      }   
-   }
+        rulesLoaded = true;
+    }
+
+    public void loadRuleBase2(String string) {
+        ruleBase = loadMeasurementRuleBase(string);
+        if (ruleBase != null) {
+            rulesLoaded = true;
+        }
+    }
+
+    public RuleBase loadMeasurementRuleBase(String string) {
+        RuleBase measurementRuleBase = null;
+        try {
+            boolean fileFound = false;
+            String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY");
+
+            if (measurementDirPath != null) {
+                //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
+                File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY") + string);
+                if (file.isFile() || file.canRead()) {
+                    log.debug("Loading from file " + file.getName());
+                    FileInputStream fis = new FileInputStream(file);
+                    ruleBase = RuleBaseLoader.loadFromInputStream(fis);
+                    fileFound = true;
+                }
+            }
+
+            if (!fileFound) {
+                URL url = MeasurementFlowSheet.class.getResource("/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/" + string);  //TODO: change this so it is configurable;
+                log.debug("loading from URL " + url.getFile());
+                measurementRuleBase = RuleBaseLoader.loadFromUrl(url);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return measurementRuleBase;
+    }
+
+    private void addDSForMeasurement(String type, String dsRules) {
+        RuleBase rb = loadMeasurementRuleBase(dsRules);
+        if (rb != null) {
+            dsRulesHash.put(type, rb);
+        }
+    }
+
+    public void runRulesForMeasurement(EctMeasurementsDataBean mdb) throws Exception {
+
+        String type = mdb.getType();
+        RuleBase rb = (RuleBase) dsRulesHash.get(type);
+        //Is there a rule base for this
+        if (rb != null) {
+
+            try {
+                WorkingMemory workingMemory = rb.newWorkingMemory();
+                workingMemory.assertObject(new MeasurementDSHelper(mdb));
+                workingMemory.fireAllRules();
+            } catch (Exception e) {
+                e.printStackTrace();
+            //throw new Exception("ERROR: Drools ",e);
+            }
+        }
+    }
     /////
-   
-      public MeasurementInfo getMessages(MeasurementInfo mi) throws Exception{
-          if (!rulesLoaded){
-              throw new Exception("No Drools file loaded");
-              //loadRuleBase();
-          } 
+    public MeasurementInfo getMessages(MeasurementInfo mi) throws Exception {
+        if (!rulesLoaded) {
+            throw new Exception("No Drools file loaded");
+        //loadRuleBase();
+        }
 
-          try{
-             WorkingMemory workingMemory = ruleBase.newWorkingMemory();
-             workingMemory.assertObject(mi);
-             workingMemory.fireAllRules();
-          }catch(Exception e){
-              e.printStackTrace(); 
-              //throw new Exception("ERROR: Drools ",e);
-          }
-          return mi;   
-   }
-
-   
+        try {
+            WorkingMemory workingMemory = ruleBase.newWorkingMemory();
+            workingMemory.assertObject(mi);
+            workingMemory.fireAllRules();
+        } catch (Exception e) {
+            e.printStackTrace();
+        //throw new Exception("ERROR: Drools ",e);
+        }
+        return mi;
+    }
 
     public String getDisplayName() {
         return displayName;
@@ -283,24 +303,22 @@ public class MeasurementFlowSheet {
         this.recommendationColour = recommendationColour;
     }
 
-    
     void AddIndicator(String key, String value) {
-        if (key != null && value != null){
-              indicatorHash.put(key,value);                     
-        } 
+        if (key != null && value != null) {
+            indicatorHash.put(key, value);
+        }
     }
-    
-    public String getIndicatorColour(String key){
+
+    public String getIndicatorColour(String key) {
         String ret = null;
-        if (key != null){
+        if (key != null) {
             ret = (String) indicatorHash.get(key);
         }
         return ret;
     }
 
-    
-    public ArrayList sortToCurrentOrder(ArrayList nonOrderedList){
-        Collections.sort(nonOrderedList,new FlowSheetSort(list));
+    public ArrayList sortToCurrentOrder(ArrayList nonOrderedList) {
+        Collections.sort(nonOrderedList, new FlowSheetSort(list));
         return nonOrderedList;
     }
 
@@ -320,28 +338,39 @@ public class MeasurementFlowSheet {
         isMedical = medical;
     }
 
+    public String getTopHTMLFileName() {
+        return topHTMLFileName;
+    }
+
+    public void setTopHTMLFileName(String topHTMLFileName) {
+        this.topHTMLFileName = topHTMLFileName;
+    }
+
     class FlowSheetSort implements Comparator {
+
         ArrayList list = null;
-        public FlowSheetSort(){     
+
+        public FlowSheetSort() {
         }
-        
-        public FlowSheetSort(ArrayList sortedList){
+
+        public FlowSheetSort(ArrayList sortedList) {
             list = sortedList;
         }
-        
-        public int compare(Object o1, Object o2){
+
+        public int compare(Object o1, Object o2) {
             int n1 = list.indexOf(o1);
             int n2 = list.indexOf(o2);
-             // If this < o, return a negative 
-            if ( n1 < n2 )
-                return -1;          
-            else if (n1 == n2 )    // If this = o, return 0
+            // If this < o, return a negative 
+            if (n1 < n2) {
+                return -1;
+            } else if (n1 == n2) // If this = o, return 0
+            {
                 return 0;
-            else     // If this > o, return a positive value
+            } else // If this > o, return a positive value
+            {
                 return 1;
-            
+            }
+
         }
-        
-        
     }
 }
