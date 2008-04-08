@@ -3,7 +3,8 @@ insert into lst_orgcd (code, description, activeyn, orderbyindex,codetree)
 valuse('R0000001','Shelter Management Information System',1,10,'R000001');
 insert into lst_orgcd (code, description, activeyn, orderbyindex,codetree)
 values('O0000020','Salvation Army',1,30,'R0000001O0000020');
-
+-- init secuserrole
+update secuserrole set ORGCD='R0000001', activeyn=1
 -- update privilege table, 
 -- the privilge implies a hierachy o-r-u-w-x, in alphabetic order
 truncate table secprivilege;
