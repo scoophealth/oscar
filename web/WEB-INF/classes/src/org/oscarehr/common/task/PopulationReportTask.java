@@ -27,7 +27,7 @@ public class PopulationReportTask extends TimerTask {
         if (URL == null) {
 
             String host = OscarProperties.getInstance().getProperty("host");
-            if (host == null) return (null);
+            if (host == null) return(null);
 
             URL = new StringBuilder("https://").append(host).append("/oscar/PopulationReport.do").toString();
         }
@@ -39,8 +39,7 @@ public class PopulationReportTask extends TimerTask {
 
     private static String getFile() {
         if (FILE == null) {
-            FILE = new StringBuilder().append(System.getProperty("user.home")).append(File.separator).append("reports").append(File.separator).append("report")
-                    .append(File.separator).append("populationReport.html").toString();
+            FILE = new StringBuilder().append(System.getProperty("user.home")).append(File.separator).append("reports").append(File.separator).append("report").append(File.separator).append("populationReport.html").toString();
         }
 
         logger.info("write file: " + FILE);
