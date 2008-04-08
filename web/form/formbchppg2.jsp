@@ -27,8 +27,28 @@ if (request.getParameter("view") != null && request.getParameter("view").equals(
 
 
 // if this is a new form automatically fill as much as possible
-if (props == null || (props.getProperty("pg2_fluDate1", "").equals("") && props.getProperty("pg2_otherVac1", "").equals(""))){
+if (props == null || (props.getProperty("pg2_medName1", "").equals("") && props.getProperty("pg2_fluDate1", "").equals("") && props.getProperty("pg2_otherVac1", "").equals(""))){
 //if(true){
+    
+    // fill the medications
+    RxPrescriptionData rxData = new RxPrescriptionData();
+    RxPrescriptionData.Prescription[] medications = rxData.getPrescriptionsByPatient(demoNo);
+    
+    if (medications.length > 13){
+        for (int i=14; i<medications.length && i<28; i++){
+            tempName = medications[i].getBrandName();
+
+            if (tempName == null || tempName.equals("") || tempName.equals("null"))
+                tempName = medications[i].getCustomName();
+
+            props.setProperty("pg2_medName"+(i-13), tempName);
+            props.setProperty("pg2_date"+(i-13), medications[i].getRxDate().toString().replaceAll("-", "/"));
+            props.setProperty("pg2_dose"+(i-13), medications[i].getDosageDisplay());
+            props.setProperty("pg2_howOften"+(i-13), medications[i].getFullFrequency());
+        }
+    }
+    
+    // fill the preventions
     PreventionData pd = new PreventionData();
     ArrayList vaccines = new ArrayList();
     vaccines = pd.getPreventionData(""+demoNo);

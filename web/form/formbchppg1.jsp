@@ -1,6 +1,6 @@
 
 <%@ page language="java"%>
-<%@ page import="java.util.*, oscar.util.UtilDateUtilities, oscar.form.*, oscar.form.data.*, oscar.oscarPrevention.PreventionData" %>
+<%@ page import="java.util.*, oscar.util.UtilDateUtilities, oscar.form.*, oscar.form.data.*, oscar.oscarPrevention.PreventionData, oscar.oscarRx.data.RxPrescriptionData" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -24,7 +24,24 @@ if (request.getParameter("view") != null && request.getParameter("view").equals(
 
 // if this is a new form automatically fill as much as possible
 if (props == null || props.getProperty("c_lastVisited", "").equals("")){
-//if(true){
+//if (true){
+    // fill the medications
+    RxPrescriptionData rxData = new RxPrescriptionData();
+    RxPrescriptionData.Prescription[] medications = rxData.getPrescriptionsByPatient(demoNo);
+    for (int i=0; i<medications.length && i<14; i++){
+        tempName = medications[i].getBrandName();
+
+        if (tempName == null || tempName.equals("") || tempName.equals("null"))
+            tempName = medications[i].getCustomName();
+            
+        props.setProperty("pg1_medName"+(i+1), tempName);
+        props.setProperty("pg1_date"+(i+1), medications[i].getRxDate().toString().replaceAll("-", "/"));
+        props.setProperty("pg1_dose"+(i+1), medications[i].getDosageDisplay());
+        props.setProperty("pg1_howOften"+(i+1), medications[i].getFullFrequency());
+    }
+    
+    
+    // fill the vaccines
     PreventionData pd = new PreventionData();
     ArrayList vaccines = new ArrayList();
     vaccines = pd.getPreventionData(""+demoNo);
