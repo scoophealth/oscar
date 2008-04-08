@@ -72,7 +72,13 @@
         guideline=""
         graphable="no"
         value_name="Kg"/>  
-    
+        
+    <item
+        measurement_type="WAIS"
+        display_name="Waist Circumference"
+        guideline=""
+        graphable="yes"
+        value_name="cm"/>
         
    <!-- annual items -->      
   
@@ -82,7 +88,13 @@
         guideline="Target: 18.5 - 24.9 (kg/m&lt;sup&gt;2&lt;/sup&gt;)"
         graphable="yes"
         value_name="BMI"/>
-   
+   <item
+        measurement_type="BMED"
+        display_name="BP Med Changes"
+        guideline=""
+        graphable="no"
+        value_name="Changed"/>     
+    
   
    <item
         measurement_type="ACR"
@@ -96,6 +108,18 @@
         guideline="Ratio &lt; 4.0"
         graphable="yes"
         value_name="TC/HDL"/>  
+        
+    <item
+        measurement_type="TCHL"
+        display_name="Total Cholestorol"
+        guideline=""
+        graphable="yes"
+        value_name="T. Chol"
+       />    
+       
+       
+             
+        
    <item
         measurement_type="LDL"
         display_name="LDL"
@@ -115,6 +139,17 @@
         graphable="yes"
         value_name="eGFR"/>
         
+    <item 
+        prevention_type="Flu"
+        display_name="Flu Vaccine"
+        guideline="Annually"
+        graphable="no"/>
+        
+    <item 
+        prevention_type="Pneumovax"
+        display_name="Pneumococcal vaccine"
+        guideline=""
+        graphable="no"/>
    <!--
      Items not yet implemented
      
@@ -269,6 +304,42 @@
           isNumeric="1"/>   
     </measurement>
         
+     <measurement 
+        type="BMED"      
+        typeDesc="BP Med Changes"      
+        typeDisplayName="Blood Pressure Medication Changes" 
+        measuringInstrc="Changed">  
+        <validationRule
+           name="Yes/No"
+           regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
+    </measurement>  
     
+     <measurement 
+        type="TCHL" 
+        typeDesc="Total Cholestorol" 
+        typeDisplayName="Total Cholestorol" 
+        measuringInstrc="in mmol/L (nn.n) Range:2.0-12.0">
+        <validationRule 
+            name="Numeric Value: 2.0 to 12.0" 
+            maxValue="12" 
+            minValue="2" 
+            isDate="" 
+            isNumeric="1" 
+            regularExp="" 
+            maxLength="" 
+            minLength=""/>
+    </measurement>
+    
+    <measurement 
+        type="WAIS"     
+        typeDesc="Waist"    
+        typeDisplayName="Waist" 
+        measuringInstrc="Waist Circum in cm">
+        <validationRule 
+            name="Numeric Value: 0 to 300" 
+            maxValue="300" 
+            minValue="0" 
+            isNumeric="1"/>
+    </measurement>
         
 </flowsheet>
