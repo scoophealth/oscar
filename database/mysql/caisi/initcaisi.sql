@@ -2594,7 +2594,7 @@ from lst_admission_status
 union
 select 'PTY',code code,description,null,isactive,displayorder,null
 from lst_program_type
-
+;
 
 
 CREATE OR REPLACE VIEW v_rep_bedlog AS
