@@ -5,9 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.UnknownHostException;
 import java.util.TimerTask;
 
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
 
@@ -55,7 +58,7 @@ public class PopulationReportTask extends TimerTask {
                 logger.debug("Population report task not run, no host / url configured.");
                 return;
             }
-/*
+
             HttpClient client = new HttpClient();
             HttpMethod method = new GetMethod(url);
 
@@ -66,7 +69,7 @@ public class PopulationReportTask extends TimerTask {
         }
         catch (UnknownHostException e) {
             logger.error("Error running population report task, unknown host, host=" + e.getMessage());
-*/        }
+        }
         catch (Throwable t) {
             logger.error("error running population report task", t);
         }
