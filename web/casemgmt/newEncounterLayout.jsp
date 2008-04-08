@@ -628,7 +628,10 @@ function navBarLoader() {
                                                 while( $(div).firstChild )
                                                     $(div).removeChild($(div).firstChild);
                                                 
-                                                $(div).update(request.responseText);  
+                                                $(div).update(request.responseText);                                                    
+                                                    
+                                                if( $("leftColLoader") != null )
+                                                    Element.remove("leftColLoader");                                                      
 
                                                 //track ajax completions and display divs when last ajax call completes                                                
                                                 navBarObj.display(navBar,div);
