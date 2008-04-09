@@ -6921,15 +6921,20 @@ CREATE TABLE preventionsExt (
 CREATE TABLE `secRole` (
   `role_no` int(3) NOT NULL auto_increment,
   `role_name` varchar(30) NOT NULL default '',
+  `description` varchar(60),
   PRIMARY KEY  (`role_no`),
   UNIQUE KEY `role_name` (`role_name`)
 ) ;
 
-CREATE TABLE `secUserRole` (
-  `provider_no` varchar(6) NOT NULL default '',
-  `role_name` varchar(30) NOT NULL default '',
-  PRIMARY KEY  (`provider_no`, `role_name`)
-) ;
+
+create table secUserRole(
+  `id`  int(10) not null auto_increment,  
+  `provider_no` VARCHAR(6) not null,
+  `role_no` VARCHAR(30) not null,
+  `orgcd` VARCHAR(80) default 'R0000001',
+  `activeyn`    int(1),
+  primary key (id)
+);
 
 CREATE TABLE `secPrivilege` (
   `id` int(2) NOT NULL auto_increment,
@@ -6950,9 +6955,10 @@ CREATE TABLE `secObjPrivilege` (
 
 CREATE TABLE `secObjectName` (
   `objectName` varchar(100) NOT NULL default '',
+  `description` varchar(60),
+  `orgapplicable` tinyint(1) default 0,
   PRIMARY KEY  (`objectName`)
 ) ;
-
 
 CREATE TABLE `demographicSets` (
   `demographic_no` int(10) default NULL,
@@ -7758,3 +7764,17 @@ CREATE TABLE `formGrowthChart` (
             key `resource_id` (resource_id),
             key `resource_type` (resource_type)
          );
+
+
+create table lst_orgcd
+
+(
+  code         VARCHAR(8) not null,
+  description  VARCHAR(240),
+  activeyn     VARCHAR(1),
+  orderbyindex int,
+  codetree      VARCHAR(80),
+  primary key (code) 
+);
+
+create index IDX_ORGCD_CODE on lst_orgcd (codetree);
