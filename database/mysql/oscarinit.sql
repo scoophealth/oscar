@@ -6930,7 +6930,7 @@ CREATE TABLE `secRole` (
 create table secUserRole(
   `id`  int(10) not null auto_increment,  
   `provider_no` VARCHAR(6) not null,
-  `role_no` VARCHAR(30) not null,
+  `role_name` VARCHAR(30) not null,
   `orgcd` VARCHAR(80) default 'R0000001',
   `activeyn`    int(1),
   primary key (id)

@@ -1286,9 +1286,9 @@ insert into `secRole` values(6, 'Vaccine Provider', 'Vaccine Provider');
 insert into `secRole` values(null, 'external', 'External');
 insert into `secRole` values(null, 'er_clerk', 'ER Clerk');
 
-insert into `secUserRole` (`provider_no`,`role_no`,`orgcd`,`activeyn`) values('999998', '2', 'R0000001',1);
-insert into `secUserRole` (`provider_no`,`role_no`,`orgcd`,`activeyn`) values('999998', '3', 'R0000001',1);
-insert into `secUserRole` (`provider_no`,`role_no`,`orgcd`,`activeyn`) values('999997', '1', 'R0000001',1);
+insert into `secUserRole` (`provider_no`,`role_name`,`orgcd`,`activeyn`) values('999998', 'doctor', 'R0000001',1);
+insert into `secUserRole` (`provider_no`,`role_name`,`orgcd`,`activeyn`) values('999998', 'admin', 'R0000001',1);
+insert into `secUserRole` (`provider_no`,`role_name`,`orgcd`,`activeyn`) values('999997', 'receptionist', 'R0000001',1);
 
 insert into `secPrivilege` values(1, 'x', 'All rights.');
 insert into `secPrivilege` values(2, 'r', 'Read');
