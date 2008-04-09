@@ -394,8 +394,4 @@
             <bean class="org.oscarehr.PMmodule.service.ClientRestrictionManager" autowire="byName"/>
         </property>
     </bean>
-
-    <bean id="version" class="org.caisi.service.Version">
-        <property name="version" value="3.1.0"/>
-    </bean>
 </beans>

@@ -26,7 +26,6 @@
 <%@ page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils" %>
 <%@ page import="org.springframework.web.context.WebApplicationContext" %>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
-<%@ page import="org.caisi.service.Version" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
@@ -51,7 +50,6 @@
         dayStr = "0" + dayStr;
 
     String dateStr = yearStr + "-" + mthStr + "-" + dayStr;
-    Version version=null;
 	WebApplicationContext ctx=null;
 %>
 
@@ -127,9 +125,8 @@
                             <div align="center">
                                 <%
                                     ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-                                    version = (Version) ctx.getBean("version");
                                 %>
-                                <span style="font-weight:bold"><%=version.getVersion()%></span>
+                                <span style="font-weight:bold"></span>
                             </div>
                         </td>
                     </tr>

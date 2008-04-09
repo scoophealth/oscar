@@ -23,7 +23,7 @@
  -->
 
 <%@ include file="/casemgmt/taglibs.jsp" %>
-<%@ page import="java.util.Date,org.caisi.model.*,org.oscarehr.casemgmt.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*,org.caisi.service.Version" %>
+<%@ page import="java.util.Date,org.caisi.model.*,org.oscarehr.casemgmt.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*" %>
 
 <table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
 	<tr class="title">

@@ -1,5 +1,5 @@
 <%@ include file="/taglibs.jsp" %>
-<%@ page import="org.caisi.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*,org.caisi.service.Version" %>
+<%@ page import="org.caisi.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*" %>
 <%@ page import="java.util.Date" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
@@ -13,8 +13,6 @@
 
 <%
 	ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(application);
-	Version version = (Version)ctx.getBean("version");
-	pageContext.setAttribute("version",version);
 %>
 <c:if test="${requestScope.from ne 'CaseMgmt'}">
 <html>
@@ -66,4 +64,4 @@
 		}
 	</script>	
 <table border="0" cellspacing="0" cellpadding="1" width="100%" bgcolor="#CCCCFF">
-	  <tr class="subject"><th width="20%"></th><th colspan="2" width="80%">TicklerPlus</th><th width="20%" align="right" nowrap>version <c:out value="${version.version}"/></th></tr>
+	  <tr class="subject"><th width="20%"></th><th colspan="2" width="80%">TicklerPlus</th><th width="20%" align="right" nowrap></th></tr>

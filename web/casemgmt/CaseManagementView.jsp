@@ -28,7 +28,6 @@
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.*" %>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.caisi.service.Version"%>
 <%@ page import="oscar.OscarProperties" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
@@ -111,9 +110,8 @@ setTimeout(string,time);
 <th width="8%"></th><th style="font-size: 20" colspan="2" width="80%"><b>Case Management Encounter</b></th>
 <%
 WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-Version version = (Version) ctx.getBean("version");
 %>
-<th width="12%" align="right" nowrap>version <%=version.getVersion()%></th>
+<th width="12%" align="right" nowrap></th>
 </tr>
 
 </table>

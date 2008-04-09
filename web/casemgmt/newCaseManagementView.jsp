@@ -32,7 +32,7 @@
 <%@page import="oscar.util.DateUtils" %>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.caisi.service.Version, org.caisi.model.Role"%>
+<%@page import="org.caisi.model.Role"%>
 
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
@@ -1544,9 +1544,8 @@ function autoCompleteShowMenu(element, update){
 <th width="8%"></th><th style="font-size: 20" colspan="2" width="80%"><b>Case Management Encounter</b></th>
 <%
 WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-Version version = (Version) ctx.getBean("version");
 %>
-<th width="12%" align="right" nowrap>version <%=version.getVersion()%></th>
+<th width="12%" align="right" nowrap></th>
 </tr>
 
 </table>

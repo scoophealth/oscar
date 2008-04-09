@@ -192,7 +192,6 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 -->
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.caisi.service.Version"%>
 <%@page import="oscar.util.*"%>
 <%@page import="oscar.oscarDB.*"%>
 <html:html locale="true">
@@ -754,9 +753,8 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <logic:equal name="infirmaryView_isOscar" value="false">
 <%
 	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-	Version version = (Version) ctx.getBean("version");
 %>
-<!-- <span style="font-weight:bold;color:blue">caisi core version <%=version.getVersion()%></span>-->&nbsp&nbsp&nbsp&nbsp
+&nbsp&nbsp&nbsp&nbsp
 </logic:equal>
 
          <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a>
