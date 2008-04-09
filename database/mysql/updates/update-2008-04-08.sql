@@ -71,11 +71,11 @@ UPDATE secObjectName set description = 'Administration'
 
   WHERE objectname= '_admin';
 
-UPDATE secObjectName set description = 'Administration - Casi'
+UPDATE secObjectName set description = 'Administration - Caisi'
 
   WHERE objectname= '_admin.caisi';
 
-UPDATE secObjectName set description = 'Administration - Manage Roles'
+UPDATE secObjectName set description = 'Administration - Manage Caisi Roles'
 
   WHERE objectname= '_admin.caisiRoles';
 
@@ -123,7 +123,7 @@ UPDATE secObjectName set description = 'Client Master Record'
 
   WHERE objectname= '_masterLink';
 
-UPDATE secObjectName set description = 'Client - Merge Record'
+UPDATE secObjectName set description = 'Client - Merge Records'
 
   WHERE objectname= '_pmm.mergeRecords';
 
@@ -155,7 +155,7 @@ UPDATE secObjectName set description = 'Program - Queue'
 
   WHERE objectname= '_pmm_editProgram.queue';
 
-UPDATE secObjectName set description = 'Program - Service Restriction'
+UPDATE secObjectName set description = 'Program - Service Restrictions'
 
   WHERE objectname= '_pmm_editProgram.serviceRestrictions';
 
@@ -167,7 +167,7 @@ UPDATE secObjectName set description = 'Program - Team'
 
   WHERE objectname= '_pmm_editProgram.teams';
 
-UPDATE secObjectName set description = 'Report Runer'
+UPDATE secObjectName set description = 'Report Runner'
 
   WHERE objectname= '_reportRunner';
 
