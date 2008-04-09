@@ -33,9 +33,9 @@ create table secUserRole(
 
   provider_no VARCHAR(6) not null,
 
-  role_name   VARCHAR(30) not null,
+  role_no VARCHAR(30) not null,
 
-  orgcd       VARCHAR(80) default 'R0000001',
+  orgcd VARCHAR(80) default 'R0000001',
 
   activeyn    int(1),
 
@@ -43,9 +43,9 @@ create table secUserRole(
 
 );
 
-insert into secUserRole (provider_no, role_name, orgcd, activeyn)
+insert into secUserRole (provider_no, role_no, orgcd, activeyn)
 
-select a.provider_no,a.role_name,'R0000001',1 from secUserRole_tmp a;
+select a.provider_no,b.role_no,'R0000001',1 from secUserRole_tmp a, secRole b where a.role_name=b.role_name;
 
 drop table secUserRole_tmp;
 
@@ -53,13 +53,13 @@ drop table secUserRole_tmp;
 
 alter table secObjectName add description varchar(60);
 alter table secObjectName add orgapplicable tinyint(1);
+update secObjectName set orgapplicable = 0;
 
-
-create or replace view v_user_access as
-select a.provider_no, c.codetree orgcd, b.objectName,d.orgapplicable, max(b.privilege) privilege
-from secUserRole a, secObjPrivilege b, lst_orgcd c, secObjectName d
-where a.role_name = b.roleUserGroup
-and a.orgcd = c.code and b.objectName=d.objectName
-and a.activeyn=1 and c.activeyn=1
-group by a.provider_no, c.codetree, b.objectName,d.orgapplicable
-;
+--create or replace view v_user_access as
+--select a.provider_no, c.codetree orgcd, b.objectName,d.orgapplicable, max(b.privilege) privilege
+--from secUserRole a, secObjPrivilege b, lst_orgcd c, secObjectName d
+--where a.role_name = b.roleUserGroup
+--and a.orgcd = c.code and b.objectName=d.objectName
+--and a.activeyn=1 and c.activeyn=1
+--group by a.provider_no, c.codetree, b.objectName,d.orgapplicable
+--;
