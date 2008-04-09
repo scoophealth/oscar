@@ -22,13 +22,10 @@
 */
  -->
 <%@page import="java.util.*"%>
-<%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.caisi.dao.*"%>
 <%@page import="org.caisi.model.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
-<%@page import="org.oscarehr.PMmodule.dao.*"%>
 <%@page import="org.oscarehr.PMmodule.web.*"%>
+<%@page import="org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.util.*"%>
 <%@page import="java.text.*"%>
 <%
@@ -56,8 +53,7 @@
 	}
 	
 	
-	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-	PopulationReportUIBean populationReportUIBean=new PopulationReportUIBean(applicationContext, programId, startDate, endDate);
+	PopulationReportUIBean populationReportUIBean=new PopulationReportUIBean(programId, startDate, endDate);
 	Program program=populationReportUIBean.getProgram();
 	
 	PopulationReportDataObjects.RoleDataGrid roleDataGrid=populationReportUIBean.getRoleDataGrid();

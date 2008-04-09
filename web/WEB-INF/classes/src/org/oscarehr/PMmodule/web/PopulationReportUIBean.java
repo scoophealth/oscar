@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.caisi.dao.IssueGroupDao;
-import org.caisi.model.IssueGroup;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoleDAO;
@@ -35,31 +33,28 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.EncounterTypeDataGrid;
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.EncounterTypeDataRow;
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.RoleDataGrid;
+import org.oscarehr.common.dao.IssueGroupDao;
 import org.oscarehr.common.dao.PopulationReportDAO;
+import org.oscarehr.common.model.IssueGroup;
 import org.oscarehr.util.EncounterUtil;
-import org.springframework.context.ApplicationContext;
+import org.oscarehr.util.SpringUtils;
 
 public class PopulationReportUIBean {
 
-    private ProgramDao programDao = null;
-    private RoleDAO roleDAO = null;
-    private IssueGroupDao issueGroupDao = null;
-    private PopulationReportDAO populationReportDAO = null;
+    private ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
+    private RoleDAO roleDAO = (RoleDAO)SpringUtils.getBean("roleDAO");
+    private IssueGroupDao issueGroupDao = (IssueGroupDao)SpringUtils.getBean("issueGroupDao");
+    private PopulationReportDAO populationReportDAO = (PopulationReportDAO)SpringUtils.getBean("populationReportDAO");
 
     private int programId = -1;
     private Date startDate = null;
     private Date endDate = null;
 
-    public PopulationReportUIBean(ApplicationContext applicationContext, int programId, Date startDate, Date endDate) {
+    public PopulationReportUIBean(int programId, Date startDate, Date endDate) {
 
         this.programId = programId;
         this.startDate = startDate;
         this.endDate = endDate;
-
-        programDao = (ProgramDao)applicationContext.getBean("programDao");
-        roleDAO = (RoleDAO)applicationContext.getBean("roleDAO");
-        issueGroupDao = (IssueGroupDao)applicationContext.getBean("issueGroupDao");
-        populationReportDAO = (PopulationReportDAO)applicationContext.getBean("populationReportDAO");
     }
 
     private Set<IssueGroup> allIssueGroups = null;

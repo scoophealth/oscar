@@ -2,8 +2,8 @@ package org.oscarehr.PMmodule.web;
 
 import java.util.TreeMap;
 
-import org.caisi.model.IssueGroup;
 import org.caisi.model.Role;
+import org.oscarehr.common.model.IssueGroup;
 import org.oscarehr.util.AccumulatorMap;
 import org.oscarehr.util.EncounterUtil;
 

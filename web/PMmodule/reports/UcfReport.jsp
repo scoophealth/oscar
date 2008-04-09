@@ -65,13 +65,7 @@
 	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 	OscarFormDAOHibernate caisiForms = (OscarFormDAOHibernate) applicationContext.getBean("oscarFormDAO");
 	Map data = caisiForms.getFormReport(formId,startDate,endDate);
-	OscarForm form = caisiForms.getOscarForm(formId);
-	
-	/*PopulationReportUIBean populationReportUIBean=new PopulationReportUIBean(applicationContext, formId, startDate, endDate);
-	Program program=populationReportUIBean.getProgram();
-	
-	PopulationReportDataObjects.RoleDataGrid roleDataGrid=populationReportUIBean.getRoleDataGrid();
-	*/
+	OscarForm form = caisiForms.getOscarForm(formId);	
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
