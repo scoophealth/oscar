@@ -2531,71 +2531,6 @@ CREATE OR REPLACE VIEW v_lk_org AS
 SELECT 0 grandParentID, 0 parentID, id, name description
 FROM agency;
 
-CREATE OR REPLACE VIEW v_lookup_table AS
-select 'BTY' prefix, bed_type_id code, name description, '' parentcode,1 active,bed_type_id lineID, dflt buf1
-    from bed_type
-union
-select 'BED' prefix, bed_id code, name description, room_id parentcode, active,bed_id,bed_type_id
-    from bed
-union
-select 'ORG' prefix, id, description,  null parentcode,1, 0 lineID, null
-    from v_lk_org
-union
-select 'ROL', role_name,role_name,  null parentcode, 1,0,null
-       from secRole
-union
-select 'ROC', role_id, name,  null parentcode,1,0,null
-       from caisi_role
-union
-select 'QGV',qgviewcode,description,groupcode,1,0,null
-       FROM report_qgviewsummary
-union
-SELECT 'RPG',id,description,null,1,orderbyindex,null
-       FROM report_lk_reportgroup
-union
-SELECT 'LKT',tableid,description,moduleid,activeyn,0,null
-       FROM app_lookuptable
-union
-SELECT 'MOD',module_id,description, null, 1,0,null
-from app_module
-union
-SELECT 'FCT',id,description, null, isactive,displayorder,null
-from lst_field_category
-union
-SELECT 'ISS',issue_id,description,role,1,0,null
-FROM issue
-Union
-SELECT 'IGP',id,Name,null,1, 0,null
-from IssueGroup
-union
-SELECT 'GEN',code,description,null,isactive, displayorder,null
-FROM lst_gender
-union
-SELECT 'SEC',id,description,null,isactive, displayorder, null
-FROM lst_sector
-union
-SELECT 'OGN',id,description,null,isactive, displayorder, null
-FROM lst_organization
-union
-SELECT 'DRN',id,description,null,isactive, displayorder, needsecondary
-FROM lst_discharge_reason
-union
-SELECT 'SRT',id,description,null,isactive, displayorder,null
-FROM lst_service_restriction
-union
-select 'PRO',program_id,name description,facility_id parentcode,( case program_status when 'active' then '1' when 'inactive' then '0' else '-1' end) isactive,null,null
-from program
-union
-select 'FAC',id facility_id,name description,org_id parentcode, if(disabled='1',0,1) isactive,null,null
-from facility
-union
-select 'AST',code code,description,null,isactive,displayorder,null
-from lst_admission_status
-union
-select 'PTY',code code,description,null,isactive,displayorder,null
-from lst_program_type
-;
-
 
 CREATE OR REPLACE VIEW v_rep_bedlog AS
 SELECT
@@ -2627,4 +2562,14 @@ FROM  report a left join report_lk_reportgroup d on a.reportgroup=d.id
 		join (report_role b join secUserRole c on b.rolecode = c.role_name) on a.reportno = b.reportno 
 GROUP BY a.reportno, a.title, a.description, a.orgapplicable, a.reporttype, a.dateoption, a.datepart, 
 	a.reportgroup,d.id, a.tablename,a.notes, c.provider_no, d.description, a.updatedby, a.updateddate
+;
+
+
+create or replace view v_user_access as
+select a.provider_no, c.codetree orgcd, b.objectName,d.orgapplicable, max(b.privilege) privilege
+from secUserRole a, secObjPrivilege b, lst_orgcd c, secObjectName d
+where a.role_name = b.roleUserGroup
+and a.orgcd = c.code and b.objectName=d.objectName
+and a.activeyn=1 and c.activeyn=1
+group by a.provider_no, c.codetree, b.objectName,d.orgapplicable
 ;
