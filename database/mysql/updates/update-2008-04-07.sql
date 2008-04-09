@@ -33,7 +33,7 @@ create table secUserRole(
 
   provider_no VARCHAR(6) not null,
 
-  role_no VARCHAR(30) not null,
+  role_name VARCHAR(30) not null,
 
   orgcd VARCHAR(80) default 'R0000001',
 
@@ -43,9 +43,9 @@ create table secUserRole(
 
 );
 
-insert into secUserRole (provider_no, role_no, orgcd, activeyn)
+insert into secUserRole (provider_no, role_name, orgcd, activeyn)
 
-select a.provider_no,b.role_no,'R0000001',1 from secUserRole_tmp a, secRole b where a.role_name=b.role_name;
+select a.provider_no,a.role_name,'R0000001',1 from secUserRole_tmp a;
 
 drop table secUserRole_tmp;
 
