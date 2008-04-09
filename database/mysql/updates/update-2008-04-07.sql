@@ -52,3 +52,4 @@ drop table secUserRole_tmp;
 -- add descriptions to the object list
 
 alter table secObjectName add description varchar(60);
+alter table secObjectName add orgapplicable tinyint(1);
