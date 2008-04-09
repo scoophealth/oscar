@@ -8,7 +8,7 @@ import org.oscarehr.util.AccumulatorMap;
 import org.oscarehr.util.EncounterUtil;
 
 /**
- * This bean is a essentiallya huge data grid. The purpose of this
+ * This bean is a essentially a huge data grid. The purpose of this
  * bean is to facilitate with generating population reports.
  */
 public class PopulationReportDataObjects {
