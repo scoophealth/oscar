@@ -20,6 +20,8 @@
  */
 package org.oscarehr.common.web;
 
+import java.util.ArrayList;
+
 import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
@@ -82,19 +84,21 @@ public class OscarSpringContextLoader extends ContextLoader {
 			}
 		}
 
-		// now we create an array of application context file names
-		String[] configLocations = new String[moduleList.length + 1];
+		// now we create an list of application context file names
+		ArrayList<String> configLocations = new ArrayList<String>();
 
-		// always load applicationContext.xml
-		configLocations[0] = CONTEXTNAME + ".xml";
-		log.info("Preparing " + configLocations[0]);
+        // always load applicationContext.xml
+        configLocations.add(CONTEXTNAME + ".xml");
 
-		for (int idx = 0; idx < moduleList.length; ++idx) {
-			configLocations[idx + 1] = CONTEXTNAME + moduleList[idx] + ".xml";
-			log.info("Preparing " + configLocations[idx + 1]);
+        for (String s : moduleList) {
+            configLocations.add(CONTEXTNAME + s + ".xml");
 		}
 
-		wac.setConfigLocations(configLocations);
+        for (String s : configLocations) {
+            log.info("Preparing " + s);            
+        }
+
+		wac.setConfigLocations(configLocations.toArray(new String[0]));
 		wac.refresh();
 		
         if (SpringUtils.beanFactory==null) SpringUtils.beanFactory=wac;

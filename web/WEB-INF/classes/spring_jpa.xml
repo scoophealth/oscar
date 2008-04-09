@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+       default-autowire="byName">
+
+    <!-- load properties from additional property files; oscar.properties is already loaded -->
+    <bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer" lazy-init="default"
+          autowire="default" dependency-check="default">
+        <property name="locations">
+            <list>
+                <value>/WEB-INF/classes/oscar_mcmaster.properties</value>
+            </list>
+        </property>
+    </bean>
+
+	<!-- DataSource -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${db_driver}" />
+		<property name="url" value="${db_uri}${db_name}" />
+		<property name="defaultAutoCommit" value="true" />
+
+		<property name="username" value="${db_username}" />
+		<property name="password" value="${db_password}" />
+
+		<property name="maxActive" value="100" />
+		<property name="maxIdle" value="2" />
+		<property name="maxWait" value="10000" />
+		
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="${db_validationQuery}" />
+		
+		<property name="maxOpenPreparedStatements" value="320" />
+		<property name="poolPreparedStatements" value="true" />
+	</bean>
+
+	<!-- JPA -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" >
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="jpaProperties">
+			<props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
+
+				<prop key="hibernate.cache.use_second_level_cache">false</prop>
+				<prop key="hibernate.cache.use_query_cache">false</prop>
+	
+				<prop key="hibernate.max_fetch_depth">3</prop>					
+			</props>
+		</property>
+	</bean>
+	<!-- JPA annotations bean post processor -->
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+  
+	<!-- TransactionManager -->
+	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager" />
+	<tx:annotation-driven transaction-manager="txManager" />
+
+</beans>

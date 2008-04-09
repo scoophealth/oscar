@@ -6,110 +6,12 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
         default-autowire="no">
 
-    <!-- load properties from additional property files; oscar.properties is already loaded -->
-    <bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="locations">
-            <list>
-                <value>/WEB-INF/classes/oscar_mcmaster.properties</value>
-            </list>
-        </property>
-    </bean>
+	<!-- setup JPA -->
+	<import resource="classpath:spring_jpa.xml"/>
 
-    <!-- data source configuration -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="driverClassName" value="${db_driver}"/>
-        <property name="url" value="${db_uri}${db_name}"/>
-        <property name="username" value="${db_username}"/>
-        <property name="password" value="${db_password}"/>
-        <property name="maxActive" value="100"/>
-
-        <property name="testOnBorrow" value="true" />
-		<property name="validationQuery" value="${db_validationQuery}" />
-		<property name="maxWait" value="4000" />
-
-    </bean>
-
-
-    <!-- hibernate session factory -->
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="entityInterceptor" ref="auditInterceptor"/>
-        <property name="mappingDirectoryLocations">
-            <!-- only *.hbm.xml will be loaded -->
-            <list>
-                <value>classpath:/org/caisi/model</value>
-                <value>classpath:/org/oscarehr/PMmodule/model</value>
-                <value>classpath:/org/oscarehr/survey/model</value>
-                <value>classpath:/org/oscarehr/casemgmt/model</value>
-                <value>classpath:/org/oscarehr/phr/model</value>
-                <value>classpath:/org/oscarehr/common/model</value>
-                <value>classpath:/com/quatro/model</value>
-            </list>
-        </property>
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-                <prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
-				<prop key="hibernate.cache.use_second_level_cache">false</prop>
-				<prop key="hibernate.cache.use_query_cache">false</prop>
-            </props>
-        </property>
-        <property name="eventListeners">
-            <map>
-                <entry key="merge">
-                    <bean class="org.springframework.orm.hibernate3.support.IdTransferringMergeEventListener"
-                          lazy-init="default" autowire="default" dependency-check="default"/>
-                </entry>
-            </map>
-        </property>
-    </bean>
-
-
-    <bean id="auditInterceptor" class="org.oscarehr.common.dao.AuditInterceptor" lazy-init="default"
-          autowire="default" dependency-check="default"/>
-
-    <bean id="auditSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="mappingDirectoryLocations">
-            <!-- only *.hbm.xml will be loaded -->
-            <list>
-                <value>classpath:/org/caisi/model</value>
-                <value>classpath:/org/oscarehr/PMmodule/model</value>
-                <value>classpath:/org/oscarehr/survey/model</value>
-                <value>classpath:/org/oscarehr/casemgmt/model</value>
-                <value>classpath:/com/quatro/model</value>
-            </list>
-        </property>
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-                <prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
-            	<prop key="hibernate.cache.use_second_level_cache">false</prop>
-				<prop key="hibernate.cache.use_query_cache">false</prop>
-            </props>
-        </property>
-    </bean>
-
-    <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
-    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="baseTransactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          abstract="true" lazy-init="default" autowire="default" dependency-check="default">
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="transactionAttributes">
-            <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
-            </props>
-        </property>
-    </bean>
+	<!-- setup hibernate -->
+	<import resource="classpath:spring_hibernate.xml"/>
+   
 
     <!-- DAO -->
     <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" autowire="byName"/>
