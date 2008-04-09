@@ -38,9 +38,9 @@ update secrole set description=role_name;
 -- update description of objects
 UPDATE secobjectname set description = 'Administration', orgapplicable=0
   WHERE objectname= '_admin';
-UPDATE secobjectname set description = 'Administration - Casi', orgapplicable=0
+UPDATE secobjectname set description = 'Administration - Caisi', orgapplicable=0
   WHERE objectname= '_admin.caisi';
-UPDATE secobjectname set description = 'Administration - Manage Roles', orgapplicable=0
+UPDATE secobjectname set description = 'Administration - Manage Caisi Roles', orgapplicable=0
   WHERE objectname= '_admin.caisiRoles';
 UPDATE secobjectname set description = 'Administration - Setup Cookie Revolver', orgapplicable=0
   WHERE objectname= '_admin.cookieRevolver';
@@ -64,7 +64,7 @@ UPDATE secobjectname set description = 'eChart', orgapplicable=0
   WHERE objectname= '_eChart';
 UPDATE secobjectname set description = 'Client Master Record', orgapplicable=1
   WHERE objectname= '_masterLink';
-UPDATE secobjectname set description = 'Client - Merge Record', orgapplicable=1
+UPDATE secobjectname set description = 'Client - Merge Records', orgapplicable=1
   WHERE objectname= '_pmm.mergeRecords';
 UPDATE secobjectname set description = 'Program - Access', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.access';
@@ -80,13 +80,13 @@ UPDATE secobjectname set description = 'Program - General', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.general';
 UPDATE secobjectname set description = 'Program - Queue', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.queue';
-UPDATE secobjectname set description = 'Program - Service Restriction', orgapplicable=1
+UPDATE secobjectname set description = 'Program - Service Restrictions', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.serviceRestrictions';
 UPDATE secobjectname set description = 'Program - Staff', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.staff';
 UPDATE secobjectname set description = 'Program - Team', orgapplicable=1
   WHERE objectname= '_pmm_editProgram.teams';
-UPDATE secobjectname set description = 'Report Runer', orgapplicable=0
+UPDATE secobjectname set description = 'Report Runner', orgapplicable=0
   WHERE objectname= '_reportRunner';
 UPDATE secobjectname set description = 'Report Writer', orgapplicable=0
   WHERE objectname= '_reportWriter';
