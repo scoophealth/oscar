@@ -12,11 +12,12 @@
 	<!-- setup hibernate -->
 	<import resource="classpath:spring_hibernate.xml"/>
    
+    <!-- JPA DAO -->
+    <bean id="issueGroupDao" class="org.oscarehr.common.dao.IssueGroupDao" autowire="byName"/>
 
-    <!-- DAO -->
+    <!-- hibernated DAO -->
     <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" autowire="byName"/>
     <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao" autowire="byName"/>
-    <bean id="issueGroupDao" class="org.oscarehr.common.dao.IssueGroupDao" autowire="byName"/>
     <bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName"/>
     <bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.ProgramQueueDao" autowire="byName"/>
     <bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.ClientReferralDAO" autowire="byName"/>
