@@ -17,7 +17,7 @@
         </property>
     </bean>
 
-	<!-- DataSource -->
+	<!-- DataSource -->	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${db_driver}" />
 		<property name="url" value="${db_uri}${db_name}" />
@@ -38,6 +38,7 @@
 	</bean>
 
 	<!-- JPA -->
+<!-- 
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaVendorAdapter" >
@@ -56,11 +57,16 @@
 			</props>
 		</property>
 	</bean>
+-->
 	<!-- JPA annotations bean post processor -->
+<!-- 
 	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
-  
+ -->
+ 
 	<!-- TransactionManager -->
+<!-- 
 	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager" />
 	<tx:annotation-driven transaction-manager="txManager" />
+ -->
 
 </beans>
