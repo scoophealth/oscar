@@ -508,7 +508,7 @@ function importFromEnct(reqInfo,txtArea)
               <%
                  if( demo != null )
                  {
-                    value = demographic.EctInfo.getSocialHistory();
+                    value = demographic.EctInfo.getFamilyHistory();
                     value = StringUtils.lineBreaks(value);
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
@@ -518,11 +518,11 @@ function importFromEnct(reqInfo,txtArea)
             case "OtherMeds":                
               <%
                  if( demo != null )
-                 {
-                    value = demographic.EctInfo.getFamilyHistory();
-                    value = StringUtils.lineBreaks(value);
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("info = '" + value + "'");
+                 {	//there is no OtherMeds in db.
+                    //value = demographic.EctInfo.getFamilyHistory();
+                    //value = StringUtils.lineBreaks(value);
+                    //value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+                    //out.println("info = '" + value + "'");
                  }
               %>                
                 break;
