@@ -83,12 +83,12 @@ public class importCasemgmt {
                         
                         System.out.println("Creating dummy provider to sign imported notes");
                         stmt.executeUpdate("INSERT INTO provider VALUES ('000000','doe','doctor','doctor','','','','0001-01-01','','','','','','','','1','','')");
-                        stmt.executeUpdate("insert into `secUserRole` values('000000', 'doctor')");
+                        stmt.executeUpdate("insert into `secUserRole` (provider_no, role_name, orgcd, activeyn) values('000000', 'doctor', 'R0000001', 1)");
                         
                         System.out.println("Importing OSCAR Providers to CAISI");
                         
                         //we have to make sure we only grant perms to entitled providers
-                        String sql = "select roleUserGroup from secObjPrivilege where objectName = '_eChart' and privilege = '|*|'";
+                        String sql = "select roleUserGroup from secObjPrivilege where objectName = '_eChart' and privilege = 'x'";
                         rs = stmt.executeQuery(sql);
                         ArrayList<String> secObjs  = new ArrayList<String>();
                         while( rs.next() ) {
