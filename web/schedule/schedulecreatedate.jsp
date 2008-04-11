@@ -46,6 +46,12 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
 
   String sdate = MyDateFormat.getMysqlStandardDate(y,m,d );
   String edate = MyDateFormat.getMysqlStandardDate(Integer.parseInt(request.getParameter("eyear")),Integer.parseInt(request.getParameter("emonth")),Integer.parseInt(request.getParameter("eday")) );
+  String origEdate;
+  if( request.getParameter("origeyear").equals("") )
+    origEdate = "1970-01-01";
+  else
+    origEdate = MyDateFormat.getMysqlStandardDate(Integer.parseInt(request.getParameter("origeyear")),Integer.parseInt(request.getParameter("origemonth")),Integer.parseInt(request.getParameter("origeday")) );
+    
   int rowsAffected = 0;
   if(sdate.equals(scheduleRscheduleBean.sdate) ) {
     String[] param1 =new String[3];
@@ -151,10 +157,14 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   }
 
   //create scheduledate record by 'b' rate
+  SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+  java.util.Date dnewEdate = df.parse(edate);
+  java.util.Date dorigEdate = df.parse(origEdate);
+  
   String[] param4 =new String[3];
     param4[0]=provider_no;
     param4[1]=sdate;
-    param4[2]=edate;
+    param4[2]= dnewEdate.before(dorigEdate) ? origEdate : edate;
   rowsAffected = scheduleMainBean.queryExecuteUpdate(param4,"delete_scheduledate_b");
   String[] param3 =new String[8];
   GregorianCalendar cal = new GregorianCalendar(y,m-1,d);
