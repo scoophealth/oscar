@@ -462,10 +462,13 @@ function addDataString1() {
                 <font size="-2"><bean:message key="schedule.scheduletemplateapplying.msgDateFormat"/></font>
                 &nbsp; &nbsp; <bean:message key="schedule.scheduletemplateapplying.msgTo"/>: 
                 <input type="text" name="eyear" size="4" maxlength="4" value="<%=eyear%>"  style="width:40px;"/>
+                <input type="hidden" name="origeyear" value="<%=eyear%>" >
                 - 
                 <input type="text" name="emonth" size="2" maxlength="2" value="<%=emonth%>"  style="width:30px;"/>
+                <input type="hidden" name="origemonth" value="<%=emonth%>" >
                 - 
                 <input type="text" name="eday" size="2" maxlength="2" value="<%=eday%>" onChange="onChangeDatee()"  style="width:30px;"/>
+                <input type="hidden" name="origeday" value="<%=eday%>" >
               </td>
             </tr>
             <tr> 
