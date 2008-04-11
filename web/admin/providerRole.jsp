@@ -104,7 +104,7 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
 if (request.getParameter("submit") != null && request.getParameter("submit").equals("Add")) {
     String number = request.getParameter("providerId");
     String name   = request.getParameter("name" + number);
-    sql = "insert into secUserRole(provider_no, role_name) values('" + number + "', '" + StringEscapeUtils.escapeSql(name) + "')";
+    sql = "insert into secUserRole(provider_no, role_name, activeyn) values('" + number + "', '" + StringEscapeUtils.escapeSql(name) + "',1)";
     if(dbObj.updateDBRecord(sql, curUser_no)){
     	msg = "Role " + name + " is added. (" + number + ")";
 	    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_ROLE, number +"|"+ name, ip);
