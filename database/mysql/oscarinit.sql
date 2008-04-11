@@ -7246,11 +7246,12 @@ CREATE INDEX dem_merged_merge ON demographic_merged (merged_to, deleted);
 --New audit table stores hashes of casemanagement notes
 --
 CREATE TABLE hash_audit (
+    `pkid` int(10) NOT NULL auto_increment,
     `signature` varchar(255) NOT NULL,
     `id` int(10) default 0,
     `type` char(3) NOT NULL,
     `algorithm` varchar(127),
-    PRIMARY KEY (signature)
+    PRIMARY KEY (pkid)
 ) TYPE=MyISAM;
 
 
