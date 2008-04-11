@@ -193,7 +193,11 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 </form>
 <%
   if(scheduleMainBean.getBDoConfigure()) scheduleMainBean.setBDoConfigure();
-  scheduleMainBean.closePstmtConn();
+  try {
+    scheduleMainBean.closePstmtConn();
+ }catch(SQLException e) {
+     e.printStackTrace();
+ }
 %>
 
 
