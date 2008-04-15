@@ -80,8 +80,7 @@ public class EctDisplayRxAction extends EctDisplayAction {
 
             date = drug.getRxDate();
             serviceDateStr = DateUtils.getDate(date, dateFormat);                                        
-      
-            item.setDate(date);
+                  
             String tmp = drug.getFullOutLine().replaceAll(";", " ");
             String strTitle = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
             strTitle = "<span " + styleColor + ">" + strTitle + "</span>";
