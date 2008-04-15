@@ -1,6 +1,9 @@
 -- default agency
 insert into agency (id, name, description, local, share_notes, hic) values (0, 'Default Agency', 'Default Agency', 1, 0, 0);
 
+-- default facility
+INSERT INTO facility (name, description) VALUES ('Default Facility', 'Default facility, please modify with a more appropriate name and description');
+
 -- default roles
 INSERT INTO `caisi_role` VALUES (1,'doctor',0,'',now()),(2,'nurse',0,'',now()),(3,'counsellor',0,'',now()),(4,'csw',0,'',now());
 
@@ -16214,24 +16217,34 @@ INSERT INTO `measurementType` VALUES (333,'REBG','Review Blood Glucose Records',
 INSERT INTO `caisi_editor` VALUES (1,'intake','Gender','','Male','M','','Yes'),(2,'intake','Gender','','Female','F','','Yes'),(3,'intake','Gender','','Transgender','T','','Yes'),(4,'Agency','Sector','','Men','1','','Yes'),(5,'Agency','Sector','','women','2','','Yes'),(6,'Agency','Sector','','Families','3','','Yes'),(7,'Agency','Sector','','Youth','4','','Yes'),(8,'Agency','Organization','','City of Toronto','1','','Yes'),(9,'Agency','Organization','','Salvation Army','2','','Yes'),(10,'Agency','Organization','','Fred Victor','3','','Yes'),(11,'Agency','Organization','','Good Shepherd','4','','Yes'),(12,'Client','Service Restriction','','Assault of client','1','','Yes'),(13,'Client','Service Restriction','','Assault of staff','2','','Yes'),(14,'Client','Service Restriction','','other','3','','Yes'),(15,'Program','Discharge Reason','','Service restriction','1','','Yes'),(16,'Program','Discharge Reason','','Client self discharge','2','','Yes'),(17,'Program','Discharge Reason','','More appropriate for other program','3','','Yes'),(18,'Program','Discharge Reason','','Completed care','4','','Yes');
 
 -- RFQ: secObjectName
-insert into `secObjectName` (`objectName`) values('_pmm.clientSearch');
-insert into `secObjectName` (`objectName`) values('_pmm.newClient');
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.clientSearch', 'Client - Search', 0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.newClient', 'Client - New Client',0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.mergeRecords', 'Client - Merge Records',0);
-insert into `secObjectName` (`objectName`) values('_pmm.caseManagement');
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.caseManagement','PMM - Case Management',0);
 
 -- PMM administration part
+
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.provider', 'Administration - Provider',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.security', 'Administration - Security',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.securityLogReport', 'Administration - Security Log Report',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.unlockAccount', 'Administration - Unlock Account',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.cookieRevolver', 'Administration - Cookie Revolver',0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.caisi', 'Administration - Caisi',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.caisiRoles', 'Administration - Manage Caisi Roles',0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.lookupFieldEditor', 'Administration - Lookup Field Editor',0);
-insert into `secObjectName` (`objectName`) values('_admin.facilityMessage');
-insert into `secObjectName` (`objectName`) values('_admin.systemMessage');
-insert into `secObjectName` (`objectName`) values('_pmm.agencyInformation');
-insert into `secObjectName` (`objectName`) values('_pmm.manageFacilities');
-insert into `secObjectName` (`objectName`) values('_pmm.staffList');
-insert into `secObjectName` (`objectName`) values('_pmm.programList');
-insert into `secObjectName` (`objectName`) values('_pmm.addProgram');
-insert into `secObjectName` (`objectName`) values('_pmm.globalRoleAccess');
-insert into `secObjectName` (`objectName`) values('_pmm.caisiRoles');
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.issueEditor', 'Administration - Issue Editor',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.caisiRoles', 'Administration - Manage Caisi Roles',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.userCreatedForms', 'Administration - User Created Forms',0);
+
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.facilityMessage', 'Administration - Facility Message',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.systemMessage', 'Administration - System Message',0);
+
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.agencyInformation','Program - Agency Information',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.manageFacilities','Program - Manage Facilities',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.staffList','Program - Staff List',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.programList','Program - Program List',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.addProgram','Program - Add Program',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.globalRoleAccess','Program - Global Role Access',0);
+-- insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.caisiRoles','Program - Caisi Roles',0);
 
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.general','Program - General',0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.staff','Program - Staff',0);
@@ -16248,9 +16261,20 @@ insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values(
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_reportRunner', 'Report Runner', 0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_reportWriter', 'Report Writer', 0);
 
-
+-- 
 insert into `secObjPrivilege` values('doctor','_admin.facilityMessage','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_admin.systemMessage','x',0,999998);
+
+insert into `secObjPrivilege` values('doctor','_admin.provider','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.security','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.securityLogReport','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.unlockAccount','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.cookieRevolver','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.caisi','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.lookupFieldEditor','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.issueEditor','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.caisiRoles','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.userCreatedForms','x',0,999998);
 
 insert into `secObjPrivilege` values('doctor','_pmm.clientSearch','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.newClient','x',0,999998);
@@ -16284,7 +16308,6 @@ INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, pro
 INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
 	VALUES ('doctor', '_reportWriter', 'x', 0, '999998');
 
-INSERT INTO facility (name, description) VALUES ('Default Facility', 'Default facility, please modify with a more appropriate name and description');
 
 -- quatro group's report runner
 insert into lst_gender (code,description,isactive,displayorder) values ('M','Male',1,2);

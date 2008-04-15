@@ -1,3 +1,23 @@
+
+-- Facility table, added to CAISI to support RFQ requirement of facilities.
+drop table if exists `facility`;
+create table facility (
+    `id` int NOT NULL auto_increment,
+    `name` varchar(32) NOT NULL default '',
+    `description` VARCHAR(150) NOT NULL default '',
+    `contact_name` varchar(255) default NULL,
+    `contact_email` varchar(255) default NULL,
+    `contact_phone` varchar(255) default NULL,
+    `hic` tinyint(1) NOT NULL default FALSE,
+    `disabled` tinyint(1) NOT NULL default '0',
+    `org_id` int(10) NOT NULL default '0',
+    `sector_id` int(10) NOT NULL default '0',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_facility_name` USING HASH (`name`)
+);
+
+
+
 --
 -- Table structure for table `access_type`
 --
@@ -75,7 +95,7 @@ CREATE TABLE `bed` (
   `bed_id` int(10) unsigned NOT NULL auto_increment,
   `bed_type_id` int(10) unsigned NOT NULL default '1',
   `room_id` int(10) unsigned default NULL,
-  `facility_id` int(10) unsigned NOT NULL default 0,
+  `facility_id` int unsigned NOT NULL default 0,
   `room_start` date NOT NULL,
   `team_id` int(10) unsigned default NULL,
   `name` varchar(45) NOT NULL,
@@ -385,7 +405,7 @@ DROP TABLE IF EXISTS `client_referral`;
 CREATE TABLE `client_referral` (
   `referral_id` bigint(20) NOT NULL auto_increment,
   `client_id` bigint(20) NOT NULL default '0',
-  `facility_id` int(10) NOT NULL default '0',
+  `facility_id` int NOT NULL default '0',
   `referral_date` datetime default NULL,
   `provider_no` varchar(6) NOT NULL,
   `notes` text default NULL,
@@ -1618,7 +1638,7 @@ CREATE TABLE `intake` (
   `creation_date` datetime NOT NULL,
   `intake_status` varchar(10) not null default 'Signed',
   `intake_location` int(10) default 0,
-  `facility_id` int(11),
+  `facility_id` int,
   PRIMARY KEY  (`intake_id`),
   KEY `IDX_intake_intake_node` (`intake_node_id`),
   KEY `IDX_intake_client_creation_date` (`client_id`,`creation_date`),
@@ -1664,9 +1684,9 @@ CREATE TABLE `issue` (
 DROP TABLE IF EXISTS `program`;
 CREATE TABLE `program` (
   `program_id` int(10) NOT NULL auto_increment,
-	facility_id bigint(22) not null,
-index(facility_id),
-foreign key (facility_id) references facility(id),
+	facility_id int not null default 0,
+--	index(facility_id),
+--	foreign key (facility_id) references facility(id),
   userDefined tinyint(1) not null,
   `intake_program` integer unsigned,
   `name` varchar(70) NOT NULL default '',
@@ -1832,7 +1852,7 @@ CREATE TABLE `room` (
   `name` varchar(45) NOT NULL,
   `floor` varchar(45) default NULL,
   `active` tinyint(1) NOT NULL default '1',
-  `facility_id` int(10) NOT NULL,
+  `facility_id` int NOT NULL,
   `assigned_bed`  tinyint(1)  NOT NULL default '1',
   `occupancy`  int(10) NULL default '0',
   CONSTRAINT `FK_room_facility` FOREIGN KEY (`facility_id`) REFERENCES `facility` (`id`),
@@ -1983,7 +2003,7 @@ CREATE TABLE `facility_message` (
   `message` text NOT NULL,
   `creation_date` datetime NOT NULL default '1900-01-01 00:00:00',
   `expiry_date` datetime NOT NULL default '1900-01-01 00:00:00',
-  `facility_id` int(22),
+  `facility_id` int,
   `facility_name` varchar(32),
   PRIMARY KEY  (`id`)
 );
@@ -2120,22 +2140,6 @@ alter table preference add `new_tickler_warning_window` varchar(10) NOT NULL def
 drop table if exists IntakeRequiredFields;
 create table IntakeRequiredFields (fieldKey varchar(255) not null primary key , isRequired tinyint not null);
 
--- Facility table, added to CAISI to support RFQ requirement of facilities.
-drop table if exists `facility`;
-create table facility (
-    `id` int NOT NULL auto_increment,
-    `name` varchar(32) NOT NULL default '',
-    `description` VARCHAR(70) NOT NULL default '',
-    `contact_name` varchar(255) default NULL,
-    `contact_email` varchar(255) default NULL,
-    `contact_phone` varchar(255) default NULL,
-    `hic` tinyint(1) NOT NULL default FALSE,
-    `disabled` tinyint(1) NOT NULL default '0',
-    `org_id` int(10) NOT NULL default '0',
-    `sector_id` int(10) NOT NULL default '0',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `idx_facility_name` USING HASH (`name`)
-);
 
 -- program restriction based on gender
 drop table if exists `program_client_restriction`;
@@ -2150,7 +2154,7 @@ create table `program_client_restriction` (
     `end_date` datetime not null,
     early_termination_provider varchar(6),
 	PRIMARY KEY (`id`),    
-    CONSTRAINT `FK_pcr_program` FOREIGN KEY (`program_id`) REFERENCES `program` (`id`),
+    CONSTRAINT `FK_pcr_program` FOREIGN KEY (`program_id`) REFERENCES `program` (`program_id`),
     CONSTRAINT `FK_pcr_provider` FOREIGN KEY (`provider_no`) REFERENCES `provider` (`provider_no`),
     CONSTRAINT `FK_pcr_demographic` FOREIGN KEY (`demographic_no`) REFERENCES `demographic` (`demographic_no`)
 );
