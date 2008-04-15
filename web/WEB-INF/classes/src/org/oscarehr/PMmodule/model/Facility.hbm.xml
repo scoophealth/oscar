@@ -23,7 +23,7 @@
             <generator class="native" />
         </id>
         <property name="name" column="name" type="string" not-null="true" length="32" />
-        <property name="description" column="description" type="string" not-null="true" length="70" />
+        <property name="description" column="description" type="string" not-null="true" length="150" />
         <property name="disabled" column="disabled" type="boolean" not-null="true"/>
         <property
                 name="contactName"
