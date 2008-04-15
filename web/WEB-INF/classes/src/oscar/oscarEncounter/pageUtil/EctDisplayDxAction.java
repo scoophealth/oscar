@@ -84,8 +84,7 @@ public class EctDisplayDxAction extends EctDisplayAction {
                 //date = new Date(System.currentTimeMillis());
                 date = null;
             }
-            
-            item.setDate(date);            
+                                
             String strTitle = StringUtils.maxLenString(dxBean.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
             
             item.setTitle(strTitle);
