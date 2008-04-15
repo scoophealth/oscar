@@ -424,7 +424,7 @@ CREATE TABLE demographic (
   PRIMARY KEY  (demographic_no),
   KEY hin (hin),
   KEY name (last_name,first_name)
-) TYPE=MyISAM;
+);
 
 --
 -- Table structure for table `demographicaccessory`
@@ -6396,7 +6396,7 @@ CREATE TABLE provider (
   comments text,
   provider_activity char(3) default NULL,
   PRIMARY KEY  (provider_no)
-) TYPE=MyISAM;
+);
 
 --
 -- Table structure for table `providerExt`
