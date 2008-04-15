@@ -74,7 +74,7 @@
                 int numToDisplay = 4; //0 based so 5 items in this case
                 int j;
                 String stripe,colour,bgColour;        
-                boolean showEllipsis;
+                
                 for(j=0; j<dao.numItems(); j++) {
                 NavBarDisplayDAO.Item item = dao.getItem(j);                       
                 colour = item.getColour().equals("") ? "" : "color: " + item.getColour() + ";";
@@ -84,8 +84,7 @@
                 }
                 else
                 stripe = "style=\"clear:both; display:block; white-space:nowrap; \"";
-                
-                showEllipsis = false;
+                            
                 %>
                 <li <%=stripe%>>
 
@@ -114,21 +113,26 @@
                         <%--      
                         }
                         --%>
-                        <span style="overflow:hidden; width:38%; height:1.2em; white-space:nowrap; float:right; text-align:right;">
-                        <% if( item.getDate() != null ) { 
-                                showEllipsis = true;
+                        
+                        <% String width;
+                            if( item.getDate() != null ) { 
+                                width = "53%";
+                                
                         %>
+                        <span style="overflow:hidden; width:38%; height:1.2em; white-space:nowrap; float:right; text-align:right;">
+                        
                             ...<a class="links" style="<%=colour%>" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="#" onclick="<%=item.getURL()%>" title="<%=item.getLinkTitle()%>">
                                 <%=DateUtils.getDate(item.getDate(), dateFormat)%>
                             </a>
+                        </span>
                         <% }
                            else {
-                        %>
-                            &nbsp;
-                        <%   } 
-                        %>
-                        </span>                        
-                        <span style="overflow:hidden; width:53%; height:1.2em; white-space:nowrap; float:right; text-align:left;">
+                        
+                            width = "91%";
+                           } 
+                        
+                        %>    
+                        <span style="overflow:hidden; width:<%=width%>; height:1.2em; white-space:nowrap; float:right; text-align:left;">
                             <a class="links" style="<%=colour%>" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="#" onclick="<%=item.getURL()%>" title="<%=item.getLinkTitle()%>">
                                 <%=item.getTitle()%>
                             </a>     
