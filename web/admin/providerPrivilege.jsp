@@ -98,12 +98,12 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 	    String objectName = (String) vecObjRowNo.get(i);
 	    if(objectName.equals("Name1") && request.getParameter("object$Name1").trim().equals("") ) continue;
 
-	    String privilege = "|";
+	    String privilege = "";
 		for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	         String paraName = (String)e.nextElement();
 	         String prefix = "privilege$" + objectName + "$";
 	         if(paraName.startsWith(prefix)) {
-	         	privilege += paraName.substring( prefix.length() ) + "|";
+	         	privilege += paraName.substring( prefix.length() );
 	         }
 	    }
 		String prefix = "priority$" + objectName;
@@ -150,11 +150,11 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
 
 
     //String privilege = request.getParameter("privilege");
-    privilege = "|";
+    privilege = "";
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
          String paraName = (String)e.nextElement();
          if(paraName.startsWith("privilege")) {
-         	privilege += paraName.substring("privilege".length()) + "|";
+         	privilege += paraName.substring("privilege".length());
          }
     }
     priority   = request.getParameter("priority");
@@ -339,7 +339,7 @@ System.out.println(roleUser);
             		bSet = false;
             	}
 %>
-                      <input type="checkbox" name="privilege<%=vecRightsName.get(j)%>" <%=priv.indexOf("|"+vecRightsName.get(j)+"|")>=0?"checked":""%> />
+                      <input type="checkbox" name="privilege<%=vecRightsName.get(j)%>" <%=priv.indexOf(((String)vecRightsName.get(j)))>=0?"checked":""%> />
                       <font size="-1"><%=((String)vecRightsDesc.get(j)).replaceAll("Only","O")%></font>
 <%			}%>
                   <!--input type="text" name="privilege" value="<%--= priv--%>" /-->
