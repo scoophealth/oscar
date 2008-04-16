@@ -1458,20 +1458,123 @@ function autoCompleteShowMenu(element, update){
         return false;
     }
     
-    function printNotes() {
-        <c:url value="/CaseManagementEntry.do" var="printURL" />
-        var empty = true;
+    function addPrintQueue(noteId) {
+        var selected = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printerGreen.png";
+        var imgId = "print" + noteId;
         
-        if( $F("notes2print").length == 0 ) {
-            if( confirm("No notes are selected.  Do you wish to print all of them?") ) {
-                printAll();
-                empty = false;
+        $(imgId).src = selected
+        if( $F("notes2print").length > 0 ) 
+            $("notes2print").value += "," + noteId;
+        else
+           $("notes2print").value = noteId;
+           
+    }
+    
+    function removePrintQueue(noteId, idx) {
+        var unselected = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png";
+        var imgId = "print" + noteId;
+        var tmp = "";
+        var idx2;
+        
+        $(imgId).src = unselected;
+            
+        //if we're slicing first note off list
+        if( idx == 0 ) {
+            idx2 = $F("notes2print").indexOf(",");
+            if( idx2 > 0 )
+                tmp = $F("notes2print").substring(idx2+1);
+        }
+        //or we're slicing after first element
+        else {                
+            idx2 = $F("notes2print").indexOf(",",idx);
+            //are we in the middle of the list?
+            if( idx2 > 0 ) {
+                tmp = $F("notes2print").substring(0,idx);
+                tmp += $F("notes2print").substring(idx2+1);
+            }
+            //or are we at the end of the list; don't copy comma
+            else
+                tmp = $F("notes2print").substring(0,idx-1);
+
+        }
+
+        $("notes2print").value = tmp;
+        
+        
+    }
+    
+    function printDateRange() {
+        var sdate = $F("printStartDate");
+        var edate = $F("printEndDate");
+        if( sdate.length == 0 || edate.length == 0 ) {
+            alert("Both start date and end date must be specified");
+            return false;
+        }
+
+        var tmp = sdate.split("-");
+        var formatdate = tmp[1] + " " + tmp[0] + ", " + tmp[2];
+        var msbeg = Date.parse(formatdate);
+
+        tmp = edate.split("-");
+        formatdate = tmp[1] + " " + tmp[0] + ", " + tmp[2];
+        var msend = Date.parse(formatdate);
+
+        if( msbeg > msend ) {
+            alert("Beginning date must precede end date");
+            return false;
+        }  
+        
+        //cycle through container divs for each note
+        var idx;
+        var noteId;
+        var notesDiv;
+        var noteDate;
+        var msnote;
+        var pos;
+        
+        for( idx = 0; idx < numNotes; ++idx ) {
+            notesDiv = $("nc" + idx).down('div');
+            noteId = notesDiv.id.substr(1);  //get note id
+           
+            if( $("obs"+noteId) != null ) {
+                console.log("Printing " + noteId);
+                //grab date and splice off time and format for js date object
+                noteDate = $("obs"+noteId).innerHTML;                
+                noteDate = noteDate.substr(0,noteDate.indexOf(" "));
+                tmp = noteDate.split("-");
+                formatdate = tmp[1] + " " + tmp[0] + ", " + tmp[2];                
+                msnote = Date.parse(formatdate);
+                pos = noteIsQeued(noteId);
+                if( msnote >= msbeg && msnote <= msend ) {
+                    if( pos == -1 )
+                        addPrintQueue(noteId);
+                }
+                else if( pos >= 0 ) {
+                    removePrintQueue(noteId, pos);
+                }
             }
         }
-        else
-            empty = false;
+        
+        return true;
+    }
+    
+    function printSetup(e) {
+        $("printOps").style.right = (pageWidth() - Event.pointerX(e)) + "px";
+        $("printOps").style.bottom = (pageHeight() - Event.pointerY(e)) + "px";
+        $("printOps").style.display = "block";
+        return false;
+    }
+    
+    function printNotes() {
+        if( $("printopDates").checked && !printDateRange()) {            
+            return false;
+        }
+        else if( $("printopAll").checked )
+            printAll();
+        
+        <c:url value="/CaseManagementEntry.do" var="printURL" />
             
-        if( empty && $F("printCPP") == "false" && $F("printRx") == "false" ) {
+        if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" ) {
             alert("Nothing selected to print");
             return false;
         }
@@ -1485,12 +1588,44 @@ function autoCompleteShowMenu(element, update){
         
         return false;
     }
+    var numNotes = <%=noteSize%>; //How many saved notes do we have?
     
-    function printAll() {
-        var numNotes = <%=noteSize%>;
+    function clearAll(e) {        
         var idx;
         var noteId;
         var notesDiv;
+        var pos;
+        
+       Event.stop(e);
+        
+        //cycle through container divs for each note
+        for( idx = 0; idx < numNotes; ++idx ) {
+            notesDiv = $("nc" + idx).down('div');
+            noteId = notesDiv.id.substr(1);  //get note id
+            
+            //if print img present, add note to print queue if not already there
+            if( $("print"+noteId) != null ) {
+                pos = noteIsQeued(noteId);
+                if( pos >= 0 )
+                    removePrintQueue(noteId, pos);                                      
+            }            
+        }
+        
+        if( $F("printCPP") == "true" )
+            printInfo("imgPrintCPP","printCPP");
+        
+        if( $F("printRx") == "true" )
+            printInfo("imgPrintRx","printRx");
+            
+        return false;
+            
+    }
+    
+    function printAll() {        
+        var idx;
+        var noteId;
+        var notesDiv;
+        var pos;
         
         //$("notes2print").value = "";
         
@@ -1500,8 +1635,10 @@ function autoCompleteShowMenu(element, update){
             noteId = notesDiv.id.substr(1);  //get note id
             
             //if print img present, add note to print queue if not already there
-            if( $("print"+noteId) != undefined ) {
-                togglePrint(noteId,null);                              
+            if( $("print"+noteId) != null ) {
+                pos = noteIsQeued(noteId);
+                if( pos == -1 )
+                    addPrintQueue(noteId);                                        
             }            
         }                
     }
@@ -2035,7 +2172,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     <input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
                     <input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
                     <input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp;
-                    <input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printNotes();" title='<bean:message key="oscarEncounter.Index.btnPrint"/>'>                              
+                    <input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" ondblclick="return clearAll(event);" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>'>                              
                 </span>
                 <input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='Display Issues'>&nbsp;
                 <input  tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp;

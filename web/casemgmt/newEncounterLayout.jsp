@@ -63,7 +63,7 @@
     <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/nifty.js"/>"></script>
     
       <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
+  <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar-blue.css" title="win2k-cold-1">
 
   <!-- main calendar program -->
   <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar.js"></script>
@@ -274,7 +274,19 @@
           color: #000000;
           
         }
-                
+        
+        .printOps {                        
+            background-color:#CCCCFF;
+            font-size:9px;
+                        
+            position: absolute;
+            display:none;
+            z-index:1;
+            width:200px;
+            right:100px;
+            bottom:200px;                                                
+        }
+        
         .showEdContainer {        
             position: absolute;
             display:none;
@@ -518,7 +530,10 @@ function init() {
     if(!NiftyCheck())
         return;
 
-    Rounded("div.showEdContent","all","transparent","#CCCCCC","big border #000000");    
+    Rounded("div.showEdContent","all","transparent","#CCCCCC","big border #000000"); 
+    Rounded("div.printOps","all","transparent","#CCCCCC","big border #000000");
+    Calendar.setup({ inputField : "printStartDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printStartDate_cal", singleClick : true, step : 1 });    
+    Calendar.setup({ inputField : "printEndDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printEndDate_cal", singleClick : true, step : 1 });    
     
 }
 
@@ -871,6 +886,7 @@ function loadDiv(div,url,limit) {
               <tiles:insert attribute="rightNavigation" />
           </div>  
           
+          <!-- hovering divs -->
           <div id="showEditNote" class="showEdContent">
               <form id="frmIssueNotes" action="" method="post" onsubmit="return updateCPPNote();">
                   <input type="hidden" id="reloadUrl" name="reloadUrl" value="">
@@ -883,6 +899,21 @@ function loadDiv(div,url,limit) {
                   <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
               </form>
           </div>
+          <div id="printOps" class="printOps">
+              <h3 style="margin-bottom:5px; text-align:center;">Print Dialog</h3>
+              <form id="frmPrintOps" action="" onsubmit="return false;">
+                   <input type="radio" id="printopSelected" name="printop" checked value="selected">Selected<br>
+                   <input type="radio" id="printopAll" name="printop" value="all">All<br>
+                   <input type="radio" id="printopDates" name="printop" value="dates">Dates<br>                   
+                   <div style="float:left; margin-left:5px; width:30px;">From:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printStartDate_cal" alt="calendar">&nbsp;<input type="text" id="printStartDate" name="printStartDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>
+                   <div style="float:left; margin-left:5px; width:30px;">To:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printEndDate_cal" alt="calendar">&nbsp;<input type="text" id="printEndDate" name="printEndDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>                   
+                   <div style="margin-top:5px; text-align:center">
+                       <input type="submit" id="printOp" style="border: 1px solid #7682b1;" value="Print" onclick="return printNotes();">
+                       <input type="submit" id="cancelprintOp" style="border: 1px solid #7682b1;" value="Cancel" onclick="$('printOps').style.display='none';">
+                   </div>
+              </form>              
+          </div>
+          
       </div>
   </body>
 </html:html>
