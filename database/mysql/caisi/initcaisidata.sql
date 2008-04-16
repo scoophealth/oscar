@@ -1,5 +1,5 @@
 -- default agency
-insert into agency (id, name, description, local, share_notes, hic) values (0, 'Default Agency', 'Default Agency', 1, 0, 0);
+insert into agency (id) values (0);
 
 -- default facility
 INSERT INTO facility (name, description) VALUES ('Default Facility', 'Default facility, please modify with a more appropriate name and description');

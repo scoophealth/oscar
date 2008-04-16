@@ -70,19 +70,6 @@ CREATE TABLE `agency` (
   `intake_quick_state` char(2) NOT NULL DEFAULT 'HS',
   `intake_indepth` integer unsigned DEFAULT 2,
   `intake_indepth_state` CHAR(2) NOT NULL DEFAULT 'HS',
-  `name` varchar(50) NOT NULL default '',
-  `description` varchar(255) default NULL,
-  `contact_name` varchar(255) default NULL,
-  `contact_email` varchar(255) default NULL,
-  `contact_phone` varchar(255) default NULL,
-  `local` tinyint(1) NOT NULL default '0',
-  `integrator_enabled` tinyint(1) NOT NULL default '0',
-  `integrator_url` varchar(255) default NULL,
-  `integrator_jms` varchar(255) default NULL,
-  `integrator_username` varchar(255) default NULL,
-  `integrator_password` varchar(255) default NULL,
-  share_notes tinyint not null,
-  `hic` tinyint(1) default NULL,
   PRIMARY KEY  (`id`)
 );
 
