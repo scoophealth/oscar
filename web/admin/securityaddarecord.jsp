@@ -164,6 +164,17 @@
       </tr>
       
       <% if (OscarProperties.getInstance().getBooleanProperty("NEW_USER_PIN_CONTROL","yes")){%>
+      
+      <% if(OscarProperties.getInstance().getBooleanProperty("caisi","on")) {  %>
+      <tr>
+        <td align="right" nowrap>Pin(remote) Enable:</td>
+        <td>
+          <input type="checkbox" name="b_RemoteLockSet" value="1"/>
+          Pin(local) Enable:
+          <input type="checkbox" name="b_LocalLockSet" value="1"  <%="checked" %>" />
+        </td>
+      </tr>
+      <%}else{ %>
       <tr>
         <td align="right" nowrap>Pin(remote) Enable:</td>
         <td>
@@ -172,6 +183,7 @@
           <input type="checkbox" name="b_LocalLockSet" value="1" />
         </td>
       </tr>
+      <%} %>
       <%}else{%>
         <input type="hidden" name="b_RemoteLockSet" value="1" />
         <input type="hidden" name="b_LocalLockSet" value="1" />
