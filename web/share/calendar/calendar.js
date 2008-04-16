@@ -1332,8 +1332,10 @@ Calendar.prototype.show = function () {
 		}
 	}
 	this.element.style.display = "block";
+        
 	this.hidden = false;
 	if (this.isPopup) {
+                this.element.style.zIndex = 1000;
 		window._dynarch_popupCalendar = this;
 		Calendar.addEvent(document, "keydown", Calendar._keyEvent);
 		Calendar.addEvent(document, "keypress", Calendar._keyEvent);
