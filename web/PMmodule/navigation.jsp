@@ -245,7 +245,7 @@
     <div class="body">
 
         <div>
-            <span>Agency</span>
+            <span>Facilities</span>
             <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_pmm.manageFacilities"
                                rights="r">
