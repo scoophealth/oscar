@@ -1,0 +1,1 @@
+alter table agency drop name, drop description, drop contact_name, drop contact_email, drop contact_phone, drop local, drop integrator_enabled, drop integrator_url, drop integrator_jms, drop integrator_username, drop integrator_password, drop share_notes, drop hic;

@@ -22,15 +22,11 @@
 
 package org.oscarehr.PMmodule.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.AgencyDao;
 import org.oscarehr.PMmodule.model.Agency;
 
 public class AgencyManager {
 	
-	private static Log log = LogFactory.getLog(AgencyManager.class);
-
 	private AgencyDao dao;
 
 	public void setAgencyDao(AgencyDao dao) {
@@ -39,20 +35,7 @@ public class AgencyManager {
 
 	public Agency getLocalAgency() {
 		Agency agency = dao.getLocalAgency();
-
-		if (agency == null) {
-			log.warn("No local agency has been saved.");
-			return new Agency(new Long(0));
-		}
-		
 		return agency;
-	}
-
-	public void saveLocalAgency(Agency agency) {
-		log.debug("Saving agency information");
-
-		agency.setLocal(true);
-		dao.saveAgency(agency);
 	}
 
 	public void saveAgency(Agency agency) {

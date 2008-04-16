@@ -176,11 +176,6 @@ public class ProgramManagerViewAction extends BaseAction {
         Facility facility=facilityDAO.getFacility(new Integer((int)program.getFacilityId()));
         if(facility!=null) request.setAttribute("facilityName", facility.getName());
 
-       
-        if (formBean.getTab().equals("General")) {
-            request.setAttribute("agency", programManager.getAgencyByProgram(programId));
-        }
-
         if (formBean.getTab().equals("Service Restrictions")) {
             request.setAttribute("service_restrictions", clientRestrictionManager.getActiveRestrictionsForProgram(Integer.valueOf(programId), new Date()));
         }

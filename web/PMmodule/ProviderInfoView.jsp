@@ -11,7 +11,6 @@
 Your Agency Domain <a href="javascript:void(0)" onclick="popupHelp('agency_domain')">?</a> includes:
 <display:table class="simple" cellspacing="2" cellpadding="3" id="agency" name="agencyDomain" export="false" requestURI="/PMmodule/ProviderInfo.do">
     <display:setProperty name="basic.msg.empty_list" value="No agencies." />
-    <display:column property="name" sortable="true" title="Name" />
 </display:table>
 <br />
 <br />

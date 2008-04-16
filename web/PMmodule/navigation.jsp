@@ -246,13 +246,6 @@
 
         <div>
             <span>Agency</span>
-			<security:oscarSec roleName="<%=roleName$%>"
-                               objectName="_pmm.agencyInformation"
-                               rights="r">
-            <div>
-                <html:link action="/PMmodule/AgencyManager.do">Agency Information</html:link>
-            </div>
-            </security:oscarSec>
             <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_pmm.manageFacilities"
                                rights="r">

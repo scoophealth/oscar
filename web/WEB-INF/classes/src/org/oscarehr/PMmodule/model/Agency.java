@@ -40,19 +40,6 @@ public class Agency implements Serializable {
 	private String intakeQuickState;
 	private Integer intakeIndepth;
 	private String intakeIndepthState;
-	private String name;
-	private String description;
-	private String contactName;
-	private String contactEmail;
-	private String contactPhone;
-	private boolean local;
-	private boolean integratorEnabled;
-	private String integratorUrl;
-	private String integratorJms;
-	private String integratorUsername;
-	private String integratorPassword;
-	private boolean shareNotes;
-	private boolean hic;
 
 	public static Agency getLocalAgency() {
 		return localAgency;
@@ -70,18 +57,6 @@ public class Agency implements Serializable {
 		agencyMap = map;
 	}
 
-	public static String getAgencyName(Long agencyId) {
-		if (agencyMap != null) {
-			Agency agency = (Agency) agencyMap.get(agencyId);
-
-			if (agency != null) {
-				return agency.getName();
-			}
-		}
-
-		return "Unknown (" + agencyId + ")";
-	}
-
 	// constructors
 	public Agency() {
 		// do nothing
@@ -97,15 +72,12 @@ public class Agency implements Serializable {
 	/**
 	 * Constructor for required fields
 	 */
-	public Agency(Long id, Integer intakeQuick, String intakeQuickState, String intakeIndepthState, String name, boolean local, boolean integratorEnabled) {
+	public Agency(Long id, Integer intakeQuick, String intakeQuickState, String intakeIndepthState) {
 
 		this.setId(id);
 		this.setIntakeQuick(intakeQuick);
 		this.setIntakeQuickState(intakeQuickState);
 		this.setIntakeIndepthState(intakeIndepthState);
-		this.setName(name);
-		this.setLocal(local);
-		this.setIntegratorEnabled(integratorEnabled);
 	}
 
 	public boolean areHousingProgramsVisible(String intakeType) {
@@ -235,218 +207,6 @@ public class Agency implements Serializable {
 		this.intakeIndepthState = intakeIndepthState;
 	}
 
-	/**
-	 * Return the value associated with the column: name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Set the value related to the column: name
-	 * 
-	 * @param name
-	 *            the name value
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * Return the value associated with the column: description
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * Set the value related to the column: description
-	 * 
-	 * @param description
-	 *            the description value
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
-	 * Return the value associated with the column: contact_name
-	 */
-	public String getContactName() {
-		return contactName;
-	}
-
-	/**
-	 * Set the value related to the column: contact_name
-	 * 
-	 * @param contactName
-	 *            the contact_name value
-	 */
-	public void setContactName(String contactName) {
-		this.contactName = contactName;
-	}
-
-	/**
-	 * Return the value associated with the column: contact_email
-	 */
-	public String getContactEmail() {
-		return contactEmail;
-	}
-
-	/**
-	 * Set the value related to the column: contact_email
-	 * 
-	 * @param contactEmail
-	 *            the contact_email value
-	 */
-	public void setContactEmail(String contactEmail) {
-		this.contactEmail = contactEmail;
-	}
-
-	/**
-	 * Return the value associated with the column: contact_phone
-	 */
-	public String getContactPhone() {
-		return contactPhone;
-	}
-
-	/**
-	 * Set the value related to the column: contact_phone
-	 * 
-	 * @param contactPhone
-	 *            the contact_phone value
-	 */
-	public void setContactPhone(String contactPhone) {
-		this.contactPhone = contactPhone;
-	}
-
-	/**
-	 * Return the value associated with the column: local
-	 */
-	public boolean isLocal() {
-		return local;
-	}
-
-	/**
-	 * Set the value related to the column: local
-	 * 
-	 * @param local
-	 *            the local value
-	 */
-	public void setLocal(boolean local) {
-		this.local = local;
-	}
-
-	/**
-	 * Return the value associated with the column: integrator_enabled
-	 */
-	public boolean isIntegratorEnabled() {
-		return integratorEnabled;
-	}
-
-	/**
-	 * Set the value related to the column: integrator_enabled
-	 * 
-	 * @param integratorEnabled
-	 *            the integrator_enabled value
-	 */
-	public void setIntegratorEnabled(boolean integratorEnabled) {
-		this.integratorEnabled = integratorEnabled;
-	}
-
-	/**
-	 * Return the value associated with the column: integrator_url
-	 */
-	public String getIntegratorUrl() {
-		return integratorUrl;
-	}
-
-	/**
-	 * Set the value related to the column: integrator_url
-	 * 
-	 * @param integratorUrl
-	 *            the integrator_url value
-	 */
-	public void setIntegratorUrl(String integratorUrl) {
-		this.integratorUrl = integratorUrl;
-	}
-
-	/**
-	 * Return the value associated with the column: integrator_jms
-	 */
-	public String getIntegratorJms() {
-		return integratorJms;
-	}
-
-	/**
-	 * Set the value related to the column: integrator_jms
-	 * 
-	 * @param integratorJms
-	 *            the integrator_jms value
-	 */
-	public void setIntegratorJms(String integratorJms) {
-		this.integratorJms = integratorJms;
-	}
-
-	/**
-	 * Return the value associated with the column: integrator_username
-	 */
-	public String getIntegratorUsername() {
-		return integratorUsername;
-	}
-
-	/**
-	 * Set the value related to the column: integrator_username
-	 * 
-	 * @param integratorUsername
-	 *            the integrator_username value
-	 */
-	public void setIntegratorUsername(String integratorUsername) {
-		this.integratorUsername = integratorUsername;
-	}
-
-	/**
-	 * Return the value associated with the column: integrator_password
-	 */
-	public String getIntegratorPassword() {
-		return integratorPassword;
-	}
-
-	/**
-	 * Set the value related to the column: integrator_password
-	 * 
-	 * @param integratorPassword
-	 *            the integrator_password value
-	 */
-	public void setIntegratorPassword(String integratorPassword) {
-		this.integratorPassword = integratorPassword;
-	}
-
-
-    public boolean isShareNotes() {
-        return shareNotes;
-    }
-
-    public void setShareNotes(boolean shareNotes) {
-        this.shareNotes = shareNotes;
-    }
-
-    /**
-	 * Return the value associated with the column: hic
-	 */
-	public boolean isHic() {
-		return hic;
-	}
-
-	/**
-	 * Set the value related to the column: hic
-	 * 
-	 * @param hic
-	 *            the hic value
-	 */
-	public void setHic(boolean hic) {
-		this.hic = hic;
-	}
 
 	public boolean equals(Object obj) {
 		if (null == obj) return false;

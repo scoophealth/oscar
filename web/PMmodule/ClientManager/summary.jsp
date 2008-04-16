@@ -28,7 +28,7 @@ function summary_load() {
 }
 
 function consent_mandatory() {
-	<c:if test="${empty consent and empty remote_consent}">
+	<c:if test="${empty consent}">
 		openConsent();
 	</c:if>
 }
@@ -444,7 +444,6 @@ function openSurvey() {
 <br />
 </caisi:isModuleLoad>
 
-<c:if test="${empty remote_consent}">
 	<div class="tabs">
 		<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
@@ -495,7 +494,6 @@ function openSurvey() {
 	</table>
 	
 	<br />
-</c:if>
 
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">

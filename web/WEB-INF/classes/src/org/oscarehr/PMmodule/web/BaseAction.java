@@ -32,7 +32,6 @@ import org.apache.struts.action.RedirectingActionForward;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
-import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
@@ -82,10 +81,6 @@ public abstract class BaseAction extends DispatchAction {
 
 	public AdmissionManager getAdmissionManager() {
 		return (AdmissionManager) getAppContext().getBean("admissionManager");
-	}
-
-	public AgencyManager getAgencyManager() {
-		return (AgencyManager) getAppContext().getBean("agencyManager");
 	}
 
 	public ClientManager getClientManager() {

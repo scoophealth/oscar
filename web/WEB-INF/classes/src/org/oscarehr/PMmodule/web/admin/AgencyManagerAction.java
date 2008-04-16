@@ -35,8 +35,6 @@ import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.web.BaseAction;
-import org.oscarehr.util.SpringUtils;
-import org.springframework.scheduling.timer.ScheduledTimerTask;
 
 public class AgencyManagerAction extends BaseAction {
 
@@ -83,55 +81,16 @@ public class AgencyManagerAction extends BaseAction {
             return view(mapping, form, request, response);
         }
 
-        if (request.getParameter("agency.hic") == null) {
-            agency.setHic(false);
-        }
-
-        agencyManager.saveLocalAgency(agency);
+        agencyManager.saveAgency(agency);
 
         ActionMessages messages = new ActionMessages();
-        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("agency.saved", agency.getName()));
         saveMessages(request, messages);
 
         request.setAttribute("id", agency.getId());
-        request.setAttribute("integratorEnabled", agency.isIntegratorEnabled());
 
         logManager.log("write", "agency", agency.getId().toString(), request);
 
         return mapping.findForward(FORWARD_EDIT);
-    }
-
-    public ActionForward enable_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        Agency agency = agencyManager.getLocalAgency();
-        agency.setIntegratorEnabled(true);
-        agencyManager.saveAgency(agency);
-
-        request.setAttribute("id", agency.getId());
-        request.setAttribute("integratorEnabled", agency.isIntegratorEnabled());
-
-        return mapping.findForward(FORWARD_EDIT);
-    }
-
-    public ActionForward disable_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        Agency agency = agencyManager.getLocalAgency();
-
-        agency.setIntegratorEnabled(false);
-        agencyManager.saveAgency(agency);
-
-        request.setAttribute("id", agency.getId());
-        request.setAttribute("integratorEnabled", agency.isIntegratorEnabled());
-
-        return mapping.findForward(FORWARD_EDIT);
-    }
-
-    public ActionForward refresh_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-
-        ScheduledTimerTask tt=(ScheduledTimerTask)SpringUtils.getBean("scheduledIntegratorUpdateTask");
-        
-        Thread t=new Thread(tt.getTimerTask());
-        t.start();
-        
-        return view(mapping, form, request, response);
     }
 
     public void setAgencyManager(AgencyManager mgr) {

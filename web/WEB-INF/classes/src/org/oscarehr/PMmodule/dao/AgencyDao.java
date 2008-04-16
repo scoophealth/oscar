@@ -33,44 +33,16 @@ public class AgencyDao extends HibernateDaoSupport {
 
     private Log log = LogFactory.getLog(AgencyDao.class);
 
-    public Agency getAgency(Long agencyId) {
-        if (agencyId == null || agencyId.longValue() < 0) {
-            throw new IllegalArgumentException();
-        }
-
-        Agency agency = (Agency)getHibernateTemplate().get(Agency.class, agencyId);
-
-        if (log.isDebugEnabled()) {
-            log.debug("getAgency: agencyId = " + agencyId + ", found = " + (agency != null));
-        }
-
-        return agency;
-    }
-
     public Agency getLocalAgency() {
         Agency agency = null;
 
-        List results = getHibernateTemplate().find("from Agency a where a.local = true");
+        List results = getHibernateTemplate().find("from Agency a");
 
         if (!results.isEmpty()) {
             agency = (Agency)results.get(0);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("getLocalAgency: found = " + (agency != null));
-        }
-
         return agency;
-    }
-
-    public List getAgencies() {
-        List results = this.getHibernateTemplate().find("from Agency");
-
-        if (log.isDebugEnabled()) {
-            log.debug("getAgencies : # of results = " + results.size());
-        }
-
-        return results;
     }
 
     public void saveAgency(Agency agency) {

@@ -71,7 +71,6 @@ import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.Demographic.ConsentGiven;
 import org.oscarehr.PMmodule.service.AdmissionManager;
-import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ClientManager;
@@ -121,8 +120,6 @@ public class ClientManagerAction extends BaseAction {
     private AdmissionManager admissionManager;
 
     private GenericIntakeManager genericIntakeManager;
-
-    private AgencyManager agencyManager;
 
     private RoomDemographicManager roomDemographicManager;
 
@@ -1291,23 +1288,6 @@ public class ClientManagerAction extends BaseAction {
             Consent consent = consentManager.getMostRecentConsent(Long.valueOf(demographicNo));
             request.setAttribute("consent", consent);
 
-            if (consent == null) {
-                DemographicExt remote_consent = clientManager.getDemographicExt(new Integer(demographicNo), "consent_st");
-
-                if (remote_consent != null) {
-                    request.setAttribute("remote_consent", remote_consent);
-                    request.setAttribute("remote_consent_exclusions", clientManager.getDemographicExt(new Integer(demographicNo), "consent_ex"));
-
-                    DemographicExt remoteConsentAgency = clientManager.getDemographicExt(new Integer(demographicNo), "consent_ag");
-                    if (remoteConsentAgency != null) {
-                        request.setAttribute("remote_consent_agency", remoteConsentAgency);
-                        request.setAttribute("remote_consent_agency_name", Agency.getAgencyName(Long.parseLong(remoteConsentAgency.getValue())));
-                    }
-
-                    request.setAttribute("remote_consent_date", clientManager.getDemographicExt(new Integer(demographicNo), "consent_dt"));
-                }
-            }
-
             request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, String.valueOf(facilityId)));
         }
 
@@ -1545,10 +1525,6 @@ public class ClientManagerAction extends BaseAction {
 
     public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
         this.genericIntakeManager = genericIntakeManager;
-    }
-
-    public void setAgencyManager(AgencyManager mgr) {
-    	this.agencyManager = mgr;
     }
 
     public void setBedDemographicManager(BedDemographicManager demographicBedManager) {

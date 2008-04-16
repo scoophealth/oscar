@@ -39,7 +39,6 @@ import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProgramSignatureDao;
 import org.oscarehr.PMmodule.dao.ProgramTeamDAO;
 import org.oscarehr.PMmodule.model.AccessType;
-import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.model.FunctionalUserType;
 import org.oscarehr.PMmodule.model.Program;
@@ -205,11 +204,6 @@ public class ProgramManager {
 
     public void removeProgram(String programId) {
         programDao.removeProgram(Integer.valueOf(programId));
-    }
-
-    // TODO: Implement this method for real
-    public Agency getAgencyByProgram(String programId) {
-        return new Agency(new Long(0), 1, "HS", "HS", "", true, false);
     }
 
     public List getProgramProviders(String programId) {
