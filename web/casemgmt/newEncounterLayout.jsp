@@ -910,6 +910,7 @@ function loadDiv(div,url,limit) {
                    <div style="margin-top:5px; text-align:center">
                        <input type="submit" id="printOp" style="border: 1px solid #7682b1;" value="Print" onclick="return printNotes();">
                        <input type="submit" id="cancelprintOp" style="border: 1px solid #7682b1;" value="Cancel" onclick="$('printOps').style.display='none';">
+                       <input type="submit" id="clearprintOp" style="border: 1px solid #7682b1;" value="Clear" onclick="$('printOps').style.display='none'; return clearAll(event);">
                    </div>
               </form>              
           </div>

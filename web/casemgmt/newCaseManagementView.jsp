@@ -1448,7 +1448,7 @@ function autoCompleteShowMenu(element, update){
             $("notes2print").value = tmp;
         }
         else {
-            $(imgId).src = selected
+            $(imgId).src = selected;
             if( $F("notes2print").length > 0 ) 
                 $("notes2print").value += "," + noteId;
             else
@@ -1457,12 +1457,15 @@ function autoCompleteShowMenu(element, update){
                 
         return false;
     }
+    var imgPrintgreen = new Image();
+    imgPrintgreen.src = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printerGreen.png";
+    var imgPrintgrey = new Image();
+    imgPrintgrey.src = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png";
     
-    function addPrintQueue(noteId) {
-        var selected = "<c:out value="${ctx}"/>/oscarEncounter/graphics/printerGreen.png";
+    function addPrintQueue(noteId) {    
         var imgId = "print" + noteId;
-        
-        $(imgId).src = selected
+                
+        $(imgId).src = imgPrintgreen.src;
         if( $F("notes2print").length > 0 ) 
             $("notes2print").value += "," + noteId;
         else
@@ -1476,7 +1479,7 @@ function autoCompleteShowMenu(element, update){
         var tmp = "";
         var idx2;
         
-        $(imgId).src = unselected;
+        $(imgId).src = imgPrintgrey.src;
             
         //if we're slicing first note off list
         if( idx == 0 ) {
@@ -1595,6 +1598,7 @@ function autoCompleteShowMenu(element, update){
         var noteId;
         var notesDiv;
         var pos;
+        var imgId;
         
        Event.stop(e);
         
@@ -1602,9 +1606,10 @@ function autoCompleteShowMenu(element, update){
         for( idx = 0; idx < numNotes; ++idx ) {
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
+            imgId = "print"+noteId;
             
-            //if print img present, add note to print queue if not already there
-            if( $("print"+noteId) != null ) {
+            //if print img present, add note to print queue if not already there            
+            if( $(imgId) != null ) {
                 pos = noteIsQeued(noteId);
                 if( pos >= 0 )
                     removePrintQueue(noteId, pos);                                      
@@ -2172,7 +2177,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     <input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
                     <input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
                     <input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp;
-                    <input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" ondblclick="return clearAll(event);" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>'>                              
+                    <input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>'>                              
                 </span>
                 <input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='Display Issues'>&nbsp;
                 <input  tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp;
