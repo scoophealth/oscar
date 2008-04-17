@@ -28,6 +28,7 @@ if (props == null || props.getProperty("c_lastVisited", "").equals("")){
     // fill the medications
     RxPrescriptionData rxData = new RxPrescriptionData();
     RxPrescriptionData.Prescription[] medications = rxData.getPrescriptionsByPatient(demoNo);
+    String tempName;
     for (int i=0; i<medications.length && i<14; i++){
         tempName = medications[i].getBrandName();
 
