@@ -139,7 +139,7 @@
         <table border="0" cellspacing="0" cellpadding="0" width="100%" >
             <tr bgcolor="#CCCCFF"><th NOWRAP><font face="Helvetica"><bean:message key="demographic.search.msgSearchPatient"/></font></th></tr>
         </table>
-        <form method="post" name="titlesearch" action="demographiccontrol.jsp" onSubmit="return checkTypeIn()">
+        <form method="get" name="titlesearch" action="demographiccontrol.jsp" onSubmit="return checkTypeIn()">
         <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#EEEEFF">         
             <tr valign="top">
                 <td rowspan="2" ALIGN="right" valign="middle">
