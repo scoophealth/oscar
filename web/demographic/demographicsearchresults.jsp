@@ -1,10 +1,14 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+
 <%
         long loadPage = System.currentTimeMillis();
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
 %>
 
 
@@ -22,7 +26,11 @@
 	if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
       //  boolean fromMessenger = request.getParameter("fromMessenger") == null ? false : (request.getParameter("fromMessenger")).equalsIgnoreCase("true")?true:false;            
 
-        
+        GregorianCalendar now=new GregorianCalendar();
+        int curYear = now.get(Calendar.YEAR);
+        int curMonth = (now.get(Calendar.MONTH)+1);
+        int curDay = now.get(Calendar.DAY_OF_MONTH);    
+        String curProvider_no = (String) session.getAttribute("user");
 %>
 <!--  
 /*
@@ -54,7 +62,6 @@
 <title> <bean:message key="demographic.demographicsearchresults.title"/> </title>
 <link rel="stylesheet" href="../web.css" >
 <script language="JavaScript">
-
 function setfocus() {
   document.titlesearch.keyword.focus();
   document.titlesearch.keyword.select();
@@ -157,11 +164,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 </tr>
 <%
     java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-    
-	GregorianCalendar now=new GregorianCalendar();
-	int curYear = now.get(Calendar.YEAR);
-	int curMonth = (now.get(Calendar.MONTH)+1);
-	int curDay = now.get(Calendar.DAY_OF_MONTH);
+    	
 	int age=0;
 	ResultSet rs=null ;
     
@@ -269,9 +272,8 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
                         <!-- Rights -->
                         <td nowrap>
                         
-                            <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
-                                
-                                <a title="Encounter" href="#" onclick="popupEChart(710,1024,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=dem_no%>&curProviderNo=<%=rs.getString("provider_no")%>&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>')">E</a>
+                            <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">                                   
+                                <a title="Encounter" href="#" onclick="popupEChart(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;">E</a>
                             </security:oscarSec>
                             <!-- Rights -->
                             <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r">
