@@ -44,6 +44,8 @@ public class LookupDao extends HibernateDaoSupport {
 	public List LoadCodeList(String tableId,boolean activeOnly,  String parentCode,String code, String codeDesc)
 	{
 		LookupTableDefValue tableDef = GetLookupTableDef(tableId);
+		if (tableDef==null) return(new ArrayList());
+		
 		List fields = LoadFieldDefList(tableId);
 		DBPreparedHandlerParam [] params = new DBPreparedHandlerParam[4];
 		String fieldNames [] = new String[7];
