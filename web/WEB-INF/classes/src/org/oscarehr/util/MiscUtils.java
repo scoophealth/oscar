@@ -22,34 +22,25 @@
 
 package org.oscarehr.util;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Properties;
 
-import org.apache.commons.dbcp.BasicDataSource;
-import org.springframework.beans.factory.BeanFactory;
+public class MiscUtils {
 
-/**
- * This class holds utilities used to work with spring.
- * The main usage is probably the beanFactory singleton.
- */
-public class SpringUtils {
-    /**
-     * This variable is populated by one of the context listeners.
-     */
-    public static BeanFactory beanFactory = null;
-
-    public static Object getBean(String beanName)
-    {
-        return(beanFactory.getBean(beanName));
+    public static byte[] propertiesToXmlByteArray(Properties p) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        p.storeToXML(os, null);
+        return(os.toByteArray());
     }
-    
-    /**
-     * This method should only be called by DbConnectionFilter, everyone else should use that to obtain a connection. 
-     */
-    protected static Connection getDbConnection() throws SQLException {
-        BasicDataSource ds = (BasicDataSource)SpringUtils.getBean("dataSource");
-        Connection c=ds.getConnection();
-        c.setAutoCommit(true);
-        return(c);
+
+    public static Properties xmlByteArrayToProperties(byte[] b) throws IOException {
+        Properties p = new Properties();
+
+        ByteArrayInputStream is = new ByteArrayInputStream(b);
+        p.loadFromXML(is);
+
+        return(p);
     }
 }
