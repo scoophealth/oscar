@@ -12,6 +12,10 @@ create table facility (
     `disabled` tinyint(1) NOT NULL default '0',
     `org_id` int(10) NOT NULL default '0',
     `sector_id` int(10) NOT NULL default '0',
+	`integratorEnabled` tinyint(1) not null,
+	`integratorUrl` varchar(255),
+	`integratorUser` varchar(255),
+	`integratorPassword` varchar(255),
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_facility_name` USING HASH (`name`)
 );

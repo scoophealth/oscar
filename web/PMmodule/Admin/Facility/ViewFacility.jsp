@@ -44,6 +44,11 @@
             <td><c:out value="${facilityManagerForm.facility.contactPhone}" /></td>
         </tr>
 
+        <tr class="b">
+            <td width="20%">Integrator Enabled:</td>
+            <td><c:out value="${facilityManagerForm.facility.integratorEnabled}" /></td>
+        </tr>
+
 
     </table>
 

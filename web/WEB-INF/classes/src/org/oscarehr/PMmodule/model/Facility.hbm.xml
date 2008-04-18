@@ -67,6 +67,10 @@
                 not-null="true"
                 length="10"
                 />
+        <property name="integratorEnabled" />
+        <property name="integratorUrl" />
+        <property name="integratorUser" />
+        <property name="integratorPassword" />
     </class>
 </hibernate-mapping>
         

@@ -100,6 +100,22 @@
             
             </td>
         </tr>
+        <tr class="b">
+            <td width="20%">Enable Integrator:</td>
+            <td><html:checkbox property="facility.integratorEnabled" /></td>
+        </tr>
+        <tr class="b">
+            <td width="20%">Integrator Url:</td>
+            <td><html:text property="facility.integratorUrl" /></td>
+        </tr>
+        <tr class="b">
+            <td width="20%">Integrator User:</td>
+            <td><html:text property="facility.integratorUser" /></td>
+        </tr>
+        <tr class="b">
+            <td width="20%">Integrator Password:</td>
+            <td><html:password property="facility.integratorPassword" /></td>
+        </tr>
         <tr>
             <td colspan="2">
                 <html:submit property="submit.save">Save</html:submit>

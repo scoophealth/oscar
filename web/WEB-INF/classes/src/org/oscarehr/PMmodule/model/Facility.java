@@ -16,6 +16,10 @@ public class Facility implements Serializable {
     private boolean disabled;
     private Integer orgId;
     private Integer sectorId;
+    private boolean integratorEnabled=false;
+    private String integratorUrl=null;
+    private String integratorUser=null;
+    private String integratorPassword=null;
     
     public Facility() {
     }
@@ -108,7 +112,39 @@ public class Facility implements Serializable {
 		this.sectorId = sectorId;
 	}
 
-	public boolean equals(Object o) {
+	public boolean isIntegratorEnabled() {
+        return integratorEnabled;
+    }
+
+    public void setIntegratorEnabled(boolean integratorEnabled) {
+        this.integratorEnabled = integratorEnabled;
+    }
+
+    public String getIntegratorUrl() {
+        return integratorUrl;
+    }
+
+    public void setIntegratorUrl(String integratorUrl) {
+        this.integratorUrl = integratorUrl;
+    }
+
+    public String getIntegratorUser() {
+        return integratorUser;
+    }
+
+    public void setIntegratorUser(String integratorUser) {
+        this.integratorUser = integratorUser;
+    }
+
+    public String getIntegratorPassword() {
+        return integratorPassword;
+    }
+
+    public void setIntegratorPassword(String integratorPassword) {
+        this.integratorPassword = integratorPassword;
+    }
+
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

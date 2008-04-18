@@ -197,6 +197,8 @@ public class FacilityManagerAction extends BaseAction {
         }
 
         try {
+            if (request.getParameter("facility.integratorEnabled") == null) facility.setIntegratorEnabled(false);
+            
             facilityManager.saveFacility(facility);
 
             ActionMessages messages = new ActionMessages();
