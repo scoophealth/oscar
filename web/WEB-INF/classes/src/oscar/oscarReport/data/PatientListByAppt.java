@@ -79,7 +79,8 @@ public class PatientListByAppt extends HttpServlet {
                ps.print(db.getString(rs,5)+",");
                ps.print(db.getString(rs,7).replaceAll("\r\n","")+",");
                ps.print(db.getString(rs,9)+" ");
-               ps.print(db.getString(rs,8));
+               ps.print(rs.getString(8)+",");
+               ps.print(rs.getString(10));
                ps.print("\n");
             }
             ps.println("");
