@@ -1690,3 +1690,14 @@ CREATE TABLE `formLabReq07` (
 	`v_immune_HepatitisA` tinyint(1) default NULL,
 	PRIMARY KEY  (`ID`)
 ) ENGINE=MyISAM;
+
+CREATE TABLE `appointment_status` (
+  `id` int(11) NOT NULL auto_increment,
+  `status` char(2) NOT NULL,
+  `description` char(30) NOT NULL default 'no description',
+  `color` char(7) NOT NULL default '#cccccc',
+  `icon` char(30) NOT NULL default '''''',
+  `active` int(1) NOT NULL default '1',
+  `editable` int(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM;
