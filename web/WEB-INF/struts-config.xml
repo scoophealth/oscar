@@ -15,15 +15,15 @@
             <form-property name="issueAdmin" type="org.caisi.model.IssueAdmin" />
         </form-bean>
         <form-bean name="caisiEditorForm" type="org.apache.struts.validator.DynaValidatorForm">
-        	<form-property name="caisiEditor" type="org.caisi.model.CaisiEditor"/>
+            <form-property name="caisiEditor" type="org.caisi.model.CaisiEditor"/>
         </form-bean>
         <form-bean name="lookupListForm" type="com.quatro.web.lookup.LookupListForm" />
         <form-bean name="lookupTableListForm" type="org.apache.struts.validator.DynaValidatorForm">
-        	<form-property name="modules" type="java.util.List"></form-property>
+            <form-property name="modules" type="java.util.List"></form-property>
         </form-bean>
         <form-bean name="lookupCodeListForm" type="org.apache.struts.validator.DynaValidatorForm">
-        	<form-property name="tableDef" type="com.quatro.model.LookupTableDefValue"></form-property>
-        	<form-property name="codes" type="java.util.List"></form-property>    
+            <form-property name="tableDef" type="com.quatro.model.LookupTableDefValue"></form-property>
+            <form-property name="codes" type="java.util.List"></form-property>    
         </form-bean>
         <form-bean name="lookupCodeEditForm" type="com.quatro.web.lookup.LookupCodeEditForm">
         </form-bean>
@@ -303,13 +303,13 @@
         <form-bean name="clientListsReportForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean" />
         </form-bean>
-
+        
         <form-bean name="quatroReportListForm" type="com.quatro.web.report.QuatroReportListForm" />
         <form-bean name="quatroReportRunnerForm" type="com.quatro.web.report.QuatroReportRunnerForm" />
         <form-bean name="quatroReportViewerForm" type="com.quatro.web.report.QuatroReportViewerForm" />
         <form-bean name="quatroReportSaveTemplateForm" type="com.quatro.web.report.QuatroReportSaveTemplateForm" />
         
-<!--
+        <!--
         <form-bean name="customReportForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.CustomReportFormBean" />
         </form-bean>
@@ -348,8 +348,8 @@
                 <form-bean name="NewStrutsActionForm" type="oscar.indivoMessenger.NewStrutsActionForm"/>
                 <form-bean name="CreateIndivoMessageActionForm" type="oscar.indivoMessenger.CreateIndivoMessageActionForm"/>
                 <form-bean name="DisplayIndivoMsgsActionForm" type="oscar.indivoMessenger.DisplayIndivoMsgsActionForm"/ -->
-		
-
+        <form-bean name="apptStatusEditForm" type="org.apache.struts.validator.LazyValidatorForm" /> 	
+        
     </form-beans>
     
     <global-forwards>
@@ -364,9 +364,9 @@
         
         
         <!-- caisi core action -->
-		<action path="/Admin" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="systemMessageForm" input="/admin/admin.jsp" validate="false">
+        <action path="/Admin" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="systemMessageForm" input="/admin/admin.jsp" validate="false">
             <forward name="list" path="page.admin.list" />
-		</action>
+        </action>
         <action path="/SystemMessage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="systemMessageForm" input="/caisicore/SystemMessageForm.jsp" validate="false">
             <forward name="view" path="/caisicore/SystemMessage.jsp" />
             <forward name="list" path="/caisicore/SystemMessageList.jsp" />
@@ -385,10 +385,10 @@
             <forward name="edit" path="/caisicore/CaisiRoleForm.jsp" />
         </action>
         <action path="/infirm" type="org.caisi.core.web.InfirmAction" name="inputForm" scope="request" parameter="action"></action>
-       	<action path="/CaisiEditor" type="org.springframework.web.struts.DelegatingActionProxy" name="caisiEditorForm" scope="request" parameter="method" validate="false">
+        <action path="/CaisiEditor" type="org.springframework.web.struts.DelegatingActionProxy" name="caisiEditorForm" scope="request" parameter="method" validate="false">
             <forward name="list" path="/caisicore/CaisiEditorList.jsp" />
             <forward name="edit" path="/caisicore/CaisiEditorForm.jsp" />
-       	</action>
+        </action>
         <!-- Login -->
         <action input="/login.jsp" name="loginForm" path="/login" scope="request" type="oscar.login.LoginAction" validate="true">
             <forward name="receptionist" path="/receptionist/receptionistcontrol.jsp" redirect="true" />
@@ -1124,10 +1124,10 @@
             <forward name="failure" path="/oscarWaitingList/DisplayWaitingList.jsp" /> 
         </action> 
         <action path="/oscarWaitingList/WLEditWaitingListNameAction"    
-          type="oscar.oscarWaitingList.pageUtil.WLEditWaitingListNameAction" 
-          scope="request"  
-          input="/oscarWaitingList/EditWaitingListName.jsp" 
-          name="WLWaitingListNameForm"> 
+                type="oscar.oscarWaitingList.pageUtil.WLEditWaitingListNameAction" 
+                scope="request"  
+                input="/oscarWaitingList/EditWaitingListName.jsp" 
+                name="WLWaitingListNameForm"> 
             <forward name="continue" path="/oscarWaitingList/EditWaitingListName.jsp" /> 
             <forward name="editSuccess" path="/oscarWaitingList/SetupDisplayWaitingList.do" /> 
             <forward name="failure" path="/oscarWaitingList/EditWaitingListName.jsp" /> 
@@ -1391,9 +1391,9 @@
             <forward name="timeout" path="/PMmodule/Timeout.jsp" />
         </action>
         <action path="/PMmodule/IntakeCMentalHealthReportAction" type="org.oscarehr.PMmodule.web.IntakeCMentalHealthReportAction" name="intakeCReportForm" scope="request" input="/PMmodule/IntakeCReport.jsp">
-        	<forward name="success" path="/PMmodule/IntakeCReport.jsp"/>
-        	<forward name="error" path="/PMmodule/IntakeCReport.jsp" />
-        	<forward name="timeout" path="/PMmodule/Timeout.jsp" />
+            <forward name="success" path="/PMmodule/IntakeCReport.jsp"/>
+            <forward name="error" path="/PMmodule/IntakeCReport.jsp" />
+            <forward name="timeout" path="/PMmodule/Timeout.jsp" />
         </action>
         <action path="/PMmodule/IntakeCReport1Action" type="org.oscarehr.PMmodule.web.IntakeCReport1Action" name="intakeCReport1Form" scope="request" input="/PMmodule/IntakeCReport1.jsp">
             <forward name="success" path="/PMmodule/IntakeCReport1.jsp" />
@@ -1536,38 +1536,38 @@
             <forward name="reportlist" path="page.report.quatroreportlist" />
         </action>
         <action path="/QuatroReport/ReportRunner" type="com.quatro.web.report.QuatroReportRunnerAction"
-              name="quatroReportRunnerForm" validate="false" scope="request">
+                name="quatroReportRunnerForm" validate="false" scope="request">
             <forward name="success" path="page.report.quatroreportrunner" />
         </action>
         <action path="/QuatroReport/ReportViewer" type="com.quatro.web.report.QuatroReportViewerAction"
-              name="quatroReportRunnerForm" validate="false" scope="request">
-           <forward name="success" path="/PMmodule/reports/QuatroReportViewer.jsp"/>
+                name="quatroReportRunnerForm" validate="false" scope="request">
+            <forward name="success" path="/PMmodule/reports/QuatroReportViewer.jsp"/>
         </action>
         <action path="/QuatroReport/SaveReportTemplate" type="com.quatro.web.report.QuatroReportTemplateAction"
-              name="quatroReportSaveTemplateForm" validate="false" scope="request">
-           <forward name="success" path="/PMmodule/reports/QuatroReportTemplateTitle.jsp"/>
+                name="quatroReportSaveTemplateForm" validate="false" scope="request">
+            <forward name="success" path="/PMmodule/reports/QuatroReportTemplateTitle.jsp"/>
         </action>
         <action path="/Lookup/LookupList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" 
-              name="lookupListForm" scope="request" validate="false">
+                name="lookupListForm" scope="request" validate="false">
             <forward name="list" path="/PMmodule/lookup/LookupList.jsp" />
         </action>
-
-
+        
+        
         <action path="/Lookup/LookupTableList" type="org.springframework.web.struts.DelegatingActionProxy" 
-              name="lookupTableListForm" scope="request" validate="false" parameter="method">
+                name="lookupTableListForm" scope="request" validate="false" parameter="method">
             <forward name="list" path="/PMmodule/lookup/LookupTableList.jsp" />
         </action>
-
+        
         <action path="/Lookup/LookupCodeList" type="org.springframework.web.struts.DelegatingActionProxy"
-              name="lookupCodeListForm" scope="request" validate="false" parameter="method">
+                name="lookupCodeListForm" scope="request" validate="false" parameter="method">
             <forward name="list" path="/PMmodule/lookup/LookupCodeList.jsp" />
         </action>
-
+        
         <action path="/Lookup/LookupCodeEdit" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" 
-              name="lookupCodeEditForm" scope="session" validate="false" input="/PMmodule/lookup/LookupCodeEdit.jsp">
+                name="lookupCodeEditForm" scope="session" validate="false" input="/PMmodule/lookup/LookupCodeEdit.jsp">
             <forward name="edit" path="/PMmodule/lookup/LookupCodeEdit.jsp" />
         </action>
-
+        
         <action path="/PMmodule/Reports/ProgramActivityReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="activityReportForm" scope="request" validate="false">
             <forward name="form" path="page.report.activityform" />
             <forward name="report" path="page.report.activityreport" />
@@ -1585,7 +1585,7 @@
             <forward name="form" path="page.report.clientlistsreportform" />
             <forward name="report" path="page.report.clientlistsreport" />
         </action>
-<!--
+        <!--
         <action path="/PMmodule/Reports/CustomReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="customReportForm" scope="request" validate="false">
             <forward name="list" path="page.customreport.list" />
             <forward name="form" path="page.customreport.form" />
@@ -1663,7 +1663,7 @@
             <forward name="report" path="/PMmodule/vaccine/vaccine_provider_report.jsp" />
         </action>
         
-          
+        
         
         <!--
                 <action input="/indivoMessenger/DisplayIndivoMessages.jsp" name="DisplayIndivoMsgsActionForm"
@@ -1708,6 +1708,15 @@
         <action path="/phr/Logout" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
         </action>
         <action path="/phrExchange" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+        </action>
+        <action
+            path="/appointment/apptStatusSetting"
+            name="apptStatusEditForm"
+            type="org.springframework.web.struts.DelegatingActionProxy"
+            scope="request"
+            parameter="dispatch">
+            <forward name="success" path="/appointment/appointmentstatussetting.jsp"/>
+            <forward name="edit" path="/appointment/appointmentstatusedit.jsp"/>
         </action>
         
     </action-mappings>
