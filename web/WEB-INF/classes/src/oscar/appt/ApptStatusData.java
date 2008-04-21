@@ -1,16 +1,20 @@
 /*
  * 
  */
-
-
 package oscar.appt;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import oscar.oscarBilling.ca.on.data.BillingONDataHelp;
 
 /**
  * Class ApptStatusData : set appt status and get the icon name and link
  * 2003-01-11
-*/
+ */
 public final class ApptStatusData {
+
+    oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
+    String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
     String apptStatus = null;
     String[] aStatus =    {"t",            "T",        "H",       "P",          "E",            "N",          "C",          "B",          "tS",          "TS",     "HS",      "PS",      "ES",        "NS",       "CS",       "BS",        "tV",          "TV",     "HV",      "PV",      "EV",       "NV",       "CV",       "BV"};
     String[] aNextStatus ={"T",            "H",        "P",       "E",          "N",            "C",          "t",          "",           "TS",          "HS",      "PS",     "ES",      "NS",        "CS",       "tS",       "",          "TV",          "HV",      "PV",     "EV",      "NV",       "CV",       "tV",       ""};
@@ -47,30 +51,42 @@ public final class ApptStatusData {
     //"S",          "V","",          "", "signed.gif", "verified.gif", "Signed", "Verified",   "#FFBBFF", "#FFBBFF",
 
     public void setApptStatus(String status) {
-         apptStatus = status;
+        apptStatus = status;
     }
 
     public String getImageName() {
-        return getStr(aStatus,aImageName);
+        if (strEditable!=null&&strEditable.equalsIgnoreCase("yes"))
+            return getStr("icon");
+        else
+            return getStr(aStatus, aImageName);
     }
 
     public String getNextStatus() {
-        return getStr(aStatus,aNextStatus);
+        if (strEditable!=null&&strEditable.equalsIgnoreCase("yes"))
+            return getStr("nextstatus");
+        else
+            return getStr(aStatus, aNextStatus);
     }
 
     public String getTitle() {
-        return getStr(aStatus,aTitle);
+        if (strEditable!=null&&strEditable.equalsIgnoreCase("yes"))
+            return getStr("desc");
+        else
+            return getStr(aStatus, aTitle);
     }
-
+    
     public String getBgColor() {
-        return getStr(aStatus,aBgColor);
+        if (strEditable!=null&&strEditable.equalsIgnoreCase("yes"))
+                return getStr("color");
+        else
+            return getStr(aStatus, aBgColor);
     }
 
-    private String getStr(String[] str, String[] tar) { 
+    private String getStr(String[] str, String[] tar) {
         String rstr = null;
 
-        for (int i = 0 ; i < str.length ; i++) {
-            if(apptStatus.equals(aStatus[i])) {
+        for (int i = 0; i < str.length; i++) {
+            if (apptStatus.equals(aStatus[i])) {
                 rstr = tar[i];
                 break;
             }
@@ -81,6 +97,7 @@ public final class ApptStatusData {
     public String signStatus() {
         return appendStatus(apptStatus, "S");
     }
+
     public String verifyStatus() {
         return appendStatus(apptStatus, "V");
     }
@@ -88,14 +105,17 @@ public final class ApptStatusData {
     public String billStatus(String fstatus) {
         return preStatus(fstatus, "B");
     }
+
     public String unbillStatus(String fstatus) {
         return preStatus(fstatus, "P");
     }
+
     public String[] getAllStatus() {
-	return this.aStatus;
+        return this.aStatus;
     }
+
     public String[] getAllTitle() {
-	return this.aTitle;
+        return this.aTitle;
     }
 
     private String appendStatus(String status, String s) {
@@ -103,17 +123,97 @@ public final class ApptStatusData {
         if (status.length() == 1) {
             temp = status + s;
         } else {
-            temp = status.substring(0,1) + s;
+            temp = status.substring(0, 1) + s;
         }
         return temp;
     }
+
     private String preStatus(String status, String s) {
         String temp = null;
         if (status.length() == 1) {
             temp = s;
         } else {
-            temp = s + status.substring(1,2);
+            temp = s + status.substring(1, 2);
         }
         return temp;
+    }
+
+    private String getStr(String kind) {
+        String rstr = null;
+        String strOtherIcon = "";
+        String strStatus = "";
+
+        BillingONDataHelp dbObj = new BillingONDataHelp();
+
+        String sql = "select * from appointment_status where active='1' order by id asc";
+        ResultSet rs = dbObj.searchDBRecord(sql);
+        
+        if (apptStatus.length()>=2){
+            strOtherIcon = apptStatus.substring(1,2);
+            strStatus = apptStatus.substring(0,1);
+        }
+        else
+            strStatus = apptStatus;
+            
+
+        try {
+            while (rs.next()) {
+                if (kind.equals("nextstatus")) {
+                    if (strStatus.equals("C")){
+                        rs.first();
+                        rstr = rs.getString("status");
+                        if (strOtherIcon.length()==1)
+                            return rstr + strOtherIcon;
+                        else
+                            return rstr;
+                    }
+                    if (strStatus.equals("B")){
+                        return "";
+                    }
+                    if (strStatus.equals(rs.getString("status"))){
+                        rs.next();
+                        while (Integer.parseInt(rs.getString("active"))==0)
+                            rs.next();
+                        rstr = rs.getString("status");
+                        if (strOtherIcon.length()==1)
+                            return rstr + strOtherIcon;
+                        else
+                            return rstr;
+                    }
+                         
+                }
+
+                if (kind.equals("desc")) {
+                    if (strStatus.equals(rs.getString("status"))){
+                        rstr = rs.getString("description");
+                        if (strOtherIcon.length()==1)
+                            return rstr + "/" + (strOtherIcon.equals("S")?"Signed":"Verified") ;
+                        else   
+                            return rstr;
+                    }
+                }
+                
+                if (kind.equals("icon")) {
+                    if (strStatus.equals(rs.getString("status"))){
+                        rstr = rs.getString("icon");
+                        if (strOtherIcon.length()==1)
+                            return strOtherIcon + rstr;
+                        else
+                            return rstr;
+                    }
+                }
+
+                if (kind.equals("color")) {
+                    if (strStatus.equals(rs.getString("status"))){
+                        rstr = rs.getString("color");
+                        return rstr;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+             e.printStackTrace();
+        }
+
+        return rstr;
     }
 }
