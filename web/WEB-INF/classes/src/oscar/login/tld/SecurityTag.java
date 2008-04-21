@@ -171,7 +171,9 @@ public class SecurityTag implements Tag {
     {
     	com.quatro.service.security.SecurityManager secManager =(com.quatro.service.security.SecurityManager)pageContext.getSession().getAttribute("securitymanager"); 
     	if (orgCd == null) orgCd = "";
-    	return secManager.GetAccess(objName, orgCd).compareToIgnoreCase(propPrivilege) >= 0;
+    	String x=secManager.GetAccess(objName, orgCd);
+    	if (x!=null) return x.compareToIgnoreCase(propPrivilege) >= 0;
+    	else return(false);
     }
     
     private boolean checkPrivilege(String roleName, Properties propPrivilege, Vector roleInObj) {
