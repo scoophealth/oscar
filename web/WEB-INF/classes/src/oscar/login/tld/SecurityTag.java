@@ -172,7 +172,7 @@ public class SecurityTag implements Tag {
     	com.quatro.service.security.SecurityManager secManager =(com.quatro.service.security.SecurityManager)pageContext.getSession().getAttribute("securitymanager"); 
     	if (orgCd == null) orgCd = "";
     	String x=secManager.GetAccess(objName, orgCd);
-    	if (x!=null) return x.compareToIgnoreCase(propPrivilege) >= 0;
+    	if (x!=null && propPrivilege!=null) return x.compareToIgnoreCase(propPrivilege) >= 0;
     	else return(false);
     }
     
