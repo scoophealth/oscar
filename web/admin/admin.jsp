@@ -323,6 +323,9 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <h3>&nbsp;<bean:message key="admin.admin.schedule"/></h3>
       <ul>
          <li><a href="#" onclick = 'popupPage(550,800,&quot;<html:rewrite page="/schedule/scheduletemplatesetting.jsp"/>&quot;);return false;' title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><bean:message key="admin.admin.scheduleSetting"/></a></li>
+         <oscar:oscarPropertiesCheck property="ENABLE_EDIT_APPT_STATUS" value="yes">  
+         <li><a href="#" onclick ="popupPage(500,600,'../appointment/appointmentstatuscontrol.jsp');return false;" title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><bean:message key="admin.admin.appointmentStatusSetting"/></a></li>
+         </oscar:oscarPropertiesCheck> 
       </ul>
   </div>
   </security:oscarSec>
