@@ -5,16 +5,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
        default-autowire="no">
-    
-    <!-- setup JPA -->
-    <import resource="classpath:spring_jpa.xml"/>
-    
-    <!-- setup hibernate -->
-    <import resource="classpath:spring_hibernate.xml"/>
-    
+
+	<!-- setup JPA -->
+	<import resource="classpath:spring_jpa.xml"/>
+
+	<!-- setup hibernate -->
+	<import resource="classpath:spring_hibernate.xml"/>
+   
     <!-- JPA DAO -->
     <bean id="issueGroupDao" class="org.oscarehr.common.dao.IssueGroupDao" autowire="byName"/>
-    
+
     <!-- hibernated DAO -->
     <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" autowire="byName"/>
     <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao" autowire="byName"/>
@@ -29,7 +29,7 @@
     <bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
     <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.BedDAO" autowire="byName"/>
     <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
-    <!-- 
+<!-- 
     <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" />
  -->
     <bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName"/>
@@ -72,10 +72,10 @@
     <bean id="EncounterWindowDAO" class="org.oscarehr.casemgmt.dao.EncounterWindowDAO" autowire="byName" />
     <bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
     <bean id="UserDSMessagePrefsDAO" class="org.oscarehr.common.dao.UserDSMessagePrefsDAO" autowire="byName" />
-    <bean id="facilityDAO" class="org.oscarehr.PMmodule.dao.FacilityDAO" autowire="byName"/>
-    <bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName"/>
-    <bean id="caisiEditorDAO" class="org.caisi.dao.CaisiEditorDAO" autowire="byName" />	
-    <!--  configure the scratch pad -->
+	<bean id="facilityDAO" class="org.oscarehr.PMmodule.dao.FacilityDAO" autowire="byName"/>
+	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName"/>
+	<bean id="caisiEditorDAO" class="org.caisi.dao.CaisiEditorDAO" autowire="byName" />	
+	<!--  configure the scratch pad -->
     <bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
     <bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
     <bean id="userAccessDao" class="com.quatro.dao.security.UserAccessDao" autowire="byName" />
@@ -85,7 +85,7 @@
         <property name="target" ref="scratchPadManagerTarget"/>
     </bean>
     <bean id="scratchPadManagerTarget" class="com.quatro.service.ScratchPadManager">
-        <property name="scratchPadDao" ref="scratchPadDao"/>
+       <property name="scratchPadDao" ref="scratchPadDao"/>
     </bean>
     <bean id="lookupManager" class="com.quatro.service.LookupManager"  autowire="byName">
         <property name="lookupDao" ref="lookupDao"/>
@@ -93,7 +93,7 @@
     <bean id="userAccessManager" class="com.quatro.service.security.UserAccessManager" autowire="byName">
         <property name="userAccessDao" ref="userAccessDao"/>
     </bean>
-    
+
     <!-- configure the available measurement flow sheets -->
     <bean id="measurementTemplateFlowSheet" class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
         <property name="flowSheets">
@@ -104,7 +104,7 @@
             </list>
         </property>
     </bean>
-    
+
     <!-- managers  -->
     <bean id="caisiEditorManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
@@ -144,9 +144,9 @@
           autowire="default" dependency-check="default">
         <property name="systemMessageDAO" ref="systemMessageDAO"/>
     </bean>
-    
-    <bean id="facilityMessageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-   lazy-init="default"  dependency-check="default">
+   
+	<bean id="facilityMessageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+          lazy-init="default"  dependency-check="default">
         <property name="transactionManager" ref="transactionManager"/>       
         <property name="target" ref="facilityMessageManagerTarget"/>
         <property name="transactionAttributes">
@@ -161,7 +161,7 @@
           autowire="default" dependency-check="default">
         <property name="facilityMessageDAO" ref="facilityMessageDAO"/>
     </bean>
-    
+
     <!-- Manager classes -->
     <bean id="programQueueManager" parent="baseTransactionProxy">
         <property name="target">
@@ -256,7 +256,7 @@
         </property>
     </bean>
     <bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.TicklerManager" autowire="byName" > 
-        
+    	
     </bean>
     <bean id="ClientImageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
@@ -294,11 +294,11 @@
                 <property name="admissionManager" ref="admissionManager"/>
                 <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
                 <property name="outsideOfDomainEnabled" value="${pmm.client.search.outside.of.domain.enabled}"/>
-                
+            	
             </bean>
         </property>
     </bean>
-    <!-- 
+<!-- 
     <bean id="topazManager" parent="baseTransactionProxy">
         <property name="target">
             <bean class="com.quatro.service.TopazManager">
@@ -307,7 +307,7 @@
         </property>
     </bean>
 -->
-    <bean id="integratorManager" class="org.oscarehr.PMmodule.service.IntegratorManager" autowire="byName" />
+    <bean id="caisiIntegratorManager" class="org.oscarehr.PMmodule.service.CaisiIntegratorManager" autowire="byName" />
     <bean id="infirmBedProgramManager" parent="baseTransactionProxy">
         <property name="target">
             <bean class="org.caisi.service.InfirmBedProgramManager" autowire="byName">
@@ -316,7 +316,7 @@
             </bean>
         </property>
     </bean>
-    
+
     <!-- TicklerPlus managers -->
     <bean id="ticklerManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
@@ -336,7 +336,7 @@
         <property name="caseManagementManager" ref="caseManagementManager"/>
         <property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO"/>
     </bean>
-    
+
     <bean id="demographicManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="demographicManagerTarget"/>
@@ -363,7 +363,7 @@
             </props>
         </property>
     </bean>
-    
+
     <bean id="consultationManagerTarget" class="org.caisi.service.ConsultationManager">
         <property name="consultationDAO" ref="consultationDAOT"/>
     </bean>

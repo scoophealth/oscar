@@ -22,7 +22,6 @@
         </property>
     </bean>
 
-
     <!-- audit strategy -->
     <bean id="bedAuditStrategy" class="org.oscarehr.PMmodule.dao.BedAuditStrategy" autowire="byName"/>
     <bean id="bedDemographicAuditStrategy" class="org.oscarehr.PMmodule.dao.BedDemographicAuditStrategy" autowire="byName"/>
@@ -199,8 +198,8 @@
         </property>
         <property name="delay" value="30000"/>
         <property name="period" value="43200000"/>
-        <!-- 
-        <property name="period" value="60000"/>
+        <!--
+        <property name="period" value="10000"/>
          -->
     </bean>
     

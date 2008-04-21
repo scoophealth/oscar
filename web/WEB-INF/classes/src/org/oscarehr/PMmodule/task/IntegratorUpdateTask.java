@@ -22,36 +22,81 @@
 
 package org.oscarehr.PMmodule.task;
 
+import java.util.List;
+import java.util.Properties;
 import java.util.TimerTask;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.oscarehr.PMmodule.service.IntegratorManager;
+import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.PMmodule.service.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 
 public class IntegratorUpdateTask extends TimerTask {
 
-    private static final Log log = LogFactory.getLog(IntegratorUpdateTask.class);
+    private static final Log logger = LogFactory.getLog(IntegratorUpdateTask.class);
 
-    private IntegratorManager integratorManager;
+    private CaisiIntegratorManager caisiIntegratorManager;
+    private FacilityDAO facilityDAO;
 
-    public void setIntegratorManager(IntegratorManager mgr) {
-        this.integratorManager = mgr;
+    public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
+        this.caisiIntegratorManager = mgr;
+    }
+
+    public void setFacilityDAO(FacilityDAO facilityDAO) {
+        this.facilityDAO = facilityDAO;
     }
 
     public void run() {
-        log.debug("IntegratorUpdateTask starting");
+        logger.debug("IntegratorUpdateTask starting");
 
         try {
-
+            List<Facility> facilities=facilityDAO.getFacilities();
+            for (Facility facility : facilities)
+            {
+                if (facility.isDisabled()==false && facility.isIntegratorEnabled()==true)
+                {
+                    updateFacility(facility);
+                }
+            }
         }
-        catch (Exception e){
-            log.error("unexpected error occurred", e);
+        catch (Exception e) {
+            logger.error("unexpected error occurred", e);
         }
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
 
-            log.debug("IntegratorUpdateTask finished)");
+            logger.debug("IntegratorUpdateTask finished)");
+        }
+    }
+
+    private void updateFacility(Facility facility) {
+        try {
+            String integratorBaseUrl=facility.getIntegratorUrl();
+            String user=facility.getIntegratorUser();
+            String password=facility.getIntegratorPassword();
+            
+            if (integratorBaseUrl==null || user==null || password==null){
+                logger.warn("Integrator is enabled but information is incomplete. facilityId="+facility.getId()+", user="+user+", password="+password+", url="+integratorBaseUrl);
+                return;
+            }
+            
+            System.err.println("INTEGRATOR : "+facility.getName()+", user="+user+", password="+password+", url="+integratorBaseUrl);
+            FacilityInfoWs facilityInfoWs=caisiIntegratorManager.getFacilityInfoWs(facility);
+
+            Properties p = new Properties();
+            p.setProperty("name", facility.getName());
+            p.setProperty("description", facility.getDescription());
+            p.setProperty("contactName", facility.getContactName());
+            p.setProperty("contactEmail", facility.getContactEmail());
+            p.setProperty("contactPhone", facility.getContactPhone());
+            facilityInfoWs.setMyFacilityInfo(MiscUtils.propertiesToXmlByteArray(p));            
+        }
+        catch (Exception e) {
+            logger.error("Unexpected error.", e);
         }
     }
 }
