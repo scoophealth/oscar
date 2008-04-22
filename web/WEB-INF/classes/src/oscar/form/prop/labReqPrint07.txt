@@ -106,7 +106,7 @@ m_blank : left, 244, 639, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
 m_blankText : left, 262, 639, 0, BaseFont.HELVETICA, 8
 m_fecalOccultBlood : left, 244, 651, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
 
-m_specimenCollectionTime : left, 325, 674, 0, BaseFont.HELVETICA, 8
+m_specimenCollectionTime : left, 333, 664, 0, BaseFont.HELVETICA, 8
 
 v_acuteHepatitis : left, 433, 358, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
 v_chronicHepatitis : left, 433, 370, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
@@ -132,4 +132,7 @@ o_otherTests14 : left, 433, 628, 0, BaseFont.HELVETICA, 8
 o_otherTests15 : left, 433, 640, 0, BaseFont.HELVETICA, 8
 o_otherTests16 : left, 433, 652, 0, BaseFont.HELVETICA, 8
 
-o_specimenCollectionDate : left, 485, 674, 0, BaseFont.HELVETICA, 8
+o_specimenCollectionDate : left, 499, 664, 0, BaseFont.HELVETICA, 8
+
+fobt_nonCCC : left, 245, 688, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+fobt_CCC : left, 349, 688, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
