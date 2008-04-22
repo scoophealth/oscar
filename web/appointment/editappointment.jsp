@@ -404,8 +404,8 @@ function onCut() {
               <div align="right"><font face="arial"><bean:message key="Appointment.formLastTime"/> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
-		<%
-                 origDate =  rs.getString("createdatetime");
+		<%                 
+                 origDate =  rs != null ? rs.getString("createdatetime") : request.getParameter("createDate");
                  String lastDateTime = bFirstDisp?apptMainBean.getString(rs,"updatedatetime"):request.getParameter("updatedatetime");
                  if (lastDateTime == null){ lastDateTime = bFirstDisp?apptMainBean.getString(rs,"createdatetime"):request.getParameter("createdatetime"); }
 		%>
