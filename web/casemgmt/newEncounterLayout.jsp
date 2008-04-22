@@ -342,7 +342,14 @@
         var calendar;
         
         function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
-          var page = "" + varpage;
+          var page;
+          var ctx = "<c:out value="${ctx}"/>";
+          //a hack for IE6 to load page in new encounter
+          if( varpage.indexOf(".") == 0 )
+            page = ctx + varpage.substr(2);
+          else
+            page = varpage;
+            
           windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
                 //var popup =window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
                 openWindows[name] = window.open(page, name, windowprops);
