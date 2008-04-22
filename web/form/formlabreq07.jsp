@@ -608,7 +608,7 @@ var maxYear=3100;
                                 <td class="checkboxLabelTd" colspan="2" style="border-bottom: 0px;">
                                     _________________________________
                                 </td>
-                                    <td class="checkboxLabelTd" style="border-bottom: 0px;">
+                                <td class="checkboxLabelTd" style="border-bottom: 0px;">
                                     <input type="text" style="width: 70px;" tabindex="16" name="b_dateSigned" value="<%=props.getProperty("b_dateSigned", UtilDateUtilities.getToday("yyyy-MM-dd"))%>">
                                 </td>
                             </tr>
@@ -622,248 +622,267 @@ var maxYear=3100;
                             </tr>
                             
                         </table>
-                            
-                            
+                        
+                        
                     </td>
-                    <td width="30%" class="bottomTableTd">
-                        
-                        
-                         <table class="bottomInnerTable">
-                             <tr>
-                                 <th class="checkboxTd">X</th>
-                                 <th class="checkboxLabelTd">Hematology</th>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="h_cbc" <%=props.getProperty("h_cbc", "")%>></td>
-                                 <td class="checkboxLabelTd">CBC</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd bottomEndSection"><input type="checkbox" name="h_prothrombinTime" <%=props.getProperty("h_prothrombinTime", "")%>></td>
-                                 <td class="checkboxLabelTd bottomEndSection">Prothrombin Time (INR)"</td>
-                             </tr>
-                             
-                             <tr>
-                                 <th class="checkboxTd">&nbsp;</th>
-                                 <th class="checkboxLabelTd">Immunology</th>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="i_pregnancyTest" <%=props.getProperty("i_pregnancyTest", "")%>></td>
-                                 <td class="checkboxLabelTd">Pregnancy Test (Urine)</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="i_mononucleosisScreen" <%=props.getProperty("i_mononucleosisScreen", "")%>></td>
-                                 <td class="checkboxLabelTd">Mononucleosis Screen</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="i_rubella" <%=props.getProperty("i_rubella", "")%>></td>
-                                 <td class="checkboxLabelTd">Rubella</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="i_prenatal" <%=props.getProperty("i_prenatal", "")%>></td>
-                                 <td class="checkboxLabelTd">Prenatal: ABO, RhD, Antibody Screen (titre and ident. if positive)</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd bottomEndSection"><input type="checkbox" name="i_repeatPrenatalAntibodies" <%=props.getProperty("i_repeatPrenatalAntibodies", "")%>></td>
-                                 <td class="checkboxLabelTd bottomEndSection">Repeat Prenatal Antibodies</td>
-                             </tr>
-                             
-                             <tr>
-                                 <th class="checkboxTd">&nbsp;</th>
-                                 <th class="checkboxLabelTd">Microbiology ID & Sensitivities (if warranted)</th>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_cervical" <%=props.getProperty("m_cervical", "")%>></td>
-                                 <td class="checkboxLabelTd">Cervical</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_vaginal" <%=props.getProperty("m_vaginal", "")%>></td>
-                                 <td class="checkboxLabelTd">Vaginal</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_vaginalRectal" <%=props.getProperty("m_vaginalRectal", "")%>></td>
-                                 <td class="checkboxLabelTd">Vaginal / Rectal - Group B Strep</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_chlamydia" <%=props.getProperty("m_chlamydia", "")%>></td>
-                                 <td class="checkboxLabelTd">Chlamydia <i>(specify source):</i> <input type="text" name="m_chlamydiaSource" style="width: 110px;" tabindex="17" value="<%=props.getProperty("m_chlamydiaSource", "")%>"></td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_gc" <%=props.getProperty("m_gc", "")%>></td>
-                                 <td class="checkboxLabelTd">GC <i>(specify source):</i> <input type="text" name="m_gcSource" style="width: 110px;" tabindex="18" value="<%=props.getProperty("m_gcSource", "")%>"></td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_sputum" <%=props.getProperty("m_sputum", "")%>></td>
-                                 <td class="checkboxLabelTd">Sputum</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_throat" <%=props.getProperty("m_throat", "")%>></td>
-                                 <td class="checkboxLabelTd">Throat</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_wound" <%=props.getProperty("m_wound", "")%>></td>
-                                 <td class="checkboxLabelTd">Wound <i>(specify source):</i> <input type="text" name="m_woundSource" style="width: 100px;" tabindex="19" value="<%=props.getProperty("m_woundSource", "")%>"></td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_urine" <%=props.getProperty("m_urine", "")%>></td>
-                                 <td class="checkboxLabelTd">Urine</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_stoolCulture" <%=props.getProperty("m_stoolCulture", "")%>></td>
-                                 <td class="checkboxLabelTd">Stool Culture</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_stoolOvaParasites" <%=props.getProperty("m_stoolOvaParasites", "")%>></td>
-                                 <td class="checkboxLabelTd">Stool Ova & Parasites</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_otherSwabsPus" <%=props.getProperty("m_otherSwabsPus", "")%>></td>
-                                 <td class="checkboxLabelTd">Other Swabs / Pus <i>(specify source):</i> <input type="text" name="m_otherSwabsSource" style="width: 100px; margin-left: 10px;" tabindex="20" value="<%=props.getProperty("m_otherSwabsSource", "")%>"></td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_blank" <%=props.getProperty("m_blank", "")%>></td>
-                                 <td class="checkboxLabelTd"><input type="text" name="m_blankText" style="width: 93%;" tabindex="21" value="<%=props.getProperty("m_blankText", "")%>"></td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxTd"><input type="checkbox" name="m_fecalOccultBlood" <%=props.getProperty("m_fecalOccultBlood", "")%>></td>
-                                 <td class="checkboxLabelTd">Fecal Occult Blood</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxLabelTd" colspan="2" style="border-bottom: 0px;">Specimen Collection Time</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxLabelTd bottomEndSection" colspan="2" style="text-align: center; border-bottom: 0px;"><input type="text" style="width: 60; text-align: center;" tabindex="22" name="m_specimenCollectionTime" value="<%=props.getProperty("m_specimenCollectionTime", "")%>"> hr.</td>
-                             </tr>
-                             
-                         </table>
-                            
-                         
-                    </td>
-                    <td width="30%" class="bottomTableTd">
-                        
-                        
-                        <table class="bottomInnerTable">
+                    <td width="50%" class="bottomTableTd">
+                        <table>
                             <tr>
-                                <th class="checkboxTd">X</th>
-                                <th class="checkboxLabelTd">Viral Hepatitis <i>(check <b>one</b> only)</i></th>
-                            </tr>
-                            <tr>
-                                <td class="checkboxTd"><input type="checkbox" name="v_acuteHepatitis" <%=props.getProperty("v_acuteHepatitis", "")%>></td>
-                                <td class="checkboxLabelTd">Acute Hepatitis</td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxTd"><input type="checkbox" name="v_chronicHepatitis" <%=props.getProperty("v_chronicHepatitis", "")%>></td>
-                                <td class="checkboxLabelTd">Chronic Hepatitis</td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxTd"><input type="checkbox" name="v_immuneStatus" <%=props.getProperty("v_immuneStatus", "")%>></td>
-                                <td class="checkboxLabelTd" style="border-bottom: 0px;">Immune Status / Previous Exposure</td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxId bottomEndSection">&nbsp;</td>
-                                <td class="checkboxLabelTd bottomEndSection">
-                                    <table style="font-size: 11px; width: 80%;">
+                                <td>
+                                    
+                                    <table class="bottomInnerTable">
                                         <tr>
-                                            <td><i>Specify:</i></td>
-                                            <td><input type="checkbox" name="v_immune_HepatitisA" <%=props.getProperty("v_immune_HepatitisA", "")%>></td>
-                                            <td>Hepatitis A</td>
+                                            <th class="checkboxTd">X</th>
+                                            <th class="checkboxLabelTd">Hematology</th>
                                         </tr>
                                         <tr>
-                                            <td>&nbsp;</td>
-                                            <td><input type="checkbox" name="v_immune_HepatitisB" <%=props.getProperty("v_immune_HepatitisB", "")%>></td>
-                                            <td>Hepatitis B</td>
+                                            <td class="checkboxTd"><input type="checkbox" name="h_cbc" <%=props.getProperty("h_cbc", "")%>></td>
+                                            <td class="checkboxLabelTd">CBC</td>
                                         </tr>
                                         <tr>
-                                            <td>&nbsp;</td>
-                                            <td><input type="checkbox" name="v_immune_HepatitisC" <%=props.getProperty("v_immune_HepatitisC", "")%>></td>
-                                            <td>Hepatitis C</td>
+                                            <td class="checkboxTd bottomEndSection"><input type="checkbox" name="h_prothrombinTime" <%=props.getProperty("h_prothrombinTime", "")%>></td>
+                                            <td class="checkboxLabelTd bottomEndSection">Prothrombin Time (INR)"</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th class="checkboxTd">&nbsp;</th>
+                                            <th class="checkboxLabelTd">Immunology</th>
                                         </tr>
                                         <tr>
-                                            <td colspan="3">
-                                                or order individual hepatitis tests in the "Other Tests" section below
+                                            <td class="checkboxTd"><input type="checkbox" name="i_pregnancyTest" <%=props.getProperty("i_pregnancyTest", "")%>></td>
+                                            <td class="checkboxLabelTd">Pregnancy Test (Urine)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="i_mononucleosisScreen" <%=props.getProperty("i_mononucleosisScreen", "")%>></td>
+                                            <td class="checkboxLabelTd">Mononucleosis Screen</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="i_rubella" <%=props.getProperty("i_rubella", "")%>></td>
+                                            <td class="checkboxLabelTd">Rubella</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="i_prenatal" <%=props.getProperty("i_prenatal", "")%>></td>
+                                            <td class="checkboxLabelTd">Prenatal: ABO, RhD, Antibody Screen (titre and ident. if positive)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd bottomEndSection"><input type="checkbox" name="i_repeatPrenatalAntibodies" <%=props.getProperty("i_repeatPrenatalAntibodies", "")%>></td>
+                                            <td class="checkboxLabelTd bottomEndSection">Repeat Prenatal Antibodies</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th class="checkboxTd">&nbsp;</th>
+                                            <th class="checkboxLabelTd">Microbiology ID & Sensitivities (if warranted)</th>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_cervical" <%=props.getProperty("m_cervical", "")%>></td>
+                                            <td class="checkboxLabelTd">Cervical</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_vaginal" <%=props.getProperty("m_vaginal", "")%>></td>
+                                            <td class="checkboxLabelTd">Vaginal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_vaginalRectal" <%=props.getProperty("m_vaginalRectal", "")%>></td>
+                                            <td class="checkboxLabelTd">Vaginal / Rectal - Group B Strep</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_chlamydia" <%=props.getProperty("m_chlamydia", "")%>></td>
+                                            <td class="checkboxLabelTd">Chlamydia <i>(specify source):</i> <input type="text" name="m_chlamydiaSource" style="width: 110px;" tabindex="17" value="<%=props.getProperty("m_chlamydiaSource", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_gc" <%=props.getProperty("m_gc", "")%>></td>
+                                            <td class="checkboxLabelTd">GC <i>(specify source):</i> <input type="text" name="m_gcSource" style="width: 110px;" tabindex="18" value="<%=props.getProperty("m_gcSource", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_sputum" <%=props.getProperty("m_sputum", "")%>></td>
+                                            <td class="checkboxLabelTd">Sputum</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_throat" <%=props.getProperty("m_throat", "")%>></td>
+                                            <td class="checkboxLabelTd">Throat</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_wound" <%=props.getProperty("m_wound", "")%>></td>
+                                            <td class="checkboxLabelTd">Wound <i>(specify source):</i> <input type="text" name="m_woundSource" style="width: 100px;" tabindex="19" value="<%=props.getProperty("m_woundSource", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_urine" <%=props.getProperty("m_urine", "")%>></td>
+                                            <td class="checkboxLabelTd">Urine</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_stoolCulture" <%=props.getProperty("m_stoolCulture", "")%>></td>
+                                            <td class="checkboxLabelTd">Stool Culture</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_stoolOvaParasites" <%=props.getProperty("m_stoolOvaParasites", "")%>></td>
+                                            <td class="checkboxLabelTd">Stool Ova & Parasites</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_otherSwabsPus" <%=props.getProperty("m_otherSwabsPus", "")%>></td>
+                                            <td class="checkboxLabelTd">Other Swabs / Pus <i>(specify source):</i> <input type="text" name="m_otherSwabsSource" style="width: 100px; margin-left: 10px;" tabindex="20" value="<%=props.getProperty("m_otherSwabsSource", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="m_blank" <%=props.getProperty("m_blank", "")%>></td>
+                                            <td class="checkboxLabelTd"><input type="text" name="m_blankText" style="width: 93%;" tabindex="21" value="<%=props.getProperty("m_blankText", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><!--<input type="checkbox" name="m_fecalOccultBlood" <%=props.getProperty("m_fecalOccultBlood", "")%>>-->&nbsp;</td>
+                                            <td class="checkboxLabelTd"><!--Fecal Occult Blood-->&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2" style="border-bottom: 0px;">Specimen Collection Time</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd bottomEndSection" colspan="2" style="text-align: center; border-bottom: 0px;"><input type="text" style="width: 60; text-align: center;" tabindex="22" name="m_specimenCollectionTime" value="<%=props.getProperty("m_specimenCollectionTime", "")%>"> hr.</td>
+                                        </tr>
+                                        
+                                    </table>
+                                    
+                                    
+                                </td>
+                                <td width="50%" class="bottomTableTd">
+                                    
+                                    
+                                    <table class="bottomInnerTable">
+                                        <tr>
+                                            <th class="checkboxTd">X</th>
+                                            <th class="checkboxLabelTd">Viral Hepatitis <i>(check <b>one</b> only)</i></th>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="v_acuteHepatitis" <%=props.getProperty("v_acuteHepatitis", "")%>></td>
+                                            <td class="checkboxLabelTd">Acute Hepatitis</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="v_chronicHepatitis" <%=props.getProperty("v_chronicHepatitis", "")%>></td>
+                                            <td class="checkboxLabelTd">Chronic Hepatitis</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd"><input type="checkbox" name="v_immuneStatus" <%=props.getProperty("v_immuneStatus", "")%>></td>
+                                            <td class="checkboxLabelTd" style="border-bottom: 0px;">Immune Status / Previous Exposure</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxId bottomEndSection">&nbsp;</td>
+                                            <td class="checkboxLabelTd bottomEndSection">
+                                                <table style="font-size: 11px; width: 80%;">
+                                                    <tr>
+                                                        <td><i>Specify:</i></td>
+                                                        <td><input type="checkbox" name="v_immune_HepatitisA" <%=props.getProperty("v_immune_HepatitisA", "")%>></td>
+                                                        <td>Hepatitis A</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>&nbsp;</td>
+                                                        <td><input type="checkbox" name="v_immune_HepatitisB" <%=props.getProperty("v_immune_HepatitisB", "")%>></td>
+                                                        <td>Hepatitis B</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>&nbsp;</td>
+                                                        <td><input type="checkbox" name="v_immune_HepatitisC" <%=props.getProperty("v_immune_HepatitisC", "")%>></td>
+                                                        <td>Hepatitis C</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            or order individual hepatitis tests in the "Other Tests" section below
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                
                                             </td>
                                         </tr>
-                                    </table>
                                         
+                                        <tr>
+                                            <th class="checkboxTd">&nbsp;</th>
+                                            <th class="checkboxLabelTd">Other Tests - <font style="font-weight: normal;">one test per line</font></th>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="23" name="o_otherTests1" value="<%=props.getProperty("o_otherTests1", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="24" name="o_otherTests2" value="<%=props.getProperty("o_otherTests2", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="25" name="o_otherTests3" value="<%=props.getProperty("o_otherTests3", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="26" name="o_otherTests4" value="<%=props.getProperty("o_otherTests4", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="27" name="o_otherTests5" value="<%=props.getProperty("o_otherTests5", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="28" name="o_otherTests6" value="<%=props.getProperty("o_otherTests6", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="29" name="o_otherTests7" value="<%=props.getProperty("o_otherTests7", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="30" name="o_otherTests8" value="<%=props.getProperty("o_otherTests8", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="31" name="o_otherTests9" value="<%=props.getProperty("o_otherTests9", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="32" name="o_otherTests10" value="<%=props.getProperty("o_otherTests10", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="33" name="o_otherTests11" value="<%=props.getProperty("o_otherTests11", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="34" name="o_otherTests12" value="<%=props.getProperty("o_otherTests12", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="35" name="o_otherTests13" value="<%=props.getProperty("o_otherTests13", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="36" name="o_otherTests14" value="<%=props.getProperty("o_otherTests14", "")%>"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="37" name="o_otherTests15" value="<%=props.getProperty("o_otherTests15", "")%>"></td>
+                                        </tr>                                        
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="height: 0px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd" colspan="2" style="border-bottom: 0px;">Specimen Collection Date</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxLabelTd bottomEndSection" colspan="2" style="text-align: center; border-bottom: 0px;"><input type="text" name="o_specimenCollectionDate" style="width: 70; text-align: center;" tabindex="39" value="<%=props.getProperty("o_specimenCollectionDate", "")%>"></td>
+                                        </tr>
+                                        <!--<tr>-->
+                                    </table>
+                                    
+                                    
+                                    
                                 </td>
-                            </tr>
+                            </tr>                
+                            
                             
                             <tr>
-                                <th class="checkboxTd">&nbsp;</th>
-                                <th class="checkboxLabelTd">Other Tests - <font style="font-weight: normal;">one test per line</font></th>
+                                <td colspan="2">
+                                    <table class="bottomInnerTable">
+                                        <tr>
+                                            <th class="checkboxLabelTd" colspan="2">
+                                                Fecal Occult Blood Test (FOBT) (check one only)
+                                            </th>  
+                                        </tr>
+                                        <tr>
+                                            <td class="checkboxTd" style="vertical-align:top; width:30%;"><input type="checkbox" name="fobt_nonCCC" <%=props.getProperty("fobt_nonCCC", "")%>><span class="checkboxLabelTd">&nbsp; FOBT (non CCC)</span></td>
+                                            <td class="checkboxTd"><input type="checkbox" name="fobt_CCC" <%=props.getProperty("fobt_CCC", "")%>><span class="checkboxLabelTd">&nbsp; ColonCancerCheck FOBT (CCC) no other test can be ordered on this form</span></td>
+                                        </tr>
+                                    </table>
+                                </td>
                             </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="23" name="o_otherTests1" value="<%=props.getProperty("o_otherTests1", "")%>"></td>
+                            <tr>                                
+                                <td class="labArea" style="vertical-align: top; height: 150px; font-size: 11px; padding-left: 10px;" colspan="2">
+                                    <b><i>Laboratory Use Only</i></b>
+                                </td>
                             </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="24" name="o_otherTests2" value="<%=props.getProperty("o_otherTests2", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="25" name="o_otherTests3" value="<%=props.getProperty("o_otherTests3", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="26" name="o_otherTests4" value="<%=props.getProperty("o_otherTests4", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="27" name="o_otherTests5" value="<%=props.getProperty("o_otherTests5", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="28" name="o_otherTests6" value="<%=props.getProperty("o_otherTests6", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="29" name="o_otherTests7" value="<%=props.getProperty("o_otherTests7", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="30" name="o_otherTests8" value="<%=props.getProperty("o_otherTests8", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="31" name="o_otherTests9" value="<%=props.getProperty("o_otherTests9", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="32" name="o_otherTests10" value="<%=props.getProperty("o_otherTests10", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="33" name="o_otherTests11" value="<%=props.getProperty("o_otherTests11", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="34" name="o_otherTests12" value="<%=props.getProperty("o_otherTests12", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="35" name="o_otherTests13" value="<%=props.getProperty("o_otherTests13", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="36" name="o_otherTests14" value="<%=props.getProperty("o_otherTests14", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="37" name="o_otherTests15" value="<%=props.getProperty("o_otherTests15", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2"><input type="text" style="width: 80%" tabindex="38" name="o_otherTests16" value="<%=props.getProperty("o_otherTests16", "")%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2">&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td class="checkboxLabelTd" colspan="2">&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td style="height: 0px;"></td>
-                            </tr>
-                            <tr>
-                                 <td class="checkboxLabelTd" colspan="2" style="border-bottom: 0px;">Specimen Collection Date</td>
-                             </tr>
-                             <tr>
-                                 <td class="checkboxLabelTd bottomEndSection" colspan="2" style="text-align: center; border-bottom: 0px;"><input type="text" name="o_specimenCollectionDate" style="width: 70; text-align: center;" tabindex="39" value="<%=props.getProperty("o_specimenCollectionDate", "")%>"></td>
-                             </tr>
-                            <tr>
                         </table>
-                        
-                        
-                        
-                    </td>
-                </tr>
-                <tr>
-                    <td class="labArea" style="vertical-align: top; height: 150px; font-size: 11px; padding-left: 10px;" colspan="2">
-                        <b><i>Laboratory Use Only</i></b>
                     </td>
                 </tr>
             </table>
