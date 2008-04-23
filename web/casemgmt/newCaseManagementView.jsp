@@ -39,6 +39,7 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
 <%
+    long start = System.currentTimeMillis();
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
     if((bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null) {
         response.sendRedirect("error.jsp");
@@ -1539,8 +1540,7 @@ function autoCompleteShowMenu(element, update){
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
            
-            if( $("obs"+noteId) != null ) {
-                console.log("Printing " + noteId);
+            if( $("obs"+noteId) != null ) {                
                 //grab date and splice off time and format for js date object
                 noteDate = $("obs"+noteId).innerHTML;                
                 noteDate = noteDate.substr(0,noteDate.indexOf(" "));
@@ -2270,7 +2270,10 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
     
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
    </script>
-   
+<%
+    long current = System.currentTimeMillis();
+    System.out.println("NEW CASEMANAGEMENT VIEW Load Time " + String.valueOf(current - start));
+%>
 <%!
   
     /*
