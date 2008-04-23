@@ -35,9 +35,9 @@ import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
-public class IntegratorUpdateTask extends TimerTask {
+public class CaisiIntegratorUpdateTask extends TimerTask {
 
-    private static final Log logger = LogFactory.getLog(IntegratorUpdateTask.class);
+    private static final Log logger = LogFactory.getLog(CaisiIntegratorUpdateTask.class);
 
     private CaisiIntegratorManager caisiIntegratorManager;
     private FacilityDAO facilityDAO;
@@ -51,7 +51,7 @@ public class IntegratorUpdateTask extends TimerTask {
     }
 
     public void run() {
-        logger.debug("IntegratorUpdateTask starting");
+        logger.debug("CaisiIntegratorUpdateTask starting");
 
         try {
             List<Facility> facilities=facilityDAO.getFacilities();
@@ -69,7 +69,7 @@ public class IntegratorUpdateTask extends TimerTask {
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
 
-            logger.debug("IntegratorUpdateTask finished)");
+            logger.debug("CaisiIntegratorUpdateTask finished)");
         }
     }
 

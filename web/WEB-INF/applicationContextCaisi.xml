@@ -191,16 +191,16 @@
         </property>
     </bean>
     <!-- ========================= SCHEDULED JOBS ========================= -->
-    <bean id="scheduledIntegratorUpdateTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
+    <bean id="scheduledCaisiIntegratorUpdateTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
           lazy-init="default"  dependency-check="default">
         <property name="timerTask">
-            <bean class="org.oscarehr.PMmodule.task.IntegratorUpdateTask" lazy-init="default" dependency-check="default" autowire="byName" />
+            <bean class="org.oscarehr.PMmodule.task.CaisiIntegratorUpdateTask" lazy-init="default" dependency-check="default" autowire="byName" />
         </property>
         <property name="delay" value="30000"/>
-        <property name="period" value="43200000"/>
         <!--
-        <property name="period" value="10000"/>
+        <property name="period" value="43200000"/>
          -->
+        <property name="period" value="30000"/>
     </bean>
     
     <bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
@@ -243,7 +243,7 @@
            dependency-check="default">
         <property name="scheduledTimerTasks">
             <list>
-                <ref bean="scheduledIntegratorUpdateTask"/>
+                <ref bean="scheduledCaisiIntegratorUpdateTask"/>
                 <ref bean="scheduledBedProgramDischargeTask"/>
                 <ref bean="scheduledErProgramDischargeTask"/>
                 <ref bean="scheduledPopulationReportTask"/>

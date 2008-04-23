@@ -49,7 +49,7 @@
             <td>
             	<c:out value="${facilityManagerForm.facility.integratorEnabled}" />
             	<c:if test="${facilityManagerForm.facility.integratorEnabled}">
-            		<a target="_blank" href="Admin/Facility/viewIntegratedCommunity.jsp">View Integrated Facilities Community</a>
+            		<a target="_blank" href="Admin/Facility/viewIntegratedCommunity.jsp?facilityId=<c:out value="${requestScope.id}" />">View Integrated Facilities Community</a>
             	</c:if>
             </td>
         </tr>
