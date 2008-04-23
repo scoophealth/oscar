@@ -109,17 +109,17 @@
                         }    
                         else {
                         --%>
-                        <a style="width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:right;"><img id="img<%=request.getAttribute("navbarName")%><%=j%>" src="<c:out value="${ctx}"/>/images/clear.gif"/>&nbsp;&nbsp;</a>
+                        <a style="width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:both;"><img id="img<%=request.getAttribute("navbarName")%><%=j%>" src="<c:out value="${ctx}"/>/images/clear.gif"/>&nbsp;&nbsp;</a>
                         <%--      
                         }
                         --%>
                         
                         <% String width;
                             if( item.getDate() != null ) { 
-                                width = "53%";
+                                width = "41%";
                                 
                         %>
-                        <span style="overflow:hidden; width:38%; height:1.2em; white-space:nowrap; float:right; text-align:right;">
+                        <span style="overflow:hidden; width:44%; height:1.2em; white-space:nowrap; float:right; text-align:right;">
                         
                             ...<a class="links" style="<%=colour%>" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="#" onclick="<%=item.getURL()%>" title="<%=item.getLinkTitle()%>">
                                 <%=DateUtils.getDate(item.getDate(), dateFormat)%>
@@ -128,11 +128,11 @@
                         <% }
                            else {
                         
-                            width = "91%";
+                            width = "85%";
                            } 
                         
                         %>    
-                        <span style="overflow:hidden; width:<%=width%>; height:1.2em; white-space:nowrap; float:right; text-align:left;">
+                        <span style="overflow:hidden; width:<%=width%>; height:1.2em; white-space:nowrap; float:left; text-align:left;">
                             <a class="links" style="<%=colour%>" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="#" onclick="<%=item.getURL()%>" title="<%=item.getLinkTitle()%>">
                                 <%=item.getTitle()%>
                             </a>     
