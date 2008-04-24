@@ -2,7 +2,6 @@ package oscar.oscarDemographic;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.servlet.ServletContext;
@@ -10,16 +9,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.jasperreports.engine.JREmptyDataSource;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
-import net.sourceforge.*;
-import net.sourceforge.barbecue.*;
-import net.sf.jasperreports.engine.JREmptyDataSource;
 
 public class PrintBarcodeAction extends OscarAction {
 	private static final String TASK_FILL = "fill";
