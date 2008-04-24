@@ -13,6 +13,7 @@
     
     saveNodeLabels(itn, genericIntakeManager);
     saveNodeTemplate(itn, genericIntakeManager);
+    saveAnswerElements(itn, genericIntakeManager);
     IntakeNode nwItn = new IntakeNode();
     copyIntakeNode(itn, nwItn);
     genericIntakeManager.saveIntakeNode(nwItn);
@@ -22,6 +23,7 @@
     session.removeAttribute("intakeNode");
     session.removeAttribute("lastNodeId");
     session.removeAttribute("lastTemplateId");
+    session.removeAttribute("lastElementId");
     response.sendRedirect("close.jsp");
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -55,11 +57,34 @@ void saveNodeTemplate(IntakeNode in, GenericIntakeManager gim) {
 	IntakeNodeTemplate iTemplate = in.getNodeTemplate();
 	if (iTemplate.getId()<0) {
 	    iTemplate.setId(null);
+	    Set iAnsElement = iTemplate.getAnswerElements();
+	    if (iTemplate.getAnswerElements()!=null) {
+		iTemplate.setAnswerElements(null);
+	    }
 	    gim.saveIntakeNodeTemplate(iTemplate);
+	    iTemplate.setAnswerElements(iAnsElement);
 	}
     }
     for (IntakeNode iN : in.getChildren()) {
 	saveNodeTemplate(iN, gim);
+    }
+}
+
+void saveAnswerElements(IntakeNode in, GenericIntakeManager gim) {
+    if (in.getNodeTemplate()!=null) {
+	if (in.getNodeTemplate().getAnswerElements()!=null) {
+	    Object[] iElements = in.getNodeTemplate().getAnswerElements().toArray();
+	    for (Object obj : iElements) {
+		IntakeAnswerElement iElement = (IntakeAnswerElement) obj;
+		if (iElement.getId()<0) {
+		    iElement.setId(null);
+		    gim.saveIntakeAnswerElement(iElement);
+		}
+	    }
+	}
+    }
+    for (IntakeNode iN : in.getChildren()) {
+	saveAnswerElements(iN, gim);
     }
 }
 
