@@ -40,6 +40,7 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
+import org.oscarehr.PMmodule.model.IntakeAnswerElement;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.model.IntakeNodeLabel;
 import org.oscarehr.PMmodule.model.IntakeNodeTemplate;
@@ -413,6 +414,10 @@ public class GenericIntakeManager {
 	    genericIntakeNodeDAO.saveIntakeNodeTemplate(intakeNodeTemplate);
 	}
         
+	public void saveIntakeAnswerElement(IntakeAnswerElement intakeAnswerElement) {
+	    genericIntakeNodeDAO.saveIntakeAnswerElement(intakeAnswerElement);
+	}
+	
         ///
         public void updateNodeLabel(IntakeNodeLabel intakeNodeLabel){
             genericIntakeNodeDAO.updateNodeLabel(intakeNodeLabel);   
