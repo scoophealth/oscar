@@ -34,6 +34,8 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.oscarehr.PMmodule.caisi_integrator.AuthenticationOutInterceptor;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWsService;
 import org.oscarehr.util.TimeClearedHashMap;
@@ -77,10 +79,19 @@ public class CaisiIntegratorManager {
     
     public FacilityInfoWs getFacilityInfoWs(Facility facility) throws MalformedURLException {
         FacilityInfoWsService service = new FacilityInfoWsService(buildURL(facility, "FacilityInfoService"));
-        FacilityInfoWs facilityInfoPort = service.getFacilityInfoWsPort();
+        FacilityInfoWs port = service.getFacilityInfoWsPort();
 
-        addAuthenticationInterceptor(facility, facilityInfoPort);
+        addAuthenticationInterceptor(facility, port);
         
-        return(facilityInfoPort);
+        return(port);
+    }
+
+    public DemographicInfoWs getDemographicInfoWs(Facility facility) throws MalformedURLException {
+        DemographicInfoWsService service = new DemographicInfoWsService(buildURL(facility, "DemographicInfoService"));
+        DemographicInfoWs port = service.getDemographicInfoWsPort();
+
+        addAuthenticationInterceptor(facility, port);
+        
+        return(port);
     }
 }

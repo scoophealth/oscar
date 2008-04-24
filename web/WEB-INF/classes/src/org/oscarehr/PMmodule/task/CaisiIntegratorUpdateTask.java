@@ -23,19 +23,28 @@
 package org.oscarehr.PMmodule.task;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.TimerTask;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.caisi.dao.DemographicDAO;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.service.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
+import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
@@ -43,6 +52,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
     private CaisiIntegratorManager caisiIntegratorManager;
     private FacilityDAO facilityDAO;
+    private DemographicDAO demographicDAO;
 
     public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
         this.caisiIntegratorManager = mgr;
@@ -52,14 +62,19 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         this.facilityDAO = facilityDAO;
     }
 
+    public void setDemographicDAO(DemographicDAO demographicDAO) {
+        this.demographicDAO = demographicDAO;
+    }
+
     public void run() {
         logger.debug("CaisiIntegratorUpdateTask starting");
 
         try {
             List<Facility> facilities = facilityDAO.getFacilities();
+            
             for (Facility facility : facilities) {
                 if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
-                    updateFacility(facility);
+                    pushAllFacilityData(facility);
                 }
             }
         }
@@ -73,17 +88,27 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         }
     }
 
-    private void updateFacility(Facility facility) {
-
+    private void pushAllFacilityData(Facility facility) {
         try {
-            // get the time here so there's a slight over lap in actualy runtime and activity time, other wise you'll have a gap, better to unnecessarily send a few more records than to miss some.
+            // check all parameters are present
+            String integratorBaseUrl = facility.getIntegratorUrl();
+            String user = facility.getIntegratorUser();
+            String password = facility.getIntegratorPassword();
+
+            if (integratorBaseUrl == null || user == null || password == null) {
+                logger.warn("Integrator is enabled but information is incomplete. facilityId=" + facility.getId() + ", user=" + user + ", password=" + password + ", url=" + integratorBaseUrl);
+                return;
+            }
+
+            // get the time here so there's a slight over lap in actual runtime and activity time, other wise you'll have a gap, better to unnecessarily send a few more records than to miss some.
             Date currentPushTime = new Date();
 
             // do all the sync work
             pushFacilityInfo(facility);
+            pushDemographics(facility);
             
             // update late push time only if an exception didn't occur
-            // reget the facility as the sync time could be very long and changes may have been made to the facility.
+            // re-get the facility as the sync time could be very long and changes may have been made to the facility.
             facility=facilityDAO.getFacility(facility.getId());
             facility.setIntegratorLastPushTime(currentPushTime);
             facilityDAO.saveFacility(facility);
@@ -93,18 +118,39 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         }
     }
 
-    private void pushFacilityInfo(Facility facility) throws IOException {
-        String integratorBaseUrl = facility.getIntegratorUrl();
-        String user = facility.getIntegratorUser();
-        String password = facility.getIntegratorPassword();
+    private void pushDemographics(Facility facility) throws MalformedURLException {
+        List<Integer> demographicIds=DemographicDAO.getDemographicIdsAdmittedIntoFacility(facility.getId());
+        DemographicInfoWs service = caisiIntegratorManager.getDemographicInfoWs(facility);
+        
+        for (Integer demographicId : demographicIds)
+        {
+            logger.debug("pushing demographicInfo facilityId:"+facility.getId()+", demographicId:"+demographicId);
 
-        if (integratorBaseUrl == null || user == null || password == null) {
-            logger.warn("Integrator is enabled but information is incomplete. facilityId=" + facility.getId() + ", user=" + user + ", password=" + password + ", url=" + integratorBaseUrl);
-            return;
+            Demographic demographic=demographicDAO.getDemographicById(demographicId);
+            
+            CachedDemographicInfo cachedDemographicInfo=new CachedDemographicInfo();
+
+            XMLGregorianCalendar cal=new XMLGregorianCalendarImpl();
+            if (demographic.getYearOfBirth()!=null) cal.setYear(Integer.parseInt(demographic.getYearOfBirth()));
+            if (demographic.getMonthOfBirth()!=null) cal.setMonth(Integer.parseInt(demographic.getMonthOfBirth()));
+            if (demographic.getDateOfBirth()!=null) cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));            
+            cachedDemographicInfo.setBirthDate(cal);
+            
+            cachedDemographicInfo.setCity(demographic.getCity());
+            cachedDemographicInfo.setFacilityDemographicId(demographic.getDemographicNo());
+            cachedDemographicInfo.setFirstName(demographic.getFirstName());
+            cachedDemographicInfo.setGender(demographic.getSex());
+            cachedDemographicInfo.setHin(demographic.getHin());
+            cachedDemographicInfo.setLastName(demographic.getLastName());
+            cachedDemographicInfo.setProvince(demographic.getProvince());
+            cachedDemographicInfo.setSin(demographic.getSin());
+            
+            service.setCachedDemographicInfo(cachedDemographicInfo);
         }
+    }
 
-        System.err.println("INTEGRATOR : " + facility.getName() + ", user=" + user + ", password=" + password + ", url=" + integratorBaseUrl);
-        FacilityInfoWs facilityInfoWs = caisiIntegratorManager.getFacilityInfoWs(facility);
+    private void pushFacilityInfo(Facility facility) throws IOException {
+        FacilityInfoWs service = caisiIntegratorManager.getFacilityInfoWs(facility);
 
         Properties p = new Properties();
         p.setProperty("name", facility.getName());
@@ -112,6 +158,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         p.setProperty("contactName", facility.getContactName());
         p.setProperty("contactEmail", facility.getContactEmail());
         p.setProperty("contactPhone", facility.getContactPhone());
-        facilityInfoWs.setMyFacilityInfo(MiscUtils.propertiesToXmlByteArray(p));
+
+        logger.debug("pushing facilityInfo : "+p);
+        service.setMyFacilityInfo(MiscUtils.propertiesToXmlByteArray(p));
     }
 }
