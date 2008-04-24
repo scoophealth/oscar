@@ -71,6 +71,7 @@
         <property name="integratorUrl" />
         <property name="integratorUser" />
         <property name="integratorPassword" />
+        <property name="integratorLastPushTime" />
     </class>
 </hibernate-mapping>
         

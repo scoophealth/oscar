@@ -22,6 +22,8 @@
 
 package org.oscarehr.PMmodule.task;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.TimerTask;
@@ -54,11 +56,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         logger.debug("CaisiIntegratorUpdateTask starting");
 
         try {
-            List<Facility> facilities=facilityDAO.getFacilities();
-            for (Facility facility : facilities)
-            {
-                if (facility.isDisabled()==false && facility.isIntegratorEnabled()==true)
-                {
+            List<Facility> facilities = facilityDAO.getFacilities();
+            for (Facility facility : facilities) {
+                if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
                     updateFacility(facility);
                 }
             }
@@ -74,29 +74,44 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
     }
 
     private void updateFacility(Facility facility) {
-        try {
-            String integratorBaseUrl=facility.getIntegratorUrl();
-            String user=facility.getIntegratorUser();
-            String password=facility.getIntegratorPassword();
-            
-            if (integratorBaseUrl==null || user==null || password==null){
-                logger.warn("Integrator is enabled but information is incomplete. facilityId="+facility.getId()+", user="+user+", password="+password+", url="+integratorBaseUrl);
-                return;
-            }
-            
-            System.err.println("INTEGRATOR : "+facility.getName()+", user="+user+", password="+password+", url="+integratorBaseUrl);
-            FacilityInfoWs facilityInfoWs=caisiIntegratorManager.getFacilityInfoWs(facility);
 
-            Properties p = new Properties();
-            p.setProperty("name", facility.getName());
-            p.setProperty("description", facility.getDescription());
-            p.setProperty("contactName", facility.getContactName());
-            p.setProperty("contactEmail", facility.getContactEmail());
-            p.setProperty("contactPhone", facility.getContactPhone());
-            facilityInfoWs.setMyFacilityInfo(MiscUtils.propertiesToXmlByteArray(p));            
+        try {
+            // get the time here so there's a slight over lap in actualy runtime and activity time, other wise you'll have a gap, better to unnecessarily send a few more records than to miss some.
+            Date currentPushTime = new Date();
+
+            // do all the sync work
+            pushFacilityInfo(facility);
+            
+            // update late push time only if an exception didn't occur
+            // reget the facility as the sync time could be very long and changes may have been made to the facility.
+            facility=facilityDAO.getFacility(facility.getId());
+            facility.setIntegratorLastPushTime(currentPushTime);
+            facilityDAO.saveFacility(facility);
         }
         catch (Exception e) {
             logger.error("Unexpected error.", e);
         }
+    }
+
+    private void pushFacilityInfo(Facility facility) throws IOException {
+        String integratorBaseUrl = facility.getIntegratorUrl();
+        String user = facility.getIntegratorUser();
+        String password = facility.getIntegratorPassword();
+
+        if (integratorBaseUrl == null || user == null || password == null) {
+            logger.warn("Integrator is enabled but information is incomplete. facilityId=" + facility.getId() + ", user=" + user + ", password=" + password + ", url=" + integratorBaseUrl);
+            return;
+        }
+
+        System.err.println("INTEGRATOR : " + facility.getName() + ", user=" + user + ", password=" + password + ", url=" + integratorBaseUrl);
+        FacilityInfoWs facilityInfoWs = caisiIntegratorManager.getFacilityInfoWs(facility);
+
+        Properties p = new Properties();
+        p.setProperty("name", facility.getName());
+        p.setProperty("description", facility.getDescription());
+        p.setProperty("contactName", facility.getContactName());
+        p.setProperty("contactEmail", facility.getContactEmail());
+        p.setProperty("contactPhone", facility.getContactPhone());
+        facilityInfoWs.setMyFacilityInfo(MiscUtils.propertiesToXmlByteArray(p));
     }
 }

@@ -1,6 +1,7 @@
 package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Represents a facility, i.e. bricks and mortar.  Each facility has a number of rooms.
@@ -20,6 +21,7 @@ public class Facility implements Serializable {
     private String integratorUrl=null;
     private String integratorUser=null;
     private String integratorPassword=null;
+    private Date integratorLastPushTime=null;
     
     public Facility() {
     }
@@ -142,6 +144,14 @@ public class Facility implements Serializable {
 
     public void setIntegratorPassword(String integratorPassword) {
         this.integratorPassword = integratorPassword;
+    }
+
+    public Date getIntegratorLastPushTime() {
+        return integratorLastPushTime;
+    }
+
+    public void setIntegratorLastPushTime(Date integratorLastPushTime) {
+        this.integratorLastPushTime = integratorLastPushTime;
     }
 
     public boolean equals(Object o) {

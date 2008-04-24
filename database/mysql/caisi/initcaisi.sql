@@ -16,6 +16,7 @@ create table facility (
 	`integratorUrl` varchar(255),
 	`integratorUser` varchar(255),
 	`integratorPassword` varchar(255),
+	`integratorLastPushTime` datetime,
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_facility_name` USING HASH (`name`)
 );
