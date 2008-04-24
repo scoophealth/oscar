@@ -14,8 +14,12 @@
     String id = request.getParameter("id");
     String mandatory = request.getParameter("mandatory");
     
-    IntakeNode theNode = findNode(Integer.parseInt(id), nodes);
+    IntakeNode theNode = findNodeByLabel(Integer.parseInt(id), nodes);
     boolean hasMandatory = (theNode.isQuestion() || theNode.isAnswerCompound());
+    boolean isDropbox = (theNode.isAnswerChoice() && !theNode.isAnswerBoolean());
+    if (isDropbox) {
+	session.setAttribute("dropboxNode", theNode);
+    }
     
     if (lblEdit != null){
         IntakeNodeLabel iLabel = new IntakeNodeLabel();
@@ -31,20 +35,22 @@
         return;
     }
     
-    
-    String val = "";
-    if(id !=null){
-        //IntakeNodeLabel eLabel = genericIntakeManager.getIntakeNodeLabel(Integer.parseInt(id));
-	IntakeNodeLabel eLabel = findLabel(Integer.parseInt(id), nodes);
-        val = eLabel!=null ? eLabel.getLabel() : "";
-    }
+    IntakeNodeLabel eLabel = theNode.getLabel();
+    String val = (eLabel!=null) ? eLabel.getLabel() : "";
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Edit Label</title>
+        <title>Edit Node</title>
+	<script type="text/javascript">
+	    function editDropbox() {
+		var eURL = "EditDropbox.jsp";
+		popup('300','400',eURL,'eddrpbx');
+	    }
+	</script>
+        <script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>" ></script>
         <style type="text/css">
         @import "<html:rewrite page="/css/genericIntake.css"/>";
         </style>
@@ -60,6 +66,9 @@
      <%	if (hasMandatory) { %>
 	<br><input type="checkbox" name="mandatory" value="true" <%=theNode.getMandatory() ? "checked" : ""%>>Mandatory</input>
      <%	} %>
+     <%	if (isDropbox) { %>
+	<br><input type="button" value="Edit Dropbox Items..." onclick="editDropbox();" />
+     <%	} %>
     </form>
     
     </body>
@@ -74,7 +83,7 @@ void buildNodes(IntakeNode in, ArrayList aln) {
     }
 }
 
-IntakeNode findNode(Integer labelId, ArrayList nodes) {
+IntakeNode findNodeByLabel(Integer labelId, ArrayList nodes) {
     IntakeNode iNode = null;
     for (int i=0; i<nodes.size(); i++) {
 	IntakeNode in = (IntakeNode) nodes.get(i);
@@ -89,12 +98,12 @@ IntakeNode findNode(Integer labelId, ArrayList nodes) {
 }
 
 IntakeNodeLabel findLabel(Integer labelId, ArrayList nodes) {
-    IntakeNode iNode = findNode(labelId, nodes);
+    IntakeNode iNode = findNodeByLabel(labelId, nodes);
     return iNode.getLabel();
 }
 
 void writeLabel(IntakeNodeLabel iLabel, ArrayList nodes) {
-    IntakeNode iNode = findNode(iLabel.getId(), nodes);
+    IntakeNode iNode = findNodeByLabel(iLabel.getId(), nodes);
     iNode.setLabel(iLabel);
 }
 
