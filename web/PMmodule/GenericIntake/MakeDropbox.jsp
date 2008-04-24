@@ -11,6 +11,7 @@ String s_entry = request.getParameter("s_entry");
 String submit_type = request.getParameter("submit_type");
 IntakeNodeTemplate intakeNodeTemplate = (IntakeNodeTemplate) session.getAttribute("intakeNodeTemplate_c");
 Integer lastTemplateId = (Integer) session.getAttribute("lastTemplateId");
+Integer lastElementId = (Integer) session.getAttribute("lastElementId");
 ArrayList<String> items = new ArrayList();
 
 if (submit_type==null) {
@@ -25,10 +26,15 @@ if (submit_type==null) {
 
 } else if (submit_type.equals("save")) {
     response.sendRedirect("close.jsp");
+    return;
     
 } else if (submit_type.equals("add")) {
     IntakeAnswerElement intakeAnswerElement = new IntakeAnswerElement();
     intakeAnswerElement.setElement(s_entry);
+    lastElementId = (lastElementId==null) ? -1 : --lastElementId;
+    intakeAnswerElement.setId(lastElementId);
+    session.setAttribute("lastElementId", lastElementId);
+    
     intakeAnswerElement.setNodeTemplate(intakeNodeTemplate);
     Set intakeAnswerElements = intakeNodeTemplate.getAnswerElements();
     intakeAnswerElements.add(intakeAnswerElement);
@@ -101,27 +107,6 @@ void insertItems(ArrayList<String> itemList, Set elementSet) {
 	IntakeAnswerElement e = (IntakeAnswerElement) elements[i];
 	itemList.add(e.getElement());
     }
-}
-
-void buildNodes(IntakeNode in, ArrayList aln) {
-    aln.add(in);
-    for (IntakeNode iN : in.getChildren()) {
-	buildNodes(iN, aln);
-    }
-}
-
-IntakeNode findNode(Integer Id, ArrayList nodes) {
-    IntakeNode iNode = null;
-    for (int i=0; i<nodes.size(); i++) {
-	IntakeNode in = (IntakeNode) nodes.get(i);
-	if (in.getId()!=null) {
-	    if (in.getId().equals(Id)) {
-		iNode = in;
-		i = nodes.size();
-	    }
-	}
-    }
-    return iNode;
 }
 
 %>
