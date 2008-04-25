@@ -120,7 +120,8 @@ public class MOHRecidivismDao {
     }
 
     private static void printHousingPlacements(Calendar startDate, Calendar endDate) throws SQLException {
-        String sqlCommand="select count(distinct(concat(a3.client_id,date(admission_date)))) from admission a3, program p3 where admission_date is not null and a3.program_id=p3.program_id and p3.type='community' and p3.name in ('Moved in with Friends or Relatives', 'Private Market Housing','Returned to Parents', 'Returned to Partner', 'Returned to Previous Address', 'Subsidized Housing') and admission_date>? and admission_date<?";
+        //String sqlCommand="select count(distinct(concat(a3.client_id,date(admission_date)))) from admission a3, program p3 where admission_date is not null and a3.program_id=p3.program_id and p3.type='community' and p3.name in ('Moved in with Friends or Relatives', 'Private Market Housing','Returned to Parents', 'Returned to Partner', 'Returned to Previous Address', 'Subsidized Housing') and admission_date>? and admission_date<?";
+        String sqlCommand="select count(distinct(concat(a3.client_id,date(admission_date)))) from admission a3, program p3 where admission_date is not null and a3.program_id=p3.program_id and p3.type='community' and admission_date>? and admission_date<?";
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
@@ -129,7 +130,7 @@ public class MOHRecidivismDao {
             ps.setTimestamp(2, new java.sql.Timestamp(endDate.getTimeInMillis()));
             rs = ps.executeQuery();
             rs.next();
-            System.err.println("housing placements : "+rs.getInt(1));                
+            System.err.println("community placements : "+rs.getInt(1));                
         }
         finally {
             rs.close();
@@ -242,7 +243,8 @@ public class MOHRecidivismDao {
         String sqlCommand = "create temporary table foo (client_id int not null, index(client_id), xdate date not null, index(xdate), unique(client_id,xdate), type varchar(64) not null, index(type))";
         executeUpdate(sqlCommand);
 
-        sqlCommand = "replace into foo (select a3.client_id,date(admission_date),'admit to community' from admission a3, program p3 where admission_date is not null and a3.program_id=p3.program_id and p3.type='community' and p3.name in ('Moved in with Friends or Relatives', 'Private Market Housing','Returned to Parents', 'Returned to Partner', 'Returned to Previous Address', 'Subsidized Housing'))";
+        //sqlCommand = "replace into foo (select a3.client_id,date(admission_date),'admit to community' from admission a3, program p3 where admission_date is not null and a3.program_id=p3.program_id and p3.type='community' and p3.name in ('Moved in with Friends or Relatives', 'Private Market Housing','Returned to Parents', 'Returned to Partner', 'Returned to Previous Address', 'Subsidized Housing'))";
+        sqlCommand = "replace into foo (select a3.client_id,date(admission_date),'admit to community' from admission a3, program p3 where admission_date is not null and a3.program_id=p3.program_id and p3.type='community')";
         executeUpdate(sqlCommand);
 
         sqlCommand = "replace into foo (select admission.client_id,date(admission_date),'admit to bed' from admission, program where admission_date is not null and admission.program_id=program.program_id and program.type='Bed')";
