@@ -18,7 +18,7 @@
  * Centre for Research on Inner City Health, St. Michael's Hospital,
  * Toronto, Ontario, Canada
  */
-package org.oscarehr.PMmodule.service;
+package org.oscarehr.PMmodule.caisi_integrator;
 
 /**
  */
@@ -31,7 +31,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
-import org.oscarehr.PMmodule.caisi_integrator.AuthenticationOutInterceptor;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;

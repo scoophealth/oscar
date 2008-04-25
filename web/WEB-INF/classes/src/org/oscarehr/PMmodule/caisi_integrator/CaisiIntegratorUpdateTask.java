@@ -20,13 +20,12 @@
  * Toronto, Ontario, Canada 
  */
 
-package org.oscarehr.PMmodule.task;
+package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.TimerTask;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -37,12 +36,12 @@ import org.caisi.dao.DemographicDAO;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Facility;
-import org.oscarehr.PMmodule.service.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.MiscUtils;
+import org.springframework.beans.BeanUtils;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -90,6 +89,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
     private void pushAllFacilityData(Facility facility) {
         try {
+            logger.debug("Pushing data for facility : "+facility.getId());
+            
             // check all parameters are present
             String integratorBaseUrl = facility.getIntegratorUrl();
             String user = facility.getIntegratorUser();
@@ -150,16 +151,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
     }
 
     private void pushFacilityInfo(Facility facility) throws IOException {
+
+        CachedFacilityInfo cachedFacilityInfo=new CachedFacilityInfo();
+        BeanUtils.copyProperties(facility, cachedFacilityInfo, new String[]{"id"});
+        
         FacilityInfoWs service = caisiIntegratorManager.getFacilityInfoWs(facility);
 
-        Properties p = new Properties();
-        p.setProperty("name", facility.getName());
-        p.setProperty("description", facility.getDescription());
-        p.setProperty("contactName", facility.getContactName());
-        p.setProperty("contactEmail", facility.getContactEmail());
-        p.setProperty("contactPhone", facility.getContactPhone());
-
-        logger.debug("pushing facilityInfo : "+p);
-        service.setMyFacilityInfo(MiscUtils.propertiesToXmlByteArray(p));
+        logger.debug("pushing facilityInfo");
+        service.setMyFacilityInfo(cachedFacilityInfo);
     }
 }

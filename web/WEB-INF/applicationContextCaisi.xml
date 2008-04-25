@@ -194,7 +194,7 @@
     <bean id="scheduledCaisiIntegratorUpdateTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
           lazy-init="default"  dependency-check="default">
         <property name="timerTask">
-            <bean class="org.oscarehr.PMmodule.task.CaisiIntegratorUpdateTask" lazy-init="default" dependency-check="default" autowire="byName" />
+            <bean class="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask" lazy-init="default" dependency-check="default" autowire="byName" />
         </property>
         <property name="delay" value="30000"/>
         <!--

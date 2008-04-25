@@ -1,12 +1,12 @@
 <%@page import="org.oscarehr.PMmodule.web.admin.IntegratorJspBean"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Properties"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo"%>
+<%@page import="java.util.List"%>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 <%
 	int facilityId=Integer.parseInt(request.getParameter("facilityId"));
-	ArrayList<Properties> facilities=IntegratorJspBean.getIntegratorFacilityCommunity(facilityId);
+	List<CachedFacilityInfo> facilities=IntegratorJspBean.getIntegratorFacilityCommunity(facilityId);
 %>
 
 <h3>Community of integrated facilities</h3>
@@ -20,15 +20,15 @@
 		<td style="border:solid black 1px">contactPhone</td>
 	</tr>
 	<%
-		for (Properties p : facilities)
+		for (CachedFacilityInfo x : facilities)
 		{
 			%>
 				<tr style="border:solid black 2px;background:white;color:silver">
-					<td style="border:solid black 1px"><%=p.get("name")%></td>
-					<td style="border:solid black 1px"><%=p.get("description")%></td>
-					<td style="border:solid black 1px"><%=p.get("contactName")%></td>
-					<td style="border:solid black 1px"><%=p.get("contactEmail")%></td>
-					<td style="border:solid black 1px"><%=p.get("contactPhone")%></td>
+					<td style="border:solid black 1px"><%=x.getName()%></td>
+					<td style="border:solid black 1px"><%=x.getDescription()%></td>
+					<td style="border:solid black 1px"><%=x.getContactName()%></td>
+					<td style="border:solid black 1px"><%=x.getContactEmail()%></td>
+					<td style="border:solid black 1px"><%=x.getContactPhone()%></td>
 				</tr>
 			<%
 		}

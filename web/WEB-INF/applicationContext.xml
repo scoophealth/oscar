@@ -308,7 +308,7 @@
         </property>
     </bean>
 -->
-    <bean id="caisiIntegratorManager" class="org.oscarehr.PMmodule.service.CaisiIntegratorManager" autowire="byName" />
+    <bean id="caisiIntegratorManager" class="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager" autowire="byName" />
     <bean id="infirmBedProgramManager" parent="baseTransactionProxy">
         <property name="target">
             <bean class="org.caisi.service.InfirmBedProgramManager" autowire="byName">
