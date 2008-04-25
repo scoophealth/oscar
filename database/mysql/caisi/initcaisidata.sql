@@ -171,7 +171,8 @@ INSERT INTO `intake_node_template` VALUES
 	(11, 11, 7, 12),
 	(12, 12, 7, 13),
 	(13, 13, 8, 14),
-	(14, 14, 1, 15);
+	(14, 14, 1, 15),
+	(15, 15, 6, 8);
 
 --
 -- Populate intake answer validation
