@@ -20,6 +20,10 @@
     }
     
     String box_item = request.getParameter("box_item");
+    Integer slct = -1;
+    if (box_item!=null) {
+	slct = Integer.parseInt(box_item);
+    }
     String child_move = request.getParameter("child_move");
     String done_reorder = request.getParameter("done_reorder");
     String s_entry = request.getParameter("s_entry");
@@ -69,7 +73,7 @@
 	    iTemplate = makeNewTemplate(dbNode, lastTemplateId);
 	    session.setAttribute("lastTemplateId", lastTemplateId);
 	    if (box_item!=null && child_move!=null) {
-		arrangeItems(box_item, child_move, iTemplate);
+		slct = arrangeItems(box_item, child_move, iTemplate);
 	    }
 	}
 	session.setAttribute("dropboxNode", dbNode);
@@ -112,7 +116,7 @@
 		    <td>
 			<select name="box_item" size="9" onchange="copy_s(selectedIndex);">
 <% for (IntakeAnswerElement ie : items) { %>
-			    <option value="<%=ie.getId()%>"><%=ie.getElement()%></option>
+			    <option value="<%=ie.getId()%>" <%=(ie.getId()==slct) ? "selected" : ""%>><%=ie.getElement()%></option>
 <% } %>
 			</select>
 		    </td>
@@ -139,9 +143,10 @@
 
 <%!
 
-void arrangeItems(String pos_s, String mov, IntakeNodeTemplate iTemplate) {
+Integer arrangeItems(String pos_s, String mov, IntakeNodeTemplate iTemplate) {
     Integer pos = Integer.parseInt(pos_s);
     Integer idx = 0;
+    Integer iid = 0;
     Set nwAnsElements = iTemplate.getAnswerElements();
     Object[] elementObjs = nwAnsElements.toArray();
     for (int i=0; i<elementObjs.length; i++) {
@@ -153,16 +158,16 @@ void arrangeItems(String pos_s, String mov, IntakeNodeTemplate iTemplate) {
     if (mov.equals("up") && idx>0) {
 	IntakeAnswerElement ie1 = (IntakeAnswerElement) elementObjs[idx];
 	IntakeAnswerElement ie2 = (IntakeAnswerElement) elementObjs[idx-1];
-	Integer iid = ie1.getId();
-	ie1.setId(ie2.getId());
-	ie2.setId(iid);
+	iid = ie2.getId();
+	ie2.setId(ie1.getId());
+	ie1.setId(iid);
 	
     } else if (mov.equals("down") && idx<elementObjs.length-1) {
 	IntakeAnswerElement ie1 = (IntakeAnswerElement) elementObjs[idx];
 	IntakeAnswerElement ie2 = (IntakeAnswerElement) elementObjs[idx+1];
-	Integer iid = ie1.getId();
-	ie1.setId(ie2.getId());
-	ie2.setId(iid);
+	iid = ie2.getId();
+	ie2.setId(ie1.getId());
+	ie1.setId(iid);
     }
     
     nwAnsElements.clear();
@@ -170,6 +175,7 @@ void arrangeItems(String pos_s, String mov, IntakeNodeTemplate iTemplate) {
 	nwAnsElements.add(e);
     }
     iTemplate.setAnswerElements(nwAnsElements);
+    return iid;
 }
 
 Integer prepareAnswerElements(IntakeNodeTemplate iTemplate, Integer lastId) {
