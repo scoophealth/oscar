@@ -58,7 +58,10 @@ trusted truejava.lang.Boolean ? i think
     
         int untrustedRes = 0;
         int hiddenRes = 0;
-        for (Hashtable ht: warnings){    
+        for (Hashtable ht: warnings){   
+            Vector<Hashtable> commentsVec = (Vector) ht.get("comments");
+            displayKeys(ht);
+                                  
             System.out.println("\nDrug: "+ht.get("name")+"\nEvidence: "+ht.get("evidence")+"\nSignificance: "+ht.get("significance")+"\nATC: "+ht.get("atc")+"\nReference: "+ht.get("reference")+"\nWarning: "+ht.get("body")+" trusted "+ht.get("trusted"));
             boolean trustedResource = trusted(ht.get("trusted"));
             boolean hideResource = false;
@@ -80,12 +83,36 @@ trusted truejava.lang.Boolean ? i think
             %>
             
             <div id="<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>"  <%=outputHtmlClass(trustedResource,hideResource)%> style="<%=hidden%>background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
-                <span style="float:right;"><a href="javascript:void(0);" onclick="HideW('<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>','<%=ht.get("id")%>','<%=getTime(ht.get("updated_at"))%>')" >Hide</a></span> <b><%=ht.get("name")%></b>  <br/>
+                <span style="float:right;"><a href="javascript:void(0);" onclick="HideW('<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>','<%=ht.get("id")%>','<%=getTime(ht.get("updated_at"))%>')" >Hide</a></span> <b><%=ht.get("name")%></b> From:<%=s(ht.get("author"))%>  <br/>
+                
+                
                 
             <%=ht.get("body")%><br/> <% String ref = (String)ht.get("reference");%>
+            
+            <%if (commentsVec != null && commentsVec.size() > 0){ %>
+                <a style="float:right;" href="javascript:void(0);" onclick="$('comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>').toggle();">comments</a>
+                <%}%>
+                
                 (<%=ht.get("evidence")%>) &nbsp;Reference: <a href="<%=ht.get("reference")%>"target="_blank"><%= StringUtils.maxLenString(ref, 51, 50, "...") %></a>
+                 
+                
+                
+                <%if (commentsVec != null && commentsVec.size() > 0){ %>
+                <!--a style="float:right;" href="javascript:void(0);" onclick="$('comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>').toggle();">comments</a-->
+                <fieldset style="border: 1px solid white;display:none;padding: 2px;" id="comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>">
+                  <legend>Comments</legend>
+                     
+                     <%for(Hashtable comment : commentsVec){ %>
+                     <div>
+                        <%= getCommentDisplay( comment ) %>
+                     </div>
+                     <%}%>
+                     
+                </fieldset>
+                <%}%>
+             
             </div>
-
+           
       <%
         }
         if (untrustedRes > 0 ){ %>
@@ -105,7 +132,37 @@ trusted truejava.lang.Boolean ? i think
 
 
 <%!
-        
+      
+     String getCommentDisplay(Hashtable h){
+         StringBuffer ret = new StringBuffer();
+         //key:comments val [{created_at=Fri Apr 04 14:35:10 EDT 2008, name=Re: APO-WARFARIN 10MG, id=4053, post_id=133, author=Guest, goat=true, created_by=7, body=i disagree , updated_at=Fri Apr 04 14:35:10 EDT 2008}]  class : java.util.Vector
+//key:type val Warning  class : java.lang.String
+         if (h != null){
+             Boolean thumbs = (Boolean) h.get("goat");
+             boolean thumb = true;
+             if(thumbs != null && thumbs.booleanValue()){
+                 ret.append("+");
+             }else{
+                 ret.append("-");
+             }
+             
+             ret.append("From: "+h.get("author")+", "+h.get("body"));
+             //author=Guest, goat=true, created_by=7, body=i disagree
+         }
+         return ret.toString();
+     }
+
+      String s(Object o){
+          String ret ="";
+          
+          if(o != null && o instanceof String){
+              return (String) o;
+          }
+          
+          return ret;
+      }
+
+
        String outputHtmlClass(boolean trustedResource, boolean hideResource){
            if (!trustedResource && hideResource){
                return "class=\"untrustedResource hiddenResource\"";
@@ -210,6 +267,10 @@ trusted truejava.lang.Boolean ? i think
                 String s  = "key:"+o+" val "+ht.get(o)+"  class : "+ht.get(o).getClass().getName();
                 sb.append(s);
                 System.out.println(s);
+                if ( o instanceof Vector){
+                   Vector v =  (Vector) o;
+                   System.out.println("SS "+v.size());
+                }
             }
        }
        return sb.toString();
