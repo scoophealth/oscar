@@ -115,6 +115,10 @@ public class ProviderPropertyAction extends DispatchAction {
          //    System.out.println("PROP WAS NULL");
          //}
          
+         if (prop == null){
+             prop = new UserProperty();
+         }
+         
          //request.setAttribute("propert",propertyToSet);
          request.setAttribute("dateProperty",prop);
          
