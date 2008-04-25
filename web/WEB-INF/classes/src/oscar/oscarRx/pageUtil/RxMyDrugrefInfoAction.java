@@ -69,7 +69,9 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         }
         Vector codes = bean.getAtcCodes();
         //Vector warnings = getWarnings(codes,myDrugrefId);
-        String[] str = new String[]{"warnings_byATC","bulletins_byATC","interactions_byATC"};
+        //String[] str = new String[]{"warnings_byATC","bulletins_byATC","interactions_byATC"};
+        String[] str = new String[]{"warnings_byATC,bulletins_byATC,interactions_byATC"};   //NEW more efficent way of sending multiple requests at the same time.
+        
         Vector all = new Vector();
         for (String command : str){
             try{
