@@ -30,6 +30,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/*
+ *The import program performs 8 functions:
+ *1) Creates a program called OSCAR.  All providers and demographics will belong here
+ *2) Creates a dummy provider to sign imported encounter notes from eChart table
+ *3) Copy all OSCAR providers with the 'all' privilege to OSCAR eChart as defined in secUserRole to program_provider
+ *4) Set up access to program OSCAR by inserting OSCAR in program_access and specifying first 6 caisi roles, listed in access_type, in table program_access_roles for each provider
+ *5) Copy all rows from demographic table into admission table, linking each record to OSCAR and provider: the progam combined with the caisi role effectively allows each provider to view demographic
+ *6) Copy the most recent encounter from the eChart table to casemgmt_note table -- each note is signed by the dummy provider and each note is assigned a uuid for tracking history
+ *7) Copy the demographic cpp from the eChart table to casemgmt_cpp table
+ *8) Split charts are then copied as per step 6 above
+ */
+
 public class importCasemgmt {
 	public static void main( String[] args ) {
 
