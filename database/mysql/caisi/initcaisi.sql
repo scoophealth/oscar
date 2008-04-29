@@ -12,7 +12,7 @@ create table facility (
     `disabled` tinyint(1) NOT NULL default '0',
     `org_id` int(10) NOT NULL default '0',
     `sector_id` int(10) NOT NULL default '0',
-	`integratorEnabled` tinyint(1) not null,
+	`integratorEnabled` tinyint(1) not null default 0,
 	`integratorUrl` varchar(255),
 	`integratorUser` varchar(255),
 	`integratorPassword` varchar(255),
@@ -2524,7 +2524,7 @@ SELECT 0 grandParentID, 0 parentID, bed_type_id id, name description
 FROM bed_type a;
 
 CREATE OR REPLACE VIEW v_lk_org AS
-SELECT 0 grandParentID, 0 parentID, id, name description
+SELECT 0 grandParentID, 0 parentID, id, name, description
 FROM agency;
 
 
