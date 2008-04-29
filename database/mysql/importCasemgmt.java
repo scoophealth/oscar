@@ -38,7 +38,7 @@ import java.io.IOException;
  *4) Set up access to program OSCAR by inserting OSCAR in program_access and specifying first 6 caisi roles, listed in access_type, in table program_access_roles for each provider
  *5) Copy all rows from demographic table into admission table, linking each record to OSCAR and provider: the progam combined with the caisi role effectively allows each provider to view demographic
  *6) Copy the most recent encounter from the eChart table to casemgmt_note table -- each note is signed by the dummy provider and each note is assigned a uuid for tracking history
- *7) Copy the demographic cpp from the eChart table to casemgmt_cpp table
+ *7) Copy the demographic cpp from the eChart table to casemgmt_cpp table AND create one note for each cpp linked with a cpp issue
  *8) Split charts are then copied as per step 6 above
  */
 
@@ -205,6 +205,29 @@ public class importCasemgmt {
                         System.out.println("OK");
                         System.out.println("Importing current eChart records. Be patient this may take a few minutes.");
                         
+                        System.out.println("Grabbing cpp issues from issue table");
+                        PreparedStatement pstmt = con.prepareStatement("select issue_id from issue where code =?");
+                        String[] iCodes = {"OMeds","SocHistory","MedHistory","Concerns","Reminders"};
+                        long[] issueIds = new long[iCodes.length];
+                        for( int idx = 0; idx < iCodes.length; ++idx) {
+                            pstmt.setString(1,iCodes[idx]);
+                            rs = pstmt.executeQuery();                            
+                            rs.next();
+                            issueIds[idx] = rs.getLong(1);
+                            System.out.println(issueIds[idx] + " : " + iCodes[idx]);
+                            rs.close();
+                        }
+                       
+                        pstmt.close();
+
+                        PreparedStatement pstmt2 = con.prepareStatement("select id from casemgmt_issue where demographic_no = ? and issue_id = ?");
+                        PreparedStatement pstmt3 = con.prepareStatement("insert into casemgmt_issue (demographic_no,issue_id, program_id,type,update_date) values(?,?," + programId + ",'nurse',now())",PreparedStatement.RETURN_GENERATED_KEYS);
+                        PreparedStatement pstmt4 = con.prepareStatement("insert into casemgmt_note (update_date, demographic_no, provider_no, note,  signed, signing_provider_no, include_issue_innote, program_no, " +
+                                "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,true,'doctor doe'," +
+                                "false," + programId + ",'1','0',?,'','0',?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+                        PreparedStatement pstmt5 = con.prepareStatement("insert into casemgmt_issue_notes Values(?,?)");
+                        
+                        
                         sql = "select * from eChart e left join (select max(eChartId) eChartId from eChart where subject != 'SPLIT CHART' group by demographicNo) " + 
                                 "mx using(eChartId) where e.eChartId = mx.eChartId and e.subject != 'SPLIT CHART'";
                         
@@ -215,7 +238,9 @@ public class importCasemgmt {
                         PreparedStatement cppInsert = con.prepareStatement("insert into casemgmt_cpp (demographic_no,provider_no,socialHistory,familyHistory,medicalHistory,ongoingConcerns," +
                                 "reminders,update_date) Values(?,?,?,?,?,?,?,?)");
                         UUID uuid;
-                        String note;
+                        String note;                        
+                        ResultSet rs3,rs4;
+                        long cIssueId;
                         while( rs.next() ) {
                             uuid = UUID.randomUUID();
                             
@@ -247,7 +272,190 @@ public class importCasemgmt {
                                     throw new SQLException(sql);
                             
                             cppInsert.clearParameters();
-                            System.out.println("Imported cpp for " + rs.getString("demographicNo"));
+                            System.out.println("Imported eChart cpp for " + rs.getString("demographicNo"));
+                            System.out.println("Creating cpp issue note");
+                            
+                            note = rs.getString("socialHistory");
+                            if( note != null && !note.equals("") ) {
+                                System.out.println("Inserting social history for " + rs.getString("demographicNo"));
+                                pstmt2.setString(1,rs.getString("demographicNo"));
+                                pstmt2.setLong(2,issueIds[1]);
+                                rs3 = pstmt2.executeQuery();
+                                if( !rs3.next() ) {
+                                        pstmt3.setString(1,rs.getString("demographicNo"));
+                                        pstmt3.setLong(2,issueIds[1]);
+                                        pstmt3.executeUpdate();
+                                        rs4 = pstmt3.getGeneratedKeys();
+                                        rs4.next();
+                                        cIssueId = rs4.getLong(1);
+                                        rs4.close();                                          
+                                }
+                                else
+                                    cIssueId = rs3.getLong(1);
+
+                                uuid = UUID.randomUUID();
+                                pstmt4.setTimestamp(1,rs.getTimestamp("timeStamp"));
+                                pstmt4.setString(2,rs.getString("demographicNo"));
+                                pstmt4.setString(3,rs.getString("providerNo"));
+                                pstmt4.setString(4,note);
+                                pstmt4.setString(5,note);
+                                pstmt4.setString(6,uuid.toString());
+                                pstmt4.setTimestamp(7,rs.getTimestamp("timeStamp"));
+                                pstmt4.executeUpdate();
+                                rs4 = pstmt4.getGeneratedKeys();
+                                rs4.next();
+                                pstmt5.setLong(1,cIssueId);
+                                pstmt5.setLong(2,rs4.getLong(1));
+                                pstmt5.executeUpdate();
+                                rs3.close();
+                                rs4.close();
+                                                               
+                            }
+                            
+                            note = rs.getString("familyHistory");
+                            if( note != null && !note.equals("") ) {
+                                System.out.println("Inserting other Meds for " + rs.getString("demographicNo"));
+                                pstmt2.setString(1,rs.getString("demographicNo"));
+                                pstmt2.setLong(2,issueIds[0]);
+                                rs3 = pstmt2.executeQuery();
+                                if( !rs3.next() ) {
+                                        pstmt3.setString(1,rs.getString("demographicNo"));
+                                        pstmt3.setLong(2,issueIds[0]);
+                                        pstmt3.executeUpdate();
+                                        rs4 = pstmt3.getGeneratedKeys();
+                                        rs4.next();
+                                        cIssueId = rs4.getLong(1);
+                                        rs4.close();                                          
+                                }
+                                else
+                                    cIssueId = rs3.getLong(1);
+
+                                uuid = UUID.randomUUID();
+                                pstmt4.setTimestamp(1,rs.getTimestamp("timeStamp"));
+                                pstmt4.setString(2,rs.getString("demographicNo"));
+                                pstmt4.setString(3,rs.getString("providerNo"));
+                                pstmt4.setString(4,note);
+                                pstmt4.setString(5,note);
+                                pstmt4.setString(6,uuid.toString());
+                                pstmt4.setTimestamp(7,rs.getTimestamp("timeStamp"));
+                                pstmt4.executeUpdate();
+                                rs4 = pstmt4.getGeneratedKeys();
+                                rs4.next();
+                                pstmt5.setLong(1,cIssueId);
+                                pstmt5.setLong(2,rs4.getLong(1));
+                                pstmt5.executeUpdate();
+                                rs3.close();
+                                rs4.close();
+                                                               
+                            }
+                            note = rs.getString("medicalHistory");
+                            if( note != null && !note.equals("") ) {
+                                System.out.println("Inserting Medical History for " + rs.getString("demographicNo"));
+                                pstmt2.setString(1,rs.getString("demographicNo"));
+                                pstmt2.setLong(2,issueIds[2]);
+                                rs3 = pstmt2.executeQuery();
+                                if( !rs3.next() ) {
+                                        pstmt3.setString(1,rs.getString("demographicNo"));
+                                        pstmt3.setLong(2,issueIds[2]);
+                                        pstmt3.executeUpdate();
+                                        rs4 = pstmt3.getGeneratedKeys();
+                                        rs4.next();
+                                        cIssueId = rs4.getLong(1);
+                                        rs4.close();                                          
+                                }
+                                else
+                                    cIssueId = rs3.getLong(1);
+
+                                uuid = UUID.randomUUID();
+                                pstmt4.setTimestamp(1,rs.getTimestamp("timeStamp"));
+                                pstmt4.setString(2,rs.getString("demographicNo"));
+                                pstmt4.setString(3,rs.getString("providerNo"));
+                                pstmt4.setString(4,note);
+                                pstmt4.setString(5,note);
+                                pstmt4.setString(6,uuid.toString());
+                                pstmt4.setTimestamp(7,rs.getTimestamp("timeStamp"));
+                                pstmt4.executeUpdate();
+                                rs4 = pstmt4.getGeneratedKeys();
+                                rs4.next();
+                                pstmt5.setLong(1,cIssueId);
+                                pstmt5.setLong(2,rs4.getLong(1));
+                                pstmt5.executeUpdate();
+                                rs3.close();
+                                rs4.close();
+                                                               
+                            }
+                            note = rs.getString("ongoingConcerns");
+                            if( note != null && !note.equals("") ) {
+                                System.out.println("Inserting ongoing Concerns for " + rs.getString("demographicNo"));
+                                pstmt2.setString(1,rs.getString("demographicNo"));
+                                pstmt2.setLong(2,issueIds[3]);
+                                rs3 = pstmt2.executeQuery();
+                                if( !rs3.next() ) {
+                                        pstmt3.setString(1,rs.getString("demographicNo"));
+                                        pstmt3.setLong(2,issueIds[3]);
+                                        pstmt3.executeUpdate();
+                                        rs4 = pstmt3.getGeneratedKeys();
+                                        rs4.next();
+                                        cIssueId = rs4.getLong(1);
+                                        rs4.close();                                          
+                                }
+                                else
+                                    cIssueId = rs3.getLong(1);
+
+                                uuid = UUID.randomUUID();
+                                pstmt4.setTimestamp(1,rs.getTimestamp("timeStamp"));
+                                pstmt4.setString(2,rs.getString("demographicNo"));
+                                pstmt4.setString(3,rs.getString("providerNo"));
+                                pstmt4.setString(4,note);
+                                pstmt4.setString(5,note);
+                                pstmt4.setString(6,uuid.toString());
+                                pstmt4.setTimestamp(7,rs.getTimestamp("timeStamp"));
+                                pstmt4.executeUpdate();
+                                rs4 = pstmt4.getGeneratedKeys();
+                                rs4.next();
+                                pstmt5.setLong(1,cIssueId);
+                                pstmt5.setLong(2,rs4.getLong(1));
+                                pstmt5.executeUpdate();
+                                rs3.close();
+                                rs4.close();
+                                                               
+                            }
+                            note = rs.getString("reminders");
+                            if( note != null && !note.equals("") ) {
+                                System.out.println("Inserting Reminders for " + rs.getString("demographicNo"));
+                                pstmt2.setString(1,rs.getString("demographicNo"));
+                                pstmt2.setLong(2,issueIds[4]);
+                                rs3 = pstmt2.executeQuery();
+                                if( !rs3.next() ) {
+                                        pstmt3.setString(1,rs.getString("demographicNo"));
+                                        pstmt3.setLong(2,issueIds[4]);
+                                        pstmt3.executeUpdate();
+                                        rs4 = pstmt3.getGeneratedKeys();
+                                        rs4.next();
+                                        cIssueId = rs4.getLong(1);
+                                        rs4.close();                                          
+                                }
+                                else
+                                    cIssueId = rs3.getLong(1);
+
+                                uuid = UUID.randomUUID();
+                                pstmt4.setTimestamp(1,rs.getTimestamp("timeStamp"));
+                                pstmt4.setString(2,rs.getString("demographicNo"));
+                                pstmt4.setString(3,rs.getString("providerNo"));
+                                pstmt4.setString(4,note);
+                                pstmt4.setString(5,note);
+                                pstmt4.setString(6,uuid.toString());
+                                pstmt4.setTimestamp(7,rs.getTimestamp("timeStamp"));
+                                pstmt4.executeUpdate();
+                                rs4 = pstmt4.getGeneratedKeys();
+                                rs4.next();
+                                pstmt5.setLong(1,cIssueId);
+                                pstmt5.setLong(2,rs4.getLong(1));
+                                pstmt5.executeUpdate();
+                                rs3.close();
+                                rs4.close();
+                                                               
+                            }
                             
                         }
                         
