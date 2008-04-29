@@ -16203,7 +16203,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("Z999","Dep on unspec en
 -- Populate issue
 --
 INSERT INTO issue (code, description, role, update_date)
-	SELECT icd10.code, icd10.short_desc, 'doctor', now() FROM icd10;
+	 SELECT icd9.icd9, icd9.description, 'doctor', now() FROM icd9;
 --
 -- Sherbourne Summary Discharge Form
 --
@@ -16790,6 +16790,12 @@ values (1, 200622, 'ORG');
 insert into report_template_org (counter, templateno, orgcd)
 values (200693, 200682, '0');
 
+--set cpp issues
+insert into issue (`code`,`description`,`role`,`update_date`) Values('OMeds','Other Meds as part of cpp', 'nurse', now());
+insert into issue (`code`,`description`,`role`,`update_date`) Values('SocHistory','Social History as part of cpp', 'nurse', now());
+insert into issue (`code`,`description`,`role`,`update_date`) Values('MedHistory','Medical History as part of cpp', 'nurse', now());
+insert into issue (`code`,`description`,`role`,`update_date`) Values('Concerns','Ongoing Concerns as part of cpp', 'nurse', now());
+insert into issue (`code`,`description`,`role`,`update_date`) Values('Reminders','Reminders as part of cpp', 'nurse', now());
 
 
 
