@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.TimerTask;
 
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -77,7 +78,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
                 }
             }
         }
-        catch (IOException e) {
+        catch (WebServiceException e) {
             logger.warn("Error connecting to integrator. "+e.getMessage());
             logger.debug("Error connecting to integrator.", e);
         }
