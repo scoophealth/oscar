@@ -260,7 +260,7 @@ public class RptDemographicQueryBuilder {
                 if (i == (providers.length - 1)){
                     stringBuffer.append(" provider_no = '"+providers[i]+"' )");
                 }else{
-                    stringBuffer.append(" provider_no '"+providers[i]+"' or  ");
+                    stringBuffer.append(" provider_no = '"+providers[i]+"' or  ");
                 }
             }
         }
