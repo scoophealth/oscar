@@ -1,5 +1,7 @@
 package oscar.oscarDemographic;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -19,25 +21,12 @@ import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
 
 
-import java.io.File;
-
-import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
-import net.sf.jasperreports.engine.JasperRunManager;
-import net.sf.jasperreports.engine.export.JExcelApiExporter;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRRtfExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
-import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
-import net.sf.jasperreports.engine.util.JRLoader;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class PrintDemoLabelAction extends OscarAction {
+    
+    private static Log logger = LogFactory.getLog(PrintDemoLabelAction.class);
 	
     public PrintDemoLabelAction() {
     }
@@ -53,14 +42,24 @@ public class PrintDemoLabelAction extends OscarAction {
         parameters.put("demo", request.getParameter("demographic_no"));
         ServletOutputStream sos = null;
         InputStream ins = null;
+        
+        
+        logger.debug("user home: " + System.getProperty("user.home"));
         try {
-            ServletContext context = getServlet().getServletContext();
-            ins = getClass().getResourceAsStream("/oscar/oscarDemographic/label.xml");
-//            ins = context.getResourceAsStream("/label.xml");
-//            ins = new FileInputStream(System.getProperty("user.home") + "/label.xml");
+            ins = new FileInputStream(System.getProperty("user.home") + "/label.xml");
         }
-        catch (Exception ex1) {
-            ex1.printStackTrace();
+        catch (FileNotFoundException ex1) {
+            logger.debug("label.xml not found in user home using default instead");
+        }
+        if (ins == null){
+            try {
+                ServletContext context = getServlet().getServletContext();
+                ins = getClass().getResourceAsStream("/oscar/oscarDemographic/label.xml");
+                logger.debug("loading from : /oscar/oscarDemographic/label.xml " + ins);
+            }
+            catch (Exception ex1) {
+                ex1.printStackTrace();
+            }
         }
 
         try {
