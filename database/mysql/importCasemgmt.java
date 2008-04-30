@@ -71,7 +71,7 @@ public class importCasemgmt {
                         System.out.println("DB PASSWD " + passwd);
                         
 			Statement stmt, stmtUpdate;
-			ResultSet rs, rsUpdate;
+			ResultSet rs, rs1, rsUpdate;
 
 			Class.forName(driver);
 			
@@ -80,27 +80,45 @@ public class importCasemgmt {
 
 			stmt = con.createStatement();	
                         stmtUpdate = con.createStatement();
-
-                        System.out.println("Creating OSCAR program");
+                        System.out.println("Checking for OSCAR program");
+                        String sql = "select program_id from program where name = 'OSCAR'";
+                        rs1 = stmt.executeQuery(sql);
+                        String programId;
+                        if( !rs1.next() ) {
+                            System.out.println("Creating OSCAR program");
                         
-			int result = stmt.executeUpdate("insert into program (name,max_allowed,type,allow_batch_admission,allow_batch_discharge,hic) " + 
+                            int result = stmt.executeUpdate("insert into program (name,max_allowed,type,allow_batch_admission,allow_batch_discharge,hic) " + 
                                 "Values('OSCAR','99999','Bed',0,0,0)", Statement.RETURN_GENERATED_KEYS);
                         
-                        rs = stmt.getGeneratedKeys();
+                            rs = stmt.getGeneratedKeys();
                         
-                        rs.next();
-                        String programId = rs.getString(1);
-                        rs.close();
-                        System.out.println("INSERT into program " + programId);
+                            rs.next();
                         
-                        System.out.println("Creating dummy provider to sign imported notes");
-                        stmt.executeUpdate("INSERT INTO provider VALUES ('000000','doe','doctor','doctor','','','','0001-01-01','','','','','','','','1','','')");
-                        stmt.executeUpdate("insert into `secUserRole` (provider_no, role_name, orgcd, activeyn) values('000000', 'doctor', 'R0000001', 1)");
+                            programId = rs.getString(1);
+                            rs.close();
+                            System.out.println("INSERT into program " + programId);
+                        }
+                        else {
+                            System.out.println("OSCAR program already present -- skipping");
+                            programId = rs1.getString(1);
+                            rs1.close();
+                        }                        
                         
-                        System.out.println("Importing OSCAR Providers to CAISI");
+                        System.out.println("Checking for additional providers to add");
+                        sql = "select provider_no from provider where provider_no = '000000'";
+                        rs1 = stmt.executeQuery(sql);
+                        
+                        if( !rs1.next() ) {
+                            rs1.close();
+                            System.out.println("Creating dummy provider to sign imported notes");
+                            stmt.executeUpdate("INSERT INTO provider VALUES ('000000','doe','doctor','doctor','','','','0001-01-01','','','','','','','','1','','')");
+                            stmt.executeUpdate("insert into `secUserRole` (provider_no, role_name, orgcd, activeyn) values('000000', 'doctor', 'R0000001', 1)");
+                        }
+                        else
+                            System.out.println("Dummy provider present -- skipping");
                         
                         //we have to make sure we only grant perms to entitled providers
-                        String sql = "select roleUserGroup from secObjPrivilege where objectName = '_eChart' and privilege = 'x'";
+                        sql = "select roleUserGroup from secObjPrivilege where objectName = '_eChart' and privilege = 'x'";
                         rs = stmt.executeQuery(sql);
                         ArrayList<String> secObjs  = new ArrayList<String>();
                         while( rs.next() ) {
@@ -127,10 +145,12 @@ public class importCasemgmt {
                         String role_name, prov;
                         int role_id;
                         PreparedStatement insert = con.prepareStatement("insert into program_provider (program_id,provider_no,role_id) Values('" + programId + "',?,?)");
+                        PreparedStatement pcheck = con.prepareStatement("select id from program_provider where provider_no = ?");
                         while( rs.next() ) {                            
                             prov = rs.getString("provider_no");
-                            
-                            if( !providers.contains(prov) ) {
+                            pcheck.setString(1,prov);
+                            rs1 = pcheck.executeQuery();
+                            if( !rs1.next() ) {
                                 role_name = rs.getString("role_name");                                
                                 insert.setString(1, prov);
                                 
@@ -143,78 +163,105 @@ public class importCasemgmt {
 
                                 if( insert.executeUpdate() != 1 )
                                     throw new SQLException("insert into program_provider failed" + prov);
-                                
-                                providers.add(prov);
+                                                                
                                 System.out.println("Imported provider " + prov);
                             }
+                            else
+                                System.out.println("provider " + prov + " present -- skipping");
+                            
+                            rs1.close();
                         }
                         
                         rs.close();
                         insert.close();
-                        System.out.println("Setting up CAISI role permissions");
-                        String id;                        
-                        insert = con.prepareStatement("insert into program_access (program_id,access_type_id,all_roles) Values(" + programId + ",?,false)", PreparedStatement.RETURN_GENERATED_KEYS);
-                        PreparedStatement roleInsert = con.prepareStatement("insert into program_access_roles (id,role_id) Values(?,1),(?,2)");
-                        for( int idx = 1; idx < 7; ++idx ) {
-                            
-                            insert.setString(1, String.valueOf(idx));
-                            
-                            if( insert.executeUpdate() != 1 )
-                                    throw new SQLException("Setting up CAISI role permissions failed");
-                            
-                            rs = insert.getGeneratedKeys();
-                            rs.next();                                                        
-                                                        
-                            roleInsert.setInt(1, rs.getInt(1));
-                            roleInsert.setInt(2, rs.getInt(1));
-                            
-                            if( roleInsert.executeUpdate() != 2 )
-                                    throw new SQLException("Setting up CAISI role permissions failed");
-                            
-                            rs.close();
+                        System.out.println("Checking CAISI role permissions");
+                        sql = "Select program_id from program_access where program_id = " + programId;
+                        rs1 = stmt.executeQuery(sql);
+                        if( !rs1.next() ) {
+                            System.out.println("Setting up CAISI role permissions");
+                            String id;                        
+                            insert = con.prepareStatement("insert into program_access (program_id,access_type_id,all_roles) Values(" + programId + ",?,false)", PreparedStatement.RETURN_GENERATED_KEYS);
+                            PreparedStatement roleInsert = con.prepareStatement("insert into program_access_roles (id,role_id) Values(?,1),(?,2)");
+                            for( int idx = 1; idx < 7; ++idx ) {
+
+                                insert.setString(1, String.valueOf(idx));
+
+                                if( insert.executeUpdate() != 1 )
+                                        throw new SQLException("Setting up CAISI role permissions failed");
+
+                                rs = insert.getGeneratedKeys();
+                                rs.next();                                                        
+
+                                roleInsert.setInt(1, rs.getInt(1));
+                                roleInsert.setInt(2, rs.getInt(1));
+
+                                if( roleInsert.executeUpdate() != 2 )
+                                        throw new SQLException("Setting up CAISI role permissions failed");
+
+                                rs.close();
+                            }
+
+                            insert.close();
+                            roleInsert.close();
+                            System.out.println("Doctors and Nurses now have full CAISI privs");
                         }
+                        else
+                            System.out.println("skipping CAISI role permissions already done");
+                        rs1.close();
                         
-                        insert.close();
-                        roleInsert.close();
-                        System.out.println("Doctors and Nurses now have full CAISI privs");
                         System.out.println("Importing OSCAR patients into CAISI");
                         
                         sql = "select demographic_no, date_joined, provider_no from demographic";
                         rs = stmt.executeQuery(sql);
                         insert = con.prepareStatement("insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag) Values(?,'" + programId +"',?,?,'current',0,0)");
-                        
+                        pcheck = con.prepareStatement("select client_id from admission where client_id = ?");
                         int i = 1;
                         while( rs.next() ) {                            
-                            insert.setInt(1, rs.getInt("demographic_no"));
-                            insert.setString(2, rs.getString("provider_no"));
-                            insert.setDate(3, rs.getDate("date_joined"));
+                            pcheck.setInt(1,rs.getInt("demographic_no"));
+                            rs1 = pcheck.executeQuery();
+                            if( !rs1.next() ) {
+                                insert.setInt(1, rs.getInt("demographic_no"));
+                                insert.setString(2, rs.getString("provider_no"));
+                                insert.setDate(3, rs.getDate("date_joined"));
                             
-                            if( insert.executeUpdate() != 1 )
-                                    throw new SQLException("insert into admission failed " + rs.getString("demographic_no"));
+                                if( insert.executeUpdate() != 1 )
+                                       throw new SQLException("insert into admission failed " + rs.getString("demographic_no"));
                             
-                            ++i;
-                            if( i > 4 ) {
-                                System.out.println("OK");
-                                i = 1;
-                            }
+                                ++i;
+                                if( i > 4 ) {
+                                    System.out.println("OK");
+                                    i = 1;
+                                }
                                 
-                            System.out.print(rs.getString("demographic_no") + " ");
+                                System.out.print(rs.getString("demographic_no") + " ");
+                            }                           
                         }
                         rs.close();
                         insert.close();
-                        System.out.println("OK");
+                        System.out.println("OK -- Done");
                         System.out.println("Importing current eChart records. Be patient this may take a few minutes.");
                         
                         System.out.println("Grabbing cpp issues from issue table");
                         PreparedStatement pstmt = con.prepareStatement("select issue_id from issue where code =?");
-                        String[] iCodes = {"OMeds","SocHistory","MedHistory","Concerns","Reminders"};
+                        insert = con.prepareStatement("insert into issue (code, description, role, update_date) values(?,?,'nurse',now()",PreparedStatement.RETURN_GENERATED_KEYS);
+                        String[][] iCodes = {{"OMeds","Other Meds as part of cpp"},{"SocHistory","Social History as part of cpp"},{"MedHistory","Medical History as part of cpp"},{"Concerns","Ongoing Concerns as part of cpp"},{"Reminders","Reminders as part of cpp"}};
                         long[] issueIds = new long[iCodes.length];
                         for( int idx = 0; idx < iCodes.length; ++idx) {
-                            pstmt.setString(1,iCodes[idx]);
+                            pstmt.setString(1,iCodes[idx][0]);
                             rs = pstmt.executeQuery();                            
-                            rs.next();
-                            issueIds[idx] = rs.getLong(1);
-                            System.out.println(issueIds[idx] + " : " + iCodes[idx]);
+                            if( !rs.next() ) {
+                                System.out.println(iCodes[idx] + " not found. Inserting");
+                                insert.setString(1,iCodes[idx][0]);
+                                insert.setString(2,iCodes[idx][1]);
+                                insert.executeUpdate();
+                                rs1 = insert.getGeneratedKeys();
+                                issueIds[idx] = rs1.getLong(1);
+                                rs1.close();
+                            }
+                            else
+                                issueIds[idx] = rs.getLong(1);
+                            
+                            System.out.println(issueIds[idx] + " : " + iCodes[idx][0]);
                             rs.close();
                         }
                        
@@ -237,11 +284,18 @@ public class importCasemgmt {
                                 "false,'" + programId + "','1','0',?,'','0',?,?)");
                         PreparedStatement cppInsert = con.prepareStatement("insert into casemgmt_cpp (demographic_no,provider_no,socialHistory,familyHistory,medicalHistory,ongoingConcerns," +
                                 "reminders,update_date) Values(?,?,?,?,?,?,?,?)");
+                        pcheck = con.prepareStatement("select note_id from casemgmt_note where demographic_no = ? and signing_provider_no = 'doctor doe'");
                         UUID uuid;
                         String note;                        
                         ResultSet rs3,rs4;
                         long cIssueId;
                         while( rs.next() ) {
+                            pcheck.setString(1, rs.getString("demographicNo"));
+                            rs1 = pcheck.executeQuery();
+                            if( rs1.next() ) {
+                                System.out.println("EChart for " + rs.getString("demographicNo") + " already present -- skipping");
+                                continue;
+                            }
                             uuid = UUID.randomUUID();
                             
                             insert.setTimestamp(1, rs.getTimestamp("timeStamp"));
@@ -465,8 +519,18 @@ public class importCasemgmt {
                         System.out.println("Importing split charts");
                         
                         sql = "select * from eChart e where e.subject = 'SPLIT CHART'";
+                        pcheck = con.prepareStatement("select note_id from casemgmt_note where update_date = ? and demographic_no = ? and provider_no = ? and signing_provider_no = 'doctor doe'");
                         rs = stmt.executeQuery(sql);
                         while( rs.next() ) {
+                            pcheck.setTimestamp(1,rs.getTimestamp("timeStamp"));
+                            pcheck.setString(2, rs.getString("demographicNo"));
+                            pcheck.setString(3, rs.getString("providerNo"));
+                            rs1 = pcheck.executeQuery();
+                            if( rs1.next() ) {
+                                System.out.println(rs.getString("demographicNo") + " already present -- skipping split chart");
+                                continue;
+                            }
+
                             uuid = UUID.randomUUID();                                                        
                             
                             insert.setTimestamp(1, rs.getTimestamp("timeStamp"));
