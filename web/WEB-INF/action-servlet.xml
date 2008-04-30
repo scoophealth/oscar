@@ -69,12 +69,8 @@
     <bean name="/PMmodule/Reports/ClientListsReport" class="org.oscarehr.PMmodule.web.reports.ClientListsReportAction" singleton="false" autowire="byName" />
     <bean name="/PMmodule/Admin/DefaultRoleAccess" class="org.oscarehr.PMmodule.web.admin.DefaultRoleAccessAction" singleton="false"  autowire="byName" />
     <!-- Generic Intake -->
-    <bean name="/PMmodule/GenericIntake/Search" class="org.oscarehr.PMmodule.web.GenericIntakeSearchAction" singleton="false">
-        <property name="clientManager" ref="clientManager"/>
-        <property name="genericIntakeManager" ref="genericIntakeManager"/>
-        
+    <bean name="/PMmodule/GenericIntake/Search" class="org.oscarehr.PMmodule.web.GenericIntakeSearchAction" singleton="false" autowire="byName">
         <property name="surveyManager" ref="oscarSurveyManager"/>
-        <property name="lookupManager" ref="lookupManager"/>
     </bean>
     <bean name="/PMmodule/GenericIntake/Edit" class="org.oscarehr.PMmodule.web.GenericIntakeEditAction" singleton="false">
         <property name="admissionManager" ref="admissionManager"/>

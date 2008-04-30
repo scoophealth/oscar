@@ -121,7 +121,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
     private void pushDemographics(Facility facility) throws MalformedURLException {
         List<Integer> demographicIds = DemographicDAO.getDemographicIdsAdmittedIntoFacility(facility.getId());
-        DemographicInfoWs service = caisiIntegratorManager.getDemographicInfoWs(facility);
+        DemographicInfoWs service = caisiIntegratorManager.getDemographicInfoWs(facility.getId());
 
         for (Integer demographicId : demographicIds) {
             logger.debug("pushing demographicInfo facilityId:" + facility.getId() + ", demographicId:" + demographicId);
@@ -154,7 +154,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         CachedFacilityInfo cachedFacilityInfo = new CachedFacilityInfo();
         BeanUtils.copyProperties(facility, cachedFacilityInfo, new String[] { "id" });
 
-        FacilityInfoWs service = caisiIntegratorManager.getFacilityInfoWs(facility);
+        FacilityInfoWs service = caisiIntegratorManager.getFacilityInfoWs(facility.getId());
 
         logger.debug("pushing facilityInfo");
         service.setMyFacilityInfo(cachedFacilityInfo);

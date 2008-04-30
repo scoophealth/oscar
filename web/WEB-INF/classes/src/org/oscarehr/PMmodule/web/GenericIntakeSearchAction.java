@@ -22,20 +22,29 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.ws.WebServiceException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoParameters;
+import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoResult;
+import org.oscarehr.util.SessionConstants;
 
 import com.quatro.service.LookupManager;
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
@@ -45,40 +54,96 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     private static final String FORWARD_SEARCH_FORM = "searchForm";
     private static final String FORWARD_INTAKE_EDIT = "intakeEdit";
 
-    protected SurveyManager surveyManager;
-    protected LookupManager lookupManager;
+    private SurveyManager surveyManager;
+    private LookupManager lookupManager;
+    private CaisiIntegratorManager caisiIntegratorManager;
 
     public void setSurveyManager(SurveyManager mgr) {
         this.surveyManager = mgr;
     }
-	public void setLookupManager(LookupManager lookupManager) {
-		this.lookupManager = lookupManager;
-	}
 
+    public void setLookupManager(LookupManager lookupManager) {
+        this.lookupManager = lookupManager;
+    }
+
+    public void setCaisiIntegratorManager(CaisiIntegratorManager caisiIntegratorManager) {
+        this.caisiIntegratorManager = caisiIntegratorManager;
+    }
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
+        request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
         return mapping.findForward(FORWARD_SEARCH_FORM);
     }
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
-        
-        //UCF
-		request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
-		
-        boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
+
+        // UCF
+        request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
+
+        boolean allowOnlyOptins = UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
         List<Demographic> localMatches = localSearch(intakeSearchBean, allowOnlyOptins);
         intakeSearchBean.setLocalMatches(localMatches);
 
         intakeSearchBean.setSearchPerformed(true);
-		request.setAttribute("genders",lookupManager.LoadCodeList("GEN", true, null, null));
+        request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
+
+        int currentFacilityId=(Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        
+        if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId))
+        {
+            try {
+                DemographicInfoWs demographicInfoWs=caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
+                
+                MatchingDemographicInfoParameters parameters=new MatchingDemographicInfoParameters();
+                parameters.setMaxEntriesToReturn(10);
+                parameters.setMinScore(20);
+                
+                String temp=StringUtils.trimToNull(intakeSearchBean.getFirstName());
+                parameters.setFirstName(temp);
+                
+                temp=StringUtils.trimToNull(intakeSearchBean.getLastName());
+                parameters.setLastName(temp);
+                
+                temp=StringUtils.trimToNull(intakeSearchBean.getHealthCardNumber());
+                parameters.setHin(temp);
+                
+                XMLGregorianCalendar cal=new XMLGregorianCalendarImpl();
+                {
+                    temp=StringUtils.trimToNull(intakeSearchBean.getYearOfBirth());
+                    if (temp!=null) cal.setYear(Integer.parseInt(temp));
+    
+                    temp=StringUtils.trimToNull(intakeSearchBean.getMonthOfBirth());
+                    if (temp!=null) cal.setMonth(Integer.parseInt(temp));
+    
+                    temp=StringUtils.trimToNull(intakeSearchBean.getDayOfBirth());
+                    if (temp!=null) cal.setDay(Integer.parseInt(temp));
+    
+                    cal.setTime(0,0,0);
+                }
+                parameters.setBirthDate(cal);
+                
+                List<MatchingDemographicInfoResult> integratedMatches=demographicInfoWs.getMatchingDemographicInfos(parameters);
+                if (LOG.isDebugEnabled())
+                {
+                    for (MatchingDemographicInfoResult r : integratedMatches) LOG.debug("*** do itegrated search results : "+r.getCachedDemographicInfo()+" : "+r.getScore());
+                }
+            }
+            catch (WebServiceException e) {
+                LOG.warn("Error connecting to integrator. "+e.getMessage());
+                LOG.debug("Error connecting to integrator.", e);
+            }
+            catch (Exception e) {
+                LOG.error("Unexpected error.", e);
+            }
+        }
         
         // if matches found display results, otherwise create local intake
         if (!localMatches.isEmpty()) {
             return mapping.findForward(FORWARD_SEARCH_FORM);
-        } else {
+        }
+        else {
             return createLocal(mapping, form, request, response);
         }
     }
@@ -107,7 +172,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     }
 
     private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean, boolean populateDefaultBirthDate) {
-        return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(), intakeSearchBean.getHealthCardNumber(), intakeSearchBean.getHealthCardVersion(), populateDefaultBirthDate);
+        return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(), intakeSearchBean.getHealthCardNumber(),
+                intakeSearchBean.getHealthCardVersion(), populateDefaultBirthDate);
     }
 
     protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {

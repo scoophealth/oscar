@@ -23,7 +23,7 @@
 		for (CachedFacilityInfo x : facilities)
 		{
 			%>
-				<tr style="border:solid black 2px;background:white;color:silver">
+				<tr style="border:solid black 2px;background:white;color:gray">
 					<td style="border:solid black 1px"><%=x.getName()%></td>
 					<td style="border:solid black 1px"><%=x.getDescription()%></td>
 					<td style="border:solid black 1px"><%=x.getContactName()%></td>

@@ -60,7 +60,7 @@ public class CaisiIntegratorManager {
         else return(false);
     }
 
-    public Facility getFacility(int facilityId)
+    private Facility getFacility(int facilityId)
     {
         return(facilityDAO.getFacility(facilityId));
     }
@@ -76,7 +76,9 @@ public class CaisiIntegratorManager {
         return(new URL(facility.getIntegratorUrl()+'/'+servicePoint+"?wsdl"));
     }
     
-    public FacilityInfoWs getFacilityInfoWs(Facility facility) throws MalformedURLException {
+    public FacilityInfoWs getFacilityInfoWs(int facilityId) throws MalformedURLException {
+        Facility facility=getFacility(facilityId);
+        
         FacilityInfoWsService service = new FacilityInfoWsService(buildURL(facility, "FacilityInfoService"));
         FacilityInfoWs port = service.getFacilityInfoWsPort();
 
@@ -85,7 +87,9 @@ public class CaisiIntegratorManager {
         return(port);
     }
 
-    public DemographicInfoWs getDemographicInfoWs(Facility facility) throws MalformedURLException {
+    public DemographicInfoWs getDemographicInfoWs(int facilityId) throws MalformedURLException {
+        Facility facility=getFacility(facilityId);
+        
         DemographicInfoWsService service = new DemographicInfoWsService(buildURL(facility, "DemographicInfoService"));
         DemographicInfoWs port = service.getDemographicInfoWsPort();
 
