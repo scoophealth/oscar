@@ -81,6 +81,23 @@
     </display-el:table>
 
 </c:if>
+
+<c:if test="${not empty requestScope.remoteMatches}">
+    <p>The following possible matches were found in the integrated community.</p>
+    <display-el:table class="simple" name="requestScope.remoteMatches" id="x">
+        <display-el:setProperty name="paging.banner.placement" value="bottom" />
+
+        <display-el:column property="cachedDemographicInfo.facilityId" title="FacilityId" />
+        <display-el:column title="name" >
+        	<c:out value="${x.cachedDemographicInfo.lastName}" />, <c:out value="${x.cachedDemographicInfo.firstName}" />
+        </display-el:column>
+        <display-el:column property="cachedDemographicInfo.birthDate" title="BirthDate" />
+        <display-el:column property="cachedDemographicInfo.gender" title="Gender" />
+        <display-el:column property="cachedDemographicInfo.hin" title="Health Number" />
+        <display-el:column property="score" title="Matching Score" />
+    </display-el:table>
+</c:if>
+
 <c:if test="${requestScope.genericIntakeSearchForm.searchPerformed}">
     <br />
     <p><html:submit onclick="createLocal()">New Client</html:submit></p>

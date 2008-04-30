@@ -129,6 +129,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
                 {
                     for (MatchingDemographicInfoResult r : integratedMatches) LOG.debug("*** do itegrated search results : "+r.getCachedDemographicInfo()+" : "+r.getScore());
                 }
+                
+                request.setAttribute("remoteMatches", integratedMatches);
             }
             catch (WebServiceException e) {
                 LOG.warn("Error connecting to integrator. "+e.getMessage());
