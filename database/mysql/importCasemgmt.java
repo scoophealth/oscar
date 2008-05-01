@@ -182,7 +182,7 @@ public class importCasemgmt {
                             String id;                        
                             insert = con.prepareStatement("insert into program_access (program_id,access_type_id,all_roles) Values(" + programId + ",?,false)", PreparedStatement.RETURN_GENERATED_KEYS);
                             PreparedStatement roleInsert = con.prepareStatement("insert into program_access_roles (id,role_id) Values(?,1),(?,2)");
-                            for( int idx = 1; idx < 7; ++idx ) {
+                            for( int idx = 1; idx < 9; ++idx ) {
 
                                 insert.setString(1, String.valueOf(idx));
 
