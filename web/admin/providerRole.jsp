@@ -195,7 +195,8 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
             }
         }
         
-        //delete privelege from caisi casemanagement if needed
+        //delete privilege from caisi casemanagement if needed
+        //set privilege to highest still assigned
         public void delCaisiPriv(DBHelp dbObj, String roleName, String name, String provNo, String curUser_no) throws java.sql.SQLException {
             if( (name.equals("doctor") || name.equals("nurse") || name.equals("locum")) && name.equals(roleName) ) {
                 String sql = "SELECT role_name FROM secUserRole WHERE provider_no = '" + provNo + "' AND (role_name = 'doctor' OR role_name = 'nurse' OR role_name = 'locum')";
@@ -204,6 +205,31 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
                     sql = "DELETE FROM program_provider WHERE provider_no = '" + provNo + "'";
                     dbObj.updateDBRecord(sql,curUser_no);
                 }
+                else {
+                    sql = "SELECT cr.name AS name from caisi_role cr, program_provider pp WHERE pp.provider_no = '" + provNo + "' AND cr.role_id = pp.role_id";
+                    ResultSet rs1 = dbObj.searchDBRecord(sql);
+                    rs1.next();
+                    String caisiRole = rs1.getString("name");                    
+                    String curRole;
+                    String highRole = null;
+                    do {
+                        curRole = rs.getString("role_name");
+                        if( curRole.equals("doctor") || curRole.equals("locum") ) {
+                            highRole = curRole;
+                            break;
+                        }
+                        else if( curRole.equals("nurse") )
+                            highRole = curRole;
+                        
+                    }while( rs.next());
+                    
+                    if( !caisiRole.equals(highRole) ) {
+                        sql = "UPDATE program_provider SET role_id = " + roles.get(highRole) + " WHERE provider_no = '" + provNo + "'";
+                        dbObj.updateDBRecord(sql, curUser_no);
+                    }
+                    rs1.close();
+                }
+                rs.close();
             }
         }
 %>
