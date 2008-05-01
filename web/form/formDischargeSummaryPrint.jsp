@@ -343,12 +343,18 @@ var maxYear=9900;
 
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
- <tr bgcolor="#486ebd">
-      <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Sherbourne Health Centre</font></th>
+ <tr>
+      <td align="center" ><b>Sherbourne Health Centre</b></td>
  </tr>
+ <tr>
+ 	<td align="center" ><b>(ph) 416-324-4163</b></td>
+ </tr>
+ <tr>
+ 	<td align="center" ><b>(fax)416-324-4181</b></td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
 <tr>
-<td align="center" ><b><font face="Verdana, Arial, Helvetica, sans-serif">MULTI-DISCIPLINARY TEAM DISCHARGE SUMMARY
-</font></b></td>
+<td align="center" ><b>MULTI-DISCIPLINARY TEAM DISCHARGE SUMMARY</b></td>
 </tr>
 <tr><td>&nbsp;</td></tr>
 </table>
@@ -369,14 +375,9 @@ var maxYear=9900;
      <td><%= props.getProperty("admitDate", "") %></td>
      <th align="right">Discharge Date(yyyy/mm/dd): </th>
      <td><%= props.getProperty("dischargeDate", "") %></td>
-	 <th align="right">Program Name: </th>
-	 <td><%= props.getProperty("programName", "") %></td>
-	 </tr>
-	 
-	 <tr width="100%">
 	 <th align="right">Allergies: </th>
-     <td colspan="5"><%= props.getProperty("allergies", "") %></td>
-    </tr>
+	 <td><%= props.getProperty("allergies", "") %></td>
+	 
    	<tr><td>&nbsp;</td></tr>  
 </table>
 
@@ -396,26 +397,12 @@ var maxYear=9900;
 
 <table width="100%" border="0"  cellspacing="0" cellpadding="0" >
 <tr>
-	<th align="left">Follow-up Appointment(s):  To be arranged by Patient:</th>	
-	<td align="left">
-		<%if(props.getProperty("followUpAppointment","").equals("1")){%>
-		<input type="radio" name="followUpAppointment" value="1" checked />
-		<%}else { %>
-		<input type="radio" name="followUpAppointment" value="1" />
-		<%} %>Yes
-	</td>
-	<td align="left">
-		<%if(props.getProperty("followUpAppointment","").equals("0")){%>
-		<input type="radio" name="followUpAppointment" value="0" checked />
-		<%}else { %>
-		<input type="radio" name="followUpAppointment" value="0"/>
-		<%} %>No
-	</td>
+	<th align="left">Follow-up Appointment(s): </th>	
 </tr>
 </table>
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" > 
 <tr>
-	<th>Dr. </th>
+	<th>Agency/Health Care Provider </th>
 	<th>Phone No: </th>
 	<th>Date/Time: </th>
 	<th>Location: </th>
@@ -438,7 +425,12 @@ var maxYear=9900;
     <td><%= props.getProperty("date3", "") %>&nbsp;</td>	
     <td><%= props.getProperty("location3", "") %>&nbsp;</td>
 </tr>
-
+<tr>
+	<td><%= props.getProperty("doctor4", "") %>&nbsp;</td>	
+    <td><%= props.getProperty("phoneNumber4", "") %>&nbsp;</td>	
+    <td><%= props.getProperty("date4", "") %>&nbsp;</td>	
+    <td><%= props.getProperty("location4", "") %>&nbsp;</td>
+</tr>
 </table>
 <br>
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
@@ -446,7 +438,7 @@ var maxYear=9900;
 	<td>
 		<table width="100%" border="0"  cellspacing="0" cellpadding="0">
 			<tr><th>Current Medications:</th></tr>
-			<tr><td><%= props.getProperty("prescriptionSummary", "") %>&nbsp;</td></tr>
+			<tr><td>Please see Attached Summary </td></tr>
 		</table>
 	<td>
 		<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
@@ -468,50 +460,8 @@ var maxYear=9900;
 			</td>			
 			
 		</tr>
-		<tr>
-			<th align="left">Covered by Ontario Drug Benefit:</th>
-			<td align="left">
-				<%if(props.getProperty("coveredByODB","").equals("1")){%>
-				<input type="radio" name="coveredByODB" value="1" checked />
-				<%}else { %>
-				<input type="radio" name="coveredByODB" value="1" />
-				<%} %>Yes
-			</td>
-			<td align="left">
-				<%if(props.getProperty("coveredByODB","").equals("0")){%>
-				<input type="radio" name="coveredByODB" value="0" checked />
-				<%}else { %>
-				<input type="radio" name="coveredByODB" value="0"/>
-				<%} %>No
-			</td>	
-			
-						
-		</tr>
-		<tr>
-			<th align="left">ODB Form Required:</th>
-			<td align="left">
-				<%if(props.getProperty("ODBFormReqired","").equals("1")){%>
-				<input type="radio" name="ODBFormReqired" value="1" checked />
-				<%}else { %>
-				<input type="radio" name="ODBFormReqired" value="1" />
-				<%} %>Yes
-			</td>
-			<td align="left">
-				<%if(props.getProperty("ODBFormReqired","").equals("0")){%>
-				<input type="radio" name="ODBFormReqired" value="0" checked />
-				<%}else { %>
-				<input type="radio" name="ODBFormReqired" value="0"/>
-				<%} %>No
-			</td>	
-			<td align="left">
-				<%if(props.getProperty("ODBFormReqired","").equals("2")){%>
-				<input type="radio" name="ODBFormReqired" value="2" checked />
-				<%}else { %>
-				<input type="radio" name="ODBFormReqired" value="2"/>
-				<%} %>Completed
-			</td>					
-		</tr>
-	
+		
+		
 		<tr>
 			<th align="left">Changes in Medications (include explanation):</th>
 			<td colspan="3"><%= props.getProperty("changeMedications", "") %><td>					
@@ -521,7 +471,9 @@ var maxYear=9900;
 </tr>
 </table>
 <br>
-Referrals:
+<table>
+<tr><th align="left">Referrals:</th></tr>
+</table>
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
 
 <tr>
@@ -557,13 +509,26 @@ Referrals:
 </table>
 <br>
 <table>
-<tr>	
-     <th align="left">Infirmary Health Care Provider:</td> 
+<tr>
+    <th align="left"> Infirmary Health Care Provider:</th>     
      <td><%= props.getProperty("providerName", "") %>&nbsp;</td>
-	<th>Provider's Signature:</th>
+  </tr>
+  <tr>
+	<th align="left">Provider's Signature:</th>
 	<td><%= props.getProperty("signature", "") %>&nbsp;</td>
-	<th>Date(yyyy/mm/dd):</th>
+  </tr>
+  <tr>
+	<th align="left">Date(yyyy/mm/dd):</th>
 	<td><%= props.getProperty("signatureDate", "") %>&nbsp;</td>
+</tr>
+</table>
+<br>
+<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
+<tr>
+	<th align="left">Notes:</th>
+</tr>
+<tr>
+	<td><%=props.getProperty("notes","") %>&nbsp;</td>
 </tr>
 </table>
 
