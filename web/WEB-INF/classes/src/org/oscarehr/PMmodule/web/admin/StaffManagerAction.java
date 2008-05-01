@@ -152,7 +152,9 @@ public class StaffManagerAction extends BaseAction {
 		request.setAttribute("providers",providerManager.getActiveProviders());
 		
         request.setAttribute("facilities",facilityDAO.getActiveFacilities());
-//        request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", 0));
+        
+        //show programs which can be assigned to the provider
+        request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", 0));
 
 		logManager.log("read","full provider list","",request);
 		return mapping.findForward("list");
