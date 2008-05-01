@@ -165,6 +165,9 @@
 	<bean name="/Lookup/LookupCodeEdit" class="com.quatro.web.lookup.LookupCodeEditAction" singleton="false">
         <property name="lookupManager" ref="lookupManager"/>
 	</bean>
+	<bean name="/Lookup/LookupCodeList" class="com.quatro.web.lookup.LookupCodeListAction" singleton="false">
+        <property name="lookupManager" ref="lookupManager"/>
+	</bean>
 
     <!-- Provider Property -->
     <bean name="/setProviderStaleDate" class="org.oscarehr.provider.web.ProviderPropertyAction" singleton="false">
