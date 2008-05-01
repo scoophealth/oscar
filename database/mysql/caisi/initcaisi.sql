@@ -2085,6 +2085,10 @@ CREATE TABLE `formDischargeSummary` (
   `phoneNumber3` varchar(30) default NULL,
   `date3` varchar(20) default NULL,
   `location3` varchar(100) default NULL,
+  `doctor4` varchar(30) default NULL,
+  `phoneNumber4` varchar(30) default NULL,
+  `date4` varchar(20) default NULL,
+  `location4` varchar(100) default NULL,
   `prescriptionSummary` text default NULL,
   `prescriptionProvided` char(1) default NULL,  
   `coveredByODB` char(1) default NULL,  
@@ -2109,6 +2113,7 @@ CREATE TABLE `formDischargeSummary` (
   `providerName` varchar(60) default NULL,
   `signature` varchar(60) default NULL,
   `signatureDate` varchar(20) default NULL,
+  `notes` varchar(255) default NULL,
   PRIMARY KEY  (`id`)  
 );
 
