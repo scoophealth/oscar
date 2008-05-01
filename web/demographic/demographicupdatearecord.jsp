@@ -145,9 +145,10 @@ if( users != null && users.size() > 0 )
       //propagate demographic to caisi admission table
       if( newCaseManagement ) {
         oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
-        String[] caisiParam = new String[2];
+        String[] caisiParam = new String[3];
         caisiParam[0] = request.getParameter("provider_no");
-        caisiParam[1] = request.getParameter("demographic_no");
+        caisiParam[1] = program.getProgram(request.getParameter("provider_no"));
+        caisiParam[2] = request.getParameter("demographic_no");
         apptMainBean.queryExecuteUpdate(caisiParam, "update_admission");
       }
     //find the democust record for update
