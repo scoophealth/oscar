@@ -34,7 +34,7 @@
 		<property name="validationQuery" value="${db_validationQuery}" />
 		
 		<property name="maxOpenPreparedStatements" value="320" />
-		<property name="poolPreparedStatements" value="true" />
+		<property name="poolPreparedStatements" value="false" />
 	</bean>
 
 	<!-- JPA -->
