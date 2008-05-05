@@ -13,5 +13,5 @@ insert into issue (`code`,`description`,`role`,`update_date`) Values('Reminders'
 
 insert into ctl_billingservice_age_rules (minAge, maxAge, service_code ) values (70,79,'14047');
 insert into ctl_billingservice_age_rules (minAge, maxAge, service_code ) values (80,130,'14048');
-insert into ctl_billingservice_age_rules (minAge, maxAge, service_code ) values (50,59,'14045');
+insert into ctl_billingservice_age_rules (minAge, maxAge, service_code ) values (2,59,'14045');
 insert into ctl_billingservice_age_rules (minAge, maxAge, service_code ) values (60,69,'14046');
