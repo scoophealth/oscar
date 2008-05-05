@@ -29,7 +29,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<%@page import="java.util.ArrayList, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.util.StringUtils, oscar.oscarLab.ca.on.*"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@page import="java.util.ArrayList, java.util.Collections, java.util.List, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.util.StringUtils, oscar.oscarLab.ca.on.*"%>
+<%@page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.casemgmt.model.CaseManagementNote, org.oscarehr.casemgmt.model.Issue, org.springframework.web.context.support.*,org.springframework.web.context.*"%>
+
 <%
     if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
@@ -53,9 +56,19 @@ consultUtil = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctCon
 if( requestId != null ) consultUtil.estRequestFromId(requestId);
 if( demo == null ) demo = consultUtil.demoNo;
 
+ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+boolean useNewCmgmt = false;    
+WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+CaseManagementManager cmgmtMgr = null;
+if( users != null && users.size() > 0 && (users.get(0).equalsIgnoreCase("all") || Collections.binarySearch(users, providerNo)>=0)) {
+        useNewCmgmt = true;
+        cmgmtMgr = (CaseManagementManager)ctx.getBean("caseManagementManager");
+}
+
+    
 if (demo != null ){
     demoData = new oscar.oscarDemographic.data.DemographicData();
-    demographic = demoData.getDemographic(demo);
+    demographic = demoData.getDemographic(demo);    
 }
 else if(requestId==null){
     response.sendRedirect("../error.jsp");
@@ -477,8 +490,7 @@ function checkForm(submissionVal,formName){
 //enable import from encounter
 function importFromEnct(reqInfo,txtArea) 
 {    
-    var info = "";
-                    
+    var info = "";    
     switch( reqInfo )
     {
         case "MedicalHistory":
@@ -486,7 +498,12 @@ function importFromEnct(reqInfo,txtArea)
                 String value = "";                                
                 if( demo != null )
                 {                 
-                    value = demographic.EctInfo.getMedicalHistory();
+                     if( useNewCmgmt ) {
+                        value = listNotes(cmgmtMgr, "MedHistory", providerNo, demo);
+                    }
+                    else {
+                        value = demographic.EctInfo.getMedicalHistory();
+                    }
                     value = StringUtils.lineBreaks(value);
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
@@ -497,7 +514,12 @@ function importFromEnct(reqInfo,txtArea)
              <%
                  if( demo != null )
                  {
-                    value = demographic.EctInfo.getOngoingConcerns();
+                     if( useNewCmgmt ) {
+                        value = listNotes(cmgmtMgr, "Concerns", providerNo, demo);
+                    }
+                    else {
+                        value = demographic.EctInfo.getOngoingConcerns();
+                    }
                     value = StringUtils.lineBreaks(value);
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
@@ -508,7 +530,12 @@ function importFromEnct(reqInfo,txtArea)
               <%
                  if( demo != null )
                  {
-                    value = demographic.EctInfo.getFamilyHistory();
+                     if( useNewCmgmt ) {
+                        value = listNotes(cmgmtMgr, "SocHistory", providerNo, demo);
+                    }
+                    else {
+                        value = demographic.EctInfo.getSocialHistory();
+                    }
                     value = StringUtils.lineBreaks(value);
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
@@ -518,24 +545,37 @@ function importFromEnct(reqInfo,txtArea)
             case "OtherMeds":                
               <%
                  if( demo != null )
-                 {	//there is no OtherMeds in db.
-                    //value = demographic.EctInfo.getFamilyHistory();
-                    //value = StringUtils.lineBreaks(value);
-                    //value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    //out.println("info = '" + value + "'");
-                 }
+                 {
+                    if( useNewCmgmt ) {
+                        value = listNotes(cmgmtMgr, "OMeds", providerNo, demo);
+                    }
+                    else {
+                    //family history was used as bucket for Other Meds in old encounter
+                        value = demographic.EctInfo.getFamilyHistory();
+                    }
+                    
+                    value = StringUtils.lineBreaks(value);
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+                    out.println("info = '" + value + "'");
+                    
+                }
               %>                
                 break;
             case "Reminders":                
               <%
                  if( demo != null )
                  {
-                    value = demographic.EctInfo.getReminders();
-                    if( !value.equals("") ) {
+                     if( useNewCmgmt ) {
+                        value = listNotes(cmgmtMgr, "Reminders", providerNo, demo);
+                    }
+                    else {
+                        value = demographic.EctInfo.getReminders();
+                    }
+                    //if( !value.equals("") ) {
                         value = StringUtils.lineBreaks(value);
                         value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                         out.println("info = '" + value + "'");
-                    }
+                    //}
                  }
               %>                
     } //end switch
@@ -1215,3 +1255,25 @@ function fetchAttached() {
 </script>
 </html:html>
 
+<%!
+    protected String listNotes(CaseManagementManager cmgmtMgr, String code, String providerNo, String demoNo) {
+         // filter the notes by the checked issues       
+        List<Issue> issues = cmgmtMgr.getIssueInfoByCode(providerNo, code);
+                
+        String[] issueIds = new String[issues.size()];
+        int idx = 0;
+        for(Issue issue: issues) {
+            issueIds[idx] = String.valueOf(issue.getId());
+        }    
+        
+        // need to apply issue filter        
+        List<CaseManagementNote>notes = cmgmtMgr.getNotes(demoNo, issueIds);
+        StringBuffer noteStr = new StringBuffer();
+        for(CaseManagementNote n: notes) {
+            if( !n.isLocked() )
+                noteStr.append(n.getNote() + "\n");
+        }
+        
+        return noteStr.toString();
+    }
+%>
