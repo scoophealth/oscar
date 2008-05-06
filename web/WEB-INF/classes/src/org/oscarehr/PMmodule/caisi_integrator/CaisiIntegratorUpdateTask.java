@@ -24,6 +24,7 @@ package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
@@ -38,9 +39,14 @@ import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssueTransfer;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
+import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
+import org.oscarehr.casemgmt.dao.IssueDAO;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
+import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.beans.BeanUtils;
 
@@ -53,6 +59,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
     private CaisiIntegratorManager caisiIntegratorManager;
     private FacilityDAO facilityDAO;
     private DemographicDAO demographicDAO;
+    private CaseManagementIssueDAO caseManagementIssueDAO;
 
     public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
         this.caisiIntegratorManager = mgr;
@@ -64,6 +71,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
     public void setDemographicDAO(DemographicDAO demographicDAO) {
         this.demographicDAO = demographicDAO;
+    }
+
+    public void setCaseManagementIssueDAO(CaseManagementIssueDAO caseManagementIssueDAO) {
+        this.caseManagementIssueDAO = caseManagementIssueDAO;
     }
 
     public void run() {
@@ -79,7 +90,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
             }
         }
         catch (WebServiceException e) {
-            logger.warn("Error connecting to integrator. "+e.getMessage());
+            logger.warn("Error connecting to integrator. " + e.getMessage());
             logger.debug("Error connecting to integrator.", e);
         }
         catch (Exception e) {
@@ -110,7 +121,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
         // do all the sync work
         pushFacilityInfo(facility);
-        pushDemographics(facility);
+        DemographicInfoWs service = caisiIntegratorManager.getDemographicInfoWs(facility.getId());
+        List<Integer> demographicIds = DemographicDAO.getDemographicIdsAdmittedIntoFacility(facility.getId());
+        pushDemographics(facility, service, demographicIds);
+        pushIssues(facility, service, demographicIds);
 
         // update late push time only if an exception didn't occur
         // re-get the facility as the sync time could be very long and changes may have been made to the facility.
@@ -119,10 +133,38 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         facilityDAO.saveFacility(facility);
     }
 
-    private void pushDemographics(Facility facility) throws MalformedURLException {
-        List<Integer> demographicIds = DemographicDAO.getDemographicIdsAdmittedIntoFacility(facility.getId());
-        DemographicInfoWs service = caisiIntegratorManager.getDemographicInfoWs(facility.getId());
+    private void pushIssues(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) {
+        for (Integer demographicId : demographicIds) {
+            pushDemographicIssues(facility, service, demographicId);
+        }
+    }
 
+    private void pushDemographicIssues(Facility facility, DemographicInfoWs service, Integer demographicId) {
+        logger.debug("pushing demographicIssue facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+        List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
+        if (caseManagementIssues.size() == 0) return;
+
+        ArrayList<CachedDemographicIssueTransfer> issueTransfers = new ArrayList<CachedDemographicIssueTransfer>();
+        for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
+            Issue issue=caseManagementIssue.getIssue();
+            CachedDemographicIssueTransfer issueTransfer=new CachedDemographicIssueTransfer();
+
+            issueTransfer.setAcute(caseManagementIssue.isAcute());
+            issueTransfer.setCertain(caseManagementIssue.isCertain());
+            issueTransfer.setFacilityDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
+            issueTransfer.setIssueCode(issue.getCode());
+            issueTransfer.setIssueDescription(issue.getDescription());
+            issueTransfer.setMajor(caseManagementIssue.isMajor());
+            issueTransfer.setResolved(caseManagementIssue.isResolved());
+            
+            issueTransfers.add(issueTransfer);
+        }
+
+        service.setCachedDemographicIssues(issueTransfers);
+    }
+
+    private void pushDemographics(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) throws MalformedURLException {
         for (Integer demographicId : demographicIds) {
             logger.debug("pushing demographicInfo facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
