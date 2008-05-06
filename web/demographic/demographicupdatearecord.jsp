@@ -145,9 +145,17 @@ if( users != null && users.size() > 0 )
       //propagate demographic to caisi admission table
       if( newCaseManagement ) {
         oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
+        String progId = program.getProgram(request.getParameter("provider_no"));
+        if( progId.equals("0") ) {                
+            ResultSet rsProg = apptMainBean.queryResults("OSCAR", "search_program");
+            if( rsProg.next() )
+                progId = rsProg.getString("program_id");
+
+            rsProg.close();
+        }
         String[] caisiParam = new String[3];
         caisiParam[0] = request.getParameter("provider_no");
-        caisiParam[1] = program.getProgram(request.getParameter("provider_no"));
+        caisiParam[1] = progId;
         caisiParam[2] = request.getParameter("demographic_no");
         apptMainBean.queryExecuteUpdate(caisiParam, "update_admission");
       }

@@ -220,10 +220,20 @@
         
         //propagate demographic to caisi admission table
         if( newCaseManagement ) {
+            //fetch programId associated with provider
+            //if none(0) then check for OSCAR program; if available set it as default
             oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
+            String progId = program.getProgram(request.getParameter("staff"));
+            if( progId.equals("0") ) {                
+                ResultSet rsProg = apptMainBean.queryResults("OSCAR", "search_program");
+                if( rsProg.next() )
+                    progId = rsProg.getString("program_id");
+                    
+                rsProg.close();
+            }
             String[] caisiParam = new String[4];
             caisiParam[0] = apptMainBean.getString(rs,"demographic_no");
-            caisiParam[1] = program.getProgram(request.getParameter("staff"));
+            caisiParam[1] = progId;
             caisiParam[2] = request.getParameter("staff");
             caisiParam[3] = request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date");
             apptMainBean.queryExecuteUpdate(caisiParam, "add2caisi_admission");
