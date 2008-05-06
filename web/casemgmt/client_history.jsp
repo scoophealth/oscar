@@ -31,19 +31,23 @@
 <%if(!OscarProperties.getInstance().isTorontoRFQ())  { %>
 <tr>
 	<td bgcolor="white">Primary Health Care Provider</td>
-	<td bgcolor="white"><html:text property="cpp.primaryPhysician"/>
+	<td bgcolor="white"><html:text property="cpp.primaryPhysician"/></td>
 </tr>
 <%} %>
 <tr>
 	<td bgcolor="white" >Primary Counsellor/Caseworker</td>
-	<td bgcolor="white"><html:text property="cpp.primaryCounsellor"/>
+	<td bgcolor="white"><html:text property="cpp.primaryCounsellor"/></td>
 </tr>
 <tr>
 	<td bgcolor="white" >Other File Number</td>
-	<td bgcolor="white"><html:text property="cpp.otherFileNumber"/>
+	<td bgcolor="white"><html:text property="cpp.otherFileNumber"/></td>
 </tr>
 <tr height="10">
 	<td  bgcolor="white" colspan="2">&nbsp;</td>
+</tr>
+<tr>
+	<td bgcolor="white" >Updated Last</td>
+	<td bgcolor="white"><html:text property="cpp.update_date" size="19" maxlength="19" readonly="true"/></td>
 </tr>
 
 <tr class="title">
