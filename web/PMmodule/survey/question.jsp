@@ -115,7 +115,7 @@
 				
 				&nbsp;(<c:out value="${question.type.date}"/>)</td>
 			<td>
-				<html-el:text property="data.value(${pageNumber}_${sectionId}_${question.id})" styleId="f_date_c"/>	
+				<html-el:text property="data.value(${pageNumber}_${sectionId}_${question.id})" styleId="${pageNumber}_${sectionId}_${question.id}"/>	
 				&nbsp;
 				<img src="<c:out value="${ctx}"/>/images/calendar.jpg" id="<c:out value="${pageNumber}"/>_<c:out value="${sectionId}"/>_<c:out value="${question.id}"/>_trigger" style="cursor: pointer;" title="Date selector"/>
 				<%
@@ -125,7 +125,7 @@
 				%>
 				<script type="text/javascript">
 				    Calendar.setup({
-				        inputField     :    "f_date_c",     // id of the input field
+				        inputField     :    "<c:out value="${pageNumber}"/>_<c:out value="${sectionId}"/>_<c:out value="${question.id}"/>",     // id of the input field
 				        ifFormat       :    "<%=calFormat%>",      // format of the input field
 				        button         :    "<c:out value="${pageNumber}"/>_<c:out value="${sectionId}"/>_<c:out value="${question.id}"/>_trigger",  // trigger for the calendar (button ID)
 				        align          :    "Tl",           // alignment (defaults to "Bl")
