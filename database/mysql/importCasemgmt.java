@@ -284,13 +284,17 @@ public class importCasemgmt {
                                 "false,'" + programId + "','1','0',?,'','0',?,?)");
                         PreparedStatement cppInsert = con.prepareStatement("insert into casemgmt_cpp (demographic_no,provider_no,socialHistory,familyHistory,medicalHistory,ongoingConcerns," +
                                 "reminders,update_date) Values(?,?,?,?,?,?,?,?)");
-                        pcheck = con.prepareStatement("select note_id from casemgmt_note where demographic_no = ? and signing_provider_no = 'doctor doe'");
+                        pcheck = con.prepareStatement("select note_id from casemgmt_note where demographic_no = ? and (signing_provider_no = 'doctor doe' or (note = ? and update_date = ?))");
                         UUID uuid;
                         String note;                        
                         ResultSet rs3,rs4;
                         long cIssueId;
+                        Date d;
                         while( rs.next() ) {
                             pcheck.setString(1, rs.getString("demographicNo"));
+                            pcheck.setString(2, rs.getString("encounter"));
+                            d = new Date(rs.getTimestamp("timeStamp").getTime());
+                            pcheck.setDate(3, d);
                             rs1 = pcheck.executeQuery();
                             if( rs1.next() ) {
                                 System.out.println("EChart for " + rs.getString("demographicNo") + " already present -- skipping");
@@ -522,7 +526,8 @@ public class importCasemgmt {
                         pcheck = con.prepareStatement("select note_id from casemgmt_note where update_date = ? and demographic_no = ? and provider_no = ? and signing_provider_no = 'doctor doe'");
                         rs = stmt.executeQuery(sql);
                         while( rs.next() ) {
-                            pcheck.setTimestamp(1,rs.getTimestamp("timeStamp"));
+                            d = new Date(rs.getTimestamp("timeStamp").getTime());
+                            pcheck.setDate(1,d);
                             pcheck.setString(2, rs.getString("demographicNo"));
                             pcheck.setString(3, rs.getString("providerNo"));
                             rs1 = pcheck.executeQuery();
