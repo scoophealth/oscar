@@ -25,11 +25,13 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Hashtable;
 import java.util.Properties;
 
 import oscar.SxmlMisc;
 import oscar.login.DBHelp;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarDemographic.data.DemographicExt;
 import oscar.util.UtilDateUtilities;
 
 public class FrmBCAR2007Record extends FrmRecord {
@@ -62,7 +64,7 @@ public class FrmBCAR2007Record extends FrmRecord {
                 props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
                 props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
                 props.setProperty("c_phone", rs.getString("phone"));
-                props.setProperty("c_phoneAlt", rs.getString("phone2"));
+                props.setProperty("c_phoneAlt1", rs.getString("phone2"));
                 props.setProperty("pg1_formDate", UtilDateUtilities
                         .DateToString(UtilDateUtilities.Today(), _dateFormat));
                 props.setProperty("pg2_formDate", UtilDateUtilities
@@ -72,6 +74,14 @@ public class FrmBCAR2007Record extends FrmRecord {
                 String rd = SxmlMisc.getXmlContent(rs.getString("family_doctor"), "rd");
                 rd = rd != null ? rd : "";
                 props.setProperty("pg1_famPhy", rd);
+                
+                DemographicExt ext = new DemographicExt();
+                Hashtable demoExt = ext.getAllValuesForDemo(""+demographicNo);
+                String cell = (String) demoExt.get("demo_cell");
+                if ( cell != null ){
+                    props.setProperty("c_phoneAlt2",cell );
+                }
+                
             }
             rs.close();
             db.CloseConn();
@@ -93,7 +103,13 @@ public class FrmBCAR2007Record extends FrmRecord {
                 props.setProperty("c_postal_cur", rs.getString("postal"));
                 props.setProperty("c_phn_cur", rs.getString("hin"));
                 props.setProperty("c_phone_cur", rs.getString("phone"));
-                props.setProperty("c_phone2_cur", rs.getString("phone2"));
+                props.setProperty("c_phoneAlt1_cur", rs.getString("phone2"));
+                DemographicExt ext = new DemographicExt();
+                Hashtable demoExt = ext.getAllValuesForDemo(""+demographicNo);
+                String cell = (String) demoExt.get("demo_cell");
+                if ( cell != null ){
+                    props.setProperty("c_phoneAlt2_cur",cell );
+                }
             }
         }
         return props;

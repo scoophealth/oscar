@@ -32,7 +32,9 @@ if(!props.getProperty("c_surname_cur", "").equals("") && !(props.getProperty("c_
 && props.getProperty("c_postal_cur", "").equals(props.getProperty("c_postal", ""))
 && props.getProperty("c_phn_cur", "").equals(props.getProperty("c_phn", ""))
 && props.getProperty("c_phone_cur", "").trim().equals(props.getProperty("c_phone", "").trim())
-)) {
+&& props.getProperty("c_phoneAlt1_cur", "").trim().equals(props.getProperty("c_phoneAlt1", "").trim())
+&& props.getProperty("c_phoneAlt2_cur", "").trim().equals(props.getProperty("c_phoneAlt2", "").trim())
+        )) {
     bSync = true;
 }
 %>
@@ -208,6 +210,9 @@ function syncDemo() {
     document.forms[0].c_postal.value = "<%=props.getProperty("c_postal_cur", "")%>";
     document.forms[0].c_phn.value = "<%=props.getProperty("c_phn_cur", "")%>";
     document.forms[0].c_phone.value = "<%=props.getProperty("c_phone_cur", "")%>";
+    document.forms[0].c_phoneAlt1.value = "<%=props.getProperty("c_phoneAlt1_cur", "")%>";
+    document.forms[0].c_phoneAlt2.value = "<%=props.getProperty("c_phoneAlt2_cur", "")%>";
+
 }
 
 
