@@ -3,6 +3,9 @@
 <%@ taglib uri="http://displaytag.sf.net/el" prefix="display-el" %>
 <%@ include file="/common/messages.jsp"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoResult"%>
+<%@page import="java.util.HashMap"%>
 <h3>New Client</h3>
 <p>Please enter the following information. The system will try to determine if the client has already been entered into the system.</p>
 <html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateSearchForm()">
@@ -83,12 +86,24 @@
 </c:if>
 
 <c:if test="${not empty requestScope.remoteMatches}">
-    <p>The following possible matches were found in the integrated community.</p>
+    <%
+		HashMap<Integer,String> facilitiesNameMap=(HashMap<Integer,String>)request.getAttribute("facilitiesNameMap");
+	%>
+
+   	<p>The following possible matches were found in the integrated community.</p>
     <display-el:table class="simple" name="requestScope.remoteMatches" id="x">
         <display-el:setProperty name="paging.banner.placement" value="bottom" />
 
-        <display-el:column property="cachedDemographicInfo.facilityId" title="FacilityId" />
-        <display-el:column title="name" >
+        <display-el:column title="Facility Name">
+        	<%
+        		MatchingDemographicInfoResult mdir=(MatchingDemographicInfoResult)pageContext.getAttribute("x");
+        		CachedDemographicInfo cdi=mdir.getCachedDemographicInfo();
+    			int facilityId=cdi.getFacilityId();
+				String facilityName=facilitiesNameMap.get(facilityId);
+    		%>
+        	<%=facilityName%>
+        </display-el:column>
+        <display-el:column title="Client Name" >
         	<c:out value="${x.cachedDemographicInfo.lastName}" />, <c:out value="${x.cachedDemographicInfo.firstName}" />
         </display-el:column>
         <display-el:column property="cachedDemographicInfo.birthDate" title="BirthDate" />

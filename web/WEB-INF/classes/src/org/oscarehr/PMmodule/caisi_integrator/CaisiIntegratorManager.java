@@ -55,12 +55,12 @@ public class CaisiIntegratorManager {
     private static TimeClearedHashMap<String, Object> simpleTimeCache = new TimeClearedHashMap<String, Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
     public boolean isIntegratorEnabled(int facilityId) {
-        Facility facility = getFacility(facilityId); 
+        Facility facility = getLocalFacility(facilityId); 
         if (facility != null && facility.isIntegratorEnabled() == true) return(true);
         else return(false);
     }
 
-    private Facility getFacility(int facilityId)
+    private Facility getLocalFacility(int facilityId)
     {
         return(facilityDAO.getFacility(facilityId));
     }
@@ -77,7 +77,7 @@ public class CaisiIntegratorManager {
     }
     
     public FacilityInfoWs getFacilityInfoWs(int facilityId) throws MalformedURLException {
-        Facility facility=getFacility(facilityId);
+        Facility facility=getLocalFacility(facilityId);
         
         FacilityInfoWsService service = new FacilityInfoWsService(buildURL(facility, "FacilityInfoService"));
         FacilityInfoWs port = service.getFacilityInfoWsPort();
@@ -88,7 +88,7 @@ public class CaisiIntegratorManager {
     }
 
     public DemographicInfoWs getDemographicInfoWs(int facilityId) throws MalformedURLException {
-        Facility facility=getFacility(facilityId);
+        Facility facility=getLocalFacility(facilityId);
         
         DemographicInfoWsService service = new DemographicInfoWsService(buildURL(facility, "DemographicInfoService"));
         DemographicInfoWs port = service.getDemographicInfoWsPort();

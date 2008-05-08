@@ -18,6 +18,7 @@
  */
 package org.oscarehr.PMmodule.web;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +39,9 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoParameters;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoResult;
 import org.oscarehr.util.SessionConstants;
@@ -131,6 +134,13 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
                 }
                 
                 request.setAttribute("remoteMatches", integratedMatches);
+                
+                FacilityInfoWs facilityInfoWs=caisiIntegratorManager.getFacilityInfoWs(currentFacilityId);
+                List<CachedFacilityInfo> allFacilities=facilityInfoWs.getAllFacilityInfo();
+                HashMap<Integer,String> facilitiesNameMap=new HashMap<Integer,String>();
+                for (CachedFacilityInfo cachedFacilityInfo : allFacilities) facilitiesNameMap.put(cachedFacilityInfo.getFacilityId(), cachedFacilityInfo.getName());
+                
+                request.setAttribute("facilitiesNameMap", facilitiesNameMap);   
             }
             catch (WebServiceException e) {
                 LOG.warn("Error connecting to integrator. "+e.getMessage());
