@@ -89,7 +89,16 @@
     <%
 		HashMap<Integer,String> facilitiesNameMap=(HashMap<Integer,String>)request.getAttribute("facilitiesNameMap");
 	%>
-
+	<input type="hidden" name="remoteFacilityId" />
+	<input type="hidden" name="remoteDemographicId" />
+	<script>
+		function copyRemote(remoteFacilityId, remoteDemographicId)
+		{
+			document.forms[0].elements['remoteFacilityId'].value = remoteFacilityId;
+			document.forms[0].elements['remoteDemographicId'].value = remoteDemographicId;
+			document.forms[0].method.value='copyRemote';
+		}
+	</script>
    	<p>The following possible matches were found in the integrated community.</p>
     <display-el:table class="simple" name="requestScope.remoteMatches" id="x">
        	<%
@@ -101,7 +110,7 @@
         <display-el:setProperty name="paging.banner.placement" value="bottom" />
 
         <display-el:column title="">
-        	<input type="button" value="Copy to Local" onclick="alert('<%=facilityId%>')" />
+        	<input type="submit" value="Copy to Local" onclick="copyRemote(<%=cdi.getFacilityId()%>,<%=cdi.getFacilityDemographicId()%>)" />
         </display-el:column>
         <display-el:column title="Facility Name">
         	<%=facilityName%>

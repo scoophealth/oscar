@@ -18,6 +18,8 @@
  */
 package org.oscarehr.PMmodule.web;
 
+import java.net.MalformedURLException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,6 +41,7 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
@@ -92,65 +95,65 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         intakeSearchBean.setSearchPerformed(true);
         request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
 
-        int currentFacilityId=(Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-        
-        if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId))
-        {
+        int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+
+        if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId)) {
             try {
-                DemographicInfoWs demographicInfoWs=caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
-                
-                MatchingDemographicInfoParameters parameters=new MatchingDemographicInfoParameters();
+                DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
+
+                MatchingDemographicInfoParameters parameters = new MatchingDemographicInfoParameters();
                 parameters.setMaxEntriesToReturn(10);
                 parameters.setMinScore(20);
-                
-                String temp=StringUtils.trimToNull(intakeSearchBean.getFirstName());
+
+                String temp = StringUtils.trimToNull(intakeSearchBean.getFirstName());
                 parameters.setFirstName(temp);
-                
-                temp=StringUtils.trimToNull(intakeSearchBean.getLastName());
+
+                temp = StringUtils.trimToNull(intakeSearchBean.getLastName());
                 parameters.setLastName(temp);
-                
-                temp=StringUtils.trimToNull(intakeSearchBean.getHealthCardNumber());
+
+                temp = StringUtils.trimToNull(intakeSearchBean.getHealthCardNumber());
                 parameters.setHin(temp);
-                
-                XMLGregorianCalendar cal=new XMLGregorianCalendarImpl();
+
+                XMLGregorianCalendar cal = new XMLGregorianCalendarImpl();
                 {
-                    temp=StringUtils.trimToNull(intakeSearchBean.getYearOfBirth());
-                    if (temp!=null) cal.setYear(Integer.parseInt(temp));
-    
-                    temp=StringUtils.trimToNull(intakeSearchBean.getMonthOfBirth());
-                    if (temp!=null) cal.setMonth(Integer.parseInt(temp));
-    
-                    temp=StringUtils.trimToNull(intakeSearchBean.getDayOfBirth());
-                    if (temp!=null) cal.setDay(Integer.parseInt(temp));
-    
-                    cal.setTime(0,0,0);
+                    temp = StringUtils.trimToNull(intakeSearchBean.getYearOfBirth());
+                    if (temp != null) cal.setYear(Integer.parseInt(temp));
+
+                    temp = StringUtils.trimToNull(intakeSearchBean.getMonthOfBirth());
+                    if (temp != null) cal.setMonth(Integer.parseInt(temp));
+
+                    temp = StringUtils.trimToNull(intakeSearchBean.getDayOfBirth());
+                    if (temp != null) cal.setDay(Integer.parseInt(temp));
+
+                    cal.setTime(0, 0, 0);
                 }
                 parameters.setBirthDate(cal);
-                
-                List<MatchingDemographicInfoResult> integratedMatches=demographicInfoWs.getMatchingDemographicInfos(parameters);
-                if (LOG.isDebugEnabled())
-                {
-                    for (MatchingDemographicInfoResult r : integratedMatches) LOG.debug("*** do itegrated search results : "+r.getCachedDemographicInfo()+" : "+r.getScore());
+
+                List<MatchingDemographicInfoResult> integratedMatches = demographicInfoWs.getMatchingDemographicInfos(parameters);
+                if (LOG.isDebugEnabled()) {
+                    for (MatchingDemographicInfoResult r : integratedMatches)
+                        LOG.debug("*** do itegrated search results : " + r.getCachedDemographicInfo() + " : " + r.getScore());
                 }
-                
+
                 request.setAttribute("remoteMatches", integratedMatches);
-                
-                FacilityInfoWs facilityInfoWs=caisiIntegratorManager.getFacilityInfoWs(currentFacilityId);
-                List<CachedFacilityInfo> allFacilities=facilityInfoWs.getAllFacilityInfo();
-                HashMap<Integer,String> facilitiesNameMap=new HashMap<Integer,String>();
-                for (CachedFacilityInfo cachedFacilityInfo : allFacilities) facilitiesNameMap.put(cachedFacilityInfo.getFacilityId(), cachedFacilityInfo.getName());
-                
-                request.setAttribute("facilitiesNameMap", facilitiesNameMap);   
+
+                FacilityInfoWs facilityInfoWs = caisiIntegratorManager.getFacilityInfoWs(currentFacilityId);
+                List<CachedFacilityInfo> allFacilities = facilityInfoWs.getAllFacilityInfo();
+                HashMap<Integer, String> facilitiesNameMap = new HashMap<Integer, String>();
+                for (CachedFacilityInfo cachedFacilityInfo : allFacilities)
+                    facilitiesNameMap.put(cachedFacilityInfo.getFacilityId(), cachedFacilityInfo.getName());
+
+                request.setAttribute("facilitiesNameMap", facilitiesNameMap);
             }
             catch (WebServiceException e) {
-                LOG.warn("Error connecting to integrator. "+e.getMessage());
+                LOG.warn("Error connecting to integrator. " + e.getMessage());
                 LOG.debug("Error connecting to integrator.", e);
             }
             catch (Exception e) {
                 LOG.error("Unexpected error.", e);
             }
         }
-        
+
         // if matches found display results, otherwise create local intake
         if (!localMatches.isEmpty()) {
             return mapping.findForward(FORWARD_SEARCH_FORM);
@@ -170,6 +173,31 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
         return forwardIntakeEditUpdate(mapping, intakeSearchBean.getDemographicId());
+    }
+
+    public ActionForward copyRemote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+            request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
+
+            int remoteFacilityId=Integer.parseInt(request.getParameter("remoteFacilityId"));
+            int remoteDemographicId=Integer.parseInt(request.getParameter("remoteDemographicId"));
+
+            int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+            DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
+            CachedDemographicInfo demographicInfo=demographicInfoWs.getCachedDemographicInfoByFacilityAndFacilityDemographicId(remoteFacilityId, remoteDemographicId);
+            
+            XMLGregorianCalendar cal=demographicInfo.getBirthDate();
+            Demographic demographic = Demographic.create(demographicInfo.getFirstName(), demographicInfo.getLastName(), cal==null?null:String.valueOf(cal.getMonth()), cal==null?null:String.valueOf(cal.getDay()), cal==null?null:String.valueOf(cal.getYear()), demographicInfo.getHin(), null, true);
+            demographic.setCity(demographicInfo.getCity());
+            demographic.setProvince(demographicInfo.getProvince());
+            demographic.setSin(demographicInfo.getSin());
+            
+            return forwardIntakeEditCreate(mapping, request, demographic);
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+            return(unspecified(mapping, form, request, response));
+        }
     }
 
     private List<Demographic> localSearch(GenericIntakeSearchFormBean intakeSearchBean, boolean allowOnlyOptins) {
