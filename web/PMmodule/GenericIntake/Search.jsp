@@ -92,15 +92,18 @@
 
    	<p>The following possible matches were found in the integrated community.</p>
     <display-el:table class="simple" name="requestScope.remoteMatches" id="x">
+       	<%
+       		MatchingDemographicInfoResult mdir=(MatchingDemographicInfoResult)pageContext.getAttribute("x");
+       		CachedDemographicInfo cdi=mdir.getCachedDemographicInfo();
+   			int facilityId=cdi.getFacilityId();
+			String facilityName=facilitiesNameMap.get(facilityId);
+   		%>
         <display-el:setProperty name="paging.banner.placement" value="bottom" />
 
+        <display-el:column title="">
+        	<input type="button" value="Copy to Local" onclick="alert('<%=facilityId%>')" />
+        </display-el:column>
         <display-el:column title="Facility Name">
-        	<%
-        		MatchingDemographicInfoResult mdir=(MatchingDemographicInfoResult)pageContext.getAttribute("x");
-        		CachedDemographicInfo cdi=mdir.getCachedDemographicInfo();
-    			int facilityId=cdi.getFacilityId();
-				String facilityName=facilitiesNameMap.get(facilityId);
-    		%>
         	<%=facilityName%>
         </display-el:column>
         <display-el:column title="Client Name" >
