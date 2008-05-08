@@ -177,8 +177,6 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
     public ActionForward copyRemote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
-
             int remoteFacilityId=Integer.parseInt(request.getParameter("remoteFacilityId"));
             int remoteDemographicId=Integer.parseInt(request.getParameter("remoteDemographicId"));
 
@@ -222,6 +220,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         StringBuilder parameters = new StringBuilder(PARAM_START);
         parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_CREATE).append(PARAM_AND);
         parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
+
+        request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
 
         return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
     }
