@@ -24,6 +24,7 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -321,7 +322,9 @@ public class BillingBillingManager {
 
     public String getDispPrice() {
       BigDecimal bdFee = new BigDecimal(price).setScale(2,
-          BigDecimal.ROUND_HALF_UP);
+          //BigDecimal.ROUND_HALF_UP);
+              RoundingMode.HALF_UP);
+      System.out.println("price"+price+" fee"+bdFee.toString());
       return bdFee.toString();
     }
 
@@ -394,8 +397,8 @@ public class BillingBillingManager {
     }
 
     public String getDispLineTotal() {
-      BigDecimal bdFee = new BigDecimal(lineTotal).setScale(2,
-          BigDecimal.ROUND_HALF_UP);
+      BigDecimal bdFee = new BigDecimal(""+lineTotal).setScale(2,
+          RoundingMode.HALF_UP);
       return bdFee.toString();
     }
   }
