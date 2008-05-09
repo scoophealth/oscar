@@ -143,10 +143,19 @@ public class TeleplanFileWriter {
         appendToFile(headerLine);
         errorMsg = "";
         
+        
+        List<String> providerBillingNumbers = new ArrayList();
         for (int p = 0; p < providers.length; p++){
-           appendToHTML(HtmlTeleplanHelper.htmlNewProviderSection(providers[p].getOhip_no(),new Date()));  
-           log.debug("For Provider  :"+providers[p].getOhip_no());
-           List list = getBilling(providers[p].getOhip_no(),null,null); // null,null because date range doesn't do anything 
+            if (!providerBillingNumbers.contains(providers[p].getOhip_no())){
+                providerBillingNumbers.add(providers[p].getOhip_no());
+            }
+        }
+        
+        //for (int p = 0; p < providers.length; p++){
+        for(String providerBillingNumber: providerBillingNumbers){    
+           appendToHTML(HtmlTeleplanHelper.htmlNewProviderSection(providerBillingNumber,new Date()));  
+           log.debug("For Provider  :"+providerBillingNumber);
+           List list = getBilling(providerBillingNumber,null,null); // null,null because date range doesn't do anything 
            //Get All The Bills for this provider
            
            log.debug("Billing List Size? "+list.size());
@@ -183,7 +192,7 @@ public class TeleplanFileWriter {
            //Add to Providers Totals to the  submission
            addToTotal(providerTotals);
            increaseClaims(providerClaimsCount);
-           appendToHTML(HtmlTeleplanHelper.htmlFooter(providers[p].getOhip_no(),providerClaimsCount,providerTotals)); 
+           appendToHTML(HtmlTeleplanHelper.htmlFooter(providerBillingNumber,providerClaimsCount,providerTotals)); 
         }
         appendToHTML(HtmlTeleplanHelper.htmlFooter("",totalClaims,bigTotal)); 
         appendToHTML(HtmlTeleplanHelper.htmlBottom());
