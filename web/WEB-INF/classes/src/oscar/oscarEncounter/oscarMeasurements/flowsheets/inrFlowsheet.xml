@@ -13,7 +13,7 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  
-  Document   : hypertensionFlowsheet.xml
+  Document   : inrFlowsheet.xml
   Created on : April 23, 2006, 12:47 PM
   Author     : Jay Gallagher
   Description:
@@ -24,7 +24,7 @@
 <flowsheet name="inrFlow" 
            display_name="INR Flowsheet" 
            ds_rules="inrFlowsheet.drl"
-           dxcode_triggers="icd9:401" 
+           dxcode_triggers="icd9:42731,icd9:V5861" 
            warning_colour="#E00000"
            recommendation_colour="yellow"
            top_HTML="inr.html">
@@ -42,14 +42,15 @@
         display_name="Wafarin Weekly Dose"
         guideline=""
         graphable="yes"
-        value_name="Total mg Coumadin per week"/>    
+        value_name="Total mg Warfarin per week"/>    
     
     <item
         measurement_type="INR"
         display_name="INR"
         guideline=""
         graphable="yes"
-        value_name="INR"/>   
+        value_name="INR" 
+        ds_rules="INR.drl"/>
     
     
     <measurement 
