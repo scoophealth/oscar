@@ -420,10 +420,12 @@ CREATE TABLE demographic (
 	children varchar(255) default NULL,
 	sourceOfIncome varchar(255)default NULL,
 	citizenship varchar(40) default NULL,
-	sin varchar(15) default NULL,  
+	sin varchar(15) default NULL, 
+  country_of_origin char(4) default NULL,
   PRIMARY KEY  (demographic_no),
   KEY hin (hin),
-  KEY name (last_name,first_name)
+  KEY name (last_name,first_name),
+  KEY `country_of_origin` (`country_of_origin`)
 );
 
 --
