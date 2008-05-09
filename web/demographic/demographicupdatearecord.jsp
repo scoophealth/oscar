@@ -59,7 +59,7 @@ if( users != null && users.size() > 0 )
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
   //if action is good, then give me the result
-    String[] param =new String[23];
+    String[] param =new String[24];
 	  param[0]=request.getParameter("last_name");
 	  param[1]=request.getParameter("first_name");
 	  param[2]=request.getParameter("address");
@@ -83,8 +83,9 @@ if( users != null && users.size() > 0 )
 	  param[20]=request.getParameter("pcn_indicator");
 	  param[21]=request.getParameter("hc_type");
 	  param[22]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip><rd>" + request.getParameter("r_doctor") + "</rd>" + (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "") ;  
-
-	  java.sql.Date [] dtparam = new java.sql.Date[4];
+          param[23] =request.getParameter("countryOfOrigin");
+	
+           java.sql.Date [] dtparam = new java.sql.Date[4];
 	  dtparam[0]=MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date"));
 	  dtparam[1]=MyDateFormat.getSysDate(request.getParameter("end_date_year")+"-"+request.getParameter("end_date_month")+"-"+request.getParameter("end_date_date"));
 	  dtparam[2]=MyDateFormat.getSysDate(request.getParameter("eff_date_year")+"-"+request.getParameter("eff_date_month")+"-"+request.getParameter("eff_date_date"));

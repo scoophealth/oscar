@@ -8,6 +8,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
+<%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*" %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="addDemoBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
@@ -41,6 +42,11 @@
 
   String billingCentre = ((String ) props.getProperty("billcenter","")).trim().toUpperCase();
   String defaultCity = prov.equals("ON")&&billingCentre.equals("N") ? "Toronto":"";
+  
+  WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+  CountryCodeDAO ccDAO =  (CountryCodeDAO) ctx.getBean("countryCodeDAO");
+
+  List<CountryCode> countryList = ccDAO.getAllCountryCodes();
 %>
 <!--
 /*
@@ -715,9 +721,20 @@ function checkFormTypeIn() {
     </tr>
      <tr valign="top">
       <td  align="right"><b>  <bean:message key="demographic.demographiceditdemographic.cytolNum"/>:</b> </td>
-      <td align="left" colspan="3" >
+      <td align="left"  >
         <input type="text" name="cytolNum">
 
+      </td>
+      <td align="right">    
+         <b>Country of Origin:</b>          
+      </td>
+      <td>
+          <select name="countryOfOrigin">
+              <option value="-1">Not Set</option>
+              <%for(CountryCode cc : countryList){ %>
+              <option value="<%=cc.getCountryId()%>"><%=cc.getCountryName() %></option>
+              <%}%>
+          </select>
       </td>
     </tr>
     <tr valign="top">
