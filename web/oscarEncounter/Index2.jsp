@@ -902,6 +902,7 @@ function popLeftColumn(url,div,params) {
                 
                 imgfunc[midName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
                 Element.observe(midImage, "click", imgfunc[midName]);
+
             }
             else {
                 topImage.src = collapsePath;
@@ -909,16 +910,24 @@ function popLeftColumn(url,div,params) {
                 midImage.src = transparentPath;
                 midImage.title = "";
 
-                Element.stopObserving(midImage, "click", imgfunc[midName]);
+               Element.stopObserving(midImage, "click", imgfunc[midName]);
                 
                 imgfunc[topName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
                 Element.observe(topImage, "click", imgfunc[topName]);
                 
                 imgfunc[lastName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
                 Element.observe(lastImage, "click", imgfunc[lastName]);                
+
             }        
     
     }  
+
+ function clickListDisplay(e) {
+	var data = $A(arguments);
+	data.shift();
+	listDisplay(data[0],data[1]);
+ }
+
 function navBarLoader() {
     //$("leftNavbar").style.height = $("content").getHeight();
     
@@ -929,12 +938,13 @@ function navBarLoader() {
      */
     if( $("rightNavBar") != undefined ) {
         $("rightNavBar").style.height = $("notCPP").getHeight();
-        this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 12);        
+        this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 14);        
     }
     else
         this.rightNumLines = 0;
-        
-    this.maxLeftNumLines = Math.floor($("leftNavbar").getHeight() / 12);    
+    
+    $("leftNavbar").style.height = "660px";    
+    this.maxLeftNumLines = Math.floor($("leftNavbar").getHeight() / 14);    
     this.arrLeftDivs = new Array();
     this.arrRightDivs = new Array();
     this.rightTotal = 0;
@@ -1049,8 +1059,8 @@ function navBarLoader() {
                  * if so we need to reduce display
                  */
                 var overflow = this.leftTotal - this.maxLeftNumLines;                
-                if( navBar == "leftNavbar" && overflow > 0 )                    
-                    this.adjust(this.arrLeftDivs, this.leftTotal, overflow);                                    
+                if( navBar == "leftNavbar" && overflow > 0 ) {
+                    this.adjust(this.arrLeftDivs, this.leftTotal, overflow);                                    	      }
                     
                 overflow = this.rightTotal - this.maxRightNumLines;                
                 if( navBar == "rightNavBar" && overflow > 0 )
@@ -1071,7 +1081,6 @@ function navBarLoader() {
                     --num2reduce;
                 
                 threshold = numLines - num2reduce;
-                console.log(idx + " threshold " + threshold);
                 listDisplay(divs[idx].id, threshold);                
             }        
         };
