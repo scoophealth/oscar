@@ -25,7 +25,7 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarBilling.ca.bc.Teleplan.*,java.math.BigDecimal,oscar.oscarBilling.ca.bc.data.*"%>
+<%@page  import="oscar.*,oscar.oscarDemographic.data.*,java.util.*,oscar.oscarBilling.ca.bc.Teleplan.*,java.math.BigDecimal,oscar.oscarBilling.ca.bc.data.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -350,10 +350,11 @@ tr.up{
                             }
                             
                         }
+                        String lin = Misc.forwardSpace(""+h.get("code"), 5)+Misc.forwardSpace(""+h.get("fee"),8)+Misc.forwardSpace(""+h.get("desc"),46);
                     %>
                    
                     <tr class="<%=classStyle%>">
-                        <td><input type="checkbox" name="codes" value="<%=h.get("code")%>¿<%=h.get("fee")%>¿<%=h.get("desc")%>" <%=selected%>/></td>
+                        <td><input type="checkbox" name="codes" value="<%=lin%>" <%=selected%>/></td>
                         <td><%=h.get("code")%></td>
                         <td><%=oldFee%></td>
                         <td><%=h.get("fee")%></td>
