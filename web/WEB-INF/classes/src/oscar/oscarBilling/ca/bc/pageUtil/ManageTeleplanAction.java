@@ -30,6 +30,7 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -117,12 +118,14 @@ public class ManageTeleplanAction extends DispatchAction {
            if (codes != null){
                for(String code: codes){
                   System.out.println(code);
-                  String[] codeval = code.split("�");   //="<%=h.get("code")%>|<%=h.get("fee")%>|<%=h.get("desc")%>"
+                  String nCode = code.substring(0,5);
+                  String fee = code.substring(5,13).trim();
+                  String desc = code.substring(13).trim();
                   BillingCodeData bcd = new BillingCodeData();
-                  if (bcd.getBillingCodeByCode(codeval[0]) == null){ //NEW CODE
-                    bcd.addBillingCode(codeval[0],codeval[2],codeval[1]);
+                  if (bcd.getBillingCodeByCode(nCode) == null){ //NEW CODE
+                    bcd.addBillingCode(nCode,desc,fee);
                   }else{ //UPDATE PRICE
-                    bcd.updateBillingCodePrice(codeval[0],codeval[1]); 
+                    bcd.updateBillingCodePrice(nCode,fee); 
                   }
                }
            }
