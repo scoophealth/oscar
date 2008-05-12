@@ -190,12 +190,13 @@
         var newId = "<nested:write name="ajaxsave" />";  
         var oldDiv;
         var newDiv;
-        var prequel = ["n","sig","signed"];
+        var prequel = ["n","sig","signed","full","print"];
 
         for( var idx = 0; idx < prequel.length; ++idx ) {
             oldDiv = prequel[idx] + origId;
             newDiv = prequel[idx] + newId;            
-            $(oldDiv).id = newDiv;        
+            if( $(oldDiv) != null )
+                $(oldDiv).id = newDiv;        
         }  
        updatedNoteId = newId;
        
@@ -205,6 +206,8 @@
             noteTxt = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(noteTxt);
        %>
        completeChangeToView("<%=noteTxt%>",newId);
+       if( origId.substr(0,1) == "0" )
+            ++numNotes;
     </nested:notEmpty>
     
    if( $("toggleIssue") != null )
