@@ -19,56 +19,28 @@
 
 package org.oscarehr.common.dao;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.IssueGroup;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-abstract class AbstractDao {
-    
-    @PersistenceContext
-    protected EntityManager entityManager = null;
+public class IntegratorConsentDao extends AbstractDao {
 
-    /**
-     * aka update
-     */
-    public void merge(Object o) {
-        entityManager.merge(o);
+    public IssueGroup find(int id) {
+        return(entityManager.find(IssueGroup.class, id));
     }
 
-    /**
-     * aka create
-     */
-    public void persist(Object o) {
-        entityManager.persist(o);
-    }
-
-    /**
-     * You can only remove attached instances.
-     */
-    public void remove(Object o) {
-        entityManager.remove(o);
-    }
-
-    /**
-     * You can only refresh attached instances.
-     */
-    public void refresh(Object o) {
-        entityManager.refresh(o);
-    }
-
-    protected Object getSingleResultOrNull(Query query)
-    {
+    public IntegratorConsent findByFacilityIdAndDemographicId(int facilityId, int demographicId) {
+        Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2");
+        query.setParameter(1, facilityId);
+        query.setParameter(2, demographicId);
+        
         @SuppressWarnings("unchecked")
-        List results=query.getResultList();
-        if (results.size()==1) return(results.get(0));
-        else if (results.size()==0) return(null);
-        else throw(new NonUniqueResultException("SingleResult requested but result was not unique : "+results.size()));
-    }
+        IntegratorConsent result = (IntegratorConsent)getSingleResultOrNull(query);
 
+        return(result);
+    }
+    
 }

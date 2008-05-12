@@ -34,6 +34,7 @@
 		<property name="validationQuery" value="${db_validationQuery}" />
 		
 		<property name="maxOpenPreparedStatements" value="320" />
+		<!-- bug in the connector 3.11 driver which prevents this from being used, we need to upgrade drivers before re-enabling -->
 		<property name="poolPreparedStatements" value="false" />
 	</bean>
 

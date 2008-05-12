@@ -47,12 +47,12 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.util.SqlUtils;
 
-public class PopulationReportDAO extends HibernateDaoSupport {
+public class PopulationReportDao extends HibernateDaoSupport {
     public static final int LOW = 0;
     public static final int MEDIUM = 1;
     public static final int HIGH = 2;
 
-    private static final Log LOG = LogFactory.getLog(PopulationReportDAO.class);
+    private static final Log LOG = LogFactory.getLog(PopulationReportDao.class);
 
     private static final String HQL_CURRENT_POP_SIZE = "select count(distinct a.ClientId) from Admission a where " + "a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and " + "a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " + "a.DischargeDate is null";
 

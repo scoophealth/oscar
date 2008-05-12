@@ -25,7 +25,7 @@ import java.util.Map.Entry;
 
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.Issue;
-import org.oscarehr.common.dao.PopulationReportDAO;
+import org.oscarehr.common.dao.PopulationReportDao;
 import org.oscarehr.common.model.Mortalities;
 import org.oscarehr.common.model.ReportStatistic;
 import org.oscarehr.common.model.ShelterPopulation;
@@ -36,11 +36,11 @@ public class PopulationReportManager {
     private static final int ONE_YEAR = 1;
     private static final int FOUR_YEARS = 4;
 
-    private PopulationReportDAO populationReportDAO;
+    private PopulationReportDao populationReportDao;
     private IssueDAO issueDAO;
 
-    public void setPopulationReportDAO(PopulationReportDAO populationReportDAO) {
-        this.populationReportDAO = populationReportDAO;
+    public void setPopulationReportDao(PopulationReportDao populationReportDao) {
+        this.populationReportDao = populationReportDao;
     }
 
     public void setIssueDAO(IssueDAO issueDAO) {
@@ -48,21 +48,21 @@ public class PopulationReportManager {
     }
 
     public ShelterPopulation getShelterPopulation() {
-        int pastYear = populationReportDAO.getCurrentAndHistoricalPopulationSize(ONE_YEAR);
-        int current = populationReportDAO.getCurrentPopulationSize();
+        int pastYear = populationReportDao.getCurrentAndHistoricalPopulationSize(ONE_YEAR);
+        int current = populationReportDao.getCurrentPopulationSize();
 
         return new ShelterPopulation(pastYear, current);
     }
 
     public ShelterUsage getShelterUsage() {
-        int[] usages = populationReportDAO.getUsages(FOUR_YEARS);
+        int[] usages = populationReportDao.getUsages(FOUR_YEARS);
 
-        return new ShelterUsage(usages[PopulationReportDAO.LOW], usages[PopulationReportDAO.MEDIUM], usages[PopulationReportDAO.HIGH]);
+        return new ShelterUsage(usages[PopulationReportDao.LOW], usages[PopulationReportDao.MEDIUM], usages[PopulationReportDao.HIGH]);
     }
 
     public Mortalities getMortalities() {
-        int count = populationReportDAO.getMortalities(ONE_YEAR);
-        int size = populationReportDAO.getCurrentAndHistoricalPopulationSize(ONE_YEAR);
+        int count = populationReportDao.getMortalities(ONE_YEAR);
+        int size = populationReportDao.getCurrentAndHistoricalPopulationSize(ONE_YEAR);
 
         return new Mortalities(count, size);
     }
@@ -70,10 +70,10 @@ public class PopulationReportManager {
     public Map<String, ReportStatistic> getMajorMedicalConditions() {
         Map<String, ReportStatistic> prevalences = new LinkedHashMap<String, ReportStatistic>();
 
-        int populationSize = populationReportDAO.getCurrentPopulationSize();
+        int populationSize = populationReportDao.getCurrentPopulationSize();
 
         for (Entry<String, SortedSet<String>> e : PopulationReportCodes.getMajorMedicalConditions().entrySet()) {
-            prevalences.put(e.getKey(), new ReportStatistic(populationReportDAO.getPrevalence(e.getValue()), populationSize));
+            prevalences.put(e.getKey(), new ReportStatistic(populationReportDao.getPrevalence(e.getValue()), populationSize));
         }
 
         return prevalences;
@@ -82,10 +82,10 @@ public class PopulationReportManager {
     public Map<String, ReportStatistic> getMajorMentalIllnesses() {
         Map<String, ReportStatistic> prevalences = new LinkedHashMap<String, ReportStatistic>();
 
-        int populationSize = populationReportDAO.getCurrentPopulationSize();
+        int populationSize = populationReportDao.getCurrentPopulationSize();
 
         for (Entry<String, SortedSet<String>> e : PopulationReportCodes.getMajorMentalIllness().entrySet()) {
-            prevalences.put(e.getKey(), new ReportStatistic(populationReportDAO.getPrevalence(e.getValue()), populationSize));
+            prevalences.put(e.getKey(), new ReportStatistic(populationReportDao.getPrevalence(e.getValue()), populationSize));
         }
 
         return prevalences;
@@ -94,10 +94,10 @@ public class PopulationReportManager {
     public Map<String, ReportStatistic> getSeriousMedicalConditions() {
         Map<String, ReportStatistic> incidences = new LinkedHashMap<String, ReportStatistic>();
 
-        int populationSize = populationReportDAO.getCurrentPopulationSize();
+        int populationSize = populationReportDao.getCurrentPopulationSize();
 
         for (Entry<String, SortedSet<String>> e : PopulationReportCodes.getSeriousMedicalConditions().entrySet()) {
-            incidences.put(e.getKey(), new ReportStatistic(populationReportDAO.getIncidence(e.getValue()), populationSize));
+            incidences.put(e.getKey(), new ReportStatistic(populationReportDao.getIncidence(e.getValue()), populationSize));
         }
 
         return incidences;

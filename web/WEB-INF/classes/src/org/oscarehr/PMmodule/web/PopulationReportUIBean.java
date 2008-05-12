@@ -34,7 +34,7 @@ import org.oscarehr.PMmodule.web.PopulationReportDataObjects.EncounterTypeDataGr
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.EncounterTypeDataRow;
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.RoleDataGrid;
 import org.oscarehr.common.dao.IssueGroupDao;
-import org.oscarehr.common.dao.PopulationReportDAO;
+import org.oscarehr.common.dao.PopulationReportDao;
 import org.oscarehr.common.model.IssueGroup;
 import org.oscarehr.util.EncounterUtil;
 import org.oscarehr.util.SpringUtils;
@@ -44,7 +44,7 @@ public class PopulationReportUIBean {
     private ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
     private RoleDAO roleDAO = (RoleDAO)SpringUtils.getBean("roleDAO");
     private IssueGroupDao issueGroupDao = (IssueGroupDao)SpringUtils.getBean("issueGroupDao");
-    private PopulationReportDAO populationReportDAO = (PopulationReportDAO)SpringUtils.getBean("populationReportDAO");
+    private PopulationReportDao populationReportDao = (PopulationReportDao)SpringUtils.getBean("populationReportDao");
 
     private int programId = -1;
     private Date startDate = null;
@@ -107,7 +107,7 @@ public class PopulationReportUIBean {
 
         EncounterTypeDataRow result = new EncounterTypeDataRow();
 
-        Map<Integer, Integer> counts = populationReportDAO.getCaseManagementNoteCountGroupedByIssueGroup(programId, (int)role.getId().longValue(), encounterType, startDate, endDate);
+        Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(programId, (int)role.getId().longValue(), encounterType, startDate, endDate);
 
         for (IssueGroup issueGroup : getIssueGroups()) {
             Integer count = counts.get(issueGroup.getId());

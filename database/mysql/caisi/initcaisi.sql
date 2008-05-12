@@ -2574,3 +2574,15 @@ and a.orgcd = c.code and b.objectName=d.objectName
 and a.activeyn=1 and c.activeyn=1
 group by a.provider_no, c.codetree, b.objectName,d.orgapplicable
 ;
+
+DROP TABLE IF EXISTS IntegratorConsent;
+create table IntegratorConsent
+(
+	id int primary key auto_increment,
+	facilityId int not null,
+	demographicId int not null,
+	unique(facilityId,demographicId),
+	consentLevel varchar(128) not null,
+	lastUpdate datetime not null
+);
+
