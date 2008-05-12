@@ -32,7 +32,7 @@
 <%@page import="org.oscarehr.PMmodule.model.Provider" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
  <nested:size id="num" name="Notes"/>
-<div style="width:10%; float:right; text-align:center;"><h3 style="padding:0px; background-color:<c:out value="${param.hc}"/>" ><a href="#" title='Add Item' onclick="return showEdit(event,'',0,'','','','<%=request.getAttribute("addUrl")%>0', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>');">+</a></h3></div>
+<div style="width:10%; float:right; text-align:center;"><h3 style="padding:0px; background-color:<c:out value="${param.hc}"/>" ><a href="#" title='Add Item' onclick="return showEdit(event,'<c:out value="${param.title}"/>','',0,'','','','<%=request.getAttribute("addUrl")%>0', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>');">+</a></h3></div>
 <div style="clear:left; float:left; width:90%;"><h3 style="width:100%; background-color:<c:out value="${param.hc}"/>"><a href="#" onclick="$('showEditNote').style.display='none';return false;"><c:out value="${param.title}"/></a></h3></div>
 <div style="clear:both; height:63px; overflow:auto;">
     <ul style="margin-left:5px;">
@@ -56,7 +56,7 @@
                 noteTxt = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(noteTxt);             
                 %>
                 <span id="spanListNote<nested:write name="note" property="id"/>" >
-                    <a class="topLinks" onmouseover="this.className='topLinkhover'"  onmouseout="this.className='topLinks'" title="Rev:<nested:write name="note" property="revision"/> - Last update:<nested:write name="note" property="update_date" format="dd-MMM-yyyy"/>" id="listNote<nested:write name="note" property="id"/>" href="#" onclick="showEdit(event, '<nested:write name="note" property="id"/>','<%=editors.toString()%>','<nested:write name="note" property="observation_date" format="dd-MMM-yyyy"/>','<nested:write name="note" property="revision"/>','<%=noteTxt%>', '<%=request.getAttribute("addUrl")%><nested:write name="note" property="id"/>', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>');return false;"><%=htmlNoteTxt%></a>
+                    <a class="topLinks" onmouseover="this.className='topLinkhover'"  onmouseout="this.className='topLinks'" title="Rev:<nested:write name="note" property="revision"/> - Last update:<nested:write name="note" property="update_date" format="dd-MMM-yyyy"/>" id="listNote<nested:write name="note" property="id"/>" href="#" onclick="showEdit(event, '<c:out value="${param.title}"/>', '<nested:write name="note" property="id"/>','<%=editors.toString()%>','<nested:write name="note" property="observation_date" format="dd-MMM-yyyy"/>','<nested:write name="note" property="revision"/>','<%=noteTxt%>', '<%=request.getAttribute("addUrl")%><nested:write name="note" property="id"/>', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>');return false;"><%=htmlNoteTxt%></a>
                 </span>            
             </li>
         </nested:iterate>
