@@ -614,7 +614,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 if( !found ) {
                 savedId = 0;
                 %>    
-                <div class="note">
+                <div id="nc<%=savedId%>" class="note">
                     <input type="hidden" id="signed<%=savedId%>" value="false">
                     <input type="hidden" id="full<%=savedId%>" value="true">
                     <div id="n<%=savedId%>" style="line-height:1.1em;">                                     
