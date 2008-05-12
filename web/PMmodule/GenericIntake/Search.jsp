@@ -118,7 +118,9 @@
         <display-el:column title="Client Name" >
         	<c:out value="${x.cachedDemographicInfo.lastName}" />, <c:out value="${x.cachedDemographicInfo.firstName}" />
         </display-el:column>
-        <display-el:column property="cachedDemographicInfo.birthDate" title="BirthDate" />
+        <display-el:column title="BirthDate">
+        	<c:out value="${x.cachedDemographicInfo.birthDate.year}" />-<c:out value="${x.cachedDemographicInfo.birthDate.month}" />-<c:out value="${x.cachedDemographicInfo.birthDate.day}" />
+        </display-el:column>
         <display-el:column property="cachedDemographicInfo.gender" title="Gender" />
         <display-el:column property="cachedDemographicInfo.hin" title="Health Number" />
         <display-el:column property="score" title="Matching Score" />
