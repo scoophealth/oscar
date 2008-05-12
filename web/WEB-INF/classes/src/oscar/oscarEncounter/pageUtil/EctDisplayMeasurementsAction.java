@@ -85,7 +85,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             String tmp = (String)bean.measurementGroupNames.get(j);             
             winName = tmp + bean.demographicNo;
             hash = Math.abs(winName.hashCode());            
-            url = "popupPage(500,1000,'" + winName  + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=" + tmp + "');measurementLoaded('" + winName + "')";
+            url = "popupPage(500,1000,'" + hash  + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=" + tmp + "');measurementLoaded('" + hash + "')";
             Dao.addPopUpUrl(url);
             Dao.addPopUpText(tmp);            
         }
