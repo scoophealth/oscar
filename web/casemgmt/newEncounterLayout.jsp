@@ -83,7 +83,10 @@
   
   <!-- scriptaculous based select box -->
   <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/select.js"/>"></script>
-    
+  
+  <!--js code for newCaseManagementView.jsp -->
+  <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js"/>"></script>
+  
     <style type="text/css">
         
         /*CPP Format */
@@ -342,14 +345,7 @@
         var calendar;
         
         function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
-          var page;
-          var ctx = "<c:out value="${ctx}"/>";
-          //a hack for IE6 to load page in new encounter
-          if( varpage.indexOf(".") == 0 )
-            page = ctx + varpage.substr(2);
-          else
-            page = varpage;
-            
+          var page = "" + varpage;
           windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
                 //var popup =window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
                 openWindows[name] = window.open(page, name, windowprops);
@@ -473,8 +469,7 @@
                 imgfunc[lastName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
                 Element.observe(lastImage, "click", imgfunc[lastName]);                
             }   
-            
-    
+                        
     }  
     
     function clickListDisplay(e) {
@@ -568,8 +563,8 @@ function navBarLoader() {
    $("rightNavBar").style.height = "660px";
     
     
-    this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 12);                    
-    this.maxLeftNumLines = Math.floor($("leftNavBar").getHeight() / 12);    
+    this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 14);                    
+    this.maxLeftNumLines = Math.floor($("leftNavBar").getHeight() / 14);    
     this.arrLeftDivs = new Array();
     this.arrRightDivs = new Array();
     this.rightTotal = 0;
@@ -616,7 +611,8 @@ function navBarLoader() {
             for( idx in URLs[j] ) {                                
                 var div = document.createElement("div");            
                 div.className = "leftBox";
-                div.style.display = "block";                
+                div.style.display = "block";
+                div.style.visiblity = "hidden";                
                 div.id = idx;
                 $(navbar).appendChild(div); 
                 
@@ -716,14 +712,15 @@ function navBarLoader() {
                     --num2reduce;
                 
                 threshold = numLines - num2reduce;
-                listDisplay(divs[idx].id, threshold);                  
+                listDisplay(divs[idx].id, threshold);
+                divs[idx].style.visibility = "visible";
             }        
         };
 
 }
 
 //display in place editor
-function showEdit(e,noteId, editors, date, revision, note, url, containerDiv, reloadUrl) {    
+function showEdit(e,title, noteId, editors, date, revision, note, url, containerDiv, reloadUrl) {    
     //Event.extend(e);
     //e.stop();
     
@@ -765,6 +762,7 @@ function showEdit(e,noteId, editors, date, revision, note, url, containerDiv, re
     $("frmIssueNotes").action = url;   
     $("reloadUrl").value = reloadUrl;
     $("containerDiv").value = containerDiv;
+    $("winTitle").update(title);
        
     $(editElem).style.right = right + "px";
     $(editElem).style.top = top + "px";
@@ -898,6 +896,7 @@ function loadDiv(div,url,limit) {
               <form id="frmIssueNotes" action="" method="post" onsubmit="return updateCPPNote();">
                   <input type="hidden" id="reloadUrl" name="reloadUrl" value="">
                   <input type="hidden" id="containerDiv" name="containerDiv" value="">
+                  <div id="winTitle"></div>
                   <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" wrap="soft"></textarea><br>
                   <span style="float:right; margin-right:10px;">
                       <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>
@@ -909,9 +908,9 @@ function loadDiv(div,url,limit) {
           <div id="printOps" class="printOps">
               <h3 style="margin-bottom:5px; text-align:center;">Print Dialog</h3>
               <form id="frmPrintOps" action="" onsubmit="return false;">
-                   <input type="radio" id="printopSelected" name="printop" checked value="selected">Selected<br>
+                   <input type="radio" id="printopSelected" name="printop" value="selected">Selected<br>
                    <input type="radio" id="printopAll" name="printop" value="all">All<br>
-                   <input type="radio" id="printopDates" name="printop" value="dates">Dates<br>                   
+                   <input type="radio" id="printopDates" name="printop" value="dates">Dates&nbsp;<a style="font-variant:small-caps;" href="#" onclick="return printToday(event);">Today</a><br>                   
                    <div style="float:left; margin-left:5px; width:30px;">From:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printStartDate_cal" alt="calendar">&nbsp;<input type="text" id="printStartDate" name="printStartDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>
                    <div style="float:left; margin-left:5px; width:30px;">To:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printEndDate_cal" alt="calendar">&nbsp;<input type="text" id="printEndDate" name="printEndDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>                   
                    <div style="margin-top:5px; text-align:center">
