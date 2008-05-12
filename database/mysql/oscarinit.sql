@@ -7769,6 +7769,17 @@ CREATE TABLE `formGrowthChart` (
          );
 
 
+
+CREATE TABLE `country_codes` (
+  `id` int(10) NOT NULL auto_increment,
+  `country_name` varchar(255) default NULL,
+  `country_id` char(4) default NULL,
+  `c_locale` char(10) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `country_id` (`country_id`),
+  KEY `c_locale` (`c_locale`)
+);
+
 create table lst_orgcd
 
 (
