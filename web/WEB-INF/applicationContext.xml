@@ -29,6 +29,7 @@
     <bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
     <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.BedDAO" autowire="byName"/>
     <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
+    <bean id="countryCodeDAO"  class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName"/>    
 <!-- 
     <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" />
  -->
@@ -101,7 +102,8 @@
             <list>
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml</value>
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml</value>
-                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value> 
+                <!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml</value -->
             </list>
         </property>
     </bean>
