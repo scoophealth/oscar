@@ -206,8 +206,10 @@
             noteTxt = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(noteTxt);
        %>
        completeChangeToView("<%=noteTxt%>",newId);
-       if( origId.substr(0,1) == "0" )
+       if( origId.substr(0,1) == "0" ) {
+            $("nc"+origId).id = "nc" + numNotes;
             ++numNotes;
+       }
     </nested:notEmpty>
     
    if( $("toggleIssue") != null )
