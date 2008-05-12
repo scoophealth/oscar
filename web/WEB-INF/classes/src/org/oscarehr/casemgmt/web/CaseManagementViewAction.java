@@ -125,8 +125,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
      */
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         long start = System.currentTimeMillis();
+        long beginning = start;
         long current = 0;
         CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
+        log.debug("Starting VIEW");
         String tab = request.getParameter("tab");
         if (tab == null) {
             tab = CaseManagementViewFormBean.tabs[0];
@@ -138,26 +140,37 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
         String demoNo = getDemographicNo(request);
 
+        log.debug("is client in program");
         // need to check to see if the client is in our program domain
         // if not...don't show this screen!
         if (!caseManagementMgr.isClientInProgramDomain(providerNo, demoNo)) {
             return mapping.findForward("domain-error");
         }
 
+        current = System.currentTimeMillis();
+        log.debug("client in program " + String.valueOf(current-start));
+        start = current;
+        
         request.setAttribute("casemgmt_demoName", getDemoName(demoNo));
         request.setAttribute("casemgmt_demoAge", getDemoAge(demoNo));
         request.setAttribute("casemgmt_demoDOB", getDemoDOB(demoNo));
         request.setAttribute("demographicNo", demoNo);
-
+        
+        log.debug("client Image?");
         // get client image
         request.setAttribute("image_filename", this.getImageFilename(demoNo, request));
 
+        current = System.currentTimeMillis();
+        log.debug("client image " + String.valueOf(current-start));
+        start = current;
+        
         String programId = (String) request.getSession().getAttribute("case_program_id");
 
         if (programId == null || programId.length() == 0) {
             programId = "0";
         }
 
+        log.debug("is there a tmp note?");
         // check to see if there is an unsaved note
         // if there is see if casemanagemententry has already handled it
         // if it has, disregard unsaved note; if it has not then set attribute
@@ -167,6 +180,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             if (restoring == null) request.setAttribute("can_restore", new Boolean(true));
             else se.setAttribute("restoring", null);
         }
+        
+        current = System.currentTimeMillis();
+        log.debug("tmp note " + String.valueOf(current-start));
+        start = current;
+
 
         // fetch and set cpp display dimensions
         /*EncounterWindow ectWin = this.caseManagementMgr.getEctWin(providerNo);
@@ -180,11 +198,22 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         caseForm.setEctWin(ectWin);
          */
 
+        log.debug("Get admission");
         String teamName = "";
         Admission admission = admissionMgr.getCurrentAdmission(programId, Integer.valueOf(demoNo));
+        current = System.currentTimeMillis();
+        log.debug("Get admission " + String.valueOf(current-start));
+        start = current;
+
         if (admission != null) {
+            log.debug("Get teams");
             List teams = programMgr.getProgramTeams(programId);
+            current = System.currentTimeMillis();
+            log.debug("Get teams " + String.valueOf(current-start));
+            start = current;
+            
             for (Iterator i = teams.iterator(); i.hasNext();) {
+                log.debug("Searching teams");
                 ProgramTeam team = (ProgramTeam) i.next();
                 String id1 = Integer.toString(team.getId());
                 String id2 = Integer.toString(admission.getTeamId());
@@ -193,35 +222,57 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         }
         request.setAttribute("teamName", teamName);
 
+        String caisiLoaded = (String) request.getSession().getAttribute("caisiLoaded");
+        
+        if (caisiLoaded != null && caisiLoaded.equalsIgnoreCase("true")) {
+
+        log.debug("Get program providers");
         List teamMembers = new ArrayList();
         List ps = programMgr.getProgramProviders(programId);
+        current = System.currentTimeMillis();
+        log.debug("Get program providers " + String.valueOf(current-start));
+        start = current;
+        
         for (Iterator j = ps.iterator(); j.hasNext();) {
             ProgramProvider pp = (ProgramProvider) j.next();
+            log.debug("Get program provider teams");
             for (Iterator k = pp.getTeams().iterator(); k.hasNext();) {
                 ProgramTeam pt = (ProgramTeam) k.next();
                 if (pt.getName().equals(teamName)) {
                     teamMembers.add(pp.getProvider().getFormattedName());
                 }
             }
+        current = System.currentTimeMillis();
+        log.debug("Get program provider teams " + String.valueOf(current-start));
+        start = current;
+            
         }
         request.setAttribute("teamMembers", teamMembers);
-
+        }
         /* ISSUES */
-
+        current = System.currentTimeMillis();        
+        log.debug("Prep work " + String.valueOf(current - start));        
+        start = current;
         if (tab.equals("Current Issues")) {
-            List<CaseManagementIssue> issues = null;
+            List<CaseManagementIssue> issues = null;            
             if (!caseForm.getHideActiveIssue().equals("true")) {
+                log.debug("Get Issues");
                 issues = caseManagementMgr.getIssues(providerNo, this.getDemographicNo(request));
+                current = System.currentTimeMillis();
+                log.debug("Get Issues " + String.valueOf(current-start));
+                start = current;               
             }
             else {
+                log.debug("Get Active Issues");
                 issues = caseManagementMgr.getActiveIssues(providerNo, this.getDemographicNo(request));
+                current = System.currentTimeMillis();
+                log.debug("Get Active Issues " + String.valueOf(current-start));
+                start = current;    
             }
             /*
              * if(request.getSession().getAttribute("archiveView")!="true") request.setAttribute("Issues",caseManagementMgr.filterIssues(issues,providerNo,programId)); else request.setAttribute("Issues",issues);
              */
-            current = System.currentTimeMillis();
-            log.debug("GET ISSUES " + String.valueOf(current - start));
-            start = current;
+            log.debug("Filter Issues");
             Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
             issues=caseManagementMgr.filterIssues(issues, providerNo, programId,currentFacilityId);
             current = System.currentTimeMillis();
@@ -234,32 +285,44 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             /* PROGRESS NOTES */
             List<CaseManagementNote> notes = null;
 
+            log.debug("Get stale note date");
             // filter the notes by the checked issues and date if set
             UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
+            current = System.currentTimeMillis();
+            log.debug("Get stale note date " + String.valueOf(current-start));
+            start = current;
+            
             String[] checked_issues = request.getParameterValues("check_issue");
             if (checked_issues != null && checked_issues[0].trim().length() > 0) {
                 // need to apply a filter
+                log.debug("Get Notes with checked issues");
                 request.setAttribute("checked_issues", checked_issues);
                 notes = caseManagementMgr.getNotes(this.getDemographicNo(request), checked_issues, userProp);
                 notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
+                current = System.currentTimeMillis();
+                log.debug("Get Notes with checked issues " + String.valueOf(current-start));
+                start = current;                
             }
             else {
+                log.debug("Get Notes");
                 notes = caseManagementMgr.getNotes(this.getDemographicNo(request), userProp);
                 notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
+                current = System.currentTimeMillis();
+                log.debug("Get Notes " + String.valueOf(current-start));
+                start = current;          
             }
 
-            log.info("FETCHED " + notes.size() + " NOTES");
+            log.debug("FETCHED " + notes.size() + " NOTES");
             // apply role based access
             // if(request.getSession().getAttribute("archiveView")!="true")
-            current = System.currentTimeMillis();
-            log.debug("GET NOTES " + String.valueOf(current - start));
-            start = current;
+            log.debug("Filter Notes");
             notes = caseManagementMgr.filterNotes(notes, providerNo, programId,currentFacilityId);
             current = System.currentTimeMillis();
             log.debug("FILTER NOTES " + String.valueOf(current - start));
             start = current;
 
             // apply provider filter
+            log.debug("Filter Notes Provider");
             Set providers = new HashSet();
             notes = applyProviderFilters(notes, providers, caseForm.getFilter_providers());
             current = System.currentTimeMillis();
@@ -269,16 +332,26 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             request.setAttribute("providers", providers);
 
             // apply if we are filtering on role
+            log.debug("Filter on Role");
             List roles = roleMgr.getRoles();
             request.setAttribute("roles", roles);
             String[] roleId = caseForm.getFilter_roles();
             if (roleId != null && roleId.length > 0) notes = applyRoleFilter(notes, roleId);
+            current = System.currentTimeMillis();
+            log.debug("Filter on Role " + String.valueOf(current-start));
+            start = current;            
 
+            log.debug("Pop notes with editors");
             this.caseManagementMgr.getEditors(notes);
+            current = System.currentTimeMillis();
+            log.debug("Pop notes with editors " + String.valueOf(current-start));
+            start = current;
+            
 
             /*
              * Notes are by default sorted from the past to the most recent So we sort only if preference is set in form or site wide setting in oscar.properties
              */
+            log.debug("Apply sorting to notes");
             String noteSort = caseForm.getNote_sort();
             if (noteSort != null && noteSort.length() > 0) {
                 request.setAttribute("Notes", sort_notes(notes, noteSort));
@@ -289,13 +362,22 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
                 if (noteSort.trim().equalsIgnoreCase("UP")) request.setAttribute("Notes", sort_notes(notes, "update_date_asc"));
                 else request.setAttribute("Notes", notes);
             }
+            current = System.currentTimeMillis();
+            log.debug("Apply sorting to notes " + String.valueOf(current-start));
+            start = current;
 
             // UCF
+            log.debug("Fetch Survey List");
             request.setAttribute("survey_list", surveyMgr.getAllForms(currentFacilityId));
+            current = System.currentTimeMillis();
+            log.debug("Fetch Survey List " + String.valueOf(current-start));
+            start = current;
+            
             // request.setAttribute("surveys", surveyManager.getForms(demographicNo));
 
         }
 
+        log.debug("Get CPP");
         CaseManagementCPP cpp = this.caseManagementMgr.getCPP(this.getDemographicNo(request));
         if (cpp == null) {
             cpp = new CaseManagementCPP();
@@ -303,10 +385,19 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         }
         request.setAttribute("cpp", cpp);
         caseForm.setCpp(cpp);
+        current = System.currentTimeMillis();
+        log.debug("Get CPP " + String.valueOf(current-start));
+        start = current;
+        
 
         /* get allergies */
+        log.debug("Get Allergies");
         List allergies = this.caseManagementMgr.getAllergies(this.getDemographicNo(request));
         request.setAttribute("Allergies", allergies);
+        current = System.currentTimeMillis();
+        log.debug("Get Allergies " + String.valueOf(current-start));
+        start = current;
+        
 
         /* get prescriptions */
         if (tab.equals("Prescriptions")) {
@@ -352,13 +443,13 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         se.setAttribute("casemgmt_VlCountry", vLocale.getCountry());
 
         /* prepare new form list for patient */
-        se.setAttribute("casemgmt_newFormBeans", this.caseManagementMgr.getEncounterFormBeans());
+        //se.setAttribute("casemgmt_newFormBeans", this.caseManagementMgr.getEncounterFormBeans());
 
         /* prepare messenger list */
-        se.setAttribute("casemgmt_msgBeans", this.caseManagementMgr.getMsgBeans(new Integer(getDemographicNo(request))));
+        //se.setAttribute("casemgmt_msgBeans", this.caseManagementMgr.getMsgBeans(new Integer(getDemographicNo(request))));
 
         // readonly access to define creat a new note button in jsp.
-        se.setAttribute("readonly", new Boolean(this.caseManagementMgr.hasAccessRight("note-read-only", "access", providerNo, demoNo, (String) se.getAttribute("case_program_id"))));
+        //se.setAttribute("readonly", new Boolean(this.caseManagementMgr.hasAccessRight("note-read-only", "access", providerNo, demoNo, (String) se.getAttribute("case_program_id"))));
 
         // if we have just saved a note, remove saveNote flag
         Boolean saved = (Boolean) se.getAttribute("saveNote");
@@ -367,12 +458,21 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             se.removeAttribute("saveNote");
         }
         current = System.currentTimeMillis();
-        log.debug("THE END " + String.valueOf(current - start));
+        log.debug("VIEW Exiting " + String.valueOf(current - beginning));
 
         String useNewCaseMgmt = (String) request.getSession().getAttribute("newCaseManagement");
         if (useNewCaseMgmt != null && useNewCaseMgmt.equals("true")) return mapping.findForward("page.newcasemgmt.view");
         else return mapping.findForward("page.casemgmt.view");
 
+    }
+    
+    public ActionForward viewNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String nId = request.getParameter("noteId");
+        CaseManagementNote note = this.caseManagementMgr.getNote(nId);
+        request.setAttribute("noteStr", note.getNote());
+        boolean raw = request.getParameter("raw").equalsIgnoreCase("true");
+        request.setAttribute("raw", raw);
+        return mapping.findForward("displayNote");
     }
     
     public ActionForward listNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -405,8 +505,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         notes = caseManagementMgr.getNotes(demoNo, issueIds, userProp);
         notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
 
-        log.info("FETCHED " + notes.size() + " NOTES filtered by " + StringUtils.join(issueIds,","));
-        log.info("REFERER " + request.getRequestURL().toString() + "?" + request.getQueryString());
+        log.debug("FETCHED " + notes.size() + " NOTES filtered by " + StringUtils.join(issueIds,","));
+        log.debug("REFERER " + request.getRequestURL().toString() + "?" + request.getQueryString());
         
         String programId = (String) request.getSession().getAttribute("case_program_id");
 
