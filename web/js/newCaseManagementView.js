@@ -334,11 +334,12 @@ function changeToView(id) {
     //clear auto save
     clearTimeout(autoSaveTimer);
     deleteAutoSave();      
-       
+
     Element.remove("notePasswd");
+
     Element.stopObserving(id, 'keyup', monitorCaseNote);
-    Element.stopObserving(id, 'click', getActiveText);
-   
+    Element.stopObserving(id, 'click', getActiveText);   
+
     Element.remove(id);    
     
     //remove observation date input text box but preserve date if there is one
@@ -1173,19 +1174,19 @@ function filterCheckBox(checkbox) {
 var newNoteCounter = 0;
 var reason;
 function newNote(e) {
-    Event.stop(e);
-    var id = "new" + newNoteCounter;
-    
+    Event.stop(e);    
+   
     ++newNoteCounter;
     var newNoteIdx = "0" + newNoteCounter;
+    var id = "nc" + newNoteIdx;
     var sigId = "sig"+ newNoteIdx;
     var input = "<textarea tabindex='7' cols='84' rows='1' wrap='soft' class='txtArea' style='line-height:1.0em;' name='caseNote_note' id='caseNote_note" + newNoteIdx + "'>" + reason + "<\/textarea>";
     var passwd = "";
     if( passwordEnabled ) {
-        passwordEnabled = "<p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>";
+        passwd = "<p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>";
     }                
 
-    var div = "<div id='" + id + "' class='newNote'><input type='hidden' id='signed" + newNoteIdx + "' value='false'><div id='n" + newNoteIdx + "'>" +
+    var div = "<div id='" + id + "' class='newNote'><input type='hidden' id='signed" + newNoteIdx + "' value='false'><div id='n" + newNoteIdx + "'><input type='hidden' id='full" + newNoteIdx + "value='true'>" +
               input + "<div class='sig' style='display:inline;' id='" + sigId + "'><\/div>" + passwd + "<\/div><\/div>";
               
     if( changeToView(caseNote) ) {
@@ -1561,12 +1562,15 @@ function autoCompleteShowMenu(element, update){
         
         for( idx = 0; idx < numNotes; ++idx ) {
             notesDiv = $("nc" + idx).down('div');
-            noteId = notesDiv.id.substr(1);  //get note id
+            noteId = notesDiv.id.substr(1);  //get note id                       
             
             if( $("obs"+noteId) != null ) 
                 noteDate = $("obs"+noteId).innerHTML;
             else if( $("observationDate") != null )
                 noteDate = $F("observationDate");
+
+            //trim leading and trailing whitespace from date
+            noteDate = noteDate.replace(/^\s+|\s+$/g,"");            
 
             if( noteDate != null ) {
                 //grab date and splice off time and format for js date object                
@@ -1575,7 +1579,7 @@ function autoCompleteShowMenu(element, update){
                 formatdate = tmp[1] + " " + tmp[0] + ", " + tmp[2];                
                 msnote = Date.parse(formatdate);
                 pos = noteIsQeued(noteId);
-                if( msnote >= msbeg && msnote <= msend ) {
+                if( msnote >= msbeg && msnote <= msend ) {                   
                     if( pos == -1 )
                         addPrintQueue(noteId);
                 }
