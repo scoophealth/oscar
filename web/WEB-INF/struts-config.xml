@@ -1621,6 +1621,7 @@
             <forward name="unlock_ajax" path="/casemgmt/unlockAjax.jsp" />
             <forward name="expired" path="/casemgmt/expired.jsp" />  
             <forward name="listNotes" path="/casemgmt/viewNotes.jsp"/>
+            <forward name="displayNote" path="/casemgmt/displayNote.jsp"/>
         </action>
         <action path="/CaseManagementEntry" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" input="/casemgmt/CaseManagementEntry.jsp" name="caseManagementEntryForm">
             <forward name="view" path="/casemgmt/CaseManagementEntry.jsp" />
