@@ -17,7 +17,8 @@
         layout="injection"
         atc="J07CA06"
         minAge="0"
-        maxAge="19"/>
+        maxAge="19"
+        showIfMinRecordNum="1"/>
 
    <item 
          desc="DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus"
@@ -26,7 +27,8 @@
          layout="injection"
          atc="J07CA02"
          minAge="0"
-         maxAge="19"/>
+         maxAge="19"
+         showIfMinRecordNum="1"/>
                  
    <item
         desc="Hib=haemophilus influenzae type B for children under 5 years of age"
@@ -35,7 +37,8 @@
         layout="injection"
         atc="J07AG51"
         minAge="0"
-        maxAge="19"/>
+        maxAge="19"
+        showIfMinRecordNum="1"/>
         
    <item        
         desc="Pneu-C=pneumococcal 7-valent conjugate"
@@ -44,7 +47,8 @@
         layout="injection"
         atc="J07AL"
         minAge="0"
-        maxAge="19"/>
+        maxAge="19"
+        showIfMinRecordNum="1"/>
         
    <item        
         desc="MMR=measles, mumps and rubella"
@@ -53,7 +57,9 @@
         layout="injection"
         atc="J07BD52"
         minAge="0"
-        maxAge="19"/>
+        maxAge="19"
+        showIfMinRecordNum="1"/> 
+        
         
    <item        
         desc="MenC-C=meningocococcal C conjugate"
@@ -62,7 +68,8 @@
         layout="injection"
         atc="J07AH07"
         minAge="0"
-        maxAge="19"/>
+        maxAge="19"
+        showIfMinRecordNum="1"/>
         
    <item        
         desc="VZ=varicella zoster"
@@ -71,7 +78,8 @@
         layout="injection"
         atc="J07BK01"
         minAge="0"
-        maxAge="19"/>
+        maxAge="19"
+        showIfMinRecordNum="1"/>
         
    <item        
         desc="Hep B=Hepatitis B"
@@ -90,7 +98,8 @@
         layout="injection"
         atc="J07AJ52"
         minAge="0"
-        maxAge="19"/>
+        maxAge="19"
+        showIfMinRecordNum="1"/>
         
    <item        
         desc="Td=tetanus and diphtheria adult type formulation"
@@ -98,7 +107,8 @@
         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
         layout="injection"
         atc="J07CA01"
-        minAge="0"/>
+        minAge="0"
+        showIfMinRecordNum="1"/>
         
    <item        
         desc="Flu=influenza vaccine"
