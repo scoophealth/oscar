@@ -210,6 +210,10 @@
             $("nc"+origId).id = "nc" + numNotes;
             ++numNotes;
        }
+       
+       <nested:notEmpty name="DateError">
+            alert("<nested:write name="DateError"/>");
+       </nested:notEmpty>
     </nested:notEmpty>
     
    if( $("toggleIssue") != null )
