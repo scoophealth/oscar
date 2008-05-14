@@ -39,24 +39,25 @@ import org.apache.log4j.Logger;
 import org.apache.struts.upload.FormFile;
 
 public class StringUtils {
+
     private static Logger logger = LogManager.getLogger(StringUtils.class);
 
     /**
-      * use to have a maximum string length view 
-      * ie "hello world !!!" would be "hello wor..."
-      *
-      *  with maxlength 13 and shorted 8 and added "..."
-      * 
-      * BENZOICUM ACIDUM 1CH - 30CH
-      *
-      *  would equal
-      *
-      * BENZOIC ...
-      * @param maxlength The maximum string length before truncating the string
-      * @param shorted length the string will be truncated to if maxlength is met
-      * @param added string added to original string if maxlength is met.  ie ...
-      * @return either full description if its less than maxlength or shortened string if its not
-      */
+     * use to have a maximum string length view 
+     * ie "hello world !!!" would be "hello wor..."
+     *
+     *  with maxlength 13 and shorted 8 and added "..."
+     * 
+     * BENZOICUM ACIDUM 1CH - 30CH
+     *
+     *  would equal
+     *
+     * BENZOIC ...
+     * @param maxlength The maximum string length before truncating the string
+     * @param shorted length the string will be truncated to if maxlength is met
+     * @param added string added to original string if maxlength is met.  ie ...
+     * @return either full description if its less than maxlength or shortened string if its not
+     */
     public static String maxLenString(String str, int maxlength, int shorted, String added) {
         String ret = str;
         if ((str != null && maxlength > shorted) && (str.length() > maxlength)) {
@@ -95,8 +96,7 @@ public class StringUtils {
             boolean matchFound = matcher.matches();
 
             return matchFound;
-        }
-        catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             e.printStackTrace();
             logger.error("Erro ao validar expressao regular", e);
 
@@ -113,8 +113,7 @@ public class StringUtils {
             logger.debug("carregou " + resourceName);
 
             return props.getProperty(resourceIten);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("Can't read the properties file. " + "Make sure " + resourceName + " is in the CLASSPATH", e);
 
             return null;
@@ -123,19 +122,18 @@ public class StringUtils {
 
     public static String transformEmptyStringInNull(String value) {
         if (value != null) {
-            return(value.equals("")?"$null$":value);
-        }
-        else {
+            return (value.equals("") ? "$null$" : value);
+        } else {
             return value;
         }
     }
 
     public static String transformNullInEmptyString(String value) {
-        return((value == null)?"":value);
+        return ((value == null) ? "" : value);
     }
 
     public static String transformNullInOtherString(String value, String str) {
-        return(((value == null) || value.equals(""))?str:value);
+        return (((value == null) || value.equals("")) ? str : value);
     }
 
     public static String preencheBranco(int n) {
@@ -171,20 +169,17 @@ public class StringUtils {
     public static boolean isNullOrEmpty(String obj) {
         if (obj == null) {
             return true;
-        }
-        else if (obj.trim().equals("")) {
+        } else if (obj.trim().equals("")) {
             return true;
-        }
-        else if (obj.trim().toUpperCase().equals("NULL")) {
+        } else if (obj.trim().toUpperCase().equals("NULL")) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public static String replaceChar(char oldChar, char newChar, String word) {
-        return((word == null)?null:word.replace(oldChar, newChar));
+        return ((word == null) ? null : word.replace(oldChar, newChar));
     }
 
     public static String getStrIn(String[] ids) {
@@ -193,8 +188,7 @@ public class StringUtils {
         for (int i = 0; i < ids.length; i++) {
             if (i == 0) {
                 id = ids[i];
-            }
-            else {
+            } else {
                 id = id + "," + ids[i];
             }
         }
@@ -213,11 +207,9 @@ public class StringUtils {
             try {
                 new Double(str);
                 ret = true;
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 ret = false;
-            }
-            finally {
+            } finally {
                 return ret;
             }
         }
@@ -236,21 +228,19 @@ public class StringUtils {
     }
 
     /**
-      * Returns true if the specified String represents a valid date
-      *
-      * @param string String
-      * @return boolean
-      */
+     * Returns true if the specified String represents a valid date
+     *
+     * @param string String
+     * @return boolean
+     */
     public static boolean isValidDate(String dateString, String format) {
         boolean ret = false;
         SimpleDateFormat fmt = new SimpleDateFormat(format);
         try {
             fmt.parse(dateString);
             ret = true;
-        }
-        catch (ParseException ex) {
-        }
-        finally {
+        } catch (ParseException ex) {
+        } finally {
             return ret;
         }
     }
@@ -261,14 +251,13 @@ public class StringUtils {
             int pointer;
             StringBuffer strb = new StringBuffer(file.getFileSize());
             while ((pointer = is.read()) != -1) {
-                strb.append((char)pointer);
+                strb.append((char) pointer);
             }
-            return(strb.toString());
-        }
-        catch (Exception e) {
+            return (strb.toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return("");
+        return ("");
     }
 
     //joins an array into a string; array elements separated by a specified delimiter
@@ -321,10 +310,11 @@ public class StringUtils {
      *Takes a list of String Objects and returns a String with the all values from the list separated by a comma
      */
     public static String getCSV(List l) {
-        StringBuffer ret = new StringBuffer();;
+        StringBuffer ret = new StringBuffer();
+        ;
         if (l != null) {
             for (int i = 0; i < l.size(); i++) {
-                ret.append((String)l.get(i));
+                ret.append((String) l.get(i));
                 if (i + 1 < l.size()) {
                     ret.append(",");
                 }
@@ -334,48 +324,45 @@ public class StringUtils {
     }
 
     /**
-     * Strips linebreaks
-     * Converts multiple line breaks to one line break
-     * Added by johnchwk Jun 2007
+     * Strips linebreaks   
+     * Replace linebreaks and multiple spaces by a single space
+     * johnchwk Apr 2008
      */
     public static String lineBreaks(String str) {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(str);
-        int strlen = (stringBuffer.length() - 1);
-        int i = 1;
-        int k = 0;
-        boolean space = false;
-        while ((i <= strlen) && (i > 0)) {
-            k = 0;
-            // Delete consecutive line breaks
-            while (((stringBuffer.charAt(i) == '\n') || (stringBuffer.charAt(i) == '\r')) && (i < strlen)) {
-                stringBuffer.deleteCharAt(i);
-                strlen--;
-                k++;
-            }
-            // Two or more line breaks converted to one line break
-            if ((k >= 2) && (!space) && (stringBuffer.charAt(i) != ' ')) {
-                stringBuffer.insert(i, "\n");
-                strlen++;
-                i++;
-            }
-            // Line break and no spaces on either side of line break so insert space else the two words will get concatenated
-            else if ((k == 1) && (!space) && (stringBuffer.charAt(i) != ' ') && k < 2) {
-                //stringBuffer.insert(i, " ");
-            	stringBuffer.insert(i, "; ");
-                strlen++;
-                i++;
-            }
-            if (stringBuffer.charAt(i) == ' ') {
-                space = true;
-            }
-            else {
-                space = false;
-            }
-            i++;
+        StringBuffer mystringBuffer = new StringBuffer();
+        mystringBuffer.append(str);
 
+        char currentchar = ' ';
+
+        boolean spaces = true;
+
+        int position = 0;
+        int strlen = (mystringBuffer.length());
+
+        strlen--;                                // since position starts at 0
+
+        // Convert all LB to spaces
+        for (position = 0; position <= strlen; position++) {
+            if (mystringBuffer.charAt(position) == '\r' || mystringBuffer.charAt(position) == '\n') {
+                mystringBuffer.setCharAt(position, ' ');
+            }
         }
-        return stringBuffer.toString();
-    }
 
+        // Leave only single spaces
+        position = 0;
+        while (position <= strlen) {
+            if (mystringBuffer.charAt(position) == ' ' && spaces) {
+                mystringBuffer.deleteCharAt(position);
+                strlen--;
+            } else if (mystringBuffer.charAt(position) == ' ') {
+                spaces = true;
+                position++;
+            } else {
+                spaces = false;
+                position++;
+            }
+        }
+
+        return mystringBuffer.toString();
+    }
 }
