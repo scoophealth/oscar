@@ -70,7 +70,8 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
         
         public PHRAction getActionById(String id){ 
             String sql ="from PHRAction a where a.id = ? ";
-            List<PHRAction> list = getHibernateTemplate().find(sql,id);
+            
+            List<PHRAction> list = getHibernateTemplate().find(sql, new Integer(id));
             
             if (list == null || list.size() == 0){
                 return null;
