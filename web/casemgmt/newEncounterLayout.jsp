@@ -537,6 +537,10 @@ function init() {
     Calendar.setup({ inputField : "printStartDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printStartDate_cal", singleClick : true, step : 1 });    
     Calendar.setup({ inputField : "printEndDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printEndDate_cal", singleClick : true, step : 1 });    
     
+    <nested:notEmpty name="DateError">
+        alert("<nested:write name="DateError"/>");
+    </nested:notEmpty>
+    
 }
 
 /*
