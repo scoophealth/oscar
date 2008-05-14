@@ -144,7 +144,7 @@
                 }
                 catch(e) {                
                     ev = document.createEvent("UIEvents");                    
-
+                    ev.initEvent("keypress",true,true);
                     /*
                     Safari doesn't support these funcs but seems to scroll without them
                     ev.initUIEvent( 'keypress', true, true, window, 1 );                    
@@ -153,7 +153,7 @@
                     
                 }
                 
-                inpu.dispatchEvent(ev); // causes the scrolling                                      
+                inpu.dispatchEvent(ev); // causes the scrolling                                                      
                 
 	}else if (inpu.createTextRange) {                
 		var range = inpu.createTextRange();
@@ -305,7 +305,8 @@ function changeToView(id) {
             return false;
         else {
             saving = true;
-            ajaxSaveNote(sig,nId,tmp);              
+            if( ajaxSaveNote(sig,nId,tmp) == false)
+                return false;
         }
    }
    
@@ -385,6 +386,7 @@ function changeToView(id) {
         tmp = "&nbsp;";
         
     tmp = tmp.replace(/\n/g,"<br>");
+
     if( !saving ) {
         if( largeNote(tmp) ) {
             var btmImg = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
@@ -406,10 +408,11 @@ function changeToView(id) {
         
         new Insertion.Top(parent, input);
 
-        if( nId.substr(0,1) != "0" )            
+        if( nId.substr(0,1) != "0" ) {
             Element.remove(printImg);
+            new Insertion.Top(parent, printimg);
+        }
         
-        new Insertion.Top(parent, printimg); 
         new Insertion.Top(parent, img);            
 
         $(parent).style.height = "auto";        
@@ -754,13 +757,16 @@ function editNote(e) {
     }
     else
         payload = "";
+
     Element.remove(txtId);                       
     caseNote = "caseNote_note" + nId;                
     
     var input = "<textarea tabindex='7' cols='84' rows='10' wrap='soft' class='txtArea' style='line-height:1.1em;' name='caseNote_note' id='" + caseNote + "'>" + payload + "<\/textarea>";                    
     new Insertion.Top(txt, input);                 
     var printimg = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";    
-    new Insertion.Top(txt, printimg);
+
+    if( nId.substr(0,1) != "0" )
+        new Insertion.Top(txt, printimg);
 
     if( $F(isFull) == "true" ) {    
         //position cursor at end of text  
@@ -924,7 +930,9 @@ function validDate() {
     var time = strDate.substr(strDate.indexOf(" ")+1);
     var date = new Date( mnth + " " + day + ", " + year + " " + time);
     var today = new Date(strToday);    
-    
+    today.setHours(23);
+    today.setMinutes(59);
+
     if( date <= today )
         return true;
     else
@@ -932,7 +940,7 @@ function validDate() {
 }
 
 function ajaxSaveNote(div,noteId,noteTxt) {
-    if( $("observationDate") != undefined && $("observationDate").value.length > 0 && !validDate() ) {
+    if( $("observationDate") != null && $("observationDate").value.length > 0 && !validDate() ) {
         alert("Observation date must be in the past");
         return false;
     }
@@ -940,6 +948,11 @@ function ajaxSaveNote(div,noteId,noteTxt) {
     if( caisiEnabled ) {
         if( !issueIsAssigned() ) {
             alert("At least one(1) issue must be assigned to note");
+            return false;
+        }
+
+        if( $("observationDate").value.length == 0 ) {
+            alert("An observation date must be set");
             return false;
         }
     }
@@ -972,12 +985,12 @@ function ajaxSaveNote(div,noteId,noteTxt) {
                             if( request.status == 403 )
                                 alert("Session Expired");
                             else
-                                alert("Error saving note " + request.status);
+                                alert("Error saving note " + request.status + " " + request.responseText);
                         }                        
                      }
                    );  
                    
-    return false;
+    return true;
 }
 
 function savePage(method) {
@@ -995,6 +1008,11 @@ function savePage(method) {
     if( caisiEnabled ) {
         if( !issueIsAssigned() ) {
             alert("At least one(1) issue must be assigned to note");
+            return false;
+        }
+
+        if( $("observationDate").value.length == 0 ) {
+            alert("An observation date must be set");
             return false;
         }
     }
@@ -1186,7 +1204,7 @@ function newNote(e) {
         passwd = "<p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>";
     }                
 
-    var div = "<div id='" + id + "' class='newNote'><input type='hidden' id='signed" + newNoteIdx + "' value='false'><div id='n" + newNoteIdx + "'><input type='hidden' id='full" + newNoteIdx + "value='true'>" +
+    var div = "<div id='" + id + "' class='newNote'><input type='hidden' id='signed" + newNoteIdx + "' value='false'><div id='n" + newNoteIdx + "'><input type='hidden' id='full" + newNoteIdx + "' value='true'>" +
               input + "<div class='sig' style='display:inline;' id='" + sigId + "'><\/div>" + passwd + "<\/div><\/div>";
               
     if( changeToView(caseNote) ) {
