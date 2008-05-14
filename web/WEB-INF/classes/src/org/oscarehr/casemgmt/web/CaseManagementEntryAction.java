@@ -676,7 +676,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         if (observationDate != null && !observationDate.equals("")) {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm");
             Date dateObserve = formatter.parse(observationDate);
-            note.setObservation_date(dateObserve);
+            if( dateObserve.getTime() > now.getTime() ) {
+                request.setAttribute("DateError", "Observation Date set in future, rolled back to current time");
+                note.setObservation_date(now);
+            }
+            else
+                note.setObservation_date(dateObserve);
         }
         else if (note.getObservation_date() == null) {
             note.setObservation_date(now);
@@ -727,7 +732,22 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         if (chain != null) {
             request.getSession().setAttribute("newNote", false);
             request.getSession().setAttribute("saveNote", new Boolean(true)); // tell CaseManagementView we have just saved note
-            return mapping.findForward(chain);
+            ActionForward fwd = mapping.findForward(chain);            
+            StringBuffer path = new StringBuffer(fwd.getPath());
+            
+            if( request.getAttribute("DateError") != null ) {
+                if( path.indexOf("?") == -1 )
+                    path.append("?");
+                else
+                    path.append("&");
+               
+                path.append("DateError=Observation Date set in future.  Rolled back to current time");
+            }
+            
+            
+            ActionForward forward = new ActionForward();
+            forward.setPath(path.toString());
+            return forward;
         }
 
         // this.caseManagementMgr.saveNote();
@@ -762,6 +782,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             history = "---------History Record---------" + history;
             
         }
+        
+        String observationDate = request.getParameter("obsDate");        
+        
+        if (observationDate != null && !observationDate.equals("")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm");
+            Date dateObserve = formatter.parse(observationDate);
+            if( dateObserve.getTime() > now.getTime() ) {
+                request.setAttribute("DateError", "Observation Date set in future, rolled back to current time");
+                note.setObservation_date(now);
+            }
+            else
+                note.setObservation_date(dateObserve);
+        }
+        else if (note.getObservation_date() == null) {
+            note.setObservation_date(now);
+        }
+
         
         history = noteTxt + "[[" + now + "]]" + history;
         note.setNote(noteTxt);                
@@ -838,16 +875,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         note.setRevision(String.valueOf(revision));
         
-        String observationDate = request.getParameter("obsDate");        
-        
-        if (observationDate != null && !observationDate.equals("")) {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm");
-            Date dateObserve = formatter.parse(observationDate);
-            note.setObservation_date(dateObserve);
-        }
-        else if (note.getObservation_date() == null) {
-            note.setObservation_date(now);
-        }
 
         note.setUpdate_date(now);
         if (note.getCreate_date() == null) note.setCreate_date(now);
@@ -905,6 +932,24 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         noteSave(cform, request);
         cform.setMethod("view");
+        String error = (String)request.getAttribute("DateError");
+        if (error != null) {
+            request.getSession().setAttribute("newNote", false);
+            request.getSession().setAttribute("saveNote", new Boolean(true)); // tell CaseManagementView we have just saved note
+            ActionForward fwd = mapping.findForward("list");            
+            StringBuffer path = new StringBuffer(fwd.getPath());
+            
+            if( path.indexOf("?") == -1 )
+                path.append("?");
+            else
+                path.append("&");
+
+            path.append("DateError="+error);
+            
+            ActionForward forward = new ActionForward();
+            forward.setPath(path.toString());
+            return forward;
+        }
         return mapping.findForward("windowClose");
     }
 
@@ -921,7 +966,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         catch (Throwable e) {
             log.warn(e);
         }
-
+        
         return mapping.findForward("windowClose");
     }
 
