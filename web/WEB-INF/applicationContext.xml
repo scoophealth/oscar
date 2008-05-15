@@ -12,9 +12,6 @@
 	<!-- setup hibernate -->
 	<import resource="classpath:spring_hibernate.xml"/>
    
-    <!-- JPA DAO -->
-    <bean id="issueGroupDao" class="org.oscarehr.common.dao.IssueGroupDao" autowire="byName"/>
-
     <!-- hibernated DAO -->
     <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" autowire="byName"/>
     <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao" autowire="byName"/>

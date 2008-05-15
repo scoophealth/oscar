@@ -45,7 +45,6 @@
     <bean id="surveyTestDAO" class="org.oscarehr.survey.dao.hibernate.SurveyTestDAOHibernate" autowire="byName"/>
     <bean id="oscarFormDAO" class="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate" autowire="byName"/>
     <bean id="populationReportDao" class="org.oscarehr.common.dao.PopulationReportDao" autowire="byName"/>
-    <bean id="integratorConsentDao" class="org.oscarehr.common.dao.IntegratorConsentDao" autowire="byName"/>
     
 
     <!-- managers  -->    
