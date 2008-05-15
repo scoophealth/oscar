@@ -188,6 +188,7 @@
         <property name="target">
             <bean class="org.oscarehr.common.service.PopulationReportManager" autowire="byName">
                     <property name="issueDAO" ref="IssueDAO"/>
+                    <property name="populationReportDao" ref="populationReportDao"/>
             </bean>
         </property>
     </bean>
