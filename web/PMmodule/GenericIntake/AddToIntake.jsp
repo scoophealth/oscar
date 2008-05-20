@@ -88,6 +88,16 @@ String pSize        = request.getParameter("pSize");
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Add To Intake</title>
 	<script type="text/javascript">
+	    function type_selected(eType) {
+		for (var i=0; i<eType.length; i++) {
+		    if (eType[i].checked==true) {
+			return true;
+		    }
+		}
+		alert("Please select an element type!");
+		return false;
+	    }
+	    
 	    function doMandatory() {
 		if (document.addToIntakeFrm.mandatorySet.value==0 && document.forms[0].mandatory.checked==true) {
 		    document.forms[0].mandatory.checked = false;
@@ -108,7 +118,7 @@ String pSize        = request.getParameter("pSize");
         <script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>" ></script>
     </head>
     <body>
-        <form name="addToIntakeFrm" method="post" action="AddToIntake.jsp">
+        <form name="addToIntakeFrm" method="post" action="AddToIntake.jsp" onsubmit="return type_selected(elementType);">
             
             <input type="hidden" name="newpos"                value="<%=pSize%>"/>
             
