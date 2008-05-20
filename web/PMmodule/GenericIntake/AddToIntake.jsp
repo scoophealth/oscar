@@ -88,14 +88,17 @@ String pSize        = request.getParameter("pSize");
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Add To Intake</title>
 	<script type="text/javascript">
-	    function type_selected(eType) {
-		for (var i=0; i<eType.length; i++) {
-		    if (eType[i].checked==true) {
-			return true;
+	    function type_selected(nTemplate, eType) {
+		if (nTemplate=='4' || nTemplate=='5' || nTemplate=='6') {
+		    for (var i=0; i<eType.length; i++) {
+			if (eType[i].checked==true) {
+			    return true;
+			}
 		    }
+		    alert("Please select an element type!");
+		    return false;
 		}
-		alert("Please select an element type!");
-		return false;
+		return true;
 	    }
 	    
 	    function doMandatory() {
@@ -118,7 +121,7 @@ String pSize        = request.getParameter("pSize");
         <script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>" ></script>
     </head>
     <body>
-        <form name="addToIntakeFrm" method="post" action="AddToIntake.jsp" onsubmit="return type_selected(elementType);">
+        <form name="addToIntakeFrm" method="post" action="AddToIntake.jsp" onsubmit="return type_selected(<%=nodeTemplate%>, elementType);">
             
             <input type="hidden" name="newpos"                value="<%=pSize%>"/>
             
