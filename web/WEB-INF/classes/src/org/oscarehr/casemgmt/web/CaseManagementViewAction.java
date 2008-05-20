@@ -226,28 +226,38 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         
         if (caisiLoaded != null && caisiLoaded.equalsIgnoreCase("true")) {
 
-        log.debug("Get program providers");
-        List teamMembers = new ArrayList();
-        List ps = programMgr.getProgramProviders(programId);
-        current = System.currentTimeMillis();
-        log.debug("Get program providers " + String.valueOf(current-start));
-        start = current;
-        
-        for (Iterator j = ps.iterator(); j.hasNext();) {
-            ProgramProvider pp = (ProgramProvider) j.next();
-            log.debug("Get program provider teams");
-            for (Iterator k = pp.getTeams().iterator(); k.hasNext();) {
-                ProgramTeam pt = (ProgramTeam) k.next();
-                if (pt.getName().equals(teamName)) {
-                    teamMembers.add(pp.getProvider().getFormattedName());
+            log.debug("Get program providers");
+            List teamMembers = new ArrayList();
+            List ps = programMgr.getProgramProviders(programId);
+            current = System.currentTimeMillis();
+            log.debug("Get program providers " + String.valueOf(current-start));
+            start = current;
+
+            for (Iterator j = ps.iterator(); j.hasNext();) {
+                ProgramProvider pp = (ProgramProvider) j.next();
+                log.debug("Get program provider teams");
+                for (Iterator k = pp.getTeams().iterator(); k.hasNext();) {
+                    ProgramTeam pt = (ProgramTeam) k.next();
+                    if (pt.getName().equals(teamName)) {
+                        teamMembers.add(pp.getProvider().getFormattedName());
+                    }
                 }
+            current = System.currentTimeMillis();
+            log.debug("Get program provider teams " + String.valueOf(current-start));
+            start = current;
+
             }
-        current = System.currentTimeMillis();
-        log.debug("Get program provider teams " + String.valueOf(current-start));
-        start = current;
+            request.setAttribute("teamMembers", teamMembers);
             
-        }
-        request.setAttribute("teamMembers", teamMembers);
+            /* prepare new form list for patient */
+            se.setAttribute("casemgmt_newFormBeans", this.caseManagementMgr.getEncounterFormBeans());
+
+            /* prepare messenger list */
+            se.setAttribute("casemgmt_msgBeans", this.caseManagementMgr.getMsgBeans(new Integer(demoNo)));
+
+            // readonly access to define creat a new note button in jsp.
+            se.setAttribute("readonly", new Boolean(this.caseManagementMgr.hasAccessRight("note-read-only", "access", providerNo, demoNo, (String) se.getAttribute("case_program_id"))));
+
         }
         /* ISSUES */
         current = System.currentTimeMillis();        
@@ -438,19 +448,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         caseForm.setVlCountry(vLocale.getCountry());
         caseForm.setDemographicNo(getDemographicNo(request));
 
-        se.setAttribute("casemgmt_DemoNo", getDemographicNo(request));
+        se.setAttribute("casemgmt_DemoNo", demoNo);
         caseForm.setRootCompURL((String) se.getAttribute("casemgmt_oscar_baseurl"));
         se.setAttribute("casemgmt_VlCountry", vLocale.getCountry());
-
-        /* prepare new form list for patient */
-        //se.setAttribute("casemgmt_newFormBeans", this.caseManagementMgr.getEncounterFormBeans());
-
-        /* prepare messenger list */
-        //se.setAttribute("casemgmt_msgBeans", this.caseManagementMgr.getMsgBeans(new Integer(getDemographicNo(request))));
-
-        // readonly access to define creat a new note button in jsp.
-        //se.setAttribute("readonly", new Boolean(this.caseManagementMgr.hasAccessRight("note-read-only", "access", providerNo, demoNo, (String) se.getAttribute("case_program_id"))));
-
+        
         // if we have just saved a note, remove saveNote flag
         Boolean saved = (Boolean) se.getAttribute("saveNote");
         if (saved != null && saved == true) {
@@ -476,6 +477,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
     }
     
     public ActionForward listNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        System.out.println("List Notes start");
+        long beginning = System.currentTimeMillis();
+        long start = beginning;
+        long current = 0;
         String providerNo = getProviderNo(request);
         String demoNo = getDemographicNo(request);
         List notes = null;
@@ -486,8 +491,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         
         // filter the notes by the checked issues and date if set
         UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
-        String[] codes = request.getParameterValues("issue_code");
+        
+        current = System.currentTimeMillis();
+        System.out.println("Setup " + String.valueOf(current - start));
+        start = current;
+        String[] codes = request.getParameterValues("issue_code");        
         List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, codes);
+        current = System.currentTimeMillis();
+        System.out.println("Get Issues " + String.valueOf(current - start));
+        start = current;
         
         StringBuffer checked_issues = new StringBuffer();
         String[] issueIds = new String[issues.size()];
@@ -504,6 +516,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         // need to apply issue filter        
         notes = caseManagementMgr.getNotes(demoNo, issueIds, userProp);
         notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
+        current = System.currentTimeMillis();
+        System.out.println("Get Notes " + String.valueOf(current - start));
+        start = current;
 
         log.debug("FETCHED " + notes.size() + " NOTES filtered by " + StringUtils.join(issueIds,","));
         log.debug("REFERER " + request.getRequestURL().toString() + "?" + request.getQueryString());
@@ -524,6 +539,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         if (noteSort.trim().equalsIgnoreCase("UP")) request.setAttribute("Notes", sort_notes(notes, "update_date_asc"));
         else request.setAttribute("Notes", notes);
         
+        current = System.currentTimeMillis();
+        System.out.println("Filter notes " + String.valueOf(current - start));
+        System.out.println("Total List Notes " + String.valueOf(current - beginning));
+
         return mapping.findForward("listNotes");
     }
 
