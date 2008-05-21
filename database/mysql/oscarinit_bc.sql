@@ -2315,6 +2315,8 @@ CREATE TABLE formWCB (
 CREATE TABLE log_teleplantx (
   log_no int(10) NOT NULL auto_increment,
   claim blob,
+  sequence_no int(10) default NULL,
+  billingmaster_no int(10) default NULL,
   PRIMARY KEY  (log_no)
 ) TYPE=MyISAM;
 
@@ -2335,7 +2337,7 @@ CREATE TABLE specialty (
 CREATE TABLE teleplanS00 (
   s00_id int(10) NOT NULL auto_increment,
   s21_id int(10) NOT NULL default '0',
-  filename varchar(30) default NULL,
+  filename varchar(255) default NULL,
   t_s00type char(3) default NULL,
   t_datacenter varchar(5) default NULL,
   t_dataseq varchar(7) default NULL,
@@ -2400,7 +2402,7 @@ CREATE TABLE teleplanS00 (
 
 CREATE TABLE teleplanS21 (
   s21_id int(10) NOT NULL auto_increment,
-  filename varchar(30) default NULL,
+  filename varchar(255) default NULL,
   t_datacenter varchar(5) default NULL,
   t_dataseq varchar(7) default NULL,
   t_payment varchar(8) default NULL,
@@ -2425,7 +2427,7 @@ CREATE TABLE teleplanS21 (
 CREATE TABLE teleplanS22 (
   s22_id int(10) NOT NULL auto_increment,
   s21_id int(10) NOT NULL default '0',
-  filename varchar(30) default NULL,
+  filename varchar(255) default NULL,
   t_s22type char(3) default NULL,
   t_datacenter varchar(5) default NULL,
   t_dataseq varchar(7) default NULL,
@@ -2448,7 +2450,7 @@ CREATE TABLE teleplanS22 (
 CREATE TABLE teleplanS23 (
   s23_id int(10) NOT NULL auto_increment,
   s21_id int(10) NOT NULL default '0',
-  filename varchar(30) default NULL,
+  filename varchar(255) default NULL,
   t_s23type char(3) default NULL,
   t_datacenter varchar(5) default NULL,
   t_dataseq varchar(7) default NULL,
@@ -2479,7 +2481,7 @@ CREATE TABLE teleplanS23 (
 CREATE TABLE teleplanS25 (
   s25_id int(10) NOT NULL auto_increment,
   s21_id int(10) NOT NULL default '0',
-  filename varchar(30) default NULL,
+  filename varchar(255) default NULL,
   t_s25type char(3) default NULL,
   t_datacenter varchar(5) default NULL,
   t_dataseq varchar(7) default NULL,
@@ -2500,7 +2502,7 @@ CREATE TABLE teleplanS25 (
 CREATE TABLE teleplanC12 (
   c12_id int(10) unsigned NOT NULL auto_increment,
   s21_id int(10) unsigned NOT NULL default '0',
-  filename varchar(50) NOT NULL default '',
+  filename varchar(255) NOT NULL default '',
   t_datacenter varchar(5) NOT NULL default '',
   t_dataseq varchar(7) NOT NULL default '',
   t_payeeno varchar(5) NOT NULL default '',
@@ -2852,7 +2854,8 @@ CREATE TABLE `hl7_msh` (
   `country_code` char(2) default NULL,
   `character_set` char(6) default NULL,
   `principal_language_of_message` char(60) default NULL,
-  PRIMARY KEY  (`msh_id`)
+  PRIMARY KEY  (`msh_id`),
+  KEY (`message_id`)
 ) TYPE=MyISAM;
  
  
@@ -3030,8 +3033,8 @@ CREATE TABLE `hl7_pid` (
 create index  teleplanS00_t_officeno on teleplanS00 (t_officeno(7));
 create index  billingmaster_billingstatus on billingmaster (billingstatus(1));
 create index  billingmaster_billing_no on billingmaster (billing_no);
-create index  demographic_no on formBCBirthSumMo (demographic_no);
-create index  formCreated on formBCBirthSumMo (formCreated);
+--create index  demographic_no on formBCBirthSumMo (demographic_no);
+--create index  formCreated on formBCBirthSumMo (formCreated);
 
 --
 -- Table structure for table `teleplan_adj_codes`
@@ -3055,6 +3058,40 @@ CREATE TABLE teleplan_refusal_code (
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
+
+CREATE TABLE `teleplan_submission_link` (
+  `id` int(10) NOT NULL auto_increment,
+  `bill_activity_id` int(10) default NULL,
+  `billingmaster_no` int(10) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `bill_activity_id` (`bill_activity_id`),
+  KEY `billingmaster_no` (`billingmaster_no`)
+);
+
+
+CREATE TABLE `billing_on_3rdPartyAddress` (
+  `id` int(6) NOT NULL auto_increment,
+  `attention` varchar(100) NOT NULL default '',
+  `company_name` varchar(100) NOT NULL default '',
+  `address` varchar(200) NOT NULL default '',
+  `city` varchar(200) NOT NULL default '',
+  `province` varchar(10) NOT NULL default '',
+  `postcode` varchar(10) NOT NULL default '',
+  `telephone` varchar(15) NOT NULL default '',
+  `fax` varchar(15) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ;
+
+
+CREATE TABLE `teleplan_response_log` (
+  `id` int(10) NOT NULL auto_increment,
+  `transaction_no` varchar(255) default NULL,
+  `result` varchar(255) default NULL,
+  `filename` varchar(255) default NULL,
+  `real_filename` varchar(255) default NULL,
+  `msgs` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+);
 
 --
 -- Table structure for table `ctl_billingservice_age_rules`
@@ -3226,6 +3263,12 @@ CREATE TABLE billing_cdm_service_codes (
   serviceCode varchar(10) NOT NULL default '',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
+
+
+alter table billactivity add column id int(10) NOT NULL auto_increment primary key;
+ 
+alter table billactivity add column sentdate datetime default NULL;
+
 
 CREATE TABLE `formBCClientChartChecklist` (
   `ID` int(10) NOT NULL auto_increment,
