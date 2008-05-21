@@ -4,8 +4,7 @@ insert into agency (id) values (0);
 -- default facility
 INSERT INTO facility (name, description) VALUES ('Default Facility', 'Default facility, please modify with a more appropriate name and description');
 
-insert into provider_facility values (999998, (select id from facility wh
-ere name='Default Facility' ));
+insert into provider_facility values (999998, (select id from facility where name='Default Facility' ));
 
 -- default roles
 INSERT INTO `caisi_role` VALUES (1,'doctor',0,'',now()),(2,'nurse',0,'',now()),(3,'counsellor',0,'',now()),(4,'csw',0,'',now());
