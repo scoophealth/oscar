@@ -44,7 +44,7 @@
     <bean id="MessagetblDAO" class="org.oscarehr.casemgmt.dao.MessagetblDAO" autowire="byName"/>
     <bean id="ProviderSignitureDao" class="org.oscarehr.casemgmt.dao.ProviderSignitureDao" autowire="byName"/>
     <bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.RoleProgramAccessDAO" autowire="byName"/>
-    <bean id="ClientImageDAO" class="org.oscarehr.casemgmt.dao.ClientImageDAO" autowire="byName"/>
+    <bean id="clientImageDAO" class="org.oscarehr.casemgmt.dao.ClientImageDAO" autowire="byName"/>
     <bean id="roleDAO" class="org.oscarehr.PMmodule.dao.RoleDAO" autowire="byName" />
     <bean id="CaseManagementTmpSaveDAO" class="org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO" autowire="byName"/>
     <bean id="ticklerDAO" class="org.oscarehr.casemgmt.dao.TicklerDAO" autowire="byName"/>
@@ -229,7 +229,7 @@
         <property name="providerDAO" ref="providerDao"/>
         <property name="demographicDAO" ref="clientDao"/>
         <property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO"/>
-        <property name="clientImageDAO" ref="ClientImageDAO"/>
+        <property name="clientImageDAO" ref="clientImageDAO"/>
         <property name="hashAuditDAO" ref="HashAuditDAO"/>
         <property name="ectWindowDAO" ref="EncounterWindowDAO"/>
         <property name="userPropertyDAO" ref="UserPropertyDAO"/>
@@ -268,7 +268,7 @@
         </property>
     </bean>
     <bean id="ClientImageManagerTarget" class="org.oscarehr.casemgmt.service.ClientImageManager"  autowire="byName" >
-        <property name="clientImageDAO" ref="ClientImageDAO"/>
+        <property name="clientImageDAO" ref="clientImageDAO"/>
     </bean>
     <bean id="oscarSurveyManager" parent="baseTransactionProxy">
         <property name="target">

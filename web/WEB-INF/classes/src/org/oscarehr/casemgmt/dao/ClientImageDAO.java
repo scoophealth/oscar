@@ -30,7 +30,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ClientImageDAO extends HibernateDaoSupport {
     public ClientImage getClientImage(String id, String image_type) {
-        List results = this.getHibernateTemplate().find("from ClientImage c where c.demographic_no = ? and c.image_type = ? order by c.update_date desc", new Object[] {Long.valueOf(id), image_type});
+        List results = getHibernateTemplate().find("from ClientImage c where c.demographic_no = ? and c.image_type = ? order by c.update_date desc", new Object[] {Long.valueOf(id), image_type});
 
         if (results.size() > 0) {
             return (ClientImage)results.get(0);
@@ -45,11 +45,11 @@ public class ClientImageDAO extends HibernateDaoSupport {
             existing.setImage_type(clientImage.getImage_type());
             existing.setUpdate_date(new Date());
         }
-        this.getHibernateTemplate().saveOrUpdate(clientImage);
+        getHibernateTemplate().saveOrUpdate(clientImage);
     }
 
     public ClientImage getClientImage(String clientId) {
-        List results = this.getHibernateTemplate().find("from ClientImage i where i.demographic_no=?", Long.valueOf(clientId));
+        List results = getHibernateTemplate().find("from ClientImage i where i.demographic_no=?", Long.valueOf(clientId));
         if (results.size() > 0) {
             return (ClientImage)results.get(0);
         }

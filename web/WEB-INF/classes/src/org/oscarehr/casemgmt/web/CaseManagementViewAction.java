@@ -158,7 +158,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         
         log.debug("client Image?");
         // get client image
-        request.setAttribute("image_filename", this.getImageFilename(demoNo, request));
+        request.setAttribute("image_filename", getImageFilename(demoNo, request));
 
         current = System.currentTimeMillis();
         log.debug("client image " + String.valueOf(current-start));

@@ -38,14 +38,18 @@ import org.caisi.dao.DemographicDAO;
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssueTransfer;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicIssuePrimaryKey;
+import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicPrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
-import org.oscarehr.casemgmt.dao.IssueDAO;
+import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
+import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.beans.BeanUtils;
@@ -60,6 +64,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
     private FacilityDAO facilityDAO;
     private DemographicDAO demographicDAO;
     private CaseManagementIssueDAO caseManagementIssueDAO;
+    private ClientImageDAO clientImageDAO;
 
     public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
         this.caisiIntegratorManager = mgr;
@@ -75,6 +80,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
     public void setCaseManagementIssueDAO(CaseManagementIssueDAO caseManagementIssueDAO) {
         this.caseManagementIssueDAO = caseManagementIssueDAO;
+    }
+
+    public void setClientImageDAO(ClientImageDAO clientImageDAO) {
+        this.clientImageDAO = clientImageDAO;
     }
 
     public void run() {
@@ -124,7 +133,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         DemographicInfoWs service = caisiIntegratorManager.getDemographicInfoWs(facility.getId());
         List<Integer> demographicIds = DemographicDAO.getDemographicIdsAdmittedIntoFacility(facility.getId());
         pushDemographics(facility, service, demographicIds);
-        pushIssues(facility, service, demographicIds);
+        pushDemographicsIssues(facility, service, demographicIds);
+        pushDemographicsImages(facility, service, demographicIds);
 
         // update late push time only if an exception didn't occur
         // re-get the facility as the sync time could be very long and changes may have been made to the facility.
@@ -133,7 +143,30 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         facilityDAO.saveFacility(facility);
     }
 
-    private void pushIssues(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) {
+    private void pushDemographicsImages(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) {
+        for (Integer demographicId : demographicIds) {
+            pushDemographicImages(facility, service, demographicId);
+        }
+    }
+
+    private void pushDemographicImages(Facility facility, DemographicInfoWs service, Integer demographicId) {
+        logger.debug("pushing demographicImage facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+        ClientImage clientImage=clientImageDAO.getClientImage(demographicId.toString());
+        if (clientImage==null) return;
+        
+        CachedDemographicImage cachedDemographicImage=new CachedDemographicImage();
+        
+        FacilityDemographicPrimaryKey facilityDemographicPrimaryKey=new FacilityDemographicPrimaryKey();
+        facilityDemographicPrimaryKey.setFacilityDemographicId(demographicId);
+        
+        cachedDemographicImage.setFacilityDemographicPrimaryKey(facilityDemographicPrimaryKey);
+        cachedDemographicImage.setImage(clientImage.getImage_data());
+        
+        service.setCachedDemographicImage(cachedDemographicImage);
+    }
+
+    private void pushDemographicsIssues(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) {
         for (Integer demographicId : demographicIds) {
             pushDemographicIssues(facility, service, demographicId);
         }
@@ -145,15 +178,18 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
         if (caseManagementIssues.size() == 0) return;
 
-        ArrayList<CachedDemographicIssueTransfer> issueTransfers = new ArrayList<CachedDemographicIssueTransfer>();
+        ArrayList<CachedDemographicIssue> issueTransfers = new ArrayList<CachedDemographicIssue>();
         for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
             Issue issue=caseManagementIssue.getIssue();
-            CachedDemographicIssueTransfer issueTransfer=new CachedDemographicIssueTransfer();
+            CachedDemographicIssue issueTransfer=new CachedDemographicIssue();
 
+            FacilityDemographicIssuePrimaryKey facilityDemographicIssuePrimaryKey=new FacilityDemographicIssuePrimaryKey();
+            facilityDemographicIssuePrimaryKey.setFacilityDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
+            facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
+            issueTransfer.setFacilityDemographicIssuePrimaryKey(facilityDemographicIssuePrimaryKey);
+            
             issueTransfer.setAcute(caseManagementIssue.isAcute());
             issueTransfer.setCertain(caseManagementIssue.isCertain());
-            issueTransfer.setFacilityDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
-            issueTransfer.setIssueCode(issue.getCode());
             issueTransfer.setIssueDescription(issue.getDescription());
             issueTransfer.setMajor(caseManagementIssue.isMajor());
             issueTransfer.setResolved(caseManagementIssue.isResolved());
@@ -172,6 +208,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
             CachedDemographicInfo cachedDemographicInfo = new CachedDemographicInfo();
 
+            FacilityDemographicPrimaryKey facilityDemographicPrimaryKey=new FacilityDemographicPrimaryKey();
+            facilityDemographicPrimaryKey.setFacilityDemographicId(demographic.getDemographicNo());
+            cachedDemographicInfo.setFacilityDemographicPrimaryKey(facilityDemographicPrimaryKey);
+            
             XMLGregorianCalendar cal = new XMLGregorianCalendarImpl();
             if (demographic.getYearOfBirth() != null) cal.setYear(Integer.parseInt(demographic.getYearOfBirth()));
             if (demographic.getMonthOfBirth() != null) cal.setMonth(Integer.parseInt(demographic.getMonthOfBirth()));
@@ -179,7 +219,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
             cachedDemographicInfo.setBirthDate(cal);
 
             cachedDemographicInfo.setCity(demographic.getCity());
-            cachedDemographicInfo.setFacilityDemographicId(demographic.getDemographicNo());
             cachedDemographicInfo.setFirstName(demographic.getFirstName());
             cachedDemographicInfo.setGender(demographic.getSex());
             cachedDemographicInfo.setHin(demographic.getHin());
