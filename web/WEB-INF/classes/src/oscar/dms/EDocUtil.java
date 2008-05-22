@@ -32,6 +32,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -452,6 +453,10 @@ public class EDocUtil extends SqlUtilBaseS {
         return dateTimeStamp;
     }
 
+    public static Date getDmsDateTimeAsDate() {
+        return UtilDateUtilities.now();
+    }
+    
     public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator) throws SQLException {
         String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,updatedatetime,status,contenttype,public1,observationdate) values (?,?,?,?,?,'A',?,0,?)";
         String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
