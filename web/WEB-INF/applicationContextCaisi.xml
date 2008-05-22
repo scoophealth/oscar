@@ -198,10 +198,7 @@
             <bean class="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask" lazy-init="default" dependency-check="default" autowire="byName" />
         </property>
         <property name="delay" value="30000"/>
-        <!--
         <property name="period" value="43200000"/>
-         -->
-        <property name="period" value="30000"/>
     </bean>
     
     <bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
