@@ -538,24 +538,12 @@ INSERT INTO encountertemplate VALUES ('VENEREAL WARTS (COND','0001-01-01 00:00:0
 -- Dumping data for table 'groupMembers_tbl'
 --
 
-INSERT INTO groupMembers_tbl VALUES (0,'88888');
-INSERT INTO groupMembers_tbl VALUES (0,'999999');
-INSERT INTO groupMembers_tbl VALUES (0,'999998');
-INSERT INTO groupMembers_tbl VALUES (0,'999997');
-INSERT INTO groupMembers_tbl VALUES (0,'174');
-INSERT INTO groupMembers_tbl VALUES (17,'174');
-INSERT INTO groupMembers_tbl VALUES (17,'999998');
-INSERT INTO groupMembers_tbl VALUES (19,'999997');
-INSERT INTO groupMembers_tbl VALUES (18,'999999');
-INSERT INTO groupMembers_tbl VALUES (18,'88888');
 
 --
 -- Dumping data for table 'groups_tbl'
 --
 
 INSERT INTO groups_tbl VALUES (17,0,'doc');
-INSERT INTO groups_tbl VALUES (18,0,'receptionist');
-INSERT INTO groups_tbl VALUES (19,0,'admin');
 
 --
 -- Dumping data for table 'ichppccode'
@@ -1060,7 +1048,6 @@ INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringI
 -- Dumping data for table 'mygroup'
 --
 
-INSERT INTO mygroup VALUES ('Docs','174','Chan','David','a1');
 INSERT INTO mygroup VALUES ('IT Support','88888','Support','IT',NULL);
 
 --
@@ -1092,11 +1079,7 @@ INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue',
 -- Dumping data for table 'provider'
 --
 
-INSERT INTO provider VALUES ('999997','oscaradmin','admin','admin','','','','0001-01-01','','','','','','','','1','','');
 INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','0001-01-01','','','','','','','','1','','');
-INSERT INTO provider VALUES ('999999','oscarrep','receptionist','receptionist','','','','0001-01-01','','','','','','','','1','','');
-INSERT INTO provider VALUES ('88888','Support','IT','receptionist','','Admin','','0001-01-01','','','','','','','','1','','');
-INSERT INTO provider VALUES ('174','Chan','David','doctor','Family Medicine','TEAM A','M','0001-01-01','','H 905-','058081','','','BAAP','1','1','','');
 
 --
 -- Dumping data for table 'providerExt'
@@ -1229,9 +1212,7 @@ INSERT INTO scheduletemplatecode VALUES ('S','Same Day - R1','30','FFF68F','N');
 -- Dumping data for table 'security'
 --
 
-INSERT INTO security(security_no,user_name,password,provider_no,pin) VALUES (127,'oscarrep','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999999','1117');
 INSERT INTO security(security_no,user_name,password,provider_no,pin) VALUES (128,'oscardoc','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999998','1117');
-INSERT INTO security(security_no,user_name,password,provider_no,pin) VALUES (129,'oscaradmin','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999997','1117');
 --
 -- Dumping data for table 'serviceSpecialists'
 --
