@@ -132,18 +132,15 @@ public class DBPreparedHandler {
         for (int i = 0; i < params.length; i++) {
         	DBPreparedHandlerParam param = params[i];
         	
-        	if(DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType()))
-        	{
-                preparedStmt.setString(i+1, param.getStringValue());
-        	}
-        	else if (DBPreparedHandlerParam.PARAM_DATE.equals(param.getParamType()))
-        			{
+        	if(DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType())){
+                    preparedStmt.setString(i+1, param.getStringValue());
+        	}else if (DBPreparedHandlerParam.PARAM_DATE.equals(param.getParamType())){
                     preparedStmt.setDate(i+1, param.getDateValue());
-        			}
-        	else if (DBPreparedHandlerParam.PARAM_INT.equals(param.getParamType()))
-        	{
-        		preparedStmt.setInt(i+1,param.getIntValue());
-        	}
+        	}else if (DBPreparedHandlerParam.PARAM_INT.equals(param.getParamType())){
+                    preparedStmt.setInt(i+1,param.getIntValue());
+        	}else if (DBPreparedHandlerParam.PARAM_TIMESTAMP.equals(param.getParamType())){
+                    preparedStmt.setTimestamp(i+1,param.getTimestampValue());
+                }
         }
         return(preparedStmt.executeUpdate());
     }
