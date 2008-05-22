@@ -114,9 +114,9 @@ public class EDocUtil extends SqlUtilBaseS {
         param[counter++] = new DBPreparedHandlerParam(newDocument.getCreatorId());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getProgramId());
 
-        java.sql.Date od1 = MyDateFormat.getSysDate(newDocument.getDateTimeStamp());
+        java.sql.Timestamp od1 = new java.sql.Timestamp( newDocument.getDateTimeStampAsDate().getTime());
         param[counter++] = new DBPreparedHandlerParam(od1);
-
+          
         param[counter++] = new DBPreparedHandlerParam(String.valueOf(newDocument.getStatus()));
         param[counter++] = new DBPreparedHandlerParam(newDocument.getContentType());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getDocPublic());
@@ -130,7 +130,7 @@ public class EDocUtil extends SqlUtilBaseS {
          * "', '" + newDocument.getStatus() + "', '" + newDocument.getContentType() + "', '" + newDocument.getDocPublic() + "', '" + newDocument.getObservationDate() + "')";
          * 
          * String document_no = runSQLinsert(documentSql); System.out.println("addDoc: " + documentSql);
-         */
+         */ 
         runPreparedSql(preparedSQL, param);
         String document_no = getLastDocumentNo();
         String ctlDocumentSql = "INSERT INTO ctl_document VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "')";
