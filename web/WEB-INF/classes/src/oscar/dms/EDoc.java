@@ -32,6 +32,7 @@ public class EDoc extends TagObject implements Comparable {
     private String docId;
     private String description = "";
     private String dateTimeStamp = "";
+    private Date dateTimeStampAsDate = null;
     private String type = "";
     private String fileName = "";
     private String html = "";
@@ -91,6 +92,7 @@ public class EDoc extends TagObject implements Comparable {
     
     private void preliminaryProcessing() {
         this.dateTimeStamp = EDocUtil.getDmsDateTime();
+        this.setDateTimeStampAsDate(EDocUtil.getDmsDateTimeAsDate());
         if (fileName.length() != 0) {
             String filenamePrefix = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyyMMdd") + UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HHmmss");
             this.fileName = filenamePrefix + fileName;
@@ -128,7 +130,7 @@ public class EDoc extends TagObject implements Comparable {
     public void setDateTimeStamp(String dateTimeStamp) {
         this.dateTimeStamp = dateTimeStamp;
     }
-
+    
     public String getModule() {
         return module;
     }
@@ -262,6 +264,14 @@ public class EDoc extends TagObject implements Comparable {
 
     public void setProgramId(Integer programId) {
         this.programId = programId;
+    }
+
+    public Date getDateTimeStampAsDate() {
+        return dateTimeStampAsDate;
+    }
+
+    public void setDateTimeStampAsDate(Date dateTimeStampAsDate) {
+        this.dateTimeStampAsDate = dateTimeStampAsDate;
     }
     
     
