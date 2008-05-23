@@ -278,7 +278,7 @@ if (visitList != null){
                 Pressure </strong></font>
                 <img src="HSFOgraph.jsp?id=HSFOBPCHART"/>
                 </div>
-            </td
+            </td>
           </tr>
           
           <tr> 

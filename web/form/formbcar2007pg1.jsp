@@ -1195,7 +1195,7 @@ function calcAgeAtEDD(){
                                     <input type="text" name="pg1_thromCoagSpec" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_thromCoagSpec", "") %>" @oscar.formDB />
                                        </td>
                             </tr><tr>
-                                <td colspan="2"></td><td><span class="small8" style="float:left;">Maternal</span><span class="small8" style="float:right;">Newborn's Father</span</td>
+                                <td colspan="2"></td><td><span class="small8" style="float:left;">Maternal</span><span class="small8" style="float:right;">Newborn's Father</span></td>
                             </tr>
                             <tr>
                                 <td>

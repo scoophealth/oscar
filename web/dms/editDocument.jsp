@@ -187,7 +187,7 @@ ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
                    </tr>
                    <tr>
                         <td>Added By: </td>
-                        <td><%=EDocUtil.getModuleName("provider", formdata.getDocCreator())%></td
+                        <td><%=EDocUtil.getModuleName("provider", formdata.getDocCreator())%></td>
                    </tr>
                    <tr>
                         <td>Date Added/Updated: </td>

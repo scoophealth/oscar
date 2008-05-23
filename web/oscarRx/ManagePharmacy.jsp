@@ -176,13 +176,13 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                             <tr>
                                <td colspan="2">
                                   <bean:message key="ManagePharmacy.txtfld.label.notes"/> : 
-                               </td                               
+                               </td>
                             </tr>                            
                             <tr>
                                <td>&nbsp;</td>
                                <td >
                                   <html:textarea property="notes"/>
-                               </td                               
+                               </td>
                             </tr>
                             
                             <tr>

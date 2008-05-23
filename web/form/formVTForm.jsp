@@ -931,7 +931,7 @@ function clearAll(yRadio, nRadio){
                                         <table cellpadding='1' cellspacing='0' width="100%">                                                
                                             <tr>
                                                 <td class="subTitle" width="36%" style="text-align:left" >                                                        
-                                                    <span id="psychHead1" style="display:none;" >Psychosocial Screen</span
+                                                    <span id="psychHead1" style="display:none;" >Psychosocial Screen</span>
                                                 </td>                                                    
                                                 <td class="subTitle" width="16%">
                                                     <span id="psychHead2" style="display:none;" >Last Data</span>

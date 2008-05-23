@@ -43,7 +43,7 @@ List pList = (Vector)(new JdbcBillingPageUtil()).getCurProviderStr();
                         <TD height="40" width="10%"></TD>
                         <TD><div style="color: white;">GST Report</div></TD>
                         <TD valign="BOTTOM"><div align="right" ><b><%=DateUtils.sumDate("yyyy-MM-dd","0")%></b><input type="button" value="Print" onclick="window.print()"/></div></TD>
-                        </TR
+                        </TR>
                 </TABLE>
                 <TABLE width = "100%" CELLPADDING="0" CELLSPACING="0" style="border: 0px;">
                 <TR>
