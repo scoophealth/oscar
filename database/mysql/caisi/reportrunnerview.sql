@@ -3,10 +3,6 @@ CREATE OR REPLACE VIEW v_lk_name AS
 SELECT 0 grandParentID, 0 parentID, bed_type_id id, name description
 FROM bed_type a;
 
-CREATE OR REPLACE VIEW v_lk_org AS
-SELECT 0 grandParentID, 0 parentID, id, name, description
-FROM agency;
-
 
 CREATE OR REPLACE VIEW v_rep_bedlog AS
 SELECT
