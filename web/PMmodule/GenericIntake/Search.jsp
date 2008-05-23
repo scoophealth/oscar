@@ -1,4 +1,3 @@
-<%@ page import="org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean" %>
 <%@ include file="/taglibs.jsp"%>
 <%@ taglib uri="http://displaytag.sf.net/el" prefix="display-el" %>
 <%@ include file="/common/messages.jsp"%>
@@ -87,6 +86,7 @@
 
 <c:if test="${not empty requestScope.remoteMatches}">
     <%
+    	@SuppressWarnings("unchecked")
 		HashMap<Integer,String> facilitiesNameMap=(HashMap<Integer,String>)request.getAttribute("facilitiesNameMap");
 	%>
 	<input type="hidden" name="remoteFacilityId" />
