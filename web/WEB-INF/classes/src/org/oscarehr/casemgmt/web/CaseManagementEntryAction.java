@@ -63,6 +63,8 @@ import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.util.UtilDateUtilities;
 
