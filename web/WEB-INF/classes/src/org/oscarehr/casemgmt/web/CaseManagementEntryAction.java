@@ -63,6 +63,8 @@ import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.util.UtilDateUtilities;
 
@@ -358,7 +360,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
     }
     
-     public ActionForward issueNoteSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {            
+     public ActionForward issueNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {            
             String strNote = request.getParameter("value");
             log.debug("Saving: " + strNote);
             if( strNote == null || strNote.equals("") )
@@ -703,6 +705,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             log.warn(e);
         }
 
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD+" or "+LogConst.UPDATE, LogConst.CON_CME_NOTE, ""+Long.valueOf(note.getId()).intValue(), request.getRemoteAddr());
+        
         return note.getId();
     }
 
@@ -1447,6 +1451,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         request.setAttribute("history", note.getHistory());
 
         cform.setCaseNote_history(note.getHistory());
+        
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_CME_NOTE, ""+Integer.valueOf(noteid).intValue(), request.getRemoteAddr());
+        
         return mapping.findForward("historyview");
     }
 
