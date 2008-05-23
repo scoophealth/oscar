@@ -104,7 +104,7 @@
        	<%
        		MatchingDemographicInfoResult mdir=(MatchingDemographicInfoResult)pageContext.getAttribute("x");
        		CachedDemographicInfo cdi=mdir.getCachedDemographicInfo();
-   			int facilityId=cdi.getFacilityId();
+   			int facilityId=cdi.getFacilityDemographicPrimaryKey().getFacilityId();
 			String facilityName=facilitiesNameMap.get(facilityId);
    		%>
         <display-el:setProperty name="paging.banner.placement" value="bottom" />
