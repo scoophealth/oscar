@@ -87,7 +87,7 @@ function setfocus() {
 <body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP bgcolor="#CCCCFF"><font face="Helvetica" color="#000000"><bean:message key="billing.billingDigSearch.msgDiagnostic"/> </font><font face="Arial, Helvetica, sans-serif" color="#FF0000"><bean:message key="billing.billingDigSearch.msgMaxSelections"/></font></th>
+    <th align=center NOWRAP bgcolor="#CCCCFF"><font face="Helvetica" color="#000000"><bean:message key="billing.billingDigSearch.msgDiagnostic"/> </font><font face="Arial, Helvetica, sans-serif" color="#FF0000"><bean:message key="billing.billingDigSearch.msgMaxSelections"/></font></th>
   </tr>
 </table>
 <% String coderange=request.getParameter("coderange");
