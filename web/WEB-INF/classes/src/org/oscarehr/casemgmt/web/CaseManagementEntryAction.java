@@ -63,8 +63,6 @@ import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 
-import oscar.log.LogAction;
-import oscar.log.LogConst;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.util.UtilDateUtilities;
 
@@ -360,7 +358,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
     }
     
-     public ActionForward issueNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {            
+     public ActionForward issueNoteSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {            
             String strNote = request.getParameter("value");
             log.debug("Saving: " + strNote);
             if( strNote == null || strNote.equals("") )
