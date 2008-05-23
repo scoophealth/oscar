@@ -110,7 +110,7 @@
         <display-el:setProperty name="paging.banner.placement" value="bottom" />
 
         <display-el:column title="">
-        	<input type="submit" value="Copy to Local" onclick="copyRemote(<%=cdi.getFacilityId()%>,<%=cdi.getFacilityDemographicId()%>)" />
+        	<input type="submit" value="Copy to Local" onclick="copyRemote(<%=facilityId%>,<%=cdi.getFacilityDemographicPrimaryKey().getFacilityDemographicId()%>)" />
         </display-el:column>
         <display-el:column title="Facility Name">
         	<%=facilityName%>
