@@ -197,6 +197,14 @@ function openSurvey() {
          </table>
 		</td>
 	</tr>
+	<tr>
+		<th width="20%">Integrator Consent : </th>
+		<td>
+			(CURRENT_CONSENT_STATUS)
+			&nbsp;&nbsp;&nbsp;
+			(CHANGE_CONSENT_BUTTON)
+		</td>
+	</tr>	
 </table>
 
 
@@ -443,57 +451,6 @@ function openSurvey() {
 </table>
 <br />
 </caisi:isModuleLoad>
-
-	<div class="tabs">
-		<table cellpadding="3" cellspacing="0" border="0">
-			<tr>
-				<th>Consent Form</th>
-			</tr>
-		</table>
-	</div>
-	
-	<table class="simple" cellspacing="2" cellpadding="3">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Most Recent</th>
-				<th>Staff</th>
-				<th>Status</th>
-				<th>Exclusions</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tr>
-			<td width="20%">Consent Form</td>
-			<c:choose>
-				<c:when test="${empty consent}">
-					<td><span style="color:red">None found</span></td>
-					<td><span style="color:red"></span></td>
-					<td></td>
-					<td></td>
-					<td><input type="button" value="New Consent" onclick="openConsent()" /></td>
-				</c:when>
-				<c:otherwise>
-					<td><fmt:formatDate value="${consent.dateSigned}" pattern="yyyy-MM-dd kk:mm" /></td>
-					<td><c:out value="${consent.providerName}" /></td>
-					<td><c:out value="${consent.status}" /></td>
-					<td><c:out value="${consent.exclusionString}" /></td>
-					<td>
-						<%
-							if (!UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external))
-							{
-								%>
-								<input type="button" value="Update" onclick="openConsent()" />
-								<%
-							}
-						%>			
-					</td>
-				</c:otherwise>
-			</c:choose>
-		</tr>
-	</table>
-	
-	<br />
 
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
