@@ -113,7 +113,6 @@ String pSize        = request.getParameter("pSize");
 	    }
 	    
 	    function makeDropbox() {
-		mandSet(0);
 		var eURL = "MakeDropbox.jsp";
 		popup('200','300',eURL,'mkdrpbx');
 	    }
@@ -139,11 +138,12 @@ String pSize        = request.getParameter("pSize");
             +<input type="radio" name="elementType" value="5" onclick="mandSet(1);">question</input><br/>
             +<input type="radio" name="elementType" value="6" onclick="mandSet(1);"> answer compound</input> <br/>
             +<input type="radio" name="elementType" value="7" onclick="mandSet(0);"> answer scalar choice</input> <br/>
-            +<input type="radio" name="elementType" value="15" onclick="makeDropbox();"> answer scalar choice (dropbox)</input> <br/>
+            +<input type="radio" name="elementType" value="15" onclick="mandSet(0); makeDropbox();"> answer scalar choice (dropbox)</input> <br/>
             +<input type="radio" name="elementType" value="8" onclick="mandSet(0);"> answer scalar text</input> <br/>
             +<input type="radio" name="elementType" value="13" onclick="mandSet(0);"> answer scalar note</input><br/>
             <%}else if(nodeTemplate.equals("6") ){%>
             +<input type="radio" name="elementType" value="7"> answer scalar choice</input> <br/>
+            +<input type="radio" name="elementType" value="15" onclick="makeDropbox();"> answer scalar choice (dropbox)</input> <br/>
             +<input type="radio" name="elementType" value="8"> answer scalar text</input> <br/>
             +<input type="radio" name="elementType" value="13"> answer scalar note</input><br/>
             <%}else{%>
