@@ -14,7 +14,7 @@ import javax.persistence.Version;
 public class IntegratorConsent {
 
     public enum ConsentLevel {
-        NONE, STATISTICS, CIRCLE_OF_CARE, ALL
+        DO_NOT_SHARE, STATISTICS, CIRCLE_OF_CARE, ALL
     }
 
     @Id
@@ -23,7 +23,7 @@ public class IntegratorConsent {
     private int facilityId = 0;
     private int demographicId = 0;
     @Enumerated(EnumType.STRING)
-    private ConsentLevel consentLevel = ConsentLevel.NONE;
+    private ConsentLevel consentLevel = ConsentLevel.DO_NOT_SHARE;
     @Version
     private Date lastUpdate = null;
 

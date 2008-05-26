@@ -362,10 +362,11 @@ public class ClientManagerAction extends BaseAction {
         Demographic demographic = clientManager.getClientByDemographicNo(id);
         request.getSession().setAttribute("clientGender", demographic.getSex());
         request.getSession().setAttribute("clientAge", demographic.getAge());
+        request.getSession().setAttribute("demographicId", demographic.getDemographicNo());
 
         //--- consent status ---
         IntegratorConsent integratorConsent=integratorConsentDao.findByFacilityIdAndDemographicId(facilityId, demographic.getDemographicNo());
-        String integratorConsentString="none indicated";
+        String integratorConsentString="have not asked the client yet";
         if (integratorConsent!=null) integratorConsentString=integratorConsent.getConsentLevel().name();
         request.getSession().setAttribute("integratorConsent", integratorConsentString);
         

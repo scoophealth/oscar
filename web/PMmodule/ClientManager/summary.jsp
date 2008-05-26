@@ -202,7 +202,7 @@ function openSurvey() {
 		<td>
 			<c:out value="${integratorConsent}" />
 			&nbsp;&nbsp;&nbsp;
-			<input type="button" value="Change consent" onclick="document.location='ClientManager/integrator_consent.jsp'" />
+			<input type="button" value="Change consent level" onclick="document.location='ClientManager/integrator_consent.jsp?demographicId=<c:out value="${demographicId}" />&consentLevel=<c:out value="${integratorConsent}" />'" />
 		</td>
 	</tr>	
 </table>
