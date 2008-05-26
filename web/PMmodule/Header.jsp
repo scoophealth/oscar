@@ -27,9 +27,9 @@
 	<tr>
 		<td align="left" width="200px">
 		<%if (oscar.OscarProperties.getInstance().isTorontoRFQ() && !oscar.OscarProperties.getInstance().getBooleanProperty("USE_CAISI_LOGO", "true")){%>
- 	        <img src="<html:rewrite page="/images/QuatroShelterLogo.gif"  />" alt="QuatroShelter" id="caisilogo"  border="0"/>
+ 	        <img src="<%=request.getContextPath()%>/images/QuatroShelterLogo.gif" alt="QuatroShelter" id="caisilogo"  border="0"/>
  	    <%} else {%>
-	        <img src="<html:rewrite page="/images/caisi_1.jpg" />" alt="Caisi" id="caisilogo"  border="0"/>
+	        <img src="<%=request.getContextPath()%>/images/caisi_1.jpg" alt="Caisi" id="caisilogo"  border="0"/>
 	    <%}%>
         </td>
         <td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome <b><c:out value="${sessionScope.provider.formattedName}" /></b>, current facility=<c:out value="${sessionScope.currentFacility.name}" />
