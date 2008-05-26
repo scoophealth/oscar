@@ -35,15 +35,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
@@ -51,7 +48,6 @@ import org.oscarehr.PMmodule.exception.ClientAlreadyRestrictedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.ClientReferral;
@@ -90,6 +86,8 @@ import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.beans.factory.annotation.Required;
@@ -100,17 +98,9 @@ import com.quatro.service.LookupManager;
 
 public class ClientManagerAction extends BaseAction {
 
-    private static Log log = LogFactory.getLog(ClientManagerAction.class);
-
     private HealthSafetyManager healthSafetyManager;
     private ClientRestrictionManager clientRestrictionManager;
     
-    private ClientReferralDAO clientReferralDAO;
-
-    public void setClientReferralDAO(ClientReferralDAO clientReferralDAO) {
-        this.clientReferralDAO = clientReferralDAO;
-    }
-
     private SurveyManager surveyManager;
 
     private LookupManager lookupManager;
@@ -140,7 +130,14 @@ public class ClientManagerAction extends BaseAction {
     private ProgramQueueManager programQueueManager;
 
     private RoomManager roomManager;
+    
+    private IntegratorConsentDao integratorConsentDao;
 
+    public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao)
+    {
+        this.integratorConsentDao=integratorConsentDao;
+    }
+    
     public void setSurveyManager(SurveyManager mgr) {
         this.surveyManager = mgr;
     }
@@ -366,6 +363,12 @@ public class ClientManagerAction extends BaseAction {
         request.getSession().setAttribute("clientGender", demographic.getSex());
         request.getSession().setAttribute("clientAge", demographic.getAge());
 
+        //--- consent status ---
+        IntegratorConsent integratorConsent=integratorConsentDao.findByFacilityIdAndDemographicId(facilityId, demographic.getDemographicNo());
+        String integratorConsentString="none indicated";
+        if (integratorConsent!=null) integratorConsentString=integratorConsent.getConsentLevel().name();
+        request.getSession().setAttribute("integratorConsent", integratorConsentString);
+        
         return mapping.findForward("edit");
     }
 

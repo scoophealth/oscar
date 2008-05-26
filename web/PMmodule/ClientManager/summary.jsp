@@ -200,9 +200,9 @@ function openSurvey() {
 	<tr>
 		<th width="20%">Integrator Consent : </th>
 		<td>
-			(CURRENT_CONSENT_STATUS)
+			<c:out value="${integratorConsent}" />
 			&nbsp;&nbsp;&nbsp;
-			(CHANGE_CONSENT_BUTTON)
+			<input type="button" value="Change consent" onclick="document.location='ClientManager/integrator_consent.jsp'" />
 		</td>
 	</tr>	
 </table>
