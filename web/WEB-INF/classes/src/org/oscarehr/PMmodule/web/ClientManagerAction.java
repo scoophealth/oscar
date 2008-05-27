@@ -318,7 +318,7 @@ public class ClientManagerAction extends BaseAction {
 
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
-        Integer facilityId= (Integer)request.getSession().getAttribute("currentFacilityId");
+        Integer facilityId= (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
         if (id == null || id.equals("")) {
             Object o = request.getAttribute("demographicNo");
