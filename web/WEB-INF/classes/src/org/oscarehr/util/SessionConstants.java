@@ -28,4 +28,5 @@ public class SessionConstants
     public static final String CURRENT_FACILITY_ID="currentFacilityId";
     public static final String CURRENT_FACILITY="currentFacility";
     public static final String INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY="isClientDependentOfFamily";
+    public static final String LOGGED_IN_PROVIDER="provider";
 }

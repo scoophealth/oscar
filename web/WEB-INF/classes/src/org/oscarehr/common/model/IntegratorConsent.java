@@ -24,6 +24,7 @@ public class IntegratorConsent {
     private int demographicId = 0;
     @Enumerated(EnumType.STRING)
     private ConsentLevel consentLevel = ConsentLevel.DO_NOT_SHARE;
+    private String provider_no = null;
     @Version
     private Date lastUpdate = null;
 
@@ -53,6 +54,14 @@ public class IntegratorConsent {
 
     public void setConsentLevel(ConsentLevel consentLevel) {
         this.consentLevel = consentLevel;
+    }
+
+    public String getProvider_no() {
+        return provider_no;
+    }
+
+    public void setProvider_no(String provider_no) {
+        this.provider_no = provider_no;
     }
 
     public Date getLastUpdate() {

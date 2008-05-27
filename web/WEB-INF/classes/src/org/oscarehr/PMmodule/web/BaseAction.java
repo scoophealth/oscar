@@ -43,6 +43,7 @@ import org.oscarehr.PMmodule.service.RatePageManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.util.SessionConstants;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.quatro.service.security.*;
@@ -127,11 +128,11 @@ public abstract class BaseAction extends DispatchAction {
 	}
 
 	protected String getProviderNo(HttpServletRequest request) {
-		return ((Provider) request.getSession().getAttribute("provider")).getProviderNo();
+		return ((Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER)).getProviderNo();
 	}
 
     protected Provider getProvider(HttpServletRequest request) {
-        return ((Provider) request.getSession().getAttribute("provider"));
+        return ((Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER));
     }
 
 	protected String getParameter(HttpServletRequest request, String parameterName) {

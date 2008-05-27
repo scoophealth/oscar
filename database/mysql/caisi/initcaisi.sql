@@ -2531,6 +2531,8 @@ create table IntegratorConsent
 	demographicId int not null,
 	unique(facilityId,demographicId),
 	consentLevel varchar(128) not null,
+    provider_no varchar(6) not null,
+	foreign key (provider_no) references provider(provider_no),
 	lastUpdate datetime not null
 );
 
