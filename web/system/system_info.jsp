@@ -65,6 +65,14 @@
 	<%=VMStat.getThreadInfo()%><br />
 	<br /><br />
 	<h1>DbConnections</h1>
-	<%=DbConnectionFilter.debugMap.toString()%>
+	<%
+		for (Map.Entry<Thread, StackTraceElement[]> entry : DbConnectionFilter.debugMap.entrySet())
+		{
+			%>
+				<%=entry.getKey().getName()%> : <%=Arrays.toString(entry.getValue()) %>
+				<br /><br />
+			<%
+		}
+	%>
 	</body>
 </html>
