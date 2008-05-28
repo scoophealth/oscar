@@ -65,6 +65,8 @@
 	<%=VMStat.getThreadInfo()%><br />
 	<br /><br />
 	<h1>DbConnections</h1>
+	connections : <%=DbConnectionFilter.debugMap.size()%>
+	<br /><br />
 	<%
 		for (Map.Entry<Thread, StackTraceElement[]> entry : DbConnectionFilter.debugMap.entrySet())
 		{
