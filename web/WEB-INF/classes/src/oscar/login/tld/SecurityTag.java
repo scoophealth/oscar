@@ -32,7 +32,6 @@ package oscar.login.tld;
 
 import java.util.Properties;
 import java.util.Vector;
-import java.util.Hashtable;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
