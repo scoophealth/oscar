@@ -38,6 +38,7 @@ import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarProvider.data.ProSignatureData;
 import oscar.oscarRx.util.RxUtil;
+import org.oscarehr.util.DbConnectionFilter;
 
 public class RxPrescriptionData {
     public Prescription getPrescription(int drugId) {
@@ -83,7 +84,8 @@ public class RxPrescriptionData {
             
             
             rs.close();
-            db.GetConnection().close();
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -211,7 +213,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.GetConnection().close();
+            DbConnectionFilter.releaseThreadLocalDbConnection();
             
             arr = (Prescription[])lst.toArray(arr);
             
@@ -406,7 +408,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.GetConnection().close();
+            DbConnectionFilter.releaseThreadLocalDbConnection();
             
             arr = (Prescription[])lst.toArray(arr);
             
@@ -520,7 +522,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.GetConnection().close();
+            DbConnectionFilter.releaseThreadLocalDbConnection();
             
             arr = (Prescription[])lst.toArray(arr);
             
@@ -589,7 +591,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.GetConnection().close();
+            DbConnectionFilter.releaseThreadLocalDbConnection();
             
             arr = (Prescription[])lst.toArray(arr);
             
@@ -629,7 +631,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.GetConnection().close();
+            DbConnectionFilter.releaseThreadLocalDbConnection();
             
             arr = (Favorite[])lst.toArray(arr);
             
@@ -662,7 +664,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.GetConnection().close();
+            DbConnectionFilter.releaseThreadLocalDbConnection();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -2028,7 +2030,7 @@ public class Favorite {
             }
             
             // close by conn
-            db.GetConnection().close();
+            DbConnectionFilter.releaseThreadLocalDbConnection();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
