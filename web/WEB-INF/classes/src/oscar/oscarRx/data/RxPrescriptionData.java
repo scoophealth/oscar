@@ -83,7 +83,7 @@ public class RxPrescriptionData {
             
             
             rs.close();
-            db.CloseConn();
+            db.GetConnection().close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -211,7 +211,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.CloseConn();
+            db.GetConnection().close();
             
             arr = (Prescription[])lst.toArray(arr);
             
@@ -282,7 +282,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.CloseConn();
+            db.getConnection().close();
             
             arr = (Prescription[])lst.toArray(arr);
             
@@ -347,7 +347,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.CloseConn();
+            db.getConnection().close();
                         
          }
          catch(SQLException e) {
@@ -520,7 +520,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.CloseConn();
+            db.GetConnection().close();
             
             arr = (Prescription[])lst.toArray(arr);
             
@@ -589,7 +589,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.CloseConn();
+            db.GetConnection().close();
             
             arr = (Prescription[])lst.toArray(arr);
             
@@ -629,7 +629,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.CloseConn();
+            db.GetConnection().close();
             
             arr = (Favorite[])lst.toArray(arr);
             
@@ -662,7 +662,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.CloseConn();
+            db.GetConnection().close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -680,7 +680,7 @@ public class RxPrescriptionData {
             String sql = "DELETE FROM favorites WHERE favoriteid = " + favoriteId;
             
             db.RunSQL(sql);
-            db.CloseConn();
+            db.getConnection().close();
             ret = true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -777,7 +777,7 @@ public class RxPrescriptionData {
             if(rs.next()){
                 retval = Integer.toString( rs.getInt(1) );
             }
-            db.CloseConn();
+            db.getConnection().close();
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
@@ -1344,7 +1344,7 @@ public class Prescription {
                 db.RunSQL(sql);
             }
             
-            db.CloseConn();
+            db.getConnection().close();
         }
         catch (Exception e) {
             e.printStackTrace(System.out);
@@ -1534,7 +1534,7 @@ public class Prescription {
             }
             
             // close by conn
-            db.CloseConn();
+            db.getConnection().close();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -2028,7 +2028,7 @@ public class Favorite {
             }
             
             // close by conn
-            db.CloseConn();
+            db.GetConnection().close();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
