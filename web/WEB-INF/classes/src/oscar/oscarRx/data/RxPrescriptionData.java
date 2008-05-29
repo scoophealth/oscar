@@ -372,6 +372,8 @@ public class RxPrescriptionData {
             Prescription p;
             
             rs = db.GetSQL(sql);
+            //java.sql.Connection conn = db.GetConnection();
+            //conn.createStatement()
             
             while(rs.next()) {
                 p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
@@ -404,7 +406,7 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            db.CloseConn();
+            db.GetConnection().close();
             
             arr = (Prescription[])lst.toArray(arr);
             
