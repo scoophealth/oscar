@@ -51,6 +51,11 @@ String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billre
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
+
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -84,14 +89,11 @@ function ogo() {
 }
 
 function ogo2() {
-  var region = '<%=billingRegion%>';
   var s = document.report.startDate.value.replace('/', '-');
   s = s.replace('/', '-');
   var e = document.report.endDate.value.replace('/', '-');
   e = e.replace('/', '-');
-  var u = '';
-  if (region == "BC") u = 'reportbcedblist2007.jsp?startDate=' + s + '&endDate=' + e;
-  else u = 'reportonedblist.jsp?startDate=' + s + '&endDate=' + e;
+  var u = 'reportonedblist.jsp?startDate=' + s + '&endDate=' + e;
   popupPage(700,900,u);
 }
 
@@ -175,7 +177,6 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td width="300">
             <% if (billingRegion.equals("BC")) { %>
                 <a HREF="#" ONCLICK ="ogo()"><bean:message key="report.reportindex.btnEDDList"/></a>
-                 &nbsp;<a HREF="#" ONCLICK ="ogo2()">07</a> 
             <% } else { %>
                 <a HREF="#" ONCLICK ="ogo()"><bean:message key="report.reportindex.btnEDBList"/></a>
                 &nbsp;<a HREF="#" ONCLICK ="ogo2()">05</a>    
@@ -418,18 +419,32 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
             </select>
         </td>
         <td>
+		<%
+		cal.add(cal.DATE, 0);
+                String NoShowEDate = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE);
+            	%>
+
+
+<input name="nsdate" type="input" size="8" id="NoShowDate" <%=NoShowEDate%> >
+ <a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.nsdate.value")%>')"><img title=Calendar" src="../images/cal.gif" alt="Calendar" border="0"><a>
+	
+
+
+<!-- 
             <select name="nsdate" >
-            <%
+ <%
               cal.add(cal.DATE, -61) ;
               for(int i=0; i<31; i++) {
                 String dateString = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE) ;
             %>
+
               <option value="<%=dateString%>" <%=dateString.equals(today)?"selected":""%> ><%=dateString%></option>
             <%
                 cal.add(cal.DATE, 1) ;
                     }
             %>
             </select>
+-->
         </td>
         <td></td>
         <td></td>
