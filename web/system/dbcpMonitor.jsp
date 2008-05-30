@@ -1,8 +1,48 @@
+<!--
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
+ */
+-->
+
 <%-- 
     Document   : dbcpMonitor
     Created on : 29-May-2008, 9:05:02 AM
     Author     : apavel
+    
+This script can be used to trace improper connection use and db connection pool 
+leaks.
+Used to monitor:
+1. Status of the DBCP (apache.commons connection pool)
+2. Status of mysql db connections
+3. Current db connections in the thread (with stack traces back to the relevant 
+classes)
+Note: If a connection is openened independently of the spring dataSource, 
+then it will not show up in section #3. Will have to use sections #1 and #2 to 
+detect those and search the source.
+
 --%>
+
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -50,13 +90,23 @@
     </head>
     <body>
         <h1>DB Monitor</h2>
-        <h3>----- DBCP Monitor -----</h2>
-        <font color="red">Active Connections: <%=numActive%></font><br/>
-        <font color="green">Idle Connections:  <%=numIdle%></font><br/><br/>
+        <h3>----- DB Connection Pool Monitor -----</h2>
+        <font color="red">Active Connections (borrowed from pool): <%=numActive%></font><br/>
+        <font color="green">Idle Connections (currently in the pool):  <%=numIdle%></font><br/><br/>
         
         <hr>
         <h3>----- Mysql Monitor -----</h3>
-        <table border="1" style="border-collapse: collapse; border: 1px solid grey">
+        <table border="1" style="border-collapse: collapse; border: 1px solid grey; font-size: 12px;">
+            <tr>
+                <th>ConnID</th>
+                <th>Usre</th>
+                <th>Host</th>
+                <th>Database</th>
+                <th>Status</th>
+                <th>LastActive (s)</th>
+                <th>State</th>
+                <th>Query</th>
+            </tr>
             <%int count = 0;
             while (rsProcessList.next()) {
             count++;%>
