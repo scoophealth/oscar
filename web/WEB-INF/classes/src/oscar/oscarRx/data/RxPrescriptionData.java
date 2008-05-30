@@ -83,11 +83,13 @@ public class RxPrescriptionData {
             }
             
             
-            rs.close();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
+            rs.close();            
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
         }
         
         return prescription;
@@ -213,12 +215,14 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
             
             arr = (Prescription[])lst.toArray(arr);
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
         }
         
         return arr;
@@ -408,14 +412,16 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
             
             arr = (Prescription[])lst.toArray(arr);
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
+
         return arr;
     }
     
@@ -522,12 +528,14 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
             
             arr = (Prescription[])lst.toArray(arr);
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
         }
         
         return arr;
@@ -591,12 +599,14 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
             
             arr = (Prescription[])lst.toArray(arr);
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
         }
         
         return arr;
@@ -631,12 +641,14 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
             
             arr = (Favorite[])lst.toArray(arr);
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
         }
         
         return arr;
@@ -664,9 +676,12 @@ public class RxPrescriptionData {
             }
             
             rs.close();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
         }
         
         return favorite;
@@ -2029,11 +2044,12 @@ public class Favorite {
                 b = true;
             }
             
-            // close by conn
-            DbConnectionFilter.releaseThreadLocalDbConnection();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
         }
         
         return b;
