@@ -71,12 +71,31 @@
 <%
         }
         else {
-            String[] encTesters = request.getParameterValues("encTesters");
+            String encTesters = request.getParameter("encTesters");
 
-            if( encTesters == null )
-                newDocArr.clear();
+            if( encTesters == null ) {                
+                
+                if( newDocArr.contains("all") ) {
+                    newDocArr.clear();                    
+                    String sql = "SELECT provider.provider_no, last_name, first_name from provider, security where provider.provider_no = security.provider_no order by last_name";
+                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    ResultSet rs = db.GetSQL(sql);                            
+
+                    while(rs.next()) {
+                        String provNo = db.getString(rs,"provider_no");
+                        if( userNo.equals(provNo) ) 
+                            continue;
+                            
+                        newDocArr.add(provNo);
+                   }
+                }
+                else {
+                    newDocArr.remove(userNo);
+                }
+                
+            }
             else
-                newDocArr = new ArrayList(Arrays.asList(encTesters));
+                newDocArr.add(encTesters);
             
             Collections.sort(newDocArr);
         
