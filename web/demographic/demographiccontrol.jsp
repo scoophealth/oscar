@@ -81,14 +81,13 @@
 
   String [][] dbQueries=new String[][] {
     {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+orderby},
-    {"search_titlename_mysql", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+orderby + " " + limit},
     {"add_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby},
     {"update_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no  from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby + " "+limit},
     {"search_detail", "select * from demographic where demographic_no=?"},
     {"search_detail_ptbr", "select * from demographic d left outer join demographic_ptbr dptbr on dptbr.demographic_no = d.demographic_no where d.demographic_no=?"},
-    {"update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?,email=?,pin=?, year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?,  chart_no=?,provider_no=?,sex=? , pcn_indicator=?,hc_type=? ,family_doctor=?, country_of_origin = ? ,date_joined=?,end_date=?,eff_date=?,hc_renew_date=? where  demographic_no=?"},
+    {"update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?,email=?,pin=?, year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?,  chart_no=?,provider_no=?,sex=? , pcn_indicator=?,hc_type=? ,family_doctor=?,date_joined=?,end_date=?,eff_date=?,hc_renew_date=? where  demographic_no=?"},
     {"update_record_ptbr", "update demographic_ptbr set cpf=?,rg=?,chart_address=?,marriage_certificate=?,birth_certificate=?,marital_state=?,partner_name=?,father_name=?,mother_name=?,district=?,address_no=?,complementary_address=? where  demographic_no=?"},
-    {"add_record", "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor, country_of_origin) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)" },
+    {"add_record", "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)" },
     {"add_record_ptbr","insert into demographic_ptbr (demographic_no,cpf,rg,chart_address,marriage_certificate,birth_certificate,marital_state,partner_name,father_name,mother_name,district,address_no,complementary_address) values (?,?,?,?,?,?,?,?,?,?,?,?,?)" },
     {"search_provider", "select * from provider status='1' order by last_name"},
     {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
@@ -114,7 +113,6 @@
     {"search_hin", "select demographic_no, ver from demographic where hin=?"},
     {"add2caisi_admission", "insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag) Values(?,?,?,?,'current',0,0)"},
     {"update_admission", "update admission set provider_no = ?, program_id = ? where client_id = ?"},
-    {"search_program", "select program_id from program where name = ?"}
    };
 
 //  String [][] dbQueries=new String[][] {
@@ -162,6 +160,7 @@
      {"edit" , "demographiceditdemographic.jsp"},
      {"pdflabel" , "demographicpdflabel.jsp"},             
      {"pdfaddresslabel" , "demographicpdfaddresslabel.jsp"},             
+     {"pdfchartlabel" , "demographicpdfchartlabel.jsp"},             
      {"appt_history" , "demographicappthistory.jsp"},
      {"Update Record" , "demographicupdatearecord.jsp"},
 

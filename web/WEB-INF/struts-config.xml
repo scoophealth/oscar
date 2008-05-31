@@ -1137,6 +1137,7 @@
         </action>
         <action path="/demographic/printDemoLabelAction" type="oscar.oscarDemographic.PrintDemoLabelAction" />
         <action path="/demographic/printDemoAddressLabelAction" type="oscar.oscarDemographic.PrintDemoAddressLabelAction" />
+        <action path="/demographic/printDemoChartLabelAction" type="oscar.oscarDemographic.PrintDemoChartLabelAction" />
         <action path="/demographic/printBarcodeAction" type="oscar.oscarDemographic.PrintBarcodeAction" />
         <action name="createBillingReportActionForm" path="/billing/CA/BC/createBillingReportAction" scope="request" type="oscar.oscarBilling.ca.bc.MSP.CreateBillingReportAction" validate="false" />
         <action input="/oscarPrevention/AddPreventionData.jsp" name="FrmForm" path="/oscarPrevention/AddPrevention" scope="request" type="oscar.oscarPrevention.pageUtil.AddPreventionAction">
@@ -1621,7 +1622,6 @@
             <forward name="unlock_ajax" path="/casemgmt/unlockAjax.jsp" />
             <forward name="expired" path="/casemgmt/expired.jsp" />  
             <forward name="listNotes" path="/casemgmt/viewNotes.jsp"/>
-            <forward name="displayNote" path="/casemgmt/displayNote.jsp"/>
         </action>
         <action path="/CaseManagementEntry" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" input="/casemgmt/CaseManagementEntry.jsp" name="caseManagementEntryForm">
             <forward name="view" path="/casemgmt/CaseManagementEntry.jsp" />

@@ -30,10 +30,6 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     String demographic$ = request.getParameter("demographic_no") ;
-    
-     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());  
-     CountryCodeDAO ccDAO =  (CountryCodeDAO) ctx.getBean("countryCodeDAO");
-     List<CountryCode> countryList = ccDAO.getAllCountryCodes();
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="r" reverse="<%=true%>" >
 <% response.sendRedirect("../noRights.html"); %>
@@ -46,7 +42,6 @@ You have no rights to access the data!
 
 <%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList" errorPage="../appointment/errorpage.jsp" %>
 <%@page  import="oscar.oscarDemographic.data.*"%>
-<%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
@@ -815,16 +810,7 @@ div.demographicWrapper {
                                                 <bean:message key="demographic.demographiceditdemographic.formSex"/>:<b><%=apptMainBean.getString(rs,"sex")%></b>
                                             </li>
                                             <li>
-                                                Language: <b><%= apptMainBean.getString(demoExt.get("language"))%></b> 
-                                                <% if (apptMainBean.getString(rs,"country_of_origin") != null &&  !apptMainBean.getString(rs,"country_of_origin").equals("") && !apptMainBean.getString(rs,"country_of_origin").equals("-1")){ 
-                                                        CountryCode countryCode = ccDAO.getCountryCode(apptMainBean.getString(rs,"country_of_origin"));
-                                                        if  (countryCode != null){
-                                                    %>
-                                                  
-                                                  Country Of Origin: <b><%=countryCode.getCountryName() %></b>
-                                                <%      }
-                                                    }
-                                                %>
+                                                Language: <b><%= apptMainBean.getString(demoExt.get("language"))%></b>
                                             </li>
                                         </ul>
                                         </div>
@@ -1174,15 +1160,6 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 <%-- // <input type="text" name="phone" size="30" value="<%=apptMainBean.getString(rs,"phone")!=null && apptMainBean.getString(rs,"phone").length()==10?apptMainBean.getString(rs,"phone").substring(0,3) + "-" + apptMainBean.getString(rs,"phone").substring(3,6) +"-"+  apptMainBean.getString(rs,"phone").substring(6):apptMainBean.getString(rs,"phone")%>">--%>
                                 <input type="text" name="demo_cell"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=apptMainBean.getString(demoExt.get("demo_cell"))%>">
                                 <input type="hidden" name="demo_cellOrig" value="<%=apptMainBean.getString(demoExt.get("demo_cell"))%>" />
-                              </td>
-                              <td  align="right"><b>Country Of Origin: </b> </td>
-                              <td align="left" >
-                                    <select name="countryOfOrigin">
-                                      <option value="-1">Not Set</option>
-                                      <%for(CountryCode cc : countryList){ %>
-                                      <option value="<%=cc.getCountryId()%>"  <% if ( apptMainBean.getString(rs,"country_of_origin").equals(cc.getCountryId())){out.print("SELECTED") ;}%> ><%=cc.getCountryName() %></option>
-                                      <%}%>
-                                    </select>
                               </td>
                             </tr>
                             <tr valign="top">
@@ -1673,6 +1650,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
                                <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFEnvelope"/>" onclick="window.location='../report/GenerateEnvelopes.do?demos=<%=apptMainBean.getString(rs,"demographic_no")%>'">
                                <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>" onclick="window.location='printDemoLabelAction.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>'">
                                <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFAddressLabel"/>" onclick="window.location='printDemoAddressLabelAction.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>'">
+                               <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFChartLabel"/>" onclick="window.location='printDemoChartLabelAction.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>'">
                                <input type="button" name="Button" size="110" value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>" onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>'">
                             </td>
                         </table>
