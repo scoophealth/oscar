@@ -10,12 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
+import org.oscarehr.caisi_integrator.ws.client.ConsentLevel;
+
 @Entity
 public class IntegratorConsent {
-
-    public enum ConsentLevel {
-        DO_NOT_SHARE, STATISTICS, CIRCLE_OF_CARE, ALL
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

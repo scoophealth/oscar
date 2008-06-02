@@ -42,6 +42,7 @@ import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
+import org.oscarehr.caisi_integrator.ws.client.ConsentLevel;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicIssuePrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicPrimaryKey;
@@ -51,6 +52,8 @@ import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.beans.BeanUtils;
 
@@ -65,6 +68,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
     private DemographicDAO demographicDAO;
     private CaseManagementIssueDAO caseManagementIssueDAO;
     private ClientImageDAO clientImageDAO;
+    private IntegratorConsentDao integratorConsentDao;
 
     public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
         this.caisiIntegratorManager = mgr;
@@ -86,7 +90,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         this.clientImageDAO = clientImageDAO;
     }
 
-    public void run() {
+    public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao)
+    {
+    	this.integratorConsentDao = integratorConsentDao;
+    }
+
+	public void run() {
         logger.debug("CaisiIntegratorUpdateTask starting");
 
         try {
@@ -225,6 +234,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
             cachedDemographicInfo.setLastName(demographic.getLastName());
             cachedDemographicInfo.setProvince(demographic.getProvince());
             cachedDemographicInfo.setSin(demographic.getSin());
+
+            IntegratorConsent consent=integratorConsentDao.findByFacilityIdAndDemographicId(facility.getId(), demographicId);
+            ConsentLevel level=null;
+            if (consent!=null) level=consent.getConsentLevel();
+            cachedDemographicInfo.setConsentLevel(level);
 
             service.setCachedDemographicInfo(cachedDemographicInfo);
         }

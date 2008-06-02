@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.caisi_integrator.ws.client.ConsentLevel"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.IntegratorConsentDao"%>
 <%@page import="org.oscarehr.common.model.IntegratorConsent"%>
@@ -6,7 +7,7 @@
 <%
 	int demographicId=Integer.parseInt(request.getParameter("demographicId"));
 	String consentLevelString=request.getParameter("consentLevel");
-    IntegratorConsent.ConsentLevel consentLevel=IntegratorConsent.ConsentLevel.valueOf(consentLevelString);
+    ConsentLevel consentLevel=ConsentLevel.valueOf(consentLevelString);
 	Integer facilityId= (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
     Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
     

@@ -1,4 +1,5 @@
 <%@page import="org.oscarehr.common.model.IntegratorConsent"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.ConsentLevel"%>
 
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 
@@ -18,7 +19,7 @@
 	<select name="consentLevel">
 		<%
 			String currentConsentLevel=request.getParameter("consentLevel");
-			for (IntegratorConsent.ConsentLevel consentLevel : IntegratorConsent.ConsentLevel.values())
+			for (ConsentLevel consentLevel : ConsentLevel.values())
 			{
 				String selected="";
 				if (consentLevel.name().equals(currentConsentLevel)) selected="selected=\"selected\"";
