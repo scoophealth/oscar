@@ -425,7 +425,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
             	%>
 
 
-<input name="nsdate" type="input" size="8" id="NoShowDate" <%=NoShowEDate%> >
+Start Date: <input name="nsdate" type="input" size="8" id="NoShowDate" <%=NoShowEDate%> >
  <a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.nsdate.value")%>')"><img title=Calendar" src="../images/cal.gif" alt="Calendar" border="0"><a>
 	
 
