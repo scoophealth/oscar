@@ -121,10 +121,16 @@ detect those and search the source.
         <font color="blue">Total Mysql Connections: <%=count%></font><br/>
         <br/>
         <hr>
+            
+    <h3>----- JVM Memory Monitor -----</h3>
+        Free Memory: <%=String.valueOf(Runtime.getRuntime().freeMemory()/1000000)%> MB<br/>
+        Total Memory: <%=String.valueOf(Runtime.getRuntime().totalMemory()/1000000)%> MB<br/>
+        Max Memory: <%=String.valueOf(Runtime.getRuntime().maxMemory()/1000000)%> MB  (Maximum memory JVM will attempt to use.)
     <h3>----- Thread Monitor -----</h3>        
     
 	Thread Format: <%=VMStat.getThreadFormat() %><br />
-	Thread Info: <%=VMStat.getThreadInfo()%><br />
+	Thread Info: <%=VMStat.getThreadInfo()%>
+        
 	<br /><br />
         <font color="blue">DbConnections in the Thread: <%=DbConnectionFilter.debugMap.size()%></font>
 	<br /><br />
