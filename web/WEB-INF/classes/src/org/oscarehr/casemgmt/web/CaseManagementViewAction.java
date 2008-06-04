@@ -307,7 +307,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
                 // need to apply a filter
                 log.debug("Get Notes with checked issues");
                 request.setAttribute("checked_issues", checked_issues);
-                notes = caseManagementMgr.getNotes(this.getDemographicNo(request), checked_issues, userProp);
+                notes = caseManagementMgr.getNotes(demoNo, checked_issues, userProp);
                 notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
                 current = System.currentTimeMillis();
                 log.debug("Get Notes with checked issues " + String.valueOf(current-start));
@@ -315,7 +315,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             }
             else {
                 log.debug("Get Notes");
-                notes = caseManagementMgr.getNotes(this.getDemographicNo(request), userProp);
+                notes = caseManagementMgr.getNotes(demoNo, userProp);
                 notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
                 current = System.currentTimeMillis();
                 log.debug("Get Notes " + String.valueOf(current-start));
@@ -323,6 +323,21 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             }
 
             log.debug("FETCHED " + notes.size() + " NOTES");
+            
+            //copy cpp notes
+            /*
+            HashMap issueMap = getCPPIssues(request, providerNo);
+            Iterator<Map.Entry> iterator = issueMap.entrySet().iterator();
+            while( iterator.hasNext() ) {
+                Map.Entry mapEntry = iterator.next();              
+                String key = (String)mapEntry.getKey();
+                Issue value = (Issue)mapEntry.getValue();
+                List<CaseManagementNote>cppNotes = caseManagementMgr.getCPP(demoNo,value.getId(),userProp);                
+                String cppAdd = request.getContextPath() + "/CaseManagementEntry.do?hc=996633&method=issueNoteSave&providerNo=" + providerNo + "&demographicNo=" + demoNo + "&issue_id=" + value.getId() + "&noteId=";                 
+                request.setAttribute(key,cppNotes);
+                request.setAttribute(key+"add",cppAdd);
+            }
+            */
             // apply role based access
             // if(request.getSession().getAttribute("archiveView")!="true")
             log.debug("Filter Notes");
@@ -742,4 +757,23 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         return filteredNotes;
     }
 
+    /*
+     *Retrieve CPP issues
+     *If not in session, load them
+     */
+    protected HashMap getCPPIssues(HttpServletRequest request, String providerNo) {
+        HashMap<String,Issue> issues = (HashMap<String,Issue>)request.getSession().getAttribute("CPPIssues");
+        if( issues == null ) {
+            String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders" };
+            issues = new HashMap<String,Issue>();
+            for( String issue : issueCodes ) {
+                List<Issue> i = caseManagementMgr.getIssueInfoByCode(providerNo, issue);
+                issues.put(issue,i.get(0));
+            }
+            
+            request.getSession().setAttribute("CPPIssues", issues);
+        }        
+        return issues;
+    }
+    
 }
