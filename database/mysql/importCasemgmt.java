@@ -26,6 +26,7 @@ import java.sql.*;
 import java.util.UUID;
 import java.util.Properties;
 import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -288,12 +289,16 @@ public class importCasemgmt {
                         UUID uuid;
                         String note;                        
                         ResultSet rs3,rs4;
-                        long cIssueId;
+                        long cIssueId, msecs;
                         Date d;
                         while( rs.next() ) {
                             pcheck.setString(1, rs.getString("demographicNo"));
                             pcheck.setString(2, rs.getString("encounter"));
-                            d = new Date(rs.getTimestamp("timeStamp").getTime());
+                            
+                            msecs = rs.getTimestamp("timeStamp").getTime();
+                            msecs += 1000;
+                            
+                            d = new Date(msecs);
                             pcheck.setDate(3, d);
                             rs1 = pcheck.executeQuery();
                             if( rs1.next() ) {
@@ -301,15 +306,18 @@ public class importCasemgmt {
                                 continue;
                             }
                             uuid = UUID.randomUUID();
+                           
+                            Timestamp time = new Timestamp(msecs);
                             
-                            insert.setTimestamp(1, rs.getTimestamp("timeStamp"));
+                            insert.setTimestamp(1, time);
                             insert.setString(2, rs.getString("demographicNo"));
                             insert.setString(3, rs.getString("providerNo"));
                             note = formatNote(new StringBuffer(rs.getString("encounter")));
+                            note = "LAST CHART\n" + note;
                             insert.setString(4, note);
                             insert.setString(5, note);
                             insert.setString(6, uuid.toString());
-                            insert.setTimestamp(7, rs.getTimestamp("timeStamp"));
+                            insert.setTimestamp(7, time);
                             
                             if( insert.executeUpdate() != 1 )
                                     throw new SQLException("inserting case note for " + rs.getString("demographicNo") + " failed");
@@ -523,7 +531,7 @@ public class importCasemgmt {
                         System.out.println("Importing split charts");
                         
                         sql = "select * from eChart e where e.subject = 'SPLIT CHART'";
-                        pcheck = con.prepareStatement("select note_id from casemgmt_note where update_date = ? and demographic_no = ? and provider_no = ? and signing_provider_no = 'doctor doe'");
+                        pcheck = con.prepareStatement("select note_id from casemgmt_note where update_date = ? and demographic_no = ? and provider_no = ? and signing_provider_no = 'doctor doe' and note like 'SPLIT CHART%'");
                         rs = stmt.executeQuery(sql);
                         while( rs.next() ) {
                             d = new Date(rs.getTimestamp("timeStamp").getTime());
@@ -542,6 +550,7 @@ public class importCasemgmt {
                             insert.setString(2, rs.getString("demographicNo"));
                             insert.setString(3, rs.getString("providerNo"));
                             note = formatNote(new StringBuffer(rs.getString("encounter")));
+                            note = "SPLIT CHART\n" + note;
                             insert.setString(4, note);
                             insert.setString(5, note);
                             insert.setString(6, uuid.toString());
