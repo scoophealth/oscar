@@ -12,7 +12,569 @@
     var medium  = 272;
     var large   = 378;
     var full    = 649;
+
+    var itemColours = new Object();
+        var autoCompleted = new Object();
+        var autoCompList = new Array();
+        var measurementWindows = new Array();
+        var openWindows = new Object();
+        var origCaseNote = "";
+        var origObservationDate = "";
+        var tmpSaveNeeded = true;
+        var calendar;
+        
+        function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
+          var page = "" + varpage;
+          windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+                //var popup =window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
+                openWindows[name] = window.open(page, name, windowprops);
+
+                if (openWindows[name] != null) {        
+                    if (openWindows[name].opener == null) {
+                        openWindows[name].opener = self;                        
+                    }
+                    openWindows[name].focus();
+                }     
+                
+        } 
+        
+        function urlencode(str) {
+            var ns = (navigator.appName=="Netscape") ? 1 : 0;
+            if (ns) { return escape(str); }
+            var ms = "%25#23 20+2B?3F<3C>3E{7B}7D[5B]5D|7C^5E~7E`60";
+            var msi = 0;
+            var i,c,rs,ts ;
+            while (msi < ms.length) {
+                c = ms.charAt(msi);
+                rs = ms.substring(++msi, msi +2);
+                msi += 2;
+                i = 0;
+                while (true)	{
+                    i = str.indexOf(c, i);
+                    if (i == -1) break;
+                    ts = str.substring(0, i);
+                    str = ts + "%" + rs + str.substring(++i, str.length);
+                }
+            }
+            return str;
+        }
     
+        function measurementLoaded(name) {
+            measurementWindows.push(openWindows[name]);
+        }
+        
+        function onClosing() {    
+            for( var idx = 0; idx < measurementWindows.length; ++idx ) {
+                if( !measurementWindows[idx].closed )
+                    measurementWindows[idx].parentChanged = true;
+            }
+            
+            //check to see if we need to back up case note
+            if( tmpSaveNeeded && (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) )
+                autoSave(false);
+        }
+        
+        var numMenus = 3;
+        function showMenu(menuNumber, eventObj) {        
+            var menuId = 'menu' + menuNumber;
+            return showPopup(menuId, eventObj);
+        }
+        
+   /*
+    *Set expand and collapse images for navbar divs and show/hide lines above threshold
+    *Store function event listeners so we start/stop listening
+    */
+   var imgfunc = new Object();
+   var obj = {};
+   function listDisplay(Id, threshold) {
+            if( threshold == 0 )
+                return;
+            
+            var saveThreshold = Id + "threshold";
+            if( $(saveThreshold) != null )
+                $(saveThreshold).value = threshold;
+                
+            var listId = Id + "list";            
+            var list = $(listId);
+            var items = list.getElementsByTagName('li');
+            items = $A(items);            
+            
+            var topName = "img"+Id+"0";
+            var midName = "img"+Id+(threshold-1);
+            var lastName = "img"+Id+(items.length-1);
+            var topImage = $(topName);            
+            var midImage = $(midName);
+            var lastImage = $(lastName);
+            var expand;
+            var expandPath = ctx + "/oscarEncounter/graphics/expand.gif";
+            var collapsePath = ctx + "/oscarMessenger/img/collapse.gif";
+            var transparentPath = ctx + "/images/clear.gif";
+            
+            for( var idx = threshold; idx < items.length; ++idx ) {
+                if( items[idx].style.display == 'block' ) {
+                    items[idx].style.display = 'none';
+                    expand = true;
+                }
+                else {
+                    items[idx].style.display = 'block';
+                    expand = false;
+                }
+            }
+
+            if( expand ) {
+                topImage.src = transparentPath;
+                lastImage.src = transparentPath;
+                midImage.src = expandPath;
+                midImage.title = (items.length - threshold) + " items more";
+
+                Element.stopObserving(topImage, "click", imgfunc[topName]);
+                Element.stopObserving(lastImage, "click", imgfunc[lastName]);
+                
+                imgfunc[midName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
+                Element.observe(midImage, "click", imgfunc[midName]);
+            }
+            else {
+                topImage.src = collapsePath;
+                lastImage.src = collapsePath;
+                midImage.src = transparentPath;
+                midImage.title = "";
+                
+                Element.stopObserving(midImage, "click", imgfunc[midName]);                
+                
+                imgfunc[topName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
+                Element.observe(topImage, "click", imgfunc[topName]);
+                
+                imgfunc[lastName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
+                Element.observe(lastImage, "click", imgfunc[lastName]);                
+            }   
+                        
+    }  
+    
+    function clickListDisplay(e) {
+        Event.stop(e);
+        var data = $A(arguments);
+        data.shift();        
+        listDisplay(data[0],data[1]);
+    }
+      
+    
+function grabEnter(id, event) {
+    var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+    if (keyCode == 13) {
+        $(id).click();        
+        return false;
+    }            
+    
+    return true;
+}
+function setupNotes(){
+    if(!NiftyCheck())
+        return;
+    
+    Rounded("div.note","all","transparent","#CCCCCC","big border #000000");
+        
+    //need to set focus after rounded is called
+    adjustCaseNote();    
+    setCaretPosition($(caseNote), $(caseNote).value.length);
+    $(caseNote).focus();
+    
+}
+var minDelta =  0.93;
+var minMain;
+var minWin;
+function monitorNavBars(e) {            
+    var win = pageWidth();
+    var main = Element.getWidth("main");    
+    
+    if( e == null ) {
+        minMain = Math.round(main * minDelta);
+        minWin = Math.round(win * minDelta);
+    }
+
+    if( main < minMain ) {        
+        $("main").style.width = minMain + "px";                
+    }
+    else if( win >= minWin &&  main == minMain ) {
+        $("main").style.width = "100%";       
+    }
+        
+}
+
+
+/*
+ *Draw the cpp views
+ */
+function showIssueNotes() {
+    var issueNoteUrls = {
+        divR1I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=SocHistory&title=Social%20History&cmd=divR1I1",
+        divR1I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=MedHistory&title=Medical%20History&cmd=divR1I2",
+        divR2I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=Concerns&title=Ongoing%20Concerns&cmd=divR2I1",
+        divR2I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=Reminders&title=Reminders&cmd=divR2I2"
+    };
+    var limit = 5;
+    
+    for( idx in issueNoteUrls ) {
+        loadDiv(idx,issueNoteUrls[idx],limit);
+    }
+}
+
+function navBarLoader() {
+
+
+   $("leftNavBar").style.height = "660px";
+   $("rightNavBar").style.height = "660px";
+    
+    
+    this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 14);                    
+    this.maxLeftNumLines = Math.floor($("leftNavBar").getHeight() / 14);    
+    this.arrLeftDivs = new Array();
+    this.arrRightDivs = new Array();
+    this.rightTotal = 0;
+    this.leftTotal = 0;
+    this.leftDivs = 10;
+    this.rightDivs = 3;
+    this.leftReported = 0;
+    this.rightReported = 0;
+    
+    //init ajax calls for all sections of the navbars and create a div for each ajax request
+    this.load = function() {
+             
+            var leftNavBar = [ 
+                  ctx + "/oscarEncounter/displayPrevention.do?hC=009999",
+                  ctx + "/oscarEncounter/displayTickler.do?hC=FF6600",
+                  ctx + "/oscarEncounter/displayDisease.do?hC=5A5A5A",
+                  ctx + "/oscarEncounter/displayForms.do?hC=917611",
+                  ctx + "/oscarEncounter/displayEForms.do?hC=11CC00",
+                  ctx + "/oscarEncounter/displayDocuments.do?hC=476BB3",
+                  ctx + "/oscarEncounter/displayLabs.do?hC=A0509C", 
+                  ctx + "/oscarEncounter/displayMessages.do?hC=DDDD00",
+                  ctx + "/oscarEncounter/displayMeasurements.do?hC=344887",
+                  ctx + "/oscarEncounter/displayConsultation.do?hC="
+              ];
+
+            var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs", "labs", "msgs", "measurements", "consultation"];
+              
+            var rightNavBar = [
+                  ctx + "/oscarEncounter/displayAllergy.do?hC=FF9933",
+                  ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3",                  
+                  ctx + "/oscarEncounter/displayIssues.do?hC=CC9900",
+                  ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=Other%20Meds&cmd=OMeds"
+              ];
+              
+          var rightNavBarTitles = [ "allergies", "Rx", "issues", "OMeds" ];
+
+          var navbar = "leftNavBar";    
+          for( var idx = 0; idx < leftNavBar.length; ++idx ) {
+                var div = document.createElement("div");            
+                div.className = "leftBox";
+                div.style.display = "block";
+                div.style.visiblity = "hidden";                
+                div.id = leftNavBarTitles[idx];
+                $(navbar).appendChild(div);                 
+                this.arrLeftDivs.push(div);
+                    
+                this.popColumn(leftNavBar[idx],leftNavBarTitles[idx],leftNavBarTitles[idx], navbar, this);          
+          
+          }
+          
+          navbar = "rightNavBar";
+          for( var idx = 0; idx < rightNavBar.length; ++idx ) {
+                var div = document.createElement("div");            
+                div.className = "leftBox";
+                div.style.display = "block";
+                div.style.visiblity = "hidden";                
+                div.id = rightNavBarTitles[idx];
+                $(navbar).appendChild(div);                                                 
+                this.arrRightDivs.push(div); 
+                    
+                this.popColumn(rightNavBar[idx],rightNavBarTitles[idx],rightNavBarTitles[idx], navbar, this);          
+          
+          }
+          
+              
+              
+          /*var URLs = new Array();
+          URLs.push(leftNavBar);
+          URLs.push(rightNavBar);
+              
+        for( var j = 0; j < URLs.length; ++j ) {                                    
+            
+            var navbar;
+            if( j == 0 )                
+                navbar = "leftNavBar";            
+            else if( j == 1)                            
+                navbar = "rightNavBar";            
+            
+            for( idx in URLs[j] ) {                                
+                var div = document.createElement("div");            
+                div.className = "leftBox";
+                div.style.display = "block";
+                div.style.visiblity = "hidden";                
+                div.id = idx;
+                $(navbar).appendChild(div); 
+                
+                if( navbar == "leftNavBar" )
+                    this.arrLeftDivs.push(div);
+                if( navbar == "rightNavBar" )
+                    this.arrRightDivs.push(div); 
+                    
+                this.popColumn(URLs[j][idx],idx,idx, navbar, this);
+            }
+            
+        }*/
+    
+    
+    };
+    
+    //update each ajax div with info from request
+    this.popColumn = function (url,div,params, navBar, navBarObj) {    
+        params = "reloadURL=" + url + "&numToDisplay=6&cmd=" + params;
+        
+        var objAjax = new Ajax.Request (                        
+                            url,
+                            {
+                                method: 'post', 
+                                postBody: params,
+                                evalScripts: true,
+                                /*onLoading: function() {                            
+                                                $(div).update("<p>Loading ...<\/p>");
+                                            }, */                            
+                                onSuccess: function(request) {                            
+                                                while( $(div).firstChild )
+                                                    $(div).removeChild($(div).firstChild);
+                                                
+                                                $(div).update(request.responseText);
+                                                    
+                                                if( $("leftColLoader") != null )
+                                                    Element.remove("leftColLoader");                                                      
+
+                                                //track ajax completions and display divs when last ajax call completes                                                
+                                                //navBarObj.display(navBar,div);
+                                           }, 
+                                onFailure: function(request) {
+                                                $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
+                                            }
+                            }
+
+                      );
+        };
+        
+        //format display and show divs in navbars
+        this.display = function(navBar,div) {          
+             
+            //add number of items plus header to total
+            var reported = 0;
+            var numDivs = 0;
+            var arrDivs;
+            if( navBar == "leftNavBar" ) {
+                this.leftTotal += parseInt($F(div+"num")) + 1;                                
+                reported = ++this.leftReported;
+                numDivs = this.leftDivs;
+                arrDivs = this.arrLeftDivs;
+            }
+            else if( navBar == "rightNavBar" ) {
+                this.rightTotal += parseInt($F(div+"num")) + 1;
+                reported = ++this.rightReported;
+                numDivs = this.rightDivs;
+                arrDivs = this.arrRightDivs;
+            }
+            
+            if( reported == numDivs ) {
+                                
+                /*
+                 * do we have more lines than permitted?
+                 * if so we need to reduce display
+                 */
+                var overflow = this.leftTotal - this.maxLeftNumLines;                
+                if( navBar == "leftNavBar" && overflow > 0 )                    
+                    this.adjust(this.arrLeftDivs, this.leftTotal, overflow);                                    
+                    
+                overflow = this.rightTotal - this.maxRightNumLines;                
+                if( navBar == "rightNavBar" && overflow > 0 )
+                    this.adjust(this.arrRightDivs, this.rightTotal, overflow);
+            
+            } //end if
+        };
+        
+        this.adjust = function(divs, total, overflow) {
+            //spread reduction across all divs weighted according to number of lines each div has            
+            var num2reduce;
+            var numLines;
+            var threshold;
+            
+            for( var idx = 0; idx < divs.length; ++idx ) {
+                numLines = parseInt($F(divs[idx].id + "num"));
+                num2reduce = Math.ceil(overflow * (numLines/total));
+                if( num2reduce == numLines && num2reduce > 0 ) 
+                    --num2reduce;
+                
+                threshold = numLines - num2reduce;
+                listDisplay(divs[idx].id, threshold);
+                divs[idx].style.visibility = "visible";
+            }        
+        };
+
+}
+
+//display in place editor
+function showEdit(e,title, noteId, editors, date, revision, note, url, containerDiv, reloadUrl) {    
+    //Event.extend(e);
+    //e.stop();
+    
+    var limit = containerDiv + "threshold";
+    var editElem = "showEditNote";
+    var pgHeight = pageHeight();
+    var right = Math.round((pageWidth() - $(editElem).getWidth())/2);
+    var top = Event.pointerY(e);   
+    var height = $("showEditNote").getHeight();    
+    var gutterMargin = 150;            
+    
+    if( right < gutterMargin )
+        right = gutterMargin;
+                    
+               
+    $("noteEditTxt").value = note;
+    
+    var editorUl = "<ul style='list-style: none outside none; margin:0px;'>";
+    
+    if( editors.length > 0 ) {
+        var editorArray = editors.split(";");    
+        var idx;
+        for( idx = 0; idx < editorArray.length; ++idx ) {
+            if( idx % 2 == 0 )
+                editorUl += "<li>" + editorArray[idx];
+            else
+                editorUl += "; " + editorArray[idx] + "</li>";
+        }
+
+        if( idx % 2 == 0 )
+            editorUl += "</li>";
+    }    
+    editorUl += "</ul>";
+    
+    var noteInfo = "<div style='float:right;'><i>Date:&nbsp;" + date + "&nbsp;rev<a href='#' onclick='return showHistory(\"" + noteId + "\",event);'>"  + revision + "</a></i></div>" + 
+                    "<div><span style='float:left;'>Editors: </span>" + editorUl  + "</div><br style='clear:both;'>";                                                        
+                    
+    $("issueNoteInfo").update(noteInfo);
+    $("frmIssueNotes").action = url;   
+    $("reloadUrl").value = reloadUrl;
+    $("containerDiv").value = containerDiv;
+    $("winTitle").update(title);
+       
+    $(editElem).style.right = right + "px";
+    $(editElem).style.top = top + "px";
+    if( Prototype.Browser.IE ) {
+        //IE6 bug of showing select box    
+        $("channel").style.visibility = "hidden";
+        $(editElem).style.display = "block";        
+    }
+    else
+        $(editElem).style.display = "table"; 
+        
+    $("noteEditTxt").focus();
+    
+    return false;
+}
+
+function updateCPPNote() {
+   var url = $("frmIssueNotes").action;
+   var reloadUrl = $("reloadUrl").value;
+   var div = $("containerDiv").value;
+   
+   $('channel').style.visibility ='visible';
+   $('showEditNote').style.display='none';
+   var params = $("frmIssueNotes").serialize();   
+   var objAjax = new Ajax.Request (                        
+                          url,
+                            {
+                                method: 'post', 
+                                evalScripts: true,
+                                postBody: params,
+                                onSuccess: function(request) {   
+                                                if( request.responseText.length > 0 )
+                                                    $(div).update(request.responseText);
+                                           }, 
+                                onFailure: function(request) {
+                                                $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
+                                            }
+                            }
+
+                      );
+    return false;
+
+}
+
+function clickLoadDiv(e) {
+    var data = $A(arguments);
+    Event.stop(e);  
+    data.shift();        
+    loadDiv(data[0],data[1],0);
+}
+
+function loadDiv(div,url,limit) {
+    
+    var objAjax = new Ajax.Request (                        
+                            url,
+                            {
+                                method: 'post', 
+                                evalScripts: true,
+                                /*onLoading: function() {                            
+                                                $(div).update("<p>Loading ...<\/p>");
+                                            },*/
+                                onSuccess: function(request) {                            
+                                                /*while( $(div).firstChild )
+                                                    $(div).removeChild($(div).firstChild);
+                                                */
+
+                                                $(div).update(request.responseText);
+                                                //listDisplay(div,100);
+                                               
+                                           }, 
+                                onFailure: function(request) {
+                                                $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
+                                            }
+                            }
+
+                      );
+    return false;
+
+}
+
+/*
+ *Manage issues attached to notes
+ */
+ var expandedIssues = new Array();
+ function displayIssue(id) {
+        //if issue has been changed/deleted remove it from array and return
+        if( $(id) == null ) {
+            removeIssue(id);
+            return false;
+        }
+        var idx;
+        var parent = $(id).parentNode;
+        $(id).toggle();
+        if( $(id).style.display != "none" ) {            
+            parent.style.backgroundColor = "#dde3eb";
+            parent.style.border = "1px solid #464f5a";
+            
+            if( (idx = expandedIssues.indexOf(id)) == -1 )
+                expandedIssues.push(id);
+        }
+        else {
+            parent.style.backgroundColor = "";
+            parent.style.border = ""; 
+            
+            removeIssue(id);
+        }
+        return false;
+   }
+   
+   function removeIssue(id) {
+        var idx;
+        
+        if( (idx = expandedIssues.indexOf(id)) > -1 )
+            expandedIssues.splice(idx,1);
+   }    
     
     function reset() {
         rowOneSmall();
@@ -1063,13 +1625,13 @@ function savePage(method) {
     }
     
     function toggleNotePasswd() {
-        <c:if test="${sessionScope.passwordEnabled=='true'}">
+        if( passwordEnabled ) {
             Element.toggle('notePasswd');
             if( $('notePasswd').style.display != "none" )
                 document.forms['caseManagementEntryForm'].elements['caseNote.password'].focus();
             else
                 document.forms['caseManagementEntryForm'].elements[caseNote].focus();
-        </c:if>
+        }
         return false;    
     }
     
@@ -1127,7 +1689,7 @@ function ajaxUpdateIssues(method, div) {
                                         onFailure: function(response) { 
                                                         alert( "Error " + response.status + "\nMost likely your session has expired.  Login again.\n" +
                                                                 "If problem persists contact support");
-                                                    }
+                                                    }                                        
                                     } );           
     
     return false;

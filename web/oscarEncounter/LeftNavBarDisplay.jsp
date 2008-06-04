@@ -1,6 +1,6 @@
 <%@page contentType="text/html"%>
 <%-- <%@page pageEncoding="UTF-8"%> --%>
-<%@page import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO, oscar.util.*"%>
+<%@page import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO, oscar.util.*, java.util.ArrayList, java.util.Date, java.util.Calendar, java.io.IOException"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
@@ -10,7 +10,7 @@
         String js = dao.getJavaScript();    
         int maxColumnHeight = 40;  //break into columns after maxColumnHeight items reached
         int menuWidth = 125;
-        String dateFormat = "dd-MMM-yyyy";
+        
         
         //Is there java script to insert in page?  Then do it
         if( js != null ) {            
@@ -67,86 +67,71 @@
         %>
         <div style="clear:left; float:left; width:90%;"><h3 style="width:100%; <%=getBackgroundColor(dao)%>"><a href="#" onclick="<%=dao.getLeftURL()%>; return false;"><%=dao.getLeftHeading()%></a></h3></div>
                
-            <ul id="<%=request.getAttribute("navbarName")%>list">
-                <%
-                //now we display the actual items of the module
-                boolean expand = dao.numItems() > 5;
-                int numToDisplay = 4; //0 based so 5 items in this case
-                int j;
-                String stripe,colour,bgColour;        
+        <ul id="<%=request.getAttribute("navbarName")%>list">
+            <%
+            //now we display the actual items of the module
+            String manageItems = "";
+            String div = (String)request.getAttribute("navbarName");
+            div = div.trim();
+            int numItems = dao.numItems();
+            String strToDisplay = request.getParameter("numToDisplay");
+            int numToDisplay;             
+            boolean xpanded = false;
+            int displayThreshold = 6;            
+            
+            if( strToDisplay != null ) { 
+                numToDisplay = Integer.parseInt(strToDisplay);
                 
-                for(j=0; j<dao.numItems(); j++) {
-                NavBarDisplayDAO.Item item = dao.getItem(j);                       
-                colour = item.getColour().equals("") ? "" : "color: " + item.getColour() + ";";
-                bgColour = item.getBgColour().equals("") ? "background-color: #f3f3f3;" : "background-color: " + item.getBgColour() + ";";
-                if ( (j % 2) == 0){
-                stripe = "style=\"clear:both; display:block; white-space:nowrap; " + bgColour + "\"";
+                if( numItems > numToDisplay ) {
+                    String xpandUrl = request.getParameter("reloadURL") + "&cmd=" + div;                      
+                    manageItems = xpandUrl;           
                 }
-                else
-                stripe = "style=\"clear:both; display:block; white-space:nowrap; \"";
-                            
-                %>
-                <li <%=stripe%>>
+            }   
+            else {
+                numToDisplay = numItems;                
+                if( numToDisplay > displayThreshold ) {                 
+                    xpanded = true;
+                }
+            }
+            
+            int numDisplayed = 0;            
 
-                        <%--     
-                        if( expand && j == 0 ) {
-                        %>
-                        <a style="width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img id="<%=request.getAttribute("navbarName")%>topimg" src="<c:out value="${ctx}"/>/oscarMessenger/img/collapse.gif"/></a>
-                        <%
-                        }
-                        else if( expand && j == numToDisplay ) {
-                        %>
-                        <a style="width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; text-decoration:none;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-numToDisplay-1 + " more items"%>">
-                            <img id="<%=request.getAttribute("navbarName")%>midimg" src="<c:out value="${ctx}"/>/oscarEncounter/graphics/expand.gif"/>                            
-                        </a>
-                        <%
-                        }
-                        
-                        else if( j == dao.numItems()-1 && j > numToDisplay ) {
-                        %>           
-                        <a style="width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img src="<c:out value="${ctx}"/>/oscarMessenger/img/collapse.gif"/></a>
-                        <%
-                        }    
-                        else {
-                        --%>
-                        <a style="width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:both;"><img id="img<%=request.getAttribute("navbarName")%><%=j%>" src="<c:out value="${ctx}"/>/images/clear.gif"/>&nbsp;&nbsp;</a>
-                        <%--      
-                        }
-                        --%>
-                        
-                        <% String width;
-                            if( item.getDate() != null ) { 
-                                width = "41%";
-                                
-                        %>
-                        <span style="overflow:hidden; width:44%; height:1.2em; white-space:nowrap; float:right; text-align:right;">
-                        
-                            ...<a class="links" style="<%=colour%>" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="#" onclick="<%=item.getURL()%>" title="<%=item.getLinkTitle()%>">
-                                <%=DateUtils.getDate(item.getDate(), dateFormat)%>
-                            </a>
-                        </span>
-                        <% }
-                           else {
-                        
-                            width = "85%";
-                           } 
-                        
-                        %>    
-                        <span style="overflow:hidden; width:<%=width%>; height:1.2em; white-space:nowrap; float:left; text-align:left;">
-                            <a class="links" style="<%=colour%>" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="#" onclick="<%=item.getURL()%>" title="<%=item.getLinkTitle()%>">
-                                <%=item.getTitle()%>
-                            </a>     
-                        </span>
-                </li>
-                <%
-                }
-                if( j == 0 ) {
-                %>
-                <li>&nbsp;</li>
-                <%}%>
-            </ul>   
-        <input type="hidden" id="<%=request.getAttribute("navbarName")%>num" value="<%=j%>" />
+            ArrayList<NavBarDisplayDAO.Item> current = new ArrayList<NavBarDisplayDAO.Item>();
+            ArrayList<NavBarDisplayDAO.Item> pastDates = new ArrayList<NavBarDisplayDAO.Item>();
+            ArrayList<NavBarDisplayDAO.Item> noDates = new ArrayList<NavBarDisplayDAO.Item>();
+            Calendar threshold = Calendar.getInstance();
+            threshold.add(Calendar.MONTH, -3);
+            Date threeMths = threshold.getTime();
+            int j;
+            
+            for(j=0; j<numItems; j++) {
+                NavBarDisplayDAO.Item item = dao.getItem(j);
+                Date d = item.getDate();
+                if( d == null )
+                    noDates.add(item);
+                else if( d.compareTo(threeMths) < 0 )
+                    pastDates.add(item);
+                else
+                    current.add(item);
+            }   
+            
+            StringBuffer jscode = new StringBuffer();
+            numDisplayed = display(current, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+            
+            if( numDisplayed < numToDisplay ) 
+                numDisplayed += display(pastDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+            
+            if( numDisplayed < numToDisplay )
+                numDisplayed += display(noDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+                
+            if( numDisplayed == 0 ) 
+                out.println("<li>&nbsp;</li>");
+            %>
+        </ul>
+        <input type="hidden" id="<%=request.getAttribute("navbarName")%>num" value="<%=numDisplayed%>" />
     <%   
+        out.println("<script type=\"text/javascript\">" + jscode.toString() + "</script>");
+        //System.out.println(jscode.toString());
         System.out.println("LeftNavBar " + request.getAttribute("navbarName") + "load time: " + (System.currentTimeMillis()-startTime) + "ms");
     %>
     
@@ -158,5 +143,73 @@
         return "";
     }
     
+    public int display(ArrayList<NavBarDisplayDAO.Item>items, int numToDisplay, int numDisplayed, String reloadUrl, boolean xpanded, int numItems, StringBuffer js, int displayThreshold, javax.servlet.http.HttpServletRequest request, javax.servlet.jsp.JspWriter out ) throws IOException {
+        String stripe,colour,bgColour;   
+        String imgName;
+        String dateFormat = "dd-MMM-yyyy";
+        numToDisplay -= numDisplayed;
+        
+        int total = items.size() < numToDisplay ? items.size() : numToDisplay;
+        int j;
+        int curNum = numDisplayed;
+        for(j = 0 ; j< total; ++j ) {                
+                NavBarDisplayDAO.Item item = items.get(j);
+                colour = item.getColour().equals("") ? "" : "color: " + item.getColour() + ";";
+                bgColour = item.getBgColour().equals("") ? "background-color: #f3f3f3;" : "background-color: " + item.getBgColour() + ";";
+                if ( (j % 2) == 0){
+                stripe = "style=\"clear:both; display:block; white-space:nowrap; " + bgColour + "\"";
+                }
+                else
+                stripe = "style=\"clear:both; display:block; white-space:nowrap; \"";
+                        
+                out.println("<li " + stripe + ">");    
+                
+                if( curNum == 0 && xpanded ) {
+                    imgName = "img" + request.getAttribute("navbarName") + curNum;                    
+                    out.println("<a href='#' onclick=\"return false;\" style='text-decoration:none; width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName + "' src='" + request.getContextPath() + "/oscarMessenger/img/collapse.gif'/>&nbsp;&nbsp;</a>");
+                    js.append("imgfunc['" + imgName + "'] = clickListDisplay.bindAsEventListener(obj,'" + request.getAttribute("navbarName") + "', '" + displayThreshold + "');" );
+                    js.append("Element.observe($('" + imgName + "'), 'click', imgfunc['" + imgName + "']);");
+                }
+                else if( j == (numToDisplay-1) && xpanded ) {
+                    imgName = "img" + request.getAttribute("navbarName") + curNum;                    
+                    out.println("<a href='#' onclick=\"return false;\" style='text-decoration:none; width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName + "' src='" + request.getContextPath() + "/oscarMessenger/img/collapse.gif'/>&nbsp;&nbsp;</a>");
+                    js.append("imgfunc['" + imgName + "'] = clickListDisplay.bindAsEventListener(obj,'" + request.getAttribute("navbarName") + "', '" + displayThreshold + "');" );
+                    js.append("Element.observe($('" + imgName + "'), 'click', imgfunc['" + imgName + "']);");
+                }
+                else if( j == (numToDisplay-1) && numItems > (curNum+1) ) {
+                    imgName = "img" + request.getAttribute("navbarName") + curNum;
+                    out.println("<a href='#' onclick=\"return false;\" title='" + String.valueOf(numItems - j - 1) + " more items' style='text-decoration:none; width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName +  "' src='" + request.getContextPath() + "/oscarEncounter/graphics/expand.gif'/>&nbsp;&nbsp;</a>");
+                    js.append("imgfunc['" + imgName + "'] = clickLoadDiv.bindAsEventListener(obj,'" + request.getAttribute("navbarName") + "','" + reloadUrl + "');" );
+                    js.append("Element.observe($('" + imgName + "'), 'click', imgfunc['" + imgName + "']);");
+                }
+                else
+                    out.println("<a style='text-decoration:none; width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:both;'><img id='img" + request.getAttribute("navbarName") + curNum + "' src='" + request.getContextPath() + "/images/clear.gif'/>&nbsp;&nbsp;</a>");
+                                         
+                ++curNum;
+                String width;
+                if( item.getDate() != null ) { 
+                    width = "41%";                                
+                    out.println("<span style='overflow:hidden; width:44%; height:1.2em; white-space:nowrap; float:right; text-align:right;'>");
+                        
+                    out.println("...<a class='links' style='" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick='" + org.apache.commons.lang.StringEscapeUtils.escapeJava(item.getURL()) + "' title='" + item.getLinkTitle() + "'>");
+                    out.println(DateUtils.getDate(item.getDate(), dateFormat));
+                    out.println("</a>");
+                    out.println("</span>");
+                }
+                else {
+                    width = "85%";
+                } 
+                        
+                out.println("<span style='overflow:hidden; width:" + width + "; height:1.2em; white-space:nowrap; float:left; text-align:left;'>");                
+                out.println("<a class='links' style='" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + org.apache.commons.lang.StringEscapeUtils.escapeJava(item.getURL()) + "\" title='" + item.getLinkTitle() + "'>");
+                out.println(item.getTitle());
+                out.println("</a>");
+                out.println("</span>");
+                out.println("</li>");
+                
+         }
+                      
+         return j;
+    }
     
     %>

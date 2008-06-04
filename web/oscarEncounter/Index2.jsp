@@ -441,6 +441,7 @@ if (request.getParameter("casetoEncounter")==null)
     
     function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
       var page = "" + varpage;
+      name = name.replace(/\s+/g,"_"); 
       windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
             //var popup =window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
             openWindows[name] = window.open(page, name, windowprops);
@@ -811,6 +812,42 @@ function updateDiv() {
     setTimeout("updateDiv();", 1000);
 }
 
+function clickLoadDiv(e) {
+    var data = $A(arguments);
+    Event.stop(e);  
+    data.shift();        
+    loadDiv(data[0],data[1],0);
+}
+
+function loadDiv(div,url,limit) {
+    
+    var objAjax = new Ajax.Request (                        
+                            url,
+                            {
+                                method: 'post', 
+                                evalScripts: true,
+                                /*onLoading: function() {                            
+                                                $(div).update("<p>Loading ...<\/p>");
+                                            },*/
+                                onSuccess: function(request) {                            
+                                                /*while( $(div).firstChild )
+                                                    $(div).removeChild($(div).firstChild);
+                                                */
+
+                                                $(div).update(request.responseText);
+                                                //listDisplay(div,100);
+                                               
+                                           }, 
+                                onFailure: function(request) {
+                                                $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
+                                            }
+                            }
+
+                      );
+    return false;
+
+}
+
 <%--function popLeftColumn(url,div,params) {
 
     params = "cmd=" + params;
@@ -859,6 +896,7 @@ function popLeftColumn(url,div,params) {
     *Store function event listeners so we start/stop listening
     */
    var imgfunc = new Object();
+   var obj = {};
    function listDisplay(Id, threshold) {
             if( threshold == 0 )
                 return;
@@ -866,8 +904,7 @@ function popLeftColumn(url,div,params) {
             var listId = Id + "list";            
             var list = $(listId);
             var items = list.getElementsByTagName('li');
-            items = $A(items);
-            var obj = {};
+            items = $A(items);            
             
             var topName = "img"+Id+"0";
             var midName = "img"+Id+(threshold-1);
@@ -967,7 +1004,7 @@ function navBarLoader() {
                   labs:         "<c:out value="${ctx}"/>/oscarEncounter/displayLabs.do?hC=A0509C", <%/* 550066   */%>                         
                   msgs:         "<c:out value="${ctx}"/>/oscarEncounter/displayMessages.do?hC=DDDD00", <% /* FF33CC */ %>
                   measurements: "<c:out value="${ctx}"/>/oscarEncounter/displayMeasurements.do?hC=344887",
-                  consultation: "<c:out value="${ctx}"/>/oscarEncounter/displayConsultation.do"
+                  consultation: "<c:out value="${ctx}"/>/oscarEncounter/displayConsultation.do?hC="
               };
                           
           var URLs = new Array();
@@ -1004,7 +1041,7 @@ function navBarLoader() {
     
     //update each ajax div with info from request
     this.popColumn = function (url,div,params, navBar, navBarObj) {    
-        params = "cmd=" + params;
+        params = "reloadURL=" + url + "&numToDisplay=6&cmd=" + params;
         
         var objAjax = new Ajax.Request (                        
                             url,
@@ -1022,7 +1059,7 @@ function navBarLoader() {
                                                 $(div).update(request.responseText);  
 
                                                 //track ajax completions and display divs when last ajax call completes                                                
-                                                navBarObj.display(navBar,div);
+                                                //navBarObj.display(navBar,div);
                                            }, 
                                 onFailure: function(request) {
                                                 $(div).innerHTML = "<h3>Error:<\/h3>" + request.status;
