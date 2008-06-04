@@ -72,7 +72,7 @@
     ctx = "<c:out value="${ctx}"/>";
     imgPrintgreen.src = ctx + "/oscarEncounter/graphics/printerGreen.png"; //preload green print image so firefox will update properly
     providerNo = "<%=provNo%>";
-    demographicNo = "<c:out value="${param.demographicNo}"/>";
+    demographicNo = "<%=bean.getDemographicNo()%>";
     case_program_id = "<%=pId%>";
     
     <caisi:isModuleLoad moduleName="caisi">
