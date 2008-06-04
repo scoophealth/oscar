@@ -272,7 +272,7 @@ function showHideBillPref() {
 </TABLE>
 
 <table width="100%" BGCOLOR="eeeeee">
-     <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no" defaultVal="true">
+     <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no">
 	<tr> 
     <TD align="center"><a href=# onClick ="popupPage(230,600,'../casemgmt/newCaseManagementEnable.jsp');return false;">Enable OSCAR CME UI</a> &nbsp;&nbsp;&nbsp; 
   </tr>
