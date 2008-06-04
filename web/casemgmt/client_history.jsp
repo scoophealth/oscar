@@ -45,10 +45,12 @@
 <tr height="10">
 	<td  bgcolor="white" colspan="2">&nbsp;</td>
 </tr>
+
 <tr>
 	<td bgcolor="white" >Updated Last</td>
-	<td bgcolor="white"><html:text property="cpp.update_date" size="19" maxlength="19" readonly="true"/></td>
+	<td bgcolor="white" ><c:out value="${requestScope.cpp.update_date}"/></td>
 </tr>
+
 
 <tr class="title">
 	<td>Social History</td>
