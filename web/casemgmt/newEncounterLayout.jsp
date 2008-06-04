@@ -331,7 +331,7 @@
      </style>
  <![endif]-->
     <html:base />
-    <title>Case Management</title>
+    <title><bean:message key="oscarEncounter.Index.title"/> - <oscar:nameage demographicNo="<%=(String) request.getAttribute("demographicNo")%>"/></title>
     <meta http-equiv="Cache-Control" content="no-cache">
     <script type="text/javascript">
         var itemColours = new Object();
