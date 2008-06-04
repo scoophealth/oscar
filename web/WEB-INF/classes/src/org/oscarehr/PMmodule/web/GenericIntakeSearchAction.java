@@ -18,13 +18,12 @@
  */
 package org.oscarehr.PMmodule.web;
 
-import java.net.MalformedURLException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.WebServiceException;
 
@@ -50,7 +49,6 @@ import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoResult;
 import org.oscarehr.util.SessionConstants;
 
 import com.quatro.service.LookupManager;
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
@@ -114,7 +112,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
                 temp = StringUtils.trimToNull(intakeSearchBean.getHealthCardNumber());
                 parameters.setHin(temp);
 
-                XMLGregorianCalendar cal = new XMLGregorianCalendarImpl();
+                XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
                 {
                     temp = StringUtils.trimToNull(intakeSearchBean.getYearOfBirth());
                     if (temp != null) cal.setYear(Integer.parseInt(temp));

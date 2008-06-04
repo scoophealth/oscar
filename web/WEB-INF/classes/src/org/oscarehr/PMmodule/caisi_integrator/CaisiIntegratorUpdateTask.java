@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.WebServiceException;
 
@@ -56,8 +58,6 @@ import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.beans.BeanUtils;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
@@ -121,7 +121,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         }
     }
 
-    private void pushAllFacilityData(Facility facility) throws IOException {
+    private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException {
         logger.debug("Pushing data for facility : " + facility.getId());
 
         // check all parameters are present
@@ -209,7 +209,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         service.setCachedDemographicIssues(issueTransfers);
     }
 
-    private void pushDemographics(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) throws MalformedURLException {
+    private void pushDemographics(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) throws MalformedURLException, DatatypeConfigurationException {
         for (Integer demographicId : demographicIds) {
             logger.debug("pushing demographicInfo facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
@@ -221,7 +221,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
             facilityDemographicPrimaryKey.setFacilityDemographicId(demographic.getDemographicNo());
             cachedDemographicInfo.setFacilityDemographicPrimaryKey(facilityDemographicPrimaryKey);
             
-            XMLGregorianCalendar cal = new XMLGregorianCalendarImpl();
+            XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
             if (demographic.getYearOfBirth() != null) cal.setYear(Integer.parseInt(demographic.getYearOfBirth()));
             if (demographic.getMonthOfBirth() != null) cal.setMonth(Integer.parseInt(demographic.getMonthOfBirth()));
             if (demographic.getDateOfBirth() != null) cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));
