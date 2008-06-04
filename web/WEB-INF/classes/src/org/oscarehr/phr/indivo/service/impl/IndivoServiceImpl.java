@@ -466,6 +466,7 @@ public class IndivoServiceImpl  implements PHRService{
             Map m = new HashMap();
             String indivoServer = OscarProperties.getInstance().getProperty("INDIVO_SERVER");           
             m.put(TalkClient.SERVER_LOCATION,indivoServer);
+            m.put(TalkClient.CERT_TRUST_KEY,"all");
             TalkClient client = new TalkClientImpl(m);
             return client;
         }
