@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.apache.commons.logging.Log;
@@ -62,6 +63,31 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		getHibernateTemplate().initialize(note.getIssues());
 		return note;
 	}
+        
+        public List<CaseManagementNote>getCPPNotes(String demoNo, long issueId, String staleDate) {
+            Date d;
+            GregorianCalendar cal = new GregorianCalendar(1970,1,1);
+            if( staleDate != null ) {                
+                
+                try {
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    d = formatter.parse(staleDate);
+                }
+                catch(ParseException e) {                                        
+                    d = cal.getTime();
+                    e.printStackTrace();
+                }
+            }
+            else {
+                d = cal.getTime();
+            }
+            
+            String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.observation_date >= ?  and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc"; 
+
+             @SuppressWarnings("unchecked")
+            List<CaseManagementNote> result=getHibernateTemplate().find(hql,new Object[] {issueId, demoNo, d});
+            return result;
+        }
         
         public List<CaseManagementNote> getNotesByDemographic(String demographic_no,String[] issues, String staleDate) {
             String list = null;
@@ -120,7 +146,9 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	
 	public List getNotesByDemographic(String demographic_no,String[] issues) {
             String list = null;
-            if(issues != null && issues.length>0) {
+            String hql;
+            if(issues != null) {
+                if( issues.length>1) {
                     list="";
                     for(int x=0;x<issues.length;x++) {
                             if(x!=0) {
@@ -128,10 +156,18 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
                             }
                             list += issues[x];
                     }
+                    hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
+                    return this.getHibernateTemplate().find(hql,demographic_no);
+
+                }
+                else if( issues.length == 1 ) {
+                    hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
+                    long id = Long.parseLong(issues[0]);
+                    return this.getHibernateTemplate().find(hql,new Object[] {id,demographic_no});
+                }
             }
             //String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list + ") and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
-            String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
-            return this.getHibernateTemplate().find(hql,demographic_no);
+           return new ArrayList(); 
 	}
 
 	public void saveNote(CaseManagementNote note) {
