@@ -81,6 +81,7 @@
 
   String [][] dbQueries=new String[][] {
     {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+orderby},
+    {"search_titlename_mysql", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+orderby + " " + limit},
     {"add_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby},
     {"update_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no  from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby + " "+limit},
     {"search_detail", "select * from demographic where demographic_no=?"},
@@ -113,6 +114,7 @@
     {"search_hin", "select demographic_no, ver from demographic where hin=?"},
     {"add2caisi_admission", "insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag) Values(?,?,?,?,'current',0,0)"},
     {"update_admission", "update admission set provider_no = ?, program_id = ? where client_id = ?"},
+    {"search_program", "select program_id from program where name = ?"}
    };
 
 //  String [][] dbQueries=new String[][] {
