@@ -238,6 +238,20 @@ public class CaseManagementManager {
     }
     
     /*
+     *fetch notes linked to particular issue code
+     *used for retrieving notes attached to cpp
+     */
+    public List<CaseManagementNote>getCPP(String demoNo, long issueId, UserProperty prop) {
+        String staleDate = null;
+        if( prop != null )
+            staleDate = prop.getValue();
+        
+        return caseManagementNoteDAO.getCPPNotes(demoNo, issueId, staleDate);
+            
+    }
+    
+    
+    /*
      *fetch notes for demographic linked with specified issues
      *if date is set, fetch notes after specified date
      */
