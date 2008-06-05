@@ -62,6 +62,7 @@ public class EctDisplayDxAction extends EctDisplayAction {
         
         //grab all of the diseases associated with patient and add a list item for each
         String dbFormat = "yyyy-MM-dd";
+        DateFormat formatter = new SimpleDateFormat(dbFormat);
         String serviceDateStr;
         Date date;
         dxResearchBeanHandler hd = new dxResearchBeanHandler(bean.demographicNo);
@@ -71,12 +72,18 @@ public class EctDisplayDxAction extends EctDisplayAction {
             NavBarDisplayDAO.Item item = Dao.Item();
             dxResearchBean dxBean = (dxResearchBean) diseases.get(idx);
             
-            DateFormat formatter = new SimpleDateFormat(dbFormat);
+            if (dxBean.getStatus() != null && dxBean.getStatus().equalsIgnoreCase("C")){
+               item.setColour("000000");
+            }
+            
             String dateStr = dxBean.getEnd_date();
+            String startDate = dxBean.getStart_date();
                          
             try {
                 date = (Date)formatter.parse(dateStr);
-                serviceDateStr = DateUtils.getDate(date, dateFormat);                                        
+                Date sDate = (Date)formatter.parse(startDate);
+                serviceDateStr = DateUtils.getDate(sDate, dateFormat);  
+                item.setDate(date);
             }
             catch(ParseException ex ) {
                 System.out.println("EctDisplayDxAction: Error creating date " + ex.getMessage());
