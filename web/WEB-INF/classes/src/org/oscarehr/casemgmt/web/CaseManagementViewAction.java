@@ -492,7 +492,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
     }
     
     public ActionForward listNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("List Notes start");
+        log.debug("List Notes start");
         long beginning = System.currentTimeMillis();
         long start = beginning;
         long current = 0;
@@ -503,19 +503,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         //set save url to be used by ajax editor
         String identUrl = request.getQueryString();        
         request.setAttribute("identUrl", identUrl);               
-        
+
         // filter the notes by the checked issues and date if set
         UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
         
-        current = System.currentTimeMillis();
-        System.out.println("Setup " + String.valueOf(current - start));
-        start = current;
-        String[] codes = request.getParameterValues("issue_code");        
+        String[] codes = request.getParameterValues("issue_code");  
         List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, codes);
-        current = System.currentTimeMillis();
-        System.out.println("Get Issues " + String.valueOf(current - start));
-        start = current;
-        
         StringBuffer checked_issues = new StringBuffer();
         String[] issueIds = new String[issues.size()];
         int idx = 0;
@@ -531,9 +524,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         // need to apply issue filter        
         notes = caseManagementMgr.getNotes(demoNo, issueIds, userProp);
         notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
-        current = System.currentTimeMillis();
-        System.out.println("Get Notes " + String.valueOf(current - start));
-        start = current;
 
         log.debug("FETCHED " + notes.size() + " NOTES filtered by " + StringUtils.join(issueIds,","));
         log.debug("REFERER " + request.getRequestURL().toString() + "?" + request.getQueryString());
@@ -554,10 +544,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         if (noteSort.trim().equalsIgnoreCase("UP")) request.setAttribute("Notes", sort_notes(notes, "update_date_asc"));
         else request.setAttribute("Notes", notes);
         
-        current = System.currentTimeMillis();
-        System.out.println("Filter notes " + String.valueOf(current - start));
-        System.out.println("Total List Notes " + String.valueOf(current - beginning));
-
         return mapping.findForward("listNotes");
     }
 
