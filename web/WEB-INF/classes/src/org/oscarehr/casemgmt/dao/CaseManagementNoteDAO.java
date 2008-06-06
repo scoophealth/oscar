@@ -82,10 +82,10 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
                 d = cal.getTime();
             }
             
-            String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.observation_date >= ?  and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc"; 
+            String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.observation_date >= ?  and cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) ORDER BY cmn.observation_date asc"; 
 
              @SuppressWarnings("unchecked")
-            List<CaseManagementNote> result=getHibernateTemplate().find(hql,new Object[] {issueId, demoNo, d});
+            List<CaseManagementNote> result=getHibernateTemplate().find(hql,new Object[] {issueId, demoNo, d, demoNo});
             return result;
         }
         
@@ -156,14 +156,14 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
                             }
                             list += issues[x];
                     }
-                    hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
-                    return this.getHibernateTemplate().find(hql,demographic_no);
+                    hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) ORDER BY cmn.observation_date asc";
+                    return this.getHibernateTemplate().find(hql,new Object[] {demographic_no, demographic_no});
 
                 }
                 else if( issues.length == 1 ) {
-                    hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
+                    hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) ORDER BY cmn.observation_date asc";
                     long id = Long.parseLong(issues[0]);
-                    return this.getHibernateTemplate().find(hql,new Object[] {id,demographic_no});
+                    return this.getHibernateTemplate().find(hql,new Object[] {id,demographic_no, demographic_no});
                 }
             }
             //String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list + ") and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
