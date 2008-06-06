@@ -25,7 +25,7 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
-<%@page import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.Iterator, java.text.SimpleDateFormat, java.util.Date, java.text.ParseException"%>
+<%@page import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.HashSet, java.util.Iterator, java.text.SimpleDateFormat, java.util.Date, java.text.ParseException"%>
 <%@page import="org.oscarehr.casemgmt.model.*" %>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*" %>
 <%@page import="org.oscarehr.PMmodule.model.*" %>
@@ -56,6 +56,7 @@
     String dateFormat = "dd-MMM-yyyy H:mm";    
     long savedId = 0;
     boolean found = false;
+    String bgColour = "color:#000000;background-color:#CCCCFF;";
     ArrayList lockedNotes = new ArrayList();
     ArrayList unLockedNotes = new ArrayList();
     ArrayList unEditableNotes = new ArrayList();
@@ -450,17 +451,50 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     long time1,time2;
 		    String noteStr;
 		    int length;
+                    String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "Reminders"};
+                    
+                    boolean isCPP, fulltxt;
 		    for( idx = 0; idx < noteSize; ++idx ) {
                     
                     CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
                     noteStr = note.getNote();
-		    length = noteStr.length() > 50 ? 50 : noteStr.length();
-		    //System.out.println("Starting " + note.getId());
+                    
+                    if( noteSize > 3 && idx < (noteSize - 3) ) { 
+                        length = noteStr.length() > 50 ? 50 : noteStr.length();
+                        noteStr = noteStr.substring(0,length);
+                        fulltxt = false;
+                    }
+                    else {
+                        noteStr = noteStr.replaceAll("\n","<br>");
+                        fulltxt = true;
+                    }
+                    
+                    isCPP = false; 
+                    bgColour = "color:#000000;background-color:#CCCCFF;";
+                    Set nIssues = note.getIssues();
+                    //System.out.println("nIssues " + String.valueOf(nIssues == null));
+                    Iterator iterator = nIssues.iterator();
+                    while( iterator.hasNext() ) {
+                        CaseManagementIssue issue = (CaseManagementIssue)iterator.next();
+                        for( int cppIdx = 0; cppIdx < cppCodes.length; ++cppIdx ) {
+                            if(issue.getIssue().getCode().equals(cppCodes[cppIdx])) {
+                                bgColour = "color:#FFFFFF;background-color:#996633;";
+                                isCPP = true;
+                                break;
+                            }                    
+                        }
+                        if( isCPP )
+                            break;
+                    }
+                    
+                    
+                    //System.out.println("Starting " + note.getId());
 		    time1 = System.currentTimeMillis();
                     %>                               
                     <div id="nc<%=idx%>" class="note"> 
                         <input type="hidden" id="signed<%=note.getId()%>" value="<%=note.isSigned()%>">
-                        <input type="hidden" id="full<%=note.getId()%>" value="<%=note.getId() == savedId%>">
+                        <input type="hidden" id="full<%=note.getId()%>" value="<%=fulltxt || note.getId() == savedId%>">
+                        <input type="hidden" id="bgColour<%=note.getId()%>" value="<%=bgColour%>">
                         <div id="n<%=note.getId()%>">
                             <%
                             //display last saved note for editing
@@ -469,7 +503,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             %>    
                             <img title="Print" id='print<%=note.getId()%>' alt="Toggle Print Note" onclick="togglePrint(<%=note.getId()%>, event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>
                             <textarea  tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note"/></textarea>
-                            <div class="sig" style="display:inline;" id="sig<%=note.getId()%>">
+                            <div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=note.getId()%>">
                                 <%@ include file="noteIssueList.jsp" %>
                             </div>
                             
@@ -490,26 +524,34 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             else {                                      
                             
                             String rev = note.getRevision();
+                            if( fulltxt ) {
                             %>
+                            <img title="Minimize Display" id='quitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/> 
+                            <% }else {
+                            %>                                
                             <img title="Maximize Display" id='quitImg<%=note.getId()%>' alt="Maximize Display" onclick="fullView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'/>
+                            <% } 
+                            %>
                             <img title="Print" id='print<%=note.getId()%>' alt="Toggle Print Note" onclick="togglePrint(<%=note.getId()%>, event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>
 			    
-                            <span id="txt<%=note.getId()%>"><%=noteStr.substring(0,length)%></span>
+                            <span id="txt<%=note.getId()%>"><%=noteStr%></span>
                             <%--
 			    time2 = System.currentTimeMillis();
 			    System.out.println("Format note " + String.valueOf(time2 - time1));
 			    time1 = time2;
-                            //if( largeNote(noteStr) ) {
                             --%>                                       
-                            <%-- <img title="Minimize Display" id='bottomQuitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/> --%>
+                            <% if( largeNote(noteStr) ) {
+                            %>
+                            
+                            <img title="Minimize Display" id='bottomQuitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/> 
                             <%
-                            //}
+                            }
 
 			    //time2 = System.currentTimeMillis();
 			    //System.out.println("largeNote() " + String.valueOf(time2 - time1));
 			    //time1 = time2;
                             %>                                      
-                            <div id="sig<%=note.getId()%>" style="clear:both;"><div class="sig" id="sumary<%=note.getId()%>">
+                            <div id="sig<%=note.getId()%>" class="sig" style="clear:both;<%=bgColour%>"><div id="sumary<%=note.getId()%>">
                                     <div id="observation<%=note.getId()%>" style="float:right;margin-right:3px;"><i>Date:&nbsp;<span id="obs<%=note.getId()%>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;rev<a href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></i></div>
                                     <div><span style="float:left;">Editors:</span>
                                         <ul style="list-style: none inside none; margin:0px;">    
@@ -617,9 +659,10 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 <div id="nc<%=savedId%>" class="note">
                     <input type="hidden" id="signed<%=savedId%>" value="false">
                     <input type="hidden" id="full<%=savedId%>" value="true">
+                    <input type="hidden" id="bgColour<%=savedId%>" value="<%=bgColour%>">
                     <div id="n<%=savedId%>" style="line-height:1.1em;">                                     
                         <textarea  tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
-                        <div id="sig0">
+                        <div class="sig" id="sig0">
                             <%@ include file="noteIssueList.jsp" %>                                        
                         </div>
                         
