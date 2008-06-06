@@ -37,12 +37,12 @@
 <nested:empty name="caseManagementEntryForm" property="caseNote.id">
     <nested:notEmpty name="newNoteIdx">
         <% noteIndex = request.getParameter("newNoteIdx"); %>
-        <div class="sig" id="sumary<nested:write name="newNoteIdx"/>">
+        <div id="sumary<nested:write name="newNoteIdx"/>">
         <div id="observation<nested:write name="newNoteIdx"/>" style="float:right;margin-right:3px;">
     </nested:notEmpty>
     <nested:empty name="newNoteIdx">
         <% noteIndex = "0";%>
-        <div class="sig" id="sumary0">
+        <div id="sumary0" >
         <div id="observation0" style="float:right;margin-right:3px;">
     </nested:empty>
 </nested:empty>
@@ -55,7 +55,7 @@
        noteIndex = String.valueOf(frm.getCaseNote().getId());
        
     %>
-    <div class="sig" id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
+    <div id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
     <div id="observation<nested:write name="caseManagementEntryForm" property="caseNote.id" />" style="float:right;margin-right:3px;">
 </nested:notEmpty>
     <nested:notEmpty name="ajaxsave">
@@ -65,7 +65,7 @@
         rev<a href="#" onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write name="caseManagementEntryForm" property="caseNote.revision" /></a></i>
     </nested:notEmpty>    
     <nested:empty name="ajaxsave">
-    <i>Date:</i>&nbsp;<img src="<c:out value="${ctx}/images/cal.gif" />" id="observationDate_cal" alt="calendar">&nbsp;<input type="text" id="observationDate" name="observation_date" ondblclick="this.value='';" style="font-style:italic;border:none; width:140px; background-color:#CCCCFF;" readonly value="<nested:write name="caseManagementEntryForm" property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" />">
+    <i>Date:</i>&nbsp;<img src="<c:out value="${ctx}/images/cal.gif" />" id="observationDate_cal" alt="calendar">&nbsp;<input type="text" id="observationDate" name="observation_date" ondblclick="this.value='';" style="font-style:italic;border:none; width:140px;" readonly value="<nested:write name="caseManagementEntryForm" property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" />">
                 rev<a href="#" onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write name="caseManagementEntryForm" property="caseNote.revision" /></a>
     </nested:empty>
     </div>
@@ -190,7 +190,7 @@
         var newId = "<nested:write name="ajaxsave" />";  
         var oldDiv;
         var newDiv;
-        var prequel = ["n","sig","signed","full","print"];
+        var prequel = ["n","sig","signed","full","bgColour","print"];
 
         for( var idx = 0; idx < prequel.length; ++idx ) {
             oldDiv = prequel[idx] + origId;
@@ -199,7 +199,7 @@
                 $(oldDiv).id = newDiv;        
         }  
        updatedNoteId = newId;
-       
+      
        <%
             CaseManagementEntryFormBean form = (CaseManagementEntryFormBean)request.getAttribute("caseManagementEntryForm");
             String noteTxt = form.getCaseNote().getNote();
@@ -216,6 +216,17 @@
        </nested:notEmpty>
     </nested:notEmpty>
     
+   var c = "bgColour" + "<%=noteIndex%>";          
+   var txtStyles = $F(c).split(";");
+   var txtColour = txtStyles[0].substr(txtStyles[0].indexOf("#"));
+   var background = txtStyles[1].substr(txtStyles[1].indexOf("#"));
+   var summary = "sumary" + "<%=noteIndex%>";
+   
+   $("observationDate").style.color = txtColour;
+   $("observationDate").style.backgroundColor = background; 
+   $(summary).style.color = txtColour;
+   $(summary).style.backgroundColor = background; 
+   
    if( $("toggleIssue") != null )
         $("toggleIssue").disabled = false;
     

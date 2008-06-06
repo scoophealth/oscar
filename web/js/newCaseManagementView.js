@@ -258,6 +258,7 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayAllergy.do?hC=FF9933",
                   ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3",                  
                   ctx + "/oscarEncounter/displayIssues.do?hC=CC9900",
+                  //ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=Other%20Meds&cmd=OMeds"
                   ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=Other%20Meds&cmd=OMeds"
               ];
               
@@ -282,7 +283,6 @@ function navBarLoader() {
                 var div = document.createElement("div");            
                 div.className = "leftBox";
                 div.style.display = "block";
-                div.style.visiblity = "hidden";                
                 div.id = rightNavBarTitles[idx];
                 $(navbar).appendChild(div);                                                 
                 this.arrRightDivs.push(div); 
@@ -1767,7 +1767,7 @@ function newNote(e) {
     }                
 
     var div = "<div id='" + id + "' class='newNote'><input type='hidden' id='signed" + newNoteIdx + "' value='false'><div id='n" + newNoteIdx + "'><input type='hidden' id='full" + newNoteIdx + "' value='true'>" +
-              input + "<div class='sig' style='display:inline;' id='" + sigId + "'><\/div>" + passwd + "<\/div><\/div>";
+              "<input type='hidden' id='bgColour" + newNoteIdx + "' value='color:#000000;background-color:#CCCCFF;'>" + input + "<div class='sig' style='display:inline;background-color:red;' id='" + sigId + "'><\/div>" + passwd + "<\/div><\/div>";
               
     if( changeToView(caseNote) ) {
         
@@ -1776,6 +1776,7 @@ function newNote(e) {
         document.forms["caseManagementEntryForm"].noteId.value = "0";
         document.forms["caseManagementEntryForm"].newNoteIdx.value = newNoteIdx;
         new Insertion.Bottom("encMainDiv", div);
+        $(sigId).addClassName("sig");
         Rounded("div#"+id,"all","transparent","#CCCCCC","big border #000000");
         $(caseNote).focus();   
         adjustCaseNote();
@@ -1785,7 +1786,7 @@ function newNote(e) {
         Element.observe(caseNote, 'keyup', monitorCaseNote);
         Element.observe(caseNote, 'click', getActiveText);
 
-        origCaseNote = $F(caseNote);        
+        origCaseNote = $F(caseNote);             
         ajaxUpdateIssues("edit", sigId); 
         addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, sigId);
         Element.observe('asgnIssues', 'click', addIssueFunc);        
