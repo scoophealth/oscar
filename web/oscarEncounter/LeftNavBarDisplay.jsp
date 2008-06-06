@@ -156,56 +156,63 @@
                 NavBarDisplayDAO.Item item = items.get(j);
                 colour = item.getColour().equals("") ? "" : "color: " + item.getColour() + ";";
                 bgColour = item.getBgColour().equals("") ? "background-color: #f3f3f3;" : "background-color: " + item.getBgColour() + ";";
+                String dateColour = "background-color: white;";
                 if ( (j % 2) == 0){
-                stripe = "style=\"clear:both; display:block; white-space:nowrap; " + bgColour + "\"";
-                }
-                else
-                stripe = "style=\"clear:both; display:block; white-space:nowrap; \"";
-                        
+                   stripe = "style=\"overflow: hidden; clear:both; position:relative; display:block; white-space:nowrap; " + bgColour + "\"";
+                   dateColour = bgColour;
+                }else{
+                   stripe = "style=\"overflow: hidden; clear:both; position:relative; display:block; white-space:nowrap; \"";
+                }        
                 out.println("<li " + stripe + ">");    
                 
                 if( curNum == 0 && xpanded ) {
                     imgName = "img" + request.getAttribute("navbarName") + curNum;                    
-                    out.println("<a href='#' onclick=\"return false;\" style='text-decoration:none; width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName + "' src='" + request.getContextPath() + "/oscarMessenger/img/collapse.gif'/>&nbsp;&nbsp;</a>");
+                    out.println("<a href='#' onclick=\"return false;\" style='text-decoration:none; width:7px; z-index: 100; "+dateColour+" position:relative; margin: 0px; padding-bottom: 0px;  vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName + "' src='" + request.getContextPath() + "/oscarMessenger/img/collapse.gif'/>&nbsp;&nbsp;</a>");
                     js.append("imgfunc['" + imgName + "'] = clickListDisplay.bindAsEventListener(obj,'" + request.getAttribute("navbarName") + "', '" + displayThreshold + "');" );
                     js.append("Element.observe($('" + imgName + "'), 'click', imgfunc['" + imgName + "']);");
                 }
                 else if( j == (numToDisplay-1) && xpanded ) {
                     imgName = "img" + request.getAttribute("navbarName") + curNum;                    
-                    out.println("<a href='#' onclick=\"return false;\" style='text-decoration:none; width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName + "' src='" + request.getContextPath() + "/oscarMessenger/img/collapse.gif'/>&nbsp;&nbsp;</a>");
+                    out.println("<a href='#' onclick=\"return false;\" style='text-decoration:none; width:7px; z-index: 100; "+dateColour+" position:relative; margin: 0px; padding-bottom: 0px;  vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName + "' src='" + request.getContextPath() + "/oscarMessenger/img/collapse.gif'/>&nbsp;&nbsp;</a>");
                     js.append("imgfunc['" + imgName + "'] = clickListDisplay.bindAsEventListener(obj,'" + request.getAttribute("navbarName") + "', '" + displayThreshold + "');" );
                     js.append("Element.observe($('" + imgName + "'), 'click', imgfunc['" + imgName + "']);");
                 }
                 else if( j == (numToDisplay-1) && numItems > (curNum+1) ) {
                     imgName = "img" + request.getAttribute("navbarName") + curNum;
-                    out.println("<a href='#' onclick=\"return false;\" title='" + String.valueOf(numItems - j - 1) + " more items' style='text-decoration:none; width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName +  "' src='" + request.getContextPath() + "/oscarEncounter/graphics/expand.gif'/>&nbsp;&nbsp;</a>");
+                    out.println("<a href='#' onclick=\"return false;\" title='" + String.valueOf(numItems - j - 1) + " more items' style=' text-decoration:none; width:7px; z-index: 100; "+dateColour+" position:relative; margin: 0px; padding-bottom: 0px;  vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName +  "' src='" + request.getContextPath() + "/oscarEncounter/graphics/expand.gif'/>&nbsp;&nbsp;</a>");
                     js.append("imgfunc['" + imgName + "'] = clickLoadDiv.bindAsEventListener(obj,'" + request.getAttribute("navbarName") + "','" + reloadUrl + "');" );
                     js.append("Element.observe($('" + imgName + "'), 'click', imgfunc['" + imgName + "']);");
                 }
                 else
-                    out.println("<a style='text-decoration:none; width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right; clear:both;'><img id='img" + request.getAttribute("navbarName") + curNum + "' src='" + request.getContextPath() + "/images/clear.gif'/>&nbsp;&nbsp;</a>");
+                    out.println("<a border=0 style='text-decoration:none; width:7px; z-index: 100; "+dateColour+" position:relative; margin: 0px; padding-bottom: 0px;  vertical-align: bottom; display: inline; float: right; clear:both;'><img  id='img" + request.getAttribute("navbarName") + curNum + "' src='" + request.getContextPath() + "/images/clear.gif'/>&nbsp;&nbsp;</a>");
                                          
                 ++curNum;
                 String width;
                 if( item.getDate() != null ) { 
                     width = "41%";                                
-                    out.println("<span style='overflow:hidden; width:44%; height:1.2em; white-space:nowrap; float:right; text-align:right;'>");
-                        
-                    out.println("...<a class='links' style='" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick='" + org.apache.commons.lang.StringEscapeUtils.escapeJava(item.getURL()) + "' title='" + item.getLinkTitle() + "'>");
-                    out.println(DateUtils.getDate(item.getDate(), dateFormat));
-                    out.println("</a>");
-                    out.println("</span>");
-                }
-                else {
+                } else {
                     width = "85%";
                 } 
                         
-                out.println("<span style='overflow:hidden; width:" + width + "; height:1.2em; white-space:nowrap; float:left; text-align:left;'>");                
+                out.println("<span style=\" z-index: 1; position:absolute; margin-right:10px; width:90%; overflow:hidden;  height:1.2em; white-space:nowrap; float:left; text-align:left; \">");                
                 out.println("<a class='links' style='" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + org.apache.commons.lang.StringEscapeUtils.escapeJava(item.getURL()) + "\" title='" + item.getLinkTitle() + "'>");
                 out.println(item.getTitle());
                 out.println("</a>");
                 out.println("</span>");
-                out.println("</li>");
+              
+                
+                
+                
+                if( item.getDate() != null ) { 
+                    width = "41%";                                
+                    out.println("<span style=\"z-index: 100; "+dateColour+" overflow:hidden;   position:relative; height:1.2em; white-space:nowrap; float:right; text-align:right;\">");
+                    out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick='" + org.apache.commons.lang.StringEscapeUtils.escapeJava(item.getURL()) + "' title='" + item.getLinkTitle() + "'>");
+                    out.println(DateUtils.getDate(item.getDate(), dateFormat));
+                    out.println("</a>");
+                    out.println("</span>");
+                } 
+                
+                  out.println("</li>");
                 
          }
                       
