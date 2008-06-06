@@ -601,13 +601,17 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			oscarVars.add(new LabelValueBean("Last Name","Demographic/LastName"));
 			oscarVars.add(new LabelValueBean("Program Admission Notes","Program/admissionNotes"));
 		}
+		
 		if(question != null && question.getType().isSetSelect()) {
 			//oscarVars.add(new LabelValueBean("Program Selection","Program"));
 			objects.add("Program Selector");
 		}
+				
 		
-		request.setAttribute("caisiobjects", objects);		
-		request.setAttribute("oscarVars", oscarVars);
+		//request.setAttribute("caisiobjects", objects);
+		//request.setAttribute("oscarVars", oscarVars);
+		request.getSession().setAttribute("caisiobjects", objects);		
+		request.getSession().setAttribute("oscarVars", oscarVars);
 		surveyForm.set("questionModel",question);
 
 	       List<String> colorList =  new ArrayList<String>();
@@ -623,7 +627,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	        colorList.add("orange");
 	        colorList.add("pink");
 	        colorList.add("purple");        
-	        request.setAttribute("colors", colorList);
+	        request.getSession().setAttribute("colors", colorList);
 	        
 		return mapping.findForward("question_editor");
 	}
@@ -634,9 +638,12 @@ public class SurveyManagerAction extends AbstractSurveyAction {
     		return mapping.findForward("auth");
     	}
 		
+		
 		DynaActionForm surveyForm = (DynaActionForm)form;
 		Question question = (Question)surveyForm.get("questionModel");
 		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		
+		
 		
 		if(question.getType().isSetSelect()) {
 			Select select = question.getType().getSelect();
