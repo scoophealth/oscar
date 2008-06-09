@@ -257,12 +257,11 @@ function navBarLoader() {
             var rightNavBar = [
                   ctx + "/oscarEncounter/displayAllergy.do?hC=FF9933",
                   ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3",                  
-                  ctx + "/oscarEncounter/displayIssues.do?hC=CC9900",
-                  //ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=Other%20Meds&cmd=OMeds"
-                  ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=Other%20Meds&cmd=OMeds"
+                  ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=Other%20Meds&cmd=OMeds",
+                  ctx + "/oscarEncounter/displayIssues.do?hC=CC9900"                  
               ];
               
-          var rightNavBarTitles = [ "allergies", "Rx", "issues", "OMeds" ];
+          var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "issues" ];
 
           var navbar = "leftNavBar";    
           for( var idx = 0; idx < leftNavBar.length; ++idx ) {
