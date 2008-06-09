@@ -255,7 +255,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 </div>                                  
 
             <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->--%>
-            <div style="width:100%; height:75px; background-color:#FFFFFF;">
+            <div style="width:100%; height:75px; margin:0px; background-color:#FFFFFF;">
                 <div id="divR1I1" class="topBox" style="float:left; width:49%; margin-left:3px;">
                     <%--&nbsp;<html:textarea styleId="cpp.socialHistory" property="cpp.socialHistory" tabindex="1" styleClass="rowOne" rows="4" cols="28"/>--%>
                 </div>    
@@ -294,7 +294,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 <bean:message key="oscarEncounter.Index.r"/></a>
             </div>
             --%>
-            <div style="width:100%; height:75px; background-color:#FFFFFF;">
+            <div style="width:100%; height:75px; margin-top:0px; background-color:#FFFFFF;">
                 <!--Ongoing Concerns cell -->
                 <div id="divR2I1" class="topBox" style="clear:left; float:left; width:49%; margin-left:3px;">                
                     
@@ -309,9 +309,50 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
         <div id="notCPP" style="height:70%; margin-left:2px; background-color:#FFFFFF;">
         <%--<div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white;"><jsp:include page="rightColumn.jsp" /></div>--%>
         <div id="topContent" style="float:left; width:100%; margin-right:-2px; padding-bottom:10px; background-color:#CCCCFF; font-size:10px;">
-            <span style="cursor:pointer; text-decoration:underline;" onclick="showFilter();">View Filter</span>
+            <nested:notEmpty name="caseManagementViewForm" property="filter_providers">
+                <div style="float:left; margin-left:30px;margin-top:0px;"><u>Providers:</u><br>
+                    <nested:iterate type="String" id="filter_provider" property="filter_providers">                    
+                        <c:choose>
+                        <c:when test="${filter_provider == 'a'}">
+                            All
+                        </c:when>
+                        <c:otherwise>
+                            <nested:iterate id="provider" name="providers">
+                                <c:if test="${filter_provider==provider.providerNo}">                        
+                                    <nested:write name="provider" property="formattedName"/><br>
+                                </c:if>
+                            </nested:iterate>
+                       </c:otherwise>
+                       </c:choose>
+                    </nested:iterate>
+                </div>
+            </nested:notEmpty>
+            <nested:notEmpty name="caseManagementViewForm" property="filter_roles">
+                <div style="float:left; margin-left:30px; margin-top:0px;"><u>Roles:</u><br>
+                    <nested:iterate type="String" id="filter_role" property="filter_roles"> 
+                        <c:choose>
+                        <c:when test="${filter_role == 'a'}">
+                            All
+                        </c:when>
+                        <c:otherwise>
+                            <nested:iterate id="role" name="roles">
+                                <c:if test="${filter_role==role.id}">                        
+                                    <nested:write name="role" property="name"/><br>
+                                </c:if>
+                            </nested:iterate>
+                        </c:otherwise>
+                        </c:choose>
+                    </nested:iterate>
+                </div>
+            </nested:notEmpty>
+            <nested:notEmpty name="caseManagementViewForm" property="note_sort">
+                <div style="float:left; margin-left:30px; margin-top:0px;"><u>Sort:</u><br>
+                    <nested:write property="note_sort"/><br>
+                </div>
+            </nested:notEmpty>
+            
             <div id="filter" style="display:none;">
-                <div style="height:150px; width:auto; overflow:auto; float:left; position:relative; left:10%;">
+                <div style="clear:both; height:150px; width:auto; overflow:auto; float:left; position:relative; left:10%;">
                     Provider:
                     <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
                         <li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox>All</li>
@@ -331,7 +372,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                         providerNo = prov.getProviderNo();
                         %>
                         <li><html:multibox property="filter_providers" value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
-                        <%                        
+                        <%
                         }
                         %>
                     </ul>
@@ -364,11 +405,12 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     </ul>
                 </div>
                 
-                <div style="float:left; clear:both; cursor:pointer; text-decoration:underline;" onclick="return filter();">
+                <div style="text-align:right; cursor:pointer; text-decoration:underline; margin-right:10px;" onclick="return filter();">
                     Show View
                 </div>                
             </div>            
-            <div style="float:left; clear:both; margin-bottom:5px; width:100%; text-align:center;">                                
+            <div style="float:left; clear:both; margin-top:5px; margin-bottom:5px; width:100%; text-align:center;">                                
+                <img src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>">                
                 <input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
                 <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index:1; display:none">&nbsp</div>  
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -384,10 +426,12 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 <input type="button" id="searchButton" name="button"  value="Search" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">       
                 
             </div>
-            <div style="text-align:right">
-                <img title="Print" id='imgPrintCPP' alt="Toggle Print CPP" onclick="return printInfo(this,'printCPP');"  src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>&nbsp;CPP
+            <div style="clear:both; text-align:right">
+                <img style="cursor:pointer;" title="View Filter" alte="View Filter" onclick="showFilter();" src="<c:out value="${ctx}/oscarEncounter/graphics/folder-saved-search.png"/>">&nbsp;Filter
                 &nbsp;&nbsp;
-                <img title="Print" id='imgPrintRx' alt="Toggle Print Rx" onclick="return printInfo(this, 'printRx');"  src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>&nbsp;Rx
+                <img style="cursor:pointer;" title="Print" id='imgPrintCPP' alt="Toggle Print CPP" onclick="return printInfo(this,'printCPP');"  src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>&nbsp;CPP
+                &nbsp;&nbsp;
+                <img style="cursor:pointer;" title="Print" id='imgPrintRx' alt="Toggle Print Rx" onclick="return printInfo(this, 'printRx');"  src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>&nbsp;Rx
                 &nbsp;&nbsp;
             </div>
         </div>
@@ -659,7 +703,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 <div id="nc<%=savedId%>" class="note">
                     <input type="hidden" id="signed<%=savedId%>" value="false">
                     <input type="hidden" id="full<%=savedId%>" value="true">
-                    <input type="hidden" id="bgColour<%=savedId%>" value="<%=bgColour%>">
+                    <input type="hidden" id="bgColour<%=savedId%>" value="color:#000000;background-color:#CCCCFF;">
                     <div id="n<%=savedId%>" style="line-height:1.1em;">                                     
                         <textarea  tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
                         <div class="sig" id="sig0">
