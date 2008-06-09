@@ -550,7 +550,7 @@ public class importCasemgmt {
                             insert.setString(2, rs.getString("demographicNo"));
                             insert.setString(3, rs.getString("providerNo"));
                             note = formatNote(new StringBuffer(rs.getString("encounter")));
-                            note = "SPLIT CHART\n" + note;
+                            note = "SPLIT CHART...\n" + note;
                             insert.setString(4, note);
                             insert.setString(5, note);
                             insert.setString(6, uuid.toString());
