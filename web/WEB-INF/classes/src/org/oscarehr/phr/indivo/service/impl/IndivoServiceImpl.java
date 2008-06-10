@@ -549,6 +549,9 @@ public class IndivoServiceImpl  implements PHRService{
         
         String[] iGrantProviders = (String[]) phrRegistrationForm.get("list:grantProviders");
         
+        if (iGrantProviders == null) 
+            iGrantProviders = new String[0];
+        
         ContactInformationType indiContact = IndivoUtil.generateContactInformationType(iFirstName, iLastName, iAddress, iCity, iProvince, iPostal, iPhone, iPhone2, iEmail);
         DemographicsType indiDemographics = IndivoUtil.generateDemographicType(iDob);
         
