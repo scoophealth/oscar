@@ -68,6 +68,12 @@
     </tag>
     
     <tag>
+        <name>IfNotPHRAuthenticated</name>
+        <tag-class>org.oscarehr.phr.taglib.IfNotPHRAuthenticated</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
+    
+    <tag>
         <name>indivoRegistered</name>
         <tag-class>oscar.util.indivoCheck</tag-class>
         <body-content>JSP</body-content>

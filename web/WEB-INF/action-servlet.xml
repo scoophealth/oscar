@@ -198,6 +198,11 @@
     <bean name="/phrExchange" class="org.oscarehr.phr.web.PHRExchangeAction" singleton="false">
         <property name="phrService" ref="phrService"/>
     </bean>
+    <bean name="/phr/UserManagement" class="org.oscarehr.phr.web.PHRUserManagementAction" singleton="false">
+        <property name="phrService" ref="phrService"/>
+        <property name="phrActionDAO" ref="phrActionDAO"/>
+        <property name="phrConstants" ref="phrConstants"/>
+    </bean>
     <bean name="/appointment/apptStatusSetting" class="oscar.appt.status.web.AppointmentStatusAction" singleton="false">
     </bean>
 <!--

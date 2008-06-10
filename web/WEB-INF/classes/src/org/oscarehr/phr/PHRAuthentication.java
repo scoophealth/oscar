@@ -43,6 +43,7 @@ public interface PHRAuthentication {
     public String getRole();
     public Date getExpirationDate();
     public String getName();
+    public String getNamePHRFormat();
     public void setProviderNo(String s);
     public String getProviderNo();
     

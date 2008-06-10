@@ -39,5 +39,6 @@ public interface PHRConstants {
     public String DOCTYPE_MEDICATION();
     public String DOCTYPE_MESSAGE();
     public String DOCTYPE_BINARYDATA();
+    public String DOCTYPE_ACCESSPOLICIES();
     
 }
