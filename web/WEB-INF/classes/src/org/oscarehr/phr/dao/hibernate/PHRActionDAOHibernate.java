@@ -42,6 +42,8 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.model.PHRAction;
+import org.oscarehr.phr.PHRConstants;
+import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -61,9 +63,12 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
         }
 
         public List<PHRAction> getQueuedActions(String providerNo){
-            String sql ="from PHRAction a where a.senderOscar = ? and a.status = " + PHRAction.STATUS_SEND_PENDING;
-            String[] f = new String[1];
+            PHRConstants phrConstants = new IndivoConstantsImpl(); //put in a clause to send access policies
+            String sql = "from PHRAction a where (a.senderOscar = ? OR (a.receiverOscar = ? AND phr_classification = ?)) and a.status = " + PHRAction.STATUS_SEND_PENDING;
+            String[] f = new String[3];
             f[0] = providerNo;
+            f[1] = providerNo;
+            f[2] = phrConstants.DOCTYPE_ACCESSPOLICIES();
             List<PHRAction> list = getHibernateTemplate().find(sql,f);
             return list;
         }
@@ -115,6 +120,32 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
             
         }
         
+        public List<PHRAction> getActionsByStatus(int status, String providerNo) {
+            String sql ="FROM PHRAction a WHERE a.receiverOscar = ? AND a.status = " + status;
+            String[] f = new String[1];
+            f[0] = providerNo;
+            List<PHRAction> list = getHibernateTemplate().find(sql,f);
+            
+            if (list == null){
+                return new ArrayList();
+            }
+            return list;
+        }
+        
+        public List<PHRAction> getActionsByStatus(int status, String providerNo, String classification) {
+            String sql ="FROM PHRAction a WHERE a.receiverOscar = ? AND a.phrClassification = ? AND a.status = " + status;
+            String[] f = new String[2];
+            f[0] = providerNo;
+            f[1] = classification;
+            List<PHRAction> list = getHibernateTemplate().find(sql,f);
+            
+            if (list == null){
+                return new ArrayList();
+            }
+            return list;
+        }
+            
+            
         public boolean ifActionsWithErrors(final String providerNo) {
             Long num =  (Long) getHibernateTemplate().execute(new HibernateCallback() {
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
