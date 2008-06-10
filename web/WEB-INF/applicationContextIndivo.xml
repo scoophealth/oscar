@@ -14,6 +14,14 @@
                         <ref bean="phrActionDAO"/>
             </property>
         </bean>
+        <bean id="indivoAPService" class="org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService">
+            <property name="phrDocumentDAO">
+			<ref bean="phrDocumentDAO" />
+	    </property>
+            <property name="phrActionDAO">
+                        <ref bean="phrActionDAO"/>
+            </property>
+        </bean>
          <bean id="phrConstants" class="org.oscarehr.phr.indivo.IndivoConstantsImpl">
         </bean>
         <bean id="phrDocumentDAO" class="org.oscarehr.phr.dao.hibernate.PHRDocumentDAOHibernate">
