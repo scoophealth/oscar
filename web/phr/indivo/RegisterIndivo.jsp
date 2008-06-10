@@ -126,7 +126,7 @@ if (wPhoneExt != null)
                 <div class="objectBlueHeader">
                     Personal Information
                 </div>
-                <table onload="enableSubmit();">
+                <table>
                     <html-el:hidden property="role" value="patient"/>
                     <tr>
                         <td>Name (First, Last):</td>
@@ -198,6 +198,9 @@ if (wPhoneExt != null)
            Creating a new user......  <br/>
            <b>Do not close this window.</b>
        </div>
+       <script type="text/javascript" language="JavaScript">
+           enableSubmit();
+       </script>
        <phr:IfNotPHRAuthenticated>
            <script type="text/javascript" language="JavaScript">
                disableForm();
