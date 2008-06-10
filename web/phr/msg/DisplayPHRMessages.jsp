@@ -22,6 +22,9 @@
 <%@ page import="org.oscarehr.phr.PHRConstants"%>
 <%@ page import="org.oscarehr.phr.dao.PHRActionDAO, org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="java.util.*"%>
+<%@ page import="oscar.util.StringUtils"%>
+<%@ page import="org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService" %>
+
 <%
 int statusNotAuthorized = PHRAction.STATUS_NOT_AUTHORIZED;
 String providerName = request.getSession().getAttribute("userfirstname") + " " + 
@@ -62,6 +65,10 @@ if (pageMethod.equals("unarchive"))
     int curMonth = (now.get(Calendar.MONTH)+1);
     int curDay = now.get(Calendar.DAY_OF_MONTH);
     String dateString = curYear+"-"+curMonth+"-"+curDay;    
+    
+    //get Actions Pending Approval
+    List<PHRAction> actionsPendingApproval = (List<PHRAction>) request.getSession().getAttribute("actionsPendingApproval");
+    System.out.println("list size: " + actionsPendingApproval.size());
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -175,6 +182,16 @@ if (pageMethod.equals("unarchive"))
         
         .statusDiv {
             background-color: #fb8781;
+        }
+        
+        div.sharingAlert {
+            background-color: #ffdf6f; /*#ffd649;*/
+            width: 99%;
+            font-size: 11px;
+            margin-top: 1px;
+            overflow: hidden;
+            white-space: nowrap;
+            
         }
         </style>
 
@@ -307,7 +324,30 @@ if (pageMethod.equals("unarchive"))
                 &nbsp;
             </td>
             <td class="MainTableRightColumn">
-                <table class="messageTable" border="0" width="80%" cellspacing="1">
+                
+                <%-- Sharing approval alerts -------------- --%>
+                <%if (actionsPendingApproval != null) {
+                    for (PHRAction actionPendingApproval: actionsPendingApproval) {
+                        ProviderData senderProvider = new ProviderData(actionPendingApproval.getSenderOscar()); 
+                        List idAndPermission = IndivoAPService.getProposalIdAndPermission(actionPendingApproval);
+                        String demographicIndivoId = (String) idAndPermission.get(0);
+                        String permission = (String) idAndPermission.get(1);
+                        String permissionReadable = permission.substring(permission.lastIndexOf(':')+1, permission.length());
+                                %>
+                    <div class="sharingAlert">
+                    <span style="float: left;">
+                        Add sharing for <span style="font-weight: bold; color: #339a8a;"><%=demographicIndivoId%></span>.  
+                        Share type: <span style="font-weight: bold; color: #d0722e;"><%=permissionReadable%></span> 
+                        (Proposed by <span style="font-weight: bold; color: #339a8a;"><%= senderProvider.getFirst_name()%> <%=senderProvider.getLast_name()%></span>)
+                    </span>
+                        <span style="float: right;"><a href="../../phr/UserManagement.do?method=approveAction&actionId=<%=actionPendingApproval.getId()%>"><b>Approve</b></a> <a href="../../phr/UserManagement.do?method=denyAction&actionId=<%=actionPendingApproval.getId()%>"><b>Deny</b></a></span>
+                    </div>
+                    
+                  <%} 
+                }%>
+                
+                
+                <table class="messageTable" border="0" width="99%" cellspacing="1">
                     <tr>
                         <th bgcolor="#DDDDFF" width="30">
                             &nbsp;

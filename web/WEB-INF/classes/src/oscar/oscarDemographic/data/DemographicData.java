@@ -341,6 +341,15 @@ public class DemographicData {
         return date;
     }
     
+    public void setDemographicPin(String demographicNo, String pin) throws Exception {
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        String sql = "UPDATE demographic SET pin = '" + pin + "' WHERE demographic_no = " + demographicNo;
+        db.RunSQL(sql);
+        db.CloseConn();
+    }
+    
+    
+    
     public class Demographic {
         
         protected String demographic_no;

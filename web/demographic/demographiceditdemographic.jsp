@@ -41,6 +41,7 @@ You have no rights to access the data!
 </security:oscarSec>
 
 <%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@page  import="oscar.oscarDemographic.data.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -50,6 +51,8 @@ You have no rights to access the data!
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
+
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <%
 	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
@@ -1169,7 +1172,10 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                               </td>
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPIN"/>: </b> </td>
                               <td  align="left">
-                                <input type="text" name="pin" size="30" value="<%=apptMainBean.getString(rs,"pin")!=null? apptMainBean.getString(rs,"pin") : ""%>" >
+                                <input type="text" name="pin" size="30" value="<%=apptMainBean.getString(rs,"pin")!=null? apptMainBean.getString(rs,"pin") : ""%>" ><br/>
+                                    <%if (apptMainBean.getString(rs,"pin")==null || apptMainBean.getString(rs,"pin").equals("")) {%>
+                                    <a href="javascript:" onclick="popup(600, 650, '../phr/indivo/RegisterIndivo.jsp?demographicNo=<%=demographic_no%>', 'indivoRegistration');"><sub style="white-space: nowrap;">Register for MyOSCAR</sub></a>
+                                    <%}%>
                               </td>
                             </tr>
                             <tr valign="top">

@@ -22,7 +22,7 @@ body {
 }
 
 div.objectGreenHeader {
-    background: #69b2b6 none repeat scroll 0%;
+    background: #7ab869 none repeat scroll 0%;
     border: medium none;
     color: #F1F1FD;
     font-family: arial;
@@ -31,8 +31,8 @@ div.objectGreenHeader {
 }
 
 div.objectGreen {
-    background: #F5F5FF none repeat scroll 0%;
-    border: 1px solid #69b2b6;
+    background: #f5fff6 none repeat scroll 0%;
+    border: 1px solid #7ab869;
     font-family: Arial;
     font-size: 11px;
     margin-left: 0px;
@@ -68,6 +68,32 @@ div.objectRed {
 
 font.announcementRed {
     color: #306f80;
+    text-align: center;
+    font-weight: bold;
+}
+
+div.objectBlueHeader {
+    background: #69b2b6 none repeat scroll 0%;
+    border: medium none;
+    color: #F1F1FD;
+    font-family: arial;
+    font-weight: bold;
+    text-align: center;
+}
+
+div.objectBlue {
+    background: #F5F5FF none repeat scroll 0%;
+    border: 1px solid #6F92C8;
+    font-family: Arial;
+    font-size: 11px;
+    margin-left: 0px;
+    margin-top: 2px;
+    width: 100%;
+    padding-bottom: 5px;
+}
+
+font.announcementBlue {
+    color: #306f19;
     text-align: center;
     font-weight: bold;
 }

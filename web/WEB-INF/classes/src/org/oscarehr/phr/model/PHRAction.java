@@ -55,6 +55,8 @@ public class PHRAction {
     public static final int ACTION_ADD = 1;
     public static final int ACTION_UPDATE = 2;
 
+    public static final int STATUS_ON_HOLD = 6;  //usually means the provider approved an action, but something has to be done before it is sent off
+    public static final int STATUS_APPROVAL_PENDING = 5;
     public static final int STATUS_NOT_SENT_DELETED = 4;
     public static final int STATUS_NOT_AUTHORIZED = 3;
     public static final int STATUS_SENT = 2;

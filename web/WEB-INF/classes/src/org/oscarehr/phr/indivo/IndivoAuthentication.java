@@ -82,11 +82,16 @@ public class IndivoAuthentication implements PHRAuthentication {
     
     
     
-    public String getName(){
+    public String getName() {
         EctProviderData.Provider prov = new EctProviderData().getProvider(providerNo);
         return prov.getSurname()+", "+prov.getFirstName();
     }
 
+    public String getNamePHRFormat() {
+        EctProviderData.Provider prov = new EctProviderData().getProvider(providerNo);
+        return prov.getFirstName() + " " + prov.getSurname();
+    }
+    
     public void setProviderNo(String s) {
         providerNo = s;
     }

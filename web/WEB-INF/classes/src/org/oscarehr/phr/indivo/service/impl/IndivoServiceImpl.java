@@ -32,11 +32,13 @@ package org.oscarehr.phr.indivo.service.impl;
 import java.io.StringReader;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -46,8 +48,11 @@ import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.client.TalkClient;
 import org.indivo.client.TalkClientImpl;
+import org.indivo.xml.JAXBUtils;
+import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.DocumentUtils;
 import org.indivo.xml.phr.DocumentVersionGenerator;
+import org.indivo.xml.phr.RecordGenerator;
 import org.indivo.xml.phr.document.DocumentClassificationType;
 import org.indivo.xml.phr.document.DocumentHeaderType;
 import org.indivo.xml.phr.document.DocumentVersionType;
@@ -55,6 +60,11 @@ import org.indivo.xml.phr.document.IndivoDocumentType;
 import org.indivo.xml.phr.document.VersionBodyType;
 import org.indivo.xml.phr.message.MessageType;
 import org.indivo.xml.phr.record.IndivoRecordType;
+import org.indivo.xml.phr.contact.*;
+import org.indivo.xml.phr.demographics.Demographics;
+import org.indivo.xml.phr.demographics.DemographicsType;
+import org.indivo.xml.phr.urns.ContentTypeQNames;
+import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.indivo.xml.talk.AddDocumentResultType;
 import org.indivo.xml.talk.AuthenticateResultType;
 import org.indivo.xml.talk.ReadDocumentHeaderListResultType;
@@ -68,6 +78,8 @@ import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.indivo.IndivoAuthentication;
 import org.oscarehr.phr.indivo.IndivoConstantsImpl;
+import org.oscarehr.phr.indivo.IndivoUtil;
+import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRBinaryData;
 import org.oscarehr.phr.model.PHRDocument;
@@ -90,8 +102,8 @@ import oscar.oscarRx.data.RxPrescriptionData;
 public class IndivoServiceImpl  implements PHRService{
     
     private static Log log = LogFactory.getLog(IndivoServiceImpl.class); ///IndivoServiceImpl.class
-    PHRDocumentDAO phrDocumentDAO;
-    PHRActionDAO  phrActionDAO;
+    protected PHRDocumentDAO phrDocumentDAO;
+    protected PHRActionDAO  phrActionDAO;
     
     /** Creates a new instance of IndivoServiceImpl */
     public IndivoServiceImpl() {
@@ -102,7 +114,7 @@ public class IndivoServiceImpl  implements PHRService{
         String indivoId = prov.getIndivoId();
         if (indivoId == null){
             return false;
-        }else{
+        } else {
             return true;
         }
     }
@@ -125,10 +137,21 @@ public class IndivoServiceImpl  implements PHRService{
     }
     
     public PHRAuthentication authenticate(String providerNo,String password) throws Exception {
+        //see authenticateIndivoId for exception explanation
         ProviderData providerData = new ProviderData();
         PHRAuthentication phrAuth = null;
         providerData.setProvider_no(providerNo);
         String indivoId = providerData.getMyOscarId();
+        phrAuth = authenticateIndivoId(indivoId, password);
+        phrAuth.setProviderNo(providerNo);
+        return phrAuth;
+    }
+    
+    
+    //used to authenticate demographics and perhaps admin account
+    protected PHRAuthentication authenticateIndivoId(String indivoId, String password) throws Exception {
+        //Caution: does not set provider number in PHRAuthentication object
+        PHRAuthentication phrAuth = null;
         TalkClient client = getTalkClient();  //also throws Exception
         AuthenticateResultType authResult = client.authenticate(indivoId, password);
         //Throws IndivoException & ActionNotPerformedException
@@ -136,7 +159,6 @@ public class IndivoServiceImpl  implements PHRService{
         //distinguish like this: if (e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class)
         log.debug("actor ticket "+authResult.getActorTicket());
         phrAuth = new IndivoAuthentication(authResult);
-        phrAuth.setProviderNo(providerNo);
         return phrAuth;
         
         /*
@@ -297,7 +319,12 @@ public class IndivoServiceImpl  implements PHRService{
     
     
     public void sendQueuedDocuments(PHRAuthentication auth,String providerNo) throws Exception {
+        //package sharing
+        IndivoAPService apService = new IndivoAPService(this);
+        apService.packageAllAccessPolicies(auth);
+        
         List<PHRAction> actions = phrActionDAO.getQueuedActions(providerNo);
+        
         TalkClient client = getTalkClient();
         PHRConstants constants = new IndivoConstantsImpl();
         log.debug("Processing "+actions.size()+" actions ");
@@ -397,7 +424,7 @@ public class IndivoServiceImpl  implements PHRService{
                 }else{
                     log.debug("NOTHING IS GETTING CALLED FOR THIS ");
 
-                }
+                }   
             } catch (ActionNotPerformedException anpe) {
                 //assuming user does not have authorization for the action - in this case mark it as unauthorized and stop trying to send
                 log.debug("Setting Status Not Authorized");
@@ -415,6 +442,27 @@ public class IndivoServiceImpl  implements PHRService{
         }
     }
     
+    protected List<DocumentHeaderType> getDocumentHeadersDirect(PHRAuthentication auth, String urn) throws IndivoException, ActionNotPerformedException {
+       TalkClient client = getTalkClient();
+       ReadDocumentHeaderListResultType readResult = client.readDocumentHeaders(auth.getToken(), auth.getUserId(), urn, true);
+       return readResult.getDocumentHeader();
+    }
+    
+    //versionNumber = -1 for latest version
+    protected DocumentVersionType getDocumentVersionDirect(PHRAuthentication auth, String index, int versionNumber) throws Exception {
+       TalkClient client = getTalkClient();
+       ReadDocumentResultType readResult = client.readDocument(auth.getToken(), auth.getUserId(), index, true);
+       IndivoDocumentType indivoDoc = readResult.getIndivoDocument();
+       List<DocumentVersionType> docVersions = indivoDoc.getDocumentVersion();
+       DocumentVersionType docVersion = new DocumentVersionType();
+       if (versionNumber == -1) {
+           docVersion = docVersions.get(docVersions.size()-1);
+       } else {
+           docVersion = docVersions.get(versionNumber);
+       }
+       
+       return docVersion;
+    }
 
     public boolean checkImportStatus(String documentIndex){
        return !phrDocumentDAO.hasIndex(documentIndex);
@@ -429,8 +477,11 @@ public class IndivoServiceImpl  implements PHRService{
        }
        return classImported;
     }
-                 
     
+    protected void updateDocumentDirect(PHRAuthentication auth, DocumentVersionType newDocumentVersion, String urn, String documentIndex) throws IndivoException, ActionNotPerformedException {
+        TalkClient client = getTalkClient();
+        client.updateDocument(auth.getToken(), auth.getUserId(), documentIndex, newDocumentVersion);
+    }
     
     public void  sendDemographicMessage(PHRAuthentication auth,String demographic, String priorThreadMessage, String subject,String messageText) {
         DemographicData dd = new DemographicData();
@@ -462,7 +513,7 @@ public class IndivoServiceImpl  implements PHRService{
         if (countUnreadMessages(providerNo) > 0) return true;
         return false;
     }
-        private TalkClient getTalkClient() throws Exception{
+        private TalkClient getTalkClient() throws IndivoException{
             Map m = new HashMap();
             String indivoServer = OscarProperties.getInstance().getProperty("INDIVO_SERVER");           
             m.put(TalkClient.SERVER_LOCATION,indivoServer);
@@ -479,6 +530,109 @@ public class IndivoServiceImpl  implements PHRService{
             return getTalkClient();
 
         }
+        
+    public void sendUserRegistration(Hashtable phrRegistrationForm, String whoIsAdding) throws Exception {
+        String iUsername = (String) phrRegistrationForm.get("username");
+        String iPassword = (String) phrRegistrationForm.get("password");
+        String iRole = (String) phrRegistrationForm.get("role");
+        String iFirstName = (String) phrRegistrationForm.get("firstName");
+        String iLastName = (String) phrRegistrationForm.get("lastName");
+        String iAddress = (String) phrRegistrationForm.get("address");
+        String iCity = (String) phrRegistrationForm.get("city");
+        String iProvince = (String) phrRegistrationForm.get("province");
+        String iPostal = (String) phrRegistrationForm.get("postal");
+        String iPhone = (String) phrRegistrationForm.get("phone");
+        String iPhone2 = (String) phrRegistrationForm.get("phone2");
+        String iEmail = (String) phrRegistrationForm.get("email");
+        String iDob = (String) phrRegistrationForm.get("dob");
+        String iRegisteringProviderNo = (String) phrRegistrationForm.get("registeringProviderNo");
+        
+        String[] iGrantProviders = (String[]) phrRegistrationForm.get("list:grantProviders");
+        
+        ContactInformationType indiContact = IndivoUtil.generateContactInformationType(iFirstName, iLastName, iAddress, iCity, iProvince, iPostal, iPhone, iPhone2, iEmail);
+        DemographicsType indiDemographics = IndivoUtil.generateDemographicType(iDob);
+        
+        //Login to Indivo as Admin
+        Hashtable adminLoginInfo = this.getAdminLogin();
+        PHRAuthentication adminAuth = null;
+        String adminAuthName = adminLoginInfo.get("firstName") + " " + adminLoginInfo.get("lastName");
+        
+        //adminAuth = new TestAuthentication("ticket", "admin@indivohealth.org", "Admin A", "administrator", "000000");
+        try {
+            adminAuth = this.authenticateIndivoId((String) adminLoginInfo.get("username"), (String) adminLoginInfo.get("password"));
+        } catch (Exception e) {
+            log.error("Could not authenticate as admin");
+            throw e;
+        }
+        try {
+        //Create a record:
+        String[] iRoles = new String[1];
+        iRoles[0] = iRole;  //at the moment this feature doesn't appear to be implemented, more investigation needed
+        log.debug("Creating user: \n" +
+                adminAuth.getUserId() + ", \n" +
+                adminLoginInfo.get("firstName") + ", \n" +
+                adminLoginInfo.get("lastName") + ", \n" +
+                adminAuth.getRole() + ", \n" +
+                iUsername + ", \n" +
+                iPassword + ", \n" +
+                iRole + ", \n" +
+                iRoles.toString() + ");");        
+        IndivoRecordType newRecord = RecordGenerator.generateDefaultRecord(
+                                                    adminAuth.getUserId(),
+                                                    adminAuthName,
+                                                    adminAuth.getRole(), 
+                                                    iUsername, 
+                                                    iPassword, 
+                                                    iRole, 
+                                                    iRoles,
+                                                    null, 
+                                                    null);
+        //----Prepare Contact and Demographic docs (cast to IndivoDocumentType)
+
+        //Contact Document
+        DocumentGenerator docGenerator = new DocumentGenerator();
+        JAXBContext contactInfoContext = JAXBContext.newInstance(ContactInformationType.class.getPackage().getName());
+        Element indiContactEle = JAXBUtils.marshalToElement((JAXBElement) new ContactInformation(indiContact), contactInfoContext);
+        IndivoDocumentType indiContactDocument = docGenerator.generateDefaultDocument(adminAuth.getUserId(), adminAuthName, adminAuth.getRole(),  DocumentClassificationUrns.CONTACT, ContentTypeQNames.CONTACT, indiContactEle);
+
+        //Demographic Document
+        JAXBContext demographicsInfoContext = JAXBContext.newInstance(DemographicsType.class.getPackage().getName());
+        Element indiDemographicsEle = JAXBUtils.marshalToElement((JAXBElement) new Demographics(indiDemographics), demographicsInfoContext);
+        IndivoDocumentType indiDemographicsDocument = docGenerator.generateDefaultDocument(adminAuth.getUserId(), adminAuthName, adminAuth.getRole(),  DocumentClassificationUrns.DEMOGRAPHICS, ContentTypeQNames.DEMOGRAPHICS, indiDemographicsEle);
+
+        newRecord.getIndivoDocument().add(indiContactDocument);
+        newRecord.getIndivoDocument().add(indiDemographicsDocument);
+
+        log.debug("DONE......------------" + iGrantProviders.length);
+
+        TalkClient talkClient = getTalkClient();
+        talkClient.createRecord(adminAuth.getToken(), iUsername, newRecord);
+
+        PHRAuthentication authNewUser = this.authenticateIndivoId(iUsername, iPassword);
+        
+        IndivoAPService apUtil = new IndivoAPService(this);
+
+        //do mutual sharing with indicated providers
+        for (int i=0; i<iGrantProviders.length; i++) {
+               //get provider IndivoId
+            ProviderData providerData = new ProviderData();
+            providerData.setProvider_no(iGrantProviders[i]);
+            String permissionRecipientProviderId = providerData.getMyOscarId();
+            
+            apUtil.sendAddAccessPolicy(authNewUser, permissionRecipientProviderId, IndivoAPService.LEVEL_PROVIDER);
+            apUtil.proposeAccessPolicy(iGrantProviders[i], authNewUser.getUserId(), IndivoAPService.LEVEL_PATIENT, iRegisteringProviderNo);
+        }
+        
+        } catch (JAXBException jaxbe) {
+            log.error("Failed to marshall account details");
+            throw jaxbe;
+        } catch (Exception e) {
+            log.error("Indivo failed to create the new record");
+            throw e;
+        }
+    }
+    
+    //private void getDocument(
 
     public void setPhrDocumentDAO(PHRDocumentDAO phrDocumentDAO) {
         this.phrDocumentDAO = phrDocumentDAO;
@@ -487,6 +641,37 @@ public class IndivoServiceImpl  implements PHRService{
     
     public void setPhrActionDAO(PHRActionDAO phrActionDAO){
         this.phrActionDAO = phrActionDAO;
+    }
+    
+    private Hashtable getAdminLogin() {
+        Hashtable<String, String> loginInfo = new Hashtable();
+        OscarProperties props = OscarProperties.getInstance();
+        loginInfo.put("username", props.getProperty("myOSCAR.admin.username"));
+        loginInfo.put("password", props.getProperty("myOSCAR.admin.password"));
+        loginInfo.put("firstName", props.getProperty("myOSCAR.admin.firstName"));
+        loginInfo.put("lastName", props.getProperty("myOSCAR.admin.lastName"));
+        loginInfo.put("role", props.getProperty("myOSCAR.admin.role"));
+        
+        return loginInfo;
+    }
+    
+    public void approveAction(PHRAction action) {
+        //not used, but the idea is there
+        action.setStatus(PHRAction.STATUS_SEND_PENDING);
+        phrActionDAO.update(action);
+    }
+    
+    public void denyAction(PHRAction action) {
+        action.setStatus(PHRAction.STATUS_NOT_SENT_DELETED);
+        phrActionDAO.update(action);
+    }
+    
+    public PHRActionDAO getPhrActionDao() {
+        return phrActionDAO;
+    }
+    
+    public PHRDocumentDAO getPhrDocumentDAO() {
+        return phrDocumentDAO;
     }
     
 }

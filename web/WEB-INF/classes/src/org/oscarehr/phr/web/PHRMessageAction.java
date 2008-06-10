@@ -104,10 +104,14 @@ public class PHRMessageAction extends DispatchAction {
         clearSessionVariables(request);
         String providerNo = (String) request.getSession().getAttribute("user");
         List docs = phrDocumentDAO.getDocumentsReceived(phrConstants.DOCTYPE_MESSAGE(), providerNo);
- 
-        if(docs != null) {
+        List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
+        if(docs != null)
             request.getSession().setAttribute("indivoMessages", docs);
+        if (actionsPendingApproval != null) {
+            request.getSession().setAttribute("actionsPendingApproval", actionsPendingApproval);
+            System.out.println("====actionPendinapproval is not null");
         }
+            
         return mapping.findForward("view");
     }
     
@@ -337,6 +341,7 @@ public class PHRMessageAction extends DispatchAction {
         
         String id = request.getParameter("id");
         if (id == null) return viewSentMessages(mapping, form, request, response);
+        log.debug("Id to delete:" + id);
         PHRAction action = phrActionDAO.getActionById(id);
         if (action.getStatus() != PHRAction.STATUS_SENT) {
             action.setStatus(PHRAction.STATUS_NOT_SENT_DELETED);

@@ -51,5 +51,8 @@ public class IndivoConstantsImpl implements PHRConstants {
     public String DOCTYPE_BINARYDATA() {
         return DocumentClassificationUrns.BINARYDATA;
     }
+    public String DOCTYPE_ACCESSPOLICIES() {
+        return org.indivo.xml.urns.DocumentClassificationUrns.ACCESS_POLICIES;
+    }
     
 }

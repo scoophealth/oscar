@@ -45,6 +45,8 @@ public interface PHRActionDAO {
     //actionType = -1 for all actions
     public List<PHRAction> getPendingActionsByProvider(String classification, int actionType, String providerNo);
     public List<PHRAction> getPendingActionsByProvider(int actionType, String providerNo);
+    public List<PHRAction> getActionsByStatus(int status, String providerNo);
+    public List<PHRAction> getActionsByStatus(int status, String providerNo, String classification);
     public void updatePhrIndexes(String classification, String oscarId, String providerNo, String newPhrIndex);
     public boolean isIndivoRegistered(String classification, String oscarId);
     public String getPhrIndex(String classification, String oscarId);

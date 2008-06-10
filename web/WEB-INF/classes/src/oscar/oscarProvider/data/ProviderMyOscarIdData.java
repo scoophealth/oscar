@@ -27,6 +27,8 @@ package oscar.oscarProvider.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.util.ArrayList;
+import java.util.List;
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -35,7 +37,7 @@ import oscar.oscarDB.DBHandler;
  */
 public class ProviderMyOscarIdData {
     
-    private String strColName = "MyOscarId";    
+    static private String strColName = "MyOscarId";    
     private String provider;
     
     /** Creates a new instance of ProviderColourUpdater */
@@ -137,4 +139,26 @@ public class ProviderMyOscarIdData {
       }
       return providerNo;
   }
+  
+    public static List<String> listMyOscarProviderNums() {
+      String sql;
+      String myOscarId = "";
+      ArrayList providerList = new ArrayList();
+      oscar.oscarProvider.data.ProviderData.getProviderName("sdf");
+      try {
+          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+
+          sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "'";
+          ResultSet rs = db.GetSQL(sql);
+           
+          while (rs.next()) {
+              providerList.add(rs.getString("provider_no"));
+          }
+   
+      } catch (SQLException sqe) {
+          sqe.printStackTrace();        
+      }
+      
+      return providerList;
+    }
 }
