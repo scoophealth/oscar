@@ -101,7 +101,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
                 MatchingDemographicInfoParameters parameters = new MatchingDemographicInfoParameters();
                 parameters.setMaxEntriesToReturn(10);
-                parameters.setMinScore(20);
+                parameters.setMinScore(15);
 
                 String temp = StringUtils.trimToNull(intakeSearchBean.getFirstName());
                 parameters.setFirstName(temp);
