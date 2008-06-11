@@ -94,9 +94,9 @@ function BackToOscar()
                                   
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
-                                           <html:link page="/phr/msg/DisplayPHRMessages.jsp?method=${comingfrom}" styleClass="messengerButtons">
+                                           <a href="PhrMessage.do?method=<c:out value="${comingfrom}"/>" class="messengerButtons">
                                              Back
-                                           </html:link>
+                                           </a>
                                         </td></tr></table>
                                     </td>                                    
                                     <td>

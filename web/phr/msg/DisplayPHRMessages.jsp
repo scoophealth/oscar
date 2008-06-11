@@ -279,9 +279,9 @@ if (pageMethod.equals("unarchive"))
                                     </td>
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (pageMethod.equals("viewArchivedMessages")) {%>Current<%}%>">
-                                                    <html:link page="/phrExchange.do?method=setExchangeTimeNow&forwardto=phr/msg/DisplayPHRMessages.jsp?method=viewMessages" styleClass="messengerButtons">
+                                                    <a href="../../phrExchange.do?method=setExchangeTimeNow&forwardto=phr/msg/DisplayPHRMessages.jsp?method=<%=pageMethod%>" class="messengerButtons">
                                                         Send & Receive
-                                                    </html:link>
+                                                    </a>
                                         </td></tr></table>
                                     </td>
                                     <td >
