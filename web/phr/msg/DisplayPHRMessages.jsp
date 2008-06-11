@@ -277,9 +277,16 @@ if (pageMethod.equals("unarchive"))
                                                     </html:link>
                                         </td></tr></table>
                                     </td>
+                                    <td>
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (pageMethod.equals("viewArchivedMessages")) {%>Current<%}%>">
+                                                    <html:link page="/phrExchange.do?method=setExchangeTimeNow&forwardto=phr/msg/DisplayPHRMessages.jsp?method=viewMessages" styleClass="messengerButtons">
+                                                        Send & Receive
+                                                    </html:link>
+                                        </td></tr></table>
+                                    </td>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-                                                    <a href="javascript:window.close()" class="messengerButtons">Exit MyOscar Messenges</a>
+                                                    <a href="javascript:window.close()" class="messengerButtons">Exit</a>
                                         </td></tr></table>
                                     </td>
                                     <%PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);%>
