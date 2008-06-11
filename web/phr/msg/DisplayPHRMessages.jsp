@@ -43,6 +43,7 @@ PHRActionDAO phrActionDAO = (PHRActionDAO) WebApplicationContextUtils.getWebAppl
 pageContext.setAttribute("STATUS_NOT_AUTHORIZED", PHRAction.STATUS_NOT_AUTHORIZED);
 pageContext.setAttribute("STATUS_SENT", PHRAction.STATUS_SENT);
 pageContext.setAttribute("STATUS_SEND_PENDING", PHRAction.STATUS_SEND_PENDING);
+pageContext.setAttribute("STATUS_ON_HOLD", PHRAction.STATUS_ON_HOLD);
 
 pageContext.setAttribute("ACTION_ADD", PHRAction.ACTION_ADD);
 pageContext.setAttribute("ACTION_UPDATE", PHRAction.ACTION_UPDATE);
@@ -50,6 +51,7 @@ pageContext.setAttribute("ACTION_UPDATE", PHRAction.ACTION_UPDATE);
 PHRConstants phrConstants = new IndivoConstantsImpl();
 pageContext.setAttribute("TYPE_BINARYDATA", phrConstants.DOCTYPE_BINARYDATA());
 pageContext.setAttribute("TYPE_MEDICATION", phrConstants.DOCTYPE_MEDICATION());
+pageContext.setAttribute("TYPE_ACCESSPOLICIES", phrConstants.DOCTYPE_ACCESSPOLICIES());
 
 String pageMethod = request.getParameter("method");
 if (pageMethod.equals("delete") || pageMethod.equals("resend")) 
@@ -68,7 +70,6 @@ if (pageMethod.equals("unarchive"))
     
     //get Actions Pending Approval
     List<PHRAction> actionsPendingApproval = (List<PHRAction>) request.getSession().getAttribute("actionsPendingApproval");
-    System.out.println("list size: " + actionsPendingApproval.size());
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -171,6 +172,9 @@ if (pageMethod.equals("unarchive"))
         }
         .sendPending {
             background-color: #e1eddb;
+        }
+        .onHold {
+            background-color: #edebdb;
         }
         .normal {
             background-color: #EEEEFF;
@@ -391,6 +395,7 @@ if (pageMethod.equals("unarchive"))
                     <c:forEach var="otherAction" items="${indivoOtherActions}">
                         <tr 
                             <c:choose>
+                                <c:when test="${otherAction.status == STATUS_ON_HOLD}">class="onHold"</c:when>
                                 <c:when test="${otherAction.status == STATUS_SEND_PENDING}">class="sendPending"</c:when>
                                 <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}">class="notAuthorized"</c:when>
                                 <c:otherwise>class="normal"</c:otherwise>
@@ -401,13 +406,24 @@ if (pageMethod.equals("unarchive"))
                             </td>
                             <td width="120"> 
                                 <c:choose>
+                                    <c:when test="${otherAction.status == STATUS_ON_HOLD}">Waiting to send...</c:when>
                                     <c:when test="${otherAction.status == STATUS_SEND_PENDING}">Waiting to send...</c:when>
                                     <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}">Error: Not Authorized</c:when>
                                     <c:otherwise>Unknown</c:otherwise>
                                 </c:choose>
                             </td>
                             <td>
-                            <c:out value="${otherAction.receiverPhr}"/></td>
+                            <c:choose>
+                                 <c:when test="${otherAction.phrClassification == TYPE_ACCESSPOLICIES}">
+                                    <%List idAndPermission = IndivoAPService.getProposalIdAndPermission((PHRAction)pageContext.getAttribute("otherAction"));
+                                     String demographicIndivoId = (String) idAndPermission.get(0);
+                                     String permission = (String) idAndPermission.get(1);
+                                     String permissionReadable = permission.substring(permission.lastIndexOf(':')+1, permission.length());%>
+                                    <%=demographicIndivoId%> (<%=permissionReadable%>)
+                                 </c:when>
+                                 <c:otherwise><c:out value="${otherAction.receiverPhr}"/></c:otherwise>
+                            </c:choose>
+                            </td>
                             <td>
                                   <c:choose>
                                     <c:when test="${otherAction.phrClassification == TYPE_BINARYDATA}">
@@ -424,6 +440,7 @@ if (pageMethod.equals("unarchive"))
                                                 <c:otherwise><-- Medication></c:otherwise>
                                             </c:choose>
                                     </c:when>
+                                    <c:when test="${otherAction.phrClassification == TYPE_ACCESSPOLICIES}"><-- Sharing Permission</c:when>
                                     <c:otherwise><-- Unknown></c:otherwise>
                                 </c:choose>
                             </td>

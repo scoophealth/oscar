@@ -127,6 +127,7 @@ public class PHRMessageAction extends DispatchAction {
         List messageActions = phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_MESSAGE(), PHRAction.ACTION_ADD, providerNo);
         List otherActions = phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_MEDICATION(), -1, providerNo);
         otherActions.addAll(phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_BINARYDATA(), -1, providerNo));
+        otherActions.addAll(phrActionDAO.getActionsByStatus(PHRAction.STATUS_ON_HOLD, providerNo, phrConstants.DOCTYPE_ACCESSPOLICIES()));
         request.getSession().setAttribute("indivoSentMessages", docs);
         request.getSession().setAttribute("indivoMessageActions", messageActions);
         request.getSession().setAttribute("indivoOtherActions", otherActions);
