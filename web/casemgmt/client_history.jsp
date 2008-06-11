@@ -77,7 +77,8 @@
 	<td colspan="2" bgcolor="white"><html:textarea property="cpp.otherSupportSystems" rows="2" cols="95"/></td>
 </tr>
 </table>
-<html:submit value="save" onclick="this.form.method.value='patientCPPSave'"/>
+<html:submit value="Save" onclick="this.form.method.value='patientCPPSave'"/>
+<html:submit value="Print Preview" onclick="this.form.method.value='patientCppPrintPreview'"></html:submit>
 <logic:messagesPresent message="true">
 	   <html:messages id="message" message="true" bundle="casemgmt">
 	   		<div style="color:blue"><I><c:out value="${message}"/></I></div>

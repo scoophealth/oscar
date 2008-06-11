@@ -69,6 +69,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
         caseForm.setFilter_provider("");
+        request.getSession().setAttribute("patientCppPrintPreview", "false");
         return view(mapping, form, request, response);
     }
 
@@ -119,6 +120,13 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         return view(mapping, form, request, response);
     }
 
+    public ActionForward patientCppPrintPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        log.debug("patientCPPSave");
+        
+        request.getSession().setAttribute("patientCppPrintPreview", "true");
+        return view(mapping, form, request, response);
+    }
+    
     /* show case management view */
     /*
      * Session variables : case_program_id casemgmt_DemoNo casemgmt_VlCountry casemgmt_msgBeans readonly
@@ -477,9 +485,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         log.debug("VIEW Exiting " + String.valueOf(current - beginning));
 
         String useNewCaseMgmt = (String) request.getSession().getAttribute("newCaseManagement");
-        if (useNewCaseMgmt != null && useNewCaseMgmt.equals("true")) return mapping.findForward("page.newcasemgmt.view");
-        else return mapping.findForward("page.casemgmt.view");
-
+        String printPreview = (String) request.getSession().getAttribute("patientCppPrintPreview");
+        if("true".equals(printPreview)) {
+        	request.getSession().setAttribute("patientCppPrintPreview","false");
+        	return mapping.findForward("clientHistoryPrintPreview");
+        } else {       
+        
+        	if (useNewCaseMgmt != null && useNewCaseMgmt.equals("true")) return mapping.findForward("page.newcasemgmt.view");
+        	else return mapping.findForward("page.casemgmt.view");
+        }
     }
     
     public ActionForward viewNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
