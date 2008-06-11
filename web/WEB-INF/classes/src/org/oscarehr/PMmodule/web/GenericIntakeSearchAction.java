@@ -45,7 +45,7 @@ import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoParameters;
-import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoResult;
+import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoScore;
 import org.oscarehr.util.SessionConstants;
 
 import com.quatro.service.LookupManager;
@@ -101,7 +101,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
                 MatchingDemographicInfoParameters parameters = new MatchingDemographicInfoParameters();
                 parameters.setMaxEntriesToReturn(10);
-                parameters.setMinScore(15);
+                parameters.setMinScore(13);
 
                 String temp = StringUtils.trimToNull(intakeSearchBean.getFirstName());
                 parameters.setFirstName(temp);
@@ -127,9 +127,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
                 }
                 parameters.setBirthDate(cal);
 
-                List<MatchingDemographicInfoResult> integratedMatches = demographicInfoWs.getMatchingDemographicInfos(parameters);
+                List<MatchingDemographicInfoScore> integratedMatches = demographicInfoWs.getMatchingDemographicInfos(parameters);
                 if (LOG.isDebugEnabled()) {
-                    for (MatchingDemographicInfoResult r : integratedMatches)
+                    for (MatchingDemographicInfoScore r : integratedMatches)
                         LOG.debug("*** do itegrated search results : " + r.getCachedDemographicInfo() + " : " + r.getScore());
                 }
 
