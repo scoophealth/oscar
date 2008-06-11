@@ -38,10 +38,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionRedirect;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
 
@@ -51,7 +52,7 @@ import oscar.OscarProperties;
  *
  * @author jay
  */
-public class PHRExchangeAction extends Action {
+public class PHRExchangeAction extends DispatchAction {
     
     private static Log log = LogFactory.getLog(PHRExchangeAction.class);
     PHRService phrService = null;
@@ -62,8 +63,11 @@ public class PHRExchangeAction extends Action {
     public PHRExchangeAction() {
     }
     
+    public ActionForward unspecified(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return doPhrExchange(mapping, form ,request, response);
+    }
     
-    public ActionForward execute(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward doPhrExchange(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.debug("-----------------Indivo Exchange has been called -------------");
         PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
         PrintWriter out = response.getWriter();
@@ -90,6 +94,15 @@ public class PHRExchangeAction extends Action {
     
     public void setPhrService(PHRService pServ){
         this.phrService = pServ;
+    }
+    
+    public ActionForward setExchangeTimeNow(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (request.getSession().getAttribute(phrService.SESSION_PHR_EXCHANGE_TIME) != null) {
+            request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, Calendar.getInstance().getTime());
+            log.debug("set exchange to 0");
+        }
+        log.debug("finished setting exchange to 0");
+        return new ActionRedirect(request.getParameter("forwardto"));
     }
     
         //returns a date that is intervalMinutes from now
