@@ -532,9 +532,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         }                
         
         //set save Url        
-        String addUrl = request.getContextPath() + "/CaseManagementEntry.do?method=issueNoteSave&providerNo=" + providerNo + "&demographicNo=" + demoNo + checked_issues.toString() + "&noteId=";                
+        String addUrl = request.getContextPath() + "/CaseManagementEntry.do?method=issueNoteSave&providerNo=" + providerNo + "&demographicNo=" + demoNo + checked_issues.toString() + "&noteId=";     
         request.setAttribute("addUrl", addUrl);
         
+        //set issueIds for retrieving history
+        request.setAttribute("issueIds", StringUtils.join(issueIds,","));
+
         // need to apply issue filter        
         notes = caseManagementMgr.getNotes(demoNo, issueIds, userProp);
         notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));

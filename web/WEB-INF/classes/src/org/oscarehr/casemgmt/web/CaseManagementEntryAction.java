@@ -376,10 +376,16 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                         
             String noteId = request.getParameter("noteId");                                 
             log.debug("SAVING NOTE " + noteId + " STRING: " + strNote);
+            String removeIssue = request.getParameter("removeIssue");
             
             CaseManagementNote note;
             boolean newNote = false;
+            //we don't want to try to remove an issue from a new note so we test here
             if( noteId.equals("0") ) {
+                
+                if( removeIssue.equals("true") )
+                    return null;
+                
                 note = new CaseManagementNote();
                 note.setDemographic_no(demo);
                 newNote = true;
@@ -387,7 +393,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             else {
                 note = this.caseManagementMgr.getNote(noteId);
                 //if note has not changed don't save
-                if( strNote.equals(note.getNote()) )
+                if( strNote.equals(note.getNote()) && !removeIssue.equals("true") )
                     return null;
             }
             
@@ -441,6 +447,30 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                     issueSet.add(cIssue);
                 }
                 note.setIssues(issueSet);
+            }
+            
+            /*
+             *Remove linked issue(s) and insert message into note
+             */
+            if( removeIssue.equals("true") ) {
+                String[] issue_id = request.getParameterValues("issue_id");
+                Set issueSet = note.getIssues();         
+                StringBuffer issueNames = new StringBuffer();
+                for( int idx = 0; idx < issue_id.length; ++idx ) {
+                    for(Iterator iter = issueSet.iterator();iter.hasNext();) {
+                        CaseManagementIssue cIssue = (CaseManagementIssue)iter.next();
+                        if( cIssue.getIssue_id() == Long.parseLong(issue_id[idx]) ) {
+                            issueSet.remove(cIssue);
+                            issueNames.append(cIssue.getIssue().getDescription() + "\n");
+                            break;
+                        }
+                    }
+                }
+                //Force hibernate to save rather than update
+                Set tmpIssues = new HashSet(issueSet);
+                note.setIssues(tmpIssues);
+                strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " Removed following issue(s):\n" + issueNames.toString();
+                note.setNote(strNote);
             }
             
             int revision;
@@ -1431,6 +1461,44 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         List<CaseManagementNote> history = caseManagementMgr.getHistory(noteid);
         request.setAttribute("history", history);
+        request.setAttribute("title", "Note Revision History");
+        return mapping.findForward("showHistory");
+    }
+    
+    public ActionForward issuehistory(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
+
+        String demono = getDemographicNo(request);
+        request.setAttribute("demoName", getDemoName(demono));
+        String issueIds = request.getParameter("issueIds");
+        
+        List<CaseManagementNote> history = caseManagementMgr.getIssueHistory(issueIds,demono);
+        request.setAttribute("history", history);
+        
+        
+        ArrayList<Boolean>current = new ArrayList<Boolean>(history.size());
+        for( Iterator<CaseManagementNote>iter = history.listIterator(); iter.hasNext();) {
+            CaseManagementNote historyNote = iter.next();
+            CaseManagementNote recentNote = caseManagementMgr.getMostRecentNote(historyNote.getUuid());
+            if( recentNote.getUpdate_date().compareTo(historyNote.getUpdate_date()) > 0 ) {
+                current.add(new Boolean(false));
+            }
+            else
+                current.add(new Boolean(true));
+        }
+        request.setAttribute("current", current);
+        
+        StringBuffer title = new StringBuffer();
+        String arrIssues[] = issueIds.split(",");
+        for( int idx = 0; idx < arrIssues.length; ++idx ) {
+            Issue i = this.caseManagementMgr.getIssue(arrIssues[idx]);
+            title.append(i.getDescription());
+            if( idx < arrIssues.length - 1 )
+                title.append(", ");
+        }
+        title.append(" History");
+        request.setAttribute("title", title.toString());
+        
         return mapping.findForward("showHistory");
     }
 
@@ -1711,5 +1779,24 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }               
         
         return cpp;
+    }
+    
+    /*
+     *Retrieve CPP issues
+     *If not in session, load them
+     */
+    protected HashMap getCPPIssues(HttpServletRequest request, String providerNo) {
+        HashMap<String,Issue> issues = (HashMap<String,Issue>)request.getSession().getAttribute("CPPIssues");
+        if( issues == null ) {
+            String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders" };
+            issues = new HashMap<String,Issue>();
+            for( String issue : issueCodes ) {
+                List<Issue> i = caseManagementMgr.getIssueInfoByCode(providerNo, issue);
+                issues.put(issue,i.get(0));
+            }
+            
+            request.getSession().setAttribute("CPPIssues", issues);
+        }        
+        return issues;
     }
 }
