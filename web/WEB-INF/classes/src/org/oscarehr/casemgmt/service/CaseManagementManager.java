@@ -345,6 +345,10 @@ public class CaseManagementManager {
         return this.caseManagementNoteDAO.getNote(Long.valueOf(note_id));
 
     }
+    
+    public CaseManagementNote getMostRecentNote(String uuid) {
+        return this.caseManagementNoteDAO.getMostRecentNote(uuid);
+    }
 
     public CaseManagementCPP getCPP(String demographic_no) {
         return this.caseManagementCPPDAO.getCPP(demographic_no);
@@ -783,6 +787,15 @@ public class CaseManagementManager {
     public List getHistory(String note_id) {
             CaseManagementNote note = caseManagementNoteDAO.getNote(Long.valueOf(note_id));
             return this.caseManagementNoteDAO.getHistory(note);
+    }
+    
+    /*
+     *Get all notes which have been linked to issues
+     *@param issueIds csv of issue ids
+     *@param demoNo demographic to search for
+     */
+    public List getIssueHistory(String issueIds, String demoNo) {
+        return this.caseManagementNoteDAO.getIssueHistory(issueIds, demoNo);
     }
 
     /**

@@ -57,12 +57,26 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
             String uuid = note.getUuid();
             return this.getHibernateTemplate().find("from CaseManagementNote cmn where cmn.uuid = ? order by cmn.update_date asc", uuid);
         }
+        
+        public List getIssueHistory(String issueIds, String demoNo ) {
+            String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + issueIds + ") and cmn.demographic_no = ? and cmn.id in (select max(cn.id) from CaseManagementNote cn join cn.issues i where i.issue_id in (" + issueIds + ") and cn.demographic_no = ? GROUP BY cn.uuid) ORDER BY cmn.observation_date asc"; 
+            return this.getHibernateTemplate().find(hql, new Object[] {demoNo,demoNo});
+        }
 
 	public CaseManagementNote getNote(Long id) {
 		CaseManagementNote note = (CaseManagementNote)this.getHibernateTemplate().get(CaseManagementNote.class,id);
 		getHibernateTemplate().initialize(note.getIssues());
 		return note;
 	}
+        
+        public CaseManagementNote getMostRecentNote(String uuid) {
+            String hql = "select distinct cmn from CaseManagementNote cmn where cmn.uuid = ? and cmn.id = (select max(cmn.id) from cmn where cmn.uuid = ?)";
+            List<CaseManagementNote>tmp = this.getHibernateTemplate().find(hql,new Object[]{uuid,uuid});
+            if( tmp == null )
+                return null;
+            
+            return tmp.get(0);
+        }
         
         public List<CaseManagementNote>getCPPNotes(String demoNo, long issueId, String staleDate) {
             Date d;
