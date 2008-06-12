@@ -29,12 +29,17 @@
          <title>Note History</title>
      </head>    
      <body>
-             <h3 style="text-align:center;">Note Revision History for</h3>
+             <h3 style="text-align:center;"><nested:write name="title"/></h3>
              <h3 style="text-align:center;"><nested:write name="demoName"/></h3>
-             <nested:iterate id="note" name="history">
+             <nested:iterate indexId="idx" id="note" name="history">
                  <div style="width:99%; background-color:#EFEFEF; font-size:12px; border-left: thin groove #000000; border-bottom: thin groove #000000; border-right: thin groove #000000;">
                      <pre><nested:write name="note" property="note" /></pre>
                      <div style="color:#0000FF;">
+                         <nested:notEmpty name="current">
+                             <c:if test="${current[idx] == false}">
+                                 <div style="color:#FF0000;">REMOVED</div>
+                             </c:if>
+                         </nested:notEmpty>
                          Documentation Date: <nested:write name="note" property="observation_date" format="dd-MMM-yyyy H:mm" /><br>                         
                          <nested:equal name="note" property="signed" value="true"> 
                              Signed by 
@@ -45,6 +50,7 @@
                              <nested:write name="note" property="provider.formattedName" />:
                          </nested:notEqual>           
                          <nested:write name="note" property="update_date" format="dd-MMM-yyyy H:mm" />
+                        
                      </div>
                  </div>
              </nested:iterate>                            
