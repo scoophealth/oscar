@@ -643,12 +643,14 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             <input type="text" name="icbcClaim" value="<%=allFields.getProperty("icbc_claim_no")%>"size="8" maxlength="8"/></td>
        </tr>
        <tr>
+           
+           
 
             <td class="bCellData">Facility Number
-            <input type="text" name="facilityNum" value="<%=allFields.getProperty("facility_no")%> " size="5" maxlength="5"/></td>
+            <input type="text" name="facilityNum" value="<%=allFields.getProperty("facility_no")%>" size="5" maxlength="5"/></td>
 
             <td class="bCellData">Facility Sub Number
-            <input type="text" name="facilitySubNum" value="<%=allFields.getProperty("facility_sub_no")%> " size="5" maxlength="5"/></td>
+            <input type="text" name="facilitySubNum" value="<%=allFields.getProperty("facility_sub_no")%>" size="5" maxlength="5"/></td>
        </tr>
 </table>
 
