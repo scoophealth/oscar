@@ -24,7 +24,7 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 --%>
-
+<% long start = System.currentTimeMillis(); %>
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@ include file="/casemgmt/taglibs.jsp" %>
@@ -32,8 +32,9 @@
 <%@page import="org.oscarehr.PMmodule.model.Provider" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
  <nested:size id="num" name="Notes"/>
+
 <div style="width:10%; float:right; text-align:center;"><h3 style="padding:0px; background-color:<c:out value="${param.hc}"/>" ><a href="#" title='Add Item' onclick="return showEdit(event,'<c:out value="${param.title}"/>','',0,'','','','<%=request.getAttribute("addUrl")%>0', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>');">+</a></h3></div>
-<div style="clear:left; float:left; width:90%;"><h3 style="width:100%; background-color:<c:out value="${param.hc}"/>"><a href="#" onclick="$('showEditNote').style.display='none';return false;"><c:out value="${param.title}"/></a></h3></div>
+<div style="clear:left; float:left; width:90%;"><h3 style="width:100%; background-color:<c:out value="${param.hc}"/>"><a href="#" onclick="return showIssueHistory('<%=request.getAttribute("issueIds")%>');"><c:out value="${param.title}"/></a></h3></div>
 <div style="clear:both; height:63px; overflow:auto;">
     <ul style="margin-left:5px;">
         <nested:iterate indexId="noteIdx" id="note" name="Notes" type="org.oscarehr.casemgmt.model.CaseManagementNote">
@@ -64,3 +65,6 @@
 </div>
  <input type="hidden" id="<c:out value="${param.cmd}"/>num" value="<nested:write name="num"/>">
  <input type="hidden" id="<c:out value="${param.cmd}"/>threshold" value="0">
+ <%
+    System.out.println("viewNotes loaded " + String.valueOf(System.currentTimeMillis() - start));
+ %>
