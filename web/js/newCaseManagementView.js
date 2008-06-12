@@ -483,6 +483,7 @@ function updateCPPNote() {
    $('channel').style.visibility ='visible';
    $('showEditNote').style.display='none';
    var params = $("frmIssueNotes").serialize();   
+
    var objAjax = new Ajax.Request (                        
                           url,
                             {
@@ -495,7 +496,10 @@ function updateCPPNote() {
                                            }, 
                                 onFailure: function(request) {
                                                 $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
-                                            }
+                                            },
+                                onComplete: function(request) {
+                                                $("removeIssue").value = "false";
+                                }
                             }
 
                       );
@@ -1897,6 +1901,17 @@ function showHistory(noteId, event) {
     var url = ctx + "/CaseManagementEntry.do?method=notehistory&noteId=" + noteId;    
     window.open(url,win,"scrollbars=yes, location=no, width=647, height=600","");
     return false;
+}
+
+/*
+ *Pop up window for Showing all notes that have linked to an issue
+ */
+function showIssueHistory(issueIds) {
+    var rnd = Math.round(Math.random() * 1000);
+    win = "win" + rnd;
+    var url = ctx + "/CaseManagementEntry.do?method=issuehistory&issueIds=" + issueIds;    
+    window.open(url,win,"scrollbars=yes, location=no, width=647, height=600","");
+    return false;    
 }
 
 var caseNote = "";  //contains id of note text area; system permits only 1 text area at a time to be created
