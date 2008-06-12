@@ -58,7 +58,7 @@
     <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/nifty.js"/>"></script>
     
       <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar-blue.css" title="win2k-cold-1">
+  <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
 
   <!-- main calendar program -->
   <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar.js"></script>
@@ -70,8 +70,8 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
   <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
   
-  <!-- js implementation of markdown -->
-  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/showdown.js"/>"></script>
+  <%--<!-- js implementation of markdown -->
+  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/showdown.js"/>"></script>--%>
   
   <!-- js window size utility funcs since prototype's funcs are buggy in ie6 -->
   <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
@@ -392,9 +392,11 @@ function init() {
               <form id="frmIssueNotes" action="" method="post" onsubmit="return updateCPPNote();">
                   <input type="hidden" id="reloadUrl" name="reloadUrl" value="">
                   <input type="hidden" id="containerDiv" name="containerDiv" value="">
+                  <input type="hidden" id="removeIssue" name="removeIssue" value="">
                   <div id="winTitle"></div>
                   <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" wrap="soft"></textarea><br>
                   <span style="float:right; margin-right:10px;">
+                      <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-cut.png"/>" onclick="$('removeIssue').value='true';" title='<bean:message key="oscarEncounter.Index.btnUnlink"/>'>
                       <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick="$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;" title='<bean:message key="global.btnExit"/>'>
                   </span>
