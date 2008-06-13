@@ -286,6 +286,7 @@ TH {
 
 div.topBox {
     margin-top:2px;
+    padding:0px;
     background-color: #FFFFFF;
 /*    margin-left:3px;
     margin-right:3px;*/
@@ -405,7 +406,7 @@ white-space: nowrap;
     border-bottom: 3px solid black; 
     border-right: 3px solid black; 
     padding: 3px; 
-    z-index: 10;    
+    z-index: 101;    
     font-size: 9px;
 }            
 .menuItemright { 
