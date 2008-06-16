@@ -44,7 +44,6 @@ import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
-import org.oscarehr.caisi_integrator.ws.client.ConsentLevel;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicIssuePrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicPrimaryKey;
@@ -236,9 +235,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
             cachedDemographicInfo.setSin(demographic.getSin());
 
             IntegratorConsent consent=integratorConsentDao.findByFacilityIdAndDemographicId(facility.getId(), demographicId);
-            ConsentLevel level=null;
-            if (consent!=null) level=consent.getConsentLevel();
-            cachedDemographicInfo.setConsentLevel(level);
+            cachedDemographicInfo.setConsentToBasicPersonalId(consent.isConsentToBasicPersonalId());
+            cachedDemographicInfo.setConsentToHealthCardId(consent.isConsentToHealthCardId() );
+            cachedDemographicInfo.setConsentToIssues(consent.isConsentToIssues());
+            cachedDemographicInfo.setConsentToNotes(consent.isConsentToNotes());
+            cachedDemographicInfo.setConsentToStatistics(consent.isConsentToStatistics());
 
             service.setCachedDemographicInfo(cachedDemographicInfo);
         }
