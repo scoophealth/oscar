@@ -229,6 +229,7 @@ public class NavBarDisplayDAO {
      */
     public class Item implements Comparable {
         private String title;
+        private String value;
         private String linkTitle;
         private String URL;
         private String colour;
@@ -311,6 +312,14 @@ public class NavBarDisplayDAO {
         
         public int hashCode() {
             return title.hashCode();
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
         }
     }
     
