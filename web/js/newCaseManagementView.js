@@ -422,9 +422,10 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
     
     var limit = containerDiv + "threshold";
     var editElem = "showEditNote";
-    var pgHeight = pageHeight();
-    var right = Math.round((pageWidth() - $(editElem).getWidth())/2);
-    var top = Event.pointerY(e);   
+    var pgHeight = pageHeight();    
+    var coords = Position.page($("topContent"));
+    var top = coords[1];
+    var right = Math.round(coords[0]/0.66);
     var height = $("showEditNote").getHeight();    
     var gutterMargin = 150;            
     
