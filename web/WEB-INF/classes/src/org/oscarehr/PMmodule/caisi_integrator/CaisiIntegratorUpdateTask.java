@@ -235,12 +235,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
             cachedDemographicInfo.setSin(demographic.getSin());
 
             IntegratorConsent consent=integratorConsentDao.findByFacilityIdAndDemographicId(facility.getId(), demographicId);
-            cachedDemographicInfo.setConsentToBasicPersonalId(consent.isConsentToBasicPersonalId());
-            cachedDemographicInfo.setConsentToHealthCardId(consent.isConsentToHealthCardId() );
-            cachedDemographicInfo.setConsentToIssues(consent.isConsentToIssues());
-            cachedDemographicInfo.setConsentToNotes(consent.isConsentToNotes());
-            cachedDemographicInfo.setConsentToStatistics(consent.isConsentToStatistics());
-
+            if (consent!=null)
+            {
+	            cachedDemographicInfo.setConsentToBasicPersonalId(consent.isConsentToBasicPersonalId());
+	            cachedDemographicInfo.setConsentToHealthCardId(consent.isConsentToHealthCardId() );
+	            cachedDemographicInfo.setConsentToIssues(consent.isConsentToIssues());
+	            cachedDemographicInfo.setConsentToNotes(consent.isConsentToNotes());
+	            cachedDemographicInfo.setConsentToStatistics(consent.isConsentToStatistics());
+            }
+            
             service.setCachedDemographicInfo(cachedDemographicInfo);
         }
     }
