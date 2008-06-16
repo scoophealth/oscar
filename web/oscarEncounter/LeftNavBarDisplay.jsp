@@ -116,16 +116,20 @@
             }   
             
             StringBuffer jscode = new StringBuffer();
-            numDisplayed = display(current, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
             
-            if( numDisplayed < numToDisplay ) 
+            numDisplayed += display(noDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+            
+            if( numDisplayed < numToDisplay ){
+               numDisplayed = display(current, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+            }
+               
+            if( numDisplayed < numToDisplay ){ 
                 numDisplayed += display(pastDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
-            
-            if( numDisplayed < numToDisplay )
-                numDisplayed += display(noDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+            }
                 
-            if( numDisplayed == 0 ) 
+            if( numDisplayed == 0 ) {
                 out.println("<li>&nbsp;</li>");
+            }
             %>
         </ul>
         <input type="hidden" id="<%=request.getAttribute("navbarName")%>num" value="<%=numDisplayed%>" />
@@ -194,6 +198,10 @@
                 if( item.getDate() != null ) {                                                 
                     out.println("<span style=\"z-index: 100; "+dateColour+" overflow:hidden;   position:relative; height:1.2em; white-space:nowrap; float:right; text-align:right;\">");
                     out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick='" + org.apache.commons.lang.StringEscapeUtils.escapeJava(item.getURL()) + "' title='" + item.getLinkTitle() + "'>");
+                    
+                    if(item.getValue() != null && !item.getValue().trim().equals("")){
+                        out.println(item.getValue());
+                    }
                     out.println(DateUtils.getDate(item.getDate(), dateFormat));
                     out.println("</a>");
                     out.println("</span>");
