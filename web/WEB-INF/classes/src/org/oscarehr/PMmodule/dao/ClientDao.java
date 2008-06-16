@@ -169,29 +169,53 @@ public class ClientDao extends HibernateDaoSupport {
 		LogicalExpression condAlias2 = null;
 		LogicalExpression condFirstName = null;
 		LogicalExpression condLastName = null;
+		
 		if (firstName.length() > 0) {
-			sql = "(LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
-			sql2 = "(LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
+			sql = "(LEFT(SOUNDEX(first_name),2) = LEFT(SOUNDEX('" + firstName + "'),2))";
+			sql2 = "(LEFT(SOUNDEX(alias),2) = LEFT(SOUNDEX('" + firstName + "'),2))";
 			condFirstName = Restrictions.or(Restrictions.ilike("FirstName", firstNameL), Restrictions.sqlRestriction(sql));
 			condAlias1 = Restrictions.or(Restrictions.ilike("Alias", firstNameL),Restrictions.sqlRestriction(sql2));
+			
 		}
 		if (lastName.length() > 0) {
-				sql = "(LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))";
-				sql2 = "(LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4))";
+				sql = "(LEFT(SOUNDEX(last_name),2) = LEFT(SOUNDEX('" + lastName + "'),2))";
+				sql2 = "(LEFT(SOUNDEX(alias),2) = LEFT(SOUNDEX('" + lastName + "'),2))";
 				condLastName = Restrictions.or(Restrictions.ilike("LastName", lastNameL), Restrictions.sqlRestriction(sql));
 				condAlias2 = Restrictions.or(Restrictions.ilike("Alias", lastNameL),Restrictions.sqlRestriction(sql2));
-		}
+		}	
+		
+		/*
 		if (firstName.length() > 0 && lastName.length()>0)
 		{
 			criteria.add(Restrictions.or(Restrictions.and(condFirstName, condLastName),  Restrictions.or(condAlias1, condAlias2)));
 		}
 		else if (firstName.length() > 0)
 		{
-			criteria.add(Restrictions.or(condFirstName,condAlias1));
+			criteria.add(Restrictions.or(condFirstName,condAlias1));			
 		}
 		else if (lastName.length()>0)
 		{
 			criteria.add(Restrictions.or(condLastName,condAlias2));
+		}
+		*/
+		
+		if (!bean.isSearchUsingSoundex()) {
+			
+			if (firstName.length() > 0) {
+				criteria.add(Restrictions.or(Restrictions.ilike("FirstName",firstNameL),Restrictions.ilike("Alias",firstNameL)));
+			}
+			if (lastName.length() > 0) {				
+				criteria.add(Restrictions.or(Restrictions.ilike("LastName",lastNameL),Restrictions.ilike("Alias",lastNameL)));
+			}
+		}
+		else { // soundex variation
+			
+			if (firstName.length() > 0) {
+				criteria.add(Restrictions.or(condFirstName,condAlias1));
+			}
+			if (lastName.length() > 0) {
+				criteria.add(Restrictions.or(condLastName,condAlias2));
+			}
 		}
 		
 		
