@@ -366,9 +366,7 @@ public class ClientManagerAction extends BaseAction {
 
         //--- consent status ---
         IntegratorConsent integratorConsent=integratorConsentDao.findByFacilityIdAndDemographicId(facilityId, demographic.getDemographicNo());
-        String integratorConsentString="have not asked the client yet";
-        if (integratorConsent!=null) integratorConsentString=integratorConsent.getConsentLevel().name();
-        request.getSession().setAttribute("integratorConsent", integratorConsentString);
+        request.getSession().setAttribute("integratorConsent", "N/A");
         
         return mapping.findForward("edit");
     }
