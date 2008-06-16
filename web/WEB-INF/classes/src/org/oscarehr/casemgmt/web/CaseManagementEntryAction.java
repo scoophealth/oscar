@@ -398,7 +398,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
             
             note.setNote(strNote);
-            note.setSigning_provider_no(userName);
+            note.setSigning_provider_no(providerNo);
             note.setSigned(true);
             
             note.setProvider_no(providerNo);		
