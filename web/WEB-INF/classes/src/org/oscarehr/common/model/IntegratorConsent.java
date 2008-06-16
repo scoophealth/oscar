@@ -3,14 +3,10 @@ package org.oscarehr.common.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
-
-import org.oscarehr.caisi_integrator.ws.client.ConsentLevel;
 
 @Entity
 public class IntegratorConsent {
@@ -20,11 +16,15 @@ public class IntegratorConsent {
     private int id = 0;
     private int facilityId = 0;
     private int demographicId = 0;
-    @Enumerated(EnumType.STRING)
-    private ConsentLevel consentLevel = ConsentLevel.DO_NOT_SHARE;
     private String provider_no = null;
     @Version
     private Date lastUpdate = null;
+
+	private boolean consentToStatistics = false;
+	private boolean consentToBasicPersonalId = false;
+	private boolean consentToHealthCardId = false;
+	private boolean consentToIssues = false;
+	private boolean consentToNotes = false;
 
     public int getId() {
         return id;
@@ -46,14 +46,6 @@ public class IntegratorConsent {
         this.demographicId = demographicId;
     }
 
-    public ConsentLevel getConsentLevel() {
-        return consentLevel;
-    }
-
-    public void setConsentLevel(ConsentLevel consentLevel) {
-        this.consentLevel = consentLevel;
-    }
-
     public String getProvider_no() {
         return provider_no;
     }
@@ -64,6 +56,56 @@ public class IntegratorConsent {
 
     public Date getLastUpdate() {
         return lastUpdate;
+    }
+
+	public boolean isConsentToStatistics()
+    {
+    	return consentToStatistics;
+    }
+
+	public void setConsentToStatistics(boolean consentToStatistics)
+    {
+    	this.consentToStatistics = consentToStatistics;
+    }
+
+	public boolean isConsentToBasicPersonalId()
+    {
+    	return consentToBasicPersonalId;
+    }
+
+	public void setConsentToBasicPersonalId(boolean consentToBasicPersonalId)
+    {
+    	this.consentToBasicPersonalId = consentToBasicPersonalId;
+    }
+
+	public boolean isConsentToHealthCardId()
+    {
+    	return consentToHealthCardId;
+    }
+
+	public void setConsentToHealthCardId(boolean consentToHealthCardId)
+    {
+    	this.consentToHealthCardId = consentToHealthCardId;
+    }
+
+	public boolean isConsentToIssues()
+    {
+    	return consentToIssues;
+    }
+
+	public void setConsentToIssues(boolean consentToIssues)
+    {
+    	this.consentToIssues = consentToIssues;
+    }
+
+	public boolean isConsentToNotes()
+    {
+    	return consentToNotes;
+    }
+
+	public void setConsentToNotes(boolean consentToNotes)
+    {
+    	this.consentToNotes = consentToNotes;
     }
 
 }
