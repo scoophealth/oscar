@@ -121,7 +121,8 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
                 item.setLinkTitle(title + " " + data.getDataField() + " " + formattedDate);
                 title = padd(title, data.getDataField());
                 String tmp = "<span class=\"measureCol1\">" + title + "</span>";
-                tmp += "<span class=\"measureCol2\">" + data.getDataField() + "&nbsp;</span>";
+                //tmp += "<span class=\"measureCol2\">" + data.getDataField() + "&nbsp;</span>";
+                item.setValue(data.getDataField());
                 //tmp += "<span class=\"measureCol3\">" + formattedDate + "</span><br style=\"clear:both\">";
                 item.setTitle(tmp);                       
                 item.setDate(date);            
