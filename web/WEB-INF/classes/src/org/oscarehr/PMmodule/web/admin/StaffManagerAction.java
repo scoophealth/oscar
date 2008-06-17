@@ -39,7 +39,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
@@ -58,7 +58,7 @@ import org.oscarehr.util.SessionConstants;
 public class StaffManagerAction extends BaseAction {
 	private static Log log = LogFactory.getLog(StaffManagerAction.class);
 	
-	private FacilityDAO facilityDAO=null;
+	private FacilityDao facilityDao=null;
 
     private LogManager logManager;
 
@@ -68,8 +68,8 @@ public class StaffManagerAction extends BaseAction {
 
     private RoleManager roleManager;
 
-	public void setFacilityDAO(FacilityDAO facilityDAO) {
-        this.facilityDAO = facilityDAO;
+	public void setFacilityDao(FacilityDao facilityDao) {
+        this.facilityDao = facilityDao;
     }
 	
     public ActionForward add_to_facility(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -119,7 +119,7 @@ public class StaffManagerAction extends BaseAction {
 		request.setAttribute("all_programs",allProgramsInContainer);
 		request.setAttribute("roles",roleManager.getRoles());
 		
-		List<Facility> allFacilities=facilityDAO.getActiveFacilities();
+		List<Facility> allFacilities=facilityDao.getActiveFacilities();
         request.setAttribute("all_facilities",allFacilities);
         
         List<Integer> providerFacilities=ProviderDao.getFacilityIds(provider.getProvider_no());
@@ -151,7 +151,7 @@ public class StaffManagerAction extends BaseAction {
 		//changed to get all active providers
 		request.setAttribute("providers",providerManager.getActiveProviders());
 		
-        request.setAttribute("facilities",facilityDAO.getActiveFacilities());
+        request.setAttribute("facilities",facilityDao.getActiveFacilities());
         
         //show programs which can be assigned to the provider
         request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", 0));
@@ -172,7 +172,7 @@ public class StaffManagerAction extends BaseAction {
         	programId="0";
         }
         		
-		request.setAttribute("facilities",facilityDAO.getActiveFacilities());
+		request.setAttribute("facilities",facilityDao.getActiveFacilities());
         if(facilityId.equals("0")==false) request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", Integer.valueOf(facilityId)));
 
 		request.setAttribute("providers",providerManager.getActiveProviders(facilityId, programId));

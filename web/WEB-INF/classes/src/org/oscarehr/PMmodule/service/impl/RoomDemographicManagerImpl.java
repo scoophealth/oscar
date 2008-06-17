@@ -26,11 +26,11 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.oscarehr.PMmodule.dao.BedDemographicDAO;
+import org.oscarehr.PMmodule.dao.BedDemographicDao;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
-import org.oscarehr.PMmodule.dao.RoomDemographicDAO;
+import org.oscarehr.PMmodule.dao.RoomDemographicDao;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
@@ -48,22 +48,22 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		throw e;
 	}
 
-	private BedDemographicDAO bedDemographicDAO;
-	private RoomDemographicDAO roomDemographicDAO;
+	private BedDemographicDao bedDemographicDao;
+	private RoomDemographicDao roomDemographicDao;
 	private ProviderDao providerDao;
 	private ClientDao clientDao;
 	private RoomDAO roomDAO;
 
-	public void setRoomDemographicDAO(RoomDemographicDAO roomDemographicDAO) {
-		this.roomDemographicDAO = roomDemographicDAO;
+	public void setRoomDemographicDao(RoomDemographicDao roomDemographicDao) {
+		this.roomDemographicDao = roomDemographicDao;
 	}
 
 	public void setProviderDao(ProviderDao providerDao) {
 		this.providerDao = providerDao;
 	}
 
-	public void setBedDemographicDAO(BedDemographicDAO bedDemographicDAO) {
-		this.bedDemographicDAO = bedDemographicDAO;
+	public void setBedDemographicDao(BedDemographicDao bedDemographicDao) {
+		this.bedDemographicDao = bedDemographicDao;
 	}
 
 	public void setClientDao(ClientDao clientDao) {
@@ -78,11 +78,11 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 	 * @see org.oscarehr.PMmodule.service.RoomDemographicManager#roomDemographicExists(java.lang.Integer)
 	 */
 	public boolean roomDemographicExists(Integer roomId) {
-		return roomDemographicDAO.roomDemographicExists(roomId);
+		return roomDemographicDao.roomDemographicExists(roomId);
 	}
 
 	public int getRoomOccupanyByRoom(Integer roomId){
-		return roomDemographicDAO.getRoomOccupanyByRoom(roomId);
+		return roomDemographicDao.getRoomOccupanyByRoom(roomId);
 	}
 	
 	/**
@@ -93,10 +93,10 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 			handleException(new IllegalArgumentException("roomId must not be null"));
 		}
 		List<RoomDemographic> roomDemographicList = null;
-		roomDemographicList = roomDemographicDAO.getRoomDemographicByRoom(roomId);
+		roomDemographicList = roomDemographicDao.getRoomDemographicByRoom(roomId);
 			
 		if(roomDemographicList != null  &&  roomDemographicList.size() > 0){
-			//Demographic demographic = demographicDAO.getClientByDemographicNo(roomDemographicList.get(0).getId().getDemographicNo());
+			//Demographic demographic = demographicDao.getClientByDemographicNo(roomDemographicList.get(0).getId().getDemographicNo());
 			//roomDemographicList.get(0).setDemographic(demographic);
 		}
 		return roomDemographicList;
@@ -109,7 +109,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		if (demographicNo == null) {
 			handleException(new IllegalArgumentException("demographicNo must not be null"));
 		}
-		RoomDemographic roomDemographic = roomDemographicDAO.getRoomDemographicByDemographic(demographicNo);
+		RoomDemographic roomDemographic = roomDemographicDao.getRoomDemographicByDemographic(demographicNo);
 
 		if (roomDemographic != null) {			
 	        // filter in facility
@@ -144,7 +144,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 			deleteRoomDemographic(roomDemographicPrevious);
 		}
 		if(!isNoRoomAssigned){
-			roomDemographicDAO.saveRoomDemographic(roomDemographic);
+			roomDemographicDao.saveRoomDemographic(roomDemographic);
 		}
 	}
 
@@ -153,10 +153,10 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		if(roomDemographic == null){
 			return;
 		}
-		BedDemographic bedDemographic = bedDemographicDAO.getBedDemographicByDemographic(
+		BedDemographic bedDemographic = bedDemographicDao.getBedDemographicByDemographic(
 				roomDemographic.getId().getDemographicNo());
 		if(bedDemographic != null){
-			bedDemographicDAO.deleteBedDemographic(bedDemographic);
+			bedDemographicDao.deleteBedDemographic(bedDemographic);
 		}
 	}
 	
@@ -168,7 +168,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 			handleException(new IllegalArgumentException("roomDemographic must not be null"));
 		}
 		
-		roomDemographicDAO.deleteRoomDemographic(roomDemographic);
+		roomDemographicDao.deleteRoomDemographic(roomDemographic);
 	}
 
 	void setAttributes(RoomDemographic roomDemographic) {

@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.caisi.dao.DemographicDAO;
+import org.caisi.dao.DemographicDao;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -14,7 +14,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 /**
  */
 public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
-    private DemographicDAO demographicDAOT;
+    private DemographicDao demographicDaoT;
     private ProgramDao programDao;
     private ProviderDao providerDao;
 
@@ -92,7 +92,7 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
     }
 
     private ProgramClientRestriction setRelationships(ProgramClientRestriction pcr) {
-        pcr.setClient(demographicDAOT.getDemographic("" + pcr.getDemographicNo()));
+        pcr.setClient(demographicDaoT.getDemographic("" + pcr.getDemographicNo()));
         pcr.setProgram(programDao.getProgram(pcr.getProgramId()));
         pcr.setProvider(providerDao.getProvider(pcr.getProviderNo()));
         
@@ -100,8 +100,8 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
     }
 
     @Required
-    public void setDemographicDAOT(DemographicDAO demographicDAOT) {
-        this.demographicDAOT = demographicDAOT;
+    public void setDemographicDaoT(DemographicDao demographicDaoT) {
+        this.demographicDaoT = demographicDaoT;
     }
 
     @Required

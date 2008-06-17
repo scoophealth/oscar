@@ -28,7 +28,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Provider;
@@ -50,7 +50,7 @@ public final class LoginAction extends DispatchAction {
     private static final String LOG_PRE = "Login!@#$: ";
 
     private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
-    private FacilityDAO facilityDAO = (FacilityDAO) SpringUtils.getBean("facilityDAO");
+    private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -60,7 +60,7 @@ public final class LoginAction extends DispatchAction {
         if (nextPage!=null) {
             // set current facility
             String facilityIdString=request.getParameter(SessionConstants.CURRENT_FACILITY_ID);
-            Facility facility=facilityDAO.getFacility(Integer.parseInt(facilityIdString));
+            Facility facility=facilityDao.getFacility(Integer.parseInt(facilityIdString));
             request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, Integer.parseInt(facilityIdString));
             request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
             String username=(String)request.getSession().getAttribute("user");
@@ -198,7 +198,7 @@ public final class LoginAction extends DispatchAction {
             }
             else if (facilityIds.size() == 1) {
                 // set current facility
-                Facility facility=facilityDAO.getFacility(facilityIds.get(0));
+                Facility facility=facilityDao.getFacility(facilityIds.get(0));
                 request.getSession().setAttribute("currentFacility", facility);
                 request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, facility.getId());
                 LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIds.get(0), ip);

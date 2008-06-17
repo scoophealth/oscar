@@ -43,7 +43,7 @@ import oscar.util.SqlUtils;
 
 /**
  */
-public class DemographicDAO extends HibernateDaoSupport {
+public class DemographicDao extends HibernateDaoSupport {
 
     public Demographic getDemographic(String demographic_no) {
         if (demographic_no == null || demographic_no.length() == 0) {

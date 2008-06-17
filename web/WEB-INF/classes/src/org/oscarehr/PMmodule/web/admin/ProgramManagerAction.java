@@ -35,7 +35,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.BedCheckTime;
 import org.oscarehr.PMmodule.model.Program;
@@ -61,7 +61,7 @@ import org.springframework.beans.factory.annotation.Required;
 public class ProgramManagerAction extends BaseAction {
 
     private ClientRestrictionManager clientRestrictionManager;
-    private FacilityDAO facilityDAO=null;
+    private FacilityDao facilityDao=null;
     private AdmissionManager admissionManager;
     private BedCheckTimeManager bedCheckTimeManager;
     private LogManager logManager;
@@ -70,8 +70,8 @@ public class ProgramManagerAction extends BaseAction {
     private ProgramQueueManager programQueueManager;
     private RoleManager roleManager;
         
-    public void setFacilityDAO(FacilityDAO facilityDAO) {
-        this.facilityDAO = facilityDAO;
+    public void setFacilityDao(FacilityDao facilityDao) {
+        this.facilityDao = facilityDao;
     }
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -106,7 +106,7 @@ public class ProgramManagerAction extends BaseAction {
         	list = programManager.getAllPrograms(searchStatus, searchType, Long.parseLong(searchFacilityId));
         }
     	request.setAttribute("programs", list);
-        request.setAttribute("facilities",facilityDAO.getActiveFacilities());
+        request.setAttribute("facilities",facilityDao.getActiveFacilities());
 
         programForm.set("searchStatus",searchStatus);
         programForm.set("searchType", searchType);
@@ -905,7 +905,7 @@ public class ProgramManagerAction extends BaseAction {
         request.setAttribute("accessTypes", programManager.getAccessTypes());
         request.setAttribute("bed_programs",programManager.getBedPrograms());
 
-        request.setAttribute("facilities",facilityDAO.getActiveFacilities());
+        request.setAttribute("facilities",facilityDao.getActiveFacilities());
     }
 
 

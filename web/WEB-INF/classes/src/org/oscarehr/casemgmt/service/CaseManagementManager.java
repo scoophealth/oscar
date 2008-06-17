@@ -92,7 +92,7 @@ public class CaseManagementManager {
     protected EchartDAO echartDAO;
     protected ApptDAO apptDAO;
     protected ProviderDao providerDAO;
-    protected ClientDao demographicDAO;
+    protected ClientDao demographicDao;
     protected ProviderSignitureDao providerSignitureDao;
     protected RoleProgramAccessDAO roleProgramAccessDAO;
     protected ClientImageDAO clientImageDAO;
@@ -605,7 +605,7 @@ public class CaseManagementManager {
         List<Integer> progList = new ArrayList<Integer>();
 
         if (programId == null) {
-            for (Object o : demographicDAO.getProgramIdByDemoNo(demoNo)) {
+            for (Object o : demographicDao.getProgramIdByDemoNo(demoNo)) {
                 progList.add((Integer)o);
             }
         }
@@ -702,7 +702,7 @@ public class CaseManagementManager {
 
     public String getDemoName(String demoNo) {
        
-        Demographic dg = demographicDAO.getClientByDemographicNo(new Integer(demoNo));
+        Demographic dg = demographicDao.getClientByDemographicNo(new Integer(demoNo));
         if (dg == null) return "";
         else return dg.getFirstName() + " " + dg.getLastName();
     }
@@ -710,7 +710,7 @@ public class CaseManagementManager {
     public String getDemoGender(String demoNo) {
         String gender = "";
         
-        Demographic demo = demographicDAO.getClientByDemographicNo(new Integer(demoNo));
+        Demographic demo = demographicDao.getClientByDemographicNo(new Integer(demoNo));
         if (demo != null) {
             gender = demo.getSex();
         }
@@ -720,7 +720,7 @@ public class CaseManagementManager {
     public String getDemoAge(String demoNo) {
         String age = "";
 
-        Demographic demo = demographicDAO.getClientByDemographicNo(new Integer(demoNo));
+        Demographic demo = demographicDao.getClientByDemographicNo(new Integer(demoNo));
         if (demo != null) {
             age = demo.getAge();
         }
@@ -729,7 +729,7 @@ public class CaseManagementManager {
     }
 
     public String getDemoDOB(String demoNo) {
-        Demographic dg = demographicDAO.getClientByDemographicNo(new Integer(demoNo));
+        Demographic dg = demographicDao.getClientByDemographicNo(new Integer(demoNo));
         if (dg == null) return "";
         else return dg.getYearOfBirth() + "-" + dg.getMonthOfBirth() + "-" + dg.getDateOfBirth();
     }
@@ -1191,8 +1191,8 @@ public class CaseManagementManager {
         this.roleProgramAccessDAO = roleProgramAccessDAO;
     }
 
-    public void setDemographicDAO(ClientDao demographicDAO) {
-        this.demographicDAO = demographicDAO;
+    public void setDemographicDao(ClientDao demographicDao) {
+        this.demographicDao = demographicDao;
     }
 
     public void setProviderDAO(ProviderDao providerDAO) {

@@ -31,14 +31,14 @@ import org.oscarehr.PMmodule.model.RoomDemographicPK;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Hibernate implementation of RoomDemographicDAO
+ * Hibernate implementation of RoomDemographicDao
  */
-public class RoomDemographicDAO extends HibernateDaoSupport {
+public class RoomDemographicDao extends HibernateDaoSupport {
 
-    private static final Log log = LogFactory.getLog(RoomDemographicDAO.class);
+    private static final Log log = LogFactory.getLog(RoomDemographicDao.class);
 
     /**
-     * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#roomDemographicExists(java.lang.Integer)
+     * @see org.oscarehr.PMmodule.dao.RoomDemographicDao#roomDemographicExists(java.lang.Integer)
      */
     public boolean roomDemographicExists(Integer demographicNo) {
         boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic rd where rd.id.demographicNo = " + demographicNo).next()) == 1);
@@ -64,7 +64,7 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
     }
 
     /**
-     * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#getRoomDemographicByRoom(java.lang.Integer)
+     * @see org.oscarehr.PMmodule.dao.RoomDemographicDao#getRoomDemographicByRoom(java.lang.Integer)
      */
     public List<RoomDemographic> getRoomDemographicByRoom(Integer roomId) {
         List roomDemographics = getHibernateTemplate().find("from RoomDemographic rd where rd.id.roomId = ?", roomId);
@@ -76,7 +76,7 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
     }
 
     /**
-     * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#getRoomDemographicByDemographic(java.lang.Integer)
+     * @see org.oscarehr.PMmodule.dao.RoomDemographicDao#getRoomDemographicByDemographic(java.lang.Integer)
      */
     public RoomDemographic getRoomDemographicByDemographic(Integer demographicNo) {
    	
@@ -95,7 +95,7 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
     }
 
     /**
-     * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#saveRoomDemographic(org.oscarehr.PMmodule.model.RoomDemographic)
+     * @see org.oscarehr.PMmodule.dao.RoomDemographicDao#saveRoomDemographic(org.oscarehr.PMmodule.model.RoomDemographic)
      */
     public void saveRoomDemographic(RoomDemographic roomDemographic) {
         //updateHistory(roomDemographic);

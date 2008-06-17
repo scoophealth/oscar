@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
@@ -39,12 +39,12 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 
 public class ProviderInfoAction extends BaseAction {
 
-    private FacilityDAO facilityDAO=null;
+    private FacilityDao facilityDao=null;
     private ProgramManager programManager;
     private ProviderManager providerManager;
     
-    public void setFacilityDAO(FacilityDAO facilityDAO) {
-        this.facilityDAO = facilityDAO;
+    public void setFacilityDao(FacilityDao facilityDao) {
+        this.facilityDao = facilityDao;
     }
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -94,7 +94,7 @@ public class ProviderInfoAction extends BaseAction {
         List<Integer> facilityIds = ProviderDao.getFacilityIds(providerNo);
         ArrayList<Facility> facilities=new ArrayList<Facility>();
         for (Integer facilityId : facilityIds){
-            facilities.add(facilityDAO.getFacility(facilityId));
+            facilities.add(facilityDao.getFacility(facilityId));
         }
         
         

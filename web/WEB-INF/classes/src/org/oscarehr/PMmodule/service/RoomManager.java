@@ -29,7 +29,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.BedDAO;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.exception.DuplicateRoomNameException;
@@ -59,7 +59,7 @@ public class RoomManager {
     private BedDemographicManager bedDemographicManager;
     private ProgramDao programDao;
     private BedDAO bedDAO;
-    private FacilityDAO facilityDAO;
+    private FacilityDao facilityDao;
 
     /**
      * Get room
@@ -453,7 +453,7 @@ public class RoomManager {
     	}
         Integer roomTypeId = room.getRoomTypeId();
         room.setRoomType(roomDAO.getRoomType(roomTypeId));
-        room.setFacility(facilityDAO.getFacility(room.getFacilityId()));
+        room.setFacility(facilityDao.getFacility(room.getFacilityId()));
 
         Integer programId = room.getProgramId();
 
@@ -500,8 +500,8 @@ public class RoomManager {
     }
 
     @Required
-    public void setFacilityDAO(FacilityDAO facilityDAO) {
-        this.facilityDAO = facilityDAO;
+    public void setFacilityDao(FacilityDao facilityDao) {
+        this.facilityDao = facilityDao;
     }
 
     @Required

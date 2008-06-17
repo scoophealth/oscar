@@ -24,33 +24,33 @@ package org.caisi.service;
 
 import java.util.List;
 
-import org.caisi.dao.DemographicDAO;
+import org.caisi.dao.DemographicDao;
 import org.oscarehr.PMmodule.model.Demographic;
 
 /**
  */
 public class DemographicManagerTickler {
 
-    private DemographicDAO demographicDAO = null;
+    private DemographicDao demographicDao = null;
 
-    public void setDemographicDAO(DemographicDAO demographicDAO) {
-        this.demographicDAO = demographicDAO;
+    public void setDemographicDao(DemographicDao demographicDao) {
+        this.demographicDao = demographicDao;
     }
 
     public Demographic getDemographic(String demographic_no) {
-        return demographicDAO.getDemographic(demographic_no);
+        return demographicDao.getDemographic(demographic_no);
     }
 
     public List getDemographics() {
-        return demographicDAO.getDemographics();
+        return demographicDao.getDemographics();
     }
 
     public List getProgramIdByDemoNo(String demoNo) {
-        return demographicDAO.getProgramIdByDemoNo(demoNo);
+        return demographicDao.getProgramIdByDemoNo(demoNo);
     }
 
     public List getDemoProgram(Integer demoNo) {
-        return demographicDAO.getDemoProgram(demoNo);
+        return demographicDao.getDemoProgram(demoNo);
     }
 
 }

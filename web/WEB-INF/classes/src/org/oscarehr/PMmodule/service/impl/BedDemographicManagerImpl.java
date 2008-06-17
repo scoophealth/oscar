@@ -25,7 +25,7 @@ package org.oscarehr.PMmodule.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.BedDAO;
-import org.oscarehr.PMmodule.dao.BedDemographicDAO;
+import org.oscarehr.PMmodule.dao.BedDemographicDao;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -53,15 +53,15 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 		throw e;
 	}
 
-	private BedDemographicDAO bedDemographicDAO;
+	private BedDemographicDao bedDemographicDao;
 	private ProviderDao providerDAO;
 	private BedDAO bedDAO;
-	private ClientDao demographicDAO;
+	private ClientDao demographicDao;
 	private RoomDAO roomDAO;
 	private ProgramDao programDAO;
 
-	public void setBedDemographicDAO(BedDemographicDAO BedDemographicDAO) {
-		this.bedDemographicDAO = BedDemographicDAO;
+	public void setBedDemographicDao(BedDemographicDao BedDemographicDao) {
+		this.bedDemographicDao = BedDemographicDao;
 	}
 
 	public void setProviderDAO(ProviderDao providerDAO) {
@@ -72,8 +72,8 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 		this.bedDAO = bedDAO;
 	}
 
-	public void setDemographicDAO(ClientDao demographicDAO) {
-		this.demographicDAO = demographicDAO;
+	public void setDemographicDao(ClientDao demographicDao) {
+		this.demographicDao = demographicDao;
 	}
 
 	public void setRoomDAO(RoomDAO roomDAO) {
@@ -88,7 +88,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	 * @see org.oscarehr.PMmodule.service.BedDemographicManager#demographicExists(java.lang.Integer)
 	 */
 	public boolean demographicExists(Integer bedId) {
-		return bedDemographicDAO.demographicExists(bedId);
+		return bedDemographicDao.demographicExists(bedId);
 	}
 
 	/**
@@ -101,11 +101,11 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 		
 		BedDemographic bedDemographic = null;
 
-		if (bedDemographicDAO.demographicExists(bedId)) {
-			bedDemographic = bedDemographicDAO.getBedDemographicByBed(bedId);
+		if (bedDemographicDao.demographicExists(bedId)) {
+			bedDemographic = bedDemographicDao.getBedDemographicByBed(bedId);
 			setAttributes(bedDemographic);
 
-			Demographic demographic = demographicDAO.getClientByDemographicNo(bedDemographic.getId().getDemographicNo());
+			Demographic demographic = demographicDao.getClientByDemographicNo(bedDemographic.getId().getDemographicNo());
 			bedDemographic.setDemographic(demographic);
 		}
 
@@ -122,8 +122,8 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 
 		BedDemographic bedDemographic = null;
 
-		if (bedDemographicDAO.bedExists(demographicNo)) {
-			bedDemographic = bedDemographicDAO.getBedDemographicByDemographic(demographicNo);
+		if (bedDemographicDao.bedExists(demographicNo)) {
+			bedDemographic = bedDemographicDao.getBedDemographicByDemographic(demographicNo);
 			setAttributes(bedDemographic);
 
 			Bed bed = bedDAO.getBed(bedDemographic.getId().getBedId());
@@ -164,20 +164,20 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	 * @see org.oscarehr.PMmodule.service.BedDemographicManager#getBedDemographicStatuses()
 	 */
 	public BedDemographicStatus[] getBedDemographicStatuses() {
-		return bedDemographicDAO.getBedDemographicStatuses();
+		return bedDemographicDao.getBedDemographicStatuses();
 	}
 
 	/**
 	 * @see org.oscarehr.PMmodule.service.BedDemographicManager#getExpiredReservations()
 	 */
 	public BedDemographicHistorical[] getExpiredReservations() {
-		BedDemographicHistorical[] bedDemographicHistoricals = bedDemographicDAO.getBedDemographicHistoricals(DateTimeFormatUtils.getToday());
+		BedDemographicHistorical[] bedDemographicHistoricals = bedDemographicDao.getBedDemographicHistoricals(DateTimeFormatUtils.getToday());
 		
 		for (BedDemographicHistorical historical : bedDemographicHistoricals) {
 			BedDemographicHistoricalPK id = historical.getId();
 			
 			historical.setBed(bedDAO.getBed(id.getBedId()));
-			historical.setDemographic(demographicDAO.getClientByDemographicNo(id.getDemographicNo()));
+			historical.setDemographic(demographicDao.getClientByDemographicNo(id.getDemographicNo()));
         }
 		
 		return bedDemographicHistoricals;
@@ -191,7 +191,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 			handleException(new IllegalArgumentException("bedDemographic must not be null"));
 		}
 		validate(bedDemographic);
-		bedDemographicDAO.saveBedDemographic(bedDemographic);
+		bedDemographicDao.saveBedDemographic(bedDemographic);
 	}
 
 	/**
@@ -202,12 +202,12 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 			handleException(new IllegalArgumentException("bedDemographic must not be null"));
 		}
 		
-		bedDemographicDAO.deleteBedDemographic(bedDemographic);
+		bedDemographicDao.deleteBedDemographic(bedDemographic);
 	}
 
 	void setAttributes(BedDemographic bedDemographic) {
 		Integer bedDemographicStatusId = bedDemographic.getBedDemographicStatusId();
-		BedDemographicStatus bedDemographicStatus = bedDemographicDAO.getBedDemographicStatus(bedDemographicStatusId);
+		BedDemographicStatus bedDemographicStatus = bedDemographicDao.getBedDemographicStatus(bedDemographicStatusId);
 		bedDemographic.setBedDemographicStatus(bedDemographicStatus);
 
 		Integer duration = (bedDemographicStatus != null) ? bedDemographicStatus.getDuration() : 0;
@@ -231,7 +231,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	}
 
 	void validateBedDemographicStatus(Integer bedDemographicStatusId) {
-		if (!bedDemographicDAO.bedDemographicStatusExists(bedDemographicStatusId)) {
+		if (!bedDemographicDao.bedDemographicStatusExists(bedDemographicStatusId)) {
 			handleException(new IllegalArgumentException("no bed demographic status with id : " + bedDemographicStatusId));
 		}
 	}
@@ -249,7 +249,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	}
 
 	void validateDemographic(Integer demographicNo) {
-		if (!demographicDAO.clientExists(demographicNo)) {
+		if (!demographicDao.clientExists(demographicNo)) {
 			handleException(new IllegalArgumentException("no demographic with id : " + demographicNo));
 		}
 	}

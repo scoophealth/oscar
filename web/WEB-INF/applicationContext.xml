@@ -21,8 +21,8 @@
     <bean id="agencyDao" class="org.oscarehr.PMmodule.dao.AgencyDao" autowire="byName"/>
     <bean id="admissionDao" class="org.oscarehr.PMmodule.dao.AdmissionDao" autowire="byName" />
     <bean id="jointAdmissionDAO" class="org.oscarehr.PMmodule.dao.JointAdmissionDAO" autowire="byName" />
-    <bean id="bedDemographicDAO" class="org.oscarehr.PMmodule.dao.BedDemographicDAO" autowire="byName"/>
-    <bean id="roomDemographicDAO" class="org.oscarehr.PMmodule.dao.RoomDemographicDAO" autowire="byName"/>
+    <bean id="bedDemographicDao" class="org.oscarehr.PMmodule.dao.BedDemographicDao" autowire="byName"/>
+    <bean id="roomDemographicDao" class="org.oscarehr.PMmodule.dao.RoomDemographicDao" autowire="byName"/>
     <bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
     <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.BedDAO" autowire="byName"/>
     <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
@@ -57,8 +57,8 @@
     <bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.ProgramTeamDAO" autowire="byName"/>
     <bean id="providerDefaultProgramDao" class="org.caisi.dao.ProviderDefaultProgramDao" autowire="byName"/>
     <bean id="bedProgramDao" class="org.caisi.dao.BedProgramDao" autowire="byName"/>
-    <bean id="demographicDAOT" class="org.caisi.dao.DemographicDAO" autowire="byName"/>
-    <bean id="demographicDAO" class="org.caisi.dao.DemographicDAO" autowire="byName"/>
+    <bean id="demographicDaoT" class="org.caisi.dao.DemographicDao" autowire="byName"/>
+    <bean id="demographicDao" class="org.caisi.dao.DemographicDao" autowire="byName"/>
     <bean id="oscarSecurityDAO" class="org.oscarehr.PMmodule.dao.OscarSecurityDAO" autowire="byName"/>
     <bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.ProgramSignatureDao" autowire="byName"/>
     <bean id="consultationDAOT" class="org.caisi.dao.ConsultationDAO" autowire="byName" />
@@ -71,7 +71,7 @@
     <bean id="EncounterWindowDAO" class="org.oscarehr.casemgmt.dao.EncounterWindowDAO" autowire="byName" />
     <bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
     <bean id="UserDSMessagePrefsDAO" class="org.oscarehr.common.dao.UserDSMessagePrefsDAO" autowire="byName" />
-	<bean id="facilityDAO" class="org.oscarehr.PMmodule.dao.FacilityDAO" autowire="byName"/>
+	<bean id="facilityDao" class="org.oscarehr.PMmodule.dao.FacilityDao" autowire="byName"/>
 	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName"/>
 	<bean id="caisiEditorDAO" class="org.caisi.dao.CaisiEditorDAO" autowire="byName" />	
 	<!--  configure the scratch pad -->
@@ -179,10 +179,10 @@
     <bean id="bedDemographicManager" parent="baseTransactionProxy">
         <property name="target">
             <bean class="org.oscarehr.PMmodule.service.impl.BedDemographicManagerImpl">
-                <property name="bedDemographicDAO" ref="bedDemographicDAO"/>
+                <property name="bedDemographicDao" ref="bedDemographicDao"/>
                 <property name="providerDAO" ref="providerDao"/>
                 <property name="bedDAO" ref="bedDAO"/>
-                <property name="demographicDAO" ref="clientDao"/>
+                <property name="demographicDao" ref="clientDao"/>
                 <property name="roomDAO" ref="roomDAO"/>
                 <property name="programDAO" ref="programDao"/>
             </bean>
@@ -227,7 +227,7 @@
         <property name="apptDAO" ref="ApptDAO"/>
         <property name="providerSignitureDao" ref="ProviderSignitureDao"/>
         <property name="providerDAO" ref="providerDao"/>
-        <property name="demographicDAO" ref="clientDao"/>
+        <property name="demographicDao" ref="clientDao"/>
         <property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO"/>
         <property name="clientImageDAO" ref="clientImageDAO"/>
         <property name="hashAuditDAO" ref="HashAuditDAO"/>
@@ -312,7 +312,7 @@
         <property name="target">
             <bean class="org.caisi.service.InfirmBedProgramManager" autowire="byName">
                 <property name="programProviderDAOT" ref="programProviderDAO"/>
-                <property name="demographicDao" ref="demographicDAOT"/>
+                <property name="demographicDao" ref="demographicDaoT"/>
             </bean>
         </property>
     </bean>
@@ -349,7 +349,7 @@
         </property>
     </bean>
     <bean id="demographicManagerTarget" class="org.caisi.service.DemographicManagerTickler">
-        <property name="demographicDAO" ref="demographicDAOT"/>
+        <property name="demographicDao" ref="demographicDaoT"/>
     </bean>
     <bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton"/>
     <bean id="consultationManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">

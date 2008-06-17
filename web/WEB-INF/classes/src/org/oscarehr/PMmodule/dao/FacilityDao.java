@@ -10,7 +10,7 @@ import oscar.util.SqlUtils;
 /**
  * Data access object for retrieving, creating, and updating facilities.
  */
-public class FacilityDAO extends HibernateDaoSupport {
+public class FacilityDao extends HibernateDaoSupport {
 
     public Facility getFacility(Integer id) {
         return (Facility) getHibernateTemplate().get(Facility.class, id);

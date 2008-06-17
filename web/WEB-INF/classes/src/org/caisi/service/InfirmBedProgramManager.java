@@ -32,7 +32,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.dao.BedProgramDao;
-import org.caisi.dao.DemographicDAO;
+import org.caisi.dao.DemographicDao;
 import org.caisi.dao.ProviderDefaultProgramDao;
 import org.caisi.model.ProviderDefaultProgram;
 import org.oscarehr.PMmodule.dao.ProgramDao;
@@ -44,7 +44,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 public class InfirmBedProgramManager {
     private BedProgramDao bedProgramDao;
-    private DemographicDAO demographicDAOT;
+    private DemographicDao demographicDaoT;
     private ProgramProviderDAO programProviderDAOT;
     private ProviderDefaultProgramDao providerDefaultProgramDao;
     private ProgramDao programDao;
@@ -67,8 +67,8 @@ public class InfirmBedProgramManager {
     }
 
     @Required
-    public void setDemographicDao(DemographicDAO dao) {
-        this.demographicDAOT = dao;
+    public void setDemographicDao(DemographicDao dao) {
+        this.demographicDaoT = dao;
     }
 
     public List getPrgramNameID() {
@@ -125,8 +125,8 @@ public class InfirmBedProgramManager {
         dt = cal.getTime();
         Iterator iter;
 
-        if (archiveView != null && archiveView.equals("true")) iter = demographicDAOT.getArchiveDemographicByPromgram(programId, dt, defdt).iterator();
-        else iter = demographicDAOT.getActiveDemographicByProgram(programId, dt, defdt).iterator();
+        if (archiveView != null && archiveView.equals("true")) iter = demographicDaoT.getArchiveDemographicByPromgram(programId, dt, defdt).iterator();
+        else iter = demographicDaoT.getActiveDemographicByProgram(programId, dt, defdt).iterator();
 
         ArrayList demographicList = new ArrayList();
         Demographic de = null;

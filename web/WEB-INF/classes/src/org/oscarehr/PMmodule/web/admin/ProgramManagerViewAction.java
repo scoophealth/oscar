@@ -39,7 +39,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
@@ -75,7 +75,7 @@ public class ProgramManagerViewAction extends BaseAction {
 
     private ClientRestrictionManager clientRestrictionManager;
 
-    private FacilityDAO facilityDAO=null;
+    private FacilityDao facilityDao=null;
 
     private CaseManagementManager caseManagementManager;
 
@@ -95,8 +95,8 @@ public class ProgramManagerViewAction extends BaseAction {
 
     private ProgramQueueManager programQueueManager;
 
-    public void setFacilityDAO(FacilityDAO facilityDAO) {
-        this.facilityDAO = facilityDAO;
+    public void setFacilityDao(FacilityDao facilityDao) {
+        this.facilityDao = facilityDao;
     }
     
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -173,7 +173,7 @@ public class ProgramManagerViewAction extends BaseAction {
 
         Program program = programManager.getProgram(programId);
         request.setAttribute("program", program);
-        Facility facility=facilityDAO.getFacility(new Integer((int)program.getFacilityId()));
+        Facility facility=facilityDao.getFacility(new Integer((int)program.getFacilityId()));
         if(facility!=null) request.setAttribute("facilityName", facility.getName());
 
         if (formBean.getTab().equals("Service Restrictions")) {

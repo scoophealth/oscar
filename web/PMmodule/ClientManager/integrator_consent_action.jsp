@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.IntegratorConsentDao"%>
 <%@page import="org.oscarehr.common.model.IntegratorConsent"%>
@@ -5,19 +6,13 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%!
-	private boolean isChecked(HttpServletRequest request, String parameter)
-	{
-		String temp=request.getParameter(parameter);
-		return(temp!=null && (temp.equalsIgnoreCase("on") || temp.equalsIgnoreCase("true") || temp.equalsIgnoreCase("checked")));
-	}
-
 	private void fillConsentParameters(HttpServletRequest request, IntegratorConsent integratorConsent)
 	{
-		integratorConsent.setConsentToStatistics(isChecked(request, "Statistics"));
-		integratorConsent.setConsentToBasicPersonalId(isChecked(request, "BasicPersonalId"));
-		integratorConsent.setConsentToHealthCardId(isChecked(request, "HealthCardId"));
-		integratorConsent.setConsentToIssues(isChecked(request, "Issues"));
-		integratorConsent.setConsentToNotes(isChecked(request, "Notes"));
+		integratorConsent.setConsentToStatistics(WebUtils.isChecked(request, "Statistics"));
+		integratorConsent.setConsentToBasicPersonalId(WebUtils.isChecked(request, "BasicPersonalId"));
+		integratorConsent.setConsentToHealthCardId(WebUtils.isChecked(request, "HealthCardId"));
+		integratorConsent.setConsentToIssues(WebUtils.isChecked(request, "Issues"));
+		integratorConsent.setConsentToNotes(WebUtils.isChecked(request, "Notes"));
 	}
 %>
 

@@ -37,11 +37,11 @@ import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Hibernate implementation of BedDemographicDAO
+ * Hibernate implementation of BedDemographicDao
  */
-public class BedDemographicDAO extends HibernateDaoSupport {
+public class BedDemographicDao extends HibernateDaoSupport {
 
-    private static final Log log = LogFactory.getLog(BedDemographicDAO.class);
+    private static final Log log = LogFactory.getLog(BedDemographicDao.class);
 
     public boolean bedDemographicStatusExists(Integer bedDemographicStatusId) {
         boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from BedDemographicStatus bds where bds.id = " + bedDemographicStatusId).next()) == 1);
@@ -51,7 +51,7 @@ public class BedDemographicDAO extends HibernateDaoSupport {
     }
 
     /**
-     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#demographicExists(java.lang.Integer)
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDao#demographicExists(java.lang.Integer)
      */
     public boolean demographicExists(Integer bedId) {
         boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.bedId = " + bedId).next()) == 1);
@@ -61,7 +61,7 @@ public class BedDemographicDAO extends HibernateDaoSupport {
     }
 
     /**
-     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#bedExists(java.lang.Integer)
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDao#bedExists(java.lang.Integer)
      */
     public boolean bedExists(Integer demographicNo) {
         boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.demographicNo = " + demographicNo).next()) == 1);
@@ -71,7 +71,7 @@ public class BedDemographicDAO extends HibernateDaoSupport {
     }
 
     /**
-     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicByBed(java.lang.Integer)
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDao#getBedDemographicByBed(java.lang.Integer)
      */
     public BedDemographic getBedDemographicByBed(Integer bedId) {
         List bedDemographics = getHibernateTemplate().find("from BedDemographic bd where bd.id.bedId = ?", bedId);
@@ -88,7 +88,7 @@ public class BedDemographicDAO extends HibernateDaoSupport {
     }
 
     /**
-     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicByDemographic(java.lang.Integer)
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDao#getBedDemographicByDemographic(java.lang.Integer)
      */
     public BedDemographic getBedDemographicByDemographic(Integer demographicNo) {
         List bedDemographics = getHibernateTemplate().find("from BedDemographic bd where bd.id.demographicNo = ?", demographicNo);
@@ -113,7 +113,7 @@ public class BedDemographicDAO extends HibernateDaoSupport {
     }
     
     /**
-     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicStatus(java.lang.Integer)
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDao#getBedDemographicStatus(java.lang.Integer)
      */
     public BedDemographicStatus getBedDemographicStatus(Integer bedDemographicStatusId) {
         BedDemographicStatus bedDemographicStatus = (BedDemographicStatus)getHibernateTemplate().get(BedDemographicStatus.class, bedDemographicStatusId);
@@ -123,7 +123,7 @@ public class BedDemographicDAO extends HibernateDaoSupport {
     }
 
     /**
-     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicStatuses()
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDao#getBedDemographicStatuses()
      */
     @SuppressWarnings("unchecked")
     public BedDemographicStatus[] getBedDemographicStatuses() {
@@ -134,7 +134,7 @@ public class BedDemographicDAO extends HibernateDaoSupport {
     }
 
     /**
-     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicHistoricals(java.util.Date)
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDao#getBedDemographicHistoricals(java.util.Date)
      */
     @SuppressWarnings("unchecked")
     public BedDemographicHistorical[] getBedDemographicHistoricals(Date since) {
@@ -145,7 +145,7 @@ public class BedDemographicDAO extends HibernateDaoSupport {
     }
 
     /**
-     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#saveBedDemographic(org.oscarehr.PMmodule.model.BedDemographic)
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDao#saveBedDemographic(org.oscarehr.PMmodule.model.BedDemographic)
      */
     public void saveBedDemographic(BedDemographic bedDemographic) {
         updateHistory(bedDemographic);

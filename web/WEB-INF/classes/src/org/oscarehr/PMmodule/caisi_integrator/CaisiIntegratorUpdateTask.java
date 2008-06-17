@@ -36,8 +36,8 @@ import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.caisi.dao.DemographicDAO;
-import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.caisi.dao.DemographicDao;
+import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
@@ -63,8 +63,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
     private static final Log logger = LogFactory.getLog(CaisiIntegratorUpdateTask.class);
 
     private CaisiIntegratorManager caisiIntegratorManager;
-    private FacilityDAO facilityDAO;
-    private DemographicDAO demographicDAO;
+    private FacilityDao facilityDao;
+    private DemographicDao demographicDao;
     private CaseManagementIssueDAO caseManagementIssueDAO;
     private ClientImageDAO clientImageDAO;
     private IntegratorConsentDao integratorConsentDao;
@@ -73,12 +73,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         this.caisiIntegratorManager = mgr;
     }
 
-    public void setFacilityDAO(FacilityDAO facilityDAO) {
-        this.facilityDAO = facilityDAO;
+    public void setFacilityDao(FacilityDao facilityDao) {
+        this.facilityDao = facilityDao;
     }
 
-    public void setDemographicDAO(DemographicDAO demographicDAO) {
-        this.demographicDAO = demographicDAO;
+    public void setDemographicDao(DemographicDao demographicDao) {
+        this.demographicDao = demographicDao;
     }
 
     public void setCaseManagementIssueDAO(CaseManagementIssueDAO caseManagementIssueDAO) {
@@ -98,7 +98,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         logger.debug("CaisiIntegratorUpdateTask starting");
 
         try {
-            List<Facility> facilities = facilityDAO.getFacilities();
+            List<Facility> facilities = facilityDao.getFacilities();
 
             for (Facility facility : facilities) {
                 if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
@@ -139,16 +139,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         // do all the sync work
         pushFacilityInfo(facility);
         DemographicInfoWs service = caisiIntegratorManager.getDemographicInfoWs(facility.getId());
-        List<Integer> demographicIds = DemographicDAO.getDemographicIdsAdmittedIntoFacility(facility.getId());
+        List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
         pushDemographics(facility, service, demographicIds);
         pushDemographicsIssues(facility, service, demographicIds);
         pushDemographicsImages(facility, service, demographicIds);
 
         // update late push time only if an exception didn't occur
         // re-get the facility as the sync time could be very long and changes may have been made to the facility.
-        facility = facilityDAO.getFacility(facility.getId());
+        facility = facilityDao.getFacility(facility.getId());
         facility.setIntegratorLastPushTime(currentPushTime);
-        facilityDAO.saveFacility(facility);
+        facilityDao.saveFacility(facility);
     }
 
     private void pushDemographicsImages(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) {
@@ -212,7 +212,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         for (Integer demographicId : demographicIds) {
             logger.debug("pushing demographicInfo facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-            Demographic demographic = demographicDAO.getDemographicById(demographicId);
+            Demographic demographic = demographicDao.getDemographicById(demographicId);
 
             CachedDemographicInfo cachedDemographicInfo = new CachedDemographicInfo();
 

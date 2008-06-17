@@ -23,7 +23,7 @@ package org.oscarehr.PMmodule.web;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.oscarehr.PMmodule.dao.FacilityDAO;
+import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
@@ -32,7 +32,7 @@ import org.oscarehr.util.SpringUtils;
 public class ProgramUtils
 {
     private static ProgramDao programDao=(ProgramDao)SpringUtils.getBean("programDao");
-    private static FacilityDAO facilityDao=(FacilityDAO)SpringUtils.getBean("facilityDAO");    
+    private static FacilityDao facilityDao=(FacilityDao)SpringUtils.getBean("facilityDao");    
 
     /**
      * This method stores the program ids as javascript arrays of numbers in the session space grouped
