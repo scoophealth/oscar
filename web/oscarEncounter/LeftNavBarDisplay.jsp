@@ -117,10 +117,10 @@
             
             StringBuffer jscode = new StringBuffer();
             
-            numDisplayed += display(noDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+            numDisplayed = display(noDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
             
             if( numDisplayed < numToDisplay ){
-               numDisplayed = display(current, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
+               numDisplayed += display(current, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
             }
                
             if( numDisplayed < numToDisplay ){ 
