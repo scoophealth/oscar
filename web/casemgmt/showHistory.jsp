@@ -23,7 +23,11 @@
  */
  -->
  <%@ include file="/casemgmt/taglibs.jsp" %>
- 
+ <%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*, org.oscarehr.PMmodule.service.ProviderManager, org.oscarehr.casemgmt.model.CaseManagementNote" %>
+ <%
+    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+    ProviderManager pMgr = (ProviderManager)ctx.getBean("providerManager");
+ %>
  <html>
      <head>
          <title>Note History</title>
@@ -43,7 +47,10 @@
                          Documentation Date: <nested:write name="note" property="observation_date" format="dd-MMM-yyyy H:mm" /><br>                         
                          <nested:equal name="note" property="signed" value="true"> 
                              Signed by 
-                             <nested:write name="note" property="signing_provider_no"/>:
+                             <%                               
+                               CaseManagementNote n = (CaseManagementNote)note;
+                               out.println(pMgr.getProvider(n.getSigning_provider_no()).getFormattedName());
+                             %>
                          </nested:equal>
                          <nested:notEqual name="note" property="signed" value="true"> 
                              Saved by 
