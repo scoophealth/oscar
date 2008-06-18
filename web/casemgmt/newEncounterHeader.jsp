@@ -87,7 +87,9 @@
         %>
         <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a>&nbsp;<%=bean.patientSex%> <%=bean.patientAge%> </a>
 
-        <span style="margin-left:20px;"><i>Next Appt: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></i></span>
+<a href="javascript:popupPage(400,850,'ApptHist','../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&last_name=<%=bean.patientLastName%>&first_name=<%=bean.patientFirstName%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25')" style="font-size: 11px;text-decoration:none;" title="Click to see appointment history"><span style="margin-left:20px;">Next Appt: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></span></a>
+
+
         &nbsp;&nbsp;<a href="#" onClick="popupPage(150,200,'Calculators','../oscarEncounter/calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" title="Calculators"/>Calculators</a>
 
                
