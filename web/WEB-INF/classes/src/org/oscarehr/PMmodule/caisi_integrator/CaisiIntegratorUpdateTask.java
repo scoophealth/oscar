@@ -242,6 +242,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	            cachedDemographicInfo.setConsentToIssues(consent.isConsentToIssues());
 	            cachedDemographicInfo.setConsentToNotes(consent.isConsentToNotes());
 	            cachedDemographicInfo.setConsentToStatistics(consent.isConsentToStatistics());
+	            cachedDemographicInfo.setRestrictConsentToHic(consent.isRestrictConsentToHic());
             }
             
             service.setCachedDemographicInfo(cachedDemographicInfo);

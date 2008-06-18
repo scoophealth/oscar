@@ -13,6 +13,7 @@
 		integratorConsent.setConsentToHealthCardId(WebUtils.isChecked(request, "HealthCardId"));
 		integratorConsent.setConsentToIssues(WebUtils.isChecked(request, "Issues"));
 		integratorConsent.setConsentToNotes(WebUtils.isChecked(request, "Notes"));
+		integratorConsent.setRestrictConsentToHic(WebUtils.isChecked(request, "RestrictToHic"));
 	}
 %>
 

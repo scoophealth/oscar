@@ -32,6 +32,8 @@
 	HealthCardId <input type="checkbox" name="HealthCardId" <%=integratorConsent!=null&&integratorConsent.isConsentToHealthCardId()?"checked=\"checked\"":""%>/><br />
 	Issues <input type="checkbox" name="Issues" <%=integratorConsent!=null&&integratorConsent.isConsentToIssues()?"checked=\"checked\"":""%>/><br />
 	Notes <input type="checkbox" name="Notes" <%=integratorConsent!=null&&integratorConsent.isConsentToNotes()?"checked=\"checked\"":""%>/><br />
+	<br />
+	Restrict Consent To HIC's <input type="checkbox" name="RestrictToHic" <%=integratorConsent!=null&&integratorConsent.isRestrictConsentToHic()?"checked=\"checked\"":""%>/><br />
 	</div>
 	<br /><br />
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />

@@ -25,8 +25,19 @@ public class IntegratorConsent {
 	private boolean consentToHealthCardId = false;
 	private boolean consentToIssues = false;
 	private boolean consentToNotes = false;
+	private boolean restrictConsentToHic=false;
+	
+    public boolean isRestrictConsentToHic()
+    {
+    	return restrictConsentToHic;
+    }
 
-    public int getId() {
+	public void setRestrictConsentToHic(boolean restrictConsentToHic)
+    {
+    	this.restrictConsentToHic = restrictConsentToHic;
+    }
+
+	public int getId() {
         return id;
     }
 

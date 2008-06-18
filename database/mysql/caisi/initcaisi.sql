@@ -2536,7 +2536,7 @@ create table IntegratorConsent
 	consentToBasicPersonalId tinyint(1) NOT NULL,
 	consentToHealthCardId tinyint(1) NOT NULL,
 	consentToIssues tinyint(1) NOT NULL,
-	consentToNotes tinyint(1) NOT NULL
-
+	consentToNotes tinyint(1) NOT NULL,
+	restrictConsentToHic tinyint(1) NOT NULL
 );
 
