@@ -128,12 +128,14 @@ function refresh() {
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top">
+                        <a href="javascript:history.go(-1)" onMouseOver="self.status=document.referrer;return true"><bean:message key="global.btnBack" /></a>
+<!--
             <% if (country.equals("BR")) { %>
                     <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="global.btnBack" /> &nbsp;</a>
             <%}else{%>
-                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
-            <%}%>   
-                
+                   <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
+          <%}%>   
+    -->           
                 
             </td>
             <td class="MainTableRightColumn">
