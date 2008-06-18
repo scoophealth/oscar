@@ -197,7 +197,7 @@
               
                 if( item.getDate() != null ) {                                                 
                     out.println("<span style=\"z-index: 100; "+dateColour+" overflow:hidden;   position:relative; height:1.2em; white-space:nowrap; float:right; text-align:right;\">");
-                    out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick='" + org.apache.commons.lang.StringEscapeUtils.escapeJava(item.getURL()) + "' title='" + item.getLinkTitle() + "'>");
+                    out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + org.apache.commons.lang.StringEscapeUtils.escapeJava(item.getURL()) + "\" title='" + item.getLinkTitle() + "'>");
                     
                     if(item.getValue() != null && !item.getValue().trim().equals("")){
                         out.println(item.getValue());
