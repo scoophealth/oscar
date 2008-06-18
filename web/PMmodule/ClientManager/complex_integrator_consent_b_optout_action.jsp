@@ -13,11 +13,3 @@
 demographicId : <%=request.getParameter("demographicId")%>
 <br />
 consent : <%=request.getParameter("consent")%>
-<br />
-consent.location : <%=request.getParameter("consent.location")%>
-<br />
-consent.refusedToSign : <%=request.getParameter("consent.refusedToSign")%>
-<br />
-gotoOptout : <%=request.getParameter("gotoOptout")%>
-<hr />
-<a href="complex_integrator_consent_b_optout.jsp?demographicId=<%=request.getParameter("demographicId")%>">optout page</a>

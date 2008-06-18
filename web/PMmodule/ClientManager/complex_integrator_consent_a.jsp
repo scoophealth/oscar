@@ -132,14 +132,14 @@
 		Your information will be put together with the information from other people who are homeless 
 		to improve the services offered, to do research, and to compile statistics for advocacy.   </p>
 		
-		<p>Your care at Seaton House will not change by allowing agencies to
+		<p>Your care at <%=currentFacility.getName()%> will not change by allowing agencies to
 		send information and work together through CAISI.</p>
 		
 		<p>You may withdraw permission to send information to other agencies
-		at any time. To withdraw, contact Seaton House staff or any other CAISI
-		partner.Your care at Seaton House will not change if you withdraw permission.  </p>
+		at any time. To withdraw, contact <%=currentFacility.getName()%> staff or any other CAISI
+		partner.Your care at <%=currentFacility.getName()%> will not change if you withdraw permission.  </p>
 		
-		<p>Any questions can be directed to Seaton House staff.&quot;</p>
+		<p>Any questions can be directed to <%=currentFacility.getName()%> staff.&quot;</p>
 		
 		<p>You are allowed to ask for more information about CAISI and/or to talk to your worker or other people 
 		about CAISI.  You are allowed to make decisions based on this information.  </p>
@@ -173,7 +173,7 @@
 		control over their information or any combination of these]</p>
 		<p>2.<i>When are you able to withdraw from CAISI?</i><input type="radio" name="consent.answer2" value="1">Correct <input type="radio" name="consent.answer2" value="0">Incorrect</p>
 		<p>[Correct includes: any time]</p>
-		<p>3.<i>Will your care at Seaton House be affected by your participation
+		<p>3.<i>Will your care at <%=currentFacility.getName()%> be affected by your participation
 		in CAISI? </i> <input type="radio" name="consent.answer3" value="1">
 
 		Correct <input type="radio" name="consent.answer3" value="0">Incorrect</p>
@@ -193,9 +193,9 @@
 	<tr>
 		<td>
 		<p>
-		<input type="radio" name="consent.exclusionString" value="" checked="checked">
-		&nbsp;&nbsp;&nbsp; I, <b></b>,
-		permit <b>Seaton House</b>
+		<input type="radio" name="consent" value="ALL" checked="checked">
+		&nbsp;&nbsp;&nbsp; I, <b><%=currentDemographic.getFormattedName()%></b>,
+		permit <b><%=currentFacility.getName()%></b>
 
 		and any other CAISI partner agencies to record, send and use my
 		personal information for the purposes above.</p>
@@ -204,8 +204,8 @@
 	<tr>
 		<td>
 		<p>
-		<input type="radio" name="consent.exclusionString" value="non-hic">
-		&nbsp;&nbsp;&nbsp; I, <b></b>,
+		<input type="radio" name="consent" value="HIC_ALL">
+		&nbsp;&nbsp;&nbsp; I, <b><%=currentDemographic.getFormattedName()%></b>,
 		permit only health care providers to record, send and use my
 		personal information for the purposes above.</p>
 
@@ -214,9 +214,9 @@
 	<tr>
 		<td>
 		<p>
-		<input type="radio" name="consent.exclusionString" value="all">
-		&nbsp;&nbsp;&nbsp; I, <b></b>,
-		do <b>not</b> permit <b>Seaton House</b>
+		<input type="radio" name="consent" value="NONE">
+		&nbsp;&nbsp;&nbsp; I, <b><%=currentDemographic.getFormattedName()%></b>,
+		do <b>not</b> permit <b><%=currentFacility.getName()%></b>
 
 		or any other CAISI partner agencies to record, send and use my
 		personal information for the purposes above.</p>
@@ -249,7 +249,7 @@
 		<td>
 			<input type="checkbox" name="consent.signatureDeclaration" value="on" onclick="doSignatureDeclaration(this)">
 
-			I, ted_test, ted_test, state that I have aquired the client's signature on a printed copy of this form
+			I, <%=provider.getFormattedName()%>, state that I have aquired the client's signature on a printed copy of this form
 		</td>
 	</tr>
 	

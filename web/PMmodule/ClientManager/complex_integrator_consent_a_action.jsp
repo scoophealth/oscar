@@ -9,3 +9,11 @@
 		<%
 	}
 %>
+<hr />
+demographicId : <%=request.getParameter("demographicId")%>
+<br />
+consent : <%=request.getParameter("consent")%>
+<br />
+consent.location : <%=request.getParameter("consent.location")%>
+<br />
+consent.refusedToSign : <%=request.getParameter("consent.refusedToSign")%>

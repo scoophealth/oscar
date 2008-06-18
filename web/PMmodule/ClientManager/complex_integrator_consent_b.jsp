@@ -57,7 +57,7 @@
 			}
 		}
 	
-		function submitConsent(form,optout) {
+		function submitConsent(form,gotoOptout) {
 			
 			var answer1 = getRadioValue(form.elements['consent.answer1']);
 			var answer2 = getRadioValue(form.elements['consent.answer2']);
@@ -88,9 +88,7 @@
 				return;
 			}
 			
-			if(!optout) {
-				document.consentForm.elements['optout'].value='true';
-			}
+			document.consentForm.elements['gotoOptout'].value=gotoOptout;
 			
 			form.submit();
 		}
@@ -140,15 +138,15 @@
 		improve the services offered, to do research, and to compile
 		statistics for advocacy.</p>
 
-		<p>Your care at <%=currentFacility.getContactName()%> will not change by allowing agencies
+		<p>Your care at <%=currentFacility.getName()%> will not change by allowing agencies
 		to send information and work together through CAISI.</p>
 
 		<p>You may withdraw permission to send information to other
-		agencies at any time. To withdraw, contact <%=currentFacility.getContactName()%> or any other
-		CAISI partner. Your care at <%=currentFacility.getContactName()%> will not change if you
+		agencies at any time. To withdraw, contact <%=currentFacility.getName()%> or any other
+		CAISI partner. Your care at <%=currentFacility.getName()%> will not change if you
 		withdraw permission.</p>
 
-		<p>Any questions can be directed to <%=currentFacility.getContactName()%> staff.</p>
+		<p>Any questions can be directed to <%=currentFacility.getName()%> staff.</p>
 
 		<p>You are allowed to ask for more information about CAISI and/or
 		to talk to your worker or other people about CAISI. You are allowed to
@@ -161,7 +159,8 @@
 		<form name="consentForm" method="post" action="complex_integrator_consent_b_action.jsp">
 			<input type="hidden" name="demographicId" value="<%=currentDemographicId%>">
 			<input type="hidden" name="consent.formName" value="formB">
-			<input type="hidden" name="optout" value="false" />
+			<input type="hidden" name="consent" value="ALL">
+			<input type="hidden" name="gotoOptout" value="false" />
 		</td>
 	</tr>
 	<tr>
@@ -186,7 +185,7 @@
 			type="radio" name="consent.answer2" value="0">Incorrect</p>
 
 		<p>[Correct includes: any time]</p>
-		<p>3.<i>Will your care at Seaton House be affected by your
+		<p>3.<i>Will your care at <%=currentFacility.getName()%> be affected by your
 		participation in CAISI? </i> <input type="radio" name="consent.answer3"
 			value="1"> Correct <input type="radio" name="consent.answer3"
 			value="0">Incorrect</p>

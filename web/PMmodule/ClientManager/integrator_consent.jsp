@@ -22,7 +22,7 @@
 		<li>You may withdraw permission to share information with other agencies at any time.</li>
 	</ul>
 	<br />
-	<h3 style="display:inline">I have read the above statement to the client : </h3><input type="checkbox" id="readToClient" />
+	<h3 style="display:inline">I have read the above statement to the client and have acquired their consent : </h3><input type="checkbox" id="readToClient" />
 	<br /><br />
 	
 	<h3 style="display:inline">Consent to share : </h3>
