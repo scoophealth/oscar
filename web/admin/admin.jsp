@@ -418,7 +418,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
          <li><a href="#" onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarSurveillance/ReportSurveillance.jsp"/>&quot;)"><bean:message key="admin.admin.report.SurveillanceReport"/></a></li>
          <li><a href="#" onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarReport/oscarReportRehabStudy.jsp"/>&quot;)">Rehab Study</a></li>
          <li><a href="#" onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarReport/patientlist.jsp"/>&quot;)">Export Patient List by Appointment Time</a></li>
-         <li><html:link page="/admin/oscarReport/TrackedLinks.jsp">Link Tracking Reports</html:link></li>
+         <li><html:link page="/oscarReport/TrackedLinks.jsp">Link Tracking Reports</html:link></li>
          <oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes" >
          <li><a href="#" onclick="popupPage(600,900, &quot;<html:rewrite page="/admin/oscarLogging.jsp"/>&quot;)">Server Logging</a></li>
          </oscar:oscarPropertiesCheck>
