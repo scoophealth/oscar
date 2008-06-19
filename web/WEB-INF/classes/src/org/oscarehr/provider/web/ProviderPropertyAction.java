@@ -56,7 +56,22 @@ public class ProviderPropertyAction extends DispatchAction {
         
         return view(actionmapping, actionform, request, response);
     }
-    
+
+    public ActionForward remove(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty prop = (UserProperty)frm.get("dateProperty"); 
+         
+         frm.reset(actionmapping,request);
+         this.userPropertyDAO.delete(prop);
+         
+         request.setAttribute("status", "success");
+         
+         return actionmapping.findForward("success");        
+    }    
     
     public ActionForward view(ActionMapping actionmapping,
                                ActionForm actionform,
