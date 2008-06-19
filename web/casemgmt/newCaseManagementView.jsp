@@ -25,8 +25,8 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
-<%@page import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.HashSet, java.util.Iterator, java.text.SimpleDateFormat, java.util.Date, java.text.ParseException"%>
-<%@page import="org.oscarehr.casemgmt.model.*" %>
+<%@page import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.HashSet, java.util.Iterator, java.text.SimpleDateFormat, java.util.Calendar, java.util.Date, java.text.ParseException"%>
+<%@page import="org.oscarehr.common.model.UserProperty, org.oscarehr.casemgmt.model.*" %>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*" %>
 <%@page import="org.oscarehr.PMmodule.model.*" %>
 <%@page import="oscar.util.DateUtils" %>
@@ -481,7 +481,10 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
             </span>
             <div id="encMainDiv" style="width:99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color:#FFFFFF; height:410px; overflow:auto; margin-left:2px;">
                 
-                
+                <%
+               
+                System.out.println("Notes Size " + noteList.size());
+                %>
                 <c:if test="${not empty Notes}">                        
                     <%
                     //java.util.List noteList=(java.util.List)request.getAttribute("Notes");
@@ -495,26 +498,64 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     //else check for last unsigned note and use it if present
                     if( cform.getCaseNote().getId() != null ) {
                     savedId = cform.getCaseNote().getId();                
-                    }                              
+                    }  
+                    
+                    //Check user property for stale date and show appropriately
+                    UserProperty uProp = (UserProperty)request.getAttribute(UserProperty.STALE_NOTEDATE);
+                    
+                    Date dStaleDate = null;
+                    int numToDisplay = 3;
+                    if( uProp != null ) {
+                        String strStaleDate = uProp.getValue();                    
+                        Calendar cal = Calendar.getInstance();
+                        if( strStaleDate.equalsIgnoreCase("A") ) {                            
+                            cal.set(0,1,1);
+                        }
+                        else {
+                            int pastMths = Integer.parseInt(strStaleDate);
+                            cal.add(Calendar.MONTH, pastMths);
+                        }
+                        
+                        dStaleDate = cal.getTime();
+                    }
+                    else {
+                        numToDisplay = 3;
+                    }
+
                     long time1,time2;
 		    String noteStr;
 		    int length;
                     String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "Reminders"};
                     
-                    boolean isCPP, fulltxt;
+                    boolean isCPP, fulltxt = false;
 		    for( idx = 0; idx < noteSize; ++idx ) {
                     
                     CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
                     noteStr = note.getNote();
                     
-                    if( noteSize > 3 && idx < (noteSize - 3) ) { 
-                        length = noteStr.length() > 50 ? 50 : noteStr.length();
-                        noteStr = noteStr.substring(0,length);
-                        fulltxt = false;
+                    if( dStaleDate == null ) {
+                        if( noteSize > numToDisplay && idx < (noteSize - numToDisplay) ) { 
+                            fulltxt = false;
+                        }
+                        else {
+                            fulltxt = true;
+                        }
                     }
                     else {
-                        noteStr = noteStr.replaceAll("\n","<br>");
-                        fulltxt = true;
+                        if( note.getObservation_date().compareTo(dStaleDate) >= 0 ) {
+                            fulltxt = true;
+                        }
+                        else {
+                            fulltxt = false;
+                        }
+                    }
+                    
+                    if( fulltxt ) { 
+                        noteStr = noteStr.replaceAll("\n","<br>");                        
+                    }
+                    else {
+                        length = noteStr.length() > 50 ? 50 : noteStr.length();
+                        noteStr = noteStr.substring(0,length);                                                
                     }
                     
                     isCPP = false; 
