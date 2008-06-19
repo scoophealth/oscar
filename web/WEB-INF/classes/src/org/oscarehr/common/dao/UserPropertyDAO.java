@@ -40,6 +40,11 @@ public class UserPropertyDAO extends HibernateDaoSupport {
     public UserPropertyDAO() {
     }
     
+    
+    public void delete(UserProperty prop) {
+        this.getHibernateTemplate().delete(prop);
+    }
+    
     public void saveProp(UserProperty prop) {
         this.getHibernateTemplate().saveOrUpdate(prop);
     }
