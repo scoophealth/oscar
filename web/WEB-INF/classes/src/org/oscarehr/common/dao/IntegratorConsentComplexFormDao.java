@@ -19,26 +19,14 @@
 
 package org.oscarehr.common.dao;
 
-import javax.persistence.Query;
-
-import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.IntegratorConsentComplexForm;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class IntegratorConsentDao extends AbstractDao {
+public class IntegratorConsentComplexFormDao extends AbstractDao {
 
-    public IntegratorConsent find(int id) {
-        return(entityManager.find(IntegratorConsent.class, id));
-    }
-
-    public IntegratorConsent findByFacilityIdAndDemographicId(int facilityId, int demographicId) {
-        Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2");
-        query.setParameter(1, facilityId);
-        query.setParameter(2, demographicId);
-        
-        IntegratorConsent result = (IntegratorConsent)getSingleResultOrNull(query);
-
-        return(result);
+    public IntegratorConsentComplexForm find(int id) {
+        return(entityManager.find(IntegratorConsentComplexForm.class, id));
     }
     
 }
