@@ -304,6 +304,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
                     log.debug("Get stale note date");
                     // filter the notes by the checked issues and date if set
                     UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
+                    request.setAttribute(UserProperty.STALE_NOTEDATE, userProp);
                     current = System.currentTimeMillis();
                     log.debug("Get stale note date " + String.valueOf(current-start));
                     start = current;
@@ -313,14 +314,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
                         // need to apply a filter
                         log.debug("Get Notes with checked issues");
                         request.setAttribute("checked_issues", checked_issues);
-                        notes = caseManagementMgr.getNotes(demoNo, checked_issues, userProp);
+                        notes = caseManagementMgr.getNotes(demoNo, checked_issues);
                         notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
                         current = System.currentTimeMillis();
                         log.debug("Get Notes with checked issues " + String.valueOf(current-start));
                         start = current;
                     } else {
                         log.debug("Get Notes");
-                        notes = caseManagementMgr.getNotes(demoNo, userProp);
+                        notes = caseManagementMgr.getNotes(demoNo);
                         notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
                         current = System.currentTimeMillis();
                         log.debug("Get Notes " + String.valueOf(current-start));
@@ -523,8 +524,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         String identUrl = request.getQueryString();
         request.setAttribute("identUrl", identUrl);
         
-        // filter the notes by the checked issues and date if set
-        UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
+        // filter the notes by the checked issues
+        //UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
         
         String[] codes = request.getParameterValues("issue_code");
         List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, codes);
@@ -544,7 +545,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         request.setAttribute("issueIds", StringUtils.join(issueIds,","));
         
         // need to apply issue filter
-        notes = caseManagementMgr.getNotes(demoNo, issueIds, userProp);
+        notes = caseManagementMgr.getNotes(demoNo, issueIds);
         notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
         
         log.debug("FETCHED " + notes.size() + " NOTES filtered by " + StringUtils.join(issueIds,","));
