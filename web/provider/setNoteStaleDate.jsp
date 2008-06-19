@@ -52,20 +52,8 @@ if(session.getValue("user") == null)
         
         <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
         <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script> 
-
-          <!-- main calendar program -->
-        <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar.js"></script>
-
-          <!-- language for the calendar -->
-        <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-
-          <!-- the following script defines the Calendar.setup helper function, which makes
-               adding a calendar a matter of 1 or 2 lines of code. -->
-        <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
+        
         <script type="text/javascript">            
-            function setup() {
-                Calendar.setup({ inputField : "staleDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "staleDate_cal", singleClick : true, step : 1 });
-            }
             
             function validate() {
                 var date = document.getElementById("staleDate");
@@ -80,7 +68,7 @@ if(session.getValue("user") == null)
 
     </head>
         
-    <body class="BodyStyle" vlink="#0000FF" <%=bFirstLoad?"onload='setup()'":""%> >
+    <body class="BodyStyle" vlink="#0000FF">
 
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -101,14 +89,29 @@ if(session.getValue("user") == null)
                {
                 
             %>
-            <html:form action = "/setProviderStaleDate.do" >
-               <input type="hidden" name="method" value="save"> 
+            <html:form styleId="frmProperty" action = "/setProviderStaleDate.do" >
+               <input type="hidden" id="method" name="method" value="save"> 
                <html:hidden property="dateProperty.name"/>
                <html:hidden property="dateProperty.provider_no"/>
                <html:hidden property="dateProperty.id"/>
                <bean:message key="provider.setNoteStaleDate.msgEdit"/>
-               <img src="<c:out value="${ctx}/images/cal.gif" />" id="staleDate_cal" alt="calendar"><html:text property="dateProperty.value" styleId="staleDate" ondblclick="this.value='';" readonly="true" size="10" />
-               <input type="submit" onclick="return validate();" value="<bean:message key="provider.setNoteStaleDate.btnSubmit"/>" />                           
+               <html:select property="dateProperty.value" styleId="staleDate">
+                   <html:option value="A">All</html:option>
+                   <html:option value="-1">1</html:option>
+                   <html:option value="-2">2</html:option>
+                   <html:option value="-3">3</html:option>
+                   <html:option value="-4">4</html:option>
+                   <html:option value="-5">5</html:option>
+                   <html:option value="-6">6</html:option>
+                   <html:option value="-7">7</html:option>
+                   <html:option value="-8">8</html:option>
+                   <html:option value="-9">9</html:option>
+                   <html:option value="-10">10</html:option>
+                   <html:option value="-11">11</html:option>
+                   <html:option value="-12">12</html:option>
+               </html:select>
+               <input type="submit" value="<bean:message key="provider.setNoteStaleDate.btnSubmit"/>" />                           
+               <input type="submit" onclick="$('method').value='remove';" value="<bean:message key="provider.setNoteStaleDate.btnReset"/>" />                           
             </html:form> 
             <%
                }
