@@ -1457,7 +1457,8 @@ function issueIsAssigned() {
     return false;
 }
 
-function filter() {
+
+function filter(reset) {
     document.forms["caseManagementEntryForm"].method.value = "edit";
     document.forms["caseManagementEntryForm"].note_edit.value = "new";
     document.forms["caseManagementEntryForm"].noteId.value = "0";
@@ -1465,7 +1466,8 @@ function filter() {
     document.forms["caseManagementEntryForm"].chain.value = "null";
     
     document.forms["caseManagementViewForm"].method.value = "view";
-     
+    document.forms["caseManagementViewForm"].resetFilter.value = reset;
+
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
     var caseMgtViewfrm = document.forms["caseManagementViewForm"];
     var url = ctx + "/CaseManagementEntry.do";
@@ -1487,7 +1489,7 @@ function filter() {
 }
 
 //make sure observation date is in the past
-var strToday;
+var strToday;  //initialized in newCaseManagementView.jsp
 function validDate() {
     var strDate = $("observationDate").value;
     var day = strDate.substring(0,strDate.indexOf("-"));

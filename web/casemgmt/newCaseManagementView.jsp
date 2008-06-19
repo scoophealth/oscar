@@ -219,6 +219,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
             <input type="hidden" name="method" value="view"/>
             <input type="hidden" id="check_issue" name="check_issue">
             <input type="hidden" id="serverDate" value="<%=strToday%>">
+            <input type="hidden" id="resetFilter" name="resetFilter" value="false">
             <!--Row One Headers -->
             
                 <%-- <div style="float:left; width:34%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >&nbsp;<bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
@@ -405,9 +406,12 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     </ul>
                 </div>
                 
-                <div style="text-align:right; cursor:pointer; text-decoration:underline; margin-right:10px;" onclick="return filter();">
+                <div style="text-align:right; cursor:pointer; text-decoration:underline; margin-right:10px;" onclick="return filter(false);">
                     Show View
                 </div>                
+                <div style="text-align:right; cursor:pointer; text-decoration:underline; margin-right:10px;" onclick="return filter(true);">
+                    Reset Filter
+                </div>                                
             </div>            
             <div style="float:left; clear:both; margin-top:5px; margin-bottom:5px; width:100%; text-align:center;">                                
                 <img src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>">                
