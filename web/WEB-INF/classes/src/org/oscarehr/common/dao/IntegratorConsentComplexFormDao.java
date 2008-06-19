@@ -25,7 +25,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class IntegratorConsentComplexFormDao extends AbstractDao {
 
-    public IntegratorConsentComplexForm find(int id) {
+    public IntegratorConsentComplexForm findByIntegratorConsentId(int id) {
         return(entityManager.find(IntegratorConsentComplexForm.class, id));
     }
     
