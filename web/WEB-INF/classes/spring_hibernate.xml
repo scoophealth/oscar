@@ -32,6 +32,8 @@
                 <value>classpath:/org/oscarehr/common/model</value>
                 <value>classpath:/com/quatro/model</value>
                 <value>classpath:/oscar/appt/status/model</value>
+                <value>classpath:/org/oscarehr/consultationRequest/model</value>
+                
             </list>
         </property>
         <property name="hibernateProperties">
