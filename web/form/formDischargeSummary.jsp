@@ -321,10 +321,10 @@ var maxYear=9900;
     <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Sherbourne Health Centre Infirmary</font></th>
  </tr>
  <tr bgcolor="#486ebd">
- 	<th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">(ph) 416-324-4163</font></th>
+ 	<th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">(ph) 416-324-4108</font></th>
  </tr>
  <tr bgcolor="#486ebd">
- 	<th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">(fax)416-324-4181</font></th>
+ 	<th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">(fax) 416-324-4258</font></th>
  </tr>
 <tr>
 <td align="center" bgcolor="#CCCCCC" ><b><font face="Verdana, Arial, Helvetica, sans-serif">MULTI-DISCIPLINARY TEAM DISCHARGE SUMMARY
@@ -332,7 +332,7 @@ var maxYear=9900;
 </tr>
 </table>
 
-
+<br>
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
     <tr width="100%">
      <td width="10%" align="left">Client Name:</td>
@@ -354,7 +354,7 @@ var maxYear=9900;
      <td width="10%">
       <input type="text" name="admitDate" readonly="true" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("admitDate", "") %>" />
 	 </td>
-     <td width="10%" align="right">Discharge Date(yyyy/mm/dd): </td>
+     <td width="10%" align="right">Discharge Date<small>(yyyy/mm/dd):<small> </td>
      <td width="5%">
       <input type="text" name="dischargeDate" style="width:100%" size="10" maxlength="12" value="<%= props.getProperty("dischargeDate", "") %>"/>
 	 </td>
@@ -374,7 +374,7 @@ var maxYear=9900;
     </tr>
      --> 
 </table>
-
+<br>
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
 <tr>
 <td colspan="3">Admitting Diagnosis/Primary Diagnosis:
@@ -387,7 +387,7 @@ var maxYear=9900;
 </td>
 </tr>
 <tr>
-<td colspan="3">Brief Summary of stay (include special procedures/treatment/complications):
+<td colspan="3">Brief Summary of stay (special procedures/treatment/complications):
 		<textarea  name="briefSummary" style="width:100%" cols="20" rows="3" @oscar.formDB dbType="text"/><%= props.getProperty("briefSummary", "") %></textarea>
 </td>
 </tr>
@@ -397,6 +397,7 @@ var maxYear=9900;
 </td>
 </tr>			
 </table>
+<br>
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
 <tr>
 <!--  NOT USED followUpAppointment CHECKBOX any more
@@ -433,79 +434,69 @@ var maxYear=9900;
 	<td colspan="4">Follow-up Appointment(s):</td>
 </tr> 
 <tr>
-	<td align="right">Agency/Health Care Provider </td>
-     <td>
-      <input type="text" name="doctor1" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("doctor1", "") %>"/>
+	<td align="left">Agency/Health Care Provider </td>
+	 <td align="left">Phone No </td>
+	 <td align="left">Date/Time </td>
+	 <td align="left">Location </td>
+</tr>
+<tr>
+	<td align="left">
+	<input type="text" name="doctor1" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("doctor1", "") %>"/>
 	 </td>
-	 <td align="right">Phone No: </td>
-     <td>
+	 <td align="left">
       <input type="text" name="phoneNumber1" style="width:100%" size="25" maxlength="25" value="<%= props.getProperty("phoneNumber1", "") %>"/>
 	 </td>
-	 <td align="right">Date/Time: </td>
-     <td>
+	 <td align="left"> 
       <input type="text" name="date1" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("date1", "") %>"/>
 	 </td>
-	 <td align="right">Location: </td>
-     <td>
+	 <td align="left"> 
       <input type="text" name="location1" style="width:100%" size="45" maxlength="45" value="<%= props.getProperty("location1", "") %>"/>
 	 </td>
 </tr>
 <tr>
-	<td align="right">Agency/Health Care Provider</td>
-     <td>
+	<td align="left">
       <input type="text" name="doctor2" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("doctor2", "") %>"/>
 	 </td>
-	 <td align="right">Phone No: </td>
-     <td>
+	 <td align="left">
       <input type="text" name="phoneNumber2" style="width:100%" size="25" maxlength="25" value="<%= props.getProperty("phoneNumber2", "") %>"/>
 	 </td>
-	 <td align="right">Date/Time: </td>
-     <td>
+	 <td align="left">
       <input type="text" name="date2" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("date2", "") %>"/>
 	 </td>
-	 <td align="right">Location: </td>
-     <td>
+	 <td align="left">
       <input type="text" name="location2" style="width:100%" size="45" maxlength="45" value="<%= props.getProperty("location2", "") %>"/>
 	 </td>
 </tr>
 <tr>
-	<td align="right">Agency/Health Care Provider </td>
-     <td>
+	<td align="left"> 
       <input type="text" name="doctor3" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("doctor3", "") %>"/>
 	 </td>
-	 <td align="right">Phone No: </td>
-     <td>
+	 <td align="left">
       <input type="text" name="phoneNumber3" style="width:100%" size="25" maxlength="25" value="<%= props.getProperty("phoneNumber3", "") %>"/>
 	 </td>
-	 <td align="right">Date/Time: </td>
-     <td>
+	 <td align="left"> 
       <input type="text" name="date3" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("date3", "") %>"/>
 	 </td>
-	 <td align="right">Location: </td>
-     <td>
+	 <td align="left">  
       <input type="text" name="location3" style="width:100%" size="35" maxlength="35" value="<%= props.getProperty("location3", "") %>"/>
 	 </td>
 </tr>
 <tr>
-	<td align="right">Agency/Health Care Provider </td>
-     <td>
+	<td align="left">     
       <input type="text" name="doctor4" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("doctor4", "") %>"/>
-	 </td>
-	 <td align="right">Phone No: </td>
-     <td>
+	 </td> 
+	 <td align="left">      
       <input type="text" name="phoneNumber4" style="width:100%" size="25" maxlength="25" value="<%= props.getProperty("phoneNumber4", "") %>"/>
 	 </td>
-	 <td align="right">Date/Time: </td>
-     <td>
+	 <td align="left">      
       <input type="text" name="date4" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("date4", "") %>"/>
 	 </td>
-	 <td align="right">Location: </td>
-     <td>
+	 <td align="left">      
       <input type="text" name="location4" style="width:100%" size="35" maxlength="35" value="<%= props.getProperty("location4", "") %>"/>
 	 </td>
 </tr>
 </table>
-
+<br>
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
 <tr>
 	<td width="50%">
@@ -536,31 +527,34 @@ var maxYear=9900;
 			</td>
 			<td>No</td>			
 			<td></td>
-			<td></td>
+			
 		</tr>
-		<!-- 
+		
 		<tr>
-			<td>Covered by Ontario Drug Benefit:</td>
+			<td>Changes in Medications (include explanation):</td>
 			<td align="right">
-			<%if(props.getProperty("coveredByODB","").equals("1")){%>
-			<input type="radio" name="coveredByODB" value="1" checked />
+			<%if(props.getProperty("medicationProvided","").equals("1")){%>
+			<input type="radio" name="medicationProvided" value="1" checked />
 			<%}else { %>
-			<input type="radio" name="coveredByODB" value="1" />
+			<input type="radio" name="medicationProvided" value="1" />
 			<%} %>
 			</td>
 			<td>Yes</td>
 			<td align="right">
-			<%if(props.getProperty("coveredByODB","").equals("0")){%>
-			<input type="radio" name="coveredByODB" value="0" checked />
+			<%if(props.getProperty("medicationProvided","").equals("0")){%>
+			<input type="radio" name="medicationProvided" value="0" checked />
 			<%}else { %>
-			<input type="radio" name="coveredByODB" value="0"/>
+			<input type="radio" name="medicationProvided" value="0"/>
 			<%} %>
 			</td>
 			<td>No</td>	
 			<td></td>
-			<td></td>			
+			
 		</tr>
-		
+		<tr>
+			<td colspan="6"><input type="textarea" name="changeMedications" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("changeMedications", "") %>"/><td>							
+		</tr>
+		<!--
 		<tr>
 			<td>ODB Form Required:</td>
 			<td align="right">
@@ -626,24 +620,21 @@ var maxYear=9900;
 			<td colspan="6"><input type="text" name="followUpRequiredDetail" style="width:100%" size="60" maxlength="60" value="<%= props.getProperty("followUpRequiredDetail", "") %>"/><td>						
 		</tr>
 	-->
-		<tr>
-			<td>Changes in Medications (include explanation):</td>
-			<td colspan="6"><input type="textarea" name="changeMedications" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("changeMedications", "") %>"/><td>					
-		</tr>
+		
 		</table>
 	</td>
 </tr>
 </table>
-
+<br>
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
 <tr>
 	<td colspan="3"><b>Referrals:</b>
 	</td>
 </tr>
 <tr>
-	<td>Program:</td>
-	<td>Referral Made:</td>
-	<td>Outcome:</td>
+	<td>Program</td>
+	<td>Referral Made</td>
+	<td>Outcome</td>
 <tr>
 <tr>	
 	<td><input type="text" name="referralProgram1" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralProgram1", "") %>" /></td>
@@ -671,8 +662,14 @@ var maxYear=9900;
 	<td><input type="text" name="referralOutcome5" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralOutcome5","") %>" /></td>
 </tr>
 </table>
+<br>
+<table width="100%" border="1"  cellspacing="0" cellpadding="0" >
+<tr>
+	<td colspan="6">Notes:
+		<textarea  name="notes" style="width:100%" cols="20" rows="3" @oscar.formDB dbType="text"/><%= props.getProperty("notes", "") %></textarea>
+	</td>
+</tr>
 
-<table>
 <tr>	
      <td align="left">Infirmary Health Care Provider:</td> 
      <td>
@@ -688,14 +685,10 @@ var maxYear=9900;
     </td>
 </tr>
 
-<tr>
-<td colspan="6">Notes:
-		<textarea  name="notes" style="width:100%" cols="20" rows="3" @oscar.formDB dbType="text"/><%= props.getProperty("notes", "") %></textarea>
-</td>
-</tr>
+
 </table>
 
-
+<br>
 <table>
     <tr>
         <td align="left">

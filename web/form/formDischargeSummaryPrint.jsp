@@ -347,10 +347,10 @@ var maxYear=9900;
       <td align="center" ><b>Sherbourne Health Centre</b></td>
  </tr>
  <tr>
- 	<td align="center" ><b>(ph) 416-324-4163</b></td>
+ 	<td align="center" ><b>(ph) 416-324-4108</b></td>
  </tr>
  <tr>
- 	<td align="center" ><b>(fax)416-324-4181</b></td>
+ 	<td align="center" ><b>(fax) 416-324-4258</b></td>
  </tr>
  <tr><td>&nbsp;</td></tr>
 <tr>
@@ -362,20 +362,20 @@ var maxYear=9900;
 
 <table width="100%" border="0"  cellspacing="0" cellpadding="0" >
     <tr width="100%">
-     <th align="right">Client Name:</th>
+     <th align="left">Client Name:</th>
      <td><%= props.getProperty("clientName", "") %></td>
-     <th align="right">DOB<small>(yyyy/mm/dd)</small>: </th>
+     <th align="left">DOB<small>(yyyy/mm/dd)</small>: </th>
      <td><%= props.getProperty("birthDate", "") %></td>
-	 <th align="right">OHIP#: </th>
+	 <th align="left">OHIP#: </th>
      <td><%= props.getProperty("ohip", "") %></td>
     </tr>    
 
     <tr width="100%">
-     <th align="right">Admit Date:</th>
+     <th align="left">Admit Date:</th>
      <td><%= props.getProperty("admitDate", "") %></td>
-     <th align="right">Discharge Date(yyyy/mm/dd): </th>
+     <th align="left">Discharge Date<small>(yyyy/mm/dd):</small> </th>
      <td><%= props.getProperty("dischargeDate", "") %></td>
-	 <th align="right">Allergies: </th>
+	 <th align="left">Allergies: </th>
 	 <td><%= props.getProperty("allergies", "") %></td>
 	 
    	<tr><td>&nbsp;</td></tr>  
@@ -388,10 +388,11 @@ var maxYear=9900;
 <tr><th align="left">Problem List:</th></tr>
 <tr><td><%= props.getProperty("currentIssues", "") %></td></tr>
 <tr><td>&nbsp;</td></tr>
-<tr><th align="left">Brief Summary of stay (include special procedures/treatment/complications):</th></tr>
+<tr><th align="left">Brief Summary of stay (special procedures/treatment/complications):</th></tr>
 <tr><td><%= props.getProperty("briefSummary", "") %></td></tr>
 <tr><td>&nbsp;</td></tr>
 <tr><th align="left">Discharge Plan of Care/Recommendations/Outstanding Issues:</th></tr>
+<tr><td><%= props.getProperty("dischargePlan", "") %></td></tr>
 <tr><td>&nbsp;</td></tr>		
 </table>
 
@@ -403,9 +404,9 @@ var maxYear=9900;
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" > 
 <tr>
 	<th>Agency/Health Care Provider </th>
-	<th>Phone No: </th>
-	<th>Date/Time: </th>
-	<th>Location: </th>
+	<th>Phone No </th>
+	<th>Date/Time </th>
+	<th>Location </th>
 </tr>
 <tr>
 	<td><%= props.getProperty("doctor1", "") %>&nbsp;</td>	
@@ -464,12 +465,28 @@ var maxYear=9900;
 		
 		<tr>
 			<th align="left">Changes in Medications (include explanation):</th>
+			<td align="left">
+				<%if(props.getProperty("medicationProvided","").equals("1")){%>
+				<input type="radio" name="medicationProvided" value="1" checked />
+				<%}else { %>
+				<input type="radio" name="medicationProvided" value="1" />
+				<%} %>Yes
+			</td>
+			<td align="left">
+				<%if(props.getProperty("medicationProvided","").equals("0")){%>
+				<input type="radio" name="medicationProvided" value="0" checked />
+				<%}else { %>
+				<input type="radio" name="medicationProvided" value="0"/>
+				<%} %>No
+			</td>
+		</tr>
+		<tr>	
 			<td colspan="3"><%= props.getProperty("changeMedications", "") %><td>					
 		</tr>
 		</table>
 	</td>
 </tr>
-</table>
+</table> 1800 968 3503 ext 1562
 <br>
 <table>
 <tr><th align="left">Referrals:</th></tr>
@@ -477,10 +494,10 @@ var maxYear=9900;
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
 
 <tr>
-	<th>Program:</th>
-	<th>Referral Made:</th>
-	<th>Outcome:</th>
-<tr>
+	<th>Program</th>
+	<th>Referral Made</th>
+	<th>Outcome</th>
+</tr>
 <tr>	
 	<td><%= props.getProperty("referralProgram1", "") %>&nbsp;</td>
 	<td><%= props.getProperty("referralMade1","") %>&nbsp;</td>
@@ -507,6 +524,14 @@ var maxYear=9900;
 	<td><%= props.getProperty("referralOutcome5","") %>&nbsp;</td>
 </tr>
 </table>
+
+<br>
+
+<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
+<tr>
+	<th align="left">Notes:</th>
+</tr>
+</table>
 <br>
 <table>
 <tr>
@@ -523,14 +548,6 @@ var maxYear=9900;
 </tr>
 </table>
 <br>
-<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
-<tr>
-	<th align="left">Notes:</th>
-</tr>
-<tr>
-	<td><%=props.getProperty("notes","") %>&nbsp;</td>
-</tr>
-</table>
 
 </body>
 </html:html>
