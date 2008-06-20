@@ -2091,7 +2091,7 @@ CREATE TABLE `formDischargeSummary` (
   `location4` varchar(100) default NULL,
   `prescriptionSummary` text default NULL,
   `prescriptionProvided` char(1) default NULL,  
-  `coveredByODB` char(1) default NULL,  
+  `medicationProvided` char(1) default NULL,  
   `ODBFormReqired` char(1) default NULL,
   `changeMedications` varchar(255) default NULL,
   `referralProgram1` varchar(255) default NULL,
