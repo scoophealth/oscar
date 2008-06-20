@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS IntegratorConsentComplexForm;
 create table IntegratorConsentComplexForm
 (
 	integratorConsentID int not null, foreign key (integratorConsentID) references IntegratorConsent(id) on delete cascade,
