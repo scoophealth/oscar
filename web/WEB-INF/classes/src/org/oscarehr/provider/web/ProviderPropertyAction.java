@@ -190,6 +190,142 @@ public class ProviderPropertyAction extends DispatchAction {
     /////
     
     
+    public ActionForward viewConsultationRequestCuffOffDate(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+                               
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
+         
+         if (prop == null){
+             prop = new UserProperty();
+         }
+         
+         request.setAttribute("dateProperty",prop);
+         
+         request.setAttribute("providertitle","provider.setConsultationCutOffDate.title"); //=Set myDrugref ID
+         request.setAttribute("providermsgPrefs","provider.setConsultationCutOffDate.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setConsultationCutOffDate.msgProvider"); //=myDrugref ID
+         request.setAttribute("providermsgEdit","provider.setConsultationCutOffDate.msgEdit"); //=Enter your desired login for myDrugref
+         request.setAttribute("providerbtnSubmit","provider.setConsultationCutOffDate.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setConsultationCutOffDate.msgSuccess"); //=myDrugref Id saved
+         request.setAttribute("method","saveConsultationRequestCuffOffDate");
+         
+         frm.set("dateProperty", prop);
+         return actionmapping.findForward("gen");
+     }
+
+    
+    public ActionForward saveConsultationRequestCuffOffDate(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+         String provider = (String) request.getSession().getAttribute("user");
+         //System.out.println("provider # "+provider);
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");         
+         String drugrefId = "";
+
+         if (UdrugrefId != null){
+             drugrefId = UdrugrefId.getValue();
+         }   
+         
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
+         
+         if (prop ==null){
+             prop = new UserProperty();
+             prop.setName(UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
+             prop.setProvider_no(provider);
+         }
+         prop.setValue(drugrefId);
+         
+         this.userPropertyDAO.saveProp(prop);
+         
+         request.setAttribute("status", "success");
+         request.setAttribute("dateProperty",prop);
+         request.setAttribute("providertitle","provider.setConsultationCutOffDate.title"); //=Set myDrugref ID
+         request.setAttribute("providermsgPrefs","provider.setConsultationCutOffDate.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setConsultationCutOffDate.msgProvider"); //=myDrugref ID
+         request.setAttribute("providermsgEdit","provider.setConsultationCutOffDate.msgEdit"); //=Enter your desired login for myDrugref
+         request.setAttribute("providerbtnSubmit","provider.setConsultationCutOffDate.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setConsultationCutOffDate.msgSuccess"); //=myDrugref Id saved
+         request.setAttribute("method","saveConsultationRequestCuffOffDate");
+         return actionmapping.findForward("gen");
+     }
+    
+    
+    
+    
+    //// CONSULT TEAM 
+    
+    public ActionForward viewConsultationRequestTeamWarning(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+                               
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_TEAM_WARNING);
+         
+         if (prop == null){
+             prop = new UserProperty();
+         }
+         
+         request.setAttribute("dateProperty",prop);
+         
+         request.setAttribute("providertitle","provider.setConsultationTeamWarning.title"); //=Set myDrugref ID
+         request.setAttribute("providermsgPrefs","provider.setConsultationTeamWarning.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setConsultationTeamWarning.msgProvider"); //=myDrugref ID
+         request.setAttribute("providermsgEdit","provider.setConsultationTeamWarning.msgEdit"); //=Enter your desired login for myDrugref
+         request.setAttribute("providerbtnSubmit","provider.setConsultationTeamWarning.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setConsultationTeamWarning.msgSuccess"); //=myDrugref Id saved
+         request.setAttribute("method","saveConsultationRequestTeamWarning");
+         
+         frm.set("dateProperty", prop);
+         return actionmapping.findForward("gen");
+     }
+
+    
+    public ActionForward saveConsultationRequestTeamWarning(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+         String provider = (String) request.getSession().getAttribute("user");
+         //System.out.println("provider # "+provider);
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");         
+         String drugrefId = "";
+
+         if (UdrugrefId != null){
+             drugrefId = UdrugrefId.getValue();
+         }   
+         
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_TEAM_WARNING);
+         
+         if (prop ==null){
+             prop = new UserProperty();
+             prop.setName(UserProperty.CONSULTATION_TEAM_WARNING);
+             prop.setProvider_no(provider);
+         }
+         prop.setValue(drugrefId);
+         
+         this.userPropertyDAO.saveProp(prop);
+         
+         request.setAttribute("status", "success");
+         request.setAttribute("dateProperty",prop);
+         request.setAttribute("providertitle","provider.setConsultationTeamWarning.title"); //=Set myDrugref ID
+         request.setAttribute("providermsgPrefs","provider.setConsultationTeamWarning.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setConsultationTeamWarning.msgProvider"); //=myDrugref ID
+         request.setAttribute("providermsgEdit","provider.setConsultationTeamWarning.msgEdit"); //=Enter your desired login for myDrugref
+         request.setAttribute("providerbtnSubmit","provider.setConsultationTeamWarning.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setConsultationTeamWarning.msgSuccess"); //=myDrugref Id saved
+         request.setAttribute("method","saveConsultationRequestTeamWarning");
+         return actionmapping.findForward("gen");
+     }
+    
+    
     
     
     /**
