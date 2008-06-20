@@ -30,6 +30,17 @@
 </tag>
 
 <tag>
+  <name>agedConsult</name>
+  <tagclass>oscar.oscarEncounter.oscarConsultationRequest.tld.ConsultTag</tagclass>
+  <bodycontent>jsp</bodycontent>
+  <attribute>
+    <name>providerNo</name>
+    <required>true</required>
+    <rtexprvalue>true</rtexprvalue>
+  </attribute>
+</tag>
+
+<tag>
   <name>newUnclaimedLab</name>
   <tagclass>oscar.oscarLab.tld.UnclaimedLabTag</tagclass>
   <bodycontent>jsp</bodycontent>  
