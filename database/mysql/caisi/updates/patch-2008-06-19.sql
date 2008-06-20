@@ -6,3 +6,6 @@ create table IntegratorConsentComplexForm
 	printedFormLocation varchar(255),
 	refusedToSign tinyint(1) not null
 );
+
+
+alter table formdischargesummary change coveredByODB medicationProvided char(1);
