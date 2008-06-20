@@ -372,6 +372,7 @@ function refreshAllTabAlerts() {
     refreshTabAlerts("oscar_new_lab");
     refreshTabAlerts("oscar_new_msg");
     refreshTabAlerts("oscar_new_tickler");
+    refreshTabAlerts("oscar_aged_consults");
     refreshTabAlerts("oscar_scratch");
 }
 
@@ -598,7 +599,8 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
          </caisi:isModuleLoad>
      <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">     
         <li>
-         <a HREF="#" ONCLICK ="popupOscarRx(625,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>"><bean:message key="global.con"/></a>
+         <a HREF="#" ONCLICK ="popupOscarRx(625,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>">
+         <span id="oscar_aged_consults"><bean:message key="global.con"/></span></a>
         </li>
      </caisi:isModuleLoad>
      
