@@ -35,6 +35,10 @@ public class UserProperty implements Serializable {
     
     public final static String STALE_NOTEDATE = "cme_note_date";
     public final static String MYDRUGREF_ID = "mydrugref_id";
+    public final static String CONSULTATION_TIME_PERIOD_WARNING = "consultation_time_period_warning";
+    public final static String CONSULTATION_TEAM_WARNING = "consultation_team_warning";
+    
+    
    
     private long id;
     private String name;
