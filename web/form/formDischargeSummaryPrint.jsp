@@ -486,7 +486,7 @@ var maxYear=9900;
 		</table>
 	</td>
 </tr>
-</table> 1800 968 3503 ext 1562
+</table> 
 <br>
 <table>
 <tr><th align="left">Referrals:</th></tr>
