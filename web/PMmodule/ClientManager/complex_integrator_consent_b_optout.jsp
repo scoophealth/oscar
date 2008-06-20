@@ -43,10 +43,6 @@
 %>
 
 
-
-
-
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
 <html>
@@ -130,7 +126,7 @@
 	</tr>
 	<tr>
 		<td>
-			<input type="checkbox" id="chk_all" onclick="clickOptOut(this)"/>I, <b><%=currentDemographic.getFormattedName()%></b>, do not permit 
+			<input type="checkbox" name="consent" value="NONE"/>I, <b><%=currentDemographic.getFormattedName()%></b>, do not permit 
 			<b><%=currentFacility.getName()%></b> and any other CAISI partner agencies to record, 
 			send and use my personal information for the purposes above.
 		</td>
@@ -138,7 +134,7 @@
 
 	<tr>
 		<td>
-			<input type="checkbox" id="chk_hic" onclick="clickHicOptOut(this);"/>I, <b><%=currentDemographic.getFormattedName()%></b>, do not permit 
+			<input type="checkbox" name="consent" value="HIC_ALL"/>I, <b><%=currentDemographic.getFormattedName()%></b>, do not permit 
 			any non-health providing programs to record, send and use my personal information for the purposes above.
 		</td>
 	</tr>	
@@ -171,6 +167,7 @@
 	<td>
 	<br>
 
+	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 	<input type="button" value="Save the form and Exit" onclick="submitConsent(document.consentForm)" />
 	<input type="button" value="Cancel"	onclick="window.close()" />
 	<input type="button" value="Print to Sign" onClick="window.print()" />
