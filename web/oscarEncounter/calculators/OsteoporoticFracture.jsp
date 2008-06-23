@@ -237,11 +237,11 @@ osteFactorFemale[8][5]  = 33.1; // < -2
 				
 				document.second.prediction.value=
 					                  "*****************************************\n"
-									 +"*<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgAverage"/>      *\n"
-									 +"*<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOsteoporoticFracture"/>                  *\n"
+									 +"*<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgAverage"/>      \n"
+									 +"*<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOsteoporoticFracture"/>                  \n"
 									 +"*****************************************\n"	                                
-									 +"* <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msg10YearProb"/>:         "+retval+" %  *\n"
-									 +"* <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOverall"/>: "+total+" %  \t\t\t*\n"
+									 +"* <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msg10YearProb"/>:         "+retval+" %  \n"
+									 +"* <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOverall"/>: "+total+" %  \n"
 									 +"*****************************************\n";
 				
 		
@@ -289,10 +289,15 @@ function write2Parent(){
     if( window.opener != null )
         pastewin = window.opener;
 
-    pastewin.document.encForm.enTextarea.value = pastewin.document.encForm.enTextarea.value + "\n\n" + text;
-    pastewin.setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.scrollHeight", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
-    pastewin.document.encForm.enTextarea.focus();
-        
+    if( pastewin.document.forms["caseManagementEntryForm"] == undefined ) {
+        pastewin.document.encForm.enTextarea.value = pastewin.document.encForm.enTextarea.value + "\n\n" + text;
+        pastewin.setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.scrollHeight", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+        pastewin.document.encForm.enTextarea.focus();
+    }
+    else {
+        pastewin.pasteToEncounterNote(text);
+    }
+    
     window.close();
  }
 

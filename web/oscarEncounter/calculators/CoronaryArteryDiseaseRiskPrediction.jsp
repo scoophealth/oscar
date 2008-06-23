@@ -310,28 +310,28 @@ function calculate(){
     if (document.calCorArDi.sex[0].checked){
         if (Total > 22){
             riskLvl = "HIGH";
-            lipidLvl = "LDL-C Level(mmol/L) - < 2.0           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n";
+            lipidLvl = "LDL-C Level(mmol/L) - < 2.0           \n* TC/HDL-C Ratio - < 4.0\n";
         }
         else if (Total < 20){
             riskLvl = "LOW";
-            lipidLvl = "LDL-C Level(mmol/L) - < 5.0           *\n* TC/HDL-C Ratio - < 6.0\t\t*\n";
+            lipidLvl = "LDL-C Level(mmol/L) - < 5.0           \n* TC/HDL-C Ratio - < 6.0\n";
         }
         else{
             riskLvl = "MODERATE";
-            lipidLvl = "LDL-C Level(mmol/L) - < 3.5           *\n* TC/HDL-C Ratio - < 5.0\t\t*\n";
+            lipidLvl = "LDL-C Level(mmol/L) - < 3.5           \n* TC/HDL-C Ratio - < 5.0\n";
         }   
     }else{
         if (Total > 14){
             riskLvl = "HIGH";
-            lipidLvl = "LDL-C Level(mmol/L) - < 2.0           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n";
+            lipidLvl = "LDL-C Level(mmol/L) - < 2.0           \n* TC/HDL-C Ratio - < 4.0\n";
         }
         else if (Total < 13){
             riskLvl = "LOW";
-            lipidLvl = "LDL-C Level(mmol/L) - < 5.0           *\n* TC/HDL-C Ratio - < 6.0\t\t*\n";
+            lipidLvl = "LDL-C Level(mmol/L) - < 5.0           \n* TC/HDL-C Ratio - < 6.0\n";
         }
         else{
             riskLvl = "MODERATE";
-            lipidLvl = "LDL-C Level(mmol/L) - < 3.5           *\n* TC/HDL-C Ratio - < 5.0\t\t*\n";
+            lipidLvl = "LDL-C Level(mmol/L) - < 3.5           \n* TC/HDL-C Ratio - < 5.0\n";
         } 
     }
                 
@@ -357,29 +357,29 @@ function calculate(){
         if (document.calCorArDi.diabetic.checked){
             resetAverageChart();
             document.second.prediction.value="*****************************************\n"
-                                        +"*Coronary Artery Disease Risk Prediction*\n"
+                                        +"*Coronary Artery Disease Risk Prediction\n"
                                         +"*****************************************\n"
-                                        +"* Total Point Count: "+Total+"           \t*\n"
-                                        +"* 10-year Risk: HIGH >= 20%             *\n"
+                                        +"* Total Point Count: "+Total+"           \n"
+                                        +"* 10-year Risk: HIGH >= 20%              \n"
 					+"*****************************************\n"
-					+"*Patients with established CVD, diabetes*\n"
-                                        +"*or any atherosclerotic disease are     *\n"
-                                        +"*automatically considered high risk     *\n"
-                                        +"*with a >=20% 10-year risk.             *\n"
+					+"*Patients with established CVD, diabetes \n"
+                                        +"*or any atherosclerotic disease are      \n"
+                                        +"*automatically considered high risk      \n"
+                                        +"*with a >=20% 10-year risk.              \n"
                                         +"*****************************************\n"
-                                        +"* Based on risk, your target lipid      *\n"
-                                        +"* levels should be:                     *\n"
-                                        +"* LDL-C Level(mmol/L) - < 2.0           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n"
+                                        +"* Based on risk, your target lipid       \n"
+                                        +"* levels should be:                      \n"
+                                        +"* LDL-C Level(mmol/L) - < 2.0            \n* TC/HDL-C Ratio - < 4.0\n"
                                         +"*****************************************";
 	}else{
             document.second.prediction.value="*****************************************\n"
-                                        +"*Coronary Artery Disease Risk Prediction*\n"
+                                        +"*Coronary Artery Disease Risk Prediction\n"
                                         +"*****************************************\n"
-                                        +"* Total Point Count:  "+Total+  "            \t*\n"
-                                        +"* 10-year Risk: "+riskLvl+" - "+percent+"\t\t*\n"
+                                        +"* Total Point Count:  "+Total+  "        \n"
+                                        +"* 10-year Risk: "+riskLvl+" - "+percent+"\n"
 					+"*****************************************\n"
-					+"* Based on risk, your target lipid      *\n"
-                                        +"* levels should be:                     *\n"
+					+"* Based on risk, your target lipid       \n"
+                                        +"* levels should be:                      \n"
 					+"* "+lipidLvl
 					+"*****************************************";
                                         
@@ -393,10 +393,15 @@ function write2Parent(){
     if( window.opener != null )
         pastewin = window.opener;
 
-    pastewin.document.encForm.enTextarea.value = pastewin.document.encForm.enTextarea.value + "\n\n" + text;
-    pastewin.setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.scrollHeight", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
-    pastewin.document.encForm.enTextarea.focus();
-        
+    if( pastewin.document.forms["caseManagementEntryForm"] == undefined ) {
+        pastewin.document.encForm.enTextarea.value = pastewin.document.encForm.enTextarea.value + "\n\n" + text;
+        pastewin.setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.scrollHeight", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+        pastewin.document.encForm.enTextarea.focus();
+    }
+    else {
+        pastewin.pasteToEncounterNote(text);
+    }
+    
     window.close();   
  }
 
