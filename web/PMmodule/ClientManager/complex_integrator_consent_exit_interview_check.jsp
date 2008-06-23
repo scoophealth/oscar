@@ -1,0 +1,33 @@
+<%@page import="org.oscarehr.util.*"%>
+<%@page import="org.oscarehr.common.dao.*"%>
+<%@page import="org.oscarehr.common.model.*"%>
+<%@page import="org.oscarehr.PMmodule.model.Provider"%>
+
+<script>
+	window.opener.location=window.opener.location;
+</script>
+
+<%
+	// this jsp should check to see if an exit interview is required or not
+	// if it is, forward to exit interview
+	// if not close window
+
+	int demographicId=Integer.parseInt(request.getParameter("demographicId"));
+	Integer facilityId= (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+	
+	IntegratorConsentComplexExitInterviewDao integratorConsentComplexExitInterviewDao=(IntegratorConsentComplexExitInterviewDao)SpringUtils.getBean("integratorConsentComplexExitInterviewDao");
+	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(facilityId,demographicId);
+	IntegratorConsentComplexExitInterview integratorConsentComplexExitInterview=integratorConsentComplexExitInterviewDao.find(pk);
+	if (integratorConsentComplexExitInterview==null)
+	{
+		response.sendRedirect("complex_integrator_consent_exit_interview.jsp?demographicId="+demographicId);
+	}
+	else
+	{
+		%>
+			<script>
+				window.close();
+			</script>
+		<%
+	}
+%>

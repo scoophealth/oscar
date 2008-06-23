@@ -47,13 +47,12 @@
 	Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 	
 	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
-	IntegratorConsent integratorConsent=integratorConsentDao.findByFacilityIdAndDemographicId(facilityId,demographicId);
+	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(facilityId,demographicId);
+	IntegratorConsent integratorConsent=integratorConsentDao.find(pk);
 	if (integratorConsent==null)
 	{
-		integratorConsent=new IntegratorConsent();
-		
-		integratorConsent.setFacilityId(facilityId);
-		integratorConsent.setDemographicId(demographicId);
+		integratorConsent=new IntegratorConsent();		
+		integratorConsent.setId(pk);
 		integratorConsent.setProvider_no(provider.getProvider_no());
 	
 		fillConsentParameters(request, integratorConsent);
@@ -68,8 +67,6 @@
 	
 		integratorConsentDao.merge(integratorConsent);
 	}
+	
+	response.sendRedirect("complex_integrator_consent_exit_interview_check.jsp?demographicId="+demographicId);
 %>
-<script>
-window.opener.location.reload();
-window.close();
-</script>

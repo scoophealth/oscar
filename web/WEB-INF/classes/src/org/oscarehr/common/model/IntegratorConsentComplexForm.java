@@ -1,55 +1,45 @@
 package org.oscarehr.common.model;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Entity
-public class IntegratorConsentComplexForm
-{
-
-	@Id
-	private int integratorConsentId = 0;
+public class IntegratorConsentComplexForm {
+	@EmbeddedId
+	private FacilityDemographicPrimaryKey id;
 	private String form = null;
 	private String printedFormLocation = null;
 	private boolean refusedToSign = false;
 
-	public int getIntegratorConsentId()
-	{
-		return integratorConsentId;
+	public FacilityDemographicPrimaryKey getId() {
+		return id;
 	}
 
-	public void setIntegratorConsentId(int integratorConsentId)
-	{
-		this.integratorConsentId = integratorConsentId;
+	public void setId(FacilityDemographicPrimaryKey id) {
+		this.id = id;
 	}
 
-	public String getForm()
-	{
+	public String getForm() {
 		return form;
 	}
 
-	public void setForm(String form)
-	{
+	public void setForm(String form) {
 		this.form = form;
 	}
 
-	public String getPrintedFormLocation()
-	{
+	public String getPrintedFormLocation() {
 		return printedFormLocation;
 	}
 
-	public void setPrintedFormLocation(String printedFormLocation)
-	{
+	public void setPrintedFormLocation(String printedFormLocation) {
 		this.printedFormLocation = printedFormLocation;
 	}
 
-	public boolean isRefusedToSign()
-	{
+	public boolean isRefusedToSign() {
 		return refusedToSign;
 	}
 
-	public void setRefusedToSign(boolean refusedToSign)
-	{
+	public void setRefusedToSign(boolean refusedToSign) {
 		this.refusedToSign = refusedToSign;
 	}
 

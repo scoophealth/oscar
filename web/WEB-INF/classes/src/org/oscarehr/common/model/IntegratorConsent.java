@@ -2,121 +2,92 @@ package org.oscarehr.common.model;
 
 import java.util.Date;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Version;
 
 @Entity
 public class IntegratorConsent {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id = 0;
-    private int facilityId = 0;
-    private int demographicId = 0;
-    private String provider_no = null;
-    @Version
-    private Date lastUpdate = null;
+	@EmbeddedId
+	private FacilityDemographicPrimaryKey id;
+	private String provider_no = null;
+	@Version
+	private Date lastUpdate = null;
 
 	private boolean consentToStatistics = false;
 	private boolean consentToBasicPersonalId = false;
 	private boolean consentToHealthCardId = false;
 	private boolean consentToIssues = false;
 	private boolean consentToNotes = false;
-	private boolean restrictConsentToHic=false;
-	
-    public boolean isRestrictConsentToHic()
-    {
-    	return restrictConsentToHic;
-    }
+	private boolean restrictConsentToHic = false;
 
-	public void setRestrictConsentToHic(boolean restrictConsentToHic)
-    {
-    	this.restrictConsentToHic = restrictConsentToHic;
-    }
+	public void setId(FacilityDemographicPrimaryKey id) {
+		this.id = id;
+	}
 
-	public int getId() {
-        return id;
-    }
+	public boolean isRestrictConsentToHic() {
+		return restrictConsentToHic;
+	}
 
-    public int getFacilityId() {
-        return facilityId;
-    }
+	public void setRestrictConsentToHic(boolean restrictConsentToHic) {
+		this.restrictConsentToHic = restrictConsentToHic;
+	}
 
-    public void setFacilityId(int facilityId) {
-        this.facilityId = facilityId;
-    }
+	public FacilityDemographicPrimaryKey getId() {
+		return id;
+	}
 
-    public int getDemographicId() {
-        return demographicId;
-    }
+	public String getProvider_no() {
+		return provider_no;
+	}
 
-    public void setDemographicId(int demographicId) {
-        this.demographicId = demographicId;
-    }
+	public void setProvider_no(String provider_no) {
+		this.provider_no = provider_no;
+	}
 
-    public String getProvider_no() {
-        return provider_no;
-    }
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
 
-    public void setProvider_no(String provider_no) {
-        this.provider_no = provider_no;
-    }
+	public boolean isConsentToStatistics() {
+		return consentToStatistics;
+	}
 
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
+	public void setConsentToStatistics(boolean consentToStatistics) {
+		this.consentToStatistics = consentToStatistics;
+	}
 
-	public boolean isConsentToStatistics()
-    {
-    	return consentToStatistics;
-    }
+	public boolean isConsentToBasicPersonalId() {
+		return consentToBasicPersonalId;
+	}
 
-	public void setConsentToStatistics(boolean consentToStatistics)
-    {
-    	this.consentToStatistics = consentToStatistics;
-    }
+	public void setConsentToBasicPersonalId(boolean consentToBasicPersonalId) {
+		this.consentToBasicPersonalId = consentToBasicPersonalId;
+	}
 
-	public boolean isConsentToBasicPersonalId()
-    {
-    	return consentToBasicPersonalId;
-    }
+	public boolean isConsentToHealthCardId() {
+		return consentToHealthCardId;
+	}
 
-	public void setConsentToBasicPersonalId(boolean consentToBasicPersonalId)
-    {
-    	this.consentToBasicPersonalId = consentToBasicPersonalId;
-    }
+	public void setConsentToHealthCardId(boolean consentToHealthCardId) {
+		this.consentToHealthCardId = consentToHealthCardId;
+	}
 
-	public boolean isConsentToHealthCardId()
-    {
-    	return consentToHealthCardId;
-    }
+	public boolean isConsentToIssues() {
+		return consentToIssues;
+	}
 
-	public void setConsentToHealthCardId(boolean consentToHealthCardId)
-    {
-    	this.consentToHealthCardId = consentToHealthCardId;
-    }
+	public void setConsentToIssues(boolean consentToIssues) {
+		this.consentToIssues = consentToIssues;
+	}
 
-	public boolean isConsentToIssues()
-    {
-    	return consentToIssues;
-    }
+	public boolean isConsentToNotes() {
+		return consentToNotes;
+	}
 
-	public void setConsentToIssues(boolean consentToIssues)
-    {
-    	this.consentToIssues = consentToIssues;
-    }
-
-	public boolean isConsentToNotes()
-    {
-    	return consentToNotes;
-    }
-
-	public void setConsentToNotes(boolean consentToNotes)
-    {
-    	this.consentToNotes = consentToNotes;
-    }
+	public void setConsentToNotes(boolean consentToNotes) {
+		this.consentToNotes = consentToNotes;
+	}
 
 }

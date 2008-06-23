@@ -87,6 +87,7 @@ import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.model.FacilityDemographicPrimaryKey;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.util.SessionConstants;
@@ -365,7 +366,8 @@ public class ClientManagerAction extends BaseAction {
         request.getSession().setAttribute("demographicId", demographic.getDemographicNo());
 
         //--- consent status ---
-        IntegratorConsent integratorConsent=integratorConsentDao.findByFacilityIdAndDemographicId(facilityId, demographic.getDemographicNo());
+        FacilityDemographicPrimaryKey pk = new FacilityDemographicPrimaryKey(facilityId, demographic.getDemographicNo());
+        IntegratorConsent integratorConsent=integratorConsentDao.find(pk);
         request.getSession().setAttribute("integratorConsent", "N/A");
         
         return mapping.findForward("edit");

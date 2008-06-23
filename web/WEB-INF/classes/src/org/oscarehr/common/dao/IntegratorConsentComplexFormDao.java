@@ -19,13 +19,14 @@
 
 package org.oscarehr.common.dao;
 
+import org.oscarehr.common.model.FacilityDemographicPrimaryKey;
 import org.oscarehr.common.model.IntegratorConsentComplexForm;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class IntegratorConsentComplexFormDao extends AbstractDao {
 
-    public IntegratorConsentComplexForm findByIntegratorConsentId(int id) {
+    public IntegratorConsentComplexForm find(FacilityDemographicPrimaryKey id) {
         return(entityManager.find(IntegratorConsentComplexForm.class, id));
     }
     

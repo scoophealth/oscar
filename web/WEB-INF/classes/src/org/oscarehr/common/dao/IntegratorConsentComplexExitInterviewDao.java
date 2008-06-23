@@ -20,13 +20,14 @@
 package org.oscarehr.common.dao;
 
 import org.oscarehr.common.model.FacilityDemographicPrimaryKey;
-import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.IntegratorConsentComplexExitInterview;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class IntegratorConsentDao extends AbstractDao {
+public class IntegratorConsentComplexExitInterviewDao extends AbstractDao {
 
-    public IntegratorConsent find(FacilityDemographicPrimaryKey id) {
-        return(entityManager.find(IntegratorConsent.class, id));
-    }    
+    public IntegratorConsentComplexExitInterview find(FacilityDemographicPrimaryKey id) {
+        return(entityManager.find(IntegratorConsentComplexExitInterview.class, id));
+    }
+    
 }

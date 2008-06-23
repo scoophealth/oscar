@@ -54,13 +54,12 @@
 	Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 	
 	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
-	IntegratorConsent integratorConsent=integratorConsentDao.findByFacilityIdAndDemographicId(facilityId,demographicId);
+	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(facilityId,demographicId);
+	IntegratorConsent integratorConsent=integratorConsentDao.find(pk);
 	if (integratorConsent==null)
 	{
 		integratorConsent=new IntegratorConsent();
-		
-		integratorConsent.setFacilityId(facilityId);
-		integratorConsent.setDemographicId(demographicId);
+		integratorConsent.setId(pk);
 		integratorConsent.setProvider_no(provider.getProvider_no());
 	
 		fillConsentParameters(request, integratorConsent);
@@ -78,11 +77,11 @@
 	
 	
 	IntegratorConsentComplexFormDao integratorConsentComplexFormDao=(IntegratorConsentComplexFormDao)SpringUtils.getBean("integratorConsentComplexFormDao");
-	IntegratorConsentComplexForm integratorConsentComplexForm=integratorConsentComplexFormDao.findByIntegratorConsentId(integratorConsent.getId());
+	IntegratorConsentComplexForm integratorConsentComplexForm=integratorConsentComplexFormDao.find(pk);
 	if (integratorConsentComplexForm==null)
 	{
 		integratorConsentComplexForm=new IntegratorConsentComplexForm();
-		integratorConsentComplexForm.setIntegratorConsentId(integratorConsent.getId());
+		integratorConsentComplexForm.setId(pk);
 		
 		fillComplexConsentParameters(request, integratorConsentComplexForm);
 		
@@ -101,12 +100,7 @@
 		response.sendRedirect("complex_integrator_consent_b_optout.jsp?demographicId="+request.getParameter("demographicId"));
 	}
 	else
-	{
-		%>
-			<script>
-				window.opener.location.reload();
-				window.close();
-			</script>
-		<%
+	{		
+		response.sendRedirect("complex_integrator_consent_exit_interview_check.jsp?demographicId="+demographicId);
 	}
 %>

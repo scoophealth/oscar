@@ -22,8 +22,8 @@
 */
  -->
 
-<%@page import="org.oscarehr.common.dao.IntegratorConsentDao"%>
-<%@page import="org.oscarehr.common.model.IntegratorConsent"%>
+<%@page import="org.oscarehr.common.dao.*"%>
+<%@page import="org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.model.Provider"%>
@@ -38,7 +38,8 @@
 	int currentFacilityId = (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	Facility currentFacility = (Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 	IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
-	IntegratorConsent integratorConsent = integratorConsentDao.findByFacilityIdAndDemographicId(currentFacilityId, currentDemographicId);
+	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(currentFacilityId, currentDemographicId);
+	IntegratorConsent integratorConsent = integratorConsentDao.find(pk);
     Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 %>
 

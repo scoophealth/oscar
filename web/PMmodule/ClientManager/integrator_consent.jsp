@@ -1,6 +1,6 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page import="org.oscarehr.common.dao.IntegratorConsentDao"%>
-<%@page import="org.oscarehr.common.model.IntegratorConsent"%>
+<%@page import="org.oscarehr.common.dao.*"%>
+<%@page import="org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.FacilityDao"%>
 
@@ -10,7 +10,8 @@
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
-	IntegratorConsent integratorConsent=integratorConsentDao.findByFacilityIdAndDemographicId(currentFacilityId, currentDemographicId);
+	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(currentFacilityId, currentDemographicId);
+	IntegratorConsent integratorConsent=integratorConsentDao.find(pk);
 %>
 
 <form action="integrator_consent_action.jsp" onsubmit="if (readToClient.checked) {return(true);} else {alert('You must read the statement to the client.');return(false);}" >

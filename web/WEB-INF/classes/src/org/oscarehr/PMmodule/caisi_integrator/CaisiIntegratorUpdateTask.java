@@ -234,7 +234,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
             cachedDemographicInfo.setProvince(demographic.getProvince());
             cachedDemographicInfo.setSin(demographic.getSin());
 
-            IntegratorConsent consent=integratorConsentDao.findByFacilityIdAndDemographicId(facility.getId(), demographicId);
+            org.oscarehr.common.model.FacilityDemographicPrimaryKey pk=new org.oscarehr.common.model.FacilityDemographicPrimaryKey(facility.getId(), demographicId);
+            IntegratorConsent consent=integratorConsentDao.find(pk);
             if (consent!=null)
             {
 	            cachedDemographicInfo.setConsentToBasicPersonalId(consent.isConsentToBasicPersonalId());

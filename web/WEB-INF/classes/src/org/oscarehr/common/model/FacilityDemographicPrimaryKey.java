@@ -1,4 +1,4 @@
-package org.oscarehr.casemgmt.model;
+package org.oscarehr.common.model;
 
 import java.io.Serializable;
 
@@ -9,6 +9,17 @@ public class FacilityDemographicPrimaryKey implements Serializable {
 	private Integer facilityId = null;
 	private Integer demographicId = null;
 
+	public FacilityDemographicPrimaryKey()
+	{
+		// do nothing, required by jpa
+	}
+	
+	public FacilityDemographicPrimaryKey(Integer facilityId, Integer demographicId)
+	{
+		this.facilityId=facilityId;
+		this.demographicId=demographicId;
+	}
+	
 	public Integer getFacilityId() {
 		return facilityId;
 	}
