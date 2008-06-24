@@ -116,6 +116,10 @@
             <td width="20%">Integrator Password:</td>
             <td><html:password property="facility.integratorPassword" /></td>
         </tr>
+        <tr class="b">
+            <td width="20%">Use Quick Consent:</td>
+            <td><html:checkbox property="facility.useQuickConsent" /></td>
+        </tr>
         <tr>
             <td colspan="2">
                 <html:submit property="submit.save">Save</html:submit>

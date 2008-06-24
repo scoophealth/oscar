@@ -320,6 +320,7 @@ public class ClientManagerAction extends BaseAction {
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
         Integer facilityId= (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        Facility facility= (Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 
         if (id == null || id.equals("")) {
             Object o = request.getAttribute("demographicNo");
@@ -368,7 +369,15 @@ public class ClientManagerAction extends BaseAction {
         //--- consent status ---
         FacilityDemographicPrimaryKey pk = new FacilityDemographicPrimaryKey(facilityId, demographic.getDemographicNo());
         IntegratorConsent integratorConsent=integratorConsentDao.find(pk);
-        request.getSession().setAttribute("integratorConsent", "N/A");
+        String consentText="Have not asked client yet.";
+        if (integratorConsent!=null)
+        {
+        	if (integratorConsent.isConsentToBasicPersonalId() && integratorConsent.isConsentToHealthCardId() && integratorConsent.isConsentToIssues() && integratorConsent.isConsentToNotes() && integratorConsent.isConsentToStatistics() && !integratorConsent.isRestrictConsentToHic()) consentText="Consented to all";
+        	else if (!integratorConsent.isConsentToBasicPersonalId() && !integratorConsent.isConsentToHealthCardId() && !integratorConsent.isConsentToIssues() && !integratorConsent.isConsentToNotes() && !integratorConsent.isConsentToStatistics()) consentText="Consented to none";
+        	else  consentText="Consented to some";
+        }
+        request.getSession().setAttribute("integratorConsent", consentText);
+        request.getSession().setAttribute("useQuickConsent", facility.isUseQuickConsent());
         
         return mapping.findForward("edit");
     }

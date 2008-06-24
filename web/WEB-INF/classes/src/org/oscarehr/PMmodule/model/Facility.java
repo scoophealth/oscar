@@ -22,8 +22,17 @@ public class Facility implements Serializable {
     private String integratorUser=null;
     private String integratorPassword=null;
     private Date integratorLastPushTime=null;
+    private boolean useQuickConsent=true;
     
-    public Facility() {
+    public boolean isUseQuickConsent() {
+		return useQuickConsent;
+	}
+
+	public void setUseQuickConsent(boolean useQuickConsent) {
+		this.useQuickConsent = useQuickConsent;
+	}
+
+	public Facility() {
     }
 
     public Facility(String name, String description) {

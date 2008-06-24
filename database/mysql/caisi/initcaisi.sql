@@ -16,6 +16,7 @@ create table facility (
 	`integratorUser` varchar(255),
 	`integratorPassword` varchar(255),
 	`integratorLastPushTime` datetime,
+	`useQuickConsent` tinyint(1) not null,
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_facility_name` USING HASH (`name`)
 );

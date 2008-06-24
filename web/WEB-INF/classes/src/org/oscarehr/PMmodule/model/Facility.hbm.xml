@@ -72,6 +72,7 @@
         <property name="integratorUser" />
         <property name="integratorPassword" />
         <property name="integratorLastPushTime" />
+        <property name="useQuickConsent" />
     </class>
 </hibernate-mapping>
         

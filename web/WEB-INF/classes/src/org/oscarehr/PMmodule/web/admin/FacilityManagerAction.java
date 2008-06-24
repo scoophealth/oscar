@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.geronimo.mail.util.SessionUtil;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -29,6 +30,8 @@ import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.FacilityDischargedClients;
+import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.WebUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.quatro.service.LookupManager;
@@ -197,10 +200,14 @@ public class FacilityManagerAction extends BaseAction {
         }
 
         try {
-            if (request.getParameter("facility.integratorEnabled") == null) facility.setIntegratorEnabled(false);
+        	facility.setIntegratorEnabled(WebUtils.isChecked(request, "facility.integratorEnabled"));
+        	facility.setUseQuickConsent(WebUtils.isChecked(request, "facility.useQuickConsent"));
             
             facilityManager.saveFacility(facility);
 
+            Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+            if (currentFacilityId.equals(facility.getId())) request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
+            
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("facility.saved", facility.getName()));
             saveMessages(request, messages);
