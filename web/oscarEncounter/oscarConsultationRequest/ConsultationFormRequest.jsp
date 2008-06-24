@@ -504,7 +504,7 @@ function importFromEnct(reqInfo,txtArea)
                     else {
                         value = demographic.EctInfo.getMedicalHistory();
                     }
-                    value = StringUtils.lineBreaks(value);
+                    //value = StringUtils.lineBreaks(value);
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
                 }
@@ -520,7 +520,7 @@ function importFromEnct(reqInfo,txtArea)
                     else {
                         value = demographic.EctInfo.getOngoingConcerns();
                     }
-                    value = StringUtils.lineBreaks(value);
+                    //value = StringUtils.lineBreaks(value);
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
                  }
@@ -536,7 +536,7 @@ function importFromEnct(reqInfo,txtArea)
                     else {
                         value = demographic.EctInfo.getSocialHistory();
                     }
-                    value = StringUtils.lineBreaks(value);
+                    //value = StringUtils.lineBreaks(value);
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
                  }
@@ -554,7 +554,7 @@ function importFromEnct(reqInfo,txtArea)
                         value = demographic.EctInfo.getFamilyHistory();
                     }
                     
-                    value = StringUtils.lineBreaks(value);
+                    //value = StringUtils.lineBreaks(value);
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
                     
@@ -572,7 +572,7 @@ function importFromEnct(reqInfo,txtArea)
                         value = demographic.EctInfo.getReminders();
                     }
                     //if( !value.equals("") ) {
-                        value = StringUtils.lineBreaks(value);
+                        //value = StringUtils.lineBreaks(value);
                         value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                         out.println("info = '" + value + "'");
                     //}
