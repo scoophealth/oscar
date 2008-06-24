@@ -253,6 +253,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <div class="adminBox">
 	  <h3>&nbsp;2 Factor Authentication</h3>
 	  <ul>
+	      <li><a href="#" onclick = "popupPage(500,700,'../gatekeeper/ip/show');return false;">Set IP filter (no super certificate)</a></li>
 	      <li><a href="#" onclick = "popupPage(500,700,'../gatekeeper/cert/?act=super');return false;">Set super certificate</a></li>
 	      <li><a href="#" onclick = "popupPage(500,700,'../gatekeeper/supercert');return false;">Generate super certificate</a></li>
 	      <li><a href="#" onclick = "popupPage(500,700,'../gatekeeper/clear');return false;">Clear user cookie and super-cert cookie</a></li>
