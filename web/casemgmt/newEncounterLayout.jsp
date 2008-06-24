@@ -398,7 +398,7 @@ function init() {
                   <span style="float:right; margin-right:10px;">
                       <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-cut.png"/>" onclick="$('removeIssue').value='true';" title='<bean:message key="oscarEncounter.Index.btnUnlink"/>'>
                       <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>
-                      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick="$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;" title='<bean:message key="global.btnExit"/>'>
+                      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;" title='<bean:message key="global.btnExit"/>'>
                   </span>
                   <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
               </form>
