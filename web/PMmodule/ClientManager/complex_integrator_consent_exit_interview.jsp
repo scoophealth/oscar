@@ -28,37 +28,6 @@
 <html>
 <head>
 	<title>Exit Interview</title>
-	<script>
-	
-		function isEmpty(ctlName) {
-			var value = document.consentForm.elements[ctlName].value;
-			if(value == '') {
-				return true;
-			}
-			return false;
-		}
-		
-		function submitInterview(form) {
-			var msg = '';		
-			if(isEmpty('interview.language')) {msg += 'Question 1 is required\n';}
-			if(isEmpty('interview.languageRead')) {msg += 'Question 2 is required\n';}
-			if(isEmpty('interview.education')) {msg += 'Question 3 is required\n';}
-			if(isEmpty('interview.review')) {msg += 'Question 4 is required\n';}
-			if(isEmpty('interview.pressure')) {msg += 'Question 5 is required\n';}
-			if(isEmpty('interview.information')) {msg += 'Question 6 is required\n';}
-			if(isEmpty('interview.followup')) {msg += 'Question 7 is required\n';}
-			if(isEmpty('interview.comments')) {msg += 'Question 8 is required\n';}
-			
-			
-			if(msg != '') {
-				alert(msg);
-				return;
-			}
-
-			form.submit();
-		}
-	</script>	
-
 </head>
 
 <body topmargin="20" leftmargin="10">
@@ -66,13 +35,8 @@
 <font color="#FF0000" face="Arial"><b><font size="3">Exit interview:</font></b></font>
 <p>
 
-<form name="consentForm" method="post" action="/oscar/PMmodule/Consent.do">
-<input type="hidden" name="method" value="saveInterview" />
-<input type="hidden" name="consent.id" value="">
-<input type="hidden" name="consent.demographicNo" value="">
-<input type="hidden" name="consent.providerNo" value="">
-<input type="hidden" name="consent.formName" value="">
-<input type="hidden" name="consent.formVersion" value="">
+<form name="consentForm" method="post" action="complex_integrator_consent_exit_interview_action.jsp">
+<input type="hidden" name="demographicId" value="<%=request.getParameter("demographicId")%>">
 
 <table border="1" width="100%" cellspacing="3" cellpadding="3">
 
@@ -93,7 +57,7 @@
 			<select name="interview.language"><option value=""></option>
 				<option value="English">English</option>
 				<option value="French">French</option>
-				<option value="Other">Other</option>
+				<option value="">Other</option>
 
 				<option value="Refused">Refused</option></select>
 			<br/>
@@ -109,7 +73,7 @@
 			<select name="interview.languageRead"><option value=""></option>
 				<option value="English">English</option>
 				<option value="French">French</option>
-				<option value="Other">Other</option>
+				<option value="">Other</option>
 				<option value="Refused">Refused</option></select>			
 			<br/>
 
@@ -211,7 +175,7 @@
 					
 	<tr>
 		<td colspan="2">
-			<input type="button" value="Save Interview" onclick="submitInterview(document.consentForm)" />
+			<input type="submit" value="Save Interview" />
 		</td>
 	</tr>		
 </table>
