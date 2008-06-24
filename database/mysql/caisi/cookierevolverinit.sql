@@ -67,6 +67,12 @@ CREATE TABLE IF NOT EXISTS `cr_userrole` (
   PRIMARY KEY  (`user_id`,`user_role`)
 ) TYPE=MyISAM;
 
+CREATE TABLE IF NOT EXISTS `cr_iprange` (
+  `id` varchar(37) NOT NULL default '',
+  `range` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 INSERT INTO cr_policy (policy_id, static_ip, ip, remote_access, generate_super_certs, administrate_policies, administrate_questions, remove_bans, user_id, role_id, priority, usage_times_before_reverify, max_time_between_usage, expire_cookie, ip_filter, certs_max, certs_current, default_answer)
 VALUES ('admin-policy', 0, null, 1, 1, 1, 1, 1, null, 'admin', 10, 10000000, 2592000, 315360000, null, 1000000, 1, null);
 
