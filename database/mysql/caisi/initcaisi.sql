@@ -1,6 +1,5 @@
 
 -- Facility table, added to CAISI to support RFQ requirement of facilities.
-drop table if exists `facility`;
 create table facility (
     `id` int NOT NULL auto_increment,
     `name` varchar(32) NOT NULL default '',
@@ -27,7 +26,6 @@ create table facility (
 -- Table structure for table `access_type`
 --
 
-DROP TABLE IF EXISTS `access_type`;
 CREATE TABLE `access_type` (
   `access_id` bigint(20) NOT NULL auto_increment,
   `name` varchar(255) default NULL,
@@ -39,7 +37,6 @@ CREATE TABLE `access_type` (
 -- Table structure for table `admission`
 --
 
-DROP TABLE IF EXISTS `admission`;
 CREATE TABLE `admission` (
   `am_id` bigint(11) NOT NULL auto_increment,
   `client_id` bigint(11) NOT NULL default '0',
@@ -68,7 +65,6 @@ CREATE TABLE `admission` (
 --
 -- Table structure for table `agency`
 --
-DROP TABLE IF EXISTS `agency`;
 CREATE TABLE `agency` (
   `id` bigint(20) NOT NULL default '0',  
   `intake_quick` integer unsigned NOT NULL DEFAULT 1,
@@ -82,7 +78,6 @@ CREATE TABLE `agency` (
 -- Table structure for table `bed`
 --
 
-DROP TABLE IF EXISTS `bed`;
 CREATE TABLE `bed` (
   `bed_id` int(10) unsigned NOT NULL auto_increment,
   `bed_type_id` int(10) unsigned NOT NULL default '1',
@@ -99,7 +94,6 @@ CREATE TABLE `bed` (
 --
 -- Table structure for table `bed_check_time`
 --
-DROP TABLE IF EXISTS `bed_check_time`;
 CREATE TABLE `bed_check_time` (
   `bed_check_time_id` int(10) unsigned NOT NULL auto_increment,
   `program_id` int(10) unsigned NOT NULL,
@@ -112,7 +106,6 @@ CREATE TABLE `bed_check_time` (
 -- Table structure for table `bed_demographic`
 --
 
-DROP TABLE IF EXISTS `bed_demographic`;
 CREATE TABLE  `bed_demographic` (
   `bed_id` int(10) unsigned NOT NULL,
   `demographic_no` int(10) unsigned NOT NULL,
@@ -130,7 +123,6 @@ CREATE TABLE  `bed_demographic` (
 -- Table structure for table `bed_demographic_historical`
 --
 
-DROP TABLE IF EXISTS `bed_demographic_historical`;
 CREATE TABLE `bed_demographic_historical` (
   `bed_id` int(10) unsigned NOT NULL,
   `demographic_no` int(10) unsigned NOT NULL,
@@ -143,7 +135,6 @@ CREATE TABLE `bed_demographic_historical` (
 -- Table structure for table `bed_demographic_status`
 --
 
-DROP TABLE IF EXISTS `bed_demographic_status`;
 CREATE TABLE `bed_demographic_status` (
   `bed_demographic_status_id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(45) NOT NULL,
@@ -156,7 +147,6 @@ CREATE TABLE `bed_demographic_status` (
 -- Table structure for table `bed_type`
 --
 
-DROP TABLE IF EXISTS `bed_type`;
 CREATE TABLE `bed_type` (
   `bed_type_id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(45) NOT NULL,
@@ -168,7 +158,6 @@ CREATE TABLE `bed_type` (
 -- Table structure for table `caisi_form`
 --
 
-DROP TABLE IF EXISTS `caisi_form`;
 CREATE TABLE `caisi_form` (
   `form_id` bigint(20) NOT NULL auto_increment,
   facilityId int,
@@ -183,7 +172,6 @@ CREATE TABLE `caisi_form` (
 -- Table structure for table `caisi_form_data`
 --
 
-DROP TABLE IF EXISTS `caisi_form_data`;
 CREATE TABLE `caisi_form_data` (
   `id` bigint(20) NOT NULL auto_increment,
   `instance_id` bigint(20) default NULL,
@@ -200,7 +188,6 @@ CREATE TABLE `caisi_form_data` (
 -- Table structure for table `caisi_form_instance`
 --
 
-DROP TABLE IF EXISTS `caisi_form_instance`;
 CREATE TABLE `caisi_form_instance` (
   `id` bigint(20) NOT NULL auto_increment,
   `form_id` bigint(20) default NULL,
@@ -214,7 +201,6 @@ CREATE TABLE `caisi_form_instance` (
 );
 
 
-DROP TABLE IF EXISTS `caisi_form_data_tmpsave`;
 CREATE TABLE `caisi_form_data_tmpsave` (
   `tmp_form_data_id` bigint(20) NOT NULL auto_increment,
   `tmp_instance_id` bigint(20) default NULL,
@@ -231,7 +217,6 @@ CREATE TABLE `caisi_form_data_tmpsave` (
 --
 -- Table structure for table `caisi_form_instance`
 --
-DROP TABLE IF EXISTS `caisi_form_instance_tmpsave`;
 CREATE TABLE `caisi_form_instance_tmpsave` (
   `tmp_instance_id` bigint(20) NOT NULL auto_increment,
   `instance_id` bigint(20) NOT NULL,
@@ -263,7 +248,6 @@ CREATE TABLE `caisi_form_question` (
 -- Table structure for table `caisi_role`
 --
 
-DROP TABLE IF EXISTS `caisi_role`;
 CREATE TABLE `caisi_role` (
   `role_id` int(10) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
@@ -277,7 +261,6 @@ CREATE TABLE `caisi_role` (
 -- Table structure for table `casemgmt_cpp`
 --
 
-DROP TABLE IF EXISTS `casemgmt_cpp`;
 CREATE TABLE `casemgmt_cpp` (
   `id` int(10) NOT NULL auto_increment,
   `demographic_no` varchar(10) NOT NULL default '',
@@ -300,7 +283,6 @@ CREATE TABLE `casemgmt_cpp` (
 -- Table structure for table `casemgmt_issue`
 --
 
-DROP TABLE IF EXISTS `casemgmt_issue`;
 CREATE TABLE `casemgmt_issue` (
   `id` int(10) NOT NULL auto_increment,
   `demographic_no` varchar(20) NOT NULL default '',
@@ -320,7 +302,6 @@ CREATE TABLE `casemgmt_issue` (
 -- Table structure for table `casemgmt_issue_notes`
 --
 
-DROP TABLE IF EXISTS `casemgmt_issue_notes`;
 CREATE TABLE `casemgmt_issue_notes` (
   `id` int(10) NOT NULL default '0',
   `note_id` int(10) NOT NULL default '0',
@@ -332,7 +313,6 @@ CREATE TABLE `casemgmt_issue_notes` (
 -- Table structure for table `casemgmt_note`
 --
 
-DROP TABLE IF EXISTS `casemgmt_note`;
 CREATE TABLE `casemgmt_note` (
   `note_id` int(10) NOT NULL auto_increment,
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -363,7 +343,6 @@ CREATE TABLE `casemgmt_note` (
 -- Table structure for table `casemgmt_tmpsave`
 --
 
-DROP TABLE IF EXISTS `casemgmt_tmpsave`;
 CREATE TABLE `casemgmt_tmpsave` (
   `id` bigint(20) NOT NULL auto_increment,
   `demographic_no` bigint(20) default NULL,
@@ -379,7 +358,6 @@ CREATE TABLE `casemgmt_tmpsave` (
 -- Table structure for table `client_image`
 --
 
-DROP TABLE IF EXISTS `client_image`;
 CREATE TABLE `client_image` (
   `image_id` bigint(20) NOT NULL auto_increment,
   `demographic_no` int(11) default NULL,
@@ -393,7 +371,6 @@ CREATE TABLE `client_image` (
 -- Table structure for table `client_referral`
 --
 
-DROP TABLE IF EXISTS `client_referral`;
 CREATE TABLE `client_referral` (
   `referral_id` bigint(20) NOT NULL auto_increment,
   `client_id` bigint(20) NOT NULL default '0',
@@ -411,7 +388,6 @@ CREATE TABLE `client_referral` (
   PRIMARY KEY  (`referral_id`)
 );
 
-DROP TABLE IF EXISTS `consent`;
 CREATE TABLE `consent` (
   `id` bigint(20) NOT NULL auto_increment,
   `demographic_no` bigint(20) NOT NULL default '0',
@@ -436,7 +412,6 @@ CREATE TABLE `consent` (
 -- Table structure for table `consent_interview`
 --
 
-DROP TABLE IF EXISTS `consent_interview`;
 CREATE TABLE `consent_interview` (
   `id` bigint(20) NOT NULL auto_increment,
   `consent_id` bigint(20) NOT NULL default '0',
@@ -462,7 +437,6 @@ CREATE TABLE `consent_interview` (
   PRIMARY KEY  (`id`)
 );
 
-DROP TABLE IF EXISTS `cr_cert`;
 CREATE TABLE `cr_cert` (
   `cert_id` varchar(37) NOT NULL default '',
   `user_specific` tinyint(1) default NULL,
@@ -484,7 +458,6 @@ CREATE TABLE `cr_cert` (
 -- Table structure for table `cr_machine`
 --
 
-DROP TABLE IF EXISTS `cr_machine`;
 CREATE TABLE `cr_machine` (
   `machine_id` varchar(37) NOT NULL default '',
   `ip` varchar(15) default NULL,
@@ -496,7 +469,6 @@ CREATE TABLE `cr_machine` (
 -- Table structure for table `cr_policy`
 --
 
-DROP TABLE IF EXISTS `cr_policy`;
 CREATE TABLE `cr_policy` (
   `policy_id` varchar(37) NOT NULL default '',
   `static_ip` tinyint(1) default NULL,
@@ -523,7 +495,6 @@ CREATE TABLE `cr_policy` (
 -- Table structure for table `cr_securityquestion`
 --
 
-DROP TABLE IF EXISTS `cr_securityquestion`;
 CREATE TABLE `cr_securityquestion` (
   `question_id` varchar(37) NOT NULL default '',
   `user_id` varchar(128) default NULL,
@@ -536,7 +507,6 @@ CREATE TABLE `cr_securityquestion` (
 -- Table structure for table `cr_user`
 --
 
-DROP TABLE IF EXISTS `cr_user`;
 CREATE TABLE `cr_user` (
   `user_id` varchar(64) NOT NULL default '',
   `password_digest` varchar(128) default NULL,
@@ -550,7 +520,6 @@ CREATE TABLE `cr_user` (
 -- Table structure for table `cr_userrole`
 --
 
-DROP TABLE IF EXISTS `cr_userrole`;
 CREATE TABLE `cr_userrole` (
   `user_id` varchar(64) NOT NULL default '',
   `user_role` varchar(64) NOT NULL default '',
@@ -561,7 +530,6 @@ CREATE TABLE `cr_userrole` (
 -- Table structure for table `custom_filter`
 --
 
-DROP TABLE IF EXISTS `custom_filter`;
 CREATE TABLE `custom_filter` (
   `id` int(10) NOT NULL auto_increment,
   `provider_no` varchar(6) NOT NULL default '',
@@ -580,7 +548,6 @@ CREATE TABLE `custom_filter` (
 -- Table structure for table `custom_filter_assignees`
 --
 
-DROP TABLE IF EXISTS `custom_filter_assignees`;
 CREATE TABLE `custom_filter_assignees` (
   `filter_id` int(10) NOT NULL default '0',
   `provider_no` varchar(6) NOT NULL default ''
@@ -590,7 +557,6 @@ CREATE TABLE `custom_filter_assignees` (
 -- Table structure for table `custom_filter_providers`
 --
 
-DROP TABLE IF EXISTS `custom_filter_providers`;
 CREATE TABLE `custom_filter_providers` (
   `filter_id` int(10) NOT NULL default '0',
   `provider_no` varchar(6) NOT NULL default ''
@@ -600,7 +566,6 @@ CREATE TABLE `custom_filter_providers` (
 -- Table structure for table `default_role_access`
 --
 
-DROP TABLE IF EXISTS `default_role_access`;
 CREATE TABLE `default_role_access` (
   `id` bigint(20) NOT NULL auto_increment,
   `role_id` int(11) NOT NULL default '0',
@@ -612,7 +577,6 @@ CREATE TABLE `default_role_access` (
 -- Table structure for table `formfollowup`
 --
 
-DROP TABLE IF EXISTS `formfollowup`;
 CREATE TABLE `formfollowup` (
   `ID` bigint(20) NOT NULL auto_increment,
   `cbox_assistWithHealthCard` char(1) default NULL,
@@ -791,7 +755,6 @@ CREATE TABLE `formfollowup` (
 -- Table structure for table `formintakea`
 --
 
-DROP TABLE IF EXISTS `formintakea`;
 CREATE TABLE `formintakea` (
   `ID` bigint(11) NOT NULL auto_increment,
   `demographic_no` bigint(11) NOT NULL default '0',
@@ -954,7 +917,6 @@ CREATE TABLE `formintakea` (
 -- Table structure for table `formintakeb`
 --
 
-DROP TABLE IF EXISTS `formintakeb`;
 CREATE TABLE `formintakeb` (
   `ID` bigint(11) NOT NULL auto_increment,
   `demographic_no` bigint(11) NOT NULL default '0',
@@ -1133,7 +1095,6 @@ CREATE TABLE `formintakeb` (
 -- Table structure for table `formintakec`
 --
 
-DROP TABLE IF EXISTS `formintakec`;
 CREATE TABLE `formintakec` (
   `ID` bigint(20) NOT NULL auto_increment,
   `cboxReferralByPolice` char(2) default NULL,
@@ -1382,7 +1343,6 @@ CREATE TABLE `formintakec` (
 -- Table structure for table `formreceptionassessment`
 --
 
-DROP TABLE IF EXISTS `formreceptionassessment`;
 CREATE TABLE `formreceptionassessment` (
   `ID` int(10) NOT NULL auto_increment,
   `demographic_no` int(10) NOT NULL default '0',
@@ -1528,7 +1488,6 @@ CREATE TABLE `formreceptionassessment` (
 --
 -- Table structure for table `functional_user_type`
 --
-DROP TABLE IF EXISTS `functional_user_type`;
 CREATE TABLE `functional_user_type` (
   `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(255) default NULL,
@@ -1538,7 +1497,6 @@ CREATE TABLE `functional_user_type` (
 --
 -- Table structure for table `intake_node_label`
 --
-DROP TABLE IF EXISTS `intake_node_label`;
 CREATE TABLE `intake_node_label` (
   `intake_node_label_id` int(10) unsigned NOT NULL auto_increment,
   `lbl` text NOT NULL,
@@ -1548,7 +1506,6 @@ CREATE TABLE `intake_node_label` (
 --
 -- Table structure for table `intake_node_type`
 --
-DROP TABLE IF EXISTS `intake_node_type`;
 CREATE TABLE `intake_node_type` (
   `intake_node_type_id` int(10) unsigned NOT NULL auto_increment,
   `type` varchar(255) NOT NULL,
@@ -1558,7 +1515,6 @@ CREATE TABLE `intake_node_type` (
 --
 -- Table structure for table `intake_node_template`
 --
-DROP TABLE IF EXISTS `intake_node_template`;
 CREATE TABLE `intake_node_template` (
   `intake_node_template_id` int(10) unsigned NOT NULL auto_increment,
   `remote_intake_node_template_id` int(10) unsigned default NULL,
@@ -1574,7 +1530,6 @@ CREATE TABLE `intake_node_template` (
 --
 -- Table structure for table `intake_answer_validation`
 --
-DROP TABLE IF EXISTS `intake_answer_validation`;
 CREATE TABLE `intake_answer_validation` (
   `intake_answer_validation_id` int(10) unsigned NOT NULL auto_increment,
   `type` varchar(255) NOT NULL,
@@ -1584,7 +1539,6 @@ CREATE TABLE `intake_answer_validation` (
 --
 -- Table structure for table `intake_answer_element`
 --
-DROP TABLE IF EXISTS `intake_answer_element`;
 CREATE TABLE `intake_answer_element` (
   `intake_answer_element_id` int(10) unsigned NOT NULL auto_increment,
   `intake_node_template_id` int(10) unsigned NOT NULL,
@@ -1601,7 +1555,6 @@ CREATE TABLE `intake_answer_element` (
 --
 -- Table structure for table `intake_node`
 --
-DROP TABLE IF EXISTS `intake_node`;
 CREATE TABLE `intake_node` (
   `intake_node_id` int(10) unsigned NOT NULL auto_increment,
   `intake_node_template_id` int(10) unsigned NOT NULL,
@@ -1621,7 +1574,6 @@ CREATE TABLE `intake_node` (
 --
 -- Table structure for table `intake`
 --
-DROP TABLE IF EXISTS `intake`;
 CREATE TABLE `intake` (
   `intake_id` int(10) unsigned NOT NULL auto_increment,
   `intake_node_id` int(10) unsigned NOT NULL,
@@ -1640,7 +1592,6 @@ CREATE TABLE `intake` (
 --
 -- Table structure for table `intake_answer`
 --
-DROP TABLE IF EXISTS `intake_answer`;
 CREATE TABLE `intake_answer` (
   `intake_answer_id` int(10) unsigned NOT NULL auto_increment,
   `intake_id` int(10) unsigned NOT NULL,
@@ -1657,7 +1608,6 @@ CREATE TABLE `intake_answer` (
 -- Table structure for table `issue`
 --
 
-DROP TABLE IF EXISTS `issue`;
 CREATE TABLE `issue` (
   `issue_id` int(10) NOT NULL auto_increment,
   `code` varchar(20) NOT NULL default '',
@@ -1673,7 +1623,6 @@ CREATE TABLE `issue` (
 -- Table structure for table `program`
 --
 
-DROP TABLE IF EXISTS `program`;
 CREATE TABLE `program` (
   `program_id` int(10) NOT NULL auto_increment,
 	facility_id int not null default 0,
@@ -1720,7 +1669,6 @@ CREATE TABLE `program` (
 -- Table structure for table `program_access`
 --
 
-DROP TABLE IF EXISTS `program_access`;
 CREATE TABLE `program_access` (
   `id` bigint(20) NOT NULL auto_increment,
   `program_id` bigint(20) default NULL,
@@ -1734,7 +1682,6 @@ CREATE TABLE `program_access` (
 -- Table structure for table `program_access_roles`
 --
 
-DROP TABLE IF EXISTS `program_access_roles`;
 CREATE TABLE `program_access_roles` (
   `id` bigint(20) NOT NULL default '0',
   `role_id` bigint(20) NOT NULL default '0',
@@ -1747,7 +1694,6 @@ CREATE TABLE `program_access_roles` (
 -- Table structure for table `program_functional_user`
 --
 
-DROP TABLE IF EXISTS `program_functional_user`;
 CREATE TABLE `program_functional_user` (
   `id` bigint(20) NOT NULL auto_increment,
   `program_id` bigint(20) default NULL,
@@ -1762,7 +1708,6 @@ CREATE TABLE `program_functional_user` (
 -- Table structure for table `program_provider`
 --
 
-DROP TABLE IF EXISTS `program_provider`;
 CREATE TABLE `program_provider` (
   `id` bigint(20) NOT NULL auto_increment,
   `program_id` bigint(20) default NULL,
@@ -1779,7 +1724,6 @@ CREATE TABLE `program_provider` (
 -- Table structure for table `program_provider_team`
 --
 
-DROP TABLE IF EXISTS `program_provider_team`;
 CREATE TABLE `program_provider_team` (
   `id` bigint(20) NOT NULL default '0',
   `elt` bigint(20) NOT NULL default '0',
@@ -1792,7 +1736,6 @@ CREATE TABLE `program_provider_team` (
 -- Table structure for table `program_queue`
 --
 
-DROP TABLE IF EXISTS `program_queue`;
 CREATE TABLE `program_queue` (
   `queue_id` bigint(20) NOT NULL auto_increment,
   `client_id` bigint(20) NOT NULL default '0',
@@ -1811,7 +1754,6 @@ CREATE TABLE `program_queue` (
 -- Table structure for table `program_team`
 --
 
-DROP TABLE IF EXISTS `program_team`;
 CREATE TABLE `program_team` (
   `team_id` bigint(20) NOT NULL auto_increment,
   `name` varchar(255) default NULL,
@@ -1823,7 +1765,6 @@ CREATE TABLE `program_team` (
 -- Table structure for table `provider_default_program`
 --
 
-DROP TABLE IF EXISTS `provider_default_program`;
 CREATE TABLE `provider_default_program` (
   `id` int(10) NOT NULL auto_increment,
   `provider_no` varchar(6) NOT NULL default '',
@@ -1836,7 +1777,6 @@ CREATE TABLE `provider_default_program` (
 -- Table structure for table `room`
 --
 
-DROP TABLE IF EXISTS `room`;
 CREATE TABLE `room` (
   `room_id` int(10) unsigned NOT NULL auto_increment,
   `room_type_id` int(10) unsigned NOT NULL default '1',
@@ -1855,7 +1795,6 @@ CREATE TABLE `room` (
 -- Table structure for table `room_bed_historical`
 --
 
-DROP TABLE IF EXISTS `room_bed_historical`;
 CREATE TABLE `room_bed_historical` (
   `room_id` int(10) unsigned NOT NULL,
   `bed_id` int(10) unsigned NOT NULL,
@@ -1868,7 +1807,6 @@ CREATE TABLE `room_bed_historical` (
 -- Table structure for table `room_type`
 --
 
-DROP TABLE IF EXISTS `room_type`;
 CREATE TABLE `room_type` (
   `room_type_id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(45) NOT NULL,
@@ -1903,7 +1841,6 @@ CREATE TABLE `room_bed` (
 -- Table structure for table `survey`
 --
 
-DROP TABLE IF EXISTS `survey`;
 CREATE TABLE `survey` (
   `surveyid` bigint(20) NOT NULL auto_increment,
   `description` varchar(255) default NULL,
@@ -1923,7 +1860,6 @@ CREATE TABLE `survey` (
 -- Table structure for table `surveyData`
 --
 
-DROP TABLE IF EXISTS `surveyData`;
 CREATE TABLE `surveyData` (
   `surveyDataId` int(10) NOT NULL auto_increment,
   `surveyId` varchar(5) default NULL,
@@ -1947,7 +1883,6 @@ CREATE TABLE `surveyData` (
 -- Table structure for table `survey_test_data`
 --
 
-DROP TABLE IF EXISTS `survey_test_data`;
 CREATE TABLE `survey_test_data` (
   `id` bigint(20) NOT NULL auto_increment,
   `instance_id` bigint(20) default NULL,
@@ -1965,7 +1900,6 @@ CREATE TABLE `survey_test_data` (
 -- Table structure for table `survey_test_instance`
 --
 
-DROP TABLE IF EXISTS `survey_test_instance`;
 CREATE TABLE `survey_test_instance` (
   `id` bigint(20) NOT NULL auto_increment,
   `survey_id` bigint(20) default NULL,
@@ -1979,7 +1913,6 @@ CREATE TABLE `survey_test_instance` (
 -- Table structure for table `system_message`
 --
 
-DROP TABLE IF EXISTS `system_message`;
 CREATE TABLE `system_message` (
   `id` int(10) NOT NULL auto_increment,
   `message` text NOT NULL,
@@ -1989,7 +1922,6 @@ CREATE TABLE `system_message` (
 );
 
 
-DROP TABLE IF EXISTS `facility_message`;
 CREATE TABLE `facility_message` (
   `id` int(10) NOT NULL auto_increment,
   `message` text NOT NULL,
@@ -2001,7 +1933,6 @@ CREATE TABLE `facility_message` (
 );
 
 
-DROP TABLE IF EXISTS `pmm_log`;
 create table pmm_log (
     id bigint not null auto_increment,
     provider_no varchar(255),
@@ -2016,7 +1947,6 @@ create table pmm_log (
 --
 -- Table structure for table 'icd10'
 --
-DROP TABLE IF EXISTS icd10;
 CREATE TABLE icd10 (
     code CHAR(6) NOT NULL,
     short_desc VARCHAR(40) NOT NULL,
@@ -2027,7 +1957,6 @@ CREATE TABLE icd10 (
 --
 -- Table structure for table `program_clientstatus`
 --
-DROP TABLE IF EXISTS `program_clientstatus`;
 CREATE TABLE `program_clientstatus` (
   `clientstatus_id` bigint(20) NOT NULL auto_increment,
   `name` varchar(255) default NULL,
@@ -2035,7 +1964,6 @@ CREATE TABLE `program_clientstatus` (
   PRIMARY KEY  (`clientstatus_id`)
 );
 
-drop table if exists tickler_update;
 create table tickler_update (
 	id int(10) not null auto_increment,
 	tickler_no int(10) not null,
@@ -2045,7 +1973,6 @@ create table tickler_update (
 	primary key(id)
 );
 
-drop table if exists tickler_comments;
 create table tickler_comments (
 	id int(10) not null auto_increment,
 	tickler_no int(10) not null,
@@ -2055,7 +1982,6 @@ create table tickler_comments (
 	primary key(id)
 );
 
-DROP TABLE IF EXISTS `formDischargeSummary`;
 CREATE TABLE `formDischargeSummary` (
   `id` bigint(11) NOT NULL auto_increment,
   `demographic_no` bigint(11) NOT NULL default '0',  
@@ -2117,7 +2043,6 @@ CREATE TABLE `formDischargeSummary` (
   PRIMARY KEY  (`id`)  
 );
 
-drop table if exists `programSignature`;
 create table programSignature (
 	`id` int(10) NOT NULL auto_increment,
   	`programId` int(10) NOT NULL default '0',   	 
@@ -2134,12 +2059,10 @@ create table programSignature (
 -- Caisi Alter Oscar
 alter table preference add `new_tickler_warning_window` varchar(10) NOT NULL default '' after color_template;
 
-drop table if exists IntakeRequiredFields;
 create table IntakeRequiredFields (fieldKey varchar(255) not null primary key , isRequired tinyint not null);
 
 
 -- program restriction based on gender
-drop table if exists `program_client_restriction`;
 create table `program_client_restriction` (
     `id` bigint(22) NOT NULL auto_increment,
     `program_id` int(10) NOT NULL,
@@ -2268,7 +2191,6 @@ create table lst_program_type
 );
 
 -- Tables for quatro group's report runner:
-DROP TABLE IF EXISTS report;
 create table report
 (
   reportno     	bigint(10) 	NOT NULL auto_increment,
@@ -2287,7 +2209,6 @@ create table report
   PRIMARY KEY  (reportno)
 );
 
-DROP TABLE IF EXISTS report_date;
 create table report_date
 (
   sessionid		varchar(32) NOT NULL ,
@@ -2300,7 +2221,6 @@ create table report_date
   PRIMARY KEY  (sessionid)
 );
 
-DROP TABLE IF EXISTS `report_date_sp`;
 create table report_date_sp
 (
   reportno		int(10)    NOT NULL auto_increment,
@@ -2314,7 +2234,6 @@ create table report_date_sp
   PRIMARY KEY  (reportno)
 );
 
-DROP TABLE IF EXISTS `report_doctext`;
 create table report_doctext
 (
   docid       int(10) NOT NULL auto_increment,
@@ -2323,7 +2242,6 @@ create table report_doctext
   PRIMARY KEY  (docid)
 );
 
-DROP TABLE IF EXISTS `report_document`;
 create table report_document
 (
   docid          int(10) NOT NULL auto_increment,
@@ -2344,7 +2262,6 @@ create table report_document
   PRIMARY KEY  (docid)
 );
 
-DROP TABLE IF EXISTS `report_filter`;
 create table report_filter
 (  
   fieldno           int(10) NOT NULL auto_increment,
@@ -2363,7 +2280,6 @@ create table report_filter
   PRIMARY KEY  (fieldno)
 );
 
-DROP TABLE IF EXISTS `report_lk_reportgroup`;
 create table report_lk_reportgroup
 (
   id           int(10) NOT NULL auto_increment,
@@ -2375,7 +2291,6 @@ create table report_lk_reportgroup
   PRIMARY KEY  (id)
 );
 
-DROP TABLE IF EXISTS `report_option`;
 create table report_option
 (  
   reportoptionid int(10) NOT NULL auto_increment,
@@ -2395,7 +2310,6 @@ create table report_option
   PRIMARY KEY  (reportoptionid)
 );
 
-DROP TABLE IF EXISTS `report_qgviewfield`;
 create table report_qgviewfield
 (
   qgviewno      int(10) NOT NULL auto_increment,  
@@ -2412,7 +2326,6 @@ create table report_qgviewfield
   PRIMARY KEY  (qgviewno,fieldno)
 );
 
-DROP TABLE IF EXISTS `report_qgviewsummary`;
 create table report_qgviewsummary
 (
   qgviewno    int(10) NOT NULL auto_increment,
@@ -2434,7 +2347,6 @@ create table report_qgviewsummary
   PRIMARY KEY  (qgviewno)
 );
 
-DROP TABLE IF EXISTS `report_role`;
 create table report_role
 (
   reportno    	int(10) NOT NULL default 0,
@@ -2443,7 +2355,6 @@ create table report_role
   PRIMARY KEY  (reportno,rolecode)
 );
 
-DROP TABLE IF EXISTS `report_template`;
 create table report_template
 (
   templateno     int(10) NOT NULL auto_increment,
@@ -2460,7 +2371,6 @@ create table report_template
   PRIMARY KEY  (templateno)
 );
 
-DROP TABLE IF EXISTS `report_template_criteria`;
 create table report_template_criteria 
 (
   counter    int(10) not null	default 0,
@@ -2475,7 +2385,6 @@ create table report_template_criteria
   PRIMARY KEY  (templateno,counter)
 );
 
-DROP TABLE IF EXISTS `report_template_org`;
 create table report_template_org
 (
   counter    int(10) not null,
@@ -2484,7 +2393,6 @@ create table report_template_org
   PRIMARY KEY  (templateno,counter)
 );
 
-DROP TABLE IF EXISTS app_lookuptable;
 create table app_lookuptable
 (
   tableid         varchar(32) not null,
@@ -2497,7 +2405,6 @@ create table app_lookuptable
   PRIMARY KEY  (tableid)
 );
 
-DROP TABLE IF EXISTS app_lookuptable_fields;
 create table app_lookuptable_fields
 (
   tableid     VARCHAR(10) not null,
@@ -2514,7 +2421,6 @@ create table app_lookuptable_fields
   primary key (tableid, fieldname)
 );
 
-DROP TABLE IF EXISTS app_module;
 create table app_module
 (
   module_id   int(10) not null,
@@ -2523,7 +2429,6 @@ create table app_module
 );
 
 
-DROP TABLE IF EXISTS IntegratorConsent;
 create table IntegratorConsent
 (
 	facilityId int not null, foreign key (facilityId) references facility(id),
@@ -2540,7 +2445,6 @@ create table IntegratorConsent
 	restrictConsentToHic tinyint(1) NOT NULL
 );
 
-DROP TABLE IF EXISTS IntegratorConsentComplexForm;
 create table IntegratorConsentComplexForm
 (
 	facilityId int not null, foreign key (facilityId) references facility(id),
@@ -2552,7 +2456,6 @@ create table IntegratorConsentComplexForm
 	refusedToSign tinyint(1) not null
 );
 
-DROP TABLE IF EXISTS IntegratorConsentComplexExitInterview;
 create table IntegratorConsentComplexExitInterview
 (
 	facilityId int not null, foreign key (facilityId) references facility(id),
