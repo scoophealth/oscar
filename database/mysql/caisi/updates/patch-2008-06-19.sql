@@ -7,4 +7,4 @@ create table IntegratorConsentComplexForm
 );
 
 
-alter table formdischargesummary change coveredByODB medicationProvided char(1);
+alter table formDischargeSummary change coveredByODB medicationProvided char(1);
