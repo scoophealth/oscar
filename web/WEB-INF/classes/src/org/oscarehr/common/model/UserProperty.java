@@ -37,6 +37,7 @@ public class UserProperty implements Serializable {
     public final static String MYDRUGREF_ID = "mydrugref_id";
     public final static String CONSULTATION_TIME_PERIOD_WARNING = "consultation_time_period_warning";
     public final static String CONSULTATION_TEAM_WARNING = "consultation_team_warning";
+    public final static String WORKLOAD_MANAGEMENT = "workload_management";
     
     
    
