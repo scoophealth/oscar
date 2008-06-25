@@ -25,6 +25,9 @@
 
 package org.oscarehr.provider.web;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,8 +36,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
+import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil;
 
 /**
  *
@@ -273,6 +279,24 @@ public class ProviderPropertyAction extends DispatchAction {
              prop = new UserProperty();
          }
          
+         EctConsultationFormRequestUtil conUtil = new EctConsultationFormRequestUtil();
+         conUtil.estTeams();
+         Vector<String> vect = conUtil.teamVec;
+         
+         ArrayList serviceList = new ArrayList();
+         serviceList.add(new  LabelValueBean("All","-1"));
+         for (String s: vect ){
+                 serviceList.add(new LabelValueBean(s,s));
+         }   
+         serviceList.add(new  LabelValueBean("None",""));
+         
+         
+         
+         //conUtil.teamVec.add("All");
+         //conUtil.teamVec.add("None");
+//         System.out.println("cont size "+conUtil.teamVec.size());
+         request.setAttribute("dropOpts",serviceList);
+         
          request.setAttribute("dateProperty",prop);
          
          request.setAttribute("providertitle","provider.setConsultationTeamWarning.title"); //=Set myDrugref ID
@@ -304,6 +328,8 @@ public class ProviderPropertyAction extends DispatchAction {
          
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_TEAM_WARNING);
          
+         
+         
          if (prop ==null){
              prop = new UserProperty();
              prop.setName(UserProperty.CONSULTATION_TEAM_WARNING);
@@ -312,6 +338,20 @@ public class ProviderPropertyAction extends DispatchAction {
          prop.setValue(drugrefId);
          
          this.userPropertyDAO.saveProp(prop);
+         
+         
+         EctConsultationFormRequestUtil conUtil = new EctConsultationFormRequestUtil();
+         conUtil.estTeams();
+         Vector<String> vect = conUtil.teamVec;
+         
+         ArrayList serviceList = new ArrayList();
+         serviceList.add(new  LabelValueBean("All","-1"));
+         for (String s: vect ){
+                 serviceList.add(new LabelValueBean(s,s));
+         }   
+         serviceList.add(new  LabelValueBean("None",""));
+         request.setAttribute("dropOpts",serviceList);
+         
          
          request.setAttribute("status", "success");
          request.setAttribute("dateProperty",prop);
@@ -326,7 +366,106 @@ public class ProviderPropertyAction extends DispatchAction {
      }
     
     
+    //WORKLOAD MANAGEMENT SCREEN PROPERTY
+    public ActionForward viewWorkLoadManagement(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+                               
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.WORKLOAD_MANAGEMENT);
+         
+         if (prop == null){
+             prop = new UserProperty();
+         }
+         
+         
+         ArrayList serviceList = new ArrayList();
+         try{
+             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+             ResultSet rs = db.GetSQL("select distinct servicetype, servicetype_name from ctl_billingservice where status='A'");
+             while (rs.next()){
+                 String servicetype     = rs.getString("servicetype");
+                 String servicetypename = rs.getString("servicetype_name");
+                 serviceList.add(new LabelValueBean(servicetypename,servicetype));
+             }
+         }catch(Exception e){
+             e.printStackTrace();
+         }
+         serviceList.add(new  LabelValueBean("None",""));
+         
+         request.setAttribute("dropOpts",serviceList);
+         
+         request.setAttribute("dateProperty",prop);
+         
+         request.setAttribute("providertitle","provider.setWorkLoadManagement.title"); //=Set myDrugref ID
+         request.setAttribute("providermsgPrefs","provider.setWorkLoadManagement.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setWorkLoadManagement.msgProvider"); //=myDrugref ID
+         request.setAttribute("providermsgEdit","provider.setWorkLoadManagement.msgEdit"); //=Enter your desired login for myDrugref
+         request.setAttribute("providerbtnSubmit","provider.setWorkLoadManagement.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setWorkLoadManagement.msgSuccess"); //=myDrugref Id saved
+         request.setAttribute("method","saveWorkLoadManagement");
+         
+         frm.set("dateProperty", prop);
+         return actionmapping.findForward("gen");
+     }
+
     
+    public ActionForward saveWorkLoadManagement(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+         String provider = (String) request.getSession().getAttribute("user");
+    
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");         
+         String drugrefId = "";
+
+         if (UdrugrefId != null){
+             drugrefId = UdrugrefId.getValue();
+         }   
+         
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.WORKLOAD_MANAGEMENT);
+         
+         if (prop ==null){
+             prop = new UserProperty();
+             prop.setName(UserProperty.WORKLOAD_MANAGEMENT);
+             prop.setProvider_no(provider);
+         }
+         prop.setValue(drugrefId);
+         
+         this.userPropertyDAO.saveProp(prop);
+         
+         ArrayList serviceList = new ArrayList();
+         try{
+             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+             ResultSet rs = db.GetSQL("select distinct servicetype, servicetype_name from ctl_billingservice where status='A'");
+             while (rs.next()){
+                 String servicetype     = rs.getString("servicetype");
+                 String servicetypename = rs.getString("servicetype_name");
+                 serviceList.add(new LabelValueBean(servicetypename,servicetype));
+             }
+         }catch(Exception e){
+             e.printStackTrace();
+         }
+         
+         request.setAttribute("dropOpts",serviceList);
+         
+         request.setAttribute("status", "success");
+         request.setAttribute("dateProperty",prop);
+         request.setAttribute("providertitle","provider.setWorkLoadManagement.title"); //=Set myDrugref ID
+         request.setAttribute("providermsgPrefs","provider.setWorkLoadManagement.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setWorkLoadManagement.msgProvider"); //=myDrugref ID
+         request.setAttribute("providermsgEdit","provider.setWorkLoadManagement.msgEdit"); //=Enter your desired login for myDrugref
+         request.setAttribute("providerbtnSubmit","provider.setWorkLoadManagement.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setWorkLoadManagement.msgSuccess"); //=myDrugref Id saved
+         request.setAttribute("method","saveWorkLoadManagement");
+         return actionmapping.findForward("gen");
+     }
+    
+    
+   
     
     /**
      * Creates a new instance of ProviderPropertyAction
