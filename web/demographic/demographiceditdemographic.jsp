@@ -1532,12 +1532,18 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: </b></td>
                               <td align="left" >
                               <%
-                                 // Format year
-                                 decF.applyPattern("0000");
-                                 String dateJoinedYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"date_joined")));
-                                 decF.applyPattern("00");
-                                 String dateJoinedMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"date_joined")));
-                                 String dateJoinedDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"date_joined")));
+                                 String date_joined = apptMainBean.getString(rs,"date_joined");
+                                 String dateJoinedYear = "";
+                                 String dateJoinedMonth = "";
+                                 String dateJoinedDay = "";
+                                 if( date_joined != null && date_joined.length() == 10 ) {
+                                    // Format year
+                                    decF.applyPattern("0000");
+                                    dateJoinedYear = decF.format(MyDateFormat.getYearFromStandardDate(date_joined));
+                                    decF.applyPattern("00");
+                                    dateJoinedMonth = decF.format(MyDateFormat.getMonthFromStandardDate(date_joined));
+                                    dateJoinedDay = decF.format(MyDateFormat.getDayFromStandardDate(date_joined));
+                                 }
                               %>
                                 <input type="text" name="date_joined_year" size="4" maxlength="4" value="<%= dateJoinedYear %>">
                                 <input type="text" name="date_joined_month" size="2" maxlength="2" value="<%= dateJoinedMonth %>">
