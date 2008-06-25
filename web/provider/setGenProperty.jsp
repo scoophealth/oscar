@@ -100,8 +100,16 @@ if(session.getValue("user") == null)
             <bean-el:message key="${providermsgEdit}"/> <c:out value="${dateProperty.value}"/>
             
             <html:form action = "/setProviderStaleDate.do" >
-               <input type="hidden" name="method" value="<c:out value="${method}"/>"> 
+               <input type="hidden" name="method" value="<c:out value="${method}"/>">
+               <% if (request.getAttribute("dropOpts") == null) { %>
                <html:text property="dateProperty.value"/>
+               <% }else{ %>
+               <html:select property="dateProperty.value" >
+                   <html:options collection="dropOpts" property="value" labelProperty="label"/>
+                   
+               </html:select>
+                
+               <%}%>
                <input type="submit" value="<bean-el:message key="${providerbtnSubmit}" />"/>                        
             </html:form> 
             
