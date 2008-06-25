@@ -30,7 +30,7 @@
 	                      d.phone, d.phone2, d.year_of_birth, d.month_of_birth, d.date_of_birth, 
 	                      CONCAT(d.hin,' ') as hin, CONCAT(d.ver,' ') as ver, 
 	                      d.sex, CONCAT(p.last_name, CONCAT(', ',p.first_name)) as doc_name 
-	                      from demographic d, provider p where demographic_no =$P{demo} and d.provider_no = p.provider_no]]></queryString>
+	                      from demographic d left outer join provider p on d.provider_no = p.provider_no where demographic_no =$P{demo}]]></queryString>
 
 	<field name="last_name" class="java.lang.String"/>
 	<field name="chart_no" class="java.lang.String"/>
@@ -69,12 +69,35 @@
 						width="330"
 						height="14"
 						key="textField"
-						positionType="Float"/>
+						positionType="Float">
+                                                    <printWhenExpression>
+                                                        $F{doc_name} != null
+                                                    </printWhenExpression>
+                                                </reportElement>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement>
 						<font size="12" isBold="true" isUnderline="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["HOME: " + $F{phone} + "   " + "Dr. " + $F{doc_name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="17"
+						y="0"
+						width="330"
+						height="14"
+						key="textField"
+						positionType="Float">
+                                                    <printWhenExpression>
+                                                        $F{doc_name} == null
+                                                    </printWhenExpression>
+                                                </reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="12" isBold="true" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["HOME: " + $F{phone} + "   " + " No Doctor Assigned"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
