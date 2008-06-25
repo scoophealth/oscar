@@ -19,11 +19,16 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page errorPage="errorpage.jsp" import="java.util.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"%>
 
 <%//
+
+	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
 			if (session.getAttribute("user") == null) {
 				response.sendRedirect("../../../logout.jsp");
 			}
@@ -64,21 +69,40 @@
 				<h1>Successful Addition of a billing Record.</h1>
 				<% if (request.getParameter("submit") != null && "Save & Add Another Bill".equals(request.getParameter("submit"))) { %>
 				    <script LANGUAGE="JavaScript">
-					self.opener.refresh();
+					self.opener.refresh();  
 					self.location.href="<%=request.getParameter("url_back")%>";
 				    </script>
 				<% }
-				if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { %>
+				if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { System.out.println("option a");%>
 					<a href="billingON3rdInv.jsp?billingNo=<%=billingNo%>"> Print invoice</a>
 				<% } %>
 				</p>
 				
-				<% if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { %>
+				<% if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { System.out.println("option b");%>
 					<script LANGUAGE="JavaScript">
-						self.close();
-						self.opener.refresh();
+                                            
+                                        <% 
+                                            //GET WORKLOAD MANAGEMENT SCREEN IF THERE IS ANY
+                                            String curBilf = request.getParameter("curBillForm");
+                                            
+                                            String provider = (String) request.getSession().getAttribute("user");
+                                            UserProperty prop = userPropertyDAO.getProp(provider, UserProperty.WORKLOAD_MANAGEMENT);
+         
+                                            String wrkloadmanagement =  prop.getValue();
+                                            if ( wrkloadmanagement != null && !wrkloadmanagement.equals("") && !wrkloadmanagement.equals(curBilf) ){ 
+                                            ///NEED TO CHECK IF THIS IS THE CURRENT FORM IF SO LET IT CLOSE!!!
+                                            String urlBack = request.getParameter("url_back")+"&curBillForm="+wrkloadmanagement;
+
+                                        %>
+                                            self.opener.refresh(); 
+                                            self.location.href="<%=urlBack%>";
+                                        
+                                        <%}else{%>
+                                            self.close();
+                                            self.opener.refresh();
+                                        <% }%>
 					</script>
-				<% } else {	%>
+				<% } else { %>
 					<script LANGUAGE="JavaScript">
 						function popupPage(vheight,vwidth,varpage) {
 						  var page = "" + varpage;
