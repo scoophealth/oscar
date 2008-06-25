@@ -52,6 +52,7 @@ public class ConsultTag extends TagSupport {
    }
 
    public int doStartTag() throws JspException    {
+            numNewLabs = 0;
 	    if(providerNo!=null){
                 try{
 	       ConsultationRequestDAO tcm = (ConsultationRequestDAO) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("consultationRequestDAO");
@@ -62,6 +63,7 @@ public class ConsultTag extends TagSupport {
                // Date not set /  team set  == default to one month
                // Date set /  team not set  == search on the whole clinic
                // Date not set /  team not set  == do nothing
+               // BUT If the team is -1 it should search on all teams.
                
                UserProperty up = pref.getProp(providerNo, UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
                UserProperty up2 = pref.getProp(providerNo, UserProperty.CONSULTATION_TEAM_WARNING);
@@ -76,32 +78,31 @@ public class ConsultTag extends TagSupport {
                if ( up2 != null && up2.getValue() != null && !up2.getValue().trim().equals("")){
                   team = up2.getValue(); 
                }
-               
-               
-               if ( team != null && timeperiod != null){
-                       Calendar cal = Calendar.getInstance();
-                       int countback = Integer.parseInt(timeperiod);
-                       countback = countback * -1;
-                       cal.add(Calendar.MONTH,countback );
-                       Date cutoffDate = cal.getTime();
-                   numNewLabs= tcm.getReferralsAfterCutOffDateAndNotCompleted(cutoffDate, team).size();
-                   
-               }else if ( team != null && timeperiod == null){  //Default to one month
-                        Calendar cal = Calendar.getInstance();
-                       cal.add(Calendar.MONTH,-1);
-                       Date cutoffDate = cal.getTime();
-                   numNewLabs= tcm.getReferralsAfterCutOffDateAndNotCompleted(cutoffDate, team).size();
-                   
-               }else if ( team == null && timeperiod != null){
-                   Calendar cal = Calendar.getInstance();
-                       int countback = Integer.parseInt(timeperiod);
-                       countback = countback * -1;
-                       cal.add(Calendar.MONTH,countback );
-                       Date cutoffDate = cal.getTime();
-                   numNewLabs= tcm.getReferralsAfterCutOffDateAndNotCompleted(cutoffDate).size();
-                   
+                
+               boolean allTeams = false;
+               if (team != null && team.equals("-1")){
+                   team = null;
+                   allTeams = true;
                }
                
+               Calendar cal = Calendar.getInstance();
+               int countback = -1;
+               if (timeperiod != null){
+                       countback = Integer.parseInt(timeperiod);
+                       countback = countback * -1;
+                       cal.add(Calendar.MONTH,countback );
+                        
+               }
+               cal.add(Calendar.MONTH,countback );
+               Date cutoffDate = cal.getTime();
+               
+               
+               if (allTeams){
+                   numNewLabs= tcm.getReferralsAfterCutOffDateAndNotCompleted(cutoffDate).size();
+               }else if (team != null){    
+                   numNewLabs= tcm.getReferralsAfterCutOffDateAndNotCompleted(cutoffDate, team).size();
+               }
+
                
                 }catch(Exception ee){
                     ee.printStackTrace();
