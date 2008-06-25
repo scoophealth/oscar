@@ -109,6 +109,30 @@ if(session.getValue("user") == null)
                    <html:option value="-10">10</html:option>
                    <html:option value="-11">11</html:option>
                    <html:option value="-12">12</html:option>
+                   <html:option value="-13">13</html:option>
+                   <html:option value="-14">14</html:option>
+                   <html:option value="-15">15</html:option>
+                   <html:option value="-16">16</html:option>
+                   <html:option value="-17">17</html:option>
+                   <html:option value="-18">18</html:option>
+                   <html:option value="-19">19</html:option>
+                   <html:option value="-20">20</html:option>
+                   <html:option value="-21">21</html:option>
+                   <html:option value="-22">22</html:option>
+                   <html:option value="-23">23</html:option>
+                   <html:option value="-24">24</html:option>
+                   <html:option value="-25">25</html:option>
+                   <html:option value="-26">26</html:option>
+                   <html:option value="-27">27</html:option>
+                   <html:option value="-28">28</html:option>
+                   <html:option value="-29">29</html:option>
+                   <html:option value="-30">30</html:option>
+                   <html:option value="-31">31</html:option>
+                   <html:option value="-32">32</html:option>
+                   <html:option value="-33">33</html:option>
+                   <html:option value="-34">34</html:option>
+                   <html:option value="-35">35</html:option>
+                   <html:option value="-36">36</html:option>
                </html:select>
                <input type="submit" value="<bean:message key="provider.setNoteStaleDate.btnSubmit"/>" />                           
                <input type="submit" onclick="$('method').value='remove';" value="<bean:message key="provider.setNoteStaleDate.btnReset"/>" />                           
