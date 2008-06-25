@@ -275,12 +275,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             	}
             	
             	intake.setIntakeLocation(intakeLocationId); 
-            	
+            }
+            
             	Facility currentFacility = (Facility)request.getSession().getAttribute("currentFacility");
             	Integer currentFacilityId = currentFacility.getId();
             	intake.setFacilityId(currentFacilityId);
-            }
-            
            
             	admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich);
             
