@@ -271,7 +271,7 @@ public class importCasemgmt {
                         PreparedStatement pstmt2 = con.prepareStatement("select id from casemgmt_issue where demographic_no = ? and issue_id = ?");
                         PreparedStatement pstmt3 = con.prepareStatement("insert into casemgmt_issue (demographic_no,issue_id, program_id,type,update_date) values(?,?," + programId + ",'nurse',now())",PreparedStatement.RETURN_GENERATED_KEYS);
                         PreparedStatement pstmt4 = con.prepareStatement("insert into casemgmt_note (update_date, demographic_no, provider_no, note,  signed, signing_provider_no, include_issue_innote, program_no, " +
-                                "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,true,'doctor doe'," +
+                                "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,true,'000000'," +
                                 "false," + programId + ",'1','0',?,'','0',?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
                         PreparedStatement pstmt5 = con.prepareStatement("insert into casemgmt_issue_notes Values(?,?)");
                         
@@ -281,11 +281,11 @@ public class importCasemgmt {
                         
                         rs = stmt.executeQuery(sql);
                         insert = con.prepareStatement("insert into casemgmt_note (update_date, demographic_no, provider_no, note,  signed, signing_provider_no, include_issue_innote, program_no, " +
-                                "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,true,'doctor doe'," +
+                                "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,true,'000000'," +
                                 "false,'" + programId + "','1','0',?,'','0',?,?)");
                         PreparedStatement cppInsert = con.prepareStatement("insert into casemgmt_cpp (demographic_no,provider_no,socialHistory,familyHistory,medicalHistory,ongoingConcerns," +
                                 "reminders,update_date) Values(?,?,?,?,?,?,?,?)");
-                        pcheck = con.prepareStatement("select note_id from casemgmt_note where demographic_no = ? and (signing_provider_no = 'doctor doe' or (note = ? and update_date = ?))");
+                        pcheck = con.prepareStatement("select note_id from casemgmt_note where demographic_no = ? and (signing_provider_no = '000000' or (note = ? and update_date = ?))");
                         UUID uuid;
                         String note;                        
                         ResultSet rs3,rs4;
@@ -296,7 +296,7 @@ public class importCasemgmt {
                             pcheck.setString(2, rs.getString("encounter"));
                             
                             msecs = rs.getTimestamp("timeStamp").getTime();
-                            msecs += 1000;
+                            msecs += (1000*60*2);
                             
                             d = new Date(msecs);
                             pcheck.setDate(3, d);
@@ -531,7 +531,7 @@ public class importCasemgmt {
                         System.out.println("Importing split charts");
                         
                         sql = "select * from eChart e where e.subject = 'SPLIT CHART'";
-                        pcheck = con.prepareStatement("select note_id from casemgmt_note where update_date = ? and demographic_no = ? and provider_no = ? and signing_provider_no = 'doctor doe' and note like 'SPLIT CHART%'");
+                        pcheck = con.prepareStatement("select note_id from casemgmt_note where update_date = ? and demographic_no = ? and provider_no = ? and signing_provider_no = '000000' and note like 'SPLIT CHART%'");
                         rs = stmt.executeQuery(sql);
                         while( rs.next() ) {
                             d = new Date(rs.getTimestamp("timeStamp").getTime());
