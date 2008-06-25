@@ -71,7 +71,7 @@
 						key="textField"
 						positionType="Float">
                                                     <printWhenExpression>
-                                                        $F{doc_name} != null
+                                                        Boolean.valueOf($F{doc_name} != null)
                                                     </printWhenExpression>
                                                 </reportElement>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
@@ -90,7 +90,7 @@
 						key="textField"
 						positionType="Float">
                                                     <printWhenExpression>
-                                                        $F{doc_name} == null
+                                                        Boolean.valueOf($F{doc_name} == null)
                                                     </printWhenExpression>
                                                 </reportElement>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
