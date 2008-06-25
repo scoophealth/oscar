@@ -33,6 +33,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
@@ -51,7 +52,7 @@ public final class LoginAction extends DispatchAction {
 
     private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
     private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
-
+    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String ip = request.getRemoteAddr();
@@ -205,6 +206,20 @@ public final class LoginAction extends DispatchAction {
             }
             else {
                 // do nothing, not in any facilities
+            	//CAISI:
+            	//If the provider is not in any facilities, we should put him/her into the default facility which is 1st one in the db.
+            	if(IsPropertiesOn.isCaisiEnable()) {
+            		List facilities = facilityDao.getFacilities();
+            		if(facilities!=null && facilities.size()>=1) {
+            			Facility fac = (Facility)facilities.get(0);
+            			int first_id = fac.getId();
+            			ProviderDao.addProviderToFacility(providerNo, first_id);
+            			Facility facility=facilityDao.getFacility(first_id);
+            			request.getSession().setAttribute("currentFacility", facility);
+            			request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, first_id);
+            			LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+first_id, ip);
+            		}
+            	}
             }
         }
         // expired password
