@@ -38,16 +38,23 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.FacilityDao;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicIssuePrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicPrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.FacilityProgramPrimaryKey;
+import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.Status;
+import org.oscarehr.caisi_integrator.ws.client.Type;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
@@ -60,204 +67,247 @@ import org.springframework.beans.BeanUtils;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
-    private static final Log logger = LogFactory.getLog(CaisiIntegratorUpdateTask.class);
+	private static final Log logger = LogFactory.getLog(CaisiIntegratorUpdateTask.class);
 
-    private CaisiIntegratorManager caisiIntegratorManager;
-    private FacilityDao facilityDao;
-    private DemographicDao demographicDao;
-    private CaseManagementIssueDAO caseManagementIssueDAO;
-    private ClientImageDAO clientImageDAO;
-    private IntegratorConsentDao integratorConsentDao;
+	private CaisiIntegratorManager caisiIntegratorManager;
+	private FacilityDao facilityDao;
+	private DemographicDao demographicDao;
+	private CaseManagementIssueDAO caseManagementIssueDAO;
+	private ClientImageDAO clientImageDAO;
+	private IntegratorConsentDao integratorConsentDao;
+	private ProgramDao programDao;
 
-    public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
-        this.caisiIntegratorManager = mgr;
-    }
+	public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
+		this.caisiIntegratorManager = mgr;
+	}
 
-    public void setFacilityDao(FacilityDao facilityDao) {
-        this.facilityDao = facilityDao;
-    }
+	public void setFacilityDao(FacilityDao facilityDao) {
+		this.facilityDao = facilityDao;
+	}
 
-    public void setDemographicDao(DemographicDao demographicDao) {
-        this.demographicDao = demographicDao;
-    }
+	public void setDemographicDao(DemographicDao demographicDao) {
+		this.demographicDao = demographicDao;
+	}
 
-    public void setCaseManagementIssueDAO(CaseManagementIssueDAO caseManagementIssueDAO) {
-        this.caseManagementIssueDAO = caseManagementIssueDAO;
-    }
+	public void setCaseManagementIssueDAO(CaseManagementIssueDAO caseManagementIssueDAO) {
+		this.caseManagementIssueDAO = caseManagementIssueDAO;
+	}
 
-    public void setClientImageDAO(ClientImageDAO clientImageDAO) {
-        this.clientImageDAO = clientImageDAO;
-    }
+	public void setClientImageDAO(ClientImageDAO clientImageDAO) {
+		this.clientImageDAO = clientImageDAO;
+	}
 
-    public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao)
-    {
-    	this.integratorConsentDao = integratorConsentDao;
-    }
+	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
+		this.integratorConsentDao = integratorConsentDao;
+	}
+
+	public void setProgramDao(ProgramDao programDao) {
+		this.programDao = programDao;
+	}
 
 	public void run() {
-        logger.debug("CaisiIntegratorUpdateTask starting");
+		logger.debug("CaisiIntegratorUpdateTask starting");
 
-        try {
-            List<Facility> facilities = facilityDao.getFacilities();
+		try {
+			List<Facility> facilities = facilityDao.getFacilities();
 
-            for (Facility facility : facilities) {
-                if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
-                    pushAllFacilityData(facility);
-                }
-            }
-        }
-        catch (WebServiceException e) {
-            logger.warn("Error connecting to integrator. " + e.getMessage());
-            logger.debug("Error connecting to integrator.", e);
-        }
-        catch (Exception e) {
-            logger.error("unexpected error occurred", e);
-        }
-        finally {
-            DbConnectionFilter.releaseThreadLocalDbConnection();
+			for (Facility facility : facilities) {
+				if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
+					pushAllFacilityData(facility);
+				}
+			}
+		} catch (WebServiceException e) {
+			logger.warn("Error connecting to integrator. " + e.getMessage());
+			logger.debug("Error connecting to integrator.", e);
+		} catch (Exception e) {
+			logger.error("unexpected error occurred", e);
+		} finally {
+			DbConnectionFilter.releaseThreadLocalDbConnection();
 
-            logger.debug("CaisiIntegratorUpdateTask finished)");
-        }
-    }
+			logger.debug("CaisiIntegratorUpdateTask finished)");
+		}
+	}
 
-    private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException {
-        logger.debug("Pushing data for facility : " + facility.getId());
+	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException {
+		logger.debug("Pushing data for facility : " + facility.getId());
 
-        // check all parameters are present
-        String integratorBaseUrl = facility.getIntegratorUrl();
-        String user = facility.getIntegratorUser();
-        String password = facility.getIntegratorPassword();
+		// check all parameters are present
+		String integratorBaseUrl = facility.getIntegratorUrl();
+		String user = facility.getIntegratorUser();
+		String password = facility.getIntegratorPassword();
 
-        if (integratorBaseUrl == null || user == null || password == null) {
-            logger.warn("Integrator is enabled but information is incomplete. facilityId=" + facility.getId() + ", user=" + user + ", password=" + password + ", url=" + integratorBaseUrl);
-            return;
-        }
+		if (integratorBaseUrl == null || user == null || password == null) {
+			logger.warn("Integrator is enabled but information is incomplete. facilityId=" + facility.getId() + ", user=" + user + ", password=" + password + ", url="
+					+ integratorBaseUrl);
+			return;
+		}
 
-        // get the time here so there's a slight over lap in actual runtime and activity time, other wise you'll have a gap, better to unnecessarily send a few more records than to miss some.
-        Date currentPushTime = new Date();
+		// get the time here so there's a slight over lap in actual runtime and
+		// activity time, other wise you'll have a gap, better to unnecessarily
+		// send a few more records than to miss some.
+		Date currentPushTime = new Date();
 
-        // do all the sync work
-        pushFacilityInfo(facility);
-        DemographicInfoWs service = caisiIntegratorManager.getDemographicInfoWs(facility.getId());
-        List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
-        pushDemographics(facility, service, demographicIds);
-        pushDemographicsIssues(facility, service, demographicIds);
-        pushDemographicsImages(facility, service, demographicIds);
+		// do all the sync work
+		pushFacilityInfo(facility);
+		DemographicInfoWs service = caisiIntegratorManager.getDemographicInfoWs(facility.getId());
+		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
+		pushDemographics(facility, service, demographicIds);
+		pushDemographicsIssues(facility, service, demographicIds);
+		pushDemographicsImages(facility, service, demographicIds);
+		pushPrograms(facility);
 
-        // update late push time only if an exception didn't occur
-        // re-get the facility as the sync time could be very long and changes may have been made to the facility.
-        facility = facilityDao.getFacility(facility.getId());
-        facility.setIntegratorLastPushTime(currentPushTime);
-        facilityDao.saveFacility(facility);
-    }
+		// update late push time only if an exception didn't occur
+		// re-get the facility as the sync time could be very long and changes
+		// may have been made to the facility.
+		facility = facilityDao.getFacility(facility.getId());
+		facility.setIntegratorLastPushTime(currentPushTime);
+		facilityDao.saveFacility(facility);
+	}
 
-    private void pushDemographicsImages(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) {
-        for (Integer demographicId : demographicIds) {
-            pushDemographicImages(facility, service, demographicId);
-        }
-    }
+	private void pushPrograms(Facility facility) throws MalformedURLException {
+		List<Program> programs=programDao.getProgramsByFacilityId(facility.getId());
+		ArrayList<CachedProgramInfo> cachedProgramInfos=new ArrayList<CachedProgramInfo>();
+		
+		for (Program program : programs)
+		{
+			CachedProgramInfo cachedProgramInfo=new CachedProgramInfo();
+			
+			FacilityProgramPrimaryKey pk=new FacilityProgramPrimaryKey();
+			pk.setFacilityProgramId(program.getId());
+			cachedProgramInfo.setFacilityProgramPrimaryKey(pk);
 
-    private void pushDemographicImages(Facility facility, DemographicInfoWs service, Integer demographicId) {
-        logger.debug("pushing demographicImage facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+			cachedProgramInfo.setDescription(program.getDescr());
+			cachedProgramInfo.setFirstNation(program.isFirstNation());
+			cachedProgramInfo.setGender(program.getManOrWoman());
+			cachedProgramInfo.setMaxAge(program.getAgeMax());
+			cachedProgramInfo.setMinAge(program.getAgeMin());
+			cachedProgramInfo.setName(program.getName());
+			
+			if ("active".equals(program.getProgramStatus())) cachedProgramInfo.setStatus(Status.ACTIVE);
+			else cachedProgramInfo.setStatus(Status.INACTIVE);
+			
+			if ("community".equals(program.getProgramStatus())) cachedProgramInfo.setType(Type.COMMUNITY);
+			if ("Bed".equals(program.getProgramStatus())) cachedProgramInfo.setType(Type.BED);
+			if ("Bed".equals(program.getProgramStatus())) cachedProgramInfo.setType(Type.SERVICE);
+			
+			cachedProgramInfos.add(cachedProgramInfo);
+		}
+		
+		ProgramInfoWs service = caisiIntegratorManager.getProgramInfoWs(facility.getId());
+		service.setCachedProgramInfos(cachedProgramInfos);
+	}
 
-        ClientImage clientImage=clientImageDAO.getClientImage(demographicId.toString());
-        if (clientImage==null) return;
-        
-        CachedDemographicImage cachedDemographicImage=new CachedDemographicImage();
-        
-        FacilityDemographicPrimaryKey facilityDemographicPrimaryKey=new FacilityDemographicPrimaryKey();
-        facilityDemographicPrimaryKey.setFacilityDemographicId(demographicId);
-        
-        cachedDemographicImage.setFacilityDemographicPrimaryKey(facilityDemographicPrimaryKey);
-        cachedDemographicImage.setImage(clientImage.getImage_data());
-        
-        service.setCachedDemographicImage(cachedDemographicImage);
-    }
+	private void pushDemographicsImages(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) {
+		for (Integer demographicId : demographicIds) {
+			pushDemographicImages(facility, service, demographicId);
+		}
+	}
 
-    private void pushDemographicsIssues(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) {
-        for (Integer demographicId : demographicIds) {
-            pushDemographicIssues(facility, service, demographicId);
-        }
-    }
+	private void pushDemographicImages(Facility facility, DemographicInfoWs service, Integer demographicId) {
+		logger.debug("pushing demographicImage facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-    private void pushDemographicIssues(Facility facility, DemographicInfoWs service, Integer demographicId) {
-        logger.debug("pushing demographicIssue facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+		ClientImage clientImage = clientImageDAO.getClientImage(demographicId.toString());
+		if (clientImage == null)
+			return;
 
-        List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
-        if (caseManagementIssues.size() == 0) return;
+		CachedDemographicImage cachedDemographicImage = new CachedDemographicImage();
 
-        ArrayList<CachedDemographicIssue> issueTransfers = new ArrayList<CachedDemographicIssue>();
-        for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
-            Issue issue=caseManagementIssue.getIssue();
-            CachedDemographicIssue issueTransfer=new CachedDemographicIssue();
+		FacilityDemographicPrimaryKey facilityDemographicPrimaryKey = new FacilityDemographicPrimaryKey();
+		facilityDemographicPrimaryKey.setFacilityDemographicId(demographicId);
 
-            FacilityDemographicIssuePrimaryKey facilityDemographicIssuePrimaryKey=new FacilityDemographicIssuePrimaryKey();
-            facilityDemographicIssuePrimaryKey.setFacilityDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
-            facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
-            issueTransfer.setFacilityDemographicIssuePrimaryKey(facilityDemographicIssuePrimaryKey);
-            
-            issueTransfer.setAcute(caseManagementIssue.isAcute());
-            issueTransfer.setCertain(caseManagementIssue.isCertain());
-            issueTransfer.setIssueDescription(issue.getDescription());
-            issueTransfer.setMajor(caseManagementIssue.isMajor());
-            issueTransfer.setResolved(caseManagementIssue.isResolved());
-            
-            issueTransfers.add(issueTransfer);
-        }
+		cachedDemographicImage.setFacilityDemographicPrimaryKey(facilityDemographicPrimaryKey);
+		cachedDemographicImage.setImage(clientImage.getImage_data());
 
-        service.setCachedDemographicIssues(issueTransfers);
-    }
+		service.setCachedDemographicImage(cachedDemographicImage);
+	}
 
-    private void pushDemographics(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) throws MalformedURLException, DatatypeConfigurationException {
-        for (Integer demographicId : demographicIds) {
-            logger.debug("pushing demographicInfo facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+	private void pushDemographicsIssues(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) {
+		for (Integer demographicId : demographicIds) {
+			pushDemographicIssues(facility, service, demographicId);
+		}
+	}
 
-            Demographic demographic = demographicDao.getDemographicById(demographicId);
+	private void pushDemographicIssues(Facility facility, DemographicInfoWs service, Integer demographicId) {
+		logger.debug("pushing demographicIssue facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-            CachedDemographicInfo cachedDemographicInfo = new CachedDemographicInfo();
+		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
+		if (caseManagementIssues.size() == 0)
+			return;
 
-            FacilityDemographicPrimaryKey facilityDemographicPrimaryKey=new FacilityDemographicPrimaryKey();
-            facilityDemographicPrimaryKey.setFacilityDemographicId(demographic.getDemographicNo());
-            cachedDemographicInfo.setFacilityDemographicPrimaryKey(facilityDemographicPrimaryKey);
-            
-            XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-            if (demographic.getYearOfBirth() != null) cal.setYear(Integer.parseInt(demographic.getYearOfBirth()));
-            if (demographic.getMonthOfBirth() != null) cal.setMonth(Integer.parseInt(demographic.getMonthOfBirth()));
-            if (demographic.getDateOfBirth() != null) cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));
-            cachedDemographicInfo.setBirthDate(cal);
+		ArrayList<CachedDemographicIssue> issueTransfers = new ArrayList<CachedDemographicIssue>();
+		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
+			Issue issue = caseManagementIssue.getIssue();
+			CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
 
-            cachedDemographicInfo.setCity(demographic.getCity());
-            cachedDemographicInfo.setFirstName(demographic.getFirstName());
-            cachedDemographicInfo.setGender(demographic.getSex());
-            cachedDemographicInfo.setHin(demographic.getHin());
-            cachedDemographicInfo.setLastName(demographic.getLastName());
-            cachedDemographicInfo.setProvince(demographic.getProvince());
-            cachedDemographicInfo.setSin(demographic.getSin());
+			FacilityDemographicIssuePrimaryKey facilityDemographicIssuePrimaryKey = new FacilityDemographicIssuePrimaryKey();
+			facilityDemographicIssuePrimaryKey.setFacilityDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
+			facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
+			issueTransfer.setFacilityDemographicIssuePrimaryKey(facilityDemographicIssuePrimaryKey);
 
-            org.oscarehr.common.model.FacilityDemographicPrimaryKey pk=new org.oscarehr.common.model.FacilityDemographicPrimaryKey(facility.getId(), demographicId);
-            IntegratorConsent consent=integratorConsentDao.find(pk);
-            if (consent!=null)
-            {
-	            cachedDemographicInfo.setConsentToBasicPersonalId(consent.isConsentToBasicPersonalId());
-	            cachedDemographicInfo.setConsentToHealthCardId(consent.isConsentToHealthCardId() );
-	            cachedDemographicInfo.setConsentToIssues(consent.isConsentToIssues());
-	            cachedDemographicInfo.setConsentToNotes(consent.isConsentToNotes());
-	            cachedDemographicInfo.setConsentToStatistics(consent.isConsentToStatistics());
-	            cachedDemographicInfo.setRestrictConsentToHic(consent.isRestrictConsentToHic());
-            }
-            
-            service.setCachedDemographicInfo(cachedDemographicInfo);
-        }
-    }
+			issueTransfer.setAcute(caseManagementIssue.isAcute());
+			issueTransfer.setCertain(caseManagementIssue.isCertain());
+			issueTransfer.setIssueDescription(issue.getDescription());
+			issueTransfer.setMajor(caseManagementIssue.isMajor());
+			issueTransfer.setResolved(caseManagementIssue.isResolved());
 
-    private void pushFacilityInfo(Facility facility) throws IOException {
+			issueTransfers.add(issueTransfer);
+		}
 
-        CachedFacilityInfo cachedFacilityInfo = new CachedFacilityInfo();
-        BeanUtils.copyProperties(facility, cachedFacilityInfo, new String[] { "id" });
+		service.setCachedDemographicIssues(issueTransfers);
+	}
 
-        FacilityInfoWs service = caisiIntegratorManager.getFacilityInfoWs(facility.getId());
+	private void pushDemographics(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) throws MalformedURLException, DatatypeConfigurationException {
+		for (Integer demographicId : demographicIds) {
+			logger.debug("pushing demographicInfo facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-        logger.debug("pushing facilityInfo");
-        service.setMyFacilityInfo(cachedFacilityInfo);
-    }
+			Demographic demographic = demographicDao.getDemographicById(demographicId);
+
+			CachedDemographicInfo cachedDemographicInfo = new CachedDemographicInfo();
+
+			FacilityDemographicPrimaryKey facilityDemographicPrimaryKey = new FacilityDemographicPrimaryKey();
+			facilityDemographicPrimaryKey.setFacilityDemographicId(demographic.getDemographicNo());
+			cachedDemographicInfo.setFacilityDemographicPrimaryKey(facilityDemographicPrimaryKey);
+
+			XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+			if (demographic.getYearOfBirth() != null)
+				cal.setYear(Integer.parseInt(demographic.getYearOfBirth()));
+			if (demographic.getMonthOfBirth() != null)
+				cal.setMonth(Integer.parseInt(demographic.getMonthOfBirth()));
+			if (demographic.getDateOfBirth() != null)
+				cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));
+			cachedDemographicInfo.setBirthDate(cal);
+
+			cachedDemographicInfo.setCity(demographic.getCity());
+			cachedDemographicInfo.setFirstName(demographic.getFirstName());
+			cachedDemographicInfo.setGender(demographic.getSex());
+			cachedDemographicInfo.setHin(demographic.getHin());
+			cachedDemographicInfo.setLastName(demographic.getLastName());
+			cachedDemographicInfo.setProvince(demographic.getProvince());
+			cachedDemographicInfo.setSin(demographic.getSin());
+
+			org.oscarehr.common.model.FacilityDemographicPrimaryKey pk = new org.oscarehr.common.model.FacilityDemographicPrimaryKey(facility.getId(), demographicId);
+			IntegratorConsent consent = integratorConsentDao.find(pk);
+			if (consent != null) {
+				cachedDemographicInfo.setConsentToBasicPersonalId(consent.isConsentToBasicPersonalId());
+				cachedDemographicInfo.setConsentToHealthCardId(consent.isConsentToHealthCardId());
+				cachedDemographicInfo.setConsentToIssues(consent.isConsentToIssues());
+				cachedDemographicInfo.setConsentToNotes(consent.isConsentToNotes());
+				cachedDemographicInfo.setConsentToStatistics(consent.isConsentToStatistics());
+				cachedDemographicInfo.setRestrictConsentToHic(consent.isRestrictConsentToHic());
+			}
+
+			service.setCachedDemographicInfo(cachedDemographicInfo);
+		}
+	}
+
+	private void pushFacilityInfo(Facility facility) throws IOException {
+
+		CachedFacilityInfo cachedFacilityInfo = new CachedFacilityInfo();
+		BeanUtils.copyProperties(facility, cachedFacilityInfo, new String[] { "id" });
+
+		FacilityInfoWs service = caisiIntegratorManager.getFacilityInfoWs(facility.getId());
+
+		logger.debug("pushing facilityInfo");
+		service.setMyFacilityInfo(cachedFacilityInfo);
+	}
 }

@@ -37,6 +37,8 @@ import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWsService;
+import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWsService;
 import org.oscarehr.util.TimeClearedHashMap;
 
 public class CaisiIntegratorManager {
@@ -92,6 +94,17 @@ public class CaisiIntegratorManager {
         
         DemographicInfoWsService service = new DemographicInfoWsService(buildURL(facility, "DemographicInfoService"));
         DemographicInfoWs port = service.getDemographicInfoWsPort();
+
+        addAuthenticationInterceptor(facility, port);
+        
+        return(port);
+    }
+
+    public ProgramInfoWs getProgramInfoWs(int facilityId) throws MalformedURLException {
+        Facility facility=getLocalFacility(facilityId);
+        
+        ProgramInfoWsService service = new ProgramInfoWsService(buildURL(facility, "ProgramInfoService"));
+        ProgramInfoWs port = service.getProgramInfoWsPort();
 
         addAuthenticationInterceptor(facility, port);
         
