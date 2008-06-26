@@ -166,6 +166,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private void pushPrograms(Facility facility) throws MalformedURLException {
 		List<Program> programs=programDao.getProgramsByFacilityId(facility.getId());
+
 		ArrayList<CachedProgramInfo> cachedProgramInfos=new ArrayList<CachedProgramInfo>();
 		
 		for (Program program : programs)
