@@ -464,8 +464,72 @@ public class ProviderPropertyAction extends DispatchAction {
          return actionmapping.findForward("gen");
      }
     
-    
-   
+    //How does cpp paste into consult request property
+    public ActionForward viewConsultPasteFmt(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+                               
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.CONSULTATION_REQ_PASTE_FMT);
+         
+         if (prop == null){
+             prop = new UserProperty();
+         }         
+         
+         ArrayList serviceList = new ArrayList();
+         serviceList.add(new LabelValueBean("Single Line", "single"));
+         serviceList.add(new LabelValueBean("Multi Line", "multi"));
+         
+         request.setAttribute("dropOpts",serviceList);
+         
+         request.setAttribute("dateProperty",prop);
+         
+         request.setAttribute("providertitle","provider.setConsulReqtPasteFmt.title");
+         request.setAttribute("providermsgPrefs","provider.setConsulReqtPasteFmt.msgPrefs");
+         request.setAttribute("providermsgProvider","provider.setConsulReqtPasteFmt.msgProvider");
+         request.setAttribute("providermsgEdit","provider.setConsulReqtPasteFmt.msgEdit");
+         request.setAttribute("providerbtnSubmit","provider.setConsulReqtPasteFmt.btnSubmit");
+         request.setAttribute("providermsgSuccess","provider.setConsulReqtPasteFmt.msgSuccess");
+         request.setAttribute("method","saveConsultPasteFmt");
+         
+         frm.set("dateProperty", prop);
+         return actionmapping.findForward("gen");
+     }    
+
+    public ActionForward saveConsultPasteFmt(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+        
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty prop = (UserProperty)frm.get("dateProperty");        
+         String fmt = prop != null ? prop.getValue() : "";
+         
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.CONSULTATION_REQ_PASTE_FMT);
+         
+         if( saveProperty == null ) {
+             saveProperty = new UserProperty();
+             saveProperty.setProvider_no(provider);
+             saveProperty.setName(UserProperty.CONSULTATION_REQ_PASTE_FMT);
+         }
+         
+         saveProperty.setValue(fmt);
+         this.userPropertyDAO.saveProp(saveProperty);
+         
+         request.setAttribute("status", "success");
+         request.setAttribute("providertitle","provider.setConsulReqtPasteFmt.title");
+         request.setAttribute("providermsgPrefs","provider.setConsulReqtPasteFmt.msgPrefs");
+         request.setAttribute("providermsgProvider","provider.setConsulReqtPasteFmt.msgProvider");
+         request.setAttribute("providermsgEdit","provider.setConsulReqtPasteFmt.msgEdit");
+         request.setAttribute("providerbtnSubmit","provider.setConsulReqtPasteFmt.btnSubmit");
+         request.setAttribute("providermsgSuccess","provider.setConsulReqtPasteFmt.msgSuccess");
+         request.setAttribute("method","saveConsultPasteFmt");
+                  
+         return actionmapping.findForward("gen");
+     }        
     
     /**
      * Creates a new instance of ProviderPropertyAction
