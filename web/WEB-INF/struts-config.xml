@@ -27,6 +27,9 @@
         </form-bean>
         <form-bean name="lookupCodeEditForm" type="com.quatro.web.lookup.LookupCodeEditForm">
         </form-bean>
+        <form-bean name="clinicForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="clinic" type="org.oscarehr.common.model.Clinic" />
+        </form-bean>
         <!-- login form bean -->
         <form-bean name="loginForm" type="oscar.login.LoginForm" />
         <form-bean name="msgSendMessageForm" type="oscar.oscarMessenger.pageUtil.MsgSendMessageForm" />
@@ -784,6 +787,11 @@
         <action input="/immunization/config/ImmunizationSetDisplay.jsp" name="EctImmImmunizationSetDisplayForm" path="/oscarEncounter/immunization/config/ImmunizationSetDisplay" scope="request" type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmImmunizationSetDisplayAction">
             <forward name="success" path="/oscarEncounter/immunization/config/ImmunizationSetDisplay.jsp" />
         </action>
+        <!-- action input="/oscarEncounter/oscarMeasurements/Measurements.jsp" name="EctMeasurementsForm" path="/oscarEncounter/GraphMeasurements" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.MeasurementGraphAction2">
+            <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessMeasurementsSubmission.jsp" />
+            <forward name="failure" path="/oscarEncounter/oscarMeasurements/Measurements.jsp" />
+        </action -->
+        
         <action input="/oscarEncounter/oscarMeasurements/Measurements.jsp" name="EctMeasurementsForm" path="/oscarEncounter/Measurements" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctMeasurementsAction">
             <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessMeasurementsSubmission.jsp" />
             <forward name="failure" path="/oscarEncounter/oscarMeasurements/Measurements.jsp" />
@@ -1695,6 +1703,12 @@
         </action>
         <!-- Population Report -->
         <!-- PHR -->
+        
+        <action path="/admin/ManageClinic" name="clinicForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+            <forward name="success" path="/admin/clinicAdmin.jsp" />
+        </action>
+        
+        
         
         <action path="/PhrRetrieve" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="report" path="/PMmodule/vaccine/vaccine_provider_report.jsp" />
