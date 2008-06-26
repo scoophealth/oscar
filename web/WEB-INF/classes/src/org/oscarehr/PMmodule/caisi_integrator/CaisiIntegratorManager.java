@@ -26,9 +26,6 @@ package org.oscarehr.PMmodule.caisi_integrator;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.oscarehr.PMmodule.dao.FacilityDao;
@@ -39,22 +36,14 @@ import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWsService;
-import org.oscarehr.util.TimeClearedHashMap;
 
 public class CaisiIntegratorManager {
-
-    private static Log logger = LogFactory.getLog(CaisiIntegratorManager.class);
 
     private FacilityDao facilityDao;
 
     public void setFacilityDao(FacilityDao facilityDao) {
         this.facilityDao = facilityDao;
     }
-
-    /**
-     * This is a simple cache mechanism which removes objects based on time. The expectation is that anyon who puts items into this will identify themselves uniquely via the map key.
-     */
-    private static TimeClearedHashMap<String, Object> simpleTimeCache = new TimeClearedHashMap<String, Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
     public boolean isIntegratorEnabled(int facilityId) {
         Facility facility = getLocalFacility(facilityId); 
