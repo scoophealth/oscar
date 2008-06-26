@@ -356,7 +356,9 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <li><a href="#" onclick ='popupPage(800,720,&quot;<html:rewrite page="/billing/CA/BC/TeleplanSubmission.jsp"/>&quot;);return false;'>Generate Teleplan File2</a></li>
           <li><a href="#" onclick ='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/BC/teleplan/ManageTeleplan.jsp"/>&quot;);return false;'>Manage Teleplan</a></li>
           </oscar:oscarPropertiesCheck>
+          <oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="no" defaultVal="true">
           <li><a href="#" onclick ='popupPage(600,800,&quot;<html:rewrite page="/billing/CA/BC/billingTA.jsp"/>&quot;);return false;'>Upload Remittance Files</a></li>
+          </oscar:oscarPropertiesCheck>
           <li><a href="#" onclick ='popupPage(600,800,&quot;<html:rewrite page="/billing/CA/BC/viewReconcileReports.jsp"/>&quot;);return false;'>MSP Reconcilliation Reports</a></li>
           <li><a href="#" onclick ='popUpBillStatus(375,425,&quot;<html:rewrite page="/billing/CA/BC/billingAccountReports.jsp"/>&quot;);return false;'>Accounting Reports</a></li>
           <li><a href="#" onclick ='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/BC/billStatus.jsp"/>&quot;);return false;'>Edit Invoices</a></li>
