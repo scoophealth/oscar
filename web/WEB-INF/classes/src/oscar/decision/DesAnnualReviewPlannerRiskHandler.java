@@ -134,10 +134,10 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
             results += "</b></font></td></tr></table>\n";
         } else if (rawName.equals("risk")) {
             results += "</font></td><td><input type=checkbox name=\"xml_" + riskName
-                    + "\" value='checked' datafld='xml_" + riskName + "'>";
+                    + "\" value='checked' id='xml_" + riskName + "'>";
             riskName = "";
         } else if (rawName.equals("entry")) {
-            results += "</font></td><td><input type=text size=6 name=\"xml_" + riskName + "\" datafld='xml_"
+            results += "</font></td><td><input type=text size=6 name=\"xml_" + riskName + "\" id='xml_"
                     + riskName + "'>";
             riskName = "";
         }

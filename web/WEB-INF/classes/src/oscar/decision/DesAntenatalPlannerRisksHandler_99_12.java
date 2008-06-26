@@ -119,7 +119,7 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
             for (int i=0; i < atts.getLength(); i++) {
                 if (atts.getQName(i) == "name") {
                     riskName = atts.getValue(i);
-                    results += "<input type=checkbox name=\"risk_" + riskName + "\" value='checked' datafld='risk_" +riskName+ "'></font></td><td width="+100/numcols+"% >";
+                    results += "<input type=checkbox name=\"risk_" + riskName + "\" value='checked' id='risk_" +riskName+ "'></font></td><td width="+100/numcols+"% >";
                     riskNameObj.setProperty(riskName, "checked");
                 }
                 if (atts.getQName(i) == "href") {

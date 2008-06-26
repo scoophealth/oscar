@@ -120,11 +120,11 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
                     clName = atts.getValue(i);
                     results += "<td width='5%'>";
                     results += "<input type=checkbox name=\"checklist_" + clName
-                            + "_done\" value='checked' datafld='checklist_" + clName + "_done'>";
+                            + "_done\" value='checked' id='checklist_" + clName + "_done'>";
                     results += "</td>";
                     results += "<td width='5%'>";
                     results += "<input type=checkbox name=\"checklist_" + clName
-                            + "_na\" value='checked' datafld='checklist_" + clName + "_na'>";
+                            + "_na\" value='checked' id='checklist_" + clName + "_na'>";
                     results += "</td>";
                 }
             }
