@@ -53,8 +53,6 @@ import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicPrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityProgramPrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.Status;
-import org.oscarehr.caisi_integrator.ws.client.Type;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
@@ -177,19 +175,20 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			pk.setFacilityProgramId(program.getId());
 			cachedProgramInfo.setFacilityProgramPrimaryKey(pk);
 
+			cachedProgramInfo.setAbstinenceSupport(program.getAbstinenceSupport());
+			cachedProgramInfo.setAlcohol(program.isAlcohol());
+			cachedProgramInfo.setBedProgramAffiliated(program.isBedProgramAffiliated());
 			cachedProgramInfo.setDescription(program.getDescr());
 			cachedProgramInfo.setFirstNation(program.isFirstNation());
 			cachedProgramInfo.setGender(program.getManOrWoman());
+			cachedProgramInfo.setHousing(program.isHousing());
 			cachedProgramInfo.setMaxAge(program.getAgeMax());
+			cachedProgramInfo.setMentalHealth(program.isMentalHealth());
 			cachedProgramInfo.setMinAge(program.getAgeMin());
 			cachedProgramInfo.setName(program.getName());
-			
-			if ("active".equals(program.getProgramStatus())) cachedProgramInfo.setStatus(Status.ACTIVE);
-			else cachedProgramInfo.setStatus(Status.INACTIVE);
-			
-			if ("community".equals(program.getProgramStatus())) cachedProgramInfo.setType(Type.COMMUNITY);
-			if ("Bed".equals(program.getProgramStatus())) cachedProgramInfo.setType(Type.BED);
-			if ("Bed".equals(program.getProgramStatus())) cachedProgramInfo.setType(Type.SERVICE);
+			cachedProgramInfo.setPhysicalHealth(program.isPhysicalHealth());
+			cachedProgramInfo.setStatus(program.getProgramStatus());
+			cachedProgramInfo.setType(program.getProgramStatus());
 			
 			cachedProgramInfos.add(cachedProgramInfo);
 		}
