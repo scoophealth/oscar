@@ -88,7 +88,7 @@
                                             String provider = (String) request.getSession().getAttribute("user");
                                             UserProperty prop = userPropertyDAO.getProp(provider, UserProperty.WORKLOAD_MANAGEMENT);
          
-                                            String wrkloadmanagement =  prop.getValue();
+                                            String wrkloadmanagement =  prop!= null ? prop.getValue() : null;
                                             if ( wrkloadmanagement != null && !wrkloadmanagement.equals("") && !wrkloadmanagement.equals(curBilf) ){ 
                                             ///NEED TO CHECK IF THIS IS THE CURRENT FORM IF SO LET IT CLOSE!!!
                                             String urlBack = request.getParameter("url_back")+"&curBillForm="+wrkloadmanagement;
