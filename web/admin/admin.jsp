@@ -479,6 +479,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 	<div class="adminBox">
 	    <h3>&nbsp;<bean:message key="admin.admin.misc"/></h3>
 	    <ul>
+                <li><a href="#" onclick ='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageClinic.do"/>&quot;);return false;'>Clinic Admin</a></li>
 		<li><a href="#" onclick ='popupPage(550,800,&quot;<html:rewrite page="/demographic/demographicExport.jsp"/>&quot;);return false;'>Demographic Export <!-- I18N --></a></li>
 		<li><a href="#" onclick ='popupPage(550,800,&quot;<html:rewrite page="/admin/demographicmergerecord.jsp"/>&quot;);return false;'>Demographic Merge Records</a></li>
 		<li><a href="#" onclick ='popupPage(550,800,&quot;<html:rewrite page="/admin/updatedemographicprovider.jsp"/>&quot;);return false;' ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></li>
