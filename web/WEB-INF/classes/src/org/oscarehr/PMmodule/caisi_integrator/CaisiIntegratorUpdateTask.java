@@ -188,7 +188,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedProgramInfo.setName(program.getName());
 			cachedProgramInfo.setPhysicalHealth(program.isPhysicalHealth());
 			cachedProgramInfo.setStatus(program.getProgramStatus());
-			cachedProgramInfo.setType(program.getProgramStatus());
+			cachedProgramInfo.setType(program.getType());
 			
 			cachedProgramInfos.add(cachedProgramInfo);
 		}
