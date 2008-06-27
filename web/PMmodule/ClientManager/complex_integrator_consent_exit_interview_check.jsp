@@ -3,10 +3,6 @@
 <%@page import="org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.PMmodule.model.Provider"%>
 
-<script>
-	window.opener.location=window.opener.location;
-</script>
-
 <%
 	// this jsp should check to see if an exit interview is required or not
 	// if it is, forward to exit interview
@@ -26,6 +22,7 @@
 	{
 		%>
 			<script>
+				window.opener.location=window.opener.location;
 				window.close();
 			</script>
 		<%
