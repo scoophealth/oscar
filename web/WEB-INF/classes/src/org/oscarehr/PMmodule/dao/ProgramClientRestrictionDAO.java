@@ -67,7 +67,7 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
   		 "pcr.demographicNo = ? and pcr.programId in (select s.id from Program s where s.facilityId = ? or s.facilityId is null) " +
          "order by pcr.programId";
           paramList.add(Integer.valueOf(demographicNo));
-          paramList.add(Long.valueOf((long)facilityId));
+          paramList.add(facilityId);
           Object params[] = paramList.toArray(new Object[paramList.size()]);
           Collection<ProgramClientRestriction> pcrs= getHibernateTemplate().find(sSQL, params);
           for (ProgramClientRestriction pcr : pcrs) {

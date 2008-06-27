@@ -186,7 +186,7 @@ public class CustomFilterAction extends DispatchAction {
 		
 		//request.setAttribute("programs", programMgr.getProgramDomain(providerId));
 		Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);  
-		request.setAttribute("programs", programMgr.getProgramDomainInFacility(providerId,Long.valueOf(currentFacilityId)));
+		request.setAttribute("programs", programMgr.getProgramDomainInFacility(providerId,currentFacilityId));
 		return mapping.findForward("customFilterForm");
 	}
 	

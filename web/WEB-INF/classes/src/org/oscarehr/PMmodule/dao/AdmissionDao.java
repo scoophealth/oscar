@@ -148,7 +148,7 @@ public class AdmissionDao extends HibernateDaoSupport {
 
         String queryStr = "FROM Admission a WHERE a.ClientId=? and a.ProgramId in " +
            "(select s.id from Program s where s.facilityId=? or s.facilityId is null) ORDER BY a.AdmissionDate DESC";
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, new Long(facilityId.longValue()) });
+        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, facilityId });
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissionsByFacility for clientId " + demographicNo + ", # of admissions: " + rs.size());
@@ -213,7 +213,7 @@ public class AdmissionDao extends HibernateDaoSupport {
            "(select s.id from Program s where s.facilityId=? or s.facilityId is null) AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
 
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, new Long(facilityId.longValue()) });
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, facilityId });
 
         if (log.isDebugEnabled()) {
             log.debug("getCurrentAdmissionsByFacility for clientId " + demographicNo + ", # of admissions: " + rs.size());

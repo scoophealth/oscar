@@ -73,7 +73,6 @@
     <bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
     <bean id="clinicDAO" class="org.oscarehr.common.dao.ClinicDAO" autowire="byName" />
     <bean id="UserDSMessagePrefsDAO" class="org.oscarehr.common.dao.UserDSMessagePrefsDAO" autowire="byName" />
-	<bean id="facilityDao" class="org.oscarehr.PMmodule.dao.FacilityDao" autowire="byName"/>
 	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName"/>
 	<bean id="caisiEditorDAO" class="org.caisi.dao.CaisiEditorDAO" autowire="byName" />	
 	<!--  configure the scratch pad -->
@@ -112,12 +111,6 @@
           dependency-check="default">
         <property name="target">
             <bean class="org.caisi.service.CaisiEditorManager" autowire="byName"/>
-        </property>
-    </bean>
-    
-    <bean id="facilityManager" parent="baseTransactionProxy">
-        <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.FacilityManager" autowire="byName" />            
         </property>
     </bean>
     

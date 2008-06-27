@@ -1,7 +1,7 @@
 package org.oscarehr.PMmodule.web.admin;
 
 import org.apache.struts.action.ActionForm;
-import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.common.model.Facility;
 
 /**
  */

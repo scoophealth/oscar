@@ -11,9 +11,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.geronimo.mail.util.SessionUtil;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -23,30 +20,33 @@ import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.service.FacilityManager;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.FacilityDischargedClients;
+import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.WebUtils;
-import org.springframework.beans.factory.annotation.Required;
 
 import com.quatro.service.LookupManager;
 
 /**
  */
 public class FacilityManagerAction extends BaseAction {
-    private static final Log log = LogFactory.getLog(FacilityManagerAction.class);
 
-    private FacilityManager facilityManager;
     private AdmissionDao admissionDao;
     private ClientDao clientDao;
     private ProgramManager programManager;
     private LookupManager lookupManager;
     private LogManager logManager;
+
+    private FacilityDao facilityDao;
+
+    public void setFacilityDao(FacilityDao facilityDao) {
+		this.facilityDao = facilityDao;
+	}
 
     private static final String FORWARD_EDIT = "edit";
     private static final String FORWARD_VIEW = "view";
@@ -61,12 +61,9 @@ public class FacilityManagerAction extends BaseAction {
     }
 
     public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        List<Facility> facilities = facilityManager.getFacilities();
-        List<Facility> filteredFacilities = new ArrayList<Facility>();
-        for (Facility facility : facilities) {
-            if (!facility.isDisabled()) filteredFacilities.add(facility);
-        }
-        request.setAttribute(BEAN_FACILITIES, filteredFacilities);
+        List<Facility> facilities = facilityDao.findAll(true);
+
+        request.setAttribute(BEAN_FACILITIES, facilities);
 
         // get agency's organization list from caisi editor table
         request.setAttribute("orgList", lookupManager.LoadCodeList("OGN", true, null, null));
@@ -80,7 +77,7 @@ public class FacilityManagerAction extends BaseAction {
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String idStr = request.getParameter("id");
         Integer id = Integer.valueOf(idStr);
-        Facility facility = facilityManager.getFacility(id);
+        Facility facility = facilityDao.find(id);
 
         FacilityManagerForm facilityForm = (FacilityManagerForm) form;
         facilityForm.setFacility(facility);
@@ -147,7 +144,7 @@ public class FacilityManagerAction extends BaseAction {
 
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
-        Facility facility = facilityManager.getFacility(Integer.valueOf(id));
+        Facility facility = facilityDao.find(Integer.valueOf(id));
 
         FacilityManagerForm managerForm = (FacilityManagerForm) form;
         managerForm.setFacility(facility);
@@ -167,9 +164,9 @@ public class FacilityManagerAction extends BaseAction {
 
     public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
-        Facility facility = facilityManager.getFacility(Integer.valueOf(id));
+        Facility facility = facilityDao.find(Integer.valueOf(id));
         facility.setDisabled(true);
-        facilityManager.saveFacility(facility);
+        facilityDao.merge(facility);
 
         return list(mapping, form, request, response);
     }
@@ -203,7 +200,8 @@ public class FacilityManagerAction extends BaseAction {
         	facility.setIntegratorEnabled(WebUtils.isChecked(request, "facility.integratorEnabled"));
         	facility.setUseQuickConsent(WebUtils.isChecked(request, "facility.useQuickConsent"));
             
-            facilityManager.saveFacility(facility);
+        	if (facility.getId()==null || facility.getId()==0) facilityDao.persist(facility);
+        	else facilityDao.merge(facility);
 
             Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
             if (currentFacilityId.equals(facility.getId())) request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
@@ -225,15 +223,6 @@ public class FacilityManagerAction extends BaseAction {
 
             return mapping.findForward(FORWARD_EDIT);
         }
-    }
-
-    public FacilityManager getFacilityManager() {
-        return facilityManager;
-    }
-
-    @Required
-    public void setFacilityManager(FacilityManager facilityManager) {
-        this.facilityManager = facilityManager;
     }
 
     public void setAdmissionDao(AdmissionDao admissionDao) {

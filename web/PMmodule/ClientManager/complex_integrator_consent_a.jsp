@@ -27,7 +27,7 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.model.Provider"%>
-<%@page import="org.oscarehr.PMmodule.model.Facility"%>
+<%@page import="org.oscarehr.common.model.Facility"%>
 <%@page import="org.caisi.dao.DemographicDao"%>
 <%@page import="org.oscarehr.PMmodule.model.Demographic"%>
 

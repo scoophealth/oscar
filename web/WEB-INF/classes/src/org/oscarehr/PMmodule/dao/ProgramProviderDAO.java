@@ -27,8 +27,9 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.oscarehr.PMmodule.model.Facility;
+import org.caisi.model.FacilityMessage;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.common.model.Facility;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ProgramProviderDAO extends HibernateDaoSupport {
@@ -68,7 +69,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
         String queryStr = "from ProgramProvider pp where pp.ProviderNo = ? and pp.ProgramId in " +
                       "(select s.id from Program s where s.facilityId=? or s.facilityId is null)";
-        List results = getHibernateTemplate().find(queryStr, new Object[] { providerNo, new Long(facilityId.longValue()) });
+        List results = getHibernateTemplate().find(queryStr, new Object[] { providerNo, facilityId });
         
         if (log.isDebugEnabled()) {
             log.debug("getProgramProvidersByProviderAndFacility: providerNo=" + providerNo + ",# of results=" + results.size());
@@ -199,7 +200,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
         String queryStr = "from ProgramProvider pp where pp.ProviderNo = ? and pp.ProgramId in " +
                     "(select s.id from Program s where s.facilityId=? or s.facilityId is null)";
-        List results = getHibernateTemplate().find(queryStr, new Object[] { providerNo, new Long(facilityId.longValue()) });
+        List results = getHibernateTemplate().find(queryStr, new Object[] { providerNo, facilityId });
 
         if (log.isDebugEnabled()) {
             log.debug("getProgramDomainByFacility: providerNo=" + providerNo + ",# of results=" + results.size());
@@ -218,7 +219,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     }
     
     @SuppressWarnings("unchecked")
-    public List<Facility> getFacilityMessagesInProgramDomain(String providerNo) {
+    public List<FacilityMessage> getFacilityMessagesInProgramDomain(String providerNo) {
         if (providerNo == null || Long.valueOf(providerNo) == null) {
             throw new IllegalArgumentException();
         }
@@ -227,12 +228,12 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         return results;
     }
     
-    public List getFacilityMessagesByFacilityId(Integer facilityId) {
+    public List<FacilityMessage> getFacilityMessagesByFacilityId(Integer facilityId) {
         if (facilityId == null || facilityId == null) {
             //throw new IllegalArgumentException();
         	return null;
         }
-        List results = this.getHibernateTemplate().find("select distinct fm from FacilityMessage fm where fm.facilityId = ?", Long.valueOf(facilityId));
+        List results = this.getHibernateTemplate().find("select distinct fm from FacilityMessage fm where fm.facilityId = ?", facilityId);
 
         return results;
     }

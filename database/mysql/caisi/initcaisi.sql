@@ -1,26 +1,21 @@
-
--- Facility table, added to CAISI to support RFQ requirement of facilities.
-create table facility (
-    `id` int NOT NULL auto_increment,
-    `name` varchar(32) NOT NULL default '',
-    `description` VARCHAR(150) NOT NULL default '',
-    `contact_name` varchar(255) default NULL,
-    `contact_email` varchar(255) default NULL,
-    `contact_phone` varchar(255) default NULL,
-    `hic` tinyint(1) NOT NULL default FALSE,
-    `disabled` tinyint(1) NOT NULL default '0',
-    `org_id` int(10) NOT NULL default '0',
-    `sector_id` int(10) NOT NULL default '0',
-	`integratorEnabled` tinyint(1) not null default 0,
-	`integratorUrl` varchar(255),
-	`integratorUser` varchar(255),
-	`integratorPassword` varchar(255),
-	`integratorLastPushTime` datetime,
-	`useQuickConsent` tinyint(1) not null,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `idx_facility_name` USING HASH (`name`)
+create table Facility (
+    id int primary key auto_increment,
+    name varchar(32) NOT NULL, unique(name),
+    description VARCHAR(150),
+    contactName varchar(255),
+    contactEmail varchar(255),
+    contactPhone varchar(255),
+    hic tinyint(1) NOT NULL,
+    disabled tinyint(1) NOT NULL,
+    orgId int NOT NULL,
+    sectorId int NOT NULL,
+	integratorEnabled tinyint(1) not null,
+	integratorUrl varchar(255),
+	integratorUser varchar(255),
+	integratorPassword varchar(255),
+	integratorLastPushTime datetime,
+	useQuickConsent tinyint(1) not null
 );
-
 
 
 --

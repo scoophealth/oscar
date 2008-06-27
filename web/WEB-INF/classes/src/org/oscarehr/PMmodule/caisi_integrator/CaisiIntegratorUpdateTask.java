@@ -37,10 +37,8 @@ import javax.xml.ws.WebServiceException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.dao.DemographicDao;
-import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
@@ -58,7 +56,9 @@ import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.beans.BeanUtils;
@@ -107,7 +107,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.debug("CaisiIntegratorUpdateTask starting");
 
 		try {
-			List<Facility> facilities = facilityDao.getFacilities();
+			List<Facility> facilities = facilityDao.findAll(null);
 
 			for (Facility facility : facilities) {
 				if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
@@ -157,9 +157,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// update late push time only if an exception didn't occur
 		// re-get the facility as the sync time could be very long and changes
 		// may have been made to the facility.
-		facility = facilityDao.getFacility(facility.getId());
+		facility = facilityDao.find(facility.getId());
 		facility.setIntegratorLastPushTime(currentPushTime);
-		facilityDao.saveFacility(facility);
+		facilityDao.merge(facility);
 	}
 
 	private void pushPrograms(Facility facility) throws MalformedURLException {

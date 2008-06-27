@@ -54,7 +54,6 @@ import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Consent;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
-import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.HealthSafety;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.JointAdmission;
@@ -87,6 +86,7 @@ import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.FacilityDemographicPrimaryKey;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
@@ -615,7 +615,6 @@ public class ClientManagerAction extends BaseAction {
         DynaActionForm clientForm = (DynaActionForm) form;
 
         BedDemographic bedDemographic = (BedDemographic) clientForm.get("bedDemographic");
-        Date today = DateTimeFormatUtils.getToday();
         String roomId = request.getParameter("roomId");
         request.setAttribute("roomId", roomId);
 

@@ -5,10 +5,10 @@ import java.util.Map;
 import org.apache.struts.action.ActionForm;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedType;
-import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomType;
+import org.oscarehr.common.model.Facility;
 
 /**
  */

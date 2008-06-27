@@ -75,18 +75,18 @@ public class Program implements Serializable {
     private int ageMax=200;
     private Integer maximumServiceRestrictionDays;
     private int defaultServiceRestrictionDays;
-    private long facilityId;
+    private int facilityId;
 
     // constructors
     public Program() {
         // no arg constructor for JPA
     }
 
-    public long getFacilityId() {
+    public int getFacilityId() {
         return facilityId;
     }
 
-    public void setFacilityId(long facilityId) {
+    public void setFacilityId(int facilityId) {
         this.facilityId = facilityId;
     }
 

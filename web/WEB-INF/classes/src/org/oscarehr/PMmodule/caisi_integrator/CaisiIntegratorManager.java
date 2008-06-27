@@ -28,14 +28,14 @@ import java.net.URL;
 
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
-import org.oscarehr.PMmodule.dao.FacilityDao;
-import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWsService;
+import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.model.Facility;
 
 public class CaisiIntegratorManager {
 
@@ -53,7 +53,7 @@ public class CaisiIntegratorManager {
 
     private Facility getLocalFacility(int facilityId)
     {
-        return(facilityDao.getFacility(facilityId));
+        return(facilityDao.find(facilityId));
     }
     
     private void addAuthenticationInterceptor(Facility facility, Object wsPort)

@@ -29,8 +29,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -41,23 +39,21 @@ import org.apache.struts.actions.DispatchAction;
 import org.caisi.model.FacilityMessage;
 import org.caisi.service.FacilityMessageManager;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
-import org.oscarehr.PMmodule.model.Facility;
-import org.oscarehr.PMmodule.service.FacilityManager;
+import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.model.Facility;
 
 public class FacilityMessageAction extends DispatchAction {
 
-	private static Log log = LogFactory.getLog(FacilityMessageAction.class);
-	
-	protected FacilityMessageManager mgr = null;
-	protected FacilityManager facilityMgr = null;
+	private FacilityMessageManager mgr = null;
+	private FacilityDao facilityDao = null;
 	private ProgramProviderDAO programProviderDAO;
 	
 	public void setFacilityMessageManager(FacilityMessageManager mgr) {
 		this.mgr = mgr;
 	}
 	
-	public void setFacilityManager(FacilityManager facilityMgr) {
-		this.facilityMgr = facilityMgr;
+	public void setFacilityDao(FacilityDao facilityDao) {
+		this.facilityDao = facilityDao;
 	}
 	
 	public void setProgramProviderDAO(ProgramProviderDAO dao) {
@@ -71,11 +67,11 @@ public class FacilityMessageAction extends DispatchAction {
 	public ActionForward list(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		//List activeMessages = mgr.getMessages();
 		Facility facility = (Facility)request.getSession().getAttribute("currentFacility");
-		Long facilityId = null;
+		Integer facilityId = null;
 		if(facility!=null)
-			facilityId = Long.valueOf(facility.getId().longValue());
+			facilityId = facility.getId();
 		
-		List activeMessages = mgr.getMessagesByFacilityId(facilityId);
+		List<FacilityMessage> activeMessages = mgr.getMessagesByFacilityId(facilityId);
 		if(activeMessages!=null && activeMessages.size() >0)
 			request.setAttribute("ActiveFacilityMessages",activeMessages);
 		return mapping.findForward("list");
@@ -85,10 +81,8 @@ public class FacilityMessageAction extends DispatchAction {
 		DynaActionForm facilityMessageForm = (DynaActionForm)form;
 		String messageId = request.getParameter("id");
 		
-		String providerNo = (String)request.getSession().getAttribute("user");
-		
 		//List facilities = programProviderDAO.getFacilitiesInProgramDomain(providerNo);
-		List<Facility> facilities = new ArrayList();
+		List<Facility> facilities = new ArrayList<Facility>();
 		facilities.add((Facility)request.getSession().getAttribute("currentFacility"));
 		
 		request.getSession().setAttribute("facilities", facilities);
@@ -116,7 +110,7 @@ public class FacilityMessageAction extends DispatchAction {
 		Integer facilityId = msg.getFacilityId().intValue();
 		String facilityName = "";
 		if(facilityId!=null && facilityId.intValue()!=0)
-			facilityName = facilityMgr.getFacility(facilityId).getName();
+			facilityName = facilityDao.find(facilityId).getName();
 		msg.setFacilityName(facilityName);
 		mgr.saveFacilityMessage(msg);
 		
@@ -135,7 +129,7 @@ public class FacilityMessageAction extends DispatchAction {
 		Integer facilityId = null;
 		if(facility!=null) 
 			facilityId = facility.getId();
-		List messages = programProviderDAO.getFacilityMessagesByFacilityId(facilityId);
+		List<FacilityMessage> messages = programProviderDAO.getFacilityMessagesByFacilityId(facilityId);
 		if(messages!=null && messages.size()>0) {
 			request.setAttribute("FacilityMessages",messages);
 		}

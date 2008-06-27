@@ -2,7 +2,6 @@
 <%@page import="org.oscarehr.common.dao.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.PMmodule.dao.FacilityDao"%>
 
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 

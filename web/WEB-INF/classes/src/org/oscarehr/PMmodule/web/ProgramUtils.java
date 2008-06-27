@@ -23,10 +23,10 @@ package org.oscarehr.PMmodule.web;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
-import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.SpringUtils;
 
 public class ProgramUtils
@@ -63,7 +63,7 @@ public class ProgramUtils
         
         sb.append("var oldIn=false; var newIn=false; \n");
         sb.append("if(oldProgramId=='' || oldProgramId==null) {return false;}\n");
-        for(Facility facility : facilityDao.getFacilities()) {        	
+        for(Facility facility : facilityDao.findAll(null)) {        	
         	for(Program program : programDao.getProgramsByFacilityId(facility.getId())) {	
         		sb.append("if(oldProgramId==" + program.getId()+") {oldIn=true;}\n ");
         		sb.append("if(newProgramId==" + program.getId()+") {newIn=true;} \n");

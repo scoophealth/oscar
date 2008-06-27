@@ -25,17 +25,12 @@ package org.caisi.service;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.caisi.dao.FacilityMessageDAO;
 import org.caisi.model.FacilityMessage;
 
 
 public class FacilityMessageManager {
 
-	private static Log log = LogFactory.getLog(FacilityMessageManager.class);
-	
-	
 	private FacilityMessageDAO dao = null;	
 	
 	public FacilityMessage getMessage(String messageId) {
@@ -51,11 +46,11 @@ public class FacilityMessageManager {
 		dao.saveMessage(msg);
 	}
 	
-	public List getMessages() {
+	public List<FacilityMessage> getMessages() {
 		return dao.getMessages();
 	}
 
-	public List getMessagesByFacilityId(Long facilityId) {
+	public List<FacilityMessage> getMessagesByFacilityId(Integer facilityId) {
 		if (facilityId == null || facilityId == null) {           
         	return null;
         }

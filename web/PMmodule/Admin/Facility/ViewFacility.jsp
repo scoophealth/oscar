@@ -1,7 +1,7 @@
 <%@ include file="/taglibs.jsp"%>
 
 <%@ include file="/common/messages.jsp"%>
-<%@ page import="org.oscarehr.PMmodule.model.Facility" %>
+<%@ page import="org.oscarehr.common.model.Facility" %>
 <div class="tabs" id="tabs">
     <table cellpadding="3" cellspacing="0" border="0">
         <tr>

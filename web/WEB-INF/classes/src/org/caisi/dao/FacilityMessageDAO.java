@@ -24,20 +24,17 @@ package org.caisi.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.caisi.model.FacilityMessage;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class FacilityMessageDAO extends HibernateDaoSupport  {
 
-	private static Log log = LogFactory.getLog(FacilityMessageDAO.class);
-	
 	public FacilityMessage getMessage(Long id) {
 		return (FacilityMessage)this.getHibernateTemplate().get(FacilityMessage.class,id);
 	}
 	
-	public List getMessages() {
+	@SuppressWarnings("unchecked")
+	public List<FacilityMessage> getMessages() {
 		return this.getHibernateTemplate().find("from FacilityMessage fm order by fm.expiry_date desc");
 	}
 	
@@ -45,7 +42,8 @@ public class FacilityMessageDAO extends HibernateDaoSupport  {
 		this.getHibernateTemplate().saveOrUpdate(mesg);
 	}
 
-	public List getMessagesByFacilityId(Long facilityId) {
+	@SuppressWarnings("unchecked")
+	public List<FacilityMessage> getMessagesByFacilityId(Integer facilityId) {
 		return this.getHibernateTemplate().find("from FacilityMessage fm where facilityId=? order by fm.expiry_date desc", facilityId);
 	}
 }

@@ -29,7 +29,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.BedDAO;
-import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.exception.DuplicateRoomNameException;
@@ -54,12 +53,9 @@ public class RoomManager {
     }
 
     private RoomDAO roomDAO;
-    private BedManager bedManager;
     private RoomDemographicManager roomDemographicManager;
-    private BedDemographicManager bedDemographicManager;
     private ProgramDao programDao;
     private BedDAO bedDAO;
-    private FacilityDao facilityDao;
 
     /**
      * Get room
@@ -453,7 +449,6 @@ public class RoomManager {
     	}
         Integer roomTypeId = room.getRoomTypeId();
         room.setRoomType(roomDAO.getRoomType(roomTypeId));
-        room.setFacility(facilityDao.getFacility(room.getFacilityId()));
 
         Integer programId = room.getProgramId();
 
@@ -500,11 +495,6 @@ public class RoomManager {
     }
 
     @Required
-    public void setFacilityDao(FacilityDao facilityDao) {
-        this.facilityDao = facilityDao;
-    }
-
-    @Required
     public void setRoomDAO(RoomDAO roomDAO) {
         this.roomDAO = roomDAO;
     }
@@ -520,18 +510,8 @@ public class RoomManager {
     }
 
     @Required
-    public void setBedManager(BedManager bedManager) {
-        this.bedManager = bedManager;
-    }
-
-    @Required
     public void setRoomDemographicManager(RoomDemographicManager roomDemographicManager) {
         this.roomDemographicManager = roomDemographicManager;
     }
     
-    @Required
-    public void setBedDemographicManager(BedDemographicManager bedDemographicManager) {
-        this.bedDemographicManager = bedDemographicManager;
-    }
-
 }

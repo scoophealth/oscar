@@ -31,7 +31,7 @@ public class FacilityMessage extends BaseObject {
 	private String message;
 	private Date creation_date;
 	private Date expiry_date;
-	private Long facilityId;
+	private Integer facilityId;
 	private String facilityName;
 	
 	public FacilityMessage() {
@@ -62,10 +62,10 @@ public class FacilityMessage extends BaseObject {
 	public void setMessage(String message) {
 		this.message = message;
 	}	
-	public Long getFacilityId() {
+	public Integer getFacilityId() {
 		return facilityId;
 	}
-	public void setFacilityId(Long facility_id) {
+	public void setFacilityId(Integer facility_id) {
 		this.facilityId = facility_id;
 	}
 	public String getFacilityName() {

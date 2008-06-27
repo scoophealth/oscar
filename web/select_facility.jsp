@@ -1,6 +1,6 @@
-<%@page import="org.oscarehr.PMmodule.dao.FacilityDao"%>
+<%@page import="org.oscarehr.common.dao.FacilityDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.PMmodule.model.Facility"%>
+<%@page import="org.oscarehr.common.model.Facility"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.PMmodule.model.Provider"%>
@@ -19,7 +19,7 @@
 	<%
 		for (int facilityId : facilityIds)
 		{
-			Facility facility=facilityDao.getFacility(facilityId);
+			Facility facility=facilityDao.find(facilityId);
 			%>
 				<li><a href='?nextPage=<%=request.getParameter("nextPage")%>&<%=SessionConstants.CURRENT_FACILITY_ID%>=<%=facility.getId()%>'><%=facility.getName()%></a></li>
 			<%

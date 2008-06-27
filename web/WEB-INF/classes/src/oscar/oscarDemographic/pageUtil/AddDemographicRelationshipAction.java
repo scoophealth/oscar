@@ -35,7 +35,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.SessionConstants;
 
 import oscar.oscarDemographic.data.DemographicRelationship;

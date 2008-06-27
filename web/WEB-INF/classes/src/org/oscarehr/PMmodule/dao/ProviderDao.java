@@ -109,7 +109,7 @@ public class ProviderDao extends HibernateDaoSupport {
     	  sSQL="FROM  Provider p where p.Status='1' and p.ProviderNo in " +
                 "(select c.ProviderNo from ProgramProvider c where c.ProgramId in " +
                 "(select a.id from Program a where a.facilityId=?)) ORDER BY p.LastName";
-  	      paramList.add(Long.valueOf(facilityId));
+  	      paramList.add(facilityId);
   	      Object params[] = paramList.toArray(new Object[paramList.size()]);
 	      rs = getHibernateTemplate().find(sSQL ,params);
     	}else{

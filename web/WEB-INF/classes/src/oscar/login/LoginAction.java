@@ -15,7 +15,6 @@ package oscar.login;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Hashtable;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -28,12 +27,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.PMmodule.dao.FacilityDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.IsPropertiesOn;
+import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
@@ -61,7 +60,7 @@ public final class LoginAction extends DispatchAction {
         if (nextPage!=null) {
             // set current facility
             String facilityIdString=request.getParameter(SessionConstants.CURRENT_FACILITY_ID);
-            Facility facility=facilityDao.getFacility(Integer.parseInt(facilityIdString));
+            Facility facility=facilityDao.find(Integer.parseInt(facilityIdString));
             request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, Integer.parseInt(facilityIdString));
             request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
             String username=(String)request.getSession().getAttribute("user");
@@ -199,7 +198,7 @@ public final class LoginAction extends DispatchAction {
             }
             else if (facilityIds.size() == 1) {
                 // set current facility
-                Facility facility=facilityDao.getFacility(facilityIds.get(0));
+                Facility facility=facilityDao.find(facilityIds.get(0));
                 request.getSession().setAttribute("currentFacility", facility);
                 request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, facility.getId());
                 LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIds.get(0), ip);
@@ -209,12 +208,12 @@ public final class LoginAction extends DispatchAction {
             	//CAISI:
             	//If the provider is not in any facilities, we should put him/her into the default facility which is 1st one in the db.
             	if(IsPropertiesOn.isCaisiEnable()) {
-            		List facilities = facilityDao.getFacilities();
+            		List facilities = facilityDao.findAll(null);
             		if(facilities!=null && facilities.size()>=1) {
             			Facility fac = (Facility)facilities.get(0);
             			int first_id = fac.getId();
             			ProviderDao.addProviderToFacility(providerNo, first_id);
-            			Facility facility=facilityDao.getFacility(first_id);
+            			Facility facility=facilityDao.find(first_id);
             			request.getSession().setAttribute("currentFacility", facility);
             			request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, first_id);
             			LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+first_id, ip);

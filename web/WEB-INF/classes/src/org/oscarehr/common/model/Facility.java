@@ -1,12 +1,20 @@
-package org.oscarehr.PMmodule.model;
+package org.oscarehr.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Represents a facility, i.e. bricks and mortar.  Each facility has a number of rooms.
- */
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
 public class Facility implements Serializable {
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
     private String description;
@@ -21,6 +29,7 @@ public class Facility implements Serializable {
     private String integratorUrl=null;
     private String integratorUser=null;
     private String integratorPassword=null;
+	@Temporal(TemporalType.TIMESTAMP)
     private Date integratorLastPushTime=null;
     private boolean useQuickConsent=true;
     

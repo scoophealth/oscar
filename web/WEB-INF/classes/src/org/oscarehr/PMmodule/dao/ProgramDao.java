@@ -185,7 +185,7 @@ public class ProgramDao extends HibernateDaoSupport {
         return rs;
     }
     
-    public List <Program> getAllPrograms(String programStatus, String type, long facilityId)
+    public List <Program> getAllPrograms(String programStatus, String type, int facilityId)
     {
         @SuppressWarnings("unchecked")
     	Criteria c = getSession().createCriteria(Program.class);
@@ -474,7 +474,7 @@ public class ProgramDao extends HibernateDaoSupport {
             criteria.add(Expression.eq("mentalHealth", true));
         }
 
-        criteria.add(Expression.eq("facilityId", new Long(facilityId.longValue())));
+        criteria.add(Expression.eq("facilityId", facilityId));
         
         criteria.addOrder(Order.asc("name"));
 

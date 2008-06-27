@@ -59,7 +59,6 @@ public class Room implements Serializable {
 
     private RoomType roomType;
     private Program program;
-    private Facility facility;
 
     // constructors
     public Room() {
@@ -230,10 +229,6 @@ public class Room implements Serializable {
         return active;
     }
 
-    public Facility getFacility() {
-        return facility;
-    }
-
     /**
      * Set the value related to the column: active
      *
@@ -272,10 +267,6 @@ public class Room implements Serializable {
         return this.hashCode;
     }
 
-
-    public void setFacility(Facility facility) {
-        this.facility = facility;
-    }
     /**
      * Return the value associated with the column: assigned_bed
      */

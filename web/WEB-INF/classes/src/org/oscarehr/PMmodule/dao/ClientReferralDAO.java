@@ -77,7 +77,7 @@ public class ClientReferralDAO extends HibernateDaoSupport {
 
         String sSQL="from ClientReferral cr where cr.ClientId = ? " +
                     " and ( (cr.FacilityId=?) or (cr.ProgramId in (select s.id from Program s where s.facilityId=? or s.facilityId is null)))";
-        List results = this.getHibernateTemplate().find(sSQL, new Object[] { clientId, facilityId, new Long(facilityId.longValue()) });
+        List results = this.getHibernateTemplate().find(sSQL, new Object[] { clientId, facilityId, facilityId });
 //        		"from ClientReferral cr where cr.ClientId = ?", clientId);
 
         if (log.isDebugEnabled()) {
@@ -177,7 +177,7 @@ public class ClientReferralDAO extends HibernateDaoSupport {
             " and ( (cr.FacilityId=?) or (cr.ProgramId in (select s.id from Program s where s.facilityId=?)))";
           paramList.add(clientId);
           paramList.add(facilityId);
-          paramList.add((long)facilityId);
+          paramList.add(facilityId);
           Object params[] = paramList.toArray(new Object[paramList.size()]);
           results = getHibernateTemplate().find(sSQL, params);
         }
