@@ -14,7 +14,8 @@ create table Facility (
 	integratorUser varchar(255),
 	integratorPassword varchar(255),
 	integratorLastPushTime datetime,
-	useQuickConsent tinyint(1) not null
+	useQuickConsent tinyint(1) not null,
+	enableIntegratedReferrals tinyint(1) not null
 );
 
 
@@ -2427,7 +2428,7 @@ create table app_module
 
 create table IntegratorConsent
 (
-	facilityId int not null, foreign key (facilityId) references facility(id),
+	facilityId int not null, foreign key (facilityId) references Facility(id),
 	demographicId int not null, foreign key (demographicId) references demographic(demographic_no),
 	primary key (facilityId,demographicId),
 
@@ -2443,7 +2444,7 @@ create table IntegratorConsent
 
 create table IntegratorConsentComplexForm
 (
-	facilityId int not null, foreign key (facilityId) references facility(id),
+	facilityId int not null, foreign key (facilityId) references Facility(id),
 	demographicId int not null, foreign key (demographicId) references demographic(demographic_no),
 	primary key (facilityId,demographicId),
 
@@ -2454,7 +2455,7 @@ create table IntegratorConsentComplexForm
 
 create table IntegratorConsentComplexExitInterview
 (
-	facilityId int not null, foreign key (facilityId) references facility(id),
+	facilityId int not null, foreign key (facilityId) references Facility(id),
 	demographicId int not null, foreign key (demographicId) references demographic(demographic_no),
 	primary key (facilityId,demographicId),
 

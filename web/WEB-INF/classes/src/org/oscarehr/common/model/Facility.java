@@ -32,8 +32,17 @@ public class Facility implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
     private Date integratorLastPushTime=null;
     private boolean useQuickConsent=true;
+    private boolean enableIntegratedReferrals=true;
     
-    public boolean isUseQuickConsent() {
+    public boolean isEnableIntegratedReferrals() {
+		return enableIntegratedReferrals;
+	}
+
+	public void setEnableIntegratedReferrals(boolean enableIntegratedReferrals) {
+		this.enableIntegratedReferrals = enableIntegratedReferrals;
+	}
+
+	public boolean isUseQuickConsent() {
 		return useQuickConsent;
 	}
 
