@@ -60,6 +60,12 @@
     MeasurementInfo mi = new MeasurementInfo(demographic_no);
     ArrayList measurements = mFlowsheet.getMeasurementList();
     long startTimeToGetM = System.currentTimeMillis();
+    
+      //for (int i =0; i < measurements.size(); i++){
+      //     String measurement = (String) measurements.get(i);
+      //     System.out.println(":*:measurement= "+measurement);
+      //}
+    
     mi.getMeasurements(measurements);
     System.out.println("Getting measurements  took  "+ (System.currentTimeMillis() - startTimeToGetM) );
 
@@ -67,6 +73,12 @@
 
 
     ArrayList recList = mi.getList();
+    
+     //for (int i =0; i < recList.size(); i++){
+     //      String measurement = (String) recList.get(i);
+     //      System.out.println("-------surement= "+measurement);
+     // }
+    
     mFlowsheet.sortToCurrentOrder(recList);
     StringBuffer recListBuffer = new StringBuffer();
     for(int i = 0; i < recList.size(); i++){
@@ -345,7 +357,7 @@ div.recommendations li{
     <% } %>
 
 </td>
-<td valign="top" class="MainTableRightColumn">
+<td valign="top" class="MainTableRightColumn">    
 <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
 <div class="recommendations">
     <span style="font-size:larger;"><%=flowSheet%> Recommendations</span>
@@ -367,6 +379,11 @@ div.recommendations li{
     </ul>
 </div>
 <% } %>
+<%=mFlowsheet.getTopHTMLStream() %>
+<%--
+<img src="../../oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type=INR&type2=COUM"/>
+<br/>
+--%>
 <div >
 <%
     long startTimeToLoopAndPrint = System.currentTimeMillis();
@@ -399,13 +416,17 @@ div.recommendations li{
             //graphable="no"
             //value_name="Answer"
 %>
-<div class="preventionSection"  >
+<div class="preventionSection"  style="overflow: auto; " nowrap>
     <div class="headPrevention">
 
         <p <%=extraColour%> title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]"   >
             <%if(h2.get("graphable") != null && ((String) h2.get("graphable")).equals("yes")){%>
-            <img src="img/chart.gif" alt="Plot"  onclick="window.open('../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<%=measure%>&amp;mInstrc=<%=mtypeBean.getMeasuringInstrc()%>')"/>
+            <%if (alist != null && alist.size() > 1) { %>
+               <img src="img/chart.gif" alt="Plot"  onclick="window.open('../../oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type=<%=measure%>');"/>
+            <%}else{%>
+               <img src="img/chart.gif" alt="Plot"/>
             <%}%>
+           <%}%>
             <% System.out.println(h2.get("display_name")+ " "+ h2.get("value_name")); %>
             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
                 <span  style="font-weight:bold;"><%=h2.get("display_name")%></span>
