@@ -31,8 +31,10 @@
   String query_name = request.getParameter("query_name")!=null?request.getParameter("query_name"):("") ;
   String curUser_no = (String) session.getAttribute("user");
   
+  //System.out.println("demo "+demographic_no+" form_no "+form_no+" queryname "+query_name+" curUser "+curUser_no);
+  
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*" errorPage="../../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*" %>
 <jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
 <jsp:useBean id="risks" class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
@@ -46,6 +48,7 @@ String [][] dbQueries=new String[][] {
 {"save_desaprisk", "insert into desaprisk (desaprisk_date,desaprisk_time,provider_no,risk_content,checklist_content,demographic_no,form_no) values (?,?,?,?,?,?,? ) " }, 
 };
 plannerBean.doConfigure(dbParams,dbQueries);
+//System.out.println("TOP");
 %>
  
 <html>
@@ -92,17 +95,17 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   //for(int i=0;i<riskdataname.length;i++) {
 	//  riskDataBean.setProperty(riskdataname[i][0],"0");
   //}
-
+//System.out.println("HERHE 2");
   //get the risk data from formAR1
   String finalEDB = null, wt=null, ht=null;
   
   ResultSet rsdemo = null ;
   if(!form_no.equals("0")) {
-      if(query_name.equalsIgnoreCase("search_formonarrisk") ) {
+      //if(query_name.equalsIgnoreCase("search_formonarrisk") ) {
           rsdemo = plannerBean.queryResults(form_no, "search_formonarrisk");
-      } else {
-              rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");                  
-      }
+      //} else {
+     //         rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");                  
+     // }
           
       ResultSetMetaData resultsetmetadata = rsdemo.getMetaData();
       while (rsdemo.next()) { 
@@ -121,22 +124,24 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
           }
       }
   }
-
+//System.out.println("ABOVE HASHMAP form "+form_no+ " demographic " +demographic_no);
   //get the risk data from table desaprisk for other risk factors
   String[] param2 = {form_no, demographic_no};
   rsdemo = plannerBean.queryResults(param2, "search_desaprisk");
+  HashMap dataMap = new HashMap();
+  //System.out.println("ABOVE WHILELOOP searched for formPnbo "+form_no+" dmoe "+demographic_no);
   while (rsdemo.next()) { 
+      //System.out.println("START OF WHILE LOOP");
     String risk_content = rsdemo.getString("risk_content");
     String checklist_content = rsdemo.getString("checklist_content");
+    
+    //System.out.println("IN WHILE LOOP");
 %>
-  <xml id="xml_list">
-    <planner>
-      <%=risk_content%>
-      <%=checklist_content%>
-    </planner>
-  </xml> 
+<script type="text/javascript">
+   xmlText = "<xml><planner><%=risk_content%><%=checklist_content%></planner></xml>";
+</script>
 <%
-
+//System.out.println("above riskFilePath :"+OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerrisks_99_12.xml");
     String riskFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerrisks_99_12.xml";
     
         File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml");
@@ -144,7 +149,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 			   riskFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml";
         }
 
-
+    //System.out.println("riskFilePath:"+riskFilePath);
     //set the riskdata bean from xml file
     Properties savedar1risk1 = risks.getRiskName(riskFilePath); //risk_55
   	StringBuffer tt; 
@@ -155,6 +160,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       //  riskDataBean.setProperty(tt.toString(), savedar1risk1.getProperty(tt.toString()));
       if(SxmlMisc.getXmlContent(risk_content, "risk_"+tt.toString())!= null) {
         riskDataBean.setProperty(tt.toString(), "checked");
+            
 	    //System.out.println("risk from xml file checked "+tt.toString());
 	  }
     }
@@ -183,10 +189,13 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <%
     String riskFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerrisks_99_12.xml";
 
-    File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml");
+    File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerrisks_99_12.xml");
     if(file.isFile() || file.canRead()) {
-        riskFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml";
+        riskFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerrisks_99_12.xml";
     }
+    
+    
+    //System.out.println("riskFilePAth "+riskFilePath);
     out.println(risks.doStuff(new String(riskFilePath)));
 %>
     </td><td>
@@ -222,11 +231,11 @@ else {
   
     String checkListFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerchecklist_99_12.xml";
     
-    file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerchecklist_99_12.xml");
+    file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerchecklist_99_12.xml");
     if(file.isFile() || file.canRead()) {
-        checkListFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerchecklist_99_12.xml";
+        checkListFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerchecklist_99_12.xml";
     }
-  
+    //System.out.println("CHECJ "+checkListFilePath);
   out.println(checklist.doStuff(new String(checkListFilePath), riskDataBean));
 }
 %>    
@@ -248,6 +257,40 @@ else {
 </table>
 
 </form>
+    <script type="text/javascript">
+        // code for IE
+        //console.log(xmlText);
+if (window.ActiveXObject)
+  {
+  var doc=new ActiveXObject("Microsoft.XMLDOM");
+  doc.async="false";
+  doc.loadXML(xmlText);
+  }
+// code for Mozilla, Firefox, Opera, etc.
+else
+  {
+  var parser=new DOMParser();
+  var doc=parser.parseFromString(xmlText,"text/xml");
+  }
 
+  //console.log(doc.nodeName+" "+doc.nodeType);
+
+  
+  
+  var x=doc.getElementsByTagName("planner");
+  
+  //console.log(x.nodeName);
+  for (var i=0;i < x.length; i++){
+     //console.log("WHAT IS X "+x[i]);
+     var childs = x[i].childNodes;
+     //console.log("WHAT IS "+childs);
+     for (var j=0; j < childs.length;j++){
+        //console.log(childs[j].nodeName);
+        var ele = document.getElementById(childs[j].nodeName);
+        ele.checked = true;
+     }
+  }
+    
+    </script>
 </body>
 </html>
