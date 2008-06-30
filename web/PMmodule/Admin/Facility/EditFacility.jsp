@@ -121,7 +121,7 @@
             <td><html:checkbox property="facility.useQuickConsent" /></td>
         </tr>
         <tr class="b">
-            <td width="20%">Use Quick Consent:</td>
+            <td width="20%">Enable Integrated Referrals:</td>
             <td><html:checkbox property="facility.enableIntegratedReferrals" /></td>
         </tr>
         <tr>

@@ -199,6 +199,7 @@ public class FacilityManagerAction extends BaseAction {
         try {
         	facility.setIntegratorEnabled(WebUtils.isChecked(request, "facility.integratorEnabled"));
         	facility.setUseQuickConsent(WebUtils.isChecked(request, "facility.useQuickConsent"));
+        	facility.setEnableIntegratedReferrals(WebUtils.isChecked(request, "facility.enableIntegratedReferrals"));
             
         	if (facility.getId()==null || facility.getId()==0) facilityDao.persist(facility);
         	else facilityDao.merge(facility);
