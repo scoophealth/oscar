@@ -25,9 +25,12 @@ package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
@@ -36,6 +39,7 @@ import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWsService;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.TimeClearedHashMap;
 
 public class CaisiIntegratorManager {
 
@@ -44,6 +48,11 @@ public class CaisiIntegratorManager {
     public void setFacilityDao(FacilityDao facilityDao) {
         this.facilityDao = facilityDao;
     }
+
+    /**
+     * This is a simple cache mechanism which removes objects based on time.
+     */
+    private static TimeClearedHashMap<String, Object> simpleTimeCache = new TimeClearedHashMap<String, Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
     public boolean isIntegratorEnabled(int facilityId) {
         Facility facility = getLocalFacility(facilityId); 
@@ -98,5 +107,20 @@ public class CaisiIntegratorManager {
         addAuthenticationInterceptor(facility, port);
         
         return(port);
+    }
+    
+	public List<CachedProgramInfo> getRemotePrograms(int facilityId) throws MalformedURLException
+    {
+	    @SuppressWarnings("unchecked")
+    	List<CachedProgramInfo> results=(List<CachedProgramInfo>)simpleTimeCache.get("ALL_REMOTE_PROGRAMS");
+
+	    if (results==null)
+	    {
+	    	ProgramInfoWs programInfoWs=getProgramInfoWs(facilityId);
+	    	results=programInfoWs.getAllProgramInfo();
+	    	simpleTimeCache.put("ALL_REMOTE_PROGRAMS", results);
+	    }
+	    
+	    return(results);
     }
 }

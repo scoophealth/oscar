@@ -134,5 +134,24 @@ if (!Array.prototype.indexOf)
 			<display:column property="descr" sortable="false" title="Description"></display:column>
 		</display:table>
 
+		<c:if test="${remotePrograms!=null}">
+			<br /><br />
+			<div class="tabs" id="tabs">
+				<table cellpadding="3" cellspacing="0" border="0">
+					<tr>
+						<th title="Programs">Remote Search Results</th>
+					</tr>
+				</table>
+			</div>
+			
+			<display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="remotePrograms" pagesize="200" requestURI="/PMmodule/ClientManager.do">
+				<display:column sortable="true" title="Name">
+					<a href="#javascript:void(0);" onclick="selectProgram('','');"><c:out value="${program.name}" /></a>
+				</display:column>
+				<display:column property="type" sortable="true" title="Type"></display:column>
+				<display:column property="description" sortable="false" title="Description"></display:column>
+			</display:table>
+		</c:if>
+
 	</body>
 </html:html>
