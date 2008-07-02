@@ -1314,6 +1314,7 @@ insert into `secObjPrivilege` values('doctor', '_billing', 'x', 0, '999998');
 insert into `secObjPrivilege` values('doctor', '_tasks', 'x', 0, '999998');
 insert into `secObjPrivilege` values('doctor','_masterLink','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_rx','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.reporting','x',0,999998);
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
