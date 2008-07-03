@@ -22,17 +22,19 @@
 
 package org.oscarehr.util;
 
-import javax.servlet.http.HttpServletRequest;
-
-public class WebUtils
+public class FacilitySegmentedTimeClearedHashMap extends TimeClearedHashMap<String, Object>
 {
-	/**
-	 * This method is intended to be used to see if a check box was checked on a form submit
-	 */
-	public static boolean isChecked(HttpServletRequest request, String parameter)
+    public FacilitySegmentedTimeClearedHashMap(long maxDataAge, long checkPeriod) {
+    	super(maxDataAge, checkPeriod);
+    }
+    
+	public Object put(Integer facilityId, String key, Object value)
 	{
-		String temp=request.getParameter(parameter);
-		return(temp!=null && (temp.equalsIgnoreCase("on") || temp.equalsIgnoreCase("true") || temp.equalsIgnoreCase("checked")));
+		return(put(facilityId.toString()+':'+key, value));
 	}
 
+	public Object get(Integer facilityId, String key)
+	{
+		return(get(facilityId.toString()+':'+key));
+	}
 }

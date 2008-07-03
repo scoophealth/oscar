@@ -181,6 +181,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedProgramInfo.setDescription(program.getDescr());
 			cachedProgramInfo.setFirstNation(program.isFirstNation());
 			cachedProgramInfo.setGender(program.getManOrWoman());
+			if (program.isTransgender()) cachedProgramInfo.setGender("T");
 			cachedProgramInfo.setHousing(program.isHousing());
 			cachedProgramInfo.setMaxAge(program.getAgeMax());
 			cachedProgramInfo.setMentalHealth(program.isMentalHealth());

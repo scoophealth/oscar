@@ -25,6 +25,7 @@ package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -39,7 +40,7 @@ import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWsService;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
-import org.oscarehr.util.TimeClearedHashMap;
+import org.oscarehr.util.FacilitySegmentedTimeClearedHashMap;
 
 public class CaisiIntegratorManager {
 
@@ -52,8 +53,8 @@ public class CaisiIntegratorManager {
     /**
      * This is a simple cache mechanism which removes objects based on time.
      */
-    private static TimeClearedHashMap<String, Object> simpleTimeCache = new TimeClearedHashMap<String, Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
-
+    private static FacilitySegmentedTimeClearedHashMap simpleTimeCache = new FacilitySegmentedTimeClearedHashMap(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+    
     public boolean isIntegratorEnabled(int facilityId) {
         Facility facility = getLocalFacility(facilityId); 
         if (facility != null && facility.isIntegratorEnabled() == true) return(true);
@@ -112,15 +113,32 @@ public class CaisiIntegratorManager {
 	public List<CachedProgramInfo> getRemotePrograms(int facilityId) throws MalformedURLException
     {
 	    @SuppressWarnings("unchecked")
-    	List<CachedProgramInfo> results=(List<CachedProgramInfo>)simpleTimeCache.get("ALL_REMOTE_PROGRAMS");
+    	List<CachedProgramInfo> results=(List<CachedProgramInfo>)simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS");
 
 	    if (results==null)
 	    {
 	    	ProgramInfoWs programInfoWs=getProgramInfoWs(facilityId);
 	    	results=programInfoWs.getAllProgramInfo();
-	    	simpleTimeCache.put("ALL_REMOTE_PROGRAMS", results);
+	    	simpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS", results);
 	    }
 	    
-	    return(results);
+	    // cloned so alterations don't affect the cached data
+	    return(new ArrayList<CachedProgramInfo>(results));
+    }
+
+	public List<CachedProgramInfo> getRemoteProgramsAcceptingReferrals(int facilityId) throws MalformedURLException
+    {
+	    @SuppressWarnings("unchecked")
+    	List<CachedProgramInfo> results=(List<CachedProgramInfo>)simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS");
+
+	    if (results==null)
+	    {
+	    	ProgramInfoWs programInfoWs=getProgramInfoWs(facilityId);
+	    	results=programInfoWs.getAllProgramInfoAllowingIntegratedReferrals();
+	    	simpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS", results);
+	    }
+	    
+	    // cloned so alterations don't affect the cached data
+	    return(new ArrayList<CachedProgramInfo>(results));
     }
 }

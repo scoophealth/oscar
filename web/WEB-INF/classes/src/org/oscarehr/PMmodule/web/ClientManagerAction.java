@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -98,7 +99,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import oscar.oscarDemographic.data.DemographicRelationship;
 
-import com.crystaldecisions.reports.reportdefinition.fa;
 import com.quatro.service.LookupManager;
 
 public class ClientManagerAction extends BaseAction {
@@ -1039,8 +1039,9 @@ public class ClientManagerAction extends BaseAction {
 		Facility facility = (Facility) request.getSession().getAttribute("currentFacility");
 		if (facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals()) {
 			try {
-				List<CachedProgramInfo> results=caisiIntegratorManager.getRemotePrograms(facility.getId());
-				request.setAttribute("remotePrograms", results);				
+				List<CachedProgramInfo> results = caisiIntegratorManager.getRemoteProgramsAcceptingReferrals(facility.getId());
+				filterResultsByCriteria(results, criteria);
+				request.setAttribute("remotePrograms", results);
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1050,6 +1051,80 @@ public class ClientManagerAction extends BaseAction {
 		ProgramUtils.addProgramRestrictions(request);
 
 		return mapping.findForward("search_programs");
+	}
+
+	private void filterResultsByCriteria(List<CachedProgramInfo> results, Program criteria) {
+
+		Iterator<CachedProgramInfo> it = results.iterator();
+		while (it.hasNext()) {
+			CachedProgramInfo cachedProgramInfo = it.next();
+			String temp = StringUtils.trimToNull(criteria.getName());
+			if (temp != null) {
+				if (!cachedProgramInfo.getName().toLowerCase().contains(temp.toLowerCase())) {
+					it.remove();
+					continue;
+				}
+			}
+
+			temp = StringUtils.trimToNull(criteria.getType());
+			if (temp != null) {
+				if (!cachedProgramInfo.getType().equals(temp)) {
+					it.remove();
+					continue;
+				}
+			}
+
+			temp = StringUtils.trimToNull(criteria.getManOrWoman());
+			if (temp != null) {
+				if (!cachedProgramInfo.getGender().equals(temp)) {
+					it.remove();
+					continue;
+				}
+			}
+
+			if (criteria.isTransgender() && !cachedProgramInfo.getGender().equals("T")) {
+				it.remove();
+				continue;
+			}
+
+			if (criteria.isFirstNation() && !cachedProgramInfo.isFirstNation()) {
+				it.remove();
+				continue;
+			}
+
+			if (criteria.isBedProgramAffiliated() && !cachedProgramInfo.isBedProgramAffiliated()) {
+				it.remove();
+				continue;
+			}
+
+			if (criteria.isAlcohol() && !cachedProgramInfo.isAlcohol()) {
+				it.remove();
+				continue;
+			}
+
+			temp = StringUtils.trimToNull(criteria.getAbstinenceSupport());
+			if (temp != null) {
+				if (!cachedProgramInfo.getAbstinenceSupport().equals(temp)) {
+					it.remove();
+					continue;
+				}
+			}
+
+			if (criteria.isPhysicalHealth() && !cachedProgramInfo.isPhysicalHealth()) {
+				it.remove();
+				continue;
+			}
+
+			if (criteria.isMentalHealth() && !cachedProgramInfo.isMentalHealth()) {
+				it.remove();
+				continue;
+			}
+
+			if (criteria.isHousing() && !cachedProgramInfo.isHousing()) {
+				it.remove();
+				continue;
+			}
+		}
 	}
 
 	public ActionForward submit_erconsent(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
