@@ -28,16 +28,12 @@ import java.io.Serializable;
  */
 public class Program implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     public static final Integer DEFAULT_COMMUNITY_PROGRAM_ID = new Integer(10010);
     
     public static final String EXTERNAL_TYPE = "external";
     public static final String BED_TYPE = "Bed";
     public static final String COMMUNITY_TYPE = "community";
     public static final String SERVICE_TYPE = "Service";
-
-    private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Integer id;// fields
     private boolean userDefined = true;
@@ -170,7 +166,6 @@ public class Program implements Serializable {
      */
     public void setId(Integer id) {
         this.id = id;
-        this.hashCode = Integer.MIN_VALUE;
     }
 
     /**
@@ -548,14 +543,6 @@ public class Program implements Serializable {
         this.firstNation = firstNation;
     }
 
-    public int getHashCode() {
-        return hashCode;
-    }
-
-    public void setHashCode(int hashCode) {
-        this.hashCode = hashCode;
-    }
-
     public boolean isHousing() {
         return housing;
     }
@@ -646,20 +633,8 @@ public class Program implements Serializable {
             else return (this.getId().equals(program.getId()));
         }
     }
-
-    public int hashCode() {
-        if (Integer.MIN_VALUE == this.hashCode) {
-            if (null == this.getId()) return super.hashCode();
-            else {
-                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
-                this.hashCode = hashStr.hashCode();
-            }
-        }
-        return this.hashCode;
-    }
-
-    public String toString() {
-        return super.toString();
-    }
     
+    public int hashCode() {
+        return (id != null ? id.hashCode() : 0);
+    }    
 }
