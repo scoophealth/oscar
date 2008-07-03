@@ -243,11 +243,11 @@ public class MOHRecidivismDao {
         String sqlCommand = "create temporary table foo (client_id int not null, index(client_id), xdate date not null, index(xdate), unique(client_id,xdate), type varchar(64) not null, index(type))";
         executeUpdate(sqlCommand);
 
-        //sqlCommand = "replace into foo (select a3.client_id,date(admission_date),'admit to community' from admission a3, program p3 where admission_date is not null and a3.program_id=p3.program_id and p3.type='community' and p3.name in ('Moved in with Friends or Relatives', 'Private Market Housing','Returned to Parents', 'Returned to Partner', 'Returned to Previous Address', 'Subsidized Housing'))";
-        sqlCommand = "replace into foo (select a3.client_id,date(admission_date),'admit to community' from admission a3, program p3 where admission_date is not null and a3.program_id=p3.program_id and p3.type='community')";
+        //sqlCommand = "replace into foo (select a3.client_id,date(admission_date),'admit to community' from admission a3, program p3 where admission_date is not null and a3.program_id=p3.id and p3.type='community' and p3.name in ('Moved in with Friends or Relatives', 'Private Market Housing','Returned to Parents', 'Returned to Partner', 'Returned to Previous Address', 'Subsidized Housing'))";
+        sqlCommand = "replace into foo (select a3.client_id,date(admission_date),'admit to community' from admission a3, program p3 where admission_date is not null and a3.program_id=p3.id and p3.type='community')";
         executeUpdate(sqlCommand);
 
-        sqlCommand = "replace into foo (select admission.client_id,date(admission_date),'admit to bed' from admission, program where admission_date is not null and admission.program_id=program.program_id and program.type='Bed')";
+        sqlCommand = "replace into foo (select admission.client_id,date(admission_date),'admit to bed' from admission, program where admission_date is not null and admission.program_id=program.id and program.type='Bed')";
         executeUpdate(sqlCommand);
     }
 

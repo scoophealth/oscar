@@ -82,13 +82,13 @@ public class importCasemgmt {
 			stmt = con.createStatement();	
                         stmtUpdate = con.createStatement();
                         System.out.println("Checking for OSCAR program");
-                        String sql = "select program_id from program where name = 'OSCAR'";
+                        String sql = "select id from program where name = 'OSCAR'";
                         rs1 = stmt.executeQuery(sql);
                         String programId;
                         if( !rs1.next() ) {
                             System.out.println("Creating OSCAR program");
                         
-                            int result = stmt.executeUpdate("insert into program (name,max_allowed,type,allow_batch_admission,allow_batch_discharge,hic) " + 
+                            int result = stmt.executeUpdate("insert into program (name,maxAllowed,type,allowBatchAdmission,allowBatchDischarge,hic) " + 
                                 "Values('OSCAR','99999','Bed',0,0,0)", Statement.RETURN_GENERATED_KEYS);
                         
                             rs = stmt.getGeneratedKeys();

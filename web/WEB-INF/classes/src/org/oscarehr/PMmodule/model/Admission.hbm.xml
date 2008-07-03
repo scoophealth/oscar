@@ -138,10 +138,10 @@
 		<property
 			name="programName"
 			type="string"
-			formula="(select p.name from program p where p.program_id = program_id)" />
+			formula="(select p.name from program p where p.id = program_id)" />
 		<property
 			name="programType"
 			type="string"
-			formula="(select p.type from program p where p.program_id = program_id)" />
+			formula="(select p.type from program p where p.id = program_id)" />
 	</class>
 </hibernate-mapping>

@@ -49,7 +49,7 @@ public class programExclusiveViewTag extends TagSupport {
     public int doStartTag() throws JspException    {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = new String("SELECT exclusive_view FROM program WHERE program_id = (SELECT program_id FROM provider_default_program WHERE provider_no='" + providerNo + "')");
+            String sql = new String("SELECT exclusiveView FROM program WHERE id = (SELECT program_id FROM provider_default_program WHERE provider_no='" + providerNo + "')");
             ResultSet rs = db.GetSQL(sql);
 	    while (rs.next()) {
 		exclusiveView = db.getString(rs,1);

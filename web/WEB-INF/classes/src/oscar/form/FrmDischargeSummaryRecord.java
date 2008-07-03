@@ -53,8 +53,8 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
         		while(rs_cr2.next()) {
         			programId = rs_cr2.getString("program_id");        		
         			
-        			String sql_cr22 = "select name from program where program_id="+programId+" and type='Bed' ";
-            	//String sql_cr2 = "select p.name as program_name from program p, admission a where p.program_id=a.program_id and a.client_id="+demographic_no+" and a.admission_status='current' and p.type='Bed' ";
+        			String sql_cr22 = "select name from program where id="+programId+" and type='Bed' ";
+            	//String sql_cr2 = "select p.name as program_name from program p, admission a where p.id=a.program_id and a.client_id="+demographic_no+" and a.admission_status='current' and p.type='Bed' ";
         			ResultSet rs_cr22 = db.GetSQL(sql_cr22);
         			if(rs_cr22.next()) {
         				program_name = rs_cr22.getString("name");
@@ -110,7 +110,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             
             *******************end *************************/
            
-            String sql0 = "SELECT name AS programName FROM program WHERE program_id='"+programNo+"'";
+            String sql0 = "SELECT name AS programName FROM program WHERE id='"+programNo+"'";
             ResultSet rs0 = db.GetSQL(sql0);
             if(rs0.next()) {
             	props.setProperty("programName",db.getString(rs0,"programName"));

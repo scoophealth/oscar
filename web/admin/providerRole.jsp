@@ -58,7 +58,7 @@ DBHelp dbObj = new DBHelp();
 
 //get caisi programid for oscar
 if( newCaseManagement ) {
-    String caisiQuery = "select program_id from program where name = 'OSCAR'";
+    String caisiQuery = "select id from program where name = 'OSCAR'";
     ResultSet result = dbObj.searchDBRecord(caisiQuery);
     if( result.next() )
         caisiProgram = result.getString(1);

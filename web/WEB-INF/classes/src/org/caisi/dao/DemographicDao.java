@@ -167,7 +167,7 @@ public class DemographicDao extends HibernateDaoSupport {
         Connection c = null;
         try {
             c = DbConnectionFilter.getThreadLocalDbConnection();
-            PreparedStatement ps = c.prepareStatement("select distinct(admission.client_id) from admission,program,Facility where admission.program_id=program.program_id and program.facility_id=?");
+            PreparedStatement ps = c.prepareStatement("select distinct(admission.client_id) from admission,program,Facility where admission.program_id=program.id and program.facilityId=?");
             ps.setInt(1, facilityId);
             ResultSet rs = ps.executeQuery();
             ArrayList<Integer> results = new ArrayList<Integer>();

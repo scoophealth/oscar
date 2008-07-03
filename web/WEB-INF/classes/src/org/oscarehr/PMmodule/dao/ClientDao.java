@@ -830,7 +830,7 @@ public class ClientDao extends HibernateDaoSupport {
         boolean joinCaseMgmtNote=StringUtils.trimToNull(x.getProviderId())!=null || StringUtils.trimToNull(x.getSeenStartDate())!=null || StringUtils.trimToNull(x.getSeenEndDate())!=null;
 
         // this is a horrid join, no one is allowed to give me grief about it, until we refactor *everything*, some nasty hacks will happen. 
-		sqlCommand.append("select * from demographic"+(joinCaseMgmtNote?",casemgmt_note":"")+",admission,program where demographic.demographic_no=admission.client_id"+(joinCaseMgmtNote?" and demographic.demographic_no=casemgmt_note.demographic_no":"")+" and admission.program_id=program.program_id");
+		sqlCommand.append("select * from demographic"+(joinCaseMgmtNote?",casemgmt_note":"")+",admission,program where demographic.demographic_no=admission.client_id"+(joinCaseMgmtNote?" and demographic.demographic_no=casemgmt_note.demographic_no":"")+" and admission.program_id=program.id");
 		
 		// status
 		if (StringUtils.trimToNull(x.getAdmissionStatus())!=null) sqlCommand.append(" and demographic.patient_status=?");			
@@ -901,7 +901,7 @@ public class ClientDao extends HibernateDaoSupport {
 				clientListsReportResults.demographicId=rs.getInt("demographic.demographic_no");
 				clientListsReportResults.firstName=oscar.Misc.getString(rs,"demographic.first_name");
 				clientListsReportResults.lastName=oscar.Misc.getString(rs,"demographic.last_name");
-				clientListsReportResults.programId=rs.getInt("program.program_id");
+				clientListsReportResults.programId=rs.getInt("program.id");
 				clientListsReportResults.programName=oscar.Misc.getString(rs,"program.name");
 				
 				results.put(clientListsReportResults.lastName+clientListsReportResults.firstName,clientListsReportResults);

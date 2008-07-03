@@ -18,31 +18,30 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping package="org.oscarehr.PMmodule.model">
 	<class name="Program" table="program">
-		<id column="program_id" name="id" type="integer" unsaved-value="0">
+		<id name="id" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<property name="facilityId" column="facility_id" />
-		<property name="userDefined" />
-		<property name="numOfMembers" type="integer" formula="(select count(*) from admission a where a.program_id = program_id and a.admission_status = 'current')" />
-		<property name="queueSize" type="integer" formula="(select count(*) from program_queue a where a.program_id = program_id and a.status = 'active')" />
-		<property name="maxAllowed" column="max_allowed" />
+		<property name="facilityId" />
+		<property name="numOfMembers" type="integer" formula="(select count(*) from admission a where a.program_id = id and a.admission_status = 'current')" />
+		<property name="queueSize" type="integer" formula="(select count(*) from program_queue a where a.program_id = id and a.status = 'active')" />
+		<property name="maxAllowed" />
 		<property name="type" />
-		<property name="description" column="descr" />
+		<property name="description" />
 		<property name="address" />
 		<property name="phone" />
 		<property name="fax" />
 		<property name="url" />
 		<property name="email" />
-		<property name="emergencyNumber" column="emergency_number" />
+		<property name="emergencyNumber" />
 		<property name="location" />
 		<property name="name" />
-		<property name="holdingTank" column="holding_tank" />
-		<property name="allowBatchAdmission" column="allow_batch_admission" />
-		<property name="allowBatchDischarge" column="allow_batch_discharge" />
+		<property name="holdingTank" />
+		<property name="allowBatchAdmission" />
+		<property name="allowBatchDischarge" />
 		<property name="hic" />
-		<property name="programStatus" column="program_status" />
-		<property name="intakeProgram" column="intake_program" />
-		<property name="bedProgramLinkId" column="bed_program_link_id" />
+		<property name="programStatus" />
+		<property name="intakeProgram" />
+		<property name="bedProgramLinkId" />
 		<property name="manOrWoman" />
 		<property name="transgender" />
 		<property name="firstNation" />
@@ -52,11 +51,11 @@
 		<property name="physicalHealth" />
 		<property name="mentalHealth" />
 		<property name="housing" />
-		<property name="exclusiveView" column="exclusive_view" />
+		<property name="exclusiveView" />
 		<property name="ageMin" />
 		<property name="ageMax" />
-        <property name="maximumServiceRestrictionDays" column="maximum_restriction_days" />
-        <property name="defaultServiceRestrictionDays" column="default_restriction_days" />
+        <property name="maximumServiceRestrictionDays" />
+        <property name="defaultServiceRestrictionDays" />
 
     </class>
 </hibernate-mapping>

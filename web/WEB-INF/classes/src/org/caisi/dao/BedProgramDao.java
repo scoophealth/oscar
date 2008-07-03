@@ -72,7 +72,7 @@ public class BedProgramDao extends HibernateDaoSupport {
     public String[] getProgramInfo(int programId) {
         String[] result = new String[3];
 
-        SQLQuery query = getSession().createSQLQuery("SELECT name,address,phone,fax from program where program_id=" + programId);
+        SQLQuery query = getSession().createSQLQuery("SELECT name,address,phone,fax from program where id=" + programId);
         query.addScalar("name", Hibernate.STRING);
         query.addScalar("address", Hibernate.STRING);
         query.addScalar("phone", Hibernate.STRING);

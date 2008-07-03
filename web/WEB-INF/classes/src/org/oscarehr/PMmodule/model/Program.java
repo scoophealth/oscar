@@ -35,8 +35,7 @@ public class Program implements Serializable {
     public static final String COMMUNITY_TYPE = "community";
     public static final String SERVICE_TYPE = "Service";
 
-    private Integer id;// fields
-    private boolean userDefined = true;
+    private Integer id;
     private Integer numOfMembers;
     private Integer queueSize;
     private Integer maxAllowed;
@@ -54,7 +53,7 @@ public class Program implements Serializable {
     private boolean allowBatchAdmission;
     private boolean allowBatchDischarge;
     private boolean hic;
-    private String programStatus;
+    private String programStatus="active";
     private Integer intakeProgram;
     private Integer bedProgramLinkId;
     private String manOrWoman;
@@ -66,11 +65,11 @@ public class Program implements Serializable {
     private boolean physicalHealth;
     private boolean mentalHealth;
     private boolean housing;
-    private String exclusiveView;
+    private String exclusiveView="no";
     private int ageMin=1;
     private int ageMax=200;
     private Integer maximumServiceRestrictionDays;
-    private int defaultServiceRestrictionDays;
+    private int defaultServiceRestrictionDays=30;
     private int facilityId;
 
     // constructors
@@ -100,7 +99,6 @@ public class Program implements Serializable {
             String emergencyNumber, String name, boolean holdingTank, String programStatus) {
 
         setId(id);
-        setUserDefined(isUserDefined);
         setMaxAllowed(maxAllowed);
         setAddress(address);
         setPhone(phone);
@@ -111,14 +109,6 @@ public class Program implements Serializable {
         setName(name);
         setHoldingTank(holdingTank);
         setProgramStatus(programStatus);
-    }
-
-    public boolean isUserDefined() {
-        return userDefined;
-    }
-
-    public void setUserDefined(boolean userDefined) {
-        this.userDefined = userDefined;
     }
 
     public boolean isActive() {
@@ -149,21 +139,10 @@ public class Program implements Serializable {
         return isHoldingTank();
     }
 
-    /**
-     * Return the unique identifier of this class
-     * 
-     * @hibernate.id generator-class="native" column="program_id"
-     */
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Set the unique identifier of this class
-     * 
-     * @param id
-     *            the new ID
-     */
     public void setId(Integer id) {
         this.id = id;
     }
@@ -202,19 +181,10 @@ public class Program implements Serializable {
         this.queueSize = queueSize;
     }
 
-    /**
-     * Return the value associated with the column: max_allowed
-     */
     public Integer getMaxAllowed() {
         return maxAllowed;
     }
 
-    /**
-     * Set the value related to the column: max_allowed
-     * 
-     * @param maxAllowed
-     *            the max_allowed value
-     */
     public void setMaxAllowed(Integer maxAllowed) {
         this.maxAllowed = maxAllowed;
     }
@@ -329,19 +299,10 @@ public class Program implements Serializable {
         this.email = email;
     }
 
-    /**
-     * Return the value associated with the column: emergency_number
-     */
     public String getEmergencyNumber() {
         return emergencyNumber;
     }
 
-    /**
-     * Set the value related to the column: emergency_number
-     * 
-     * @param emergencyNumber
-     *            the emergency_number value
-     */
     public void setEmergencyNumber(String emergencyNumber) {
         this.emergencyNumber = emergencyNumber;
     }
@@ -383,53 +344,26 @@ public class Program implements Serializable {
         this.name = name;
     }
     
-    /**
-     * Return the value associated with the column: holding_tank
-     */
     public boolean isHoldingTank() {
         return holdingTank;
     }
 
-    /**
-     * Set the value related to the column: holding_tank
-     * 
-     * @param holdingTank
-     *            the holding_tank value
-     */
     public void setHoldingTank(boolean holdingTank) {
         this.holdingTank = holdingTank;
     }
 
-    /**
-     * Return the value associated with the column: allow_batch_admission
-     */
     public boolean isAllowBatchAdmission() {
         return allowBatchAdmission;
     }
 
-    /**
-     * Set the value related to the column: allow_batch_admission
-     * 
-     * @param allowBatchAdmission
-     *            the allow_batch_admission value
-     */
     public void setAllowBatchAdmission(boolean allowBatchAdmission) {
         this.allowBatchAdmission = allowBatchAdmission;
     }
 
-    /**
-     * Return the value associated with the column: allow_batch_discharge
-     */
     public boolean isAllowBatchDischarge() {
         return allowBatchDischarge;
     }
 
-    /**
-     * Set the value related to the column: allow_batch_discharge
-     * 
-     * @param allowBatchDischarge
-     *            the allow_batch_discharge value
-     */
     public void setAllowBatchDischarge(boolean allowBatchDischarge) {
         this.allowBatchDischarge = allowBatchDischarge;
     }
@@ -451,53 +385,26 @@ public class Program implements Serializable {
         this.hic = hic;
     }
 
-    /**
-     * Return the value associated with the column: program_status
-     */
     public String getProgramStatus() {
         return programStatus;
     }
 
-    /**
-     * Set the value related to the column: program_status
-     * 
-     * @param programStatus
-     *            the program_status value
-     */
     public void setProgramStatus(String programStatus) {
         this.programStatus = programStatus;
     }
 
-    /**
-     * Return the value associated with the column: intake_program
-     */
     public Integer getIntakeProgram() {
         return intakeProgram;
     }
 
-    /**
-     * Set the value related to the column: intake_program
-     * 
-     * @param intakeProgram
-     *            the intake_program value
-     */
     public void setIntakeProgram(Integer intakeProgram) {
         this.intakeProgram = intakeProgram;
     }
 
-    /**
-     * Return the value associated with the column: bed_program_link_id
-     */
     public Integer getBedProgramLinkId() {
         return bedProgramLinkId;
     }
 
-    /**
-     * Set the value related to the column: bed_program_link_id
-     * 
-     * @param bedProgramLinkId
-     *            the bed_program_link_id value
-     */
     public void setBedProgramLinkId(Integer bedProgramLinkId) {
         this.bedProgramLinkId = bedProgramLinkId;
     }
@@ -578,8 +485,8 @@ public class Program implements Serializable {
         return exclusiveView;
     }
 
-    public void setExclusiveView(String exclusive_view) {
-        this.exclusiveView = exclusive_view;
+    public void setExclusiveView(String exclusiveView) {
+        this.exclusiveView = exclusiveView;
     }
 
 

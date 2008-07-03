@@ -64,7 +64,7 @@
 
 		<property name="activeCount" type="integer"
 				  formula="(select count(*) from admission a where a.client_id=demographic_no and a.admission_status='current' 
-				           and a.program_id in (select p.program_id from program p where p.type='Bed'))" />
+				           and a.program_id in (select p.id from program p where p.type='Bed'))" />
 		<property name="hsAlertCount"
 				  formula="(select count(*) from health_safety h where h.demographic_no=demographic_no)" />
                

@@ -42,7 +42,7 @@
 			<many-to-many column="id" class="org.oscarehr.casemgmt.model.CaseManagementIssue" />
 		</set>
 		<property name="roleName" type="string" formula="(select r.name from caisi_role r where r.role_id = reporter_caisi_role)" />
-		<property name="programName" type="string" formula="(select p.name from program p where p.program_id = program_no)" />
+		<property name="programName" type="string" formula="(select p.name from program p where p.id = program_no)" />
                 <property name="revision" type="string" formula="(select count(cmn.uuid) from casemgmt_note cmn where cmn.uuid = uuid)" />
                 <property name="create_date" type="java.util.Date" formula="(select min(cmn.update_date) from casemgmt_note cmn where cmn.uuid = uuid)" />    
                 
@@ -59,7 +59,7 @@
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, 
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
-                    (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
+                    (select p.name from program p where p.id = program_no) as {cmn.programName}, 
                     (select count(casemgmt_note.uuid) from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as {cmn.revision}, (select min(casemgmt_note.update_date)
                     from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as {cmn.create_date} from casemgmt_note
                     left join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? group by uuid) recent
@@ -72,7 +72,7 @@
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, 
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
-                    (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
+                    (select p.name from program p where p.id = program_no) as {cmn.programName}, 
                     (select count(casemgmt_note.uuid) from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as {cmn.revision}, (select min(casemgmt_note.update_date)
                     from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as {cmn.create_date} from casemgmt_note
                     left join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? and observation_date >= ? group by uuid) recent
@@ -85,7 +85,7 @@
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
-                    (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
+                    (select p.name from program p where p.id = program_no) as {cmn.programName}, 
                     (select count(n1.uuid) from casemgmt_note n1 where casemgmt_note.uuid = n1.uuid) as {cmn.revision}, 
                     (select min(n2.update_date) from casemgmt_note n2 where casemgmt_note.uuid = n2.uuid) as {cmn.create_date} from casemgmt_note
                     inner join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? group by uuid) recent
@@ -98,7 +98,7 @@
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
-                    (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
+                    (select p.name from program p where p.id = program_no) as {cmn.programName}, 
                     (select count(n1.uuid) from casemgmt_note n1 where casemgmt_note.uuid = n1.uuid) as {cmn.revision}, 
                     (select min(n2.update_date) from casemgmt_note n2 where casemgmt_note.uuid = n2.uuid) as {cmn.create_date} from casemgmt_note
                     inner join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? and observation_date >= ? group by uuid) recent
@@ -111,7 +111,7 @@ select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, obser
                     encounter_type as encounter10_82_0_, billing_code as billing11_82_0_, program_no as program12_82_0_,
                     reporter_caisi_role as reporter14_82_0_, reporter_program_team as reporter15_82_0_, history as history82_0_,
                     uuid as uuid82_0_, password as password82_0_, locked as locked82_0_, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as formula16_0_,
-                    (select p.name from program p where p.program_id = program_no) as formula17_0_, 
+                    (select p.name from program p where p.id = program_no) as formula17_0_, 
                     (select count(casemgmt_note.uuid) from casemgmt_note where casemgmt_note.uuid = uuid82_0_) as formula18_0_, (select min(casemgmt_note.update_date)
                     from casemgmt_note where casemgmt_note.uuid = uuid82_0_) as formula19_0_ from casemgmt_note
                     left join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? group by uuid) recent
@@ -124,7 +124,7 @@ select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, obser
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
-                    (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
+                    (select p.name from program p where p.id = program_no) as {cmn.programName}, 
                     (select count(n1.uuid) from casemgmt_note n1 where casemgmt_note.uuid = n1.uuid) as {cmn.revision}, 
                     (select min(n2.update_date) from casemgmt_note n2 where casemgmt_note.uuid = n2.uuid) as {cmn.create_date} from casemgmt_note
                     inner join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? group by uuid) recent
@@ -137,7 +137,7 @@ select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, obser
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
-                    (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
+                    (select p.name from program p where p.id = program_no) as {cmn.programName}, 
                     (select count(n1.uuid) from casemgmt_note n1 where casemgmt_note.uuid = n1.uuid) as {cmn.revision}, 
                     (select min(n2.update_date) from casemgmt_note n2 where casemgmt_note.uuid = n2.uuid) as {cmn.create_date} from casemgmt_note
                     inner join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? and observation_date >= ? group by uuid) recent

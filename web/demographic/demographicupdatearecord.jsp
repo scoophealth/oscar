@@ -150,7 +150,7 @@ if( users != null && users.size() > 0 )
         if( progId.equals("0") ) {                
             ResultSet rsProg = apptMainBean.queryResults("OSCAR", "search_program");
             if( rsProg.next() )
-                progId = rsProg.getString("program_id");
+                progId = rsProg.getString("id");
 
             rsProg.close();
         }

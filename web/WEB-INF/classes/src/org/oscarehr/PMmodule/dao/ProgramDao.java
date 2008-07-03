@@ -133,10 +133,6 @@ public class ProgramDao extends HibernateDaoSupport {
 
         Program program = (Program) getHibernateTemplate().get(Program.class, programId);
 
-        if (log.isDebugEnabled()) {
-            log.debug("getProgram: " + ((program != null) ? String.valueOf(program.getId()) : "null"));
-        }
-
         return program;
     }
 
@@ -199,11 +195,6 @@ public class ProgramDao extends HibernateDaoSupport {
     		c.add(Restrictions.eq("facilityId", facilityId));
     	}
     	return 	c.list();
-    }
-    public List<Program> getActiveUserDefinedPrograms() {
-        @SuppressWarnings("unchecked")
-        List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.userDefined = ? and p.programStatus = 'active'", new Boolean[] { true });
-        return rs;
     }
  
     public List<Program> getPrograms() {
