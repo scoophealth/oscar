@@ -41,7 +41,7 @@ public class Program implements Serializable {
     private Integer queueSize;
     private Integer maxAllowed;
     private String type;
-    private String descr;
+    private String description;
     private String address;
     private String phone;
     private String fax;
@@ -236,21 +236,12 @@ public class Program implements Serializable {
         this.type = type;
     }
 
-    /**
-     * Return the value associated with the column: descr
-     */
-    public String getDescr() {
-        return descr;
+    public String getDescription() {
+        return description;
     }
 
-    /**
-     * Set the value related to the column: descr
-     * 
-     * @param descr
-     *            the descr value
-     */
-    public void setDescr(String descr) {
-        this.descr = descr;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**

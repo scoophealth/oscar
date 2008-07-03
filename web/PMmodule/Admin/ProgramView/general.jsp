@@ -40,7 +40,7 @@
 	</tr>
 	<tr class="b">
 		<td width="20%">Description:</td>
-		<td><c:out value="${program.descr}" /></td>
+		<td><c:out value="${program.description}" /></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">HIC:</td>

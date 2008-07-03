@@ -689,7 +689,7 @@ public class ProgramManagerAction extends BaseAction {
         Program oldProgram = new Program();
         oldProgram.setMaxAllowed(Integer.valueOf(request.getParameter("old_maxAllowed")));
         oldProgram.setName(request.getParameter("old_name"));
-        oldProgram.setDescr(request.getParameter("old_descr"));
+        oldProgram.setDescription(request.getParameter("old_descr"));
         oldProgram.setType(request.getParameter("old_type"));
         oldProgram.setAddress(request.getParameter("old_address"));
         oldProgram.setPhone(request.getParameter("old_phone"));
@@ -1035,7 +1035,7 @@ public class ProgramManagerAction extends BaseAction {
         if( program1.getMaxAllowed().intValue() != program2.getMaxAllowed().intValue() ||
                 !program1.getName().equals(program2.getName()) ||
                 !program1.getType().equals(program2.getType()) ||
-                !program1.getDescr().equals(program2.getDescr()) ||
+                !program1.getDescription().equals(program2.getDescription()) ||
                 !program1.getAddress().equals(program2.getAddress()) ||
                 !program1.getPhone().equals(program2.getPhone()) ||
                 !program1.getFax().equals(program2.getFax()) ||

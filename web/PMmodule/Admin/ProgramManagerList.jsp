@@ -93,7 +93,7 @@
 	<display:column sortable="true" title="Name">
 		<a href="<html:rewrite action="/PMmodule/ProgramManagerView.do"/>?id=<c:out value="${program.id}" />"> <c:out value="${program.name}" /> </a>
 	</display:column>
-	<display:column property="descr" sortable="true" title="Description" />
+	<display:column property="description" sortable="true" title="Description" />
 	<display:column property="type" sortable="true" title="Type" />
 	<display:column property="programStatus" sortable="true" title="Status" />
 	<display:column property="location" sortable="true" title="Location" />

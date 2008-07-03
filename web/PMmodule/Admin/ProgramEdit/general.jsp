@@ -37,7 +37,7 @@ Program p = (Program)request.getAttribute("oldProgram");
 %>
 <input type="hidden" name="old_maxAllowed" value=<%if(p!=null) { %>"<%=p.getMaxAllowed() %>" <%}else{ %> "0" <%} %>/>
 <input type="hidden" name="old_name" value=<%if(p!=null) { %>"<%=p.getName()%>" <%}else{ %> "" <%} %>/>
-<input type="hidden" name="old_descr" value=<%if(p!=null) { %>"<%=p.getDescr()%>" <%}else{ %> "" <%} %>/>
+<input type="hidden" name="old_descr" value=<%if(p!=null) { %>"<%=p.getDescription()%>" <%}else{ %> "" <%} %>/>
 <input type="hidden" name="old_type" value=<%if(p!=null) { %>"<%=p.getType()%>" <%}else{ %> "" <%} %>/>
 <input type="hidden" name="old_address" value=<%if(p!=null) { %>"<%=p.getAddress()%>"<%}else{ %> "" <%} %> />
 <input type="hidden" name="old_phone" value=<%if(p!=null) { %>"<%=p.getPhone()%>" <%}else{ %> "" <%} %>/>
@@ -88,7 +88,7 @@ Program p = (Program)request.getAttribute("oldProgram");
 	</tr>	
 	<tr class="b">
 		<td width="20%">Description:</td>
-		<td><html:text property="program.descr" size="30" maxlength="255"/></td>
+		<td><html:text property="program.description" size="30" maxlength="255"/></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">HIC:</td>

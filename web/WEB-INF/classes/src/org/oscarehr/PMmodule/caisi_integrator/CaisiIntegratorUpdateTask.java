@@ -178,7 +178,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedProgramInfo.setAbstinenceSupport(program.getAbstinenceSupport());
 			cachedProgramInfo.setAlcohol(program.isAlcohol());
 			cachedProgramInfo.setBedProgramAffiliated(program.isBedProgramAffiliated());
-			cachedProgramInfo.setDescription(program.getDescr());
+			cachedProgramInfo.setDescription(program.getDescription());
 			cachedProgramInfo.setFirstNation(program.isFirstNation());
 			cachedProgramInfo.setGender(program.getManOrWoman());
 			if (program.isTransgender()) cachedProgramInfo.setGender("T");

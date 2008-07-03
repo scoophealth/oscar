@@ -59,7 +59,7 @@
 							for (Program program : (List<Program>)request.getAttribute("programs"))
 							{
 								%>
-									<option value="<%=program.getId()%>"><%=program.getName()%> - <%=program.getDescr()%></option>
+									<option value="<%=program.getId()%>"><%=program.getName()%> - <%=program.getDescription()%></option>
 								<%						
 							}
 						%>

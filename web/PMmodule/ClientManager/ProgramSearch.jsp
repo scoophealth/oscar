@@ -131,7 +131,7 @@ if (!Array.prototype.indexOf)
 			<display:column sortable="false" title="Participation">
 				<c:out value="${program.numOfMembers}" />/<c:out value="${program.maxAllowed}" />&nbsp;(<c:out value="${program.queueSize}" /> waiting)
 			</display:column>
-			<display:column property="descr" sortable="false" title="Description"></display:column>
+			<display:column property="description" sortable="false" title="Description"></display:column>
 		</display:table>
 
 		<c:if test="${remotePrograms!=null}">
