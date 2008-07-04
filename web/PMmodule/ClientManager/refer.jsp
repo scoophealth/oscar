@@ -113,6 +113,8 @@
 </table>
 </div>
 <html:hidden property="program.id" />
+<html:hidden property="referral.remoteFacilityId" />
+<html:hidden property="referral.remoteProgramId" />
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
 		<td width="20%">Program Name</td>

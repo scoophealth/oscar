@@ -71,7 +71,7 @@ if (!Array.prototype.indexOf)
 }
 
 
-		function selectProgram(id,type) {
+		function selectProgram(id) {
 			var programId=Number(id);
 			if (gender == 'M')
 			{
@@ -109,7 +109,17 @@ if (!Array.prototype.indexOf)
 			self.close();
 		}
 		
-		
+		function selectRemoteProgram(facilityId, facilityProgramId) {
+			
+			opener.document.<%=request.getParameter("formName")%>.elements['referral.remoteFacilityId'].value=facilityId;
+			opener.document.<%=request.getParameter("formName")%>.elements['referral.remoteProgramId'].value=facilityProgramId;
+			
+			<% if(request.getParameter("submit") != null && request.getParameter("submit").equals("true")) { %>
+				opener.document.<%=request.getParameter("formName")%>.submit();
+			<% } %>
+			
+			self.close();
+		}		
 	</script>
 	
 	<body marginwidth="0" marginheight="0">
@@ -125,7 +135,7 @@ if (!Array.prototype.indexOf)
 		<display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="programs" pagesize="200" requestURI="/PMmodule/ClientManager.do">
 			<display:setProperty name="paging.banner.placement" value="bottom" />
 			<display:column sortable="true" title="Name">
-				<a href="#javascript:void(0);" onclick="selectProgram('<c:out value="${program.id}" />','<c:out value="${program.type}" />');"><c:out value="${program.name}" /></a>
+				<a href="#javascript:void(0);" onclick="selectProgram('<c:out value="${program.id}" />');"><c:out value="${program.name}" /></a>
 			</display:column>
 			<display:column property="type" sortable="true" title="Type"></display:column>
 			<display:column sortable="false" title="Participation">
@@ -146,7 +156,7 @@ if (!Array.prototype.indexOf)
 			
 			<display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="remotePrograms" pagesize="200" requestURI="/PMmodule/ClientManager.do">
 				<display:column sortable="true" title="Name">
-					<a href="#javascript:void(0);" onclick="selectProgram('','');"><c:out value="${program.name}" /></a>
+					<a href="#javascript:void(0);" onclick="selectRemoteProgram('<c:out value="${program.facilityProgramPrimaryKey.facilityId}" />','<c:out value="${program.facilityProgramPrimaryKey.facilityProgramId}" />');"><c:out value="${program.name}" /></a>
 				</display:column>
 				<display:column property="type" sortable="true" title="Type"></display:column>
 				<display:column property="description" sortable="false" title="Description"></display:column>

@@ -1043,7 +1043,6 @@ public class ClientManagerAction extends BaseAction {
 				filterResultsByCriteria(results, criteria);
 				request.setAttribute("remotePrograms", results);
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
