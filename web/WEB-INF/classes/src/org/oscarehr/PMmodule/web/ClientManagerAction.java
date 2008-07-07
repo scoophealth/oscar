@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -88,6 +89,7 @@ import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
+import org.oscarehr.caisi_integrator.ws.client.FacilityProgramPrimaryKey;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.Facility;
@@ -399,24 +401,35 @@ public class ClientManagerAction extends BaseAction {
 	public ActionForward refer(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 		ClientReferral referral = (ClientReferral) clientForm.get("referral");
-		Program p = (Program) clientForm.get("program");
 
 		long clientId = Long.parseLong(request.getParameter("id"));
-		int programId = p.getId();
 		String providerId = getProviderNo(request);
-
-		referral.setClientId(clientId);
-		referral.setProgramId((long) programId);
-		referral.setProviderNo(providerId);
-
 		Integer facilityId = (Integer) request.getSession().getAttribute("currentFacilityId");
-		referral.setFacilityId(facilityId);
 
-		referral.setReferralDate(new Date());
-		referral.setProgramType(p.getType());
-
-		referToLocalAgencyProgram(request, clientForm, referral, p);
-
+		Program p = (Program) clientForm.get("program");
+		int programId = p.getId();
+		// if it's local
+		if (programId!=0)
+		{
+			referral.setClientId(clientId);
+			referral.setProgramId((long) programId);
+			referral.setProviderNo(providerId);
+	
+			referral.setFacilityId(facilityId);
+	
+			referral.setReferralDate(new Date());
+			referral.setProgramType(p.getType());
+	
+			referToLocalAgencyProgram(request, clientForm, referral, p);
+		}
+		// remote referral
+		else if (referral.getRemoteFacilityId() != null && referral.getRemoteProgramId() != null)
+		{
+System.err.println("******* "+referral.getRemoteFacilityId()+" : "+referral.getRemoteProgramId());		
+System.err.println("******* "+referral.getNotes());		
+System.err.println("******* "+referral.getPresentProblems());		
+		}
+			
 		setEditAttributes(form, request, String.valueOf(clientId));
 		clientForm.set("program", new Program());
 		clientForm.set("referral", new ClientReferral());
@@ -474,13 +487,36 @@ public class ClientManagerAction extends BaseAction {
 	public ActionForward refer_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 		Program p = (Program) clientForm.get("program");
+		ClientReferral r = (ClientReferral) clientForm.get("referral");
 		String id = request.getParameter("id");
 		setEditAttributes(form, request, id);
+		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
+		// if it's a local referral
 		long programId = p.getId();
-		Program program = programManager.getProgram(programId);
-		p.setName(program.getName());
-		request.setAttribute("program", program);
+		if (programId != 0) {
+			Program program = programManager.getProgram(programId);
+			p.setName(program.getName());
+			request.setAttribute("program", program);
+		}
+		// if it's a remote referal
+		else if (r.getRemoteFacilityId() != null && r.getRemoteProgramId() != null) {
+			try {
+				FacilityProgramPrimaryKey pk = new FacilityProgramPrimaryKey();
+				pk.setFacilityId(Integer.parseInt(r.getRemoteFacilityId()));
+				pk.setFacilityProgramId(Integer.parseInt(r.getRemoteProgramId()));
+				CachedProgramInfo cachedProgramInfo = caisiIntegratorManager.getRemoteProgram(facilityId, pk);
+
+				p.setName(cachedProgramInfo.getName());
+
+				Program program = new Program();
+				BeanUtils.copyProperties(program, cachedProgramInfo);
+
+				request.setAttribute("program", program);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 		request.setAttribute("do_refer", true);
 		request.setAttribute("temporaryAdmission", programManager.getEnabled());

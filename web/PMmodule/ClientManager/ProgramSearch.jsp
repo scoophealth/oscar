@@ -101,6 +101,8 @@ if (!Array.prototype.indexOf)
 			}
 		
 			opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("formElementId")%>'].value=id;
+			opener.document.<%=request.getParameter("formName")%>.elements['referral.remoteFacilityId'].value=null;
+			opener.document.<%=request.getParameter("formName")%>.elements['referral.remoteProgramId'].value=null;
 			
 			<% if(request.getParameter("submit") != null && request.getParameter("submit").equals("true")) { %>
 				opener.document.<%=request.getParameter("formName")%>.submit();
@@ -111,6 +113,7 @@ if (!Array.prototype.indexOf)
 		
 		function selectRemoteProgram(facilityId, facilityProgramId) {
 			
+			opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("formElementId")%>'].value=0;
 			opener.document.<%=request.getParameter("formName")%>.elements['referral.remoteFacilityId'].value=facilityId;
 			opener.document.<%=request.getParameter("formName")%>.elements['referral.remoteProgramId'].value=facilityProgramId;
 			
