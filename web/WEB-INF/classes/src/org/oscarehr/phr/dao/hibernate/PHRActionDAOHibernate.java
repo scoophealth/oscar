@@ -144,6 +144,29 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
             }
             return list;
         }
+        
+        public List<PHRAction> getActionsByStatus(List<Integer> statuses, String providerNo, String classification) {
+            String sql ="FROM PHRAction a WHERE a.receiverOscar = ? AND a.phrClassification = ?";
+            if (statuses != null && !statuses.isEmpty()) {
+                sql += " AND (";
+                for (int i=0; i<statuses.size(); i++) {
+                    sql += "a.status = " + statuses.get(i);
+                    if (i != statuses.size()-1) sql += " OR ";
+                }
+                sql += ")";
+            }
+            sql += "ORDER BY a.status";
+            //System.out.println(sql);
+            String[] f = new String[2];
+            f[0] = providerNo;
+            f[1] = classification;
+            List<PHRAction> list = getHibernateTemplate().find(sql,f);
+            
+            if (list == null){
+                return new ArrayList();
+            }
+            return list;
+        }
             
             
         public boolean ifActionsWithErrors(final String providerNo) {
