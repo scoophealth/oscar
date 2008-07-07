@@ -413,6 +413,7 @@ if (pageMethod.equals("unarchive"))
                             </td>
                             <td width="120"> 
                                 <c:choose>
+                                    <c:when test="${otherAction.status == STATUS_SENT}">Sent</c:when>
                                     <c:when test="${otherAction.status == STATUS_ON_HOLD}">Waiting to send...</c:when>
                                     <c:when test="${otherAction.status == STATUS_SEND_PENDING}">Waiting to send...</c:when>
                                     <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}">Error: Not Authorized</c:when>

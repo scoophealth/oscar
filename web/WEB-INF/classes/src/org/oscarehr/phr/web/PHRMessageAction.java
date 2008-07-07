@@ -29,6 +29,7 @@
 
 package org.oscarehr.phr.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -127,7 +128,11 @@ public class PHRMessageAction extends DispatchAction {
         List messageActions = phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_MESSAGE(), PHRAction.ACTION_ADD, providerNo);
         List otherActions = phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_MEDICATION(), -1, providerNo);
         otherActions.addAll(phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_BINARYDATA(), -1, providerNo));
-        otherActions.addAll(phrActionDAO.getActionsByStatus(PHRAction.STATUS_ON_HOLD, providerNo, phrConstants.DOCTYPE_ACCESSPOLICIES()));
+        ArrayList<Integer> statusList = new ArrayList();
+        statusList.add(PHRAction.STATUS_ON_HOLD);
+        statusList.add(PHRAction.STATUS_NOT_AUTHORIZED);
+        statusList.add(PHRAction.STATUS_SEND_PENDING);
+        otherActions.addAll(phrActionDAO.getActionsByStatus(statusList, providerNo, phrConstants.DOCTYPE_ACCESSPOLICIES()));
         request.getSession().setAttribute("indivoSentMessages", docs);
         request.getSession().setAttribute("indivoMessageActions", messageActions);
         request.getSession().setAttribute("indivoOtherActions", otherActions);
