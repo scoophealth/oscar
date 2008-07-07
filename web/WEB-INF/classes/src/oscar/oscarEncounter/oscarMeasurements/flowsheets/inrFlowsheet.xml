@@ -24,7 +24,7 @@
 <flowsheet name="inrFlow" 
            display_name="INR Flowsheet" 
            ds_rules="inrFlowsheet.drl"
-           dxcode_triggers="icd9:42731,icd9:V5861" 
+           dxcode_triggers="icd9:42731,icd9:V5861,icd9:V1251" 
            warning_colour="#E00000"
            recommendation_colour="yellow"
            top_HTML="inr.html">
