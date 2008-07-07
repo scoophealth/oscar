@@ -91,6 +91,8 @@ public class DemographicExportAction2 extends Action {
 public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
     String setName = request.getParameter("patientSet");
     String demoNo = request.getParameter("demographicNo");
+    oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
+    String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
     
     ArrayList list = new ArrayList();
     if (demoNo==null) {
@@ -774,7 +776,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    if (filled(ap.getStatus())) {
 			ApptStatusData asd = new ApptStatusData();
 			asd.setApptStatus(ap.getStatus());
-			String msg = getResources(request).getMessage(asd.getTitle());
+			String msg = null;
+                        if (strEditable!=null&&strEditable.equalsIgnoreCase("yes"))
+                            msg = asd.getTitle();
+                        else
+                            msg = getResources(request).getMessage(asd.getTitle());
 			if (filled(msg)) {
 			    aptm.setAppointmentStatus(msg);
 			} else {
