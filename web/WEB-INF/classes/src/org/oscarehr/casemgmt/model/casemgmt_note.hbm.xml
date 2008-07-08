@@ -54,7 +54,7 @@
 	 
          <sql-query name="mostRecent">
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
-                select casemgmt_note.note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
+                select casemgmt_note.note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.providerNo}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, 
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
@@ -67,7 +67,7 @@
         </sql-query>
         <sql-query name="mostRecentTime">
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
-                select casemgmt_note.note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
+                select casemgmt_note.note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.providerNo}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, 
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
@@ -80,7 +80,7 @@
         </sql-query>
         <sql-query name="mostRecentOra">
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
-                    select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
+                    select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.providerNo}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
@@ -93,7 +93,7 @@
         </sql-query>
         <sql-query name="mostRecentTimeOra">
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
-                select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
+                select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.providerNo}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
@@ -119,7 +119,7 @@ select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, obser
 
         <sql-query name="mostRecent">
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
-                    select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
+                    select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.providerNo}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
@@ -132,7 +132,7 @@ select casemgmt_note.note_id as note1_82_0_, update_date as update2_82_0_, obser
         </sql-query>
         <sql-query name="mostRecentTime">
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
-                select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
+                select note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.providerNo}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no},
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},

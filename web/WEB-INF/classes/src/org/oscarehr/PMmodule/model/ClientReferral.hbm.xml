@@ -31,8 +31,8 @@
 		<property column="status" length="30" name="Status" not-null="false" type="string" />
 		<property column="temporary_admission_flag" name="TemporaryAdmission" not-null="false" type="boolean" />
 		<property column="completion_date" length="19" name="CompletionDate" not-null="false" type="timestamp" />
-		<property name="ProviderLastName" type="string" formula="(select p.last_name from provider p where p.provider_no = provider_no)" />
-		<property name="ProviderFirstName" type="string" formula="(select p.first_name from provider p where p.provider_no = provider_no)" />
+		<property name="ProviderLastName" type="string" formula="(select p.last_name from provider p where p.providerNo = provider_no)" />
+		<property name="ProviderFirstName" type="string" formula="(select p.first_name from provider p where p.providerNo = provider_no)" />
 		<property name="ProgramName" type="string" formula="(select p.name from program p where p.id = program_id)" />
 		<property name="programType" type="string" formula="(select p.type from program p where p.id = program_id)" />
 		<property column="present_problems" name="presentProblems" not-null="false" type="string" />

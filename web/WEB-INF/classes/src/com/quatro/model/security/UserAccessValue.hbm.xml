@@ -15,6 +15,6 @@
 	<sql-query name="user_access">
 		<return alias="uav" class="com.quatro.model.security.UserAccessValue"/>
 
-	select a.provider_no as {uav.providerNo}, c.codetree as {uav.orgCd}, b.objectname as {uav.functionCd},d.orgapplicable as {uav.orgApplicable}, max(b.privilege) as {uav.privilege} from secUserRole a, secObjPrivilege b, lst_orgcd c, secObjectName d where a.provider_no = ? and a.role_name = b.roleusergroup and a.orgcd = c.code and b.objectname=d.objectname and a.activeyn=1 and c.activeyn=1 group by a.provider_no, c.codetree, b.objectname, d.orgapplicable
+	select a.providerNo as {uav.providerNo}, c.codetree as {uav.orgCd}, b.objectname as {uav.functionCd},d.orgapplicable as {uav.orgApplicable}, max(b.privilege) as {uav.privilege} from secUserRole a, secObjPrivilege b, lst_orgcd c, secObjectName d where a.providerNo = ? and a.role_name = b.roleusergroup and a.orgcd = c.code and b.objectname=d.objectname and a.activeyn=1 and c.activeyn=1 group by a.providerNo, c.codetree, b.objectname, d.orgapplicable
 	</sql-query>
 </hibernate-mapping>
