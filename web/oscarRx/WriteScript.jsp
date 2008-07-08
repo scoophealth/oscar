@@ -359,7 +359,7 @@ String regionalIdentifier="";
                                 
                 //Replace units and frequency Unit  //TODO Pull this from Database
                 
-                var findUnitRegExp = /(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs|Units)/;
+                var findUnitRegExp = /(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs|Units|Inhalations)/;
                 var findU = findUnitRegExp.exec(betweenFirstAndSecondDigit);
                 if (findU){
                   //todo make it like !findU
@@ -387,7 +387,7 @@ String regionalIdentifier="";
                    addWarning("Could not find place to put "+frm.frequencyCode.value);
                 }
                 
-                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs|Units)/,frm.unit.options[frm.unit.selectedIndex].text);
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs|Units|Inhalations)/,frm.unit.options[frm.unit.selectedIndex].text);
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(PO|SL|IM|SC|TOP.|INH|SUPP|O.D.|O.S.|O.U.)/,frm.route.options[frm.route.selectedIndex].text);
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/,frm.frequencyCode.value);                                    
                                                                 
@@ -599,7 +599,7 @@ String regionalIdentifier="";
             }
             /////////////////////
             preStr = preStr + "\n";
-            preStr = preStr + "Qty:"+frm2.quantity.value+" Repeats:"+frm2.txtRepeat.value;   
+            preStr = preStr + "Qty:"+frm2.quantity.value+"\n"+"Repeats:"+frm2.txtRepeat.value;   
             if (frm2.nosubs.checked){
                 preStr = preStr +" No Subs";
             }
@@ -1105,7 +1105,8 @@ int i;
                                         <html:option value="drop">Drops</html:option>                                        
                                         <html:option value="patc">Patch</html:option>
                                         <html:option value="puff">Puffs</html:option>                     
-                                        <html:option value="units">Units</html:option>                     
+                                        <html:option value="units">Units</html:option>
+                                        <html:option value="units">Inhalations</html:option>
                                         <html:option value=""></html:option>
                                     </html:select>
                                     
