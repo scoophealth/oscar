@@ -80,7 +80,7 @@
 	<databaseap>
 		<ap-name>NameAddress</ap-name>
 		<ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${last_name}, ${first_name}\n${address}\n${postal},${province}</ap-output>
+		<ap-output>${last_name}, ${first_name}\n${address}\n${city},${postal},${province}</ap-output>
 	</databaseap>
 	<databaseap>
 		<ap-name>hin</ap-name>
