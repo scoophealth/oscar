@@ -41,7 +41,7 @@ public class ScheduleTemplateBean {
     timecode = timecode1;
     step = timecode1.length()>0?24*60/timecode1.length():0;
 	}
-  public void setProvider_no(String provider_no1 ) { 
+  public void setProviderNo(String provider_no1 ) { 
     provider_no = provider_no1;
   }  
   public void setName(String name1 ) { 
@@ -54,7 +54,7 @@ public class ScheduleTemplateBean {
     timecode = timecode1;
   }  
 
-  public String getProvider_no() { 
+  public String getProviderNo() { 
     return (provider_no);
   }  
   public String getName() { 

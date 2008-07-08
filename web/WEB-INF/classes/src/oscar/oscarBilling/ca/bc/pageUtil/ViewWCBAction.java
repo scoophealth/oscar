@@ -106,7 +106,7 @@ public class ViewWCBAction
           frm.setW_payeeno(providerData[1]);
         }
 
-        frm.setProvider_no(providerNo);
+        frm.setProviderNo(providerNo);
 
         SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
         String fmtStrDate = fm.format(new Date());

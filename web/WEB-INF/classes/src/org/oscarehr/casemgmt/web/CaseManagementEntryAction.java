@@ -198,7 +198,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             request.setAttribute("newNoteIdx", request.getParameter("newNoteIdx"));
 
             note = new CaseManagementNote();
-            note.setProvider_no(providerNo);
+            note.setProviderNo(providerNo);
             Provider prov = new Provider();
             prov.setProviderNo(providerNo);
             note.setProvider(prov);
@@ -221,7 +221,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 request.getSession().setAttribute("newNote", "true");
                 request.getSession().setAttribute("issueStatusChanged", "false");
                 note = new CaseManagementNote();
-                note.setProvider_no(providerNo);
+                note.setProviderNo(providerNo);
                 Provider prov = new Provider();
                 prov.setProviderNo(providerNo);
                 note.setProvider(prov);
@@ -250,7 +250,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 request.getSession().setAttribute("newNote", "true");
                 request.getSession().setAttribute("issueStatusChanged", "false");
                 note = new CaseManagementNote();
-                note.setProvider_no(providerNo);
+                note.setProviderNo(providerNo);
                 Provider prov = new Provider();
                 prov.setProviderNo(providerNo);
                 note.setProvider(prov);
@@ -401,7 +401,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             note.setSigning_provider_no(providerNo);
             note.setSigned(true);
             
-            note.setProvider_no(providerNo);		
+            note.setProviderNo(providerNo);		
             if( provider != null )
                 note.setProvider(provider);                        
             
@@ -417,7 +417,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             String team=null;
 		
             try {
-                role = String.valueOf((programManager.getProgramProvider(note.getProvider_no(),note.getProgram_no())).getRole().getId());
+                role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(),note.getProgram_no())).getRole().getId());
             }catch(Throwable e) {
                 log.error(e);
                 role = "0";
@@ -555,7 +555,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             note.setSigned(true);
         }
 
-        note.setProvider_no(providerNo);
+        note.setProviderNo(providerNo);
         if (provider != null) note.setProvider(provider);
 
         WebApplicationContext ctx = this.getSpringContext();
@@ -573,7 +573,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
 
         try {
-            role = String.valueOf((programManager.getProgramProvider(note.getProvider_no(), note.getProgram_no())).getRole().getId());
+            role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
         }
         catch (Throwable e) {
             log.error(e);
@@ -840,7 +840,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         note.setSigning_provider_no("");
         note.setSigned(false);       
         
-        note.setProvider_no(providerNo);
+        note.setProviderNo(providerNo);
         if (provider != null) note.setProvider(provider);                
         
         String programId = (String) request.getSession().getAttribute("case_program_id");
@@ -852,7 +852,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         String role = null;
         try {
-            role = String.valueOf((programManager.getProgramProvider(note.getProvider_no(), note.getProgram_no())).getRole().getId());
+            role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
         }
         catch (Throwable e) {
             log.error(e);
@@ -1636,7 +1636,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         for (int idx = notes.size() - 1; idx >= 0; --idx) {
             CaseManagementNote n = (CaseManagementNote) notes.get(idx);
-            if (!n.isSigned() && n.getProvider_no().equals(providerNo)) {
+            if (!n.isSigned() && n.getProviderNo().equals(providerNo)) {
                 note = n;
                 request.getSession().setAttribute("newNote", "false");
                 break;

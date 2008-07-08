@@ -280,7 +280,7 @@ clinic_ref_code
      * @return Value of property provider_no.
      *
      */
-    public java.lang.String getProvider_no() {
+    public java.lang.String getProviderNo() {
         return provider_no;
     }
     
@@ -288,7 +288,7 @@ clinic_ref_code
      * @param provider_no New value of property provider_no.
      *
      */
-    public void setProvider_no(java.lang.String provider_no) {
+    public void setProviderNo(java.lang.String provider_no) {
         this.provider_no = provider_no;
     }
     

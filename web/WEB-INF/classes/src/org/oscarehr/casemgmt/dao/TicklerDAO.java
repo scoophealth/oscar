@@ -86,7 +86,7 @@ public class TicklerDAO extends HibernateDaoSupport {
                     query += ",";
                 }
                 query += "?";
-                paramList.add(providers[x].getProvider_no());
+                paramList.add(providers[x].getProviderNo());
             }
             query += ")";
         }
@@ -101,7 +101,7 @@ public class TicklerDAO extends HibernateDaoSupport {
                     query += ",";
                 }
                 query += "?";
-                paramList.add(providers[x].getProvider_no());
+                paramList.add(providers[x].getProviderNo());
             }
             query += ")";
         }

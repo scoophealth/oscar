@@ -101,7 +101,7 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
          n.setBillingnote_no(rs.getString("billingnote_no"));
          n.setBillingmaster_no(rs.getString("billingmaster_no"));
          n.setCreatedate(rs.getString("createdate"));
-         n.setProvider_no(rs.getString("provider_no"));
+         n.setProviderNo(rs.getString("provider_no"));
          n.setNote(rs.getString("note"));
       }
       rs.close();
@@ -211,7 +211,7 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
      * Getter for property provider_no.
      * @return Value of property provider_no.
      */
-    public java.lang.String getProvider_no() {
+    public java.lang.String getProviderNo() {
        return provider_no;
     }
 
@@ -219,7 +219,7 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
      * Setter for property provider_no.
      * @param provider_no New value of property provider_no.
      */
-    public void setProvider_no(java.lang.String provider_no) {
+    public void setProviderNo(java.lang.String provider_no) {
        this.provider_no = provider_no;
     }
 

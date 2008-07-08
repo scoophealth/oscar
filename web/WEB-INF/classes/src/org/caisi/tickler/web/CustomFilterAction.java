@@ -169,7 +169,7 @@ public class CustomFilterAction extends DispatchAction {
 			
 			String filterName = filter.getName();
 			if(filterName!=null && filterName.equals("*Myticklers*")) {
-				filter.setAssignee(filter.getProvider_no());
+				filter.setAssignee(filter.getProviderNo());
 			}
 			
 			DynaActionForm filterForm = (DynaActionForm)form;
@@ -220,7 +220,7 @@ public class CustomFilterAction extends DispatchAction {
 	        }
 	        filter.setAssignees(sAssignees);
         }
-        filter.setProvider_no(this.getProviderNo(request));
+        filter.setProviderNo(this.getProviderNo(request));
         ticklerMgr.saveCustomFilter(filter);
         
         ActionMessages messages = new ActionMessages();

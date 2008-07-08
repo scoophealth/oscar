@@ -90,7 +90,7 @@ public class ProviderPropertyAction extends DispatchAction {
          
          if( prop == null ) {             
              prop = new UserProperty();
-             prop.setProvider_no(provider);
+             prop.setProviderNo(provider);
              prop.setName(UserProperty.STALE_NOTEDATE);
          }
          
@@ -176,7 +176,7 @@ public class ProviderPropertyAction extends DispatchAction {
          if (prop ==null){
              prop = new UserProperty();
              prop.setName(UserProperty.MYDRUGREF_ID);
-             prop.setProvider_no(provider);
+             prop.setProviderNo(provider);
          }
          prop.setValue(drugrefId);
          
@@ -243,7 +243,7 @@ public class ProviderPropertyAction extends DispatchAction {
          if (prop ==null){
              prop = new UserProperty();
              prop.setName(UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
-             prop.setProvider_no(provider);
+             prop.setProviderNo(provider);
          }
          prop.setValue(drugrefId);
          
@@ -333,7 +333,7 @@ public class ProviderPropertyAction extends DispatchAction {
          if (prop ==null){
              prop = new UserProperty();
              prop.setName(UserProperty.CONSULTATION_TEAM_WARNING);
-             prop.setProvider_no(provider);
+             prop.setProviderNo(provider);
          }
          prop.setValue(drugrefId);
          
@@ -431,7 +431,7 @@ public class ProviderPropertyAction extends DispatchAction {
          if (prop ==null){
              prop = new UserProperty();
              prop.setName(UserProperty.WORKLOAD_MANAGEMENT);
-             prop.setProvider_no(provider);
+             prop.setProviderNo(provider);
          }
          prop.setValue(drugrefId);
          
@@ -512,7 +512,7 @@ public class ProviderPropertyAction extends DispatchAction {
          
          if( saveProperty == null ) {
              saveProperty = new UserProperty();
-             saveProperty.setProvider_no(provider);
+             saveProperty.setProviderNo(provider);
              saveProperty.setName(UserProperty.CONSULTATION_REQ_PASTE_FMT);
          }
          

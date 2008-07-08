@@ -62,7 +62,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
  java.lang.String _p0_4 = billingDataBean.getVisitdate(); //throws an exception if empty
  java.lang.String _p0_5 = billingDataBean.getStatus(); //throws an exception if empty
  java.lang.String _p0_6 = billingDataBean.getDob(); //throws an exception if empty
- java.lang.String _p0_7 = billingDataBean.getProvider_no(); //throws an exception if empty
+ java.lang.String _p0_7 = billingDataBean.getProviderNo(); //throws an exception if empty
  java.lang.String _p0_8 = billingDataBean.getClinic_ref_code(); //throws an exception if empty
  java.lang.String _p0_9 = billingDataBean.getBilling_date(); //throws an exception if empty
  java.lang.String _p0_10 = billingPatientDataBean.getDemoname(); //throws an exception if empty

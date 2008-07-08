@@ -360,7 +360,7 @@ public class JdbcBillingCreateBillingFile {
 				ch1Obj.setLocation(rs.getString("location"));
 
 				ch1Obj.setDemographic_no(rs.getString("demographic_no"));
-				ch1Obj.setProvider_no(rs.getString("provider_no"));
+				ch1Obj.setProviderNo(rs.getString("provider_no"));
 				ch1Obj.setAppointment_no(rs.getString("appointment_no"));
 				ch1Obj.setDemographic_name(rs.getString("demographic_name"));
 				// String temp[] =

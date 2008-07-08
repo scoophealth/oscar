@@ -108,7 +108,7 @@ for(int i=0; i<aL.size(); i=i+2) {
       </td>
       <td align="left" width="25%" height="25"><%=obj.getBilling_date()%> &nbsp; &nbsp; &nbsp; &nbsp; <%=obj.getBilling_time()%></td>
       <td align="center" width="10%" height="25"><%=BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"")%></td>
-      <td align="center" width="15%" height="25"><%=providerBean.getProperty(obj.getProvider_no(), "")%></td>
+      <td align="center" width="15%" height="25"><%=providerBean.getProperty(obj.getProviderNo(), "")%></td>
        <td align="center" width="15%" height="25"><%=providerBean.getProperty(obj.getApptProvider_no(), "")%></td>
     
       <% if (obj.getStatus().compareTo("B")==0 || obj.getStatus().compareTo("S")==0) { %>

@@ -132,7 +132,7 @@ public class BillingSavePrep {
 		claim1Header.setLocation(val.getParameter("clinic_no"));
 
 		claim1Header.setDemographic_no(val.getParameter("demographic_no"));
-		claim1Header.setProvider_no(val.getParameter("xml_provider").substring(0,
+		claim1Header.setProviderNo(val.getParameter("xml_provider").substring(0,
 				val.getParameter("xml_provider").indexOf("|")));
 		claim1Header.setAppointment_no(val.getParameter("appointment_no")); // appointment_no;
 		claim1Header.setDemographic_name(val.getParameter("demographic_name"));
@@ -215,7 +215,7 @@ public class BillingSavePrep {
 		claim1Header.setLocation(val.getParameter("clinic_no"));
 
 		claim1Header.setDemographic_no(val.getParameter("demographic_no"));
-		claim1Header.setProvider_no(val.getParameter("xml_provider"));
+		claim1Header.setProviderNo(val.getParameter("xml_provider"));
 		claim1Header.setAppointment_no(val.getParameter("appointment_no"));
 		claim1Header.setDemographic_name(val.getParameter("demographic_name"));
 		String temp[] = getPatientLF(val.getParameter("demographic_name"));

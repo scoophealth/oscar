@@ -77,7 +77,7 @@ public class BillingReProcessBillAction extends Action {
         
         
         ///
-        String providerNo = frm.getProvider_no();//f
+        String providerNo = frm.getProviderNo();//f
         String demographicFirstName =demo.getFirstName(); //d
         String demographicLastName =demo.getLastName();  //d      
         String name_verify  = demographicFirstName.substring(0,1) + " " + demographicLastName.substring(0,2);  //d

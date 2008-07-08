@@ -182,7 +182,7 @@ public class TicklerAction extends DispatchAction {
             myfilter.setStartDate("");
             // myfilter.setEnd_date(new Date(System.currentTimeMillis()));
             myfilter.setEndDate("");
-            myfilter.setProvider_no(this.getProviderNo(request));
+            myfilter.setProviderNo(this.getProviderNo(request));
             myfilter.setStatus("A");
             myfilter.setPriority("");
             myfilter.setClient("");

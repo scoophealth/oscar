@@ -60,7 +60,7 @@
 	{
 		integratorConsent=new IntegratorConsent();
 		integratorConsent.setId(pk);
-		integratorConsent.setProvider_no(provider.getProvider_no());
+		integratorConsent.setProviderNo(provider.getProviderNo());
 	
 		fillConsentParameters(request, integratorConsent);
 		
@@ -68,7 +68,7 @@
 	}
 	else
 	{
-		integratorConsent.setProvider_no(provider.getProvider_no());
+		integratorConsent.setProviderNo(provider.getProviderNo());
 	
 		fillConsentParameters(request, integratorConsent);
 	

@@ -122,7 +122,7 @@ public class IndivoAPService extends IndivoServiceImpl {
         
         //getIndivoId
         ProviderData providerData = new ProviderData();
-        providerData.setProvider_no(action.getReceiverOscar());
+        providerData.setProviderNo(action.getReceiverOscar());
         String receiverPhr = providerData.getMyOscarId();
         
         IndivoDocumentType newPolicyDoc = prepareAccessPolicy(auth, permissionRecipientId, newPolicy);

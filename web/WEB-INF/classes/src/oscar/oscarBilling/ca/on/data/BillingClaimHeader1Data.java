@@ -243,11 +243,11 @@ public class BillingClaimHeader1Data {
 		this.payee = payee;
 	}
 
-	public String getProvider_no() {
+	public String getProviderNo() {
 		return provider_no;
 	}
 
-	public void setProvider_no(String provider_no) {
+	public void setProviderNo(String provider_no) {
 		this.provider_no = provider_no;
 	}
 

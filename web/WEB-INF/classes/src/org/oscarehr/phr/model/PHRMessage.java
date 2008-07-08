@@ -172,7 +172,7 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         PHRConstants phrConstants = new IndivoConstantsImpl();
         this.setPhrClassification(phrConstants.DOCTYPE_MESSAGE());
         
-        this.setSenderOscar(sender.getProvider_no());
+        this.setSenderOscar(sender.getProviderNo());
         this.setSenderType(PHRDocument.TYPE_PROVIDER);
         this.setSenderPhr(sender.getMyOscarId());
         this.setReceiverOscar(recipientOscarId);

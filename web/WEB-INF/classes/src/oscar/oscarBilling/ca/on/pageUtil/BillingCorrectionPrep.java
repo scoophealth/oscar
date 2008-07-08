@@ -55,7 +55,7 @@ public class BillingCorrectionPrep {
 					+ ch1Obj.getAdmission_date() + "|"
 					+ ch1Obj.getFacilty_num() + "|" + ch1Obj.getMan_review()
 					+ "|" + ch1Obj.getBilling_date() + "|"
-					+ ch1Obj.getProvider_no() + "|" + ch1Obj.getCreator());
+					+ ch1Obj.getProviderNo() + "|" + ch1Obj.getCreator());
 
 			ch1Obj
 					.setStatus(requestData.getParameter("status").substring(0,
@@ -76,7 +76,7 @@ public class BillingCorrectionPrep {
 							: "Y");
 			ch1Obj.setBilling_date(requestData
 					.getParameter("xml_appointment_date"));
-			ch1Obj.setProvider_no(requestData.getParameter("provider_no"));
+			ch1Obj.setProviderNo(requestData.getParameter("provider_no"));
 			ch1Obj.setComment(requestData.getParameter("comment"));
 
 			// provider_ohip_no update as well
@@ -203,7 +203,7 @@ public class BillingCorrectionPrep {
 		// existObj.getStatus() + "|" + existObj.getRef_num()
 		// + "|" + existObj.getAdmission_date() + "|" +
 		// existObj.getFacilty_num() + "|" + existObj.getMan_review()
-		// + "|" + existObj.getBilling_date() + "|" + existObj.getProvider_no()
+		// + "|" + existObj.getBilling_date() + "|" + existObj.getProviderNo()
 		// + "|" + existObj.getPay_program());
 		String temp = request.getParameter("m_review") == null ? "" : "Y";
 		if (!existObj.getStatus().equals(
@@ -229,7 +229,7 @@ public class BillingCorrectionPrep {
 		if (!existObj.getBilling_date().equals(
 				request.getParameter("xml_appointment_date")))
 			System.out.println("Billing_date");
-		if (!existObj.getProvider_no().equals(
+		if (!existObj.getProviderNo().equals(
 				request.getParameter("provider_no")))
 			System.out.println("getProvider_no");
 
@@ -250,7 +250,7 @@ public class BillingCorrectionPrep {
 						request.getParameter("xml_appointment_date"))
 				|| !existObj.getComment().equals(
 						request.getParameter("comment"))
-				|| !existObj.getProvider_no().equals(
+				|| !existObj.getProviderNo().equals(
 						request.getParameter("provider_no"))) {
 			ret = true;
 		}

@@ -21,7 +21,7 @@ String providerName = request.getSession().getAttribute("userfirstname") + " " +
         request.getSession().getAttribute("userlastname");
 String providerNo = (String) request.getSession().getAttribute("user");
 ProviderData providerData = new ProviderData();
-providerData.setProvider_no(providerNo);
+providerData.setProviderNo(providerNo);
 String providerPhrId = providerData.getMyOscarId();
 request.setAttribute("forwardto", request.getRequestURI());
 %>

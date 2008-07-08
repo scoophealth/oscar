@@ -24,7 +24,7 @@ public class JdbcBillingCorrection {
 				+ " location='" + ch1Obj.getLocation()
 
 				+ "'," + " demographic_no='" + ch1Obj.getDemographic_no() + "'," + " provider_no='"
-				+ ch1Obj.getProvider_no() + "'," + " appointment_no='" + ch1Obj.getAppointment_no() + "',"
+				+ ch1Obj.getProviderNo() + "'," + " appointment_no='" + ch1Obj.getAppointment_no() + "',"
 				+ " demographic_name='" + StringEscapeUtils.escapeSql(ch1Obj.getDemographic_name()) + "'," + " sex='"
 				+ ch1Obj.getSex() + "'," + " province='" + ch1Obj.getProvince() + "'," + " billing_date='"
 				+ ch1Obj.getBilling_date() + "'," + " billing_time='" + ch1Obj.getBilling_time() + "'," + " total='"
@@ -176,7 +176,7 @@ public class JdbcBillingCorrection {
 				ch1Obj.setLocation(rs.getString("location"));
 
 				ch1Obj.setDemographic_no(rs.getString("demographic_no"));
-				ch1Obj.setProvider_no(rs.getString("provider_no"));
+				ch1Obj.setProviderNo(rs.getString("provider_no"));
 				ch1Obj.setAppointment_no(rs.getString("appointment_no"));
 				ch1Obj.setDemographic_name(rs.getString("demographic_name"));
 				ch1Obj.setSex(rs.getString("sex"));

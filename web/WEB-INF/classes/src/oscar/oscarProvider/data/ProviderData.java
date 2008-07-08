@@ -165,7 +165,7 @@ public class ProviderData {
     * Getter for property provider_no.
     * @return Value of property provider_no.
     */
-   public java.lang.String getProvider_no() {
+   public java.lang.String getProviderNo() {
       return provider_no;
    }
    
@@ -173,7 +173,7 @@ public class ProviderData {
     * Setter for property provider_no.
     * @param provider_no New value of property provider_no.
     */
-   public void setProvider_no(java.lang.String provider_no) {
+   public void setProviderNo(java.lang.String provider_no) {
       this.provider_no = provider_no;
    }
    
@@ -506,7 +506,7 @@ public class ProviderData {
     }
  
     public void initMyOscarId() {
-         ProviderMyOscarIdData myOscar = new ProviderMyOscarIdData(this.getProvider_no());
+         ProviderMyOscarIdData myOscar = new ProviderMyOscarIdData(this.getProviderNo());
          this.myOscarId = myOscar.getMyOscarId();
     }
     private String myOscarId = null;

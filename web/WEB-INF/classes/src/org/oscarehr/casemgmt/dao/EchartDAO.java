@@ -70,7 +70,7 @@ public class EchartDAO extends HibernateDaoSupport {
 
         EChart ec = new EChart();
         ec.setDemographicNo(new Integer(demoNo).intValue());
-        ec.setProviderNo(note.getProvider_no());
+        ec.setProviderNo(note.getProviderNo());
         ec.setSubject("");
         
         if( cpp != null ) {

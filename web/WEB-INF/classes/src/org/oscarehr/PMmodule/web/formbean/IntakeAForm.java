@@ -839,10 +839,10 @@ public class IntakeAForm extends ValidatorForm
 	public void setPamphletNotIssued(String pamphletNotIssued) {
 		this.pamphletNotIssued = pamphletNotIssued;
 	}
-	public String getProvider_no() {
+	public String getProviderNo() {
 		return provider_no;
 	}
-	public void setProvider_no(String provider_no) {
+	public void setProviderNo(String provider_no) {
 		this.provider_no = provider_no;
 	}
 	public String getRadio_active() {

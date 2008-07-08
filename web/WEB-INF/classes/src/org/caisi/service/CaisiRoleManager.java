@@ -78,7 +78,7 @@ public class CaisiRoleManager {
         //if choose 0 as role id, do nothing.
         if (Integer.valueOf(role_no).intValue() == 0) return;
         CaisiRole cr = new CaisiRole();
-        cr.setProvider_no(provider_no);
+        cr.setProviderNo(provider_no);
         cr.setRole_id(Integer.valueOf(role_no).intValue());
         saveRoleAssignment(cr);
     }

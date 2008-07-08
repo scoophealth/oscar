@@ -304,7 +304,7 @@ otherstr2 = sotherBuffer.toString();
         billingDataBean.setVisitdate(request.getParameter("xml_vdate"));
        	billingDataBean.setStatus(request.getParameter("status"));
      	billingDataBean.setClinic_ref_code(request.getParameter("clinic_ref_code"));
-     	billingDataBean.setProvider_no(request.getParameter("provider_no"));
+     	billingDataBean.setProviderNo(request.getParameter("provider_no"));
      	billingDataBean.setBilling_date(request.getParameter("xml_appointment_date"));
      	billingDataBean.setUpdate_date(request.getParameter("update_date"));
      	billingDataBean.setTotal(otherstr);

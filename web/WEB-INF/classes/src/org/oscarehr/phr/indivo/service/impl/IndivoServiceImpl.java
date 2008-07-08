@@ -140,7 +140,7 @@ public class IndivoServiceImpl  implements PHRService{
         //see authenticateIndivoId for exception explanation
         ProviderData providerData = new ProviderData();
         PHRAuthentication phrAuth = null;
-        providerData.setProvider_no(providerNo);
+        providerData.setProviderNo(providerNo);
         String indivoId = providerData.getMyOscarId();
         phrAuth = authenticateIndivoId(indivoId, password);
         phrAuth.setProviderNo(providerNo);
@@ -619,7 +619,7 @@ public class IndivoServiceImpl  implements PHRService{
         for (int i=0; i<iGrantProviders.length; i++) {
                //get provider IndivoId
             ProviderData providerData = new ProviderData();
-            providerData.setProvider_no(iGrantProviders[i]);
+            providerData.setProviderNo(iGrantProviders[i]);
             String permissionRecipientProviderId = providerData.getMyOscarId();
             
             apUtil.sendAddAccessPolicy(authNewUser, permissionRecipientProviderId, IndivoAPService.LEVEL_PROVIDER);

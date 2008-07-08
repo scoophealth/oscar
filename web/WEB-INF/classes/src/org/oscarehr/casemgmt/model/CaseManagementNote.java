@@ -171,11 +171,11 @@ public class CaseManagementNote extends BaseObject {
         this.observation_date = observation_date;
     }
 
-    public String getProvider_no() {
+    public String getProviderNo() {
         return provider_no;
     }
 
-    public void setProvider_no(String provider_no) {
+    public void setProviderNo(String provider_no) {
         this.provider_no = provider_no;
     }
 

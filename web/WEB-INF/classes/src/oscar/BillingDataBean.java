@@ -148,7 +148,7 @@ public class BillingDataBean extends java.lang.Object implements java.io.Seriali
    * 
    * @param value the new value for the property
    */
-   public void setProvider_no(String value)
+   public void setProviderNo(String value)
    {
       provider_no = value;
    }
@@ -158,7 +158,7 @@ public class BillingDataBean extends java.lang.Object implements java.io.Seriali
    * 
    * @return the value of the property
    */
-   public String getProvider_no()
+   public String getProviderNo()
    {
       return provider_no;
    }

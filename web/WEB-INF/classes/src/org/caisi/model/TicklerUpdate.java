@@ -40,10 +40,10 @@ public class TicklerUpdate extends BaseObject {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getProvider_no() {
+	public String getProviderNo() {
 		return provider_no;
 	}
-	public void setProvider_no(String provider) {
+	public void setProviderNo(String provider) {
 		this.provider_no = provider;
 	}
 	public char getStatus() {

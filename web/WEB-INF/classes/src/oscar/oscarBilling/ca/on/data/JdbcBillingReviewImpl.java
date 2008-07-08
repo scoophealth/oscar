@@ -111,7 +111,7 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setBilling_date(rs.getString("billing_date"));
 				ch1Obj.setBilling_time(rs.getString("billing_time"));
 				ch1Obj.setStatus(rs.getString("status"));
-				ch1Obj.setProvider_no(rs.getString("provider_no"));
+				ch1Obj.setProviderNo(rs.getString("provider_no"));
 				ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
 				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
 				ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
@@ -157,7 +157,7 @@ public class JdbcBillingReviewImpl {
 					ch1Obj.setBilling_date(rs.getString("billing_date"));
 					ch1Obj.setBilling_time(rs.getString("billing_time"));
 					ch1Obj.setStatus(rs.getString("status"));
-					ch1Obj.setProvider_no(rs.getString("provider_no"));
+					ch1Obj.setProviderNo(rs.getString("provider_no"));
 					ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
 					ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
 					ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
@@ -216,7 +216,7 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setBilling_date(rs.getString("billing_date"));
 				ch1Obj.setBilling_time(rs.getString("billing_time"));
 				ch1Obj.setStatus(rs.getString("status"));
-				ch1Obj.setProvider_no(rs.getString("provider_no"));
+				ch1Obj.setProviderNo(rs.getString("provider_no"));
 				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
 				ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
 

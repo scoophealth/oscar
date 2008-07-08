@@ -80,8 +80,8 @@ Date:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %></td>
 <tr><th>Service Date</th><th>Practitioner</th><th>Payee</th><th>Ref. Doctor</th>
 </tr>
 <tr align="center"><td><%=ch1Obj.getBilling_date() %></td>
-<td><%=(new ProviderData()).getProviderName(ch1Obj.getProvider_no()) %></td>
-<td><%=(new ProviderData()).getProviderName(ch1Obj.getProvider_no()) %></td>
+<td><%=(new ProviderData()).getProviderName(ch1Obj.getProviderNo()) %></td>
+<td><%=(new ProviderData()).getProviderName(ch1Obj.getProviderNo()) %></td>
 <td><%=ch1Obj.getRef_num() %></td>
 </tr>
 </table>

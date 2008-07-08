@@ -1373,7 +1373,7 @@ public final class WCBForm
     return formEdited;
   }
 
-  public String getProvider_no() {
+  public String getProviderNo() {
     return provider_no;
   }
 
@@ -1435,7 +1435,7 @@ public final class WCBForm
     this.formEdited = formEdited;
   }
 
-  public void setProvider_no(String provider_no) {
+  public void setProviderNo(String provider_no) {
     this.provider_no = provider_no;
   }
 

@@ -128,7 +128,7 @@
 					claim1Header.setLocation(clinic_no);
 
 					claim1Header.setDemographic_no(demono);
-					claim1Header.setProvider_no(provider_no);
+					claim1Header.setProviderNo(provider_no);
 
 					claim1Header.setAppointment_no("0"); // appointment_no;
 					claim1Header.setDemographic_name(demo_name);

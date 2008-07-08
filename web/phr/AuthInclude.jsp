@@ -26,7 +26,7 @@ String providerName = request.getSession().getAttribute("userfirstname") + " " +
         request.getSession().getAttribute("userlastname");
 String providerNo = (String) request.getSession().getAttribute("user");
 ProviderData providerData = new ProviderData();
-providerData.setProvider_no(providerNo);
+providerData.setProviderNo(providerNo);
 String providerPhrId = providerData.getMyOscarId();
 PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 //this particular <logic:present statement does not search parameters in request scope for some reason

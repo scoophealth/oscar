@@ -200,7 +200,7 @@ public class CustomFilter extends BaseObject {
 	public String getAssignee() {
 		if(getAssignees().size()>0) {
 			Provider p = (Provider)getAssignees().iterator().next();
-			return p.getProvider_no();
+			return p.getProviderNo();
 		}
 		return null;
 	}
@@ -213,7 +213,7 @@ public class CustomFilter extends BaseObject {
 	public String getProvider() {
 		if(getProviders().size()>0) {
 			Provider p = (Provider)getProviders().iterator().next();
-			return p.getProvider_no();
+			return p.getProviderNo();
 		}
 		return null;
 	}
@@ -256,11 +256,11 @@ public class CustomFilter extends BaseObject {
 		this.priority = priority;
 	}
 
-	public String getProvider_no() {
+	public String getProviderNo() {
 		return provider_no;
 	}
 
-	public void setProvider_no(String provider_no) {
+	public void setProviderNo(String provider_no) {
 		this.provider_no = provider_no;
 	}
 

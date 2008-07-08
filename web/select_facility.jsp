@@ -13,7 +13,7 @@
 	FacilityDao facilityDao=(FacilityDao)SpringUtils.beanFactory.getBean("facilityDao");
 
 	Provider provider=(Provider)session.getAttribute("provider");
-	List<Integer> facilityIds=ProviderDao.getFacilityIds(provider.getProvider_no());
+	List<Integer> facilityIds=ProviderDao.getFacilityIds(provider.getProviderNo());
 %>
 <ul>
 	<%

@@ -116,7 +116,7 @@ public class LoginCheckLoginBean {
 
         if (password.equals(userpassword)) { // login successfully           
         	String[] strAuth = new String[6];
-            strAuth[0] = secBean.getProvider_no();
+            strAuth[0] = secBean.getProviderNo();
             strAuth[1] = firstname;
             strAuth[2] = lastname;
             strAuth[3] = profession;
@@ -162,7 +162,7 @@ public class LoginCheckLoginBean {
                 secBean = new LoginSecurityBean();
                 secBean.setUser_name(db.getString(rs,"user_name"));
                 secBean.setPassword(db.getString(rs,"password"));
-                secBean.setProvider_no(db.getString(rs,"provider_no"));
+                secBean.setProviderNo(db.getString(rs,"provider_no"));
                 secBean.setPin(db.getString(rs,"pin"));
                 secBean.setB_ExpireSet(new Integer(rs.getInt("b_ExpireSet")));
                 secBean.setDate_ExpireDate(rs.getDate("date_ExpireDate"));
@@ -176,7 +176,7 @@ public class LoginCheckLoginBean {
 
             // find the detail of the user
             sql = "select first_name, last_name, provider_type from provider where provider_no = '"
-                    + secBean.getProvider_no() + "'";
+                    + secBean.getProviderNo() + "'";
             rs = accessDB.searchDBRecord(sql);
             while (rs.next()) {
                 firstname = accessDB.getString(rs,"first_name");
@@ -184,7 +184,7 @@ public class LoginCheckLoginBean {
                 profession = accessDB.getString(rs,"provider_type");
             }
 
-            sql = "select role_name from secUserRole where activeyn=1 and provider_no = '" + secBean.getProvider_no() + "'";
+            sql = "select role_name from secUserRole where activeyn=1 and provider_no = '" + secBean.getProviderNo() + "'";
             rs = accessDB.searchDBRecord(sql);
             while (rs.next()) {
                 if (rolename == null) {
@@ -207,7 +207,7 @@ public class LoginCheckLoginBean {
         ResultSet rs = null;
         try {
             String strSQL = "select start_hour, end_hour, every_min, mygroup_no,new_tickler_warning_window,default_caisi_pmm from preference where provider_no = '"
-                    + secBean.getProvider_no() + "'";
+                    + secBean.getProviderNo() + "'";
             rs = accessDB.searchDBRecord(strSQL);
             while (rs.next()) {
                 temp[0] = accessDB.getString(rs,"start_hour");
@@ -235,7 +235,7 @@ public class LoginCheckLoginBean {
         ResultSet rs = null;
         try {
             String strSQL = "select start_hour, end_hour, every_min, mygroup_no from preference where provider_no = '"
-                    + secBean.getProvider_no() + "'";
+                    + secBean.getProviderNo() + "'";
             rs = accessDB.searchDBRecord(strSQL);
             while (rs.next()) {
                 temp[0] = accessDB.getString(rs,"start_hour");

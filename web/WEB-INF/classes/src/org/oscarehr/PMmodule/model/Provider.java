@@ -29,7 +29,7 @@ import java.util.Comparator;
  */
 public class Provider implements Serializable {
 
-	public static final String SYSTEMPROVIDERNO = "-1";
+	public static final String SYSTEM_PROVIDER_NO = "-1";
 
 	private int hashCode = Integer.MIN_VALUE;// primary key
 
@@ -82,10 +82,6 @@ public class Provider implements Serializable {
 
 	public String getFullName() {
 		return getFirstName() + " " + getLastName();
-	}
-
-	public String getProviderno() {
-		return getProviderNo();
 	}
 
 	public String getProviderNo() {

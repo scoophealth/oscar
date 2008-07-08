@@ -237,7 +237,7 @@ function popupPage(vheight,vwidth,varpage) {
 						BillLocation = "";
 						BillLocationNo = ch1Obj.getFacilty_num();
 						BillDate = ch1Obj.getBilling_date();
-						Provider = ch1Obj.getProvider_no();
+						Provider = ch1Obj.getProviderNo();
 						BillType = ch1Obj.getStatus();
 						payProgram = ch1Obj.getPay_program();
 						BillTotal = ch1Obj.getTotal();

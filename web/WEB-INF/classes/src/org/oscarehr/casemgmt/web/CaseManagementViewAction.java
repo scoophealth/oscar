@@ -197,7 +197,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         /*EncounterWindow ectWin = this.caseManagementMgr.getEctWin(providerNo);
         if (ectWin == null) {
             ectWin = new EncounterWindow();
-            ectWin.setProvider_no(providerNo);
+            ectWin.setProviderNo(providerNo);
             ectWin.setRowOneSize(EncounterWindow.NORMAL);
             ectWin.setRowTwoSize(EncounterWindow.NORMAL);
         }
@@ -707,7 +707,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
             if (!filter) {
                 // no filter, add all
                 filteredNotes.add(note);
-            } else if (filter && note.getProvider_no().equals(providerNo)) {
+            } else if (filter && note.getProviderNo().equals(providerNo)) {
                 // correct provider
                 filteredNotes.add(note);
             }
@@ -754,7 +754,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
                 filteredNotes.add(note);
                 
             } else {
-                if (Arrays.binarySearch(providerNo, note.getProvider_no()) >= 0)
+                if (Arrays.binarySearch(providerNo, note.getProviderNo()) >= 0)
                     // correct provider
                     filteredNotes.add(note);
             }

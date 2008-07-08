@@ -56,7 +56,7 @@ public class TicklerDAO extends HibernateDaoSupport {
             TicklerComment comment = new TicklerComment();
             comment.setTickler_no(tickler_id.longValue());
             comment.setUpdate_date(new Date());
-            comment.setProvider_no(provider);
+            comment.setProviderNo(provider);
             comment.setMessage(message);
             tickler.getComments().add(comment);
             this.saveTickler(tickler);
@@ -73,7 +73,7 @@ public class TicklerDAO extends HibernateDaoSupport {
             TicklerComment comment = new TicklerComment();
             comment.setTickler_no(tickler_id.longValue());
             comment.setUpdate_date(new Date());
-            comment.setProvider_no(provider);
+            comment.setProviderNo(provider);
             current_assignee = ((Provider)(getHibernateTemplate().find("from Provider p where p.ProviderNo = ?", task_assigned_to)).get(0)).getFormattedName();
             message = "RE-ASSIGNMENT RECORD: [Tickler \"" + tickler.getDemographic().getFormattedName() + "\" was reassigned from \"" + former_assignee + "\"  to \"" + current_assignee + "\"]";
             comment.setMessage(message);
@@ -167,7 +167,7 @@ public class TicklerDAO extends HibernateDaoSupport {
                                     query += ",";
                             }
                             query += "?";
-                            paramList.add(providers[x].getProvider_no());
+                            paramList.add(providers[x].getProviderNo());
                     }
                     query += ")";
             }
@@ -182,7 +182,7 @@ public class TicklerDAO extends HibernateDaoSupport {
                                     query += ",";
                             }
                             query += "?";
-                            paramList.add(providers[x].getProvider_no());
+                            paramList.add(providers[x].getProviderNo());
                     }
                     query += ")";
             }
@@ -225,7 +225,7 @@ public class TicklerDAO extends HibernateDaoSupport {
         if (tickler != null) {
             tickler.setStatus(status);
             TicklerUpdate update = new TicklerUpdate();
-            update.setProvider_no(provider);
+            update.setProviderNo(provider);
             update.setStatus(status);
             update.setTickler_no(tickler_id.longValue());
             update.setUpdate_date(new Date());

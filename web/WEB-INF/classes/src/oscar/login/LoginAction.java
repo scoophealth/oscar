@@ -192,7 +192,7 @@ public final class LoginAction extends DispatchAction {
             Provider provider = providerManager.getProvider(username);
             session.setAttribute("provider", provider);
 
-            List<Integer> facilityIds = ProviderDao.getFacilityIds(provider.getProvider_no());
+            List<Integer> facilityIds = ProviderDao.getFacilityIds(provider.getProviderNo());
             if (facilityIds.size() > 1) {
                 return(new ActionForward("/select_facility.jsp?nextPage=" + where));
             }

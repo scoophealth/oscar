@@ -28,7 +28,7 @@ public class LoginSecurityBean {
         setSecurity_no(null);
         setPassword(null);
         setPin(null);
-        setProvider_no(null);
+        setProviderNo(null);
         setUser_name(null);
     }
 
@@ -80,11 +80,11 @@ public class LoginSecurityBean {
         this.pin = pin;
     }
 
-    public String getProvider_no() {
+    public String getProviderNo() {
         return provider_no;
     }
 
-    public void setProvider_no(String provider_no) {
+    public void setProviderNo(String provider_no) {
         this.provider_no = provider_no;
     }
 

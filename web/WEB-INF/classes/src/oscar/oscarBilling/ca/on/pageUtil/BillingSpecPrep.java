@@ -94,7 +94,7 @@ public class BillingSpecPrep {
 		claim1Header.setLocation(val.getParameter("clinicNo"));
 
 		claim1Header.setDemographic_no(val.getParameter("functionid"));
-		claim1Header.setProvider_no(val.getParameter("provider").substring(
+		claim1Header.setProviderNo(val.getParameter("provider").substring(
 				val.getParameter("provider").indexOf("|") + 1));
 		claim1Header.setAppointment_no(val.getParameter("appointment_no")); // appointment_no;
 		claim1Header.setDemographic_name(val.getParameter("demo_name"));
@@ -176,7 +176,7 @@ public class BillingSpecPrep {
 		claim1Header.setLocation(val.getParameter("clinicNo"));
 
 		claim1Header.setDemographic_no(val.getParameter("functionid"));
-		claim1Header.setProvider_no(val.getParameter("provider").substring(
+		claim1Header.setProviderNo(val.getParameter("provider").substring(
 				val.getParameter("provider").indexOf("|") + 1));
 		claim1Header.setAppointment_no(val.getParameter("appointment_no")); // appointment_no;
 		claim1Header.setDemographic_name(val.getParameter("demo_name"));

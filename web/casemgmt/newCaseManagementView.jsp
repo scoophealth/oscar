@@ -716,7 +716,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     //so we store the ids here and list the event listeners at the end of this script
                     if( note.getId() != savedId ) {
                         
-                        if( note.isSigned() || (!note.isSigned() && note.getProvider_no().equals(provNo))) {
+                        if( note.isSigned() || (!note.isSigned() && note.getProviderNo().equals(provNo))) {
                             if( note.isLocked() ) { 
                                 lockedNotes.add(note.getId());
                             }

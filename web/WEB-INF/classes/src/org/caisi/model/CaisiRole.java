@@ -40,10 +40,10 @@ public class CaisiRole extends BaseObject {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getProvider_no() {
+	public String getProviderNo() {
 		return provider_no;
 	}
-	public void setProvider_no(String provider_no) {
+	public void setProviderNo(String provider_no) {
 		this.provider_no = provider_no;
 	}
 	public Date getUpdate_date() {

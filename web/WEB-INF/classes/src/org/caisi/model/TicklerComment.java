@@ -46,10 +46,10 @@ public class TicklerComment extends BaseObject {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public String getProvider_no() {
+	public String getProviderNo() {
 		return provider_no;
 	}
-	public void setProvider_no(String provider_no) {
+	public void setProviderNo(String provider_no) {
 		this.provider_no = provider_no;
 	}
 	public long getTickler_no() {
