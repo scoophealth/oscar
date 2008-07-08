@@ -29,18 +29,6 @@ import java.io.Serializable;
  * Any customizations belong here.
  */
 public class Messagetbl implements Serializable {
-    public static String PROP_MESSAGEID = "messageid";
-    public static String PROP_PDFATTACHMENT = "pdfattachment";
-    public static String PROP_SENTBY = "sentby";
-    public static String PROP_THESUBJECT = "thesubject";
-    public static String PROP_SENT_BY_LOCATION = "sentByLocation";
-    public static String PROP_SENTTO = "sentto";
-    public static String PROP_ATTACHMENT = "attachment";
-    public static String PROP_THEDATE = "thedate";
-    public static String PROP_SENTBY_NO = "sentbyNo";
-    public static String PROP_ACTIONSTATUS = "actionstatus";
-    public static String PROP_THEMESSAGE = "themessage";
-    public static String PROP_THEIME = "theime";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer _messageid;// fields
     private String _themessage;

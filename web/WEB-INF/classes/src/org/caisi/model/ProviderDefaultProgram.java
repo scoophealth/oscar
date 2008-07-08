@@ -29,10 +29,6 @@ import java.io.Serializable;
  * Any customizations belong here.
  */
 public class ProviderDefaultProgram implements Serializable {
-    public static String PROP_PROVIDER_NO = "providerNo";
-    public static String PROP_PROGRAM_ID = "programId";
-    public static String PROP_SIGNNOTE = "signnote";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer _id;// fields
     private String _providerNo;

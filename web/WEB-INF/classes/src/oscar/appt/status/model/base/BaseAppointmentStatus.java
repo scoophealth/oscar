@@ -15,13 +15,6 @@ import java.io.Serializable;
 public abstract class BaseAppointmentStatus  implements Serializable {
 
 	public static String REF = "AppointmentStatus";
-	public static String PROP_EDITABLE = "Editable";
-	public static String PROP_ACTIVE = "Active";
-	public static String PROP_STATUS = "Status";
-	public static String PROP_DESCRIPTION = "Description";
-	public static String PROP_ID = "Id";
-	public static String PROP_ICON = "Icon";
-	public static String PROP_COLOR = "Color";
 
 
 	// constructors

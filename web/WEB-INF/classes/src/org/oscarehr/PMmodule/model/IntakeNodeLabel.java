@@ -22,11 +22,7 @@ import java.io.Serializable;
 
 public class IntakeNodeLabel implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
     public static String REF = "IntakeNodeLabel";
-    public static String PROP_LABEL = "label";
-    public static String PROP_ID = "id";
     
     private int hashCode = Integer.MIN_VALUE;// primary key
 

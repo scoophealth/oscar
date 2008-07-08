@@ -32,24 +32,6 @@ public class Provider implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String SYSTEM_PROVIDER_NO = "-1";
-    public static String PROP_STATUS = "Status";
-    public static String PROP_SEX = "Sex";
-    public static String PROP_PROVIDER_ACTIVITY = "ProviderActivity";
-    public static String PROP_PHONE = "Phone";
-    public static String PROP_DOB = "Dob";
-    public static String PROP_PROVIDER_NO = "ProviderNo";
-    public static String PROP_TEAM = "Team";
-    public static String PROP_BILLING_NO = "BillingNo";
-    public static String PROP_OHIP_NO = "OhipNo";
-    public static String PROP_FIRST_NAME = "FirstName";
-    public static String PROP_HSO_NO = "HsoNo";
-    public static String PROP_PROVIDER_TYPE = "ProviderType";
-    public static String PROP_COMMENTS = "Comments";
-    public static String PROP_ADDRESS = "Address";
-    public static String PROP_WORK_PHONE = "WorkPhone";
-    public static String PROP_RMA_NO = "RmaNo";
-    public static String PROP_SPECIALTY = "Specialty";
-    public static String PROP_LAST_NAME = "LastName";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
 

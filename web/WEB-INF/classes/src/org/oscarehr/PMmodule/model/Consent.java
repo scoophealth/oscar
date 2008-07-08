@@ -29,25 +29,6 @@ import java.io.Serializable;
  */
 public class Consent  implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    public static String PROP_STATUS = "status";
-    public static String PROP_ANSWER1 = "answer1";
-    public static String PROP_DATE_SIGNED = "dateSigned";
-    public static String PROP_FORM_VERSION = "formVersion";
-    public static String PROP_SIGNATURE_DECLARATION = "signatureDeclaration";
-    public static String PROP_PROVIDER_NAME = "ProviderName";
-    public static String PROP_REFUSED_TO_SIGN = "refusedToSign";
-    public static String PROP_ANSWER2 = "answer2";
-    public static String PROP_EXCLUSION_STRING = "exclusionString";
-    public static String PROP_PROVIDER_NO = "ProviderNo";
-    public static String PROP_FORM_NAME = "formName";
-    public static String PROP_ANSWER3 = "answer3";
-    public static String PROP_DEMOGRAPHIC_NO = "demographicNo";
-    public static String PROP_ID = "Id";
-    public static String PROP_LOCATION = "location";
-    public static String PROP_HARDCOPY = "hardcopy";
-
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Long _id;// fields

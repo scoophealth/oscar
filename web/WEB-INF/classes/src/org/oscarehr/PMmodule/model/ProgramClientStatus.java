@@ -4,12 +4,7 @@ import java.io.Serializable;
 
 
 public class ProgramClientStatus implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     public static String REF = "ProgramClientStatus";
-    public static String PROP_PROGRAM_ID = "programId";
-    public static String PROP_NAME = "name";
-    public static String PROP_ID = "id";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
 

@@ -29,9 +29,6 @@ public class BedCheckTime implements Serializable {
 
 	private static final long serialVersionUID = 1L;
     public static String REF = "BedCheckTime";
-    public static String PROP_TIME = "time";
-    public static String PROP_PROGRAM_ID = "programId";
-    public static String PROP_ID = "id";
     
     private int hashCode = Integer.MIN_VALUE;// primary key
 

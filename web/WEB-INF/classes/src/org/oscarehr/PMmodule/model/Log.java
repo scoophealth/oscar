@@ -30,14 +30,6 @@ import java.io.Serializable;
  */
 public class Log implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-    public static String PROP_PROVIDER_NO = "ProviderNo";
-    public static String PROP_ACTION = "Action";
-    public static String PROP_IP = "Ip";
-    public static String PROP_CONTENT = "Content";
-    public static String PROP_ID = "id";
-    public static String PROP_CONTENT_ID = "ContentId";
-    public static String PROP_DATE_TIME = "DateTime";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private long _id;// fields
     private String _providerNo;

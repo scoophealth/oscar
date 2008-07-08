@@ -24,12 +24,7 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 
 public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
 
-	private static final long serialVersionUID = 1L;
     public static String REF = "IntakeAnswer";
-    public static String PROP_VALUE = "value";
-    public static String PROP_NODE = "node";
-    public static String PROP_INTAKE = "intake";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// fields
     private String value;// many to one

@@ -29,11 +29,7 @@ import java.util.List;
  */
 public class ProgramTeam implements Serializable {
 
-	private static final long serialVersionUID = 1L;
     public static String REF = "ProgramTeam";
-    public static String PROP_PROGRAM_ID = "programId";
-    public static String PROP_NAME = "name";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// fields
     private String name;

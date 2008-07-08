@@ -34,13 +34,7 @@ import org.oscarehr.common.dao.Auditable;
  */
 public class RoomDemographic implements Auditable, Serializable {
 
-	private static final long serialVersionUID = 1L;
     public static String REF = "RoomDemographic";
-    public static String PROP_PROVIDER_NO = "providerNo";
-    public static String PROP_ASSIGN_START = "assignStart";
-    public static String PROP_ASSIGN_END = "assignEnd";
-    public static String PROP_COMMENT = "comment";
-    public static String PROP_ID = "id";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
 

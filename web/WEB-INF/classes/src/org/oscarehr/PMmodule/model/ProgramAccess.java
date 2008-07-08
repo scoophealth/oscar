@@ -28,12 +28,6 @@ import java.io.Serializable;
  */
 public class ProgramAccess implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-    public static String PROP_ALL_ROLES = "AllRoles";
-    public static String PROP_ACCESS_TYPE = "AccessType";
-    public static String PROP_PROGRAM_ID = "ProgramId";
-    public static String PROP_ACCESS_TYPE_ID = "AccessTypeId";
-    public static String PROP_ID = "Id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Long _id;// fields
     private Long _programId;

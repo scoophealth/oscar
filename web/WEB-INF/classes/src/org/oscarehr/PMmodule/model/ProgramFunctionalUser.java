@@ -28,15 +28,6 @@ import java.io.Serializable;
  */
 public class ProgramFunctionalUser implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
-    public static String PROP_PROVIDER_NO = "ProviderNo";
-    public static String PROP_USER_TYPE = "UserType";
-    public static String PROP_USER_TYPE_ID = "UserTypeId";
-    public static String PROP_PROGRAM_ID = "ProgramId";
-    public static String PROP_PROVIDER = "Provider";
-    public static String PROP_ID = "Id";
-
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Long _id;// fields

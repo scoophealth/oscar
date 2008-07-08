@@ -29,11 +29,6 @@ import java.io.Serializable;
  */
 public class RatePage implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    public static String PROP_PAGE_NAME = "pageName";
-    public static String PROP_SCORE = "score";
-    public static String PROP_VISITORS = "visitors";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer _id;// fields
     private Integer _visitors;

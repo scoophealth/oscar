@@ -29,30 +29,6 @@ import java.io.Serializable;
  */
 public class ConsentInterview implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    public static String PROP_PRESSURE = "pressure";
-    public static String PROP_EDUCATION = "education";
-    public static String PROP_FORM_VERSION = "formVersion";
-    public static String PROP_FOLLOWUP_OTHER = "followupOther";
-    public static String PROP_FOLLOWUP = "followup";
-    public static String PROP_INFORMATION = "information";
-    public static String PROP_CONSENT_ID = "consentId";
-    public static String PROP_REVIEW_OTHER = "reviewOther";
-    public static String PROP_COMMENTS_OTHER = "commentsOther";
-    public static String PROP_LANGUAGE = "language";
-    public static String PROP_LANGUAGE_OTHER = "languageOther";
-    public static String PROP_PROVIDER_NO = "ProviderNo";
-    public static String PROP_PRESSURE_OTHER = "pressureOther";
-    public static String PROP_FORM_NAME = "formName";
-    public static String PROP_LANGUAGE_READ_OTHER = "languageReadOther";
-    public static String PROP_REVIEW = "review";
-    public static String PROP_DEMOGRAPHIC_NO = "demographicNo";
-    public static String PROP_COMMENTS = "comments";
-    public static String PROP_LANGUAGE_READ = "languageRead";
-    public static String PROP_INFORMATION_OTHER = "informationOther";
-    public static String PROP_ID = "Id";
-
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Long _id;// fields

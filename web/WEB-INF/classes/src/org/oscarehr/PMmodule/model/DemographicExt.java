@@ -29,15 +29,6 @@ import java.io.Serializable;
  */
 public class DemographicExt implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    public static String REF = "DemographicExt";
-    public static String PROP_KEY = "key";
-    public static String PROP_PROVIDER_NO = "providerNo";
-    public static String PROP_VALUE = "value";
-    public static String PROP_DEMOGRAPHIC_NO = "demographicNo";
-    public static String PROP_HIDDEN = "hidden";
-    public static String PROP_DATE_CREATED = "dateCreated";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// fields
     private Integer demographicNo;

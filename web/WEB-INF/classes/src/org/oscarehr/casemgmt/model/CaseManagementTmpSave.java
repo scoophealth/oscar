@@ -29,12 +29,6 @@ import java.io.Serializable;
  * Any customizations belong here.
  */
 public class CaseManagementTmpSave implements Serializable {
-    public static String PROP_UPDATE_DATE = "update_date";
-    public static String PROP_PROVIDER_NO = "providerNo";
-    public static String PROP_PROGRAM_ID = "programId";
-    public static String PROP_DEMOGRAPHIC_NO = "demographicNo";
-    public static String PROP_NOTE = "note";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Long _id;// fields
     private long _demographicNo;

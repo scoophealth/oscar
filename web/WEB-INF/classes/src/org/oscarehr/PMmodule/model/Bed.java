@@ -35,13 +35,6 @@ public class Bed implements Serializable {
     private static final String DEFAULT_NAME = "";
     private static final boolean DEFAULT_ACTIVE = true;
     public static String REF = "Bed";
-    public static String PROP_ACTIVE = "active";
-    public static String PROP_TEAM_ID = "teamId";
-    public static String PROP_BED_TYPE_ID = "bedTypeId";
-    public static String PROP_NAME = "name";
-    public static String PROP_ROOM_START = "roomStart";
-    public static String PROP_ROOM_ID = "roomId";
-    public static String PROP_ID = "id";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
 

@@ -37,12 +37,6 @@ public class BedDemographic implements Auditable, Serializable {
 	private static final long serialVersionUID = 1L;
 	private static String INFINITE_DATE = "2999-12-31";
     public static String REF = "BedDemographic";
-    public static String PROP_PROVIDER_NO = "providerNo";
-    public static String PROP_RESERVATION_START = "reservationStart";
-    public static String PROP_RESERVATION_END = "reservationEnd";
-    public static String PROP_BED_DEMOGRAPHIC_STATUS_ID = "bedDemographicStatusId";
-    public static String PROP_ID = "id";
-    public static String PROP_LATE_PASS = "latePass";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
 

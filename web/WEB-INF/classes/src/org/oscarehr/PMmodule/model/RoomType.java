@@ -28,11 +28,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class RoomType implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     public static String REF = "RoomType";
-    public static String PROP_DEFAULT = "default";
-    public static String PROP_NAME = "name";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// fields
     private String name;

@@ -24,16 +24,9 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 
 public class IntakeAnswerElement  implements Comparable<IntakeAnswerElement>, Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
 	public static final String TRUE = "T";
 	public static final String FALSE = "F";
     public static String REF = "IntakeAnswerElement";
-    public static String PROP_VALIDATION = "validation";
-    public static String PROP_NODE_TEMPLATE = "nodeTemplate";
-    public static String PROP_ELEMENT = "element";
-    public static String PROP_DEFAULT = "default";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// fields
     private boolean m_default;

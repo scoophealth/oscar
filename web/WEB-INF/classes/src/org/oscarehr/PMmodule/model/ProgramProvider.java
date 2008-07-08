@@ -29,13 +29,6 @@ import java.io.Serializable;
  */
 public class ProgramProvider implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-    public static String PROP_PROVIDER_NO = "ProviderNo";
-    public static String PROP_PROGRAM_ID = "ProgramId";
-    public static String PROP_PROVIDER = "provider";
-    public static String PROP_ROLE = "role";
-    public static String PROP_ID = "Id";
-    public static String PROP_ROLE_ID = "RoleId";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Long _id;// fields
     private Long _programId;

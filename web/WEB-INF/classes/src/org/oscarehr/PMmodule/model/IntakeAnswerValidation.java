@@ -23,10 +23,7 @@ import java.io.Serializable;
 
 public class IntakeAnswerValidation implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     public static String REF = "IntakeAnswerValidation";
-    public static String PROP_TYPE = "type";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// fields
     private String type;

@@ -29,8 +29,6 @@ import java.io.Serializable;
  * Any customizations belong here.
  */
 public class Providerext implements Serializable {
-    public static String PROP_PROVIDER_NO = "providerNo";
-    public static String PROP_SIGNATURE = "signature";// fields
     private String _providerNo;
     private String _signature;
 

@@ -31,19 +31,12 @@ import java.util.TreeSet;
 
 public class Intake implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
 	public static final String QUICK = "quick";
 	public static final String INDEPTH = "indepth";
 	public static final String PROGRAM = "program";
     public static String REF = "Intake";
-    public static String PROP_NODE = "node";
-    public static String PROP_STAFF_ID = "staffId";
-    public static String PROP_CREATED_ON = "createdOn";
-    public static String PROP_ID = "id";
-    public static String PROP_CLIENT_ID = "clientId";
     
     
     private int hashCode = Integer.MIN_VALUE;// primary key

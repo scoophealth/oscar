@@ -28,22 +28,12 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class Room implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     private static final String DEFAULT_NAME = "";
     private static final boolean DEFAULT_ACTIVE = true;
     private static final Integer DEFAULT_ASSIGNED_BED = new Integer(1);
     private static final Integer DEFAULT_OCCUPANCY = new Integer(1);
 
     public static String REF = "Room";
-    public static String PROP_ROOM_TYPE_ID = "roomTypeId";
-    public static String PROP_ACTIVE = "active";
-    public static String PROP_FLOOR = "floor";
-    public static String PROP_PROGRAM_ID = "programId";
-    public static String PROP_ASSIGNED_BED = "assignedBed";
-    public static String PROP_OCCUPANCY = "occupancy";
-    public static String PROP_NAME = "name";
-    public static String PROP_ID = "id";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
 

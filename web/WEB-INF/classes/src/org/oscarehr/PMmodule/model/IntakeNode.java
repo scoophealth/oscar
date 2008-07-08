@@ -28,15 +28,9 @@ import java.util.TreeSet;
 
 public class IntakeNode implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     private IntakeNodeWalker walker;
 
     public static String REF = "IntakeNode";
-    public static String PROP_PARENT = "parent";
-    public static String PROP_NODE_TEMPLATE = "nodeTemplate";
-    public static String PROP_LABEL = "label";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// many to one
     private IntakeNodeTemplate nodeTemplate;

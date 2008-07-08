@@ -22,8 +22,6 @@ import java.io.Serializable;
 
 public class IntakeNodeType implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	public static final Integer INTAKE_ID = 1;
 	public static final Integer PAGE_ID = 2;
 	public static final Integer SECTION_ID = 3;
@@ -33,8 +31,6 @@ public class IntakeNodeType implements Serializable {
 	public static final Integer ANSWER_SCALAR_TEXT_ID = 7;
 	public static final Integer ANSWER_SCALAR_NOTE_ID = 8;
     public static String REF = "IntakeNodeType";
-    public static String PROP_TYPE = "type";
-    public static String PROP_ID = "id";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
     

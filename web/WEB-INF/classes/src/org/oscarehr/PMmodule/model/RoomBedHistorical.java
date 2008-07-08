@@ -28,10 +28,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class RoomBedHistorical implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     public static String REF = "RoomBedHistorical";
-    public static String PROP_CONTAIN_END = "containEnd";
-    public static String PROP_ID = "id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private RoomBedHistoricalPK id;// fields
     private java.util.Date containEnd;

@@ -25,13 +25,7 @@ import java.util.TreeSet;
 
 public class IntakeNodeTemplate implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
     public static String REF = "IntakeNodeTemplate";
-    public static String PROP_TYPE = "type";
-    public static String PROP_REMOTE_ID = "remoteId";
-    public static String PROP_LABEL = "label";
-    public static String PROP_ID = "id";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
     

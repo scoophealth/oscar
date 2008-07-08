@@ -28,9 +28,6 @@ import java.io.Serializable;
  */
 public class FunctionalUserType  implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-    public static String PROP_NAME = "Name";
-    public static String PROP_ID = "Id";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Long _id;// fields
     private String _name;

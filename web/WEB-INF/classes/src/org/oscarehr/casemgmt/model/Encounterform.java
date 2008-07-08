@@ -29,10 +29,6 @@ import java.io.Serializable;
  * Any customizations belong here.
  */
 public class Encounterform implements Serializable {
-    public static String PROP_FORM_NAME = "formName";
-    public static String PROP_FORM_TABLE = "formTable";
-    public static String PROP_HIDDEN = "hidden";
-    public static String PROP_FORM_VALUE = "formValue";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private String _formValue;// fields
     private Integer _hidden;

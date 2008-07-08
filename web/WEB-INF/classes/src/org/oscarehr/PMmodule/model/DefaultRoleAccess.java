@@ -28,12 +28,6 @@ import java.io.Serializable;
  */
 public class DefaultRoleAccess  implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    public static String PROP_ACCESS_TYPE = "access_type";
-    public static String PROP_CAISI_ROLE = "caisi_role";
-    public static String PROP_ACCESS_TYPE_ID = "accessTypeId";
-    public static String PROP_ID = "id";
-    public static String PROP_ROLE_ID = "roleId";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Long _id;// fields
     private long _roleId;
