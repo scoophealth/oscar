@@ -88,8 +88,8 @@ public class importCasemgmt {
                         if( !rs1.next() ) {
                             System.out.println("Creating OSCAR program");
                         
-                            int result = stmt.executeUpdate("insert into program (name,maxAllowed,type,allowBatchAdmission,allowBatchDischarge,hic) " + 
-                                "Values('OSCAR','99999','Bed',0,0,0)", Statement.RETURN_GENERATED_KEYS);
+                            int result = stmt.executeUpdate("insert into program (name,maxAllowed,type,programStatus,allowBatchAdmission,allowBatchDischarge,hic) " + 
+                                "Values('OSCAR','99999','Bed','active',0,0,0)", Statement.RETURN_GENERATED_KEYS);
                         
                             rs = stmt.getGeneratedKeys();
                         
