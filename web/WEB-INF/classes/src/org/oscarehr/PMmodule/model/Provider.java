@@ -29,8 +29,6 @@ import java.util.Comparator;
  */
 public class Provider implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	public static final String SYSTEM_PROVIDER_NO = "-1";
 
     private int hashCode = Integer.MIN_VALUE;// primary key

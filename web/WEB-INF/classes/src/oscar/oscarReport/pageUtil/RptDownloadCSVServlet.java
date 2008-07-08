@@ -39,7 +39,6 @@ import oscar.oscarReport.data.RptReportItem;
 import com.Ostermiller.util.CSVPrinter;
 
 public class RptDownloadCSVServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
 
     private static final Logger _logger = Logger.getLogger(RptDownloadCSVServlet.class);
     String reportName = "";

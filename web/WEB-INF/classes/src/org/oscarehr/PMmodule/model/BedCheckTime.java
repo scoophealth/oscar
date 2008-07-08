@@ -27,7 +27,6 @@ import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 
 public class BedCheckTime implements Serializable {
 
-	private static final long serialVersionUID = 1L;
     public static String REF = "BedCheckTime";
     
     private int hashCode = Integer.MIN_VALUE;// primary key

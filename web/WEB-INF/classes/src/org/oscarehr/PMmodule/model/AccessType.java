@@ -29,7 +29,6 @@ import java.io.Serializable;
  */
 public class AccessType implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Long _id;// fields
     private String _name;

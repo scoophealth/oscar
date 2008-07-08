@@ -29,8 +29,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class BedDemographicHistoricalPK implements Serializable {
 	
-	private static final long serialVersionUID = 1L;
-
     protected int hashCode = Integer.MIN_VALUE;
     
     private Integer bedId;

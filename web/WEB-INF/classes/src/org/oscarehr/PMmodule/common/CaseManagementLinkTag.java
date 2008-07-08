@@ -27,8 +27,6 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 public class CaseManagementLinkTag extends TagSupport {
 
-	private static final long serialVersionUID = 1L;
-
 	private static final String PLACEHOLDER_DATE = "2000-1-1";
 	private static final String PLACEHOLDER_TIME = "12:00";
 	

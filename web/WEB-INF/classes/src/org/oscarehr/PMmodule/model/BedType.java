@@ -28,7 +28,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class BedType implements Serializable {
 
-	private static final long serialVersionUID = 1L;
     public static String REF = "BedType";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// fields

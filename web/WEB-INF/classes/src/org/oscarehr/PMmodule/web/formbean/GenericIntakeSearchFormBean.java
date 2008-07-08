@@ -26,8 +26,6 @@ import org.oscarehr.PMmodule.model.Demographic;
 
 public class GenericIntakeSearchFormBean extends ActionForm {
 
-	private static final long serialVersionUID = 1L;
-
 	private LabelValueBean[] months;
 	private LabelValueBean[] days;
 

@@ -34,7 +34,6 @@ import org.oscarehr.common.dao.Auditable;
  */
 public class BedDemographic implements Auditable, Serializable {
 
-	private static final long serialVersionUID = 1L;
 	private static String INFINITE_DATE = "2999-12-31";
     public static String REF = "BedDemographic";
 

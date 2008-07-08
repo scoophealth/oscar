@@ -29,8 +29,6 @@ import org.apache.commons.collections.Closure;
 
 public class IntakeNodeWalker implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	private static final Closure NULL_CLOSURE = new Closure() {
 		public void execute(Object o) {
 		}

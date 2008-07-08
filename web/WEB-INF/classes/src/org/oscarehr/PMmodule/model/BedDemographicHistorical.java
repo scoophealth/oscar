@@ -29,7 +29,6 @@ import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 
 public class BedDemographicHistorical implements Serializable {
 
-	private static final long serialVersionUID = 1L;
     public static String REF = "BedDemographicHistorical";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private java.util.Date usageEnd;

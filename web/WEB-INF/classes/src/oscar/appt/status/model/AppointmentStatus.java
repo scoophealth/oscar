@@ -5,7 +5,6 @@ import oscar.appt.status.model.base.BaseAppointmentStatus;
 
 
 public class AppointmentStatus extends BaseAppointmentStatus {
-	private static final long serialVersionUID = 1L;
 
 /*[CONSTRUCTOR MARKER BEGIN]*/
 	public AppointmentStatus () {

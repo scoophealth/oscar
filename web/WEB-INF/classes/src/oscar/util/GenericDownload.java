@@ -47,7 +47,6 @@ import oscar.OscarProperties;
  * @author Jay Gallagher
  */
 public class GenericDownload extends HttpServlet {
-    private static final long serialVersionUID = 1L;
 
     public GenericDownload() {}
 

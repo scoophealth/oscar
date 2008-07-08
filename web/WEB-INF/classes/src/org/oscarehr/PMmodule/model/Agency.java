@@ -28,8 +28,6 @@ import java.util.Map;
  */
 public class Agency implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	private static Agency localAgency;
 	private static Map<?, ?> agencyMap;
 

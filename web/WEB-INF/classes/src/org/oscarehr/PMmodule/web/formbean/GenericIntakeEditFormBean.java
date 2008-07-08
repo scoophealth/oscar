@@ -35,8 +35,6 @@ import org.oscarehr.PMmodule.model.Program;
 
 public class GenericIntakeEditFormBean extends ActionForm {
 
-	private static final long serialVersionUID = 1L;
-
 	private static final String BED_PROGRAM_LABEL = "Bed Program";
 	private static final String EXTERNAL_PROGRAM_LABEL = "External Agency Client Referred From";
 	private static final String COMMUNITY_PROGRAM_LABEL = "Residence Location";

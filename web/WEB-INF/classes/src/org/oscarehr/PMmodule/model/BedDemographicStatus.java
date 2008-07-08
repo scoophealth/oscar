@@ -28,7 +28,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class BedDemographicStatus implements Serializable {
 
-	private static final long serialVersionUID = 1L;
     public static String REF = "BedDemographicStatus";
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// fields

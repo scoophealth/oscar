@@ -30,8 +30,6 @@ import java.text.SimpleDateFormat;
  */
 public class Admission implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	public static final String STATUS_CURRENT="current";
 	public static final String STATUS_DISCHARGED="discharged";
 	

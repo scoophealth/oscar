@@ -8,8 +8,6 @@ import oscar.OscarProperties;
 
 public class IsModuleLoadTag extends TagSupport {
 	
-	private static final long serialVersionUID = 1L;
-
 	private String moduleName;
 	private boolean reverse = false;
 

@@ -33,8 +33,6 @@ import org.oscarehr.PMmodule.utility.Utility;
  */
 public class Demographic implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    
     private static final String DEFAULT_MONTH = "01";
     private static final String DEFAULT_DATE = "01";
     private static final String DEFAULT_YEAR = "1900";

@@ -30,7 +30,6 @@ import java.io.Serializable;
  */
 public class HealthSafety  implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     private int hashCode = Integer.MIN_VALUE;// primary key
 	
 	private long id;

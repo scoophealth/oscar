@@ -30,7 +30,6 @@ import java.io.Serializable;
  */
 public class SecUserRole implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     private int hashCode = Integer.MIN_VALUE;// primary key
     private String _roleName;
     private String _providerNo;

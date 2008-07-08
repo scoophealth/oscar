@@ -13,8 +13,6 @@ import org.hibernate.type.Type;
  */
 public class AuditInterceptor extends EmptyInterceptor {
 
-	private static final long serialVersionUID = 1L;
-	
 	private List<AuditStrategy> strategies;
 	
 	public AuditInterceptor() {

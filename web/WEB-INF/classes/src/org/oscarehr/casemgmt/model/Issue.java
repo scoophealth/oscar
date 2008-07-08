@@ -27,8 +27,6 @@ import org.caisi.model.BaseObject;
 
 public class Issue extends BaseObject {
 	
-	private static final long serialVersionUID = 1L;
-	
 	private Long id;
 	private String code;
 	private String description;

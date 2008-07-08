@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class BackupDownload extends GenericDownload {
-    private static final long serialVersionUID = 1L;
 
     private static final String ROLE_BACKUP_ADMIN = "admin";
 
