@@ -18,7 +18,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class name="org.caisi.model.CaisiRole" table="provider_caisi_role">
-		<id name="provider_no" />
+		<id name="providerNo" column="provider_no" />
 		<property name="role_id" />
 		<property name="update_date" type="java.util.Date" />
 		<many-to-one name="role" class="org.caisi.model.Role" column="role_id" update="false" insert="false" lazy="false" />

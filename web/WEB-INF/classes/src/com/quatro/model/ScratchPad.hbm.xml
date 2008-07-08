@@ -7,7 +7,7 @@
 		<id name="id" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<property name="provider_no" />
+		<property name="providerNo" column="provider_no" />
 		<property name="date_time" type="java.util.Date" />
 		<property name="scratch_text" />
 	</class>
