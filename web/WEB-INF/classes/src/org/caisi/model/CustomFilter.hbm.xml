@@ -23,7 +23,7 @@
 		</id>
 		<property name="name" unique="true" />
 		<property name="status" />
-		<property name="provider_no" />
+		<property name="providerNo" column="provider_no" />
 		<property name="start_date" column="start_date" type="java.util.Date" />
 		<property name="end_date" column="end_date" type="java.util.Date" />
 		<set name="providers" table="custom_filter_providers" lazy="false">

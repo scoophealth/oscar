@@ -23,7 +23,7 @@
 		</id>
 		<property name="tickler_no" />
 		<property name="status" />
-		<property name="provider_no" />
+		<property name="providerNo" column="provider_no" />
 		<property name="update_date" type="java.util.Date" />
 		<many-to-one name="provider" class="org.oscarehr.PMmodule.model.Provider" column="provider_no" update="false" insert="false" lazy="false" not-found="ignore" />
 	</class>
