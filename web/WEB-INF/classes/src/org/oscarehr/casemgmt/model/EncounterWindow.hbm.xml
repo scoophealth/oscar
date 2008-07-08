@@ -30,8 +30,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
     <class name="org.oscarehr.casemgmt.model.EncounterWindow" table="encounterWindow">
-        <id name="provider_no">            
-        </id>
+        <id name="providerNo" column="provider_no" />            
         <property name="rowOneSize" />
         <property name="rowTwoSize" />
     </class>

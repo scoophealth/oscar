@@ -21,7 +21,7 @@
 		<id name="id" column="drugid" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<property name="provider_no" />
+		<property name="providerNo" column="provider_no" />
 		<property name="demographic_no" />
 		<property name="archived" />
 		<property name="rx_date" type="java.util.Date" />

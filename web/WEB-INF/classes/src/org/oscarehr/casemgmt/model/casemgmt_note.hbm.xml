@@ -24,7 +24,7 @@
 		<property name="update_date" type="java.util.Date" />  
         <property name="observation_date" type="java.util.Date" />  
 		<property name="demographic_no" />
-		<property name="provider_no" />
+		<property name="providerNo" column="provider_no" />
 		<property name="note" />
 		<property name="signed" />
 		<property name="includeissue" column="include_issue_innote" />
