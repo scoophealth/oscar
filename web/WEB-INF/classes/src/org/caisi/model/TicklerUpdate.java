@@ -30,7 +30,7 @@ public class TicklerUpdate extends BaseObject {
 	private Long id;
 	private long tickler_no;
 	private char status;
-	private String provider_no;
+	private String providerNo;
 	private Date update_date;
 	private Provider provider;
 	
@@ -41,10 +41,10 @@ public class TicklerUpdate extends BaseObject {
 		this.id = id;
 	}
 	public String getProviderNo() {
-		return provider_no;
+		return providerNo;
 	}
 	public void setProviderNo(String provider) {
-		this.provider_no = provider;
+		this.providerNo = provider;
 	}
 	public char getStatus() {
 		return status;

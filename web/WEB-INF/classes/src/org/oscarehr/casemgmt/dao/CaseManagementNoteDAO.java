@@ -49,7 +49,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
         
         public List getEditors(CaseManagementNote note) {
             String uuid = note.getUuid();
-            String hql = "select distinct p from Provider p, CaseManagementNote cmn where p.ProviderNo = cmn.provider_no and cmn.uuid = ?";
+            String hql = "select distinct p from Provider p, CaseManagementNote cmn where p.ProviderNo = cmn.providerNo and cmn.uuid = ?";
             return this.getHibernateTemplate().find(hql,uuid);
         }
 

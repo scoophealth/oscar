@@ -66,7 +66,7 @@ public class CustomFilter extends BaseObject {
 	public static List priorityList;
 	
 	
-	private String provider_no;        
+	private String providerNo;        
     private boolean shortcut;
 	private String programId;
 	
@@ -257,11 +257,11 @@ public class CustomFilter extends BaseObject {
 	}
 
 	public String getProviderNo() {
-		return provider_no;
+		return providerNo;
 	}
 
 	public void setProviderNo(String provider_no) {
-		this.provider_no = provider_no;
+		this.providerNo = provider_no;
 	}
 
 	public String getSort_order() {

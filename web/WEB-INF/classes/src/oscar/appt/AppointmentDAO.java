@@ -73,7 +73,7 @@ public class AppointmentDAO extends DAO {
     public Vector retrieve(String demo_no) throws SQLException, ParseException {
 	Vector appointments = new Vector();
         String sql = "select app.*, prov.first_name, prov.last_name, prov.ohip_no from appointment app, provider prov " +
-		     "where app.provider_no = prov.provider_no and app.demographic_no =" + demo_no;
+		     "where app.providerNo = prov.providerNo and app.demographic_no =" + demo_no;
 
         DBHandler db = getDb();
         try {

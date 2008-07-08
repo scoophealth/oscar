@@ -73,7 +73,7 @@ public final class WCBForm
      */
     private String demographic_no;
 
-  private String provider_no;
+  private String providerNo;
 
   private String formCreated;
   private String formEdited;
@@ -158,7 +158,7 @@ public final class WCBForm
 
         + "', '"
 
-        + oscar.Misc.mysqlEscape(provider_no)
+        + oscar.Misc.mysqlEscape(providerNo)
 
         + "', NOW(), NOW(), '"
 
@@ -366,7 +366,7 @@ public final class WCBForm
 
         + "', '"
 
-        + oscar.Misc.mysqlEscape(provider_no)
+        + oscar.Misc.mysqlEscape(providerNo)
 
         + "', NOW(), NOW(), '"
 
@@ -651,7 +651,7 @@ public final class WCBForm
 
         demographic_no = result.getString("demographic_no");
 
-        provider_no = result.getString("provider_no");
+        providerNo = result.getString("provider_no");
 
         formCreated = result.getString("formCreated");
 
@@ -868,7 +868,7 @@ public final class WCBForm
 
   public void setW_providerno(String no) {
 
-    this.provider_no = no;
+    this.providerNo = no;
 
   }
 
@@ -1374,7 +1374,7 @@ public final class WCBForm
   }
 
   public String getProviderNo() {
-    return provider_no;
+    return providerNo;
   }
 
   public String getW_demographic() {
@@ -1436,7 +1436,7 @@ public final class WCBForm
   }
 
   public void setProviderNo(String provider_no) {
-    this.provider_no = provider_no;
+    this.providerNo = provider_no;
   }
 
   public void setW_reportype(String w_reportype) {

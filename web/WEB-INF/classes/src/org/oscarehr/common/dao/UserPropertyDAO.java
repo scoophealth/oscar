@@ -50,7 +50,7 @@ public class UserPropertyDAO extends HibernateDaoSupport {
     }
     
     public UserProperty getProp(String prov, String name) {
-        List list = this.getHibernateTemplate().find("from UserProperty p where p.provider_no = ? and p.name = ?", new Object[] {prov,name});
+        List list = this.getHibernateTemplate().find("from UserProperty p where p.providerNo = ? and p.name = ?", new Object[] {prov,name});
         if( list != null && list.size() > 0 ) {
             UserProperty prop = (UserProperty)list.get(0);
             return prop;

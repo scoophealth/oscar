@@ -2,6 +2,7 @@ package org.oscarehr.common.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Version;
@@ -11,7 +12,8 @@ public class IntegratorConsent {
 
 	@EmbeddedId
 	private FacilityDemographicPrimaryKey id;
-	private String provider_no = null;
+	@Column(name="provider_no")
+	private String providerNo = null;
 	@Version
 	private Date lastUpdate = null;
 
@@ -39,11 +41,11 @@ public class IntegratorConsent {
 	}
 
 	public String getProviderNo() {
-		return provider_no;
+		return providerNo;
 	}
 
 	public void setProviderNo(String provider_no) {
-		this.provider_no = provider_no;
+		this.providerNo = provider_no;
 	}
 
 	public Date getLastUpdate() {

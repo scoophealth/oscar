@@ -9,7 +9,7 @@ public class ScratchPadDao extends HibernateDaoSupport {
 
 	public boolean isScratchFilled(String providerNo) {
         ArrayList paramList = new ArrayList();
-		String sSQL="SELECT s.scratch_text FROM ScratchPad s WHERE s.provider_no = ? order by s.id";		
+		String sSQL="SELECT s.scratch_text FROM ScratchPad s WHERE s.providerNo = ? order by s.id";		
         paramList.add(providerNo);
         Object params[] = paramList.toArray(new Object[paramList.size()]);
         List lst = getHibernateTemplate().find(sSQL ,params);
@@ -26,7 +26,7 @@ public class ScratchPadDao extends HibernateDaoSupport {
 	
 /*
 	public CaisiRole getRoleByProviderNo(String provider_no) {
-		return (CaisiRole)this.getHibernateTemplate().find("from CaisiRole cr where cr.provider_no = ?",new Object[] {provider_no}).get(0);
+		return (CaisiRole)this.getHibernateTemplate().find("from CaisiRole cr where cr.providerNo = ?",new Object[] {provider_no}).get(0);
 	}
 
 	public List getRolesByRole(String role) {

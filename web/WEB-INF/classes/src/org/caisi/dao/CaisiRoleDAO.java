@@ -35,7 +35,7 @@ public class CaisiRoleDAO extends HibernateDaoSupport {
 	}
 
 	public CaisiRole getRoleByProviderNo(String provider_no) {
-		return (CaisiRole)this.getHibernateTemplate().find("from CaisiRole cr where cr.provider_no = ?",new Object[] {provider_no}).get(0);
+		return (CaisiRole)this.getHibernateTemplate().find("from CaisiRole cr where cr.providerNo = ?",new Object[] {provider_no}).get(0);
 	}
 
 	@SuppressWarnings("unchecked")

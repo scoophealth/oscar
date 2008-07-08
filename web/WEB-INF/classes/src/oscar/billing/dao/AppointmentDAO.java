@@ -176,9 +176,9 @@ public class AppointmentDAO extends DAO {
     public Appointment retrieve(String id) throws SQLException {
         Appointment appointment = new Appointment();
         String sql =
-            "select app.appointment_no, app.provider_no, prov.first_name, prov.last_name, app.demographic_no, dem.first_name, dem.last_name, app.name, app.reason, app.appointment_date " +
+            "select app.appointment_no, app.providerNo, prov.first_name, prov.last_name, app.demographic_no, dem.first_name, dem.last_name, app.name, app.reason, app.appointment_date " +
             "from appointment app, provider prov, demographic dem " +
-            "where app.provider_no = prov.provider_no and " +
+            "where app.providerNo = prov.providerNo and " +
             "app.demographic_no = dem.demographic_no and " +
             "app.appointment_no = " + id;
 
@@ -212,10 +212,10 @@ public class AppointmentDAO extends DAO {
         throws SQLException {
         ArrayList list = new ArrayList();
         String sql =
-            "select a.appointment_no, a.appointment_date, a.provider_no, b.last_name, " +
+            "select a.appointment_no, a.appointment_date, a.providerNo, b.last_name, " +
             "b.first_name, a.demographic_no, c.last_name, c.first_name " +
             "from appointment a, provider b, demographic c " +
-            "where a.provider_no = b.provider_no and " +
+            "where a.provider_No = b.providerNo and " +
             "a.demographic_no = c.demographic_no ";
 
         if (type.equals(Appointment.AGENDADO)) {
@@ -227,7 +227,7 @@ public class AppointmentDAO extends DAO {
         }
         
         if (provider != null && !provider.getProviderNo().trim().equals("0")) {
-			sql = sql + " and a.provider_no = " +  provider.getProviderNo().trim();
+			sql = sql + " and a.providerNo = " +  provider.getProviderNo().trim();
         }
 
         sql = sql + " order by a.appointment_date desc";
@@ -261,10 +261,10 @@ public class AppointmentDAO extends DAO {
 		throws SQLException {
 		ArrayList list = new ArrayList();
 		String sql =
-			"select a.appointment_no, a.appointment_date, a.provider_no, b.last_name, " +
+			"select a.appointment_no, a.appointment_date, a.providerNo, b.last_name, " +
 			"b.first_name, a.billing " +
 			"from appointment a, provider b, demographic c " +
-			"where a.provider_no = b.provider_no and " +
+			"where a.providerNo = b.providerNo and " +
 			"a.demographic_no = c.demographic_no and " +
 			"a.demographic_no = " + demographic.getDemographicNo() + " and " +
 			"a.billing is not null " +

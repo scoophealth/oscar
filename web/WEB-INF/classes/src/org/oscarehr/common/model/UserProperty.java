@@ -44,14 +44,14 @@ public class UserProperty implements Serializable {
     private long id;
     private String name;
     private String value;
-    private String provider_no;
+    private String providerNo;
     
     public String getProviderNo() {
-        return this.provider_no;
+        return this.providerNo;
     }
     
-    public void setProviderNo(String provider_no) {
-        this.provider_no = provider_no;
+    public void setProviderNo(String providerNo) {
+        this.providerNo = providerNo;
     }
     
     public String getValue() {

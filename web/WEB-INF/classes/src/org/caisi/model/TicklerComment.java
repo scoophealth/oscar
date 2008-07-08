@@ -30,7 +30,7 @@ public class TicklerComment extends BaseObject {
 	private Long id;
 	private long tickler_no;
 	private String message;
-	private String provider_no;
+	private String providerNo;
 	private Date update_date;
 	private Provider provider;
 	
@@ -47,10 +47,10 @@ public class TicklerComment extends BaseObject {
 		this.message = message;
 	}
 	public String getProviderNo() {
-		return provider_no;
+		return providerNo;
 	}
 	public void setProviderNo(String provider_no) {
-		this.provider_no = provider_no;
+		this.providerNo = provider_no;
 	}
 	public long getTickler_no() {
 		return tickler_no;

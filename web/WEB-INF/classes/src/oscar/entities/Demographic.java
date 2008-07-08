@@ -47,7 +47,7 @@ public class Demographic {
   private String patient_status;
   private Date date_joined;
   private String chart_no;
-  private String provider_no;
+  private String providerNo;
   private String sex;
   private Date end_date;
   private String pcn_indicator;
@@ -139,7 +139,7 @@ public class Demographic {
   }
 
   public void setProviderNo(String provider_no) {
-    this.provider_no = provider_no;
+    this.providerNo = provider_no;
   }
 
   public void setSex(String sex) {
@@ -251,7 +251,7 @@ public class Demographic {
   }
 
   public String getProviderNo() {
-    return provider_no;
+    return providerNo;
   }
 
   public String getSex() {

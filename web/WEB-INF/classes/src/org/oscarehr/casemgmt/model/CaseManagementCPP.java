@@ -31,7 +31,7 @@ import org.caisi.model.BaseObject;
 public class CaseManagementCPP extends BaseObject {
 	private Long id;
 	private String demographic_no;
-        private String provider_no;
+    private String providerNo;
 	private String socialHistory="";
 	private String familyHistory="";
 	private String medicalHistory="";
@@ -50,11 +50,11 @@ public class CaseManagementCPP extends BaseObject {
 	}
 	
         public String getProviderNo() {
-            return this.provider_no;
+            return this.providerNo;
         }
         
         public void setProviderNo(String provider_no) {
-            this.provider_no = provider_no;
+            this.providerNo = provider_no;
         }
         
 	public String getPrimaryCounsellor() {

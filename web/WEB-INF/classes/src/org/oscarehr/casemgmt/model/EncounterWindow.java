@@ -35,7 +35,7 @@ public class EncounterWindow implements Serializable {
     
     public static final int NORMAL = 60;
     
-    private String provider_no;
+    private String providerNo;
     private int rowOneSize;
     private int rowTwoSize;
     
@@ -56,11 +56,11 @@ public class EncounterWindow implements Serializable {
     } 
     
     public String getProviderNo() {
-        return this.provider_no;
+        return this.providerNo;
     }
     
     public void setProviderNo(String provider_no) {
-        this.provider_no = provider_no;
+        this.providerNo = provider_no;
     }
     
     /** Creates a new instance of EncounterWindow */

@@ -27,7 +27,7 @@ package oscar;
 
 public class ScheduleTemplateBean {
 	
-  private String provider_no = "";
+  private String providerNo = "";
   private String name = "";
   private String summary = "";
   private String timecode = "";
@@ -35,14 +35,14 @@ public class ScheduleTemplateBean {
 
   public ScheduleTemplateBean() {}
   public void setScheduleTemplateBean( String provider_no1, String name1,String summary1,String timecode1 ) {
-    provider_no = provider_no1;
+    providerNo = provider_no1;
     name = name1;
     summary = summary1;
     timecode = timecode1;
     step = timecode1.length()>0?24*60/timecode1.length():0;
 	}
   public void setProviderNo(String provider_no1 ) { 
-    provider_no = provider_no1;
+    providerNo = provider_no1;
   }  
   public void setName(String name1 ) { 
     name = name1;
@@ -55,7 +55,7 @@ public class ScheduleTemplateBean {
   }  
 
   public String getProviderNo() { 
-    return (provider_no);
+    return (providerNo);
   }  
   public String getName() { 
     return(name);

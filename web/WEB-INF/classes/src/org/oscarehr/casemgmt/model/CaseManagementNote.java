@@ -42,7 +42,7 @@ public class CaseManagementNote extends BaseObject {
     private String note;
     private boolean signed = false;
     private boolean includeissue = true;
-    private String provider_no;
+    private String providerNo;
 
     private String signing_provider_no;
     private String encounter_type = "";
@@ -172,11 +172,11 @@ public class CaseManagementNote extends BaseObject {
     }
 
     public String getProviderNo() {
-        return provider_no;
+        return providerNo;
     }
 
     public void setProviderNo(String provider_no) {
-        this.provider_no = provider_no;
+        this.providerNo = provider_no;
     }
 
     //nys

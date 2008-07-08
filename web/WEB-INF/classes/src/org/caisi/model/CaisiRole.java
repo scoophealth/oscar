@@ -26,7 +26,7 @@ import java.util.Date;
 
 public class CaisiRole extends BaseObject {
 	private Long id;
-	private String provider_no;
+	private String providerNo;
 	private int role_id;
 	private Date update_date;
 	private Role role;
@@ -41,10 +41,10 @@ public class CaisiRole extends BaseObject {
 		this.id = id;
 	}
 	public String getProviderNo() {
-		return provider_no;
+		return providerNo;
 	}
-	public void setProviderNo(String provider_no) {
-		this.provider_no = provider_no;
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
 	}
 	public Date getUpdate_date() {
 		return update_date;

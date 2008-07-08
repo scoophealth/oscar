@@ -6,7 +6,7 @@ import org.caisi.model.BaseObject;
 
 public class ScratchPad extends BaseObject {
 	private Long id;
-	private String provider_no;
+	private String providerNo;
 	private Date date_time;
 	private String scratch_text;
 	
@@ -31,11 +31,11 @@ public class ScratchPad extends BaseObject {
 	}
 
 	public String getProviderNo() {
-		return provider_no;
+		return providerNo;
 	}
 
-	public void setProviderNo(String provider_no) {
-		this.provider_no = provider_no;
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
 	}
 
 	public String getScratch_text() {

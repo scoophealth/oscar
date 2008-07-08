@@ -28,7 +28,7 @@ import org.caisi.model.BaseObject;
 
 public class Prescription extends BaseObject {
 	private Long id;
-	private String provider_no;
+	private String providerNo;
 	private String demographic_no;
 	private Date date_prescribed;
 	private Date date_printed;
@@ -68,10 +68,10 @@ public class Prescription extends BaseObject {
 		this.id = id;
 	}
 	public String getProviderNo() {
-		return provider_no;
+		return providerNo;
 	}
 	public void setProviderNo(String provider_no) {
-		this.provider_no = provider_no;
+		this.providerNo = provider_no;
 	}
 	public String getTextView() {
 		return textView;
