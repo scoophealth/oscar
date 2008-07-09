@@ -593,6 +593,7 @@ CREATE TABLE drugs (
   create_date datetime,
   dosage text,
   custom_instructions boolean default false,
+  unitName varchar(10) default NULL,
   PRIMARY KEY  (drugid)
 ) TYPE=MyISAM;
 
@@ -821,6 +822,7 @@ CREATE TABLE favorites (
   route varchar(5) default 'PO',
   dosage text,
   custom_instructions boolean default false,
+  unitName varchar(10) default NULL,
   PRIMARY KEY  (favoriteid)
 ) TYPE=MyISAM;
 
