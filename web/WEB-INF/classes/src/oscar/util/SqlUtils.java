@@ -690,6 +690,30 @@ public class SqlUtils {
         }
     }
 
+    public static List<String> selectStringList(String sqlCommand) {
+        Connection c = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            c = DbConnectionFilter.getThreadLocalDbConnection();
+            ps = c.prepareStatement(sqlCommand);
+            rs = ps.executeQuery();
+
+            ArrayList<String> al = new ArrayList<String>();
+
+            while (rs.next())
+                al.add(rs.getString(1));
+
+            return(al);
+        }
+        catch (SQLException e) {
+            throw(new PersistenceException(e));
+        }
+        finally {
+            closeResources(c, ps, rs);
+        }
+    }
+
     public static int update(String sqlCommand) {
         Connection c = null;
         PreparedStatement ps = null;

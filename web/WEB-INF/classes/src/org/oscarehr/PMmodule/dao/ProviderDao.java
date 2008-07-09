@@ -184,4 +184,9 @@ public class ProviderDao extends HibernateDaoSupport {
 	{
 	    return(SqlUtils.selectIntList("select facility_id from provider_facility where provider_no='"+provider_no+'\''));
 	}
+
+	public static List<String> getProviderIds(int facilityId)
+	{
+	    return(SqlUtils.selectStringList("select provider_no from provider_facility where facility_id="+facilityId));
+	}
 }

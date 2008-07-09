@@ -39,6 +39,8 @@ import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityProgramPrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWsService;
+import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWsService;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.FacilitySegmentedTimeClearedHashMap;
@@ -166,4 +168,16 @@ public class CaisiIntegratorManager {
 		// cloned so alterations don't affect the cached data
 		return (new ArrayList<CachedProgramInfo>(results));
 	}
+
+	public ProviderInfoWs getProviderInfoWs(int facilityId) throws MalformedURLException {
+		Facility facility = getLocalFacility(facilityId);
+
+		ProviderInfoWsService service = new ProviderInfoWsService(buildURL(facility, "ProviderInfoService"));
+		ProviderInfoWs port = service.getProviderInfoWsPort();
+
+		addAuthenticationInterceptor(facility, port);
+
+		return (port);
+	}
+
 }
