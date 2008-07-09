@@ -358,18 +358,13 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
                         <li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox>All</li>
                         <%
-                        Set providers = (Set)request.getAttribute("providers"); 
-                        Object[] arrProv = providers.toArray();
-                        if( arrProv.length > 1 ) {
-                        Provider.ComparatorName comp = ((Provider)arrProv[0]).ComparatorName();
-                        Arrays.sort(arrProv, comp);
-                        }
+                        Set<Provider> providers = (Set<Provider>)request.getAttribute("providers"); 
                         
                         String providerNo;
                         Provider prov;
-                        
-                        for(int idx = 0; idx < arrProv.length; ++idx ) {
-                        prov = (Provider)arrProv[idx];
+                        Iterator<Provider>iter = providers.iterator();
+                        while(iter.hasNext() ) {
+                        prov = iter.next();
                         providerNo = prov.getProviderNo();
                         %>
                         <li><html:multibox property="filter_providers" value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
