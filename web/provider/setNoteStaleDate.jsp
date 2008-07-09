@@ -92,7 +92,7 @@ if(session.getValue("user") == null)
             <html:form styleId="frmProperty" action = "/setProviderStaleDate.do" >
                <input type="hidden" id="method" name="method" value="save"> 
                <html:hidden property="dateProperty.name"/>
-               <html:hidden property="dateProperty.provider_no"/>
+               <html:hidden property="dateProperty.providerNo"/>
                <html:hidden property="dateProperty.id"/>
                <bean:message key="provider.setNoteStaleDate.msgEdit"/>
                <html:select property="dateProperty.value" styleId="staleDate">
