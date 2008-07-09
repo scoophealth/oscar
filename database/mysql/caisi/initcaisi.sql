@@ -1854,7 +1854,7 @@ CREATE TABLE `survey` (
 -- Table structure for table `surveyData`
 --
 
-CREATE TABLE `surveyData` (
+CREATE TABLE IF NOT EXISTS `surveyData` (
   `surveyDataId` int(10) NOT NULL auto_increment,
   `surveyId` varchar(5) default NULL,
   `demographic_no` int(10) default NULL,
