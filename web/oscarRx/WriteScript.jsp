@@ -294,7 +294,7 @@ String regionalIdentifier="";
        
        clearWarning();
        if (a){  //Find the title and shorten the string
-          //regexDebug(a);                    
+          //regexDebug(a);   
           origMinusName = orig.substring(a.index+a[0].length);
           origMinusName = origMinusName.replace(/Q12H/,"OD");   //KLUDGE the 2 get picked up as the second digit
           origMinusName = origMinusName.replace(/Q1-2H/,"OD");   //KLUDGE the 2 get picked up as the second digit
@@ -302,7 +302,7 @@ String regionalIdentifier="";
           origMinusName = origMinusName.replace(/Q4-6H/,"OD");   //KLUDGE the 2 get picked up as the second digit
           origMinusName = removePRNifNeeded(origMinusName);
           origMinusName = removeNoSubsifNeeded(origMinusName);
-              
+          
           if ( frm.brandName){        
              drugName = orig.substring(0,a.index+a[0].length);
           }else{        
@@ -408,16 +408,15 @@ String regionalIdentifier="";
 
                 if(f){
                    //regexDebug(f)
-                   var betweenSecondDigitandQuantity = afterSecondDigit.substring(0,f.index);                   
+                   var betweenSecondDigitandQuantity = afterSecondDigit.substring(0,f.index);
                    var afterQuantity = afterSecondDigit.substring(f.index+f[0].length);                   
-
                    var g = firstDigitRegExp.exec(afterQuantity);
                    if(g){
                       //regexDebug(g);
                       var betweenQtyandRepeat = afterQuantity.substring(0,g.index);
                       var afterRepeat = afterQuantity.substring(g.index+g[0].length);
                       var b4final =drugName+beforeFirstDigit+getTakeValue()+betweenFirstAndSecondDigit+getDurationValue()+betweenSecondDigitandQuantity+frm.quantity.value+betweenQtyandRepeat+frm.txtRepeat.value+afterRepeat;
-                      var newStr = drugName+beforeFirstDigit+getTakeValue()+betweenFirstAndSecondDigit+getPRN(b4final)+getDurationValue()+betweenSecondDigitandQuantity+frm.quantity.value+betweenQtyandRepeat+frm.txtRepeat.value+getNoSubs(b4final)+afterRepeat;
+                      var newStr = drugName+beforeFirstDigit+getTakeValue()+betweenFirstAndSecondDigit+getPRN(b4final)+getDurationValue()+betweenSecondDigitandQuantity+frm.quantity.value+" "+frm.unitName.value+"\n"+"Repeats:"+frm.txtRepeat.value+getNoSubs(b4final)+afterRepeat;
                       //alert (betweenFirstAndSecondDigit);
                       frm.special.value = newStr;
                       //alert(newStr);
@@ -599,7 +598,7 @@ String regionalIdentifier="";
             }
             /////////////////////
             preStr = preStr + "\n";
-            preStr = preStr + "Qty:"+frm2.quantity.value+"\n"+"Repeats:"+frm2.txtRepeat.value;   
+            preStr = preStr + "Qty:"+frm2.quantity.value+" " +frm2.unitName.value+"\n"+"Repeats:"+frm2.txtRepeat.value;   
             if (frm2.nosubs.checked){
                 preStr = preStr +" No Subs";
             }
@@ -859,6 +858,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setAtcCode(rx.getAtcCode());
     thisForm.setRegionalIdentifier(rx.getRegionalIdentifier());
     thisForm.setUnit(rx.getUnit());
+    thisForm.setUnitName(rx.getUnitName());
     thisForm.setMethod(rx.getMethod());
     thisForm.setRoute(rx.getRoute());
     thisForm.setCustomInstr(rx.getCustomInstr());
@@ -1211,7 +1211,7 @@ int i;
                                     <html:text property="quantity" size="8" onchange="javascript:if( chkQty(this.value) ) {writeScriptDisplay(); customQty(this.value);}"  onkeypress="return validNum(event);"  onkeyup="customQty(this.value);"/>
 
                                     <input type=button value="<<" onclick="javascript:useQtyMax();" />
-                                    (Calculated:&nbsp;<span id="lblSugQty" style="font-weight:bold"></span>&nbsp;)
+                                    (Calculated:&nbsp;<span id="lblSugQty" style="font-weight:bold"></span>&nbsp; )&nbsp;<html:text property="unitName" size="5" onchange="javascript:writeScriptDisplay();"/>
                                     <input type=hidden name="sugQtyMin" />
                                     <input type=hidden name="sugQtyMax" />
                                     <script language="javascript">

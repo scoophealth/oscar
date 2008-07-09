@@ -54,6 +54,7 @@ public final class RxWriteScriptForm extends ActionForm {
     String regionalIdentifier = null;
     String method = null;
     String unit = null;
+    String unitName = null;
     String route = null;
     private String dosage = null;
     
@@ -262,6 +263,7 @@ public final class RxWriteScriptForm extends ActionForm {
         this.nosubs = false;
         this.prn = false;
         this.special = null;
+        this.unitName = null;
         this.customInstr = false;
     }
     
@@ -347,6 +349,14 @@ public final class RxWriteScriptForm extends ActionForm {
      */
     public void setUnit(java.lang.String unit) {
        this.unit = unit;
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
     
     /**

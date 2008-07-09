@@ -99,6 +99,7 @@ public final class RxWriteScriptAction extends Action {
             rx.setAtcCode(frm.getAtcCode());
             rx.setRegionalIdentifier(frm.getRegionalIdentifier());
             rx.setUnit(frm.getUnit());
+            rx.setUnitName(frm.getUnitName());
             rx.setMethod(frm.getMethod());
             rx.setRoute(frm.getRoute());
             rx.setCustomInstr(frm.getCustomInstr());

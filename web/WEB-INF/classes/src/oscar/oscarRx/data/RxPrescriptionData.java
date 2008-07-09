@@ -76,6 +76,7 @@ public class RxPrescriptionData {
                 prescription.setScript_no(db.getString(rs,"script_no"));
                 prescription.setRegionalIdentifier(db.getString(rs,"regional_Identifier"));
                 prescription.setUnit(db.getString(rs,"unit"));
+                prescription.setUnitName(db.getString(rs,"unitName"));
                 prescription.setMethod(db.getString(rs,"method"));
                 prescription.setRoute(db.getString(rs,"route"));
                 prescription.setCustomInstr(rs.getBoolean("custom_instructions"));
@@ -123,6 +124,7 @@ public class RxPrescriptionData {
         prescription.setAtcCode(favorite.getAtcCode());
         prescription.setRegionalIdentifier(favorite.getRegionalIdentifier());
         prescription.setUnit(favorite.getUnit());
+        prescription.setUnitName(favorite.getUnitName());
         prescription.setMethod(favorite.getMethod());
         prescription.setRoute(favorite.getRoute());
         prescription.setCustomInstr(favorite.getCustomInstr());
@@ -156,6 +158,7 @@ public class RxPrescriptionData {
         prescription.setScript_no(rePrescribe.getScript_no());
         prescription.setRegionalIdentifier(rePrescribe.getRegionalIdentifier());
         prescription.setUnit(rePrescribe.getUnit());
+        prescription.setUnitName(rePrescribe.getUnitName());
         prescription.setMethod(rePrescribe.getMethod());
         prescription.setRoute(rePrescribe.getRoute()); 
         prescription.setCustomInstr(rePrescribe.getCustomInstr());
@@ -207,6 +210,7 @@ public class RxPrescriptionData {
                 p.setScript_no(db.getString(rs,"script_no"));
                 p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
                 p.setUnit(db.getString(rs,"unit"));
+                p.setUnitName(db.getString(rs,"unitName"));
                 p.setMethod(db.getString(rs,"method"));
                 p.setRoute(db.getString(rs,"route"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
@@ -273,6 +277,7 @@ public class RxPrescriptionData {
                 p.setScript_no(db.getString(rs,"script_no"));
                 p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
                 p.setUnit(db.getString(rs,"unit"));
+                p.setUnitName(db.getString(rs,"unitName"));
                 p.setMethod(db.getString(rs,"method"));
                 p.setRoute(db.getString(rs,"route"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
@@ -337,6 +342,7 @@ public class RxPrescriptionData {
                 p.setScript_no(db.getString(rs,"script_no"));
                 p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
                 p.setUnit(db.getString(rs,"unit"));
+                p.setUnitName(db.getString(rs,"unitName"));
                 p.setMethod(db.getString(rs,"method"));
                 p.setRoute(db.getString(rs,"route"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
@@ -404,6 +410,7 @@ public class RxPrescriptionData {
                 p.setScript_no(db.getString(rs,"script_no"));
                 p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
                 p.setUnit(db.getString(rs,"unit"));
+                p.setUnitName(db.getString(rs,"unitName"));
                 p.setMethod(db.getString(rs,"method"));
                 p.setRoute(db.getString(rs,"route"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
@@ -506,6 +513,7 @@ public class RxPrescriptionData {
                     p.setScript_no(db.getString(rs,"script_no"));
                     p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
                     p.setUnit(db.getString(rs,"unit"));
+                    p.setUnitName(db.getString(rs,"unitName"));
                     p.setMethod(db.getString(rs,"method"));
                     p.setRoute(db.getString(rs,"route")); 
                     p.setCustomInstr(rs.getBoolean("custom_instructions"));
@@ -591,6 +599,7 @@ public class RxPrescriptionData {
                 p.setScript_no(db.getString(rs,"script_no"));
                 p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
                 p.setUnit(db.getString(rs,"unit"));
+                p.setUnitName(db.getString(rs,"unitName"));
                 p.setMethod(db.getString(rs,"method"));
                 p.setRoute(db.getString(rs,"route"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
@@ -633,7 +642,7 @@ public class RxPrescriptionData {
                 db.getString(rs,"quantity"),
                 rs.getInt("repeat"), rs.getInt("nosubs"),
                 rs.getInt("prn"), db.getString(rs,"special"),db.getString(rs,"GN"),db.getString(rs,"ATC"),db.getString(rs,"regional_identifier"),
-                db.getString(rs,"unit"),db.getString(rs,"method"),db.getString(rs,"route"),rs.getBoolean("custom_instructions"),db.getString(rs,"dosage"));
+                db.getString(rs,"unit"),db.getString(rs, "unitName"),db.getString(rs,"method"),db.getString(rs,"route"),rs.getBoolean("custom_instructions"),db.getString(rs,"dosage"));
                 
               
                 
@@ -672,7 +681,7 @@ public class RxPrescriptionData {
                 db.getString(rs,"quantity"),
                 rs.getInt("repeat"), rs.getInt("nosubs"),
                 rs.getInt("prn"), db.getString(rs,"special"),db.getString(rs,"GN"),db.getString(rs,"ATC"),db.getString(rs,"regional_identifier"),
-                db.getString(rs,"unit"),db.getString(rs,"method"),db.getString(rs,"route"),rs.getBoolean("custom_instructions"),db.getString(rs,"dosage"));
+                db.getString(rs,"unit"),db.getString(rs,"unitName"),db.getString(rs,"method"),db.getString(rs,"route"),rs.getBoolean("custom_instructions"),db.getString(rs,"dosage"));
             }
             
             rs.close();
@@ -840,6 +849,7 @@ public class Prescription {
     String regionalIdentifier = null;
     String method = null;
     String unit = null; 
+    String unitName = null;
     String route = null;
     String dosage = null;
     boolean custom = false;
@@ -1460,6 +1470,7 @@ public class Prescription {
                 + "duration = '" + this.getDuration() + "' AND "
                 + "durunit = '" + this.getDurationUnit() + "' AND "
                 + "quantity = '" + this.getQuantity() + "' AND "
+                + "unitName = '" + this.getUnitName() + "' AND "
                 + "`repeat` = " + this.getRepeat() + " AND "
                 + "nosubs = " + this.getNosubsInt() + " AND "
                 + "prn = " + this.getPrnInt() + " AND "
@@ -1484,7 +1495,7 @@ public class Prescription {
                     + "rx_date, end_date, BN, GCN_SEQNO, customName, "
                     + "takemin, takemax, "
                     + "freqcode, duration, durunit, quantity, "
-                    + "`repeat`, nosubs, prn, special,GN,script_no,ATC,regional_identifier,unit,method,route,create_date,custom_instructions,dosage) "
+                    + "`repeat`, nosubs, prn, special,GN,script_no,ATC,regional_identifier,unit,method,route,create_date,custom_instructions,dosage,unitName) "
                     + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '"
                     + RxUtil.DateToString(this.getRxDate()) + "', '"
                     + RxUtil.DateToString(this.getEndDate()) + "', '"
@@ -1497,7 +1508,7 @@ public class Prescription {
                     + this.getPrnInt() + ", '"
                     + RxUtil.replace(this.getSpecial(), "'", "") + "','"+this.getGenericName()+"','"+scriptId+"', '"
                     + this.getAtcCode() +"', '"+this.getRegionalIdentifier()+"','"+this.getUnit()+"','"+this.getMethod()+"','"
-                    + this.getRoute()+"',now()," + this.getCustomInstr() + ",'"+this.getDosage()+"')";
+                    + this.getRoute()+"',now()," + this.getCustomInstr() + ",'"+this.getDosage()+ "', '"+ this.getUnitName()+ "')";
                     
                      
                     
@@ -1542,7 +1553,8 @@ public class Prescription {
                 + "method = '"+this.getMethod()+"', "
                 + "route = '"+this.getRoute()+"', "
                 + "dosage = '"+this.getDosage()+"', "        
-                + "custom_instructions = " + this.getCustomInstr() + " "
+                + "custom_instructions = " + this.getCustomInstr()+"', " 
+                + "unitName = " + this.getUnitName() + " "        
                 + "WHERE drugid = " + this.getDrugId();
                 
                 db.RunSQL(sql);
@@ -1570,7 +1582,7 @@ public class Prescription {
         this.getDurationUnit(), this.getQuantity(),
         this.getRepeat(), this.getNosubsInt(), this.getPrnInt(), 
         this.getSpecial(),this.getGenericName(),
-        this.getAtcCode(),this.getRegionalIdentifier(),this.getUnit(),this.getMethod(),this.getRoute(), this.getCustomInstr(),this.getDosage());
+        this.getAtcCode(),this.getRegionalIdentifier(),this.getUnit(),this.getUnitName(),this.getMethod(),this.getRoute(), this.getCustomInstr(),this.getDosage());
         
         return fav.Save();
     }
@@ -1649,6 +1661,22 @@ public class Prescription {
     public void setUnit(java.lang.String unit) {
        this.unit = unit;
     }
+
+    /**
+     * Getter for property unitName
+     * @return Value of property unitName.
+     */
+    public java.lang.String getUnitName() {
+       return unitName;
+    }
+    
+    /**
+     * Setter for property unitName.
+     * @param unit New value of property unitName.
+     */
+    public void setUnitName(java.lang.String unitName) {
+       this.unitName = unitName;
+    }    
     
     /**
      * Getter for property route.
@@ -1734,6 +1762,7 @@ public class Favorite {
     String atcCode;
     String regionalIdentifier;
     String unit;
+    String unitName;
     String method;
     String route;
     String dosage;
@@ -1742,7 +1771,7 @@ public class Favorite {
     String BN, int GCN_SEQNO, String customName,
     float takeMin, float takeMax, String frequencyCode, String duration,
     String durationUnit, String quantity,
-    int repeat, int nosubs, int prn, String special,String GN,String atc,String regionalIdentifier,String unit,String method,String route,boolean customInstr,String dosage) {
+    int repeat, int nosubs, int prn, String special,String GN,String atc,String regionalIdentifier,String unit,String unitName,String method,String route,boolean customInstr,String dosage) {
         this.favoriteId = favoriteId;
         this.providerNo = providerNo;
         this.favoriteName = favoriteName;
@@ -1763,6 +1792,7 @@ public class Favorite {
         this.atcCode = atc;
         this.regionalIdentifier= regionalIdentifier;
         this.unit = unit;
+        this.unitName = unitName;
         this.method = method;
         this.route = route;
         this.customInstr = customInstr;
@@ -1961,6 +1991,7 @@ public class Favorite {
                 + "prn = " + this.getPrnInt() + " AND "
                 + "special = '" + RxUtil.replace(this.getSpecial(), "'", "") + "' AND "
                 + "GN = '" +this.getGN() +"' AND "
+                + "unitName = '" +this.getUnitName() +"' AND "        
                 + "custom_instructions = " + this.getCustomInstr();
                 
                 rs = db.GetSQL(sql);
@@ -1977,7 +2008,7 @@ public class Favorite {
                     sql = "INSERT INTO favorites (provider_no, favoritename, "
                     + "BN, GCN_SEQNO, customName, takemin, takemax, "
                     + "freqcode, duration, durunit, quantity, "
-                    + "`repeat`, nosubs, prn, special,GN,ATC,regional_identifier,unit,method,route,custom_instructions,dosage) "
+                    + "`repeat`, nosubs, prn, special,GN,ATC,regional_identifier,unit,unitName,method,route,custom_instructions,dosage) "
                     + "VALUES ('" + this.getProviderNo() + "', '" + StringEscapeUtils.escapeSql(this.getFavoriteName()) + "', '"
                     + StringEscapeUtils.escapeSql(this.getBN()) + "', " + this.getGCN_SEQNO() + ", '"
                     + StringEscapeUtils.escapeSql(this.getCustomName()) + "', "
@@ -1991,12 +2022,13 @@ public class Favorite {
                     + this.getAtcCode()+"', '"
                     + this.getRegionalIdentifier()+"', '"
                     + this.getUnit()+"', '"
+                    + this.getUnitName()+"', '"        
                     + this.getMethod()+"', '"
                     + this.getRoute()+"', "
                     + this.getCustomInstr() + ", '"
                     + this.getDosage()+"')"; 
                     
-                    
+
                     db.RunSQL(sql);
                     
                     sql = "SELECT Max(favoriteid) FROM favorites";
@@ -2033,6 +2065,7 @@ public class Favorite {
                 + "ATC = '"+this.getAtcCode()+"', "
                 + "regional_identifier = '"+this.getRegionalIdentifier()+"', "
                 + "unit = '"+this.getUnit()+"', " 
+                + "unitName = '"+this.getUnitName()+"', "         
                 + "method = '"+this.getMethod()+"', "
                 + "route = '"+this.getRoute()+"', "
                 + "custom_instructions = " + this.getCustomInstr() + ", "
@@ -2102,6 +2135,22 @@ public class Favorite {
     public void setUnit(java.lang.String unit) {
        this.unit = unit;
     }
+    
+    /**
+     * Getter for property unitName.
+     * @return Value of property unitName.
+     */
+    public java.lang.String getUnitName() {
+       return unitName;
+    }
+    
+    /**
+     * Setter for property unitName.
+     * @param unitName New value of property unitName.
+     */
+    public void setUnitName(java.lang.String unitName) {
+       this.unitName = unitName;
+    }    
     
     /**
      * Getter for property method.
