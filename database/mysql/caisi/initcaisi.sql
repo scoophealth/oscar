@@ -314,7 +314,7 @@ CREATE TABLE `casemgmt_note` (
   `note_id` int(10) NOT NULL auto_increment,
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `observation_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `demographic_no` varchar(20) NOT NULL default '',
+  `demographic_no` int(10) NOT NULL default '0',
   `provider_no` varchar(20) NOT NULL default '',
   `note` mediumtext NOT NULL,
   `signed` tinyint(1) NOT NULL default '0',
