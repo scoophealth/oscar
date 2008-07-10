@@ -46,6 +46,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
@@ -89,6 +90,7 @@ import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
 import org.oscarehr.caisi_integrator.ws.client.FacilityProgramPrimaryKey;
@@ -113,7 +115,8 @@ public class ClientManagerAction extends BaseAction {
 	private CaisiIntegratorManager caisiIntegratorManager;
 	private HealthSafetyManager healthSafetyManager;
 	private ClientRestrictionManager clientRestrictionManager;
-
+	private ProviderDao providerDao;
+	
 	private SurveyManager surveyManager;
 
 	private LookupManager lookupManager;
@@ -156,6 +159,10 @@ public class ClientManagerAction extends BaseAction {
 
 	public void setSurveyManager(SurveyManager mgr) {
 		this.surveyManager = mgr;
+	}
+
+	public void setProviderDao(ProviderDao providerDao) {
+		this.providerDao = providerDao;
 	}
 
 	// Parameter
@@ -1604,6 +1611,52 @@ public class ClientManagerAction extends BaseAction {
 		/* refer */
 		if (tabBean.getTab().equals("Refer")) {
 			request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, String.valueOf(facilityId)));
+
+			if (caisiIntegratorManager.isIntegratorEnabled(facilityId))
+			{
+				try {
+					ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
+					
+					List<CachedReferral> referrals=referralWs.getReferralsFor(Integer.parseInt(demographicNo));
+					if (referrals!=null)
+					{
+						ArrayList<ClientReferral> processedReferrals=new ArrayList<ClientReferral>();
+						
+						for (CachedReferral cachedReferral : referrals)
+						{
+							ClientReferral clientReferral=new ClientReferral();
+							
+							StringBuilder programName=new StringBuilder();
+							CachedFacilityInfo cachedFacilityInfo=caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getDestinationFacilityId());
+							programName.append(cachedFacilityInfo.getName());
+							programName.append(" / ");
+							
+							FacilityProgramPrimaryKey pk=new FacilityProgramPrimaryKey();
+							pk.setFacilityId(cachedReferral.getDestinationFacilityId());
+							pk.setFacilityProgramId(cachedReferral.getDestinationFacilityProgramId());
+							CachedProgramInfo cachedProgramInfo=caisiIntegratorManager.getRemoteProgram(facilityId, pk);
+							programName.append(cachedProgramInfo.getName());
+							
+							clientReferral.setProgramName(programName.toString());
+							clientReferral.setReferralDate(cachedReferral.getReferralDate().toGregorianCalendar().getTime());
+							
+							Provider tempProvider=providerDao.getProvider(cachedReferral.getSourceFacilityProviderId());
+							clientReferral.setProviderFirstName(tempProvider.getFirstName());
+							clientReferral.setProviderLastName(tempProvider.getLastName());
+							
+							clientReferral.setNotes(cachedReferral.getReasonForReferral());
+							clientReferral.setPresentProblems(cachedReferral.getPresentingProblem());
+							
+							processedReferrals.add(clientReferral);
+						}
+					
+						request.setAttribute("remoteReferrals", processedReferrals);
+					}
+				}
+				catch (Exception e) {
+					logger.error("Unexpected Error.", e);
+				}
+			}
 		}
 
 		/* service restrictions */

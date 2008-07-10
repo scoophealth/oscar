@@ -26,7 +26,8 @@
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ page import="java.util.*"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<script>
+
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%><script>
 	function resetClientFields() {
 		var form = document.clientManagerForm;
 		form.elements['program.name'].value='';
@@ -103,6 +104,33 @@
 	<display:column property="notes" sortable="true" title="Reason for referral" />
 	<display:column property="presentProblems" sortable="true" title="Present Problems"/>
 </display:table>
+
+	<c:if test="${remoteReferrals!=null}">
+		<br /><br />
+		<div class="tabs" id="tabs">
+		<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+				<th title="Programs">Remote Referrals</th>
+			</tr>
+		</table>
+		</div>
+		<display:table class="simple" cellspacing="2" cellpadding="3" id="referral" name="remoteReferrals" export="false" pagesize="0" requestURI="/PMmodule/ClientManager.do">
+			<display:setProperty name="paging.banner.placement" value="bottom" />
+			<display:column property="programName" sortable="true" title="Program Name" />
+			<display:column sortable="true" title="Referral Date" >
+			<%
+				ClientReferral temp = (ClientReferral) pageContext.getAttribute("referral");
+				String date=DateFormatUtils.ISO_DATE_FORMAT.format(temp.getReferralDate());
+				String date1=DateFormatUtils.ISO_TIME_NO_T_FORMAT.format(temp.getReferralDate());
+			%>
+			<%=date+" "+date1%>
+			</display:column>
+			<display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
+			<display:column property="notes" sortable="true" title="Reason for referral" />
+			<display:column property="presentProblems" sortable="true" title="Present Problems"/>
+		</display:table>
+	</c:if>
+
 <br />
 <br />
 <div class="tabs" id="tabs">

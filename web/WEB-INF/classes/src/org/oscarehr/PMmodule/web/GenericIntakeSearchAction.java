@@ -43,7 +43,6 @@ import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoParameters;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoScore;
 import org.oscarehr.util.SessionConstants;
@@ -135,8 +134,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
                 request.setAttribute("remoteMatches", integratedMatches);
 
-                FacilityInfoWs facilityInfoWs = caisiIntegratorManager.getFacilityInfoWs(currentFacilityId);
-                List<CachedFacilityInfo> allFacilities = facilityInfoWs.getAllFacilityInfo();
+                List<CachedFacilityInfo> allFacilities = caisiIntegratorManager.getRemoteFacilities(currentFacilityId);
                 HashMap<Integer, String> facilitiesNameMap = new HashMap<Integer, String>();
                 for (CachedFacilityInfo cachedFacilityInfo : allFacilities)
                     facilitiesNameMap.put(cachedFacilityInfo.getFacilityId(), cachedFacilityInfo.getName());

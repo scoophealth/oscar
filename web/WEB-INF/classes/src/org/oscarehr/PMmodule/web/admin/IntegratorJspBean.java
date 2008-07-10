@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
-import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.util.SpringUtils;
 
 public class IntegratorJspBean {
@@ -13,8 +12,6 @@ public class IntegratorJspBean {
     
     public static List<CachedFacilityInfo> getIntegratorFacilityCommunity(int facilityId) throws IOException
     {
-        FacilityInfoWs facilityInfoWs=caisiIntegratorManager.getFacilityInfoWs(facilityId);
-        
-        return(facilityInfoWs.getAllFacilityInfo());
+        return(caisiIntegratorManager.getRemoteFacilities(facilityId));
     }
 }

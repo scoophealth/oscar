@@ -31,6 +31,7 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWsService;
@@ -92,6 +93,30 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
+	public List<CachedFacilityInfo> getRemoteFacilities(int facilityId) throws MalformedURLException {
+		@SuppressWarnings("unchecked")
+		List<CachedFacilityInfo> results = (List<CachedFacilityInfo>) simpleTimeCache.get(facilityId, "ALL_REMOTE_FACILITIES");
+
+		if (results == null) {
+			FacilityInfoWs facilityInfoWs = getFacilityInfoWs(facilityId);
+			results = facilityInfoWs.getAllFacilityInfo();
+			simpleTimeCache.put(facilityId, "ALL_REMOTE_FACILITIES", results);
+		}
+
+		// cloned so alterations don't affect the cached data
+		return (new ArrayList<CachedFacilityInfo>(results));
+	}
+
+	public CachedFacilityInfo getRemoteFacility(int myFacilityId, int remoteFacilityId) throws MalformedURLException
+	{
+		for (CachedFacilityInfo facility : getRemoteFacilities(myFacilityId))
+		{
+			if (facility.getFacilityId().equals(remoteFacilityId)) return(facility);
+		}
+		
+		return(null);
+	}
+	
 	public DemographicInfoWs getDemographicInfoWs(int facilityId) throws MalformedURLException {
 		Facility facility = getLocalFacility(facilityId);
 
