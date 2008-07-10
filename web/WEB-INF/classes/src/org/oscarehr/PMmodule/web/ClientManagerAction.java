@@ -38,6 +38,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -89,7 +90,9 @@ import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
 import org.oscarehr.caisi_integrator.ws.client.FacilityProgramPrimaryKey;
+import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.Facility;
@@ -104,6 +107,8 @@ import oscar.oscarDemographic.data.DemographicRelationship;
 import com.quatro.service.LookupManager;
 
 public class ClientManagerAction extends BaseAction {
+
+	private static final Logger logger = org.apache.log4j.LogManager.getLogger(ClientManagerAction.class);
 
 	private CaisiIntegratorManager caisiIntegratorManager;
 	private HealthSafetyManager healthSafetyManager;
@@ -175,15 +180,18 @@ public class ClientManagerAction extends BaseAction {
 		try {
 			admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), fullProgram, admission.getDischargeNotes(), admission.getAdmissionNotes(),
 					admission.isTemporaryAdmission());
-		} catch (ProgramFullException e) {
+		}
+		catch (ProgramFullException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", "Program is full."));
 			saveMessages(request, messages);
-		} catch (AdmissionException e) {
+		}
+		catch (AdmissionException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
 			saveMessages(request, messages);
-		} catch (ServiceRestrictionException e) {
+		}
+		catch (ServiceRestrictionException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider()
 					.getFormattedName()));
@@ -242,7 +250,8 @@ public class ClientManagerAction extends BaseAction {
 
 		try {
 			admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents, false, false);
-		} catch (AdmissionException e) {
+		}
+		catch (AdmissionException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
 			saveMessages(request, messages);
@@ -279,7 +288,8 @@ public class ClientManagerAction extends BaseAction {
 
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
 			saveMessages(request, messages);
-		} catch (AdmissionException e) {
+		}
+		catch (AdmissionException e) {
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
 			saveMessages(request, messages);
 		}
@@ -402,34 +412,44 @@ public class ClientManagerAction extends BaseAction {
 		DynaActionForm clientForm = (DynaActionForm) form;
 		ClientReferral referral = (ClientReferral) clientForm.get("referral");
 
-		long clientId = Long.parseLong(request.getParameter("id"));
+		int clientId = Integer.parseInt(request.getParameter("id"));
 		String providerId = getProviderNo(request);
 		Integer facilityId = (Integer) request.getSession().getAttribute("currentFacilityId");
 
 		Program p = (Program) clientForm.get("program");
 		int programId = p.getId();
 		// if it's local
-		if (programId!=0)
-		{
-			referral.setClientId(clientId);
+		if (programId != 0) {
+			referral.setClientId((long)clientId);
 			referral.setProgramId((long) programId);
 			referral.setProviderNo(providerId);
-	
+
 			referral.setFacilityId(facilityId);
-	
+
 			referral.setReferralDate(new Date());
 			referral.setProgramType(p.getType());
-	
+
 			referToLocalAgencyProgram(request, clientForm, referral, p);
 		}
 		// remote referral
-		else if (referral.getRemoteFacilityId() != null && referral.getRemoteProgramId() != null)
-		{
-System.err.println("******* "+referral.getRemoteFacilityId()+" : "+referral.getRemoteProgramId());		
-System.err.println("******* "+referral.getNotes());		
-System.err.println("******* "+referral.getPresentProblems());		
+		else if (referral.getRemoteFacilityId() != null && referral.getRemoteProgramId() != null) {
+			try {
+				CachedReferral cachedReferral=new CachedReferral();
+				cachedReferral.setDestinationFacilityId(Integer.parseInt(referral.getRemoteFacilityId()));
+				cachedReferral.setDestinationFacilityProgramId(Integer.parseInt(referral.getRemoteProgramId()));
+				cachedReferral.setPresentingProblem(referral.getPresentProblems());
+				cachedReferral.setReasonForReferral(referral.getNotes());
+				cachedReferral.setSourceFacilityDemographicId(clientId);
+				cachedReferral.setSourceFacilityProviderId(providerId);
+				
+				ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
+				referralWs.makeReferral(cachedReferral);
+			}
+			catch (Exception e) {
+				logger.error("Unexpected Error.", e);
+			}
 		}
-			
+
 		setEditAttributes(form, request, String.valueOf(clientId));
 		clientForm.set("program", new Program());
 		clientForm.set("referral", new ClientReferral());
@@ -445,17 +465,20 @@ System.err.println("******* "+referral.getPresentProblems());
 		boolean success = true;
 		try {
 			clientManager.processReferral(referral);
-		} catch (AlreadyAdmittedException e) {
+		}
+		catch (AlreadyAdmittedException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_admitted"));
 			saveMessages(request, messages);
 			success = false;
-		} catch (AlreadyQueuedException e) {
+		}
+		catch (AlreadyQueuedException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_referred"));
 			saveMessages(request, messages);
 			success = false;
-		} catch (ServiceRestrictionException e) {
+		}
+		catch (ServiceRestrictionException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider()
 					.getFormattedName()));
@@ -513,7 +536,8 @@ System.err.println("******* "+referral.getPresentProblems());
 				BeanUtils.copyProperties(program, cachedProgramInfo);
 
 				request.setAttribute("program", program);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -549,7 +573,8 @@ System.err.println("******* "+referral.getPresentProblems());
 		try {
 			clientRestrictionManager.saveClientRestriction(restriction);
 			success = true;
-		} catch (ClientAlreadyRestrictedException e) {
+		}
+		catch (ClientAlreadyRestrictedException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("restrict.already_restricted"));
 			saveMessages(request, messages);
@@ -568,7 +593,8 @@ System.err.println("******* "+referral.getPresentProblems());
 		Facility facility = (Facility) request.getSession().getAttribute("currentFacility");
 		if (facility != null) {
 			request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(id), facility.getId(), new Date()));
-		} else {
+		}
+		else {
 			request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(id), 0, new Date()));
 		}
 
@@ -625,17 +651,20 @@ System.err.println("******* "+referral.getPresentProblems());
 		boolean success = true;
 		try {
 			clientManager.processReferral(referral, true);
-		} catch (AlreadyAdmittedException e) {
+		}
+		catch (AlreadyAdmittedException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_admitted"));
 			saveMessages(request, messages);
 			success = false;
-		} catch (AlreadyQueuedException e) {
+		}
+		catch (AlreadyQueuedException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_referred"));
 			saveMessages(request, messages);
 			success = false;
-		} catch (ServiceRestrictionException e) {
+		}
+		catch (ServiceRestrictionException e) {
 			throw new RuntimeException("service restriction encountered during override");
 		}
 
@@ -730,7 +759,8 @@ System.err.println("******* "+referral.getPresentProblems());
 			saveMessages(request, messages);
 			return edit(mapping, clientForm, request, response);
 
-		} else {// check whether client is familyHead or independent client
+		}
+		else {// check whether client is familyHead or independent client
 			// create roomDemographic from bedDemographic
 			roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(demographicNo, facilityId);
 			if (roomDemographic == null) {// demographicNo (familyHead or independent) has no record in 'room_demographic'
@@ -793,7 +823,8 @@ System.err.println("******* "+referral.getPresentProblems());
 					getRoomDemographicManager().saveRoomDemographic(roomDemographic);
 					if (isBedSelected) {
 						bedDemographicManager.saveBedDemographic(bedDemographic);
-					} else {
+					}
+					else {
 						// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
 						getRoomDemographicManager().cleanUpBedTables(roomDemographic);
 					}
@@ -804,17 +835,20 @@ System.err.println("******* "+referral.getPresentProblems());
 						getRoomDemographicManager().saveRoomDemographic(roomDemographic);
 						if (isBedSelected) {
 							bedDemographicManager.saveBedDemographic(bedDemographic);
-						} else {
+						}
+						else {
 							// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
 							getRoomDemographicManager().cleanUpBedTables(roomDemographic);
 						}
 					}
-				} else {
+				}
+				else {
 					if (bedId == null || bedId.intValue() == 0) {// assign room only
 						if (room != null) {
 							roomCapacity = room.getOccupancy().intValue();
 						}
-					} else {// roomCapacity = total number of beds assigned to room
+					}
+					else {// roomCapacity = total number of beds assigned to room
 						Bed[] bedAssignedToRoom = bedManager.getBedsByRoom(bedDemographic.getRoomId());
 						if (bedAssignedToRoom != null && bedAssignedToRoom.length > 0) {
 							roomCapacity = bedAssignedToRoom.length;
@@ -843,7 +877,8 @@ System.err.println("******* "+referral.getPresentProblems());
 							}
 							roomOccupancy = rdsByRoom.size() - numberOfFamilyMembersAssignedRoom;
 						}
-					} else {// assign room/bed combination
+					}
+					else {// assign room/bed combination
 
 						BedDemographic bd = null;
 
@@ -867,7 +902,8 @@ System.err.println("******* "+referral.getPresentProblems());
 								if (demographicNo.intValue() == bdClientId) {
 									dependentsBedIdList.add(bd.getId().getBedId());
 									numberOfFamilyMembersAssignedRoomBed++;
-								} else {
+								}
+								else {
 									for (int j = 0; j < dependentIds.length; j++) {
 										if (dependentIds[j].intValue() == bdClientId) {
 											dependentsBedIdList.add(bd.getId().getBedId());
@@ -906,7 +942,8 @@ System.err.println("******* "+referral.getPresentProblems());
 								}
 							}
 							bedDemographicManager.saveBedDemographic(bedDemographic);
-						} else {
+						}
+						else {
 							// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
 							getRoomDemographicManager().cleanUpBedTables(roomDemographic);
 						}
@@ -940,11 +977,13 @@ System.err.println("******* "+referral.getPresentProblems());
 									}
 									bedDemographicManager.saveBedDemographic(bedDemographic);
 
-								} else if (!isBedSelected) {// assigning room only for all dependents
+								}
+								else if (!isBedSelected) {// assigning room only for all dependents
 
 									if (roomDemographic != null) {
 										roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
-									} else {
+									}
+									else {
 										roomDemographic = RoomDemographic.create(clientId, bedDemographic.getProviderNo());
 										roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
 									}
@@ -962,7 +1001,8 @@ System.err.println("******* "+referral.getPresentProblems());
 
 						}// end for loop
 
-					} else {// if(roomCapacity - roomOccupancy - familySize < 0 )
+					}
+					else {// if(roomCapacity - roomOccupancy - familySize < 0 )
 						String occupancy = "0";
 						String available = "0";
 						// Display message notifying that the roomCapacity is deficient ...
@@ -976,7 +1016,8 @@ System.err.println("******* "+referral.getPresentProblems());
 							messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.bedsCapacity_exceeded", occupancy, available));
 							saveMessages(request, messages);
 
-						} else {
+						}
+						else {
 							if (rdsByRoom != null) {
 								occupancy = String.valueOf(rdsByRoom.size());
 							}
@@ -992,13 +1033,15 @@ System.err.println("******* "+referral.getPresentProblems());
 
 				}// end of if(roomId != 0) -> (i.e.) assigning instead of unassigning
 
-			} else { // when client is independent -> just assign/unassign either room/bed or room only.
+			}
+			else { // when client is independent -> just assign/unassign either room/bed or room only.
 
 				getRoomDemographicManager().saveRoomDemographic(roomDemographic);
 
 				if (isBedSelected) {
 					bedDemographicManager.saveBedDemographic(bedDemographic);
-				} else {
+				}
+				else {
 					// if only select room without bed, delete previous selected bedId in 'bed_demographic' table
 					getRoomDemographicManager().cleanUpBedTables(roomDemographic);
 				}
@@ -1008,7 +1051,8 @@ System.err.println("******* "+referral.getPresentProblems());
 
 		if (bedDemographic.getRoomId().intValue() == 0) {
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.unreserved"));
-		} else {
+		}
+		else {
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.success"));
 		}
 		saveMessages(request, messages);
@@ -1078,7 +1122,8 @@ System.err.println("******* "+referral.getPresentProblems());
 				List<CachedProgramInfo> results = caisiIntegratorManager.getRemoteProgramsAcceptingReferrals(facility.getId());
 				filterResultsByCriteria(results, criteria);
 				request.setAttribute("remotePrograms", results);
-			} catch (MalformedURLException e) {
+			}
+			catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
 		}
@@ -1222,7 +1267,8 @@ System.err.println("******* "+referral.getPresentProblems());
 				try {
 					admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), programManager.getProgram(String.valueOf(program.getProgramId())),
 							null, admissionNotes);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					ActionMessages messages = new ActionMessages();
 					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
 					saveMessages(request, messages);
@@ -1235,7 +1281,8 @@ System.err.println("******* "+referral.getPresentProblems());
 		request.setAttribute("id", demographicNo);
 		if (success) {
 			return mapping.findForward("er-redirect");
-		} else {
+		}
+		else {
 			return mapping.findForward("search");
 		}
 	}
@@ -1303,12 +1350,14 @@ System.err.println("******* "+referral.getPresentProblems());
 				clientManager.saveDemographicExt(id, Demographic.CONSENT_GIVEN_KEY, value);
 				clientManager.saveDemographicExt(id, Demographic.METHOD_OBTAINED_KEY, Demographic.MethodObtained.EXPLICIT.name());
 				logManager.log("update", "DataSharingOpting:" + value, String.valueOf(id), request);
-			} else if ("false".equals(sharingOptinChecked)) {
+			}
+			else if ("false".equals(sharingOptinChecked)) {
 				String value = Demographic.ConsentGiven.NONE.name();
 				clientManager.saveDemographicExt(id, Demographic.CONSENT_GIVEN_KEY, value);
 				clientManager.saveDemographicExt(id, Demographic.METHOD_OBTAINED_KEY, Demographic.MethodObtained.EXPLICIT.name());
 				logManager.log("update", "DataSharingOpting:" + value, String.valueOf(id), request);
-			} else
+			}
+			else
 				throw (new IllegalStateException("Unexpected state, sharingOptinCheckbox state = " + sharingOptinChecked));
 
 		}
@@ -1342,12 +1391,10 @@ System.err.println("******* "+referral.getPresentProblems());
 		DemographicExt demographicExtConsentMethod = clientManager.getDemographicExt(Integer.parseInt(demographicNo), Demographic.METHOD_OBTAINED_KEY);
 
 		ConsentGiven consentGiven = ConsentGiven.NONE;
-		if (demographicExtConsent != null)
-			consentGiven = ConsentGiven.valueOf(demographicExtConsent.getValue());
+		if (demographicExtConsent != null) consentGiven = ConsentGiven.valueOf(demographicExtConsent.getValue());
 
 		Demographic.MethodObtained methodObtained = Demographic.MethodObtained.IMPLICIT;
-		if (demographicExtConsentMethod != null)
-			methodObtained = Demographic.MethodObtained.valueOf(demographicExtConsentMethod.getValue());
+		if (demographicExtConsentMethod != null) methodObtained = Demographic.MethodObtained.valueOf(demographicExtConsentMethod.getValue());
 
 		request.setAttribute("consentStatus", consentGiven.name());
 		request.setAttribute("consentMethod", methodObtained.name());
@@ -1379,7 +1426,8 @@ System.err.println("******* "+referral.getPresentProblems());
 				se.setAttribute("performAdmissionService",
 						new Boolean(caseManagementManager.hasAccessRight("perform admissions", "access", providerNo, demographicNo, inProgramId)));
 
-			} else if ("bed".equalsIgnoreCase(inProgramType)) {
+			}
+			else if ("bed".equalsIgnoreCase(inProgramType)) {
 				se.setAttribute("performDischargeBed", new Boolean(caseManagementManager.hasAccessRight("perform discharges", "access", providerNo, demographicNo, inProgramId)));
 				se.setAttribute("performAdmissionBed", new Boolean(caseManagementManager.hasAccessRight("perform admissions", "access", providerNo, demographicNo, inProgramId)));
 				se.setAttribute("performBedAssignments", new Boolean(caseManagementManager.hasAccessRight("perform bed assignments", "access", providerNo, demographicNo,
@@ -1465,7 +1513,8 @@ System.err.println("******* "+referral.getPresentProblems());
 			boolean isRefreshRoomDropDown = false;
 			if (request.getAttribute("isRefreshRoomDropDown") != null && request.getAttribute("isRefreshRoomDropDown").equals("Y")) {
 				isRefreshRoomDropDown = true;
-			} else {
+			}
+			else {
 				isRefreshRoomDropDown = false;
 			}
 
@@ -1494,7 +1543,8 @@ System.err.println("******* "+referral.getPresentProblems());
 
 				reservedBed = null;
 
-			} else {
+			}
+			else {
 
 				reservedBed = bedManager.getBed(bedDemographic.getBedId());
 			}
@@ -1511,9 +1561,11 @@ System.err.println("******* "+referral.getPresentProblems());
 
 			if ((isRefreshRoomDropDown && roomId != null) || (reservedBed == null && !"0".equals(roomId))) {
 				request.setAttribute("roomId", roomId);
-			} else if (reservedBed != null) {
+			}
+			else if (reservedBed != null) {
 				request.setAttribute("roomId", reservedBed.getRoomId().toString());
-			} else {
+			}
+			else {
 				request.setAttribute("roomId", "0");
 			}
 			request.setAttribute("isAssignedBed", String.valueOf(getRoomManager().isAssignedBed((String) request.getAttribute("roomId"), availableRooms)));
@@ -1524,7 +1576,8 @@ System.err.println("******* "+referral.getPresentProblems());
 			if (isRefreshRoomDropDown && request.getAttribute("unreservedBeds") != null) {
 				unreservedBeds = (Bed[]) request.getAttribute("unreservedBeds");
 
-			} else if (reservedBed != null) {
+			}
+			else if (reservedBed != null) {
 
 				// unreservedBeds = bedManager.getBedsByRoomProgram(availableRooms, bedProgramId, false);
 				unreservedBeds = bedManager.getCurrentPlusUnreservedBedsByRoom(reservedBed.getRoomId(), bedDemographic.getId().getBedId(), false);
@@ -1599,10 +1652,12 @@ System.err.println("******* "+referral.getPresentProblems());
 				// IS PERSON JOINTLY ADMITTED WITH ME, They will either have the same HeadClient or be my headClient
 				if (clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoLong) { // they're my head client
 					h.put("jointAdmission", "head");
-				} else if (demoJadm != null && clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoJadm.getHeadClientId().longValue()) {
+				}
+				else if (demoJadm != null && clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoJadm.getHeadClientId().longValue()) {
 					// They depend on the same person i do!
 					h.put("jointAdmission", "dependent");
-				} else if (demoJadm != null && demoJadm.getHeadClientId().longValue() == new Long(demographicNo).longValue()) {
+				}
+				else if (demoJadm != null && demoJadm.getHeadClientId().longValue() == new Long(demographicNo).longValue()) {
 					// They depend on me
 					h.put("jointAdmission", "dependent");
 				}
@@ -1618,7 +1673,8 @@ System.err.println("******* "+referral.getPresentProblems());
 					if (demoJadm.getHeadClientId().longValue() == new Long(demographicNo).longValue()) {
 						h.put("dependent", demoJadm.getTypeId());
 					}
-				} else if (clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoLong) { // HEAD PERSON WON'T DEPEND ON ANYONE
+				}
+				else if (clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoLong) { // HEAD PERSON WON'T DEPEND ON ANYONE
 					h.put("dependent", new Long(0));
 				}
 			}

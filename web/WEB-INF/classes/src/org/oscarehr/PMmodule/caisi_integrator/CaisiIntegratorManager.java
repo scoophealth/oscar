@@ -41,6 +41,8 @@ import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWsService;
+import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
+import org.oscarehr.caisi_integrator.ws.client.ReferralWsService;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.FacilitySegmentedTimeClearedHashMap;
@@ -174,6 +176,17 @@ public class CaisiIntegratorManager {
 
 		ProviderInfoWsService service = new ProviderInfoWsService(buildURL(facility, "ProviderInfoService"));
 		ProviderInfoWs port = service.getProviderInfoWsPort();
+
+		addAuthenticationInterceptor(facility, port);
+
+		return (port);
+	}
+
+	public ReferralWs getReferralWs(int facilityId) throws MalformedURLException {
+		Facility facility = getLocalFacility(facilityId);
+
+		ReferralWsService service = new ReferralWsService(buildURL(facility, "ReferralService"));
+		ReferralWs port = service.getReferralWsPort();
 
 		addAuthenticationInterceptor(facility, port);
 
