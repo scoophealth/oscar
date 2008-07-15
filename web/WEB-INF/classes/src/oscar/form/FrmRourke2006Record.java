@@ -35,9 +35,9 @@ public class FrmRourke2006Record extends FrmRecord {
     public Properties getFormRecord(int demographicNo, int existingID)
             throws SQLException    {
         Properties props = new Properties();
-
-        if(existingID <= 0) {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        String updated = "false";
+        if(existingID <= 0) {			
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, "
                 + "year_of_birth, month_of_birth, date_of_birth, sex "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
@@ -53,14 +53,37 @@ public class FrmRourke2006Record extends FrmRecord {
                 //props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formRourke2006 WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
             FrmRecordHelp frmRec = new FrmRecordHelp();
             frmRec.setDateFormat("dd/MM/yyyy");
             props = frmRec.getFormRecord(sql);
+            sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, "
+                + "year_of_birth, month_of_birth, date_of_birth, sex "
+                + "FROM demographic WHERE demographic_no = " + demographicNo;
+            ResultSet rs = db.GetSQL(sql);
+            
+            if(rs.next()) {
+                String rourkeVal = props.getProperty("c_pName","");
+                String demoVal = db.getString(rs,"pName");
+                
+                if( !rourkeVal.equals(demoVal) ) {
+                    props.setProperty("c_pName", demoVal);
+                    updated = "true";
+                }
+                
+                rourkeVal = props.getProperty("c_birthDate","");
+                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"));
+                demoVal = UtilDateUtilities.DateToString(dob, "dd/MM/yyyy");
+                
+                if( !rourkeVal.equals(demoVal) ) {
+                    props.setProperty("c_birthDate", demoVal);
+                    updated = "true";
+                }
+            }            
         }
-
+        db.CloseConn();
+        props.setProperty("updated", updated);
         return props;
     }
 
