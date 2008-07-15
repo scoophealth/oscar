@@ -27,9 +27,6 @@ insert into access_type (name, type) values("Age restriction override on referra
 insert into access_type (name, type) values("Age restriction override on admission","access");
 insert into access_type (name, type) values("Allow duplicate client merge","access");
 insert into access_type (name, type) values("Perform program registration intake","access");
-insert into access_type (name, type) values("can make program admissions","access");
-insert into access_type (name, type) values("can make program discharge","access");
-insert into access_type (name, type) values("can make bed assignments","access");
 insert into access_type (name, type) values("perform registration intake","access");
 insert into access_type (name, type) values("perform admissions","access");
 insert into access_type (name, type) values("perform discharges","access");
