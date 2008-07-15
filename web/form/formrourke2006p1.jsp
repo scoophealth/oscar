@@ -111,6 +111,11 @@
         var txtProblems1w = new ylib.widget.TextCounter("p1_problems1w", 120,3);
         var txtProblems2w = new ylib.widget.TextCounter("p1_problems2w", 220,5);
         var txtProblems1m = new ylib.widget.TextCounter("p1_problems1m", 230,5);        
+        
+        var updated = "<%=props.getProperty("updated","")%>";
+        if( updated == "true" ) {
+            alert("Synchronizing demographic information\nRemember to save changes");
+        }
     }    
     
     function showNotes() {
@@ -308,6 +313,8 @@
             textbox.value = date.getDate() + "/" + mth + "/" + date.getFullYear();
         }
     }
+    
+    
 
 </script>
  
