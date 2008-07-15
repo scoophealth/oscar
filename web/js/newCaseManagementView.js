@@ -954,6 +954,7 @@ function changeToView(id) {
     if( tmp.length == 0 ) 
         tmp = "&nbsp;";
         
+    tmp = tmp.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     tmp = tmp.replace(/\n/g,"<br>");
 
     if( !saving ) {
