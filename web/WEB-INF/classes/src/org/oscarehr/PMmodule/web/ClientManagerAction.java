@@ -421,7 +421,7 @@ public class ClientManagerAction extends BaseAction {
 
 		int clientId = Integer.parseInt(request.getParameter("id"));
 		String providerId = getProviderNo(request);
-		Integer facilityId = (Integer) request.getSession().getAttribute("currentFacilityId");
+		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
 		Program p = (Program) clientForm.get("program");
 		int programId = p.getId();
@@ -1123,7 +1123,7 @@ public class ClientManagerAction extends BaseAction {
 
 		request.setAttribute("programs", programManager.search(criteria));
 
-		Facility facility = (Facility) request.getSession().getAttribute("currentFacility");
+		Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 		if (facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals()) {
 			try {
 				List<CachedProgramInfo> results = caisiIntegratorManager.getRemoteProgramsAcceptingReferrals(facility.getId());

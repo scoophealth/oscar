@@ -22,22 +22,65 @@
 
 package org.oscarehr.PMmodule.service;
 
+import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.PMmodule.dao.ClientReferralDAO;
+import org.oscarehr.PMmodule.dao.ProgramQueueDao;
+import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 
-
-public interface ProgramQueueManager 
+public class ProgramQueueManager
 {
-	public ProgramQueue getProgramQueue(String queueId);
-		
-	public List getProgramQueuesByProgramId(Long programId);
+	private ProgramQueueDao dao;
+	private ClientReferralDAO referralDAO;
 	
-	public List getActiveProgramQueuesByProgramId(Long programId);
+	
+	public void setProgramQueueDao(ProgramQueueDao dao)	{
+		this.dao = dao;
+	}
+	
+	public void setClientReferralDAO(ClientReferralDAO dao)	{
+		this.referralDAO = dao;
+	}
+	
+	public ProgramQueue getProgramQueue(String queueId)
+	{
+		ProgramQueue pq = dao.getProgramQueue(Long.valueOf(queueId));
+		return pq;
+	}
+	
+	public List<ProgramQueue> getProgramQueuesByProgramId(Long programId) {
+		return dao.getProgramQueuesByProgramId(programId);
+	}
 
-	public ProgramQueue getActiveProgramQueue(String programId, String demographicNo);
-		
-	public void saveProgramQueue(ProgramQueue programQueue);
+	public void saveProgramQueue(ProgramQueue programQueue)	{
+		dao.saveProgramQueue(programQueue);
+	}
 	
-	public void rejectQueue(String programId, String clientId,String notes, String rejectionReason);
+	public List<ProgramQueue> getActiveProgramQueuesByProgramId(Long programId) {
+		return dao.getActiveProgramQueuesByProgramId(programId);
+	}
+	
+	public ProgramQueue getActiveProgramQueue(String programId, String demographicNo) {
+		return dao.getActiveProgramQueue(Long.valueOf(programId), Long.valueOf(demographicNo));
+	}
+	
+	public void rejectQueue(String programId, String clientId,String notes, String rejectionReason) {
+		ProgramQueue queue = getActiveProgramQueue(programId,clientId);
+		if(queue==null) {
+			return;
+		}
+		ClientReferral referral = this.referralDAO.getClientReferral(queue.getReferralId());
+		if(referral != null) {
+			referral.setStatus(ClientReferral.STATUS_REJECTED);
+			referral.setCompletionDate(new Date());
+			referral.setCompletionNotes(notes);			
+			referral.setRadioRejectionReason(rejectionReason);
+			this.referralDAO.saveClientReferral(referral);
+		}
+		queue.setStatus(ProgramQueue.STATUS_REJECTED);
+		
+		this.saveProgramQueue(queue);
+	}
 }

@@ -160,10 +160,7 @@
     <!-- Manager classes -->
     <bean id="programQueueManager" parent="baseTransactionProxy">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.ProgramQueueManagerImpl">
-                <property name="programQueueDao" ref="programQueueDao"/>
-                <property name="clientReferralDAO" ref="clientReferralDAO"/>
-            </bean>
+            <bean class="org.oscarehr.PMmodule.service.ProgramQueueManager" autowire="byName" />
         </property>
     </bean>
     <bean id="admissionManager" parent="baseTransactionProxy" autowire="byName">

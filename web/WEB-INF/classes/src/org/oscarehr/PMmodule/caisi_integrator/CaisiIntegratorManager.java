@@ -33,11 +33,13 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedProviderInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityProgramPrimaryKey;
+import org.oscarehr.caisi_integrator.ws.client.FacilityProviderPrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWs;
@@ -153,15 +155,11 @@ public class CaisiIntegratorManager {
 		return (new ArrayList<CachedProgramInfo>(results));
 	}
 
-	public CachedProgramInfo getRemoteProgram(int facilityId, FacilityProgramPrimaryKey remoteProgramId) throws MalformedURLException {
+	public CachedProgramInfo getRemoteProgram(int facilityId, FacilityProgramPrimaryKey remoteProgramPk) throws MalformedURLException {
 		List<CachedProgramInfo> programs = getRemotePrograms(facilityId);
 		
-		return(findProgram(programs, remoteProgramId));
-	}
-
-	private CachedProgramInfo findProgram(List<CachedProgramInfo> programs, FacilityProgramPrimaryKey remoteProgramId) {
 		for (CachedProgramInfo cachedProgramInfo : programs) {
-			if (facilityProgramPrimaryKeyEquals(cachedProgramInfo.getFacilityProgramPrimaryKey(), remoteProgramId)) {
+			if (facilityProgramPrimaryKeyEquals(cachedProgramInfo.getFacilityProgramPrimaryKey(), remoteProgramPk)) {
 				return (cachedProgramInfo);
 			}
 		}
@@ -205,6 +203,45 @@ public class CaisiIntegratorManager {
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
+	}
+
+	public List<CachedProviderInfo> getAllProviderInfos(int facilityId) throws MalformedURLException {
+		@SuppressWarnings("unchecked")
+		List<CachedProviderInfo> results = (List<CachedProviderInfo>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROVIDERS");
+
+		if (results == null) {
+			ProviderInfoWs providerInfoWs = getProviderInfoWs(facilityId);
+			results = providerInfoWs.getAllProviderInfo();
+			simpleTimeCache.put(facilityId, "ALL_REMOTE_PROVIDERS", results);
+		}
+
+		// cloned so alterations don't affect the cached data
+		return (new ArrayList<CachedProviderInfo>(results));
+	}
+
+	public CachedProviderInfo getProviderInfo(int facilityId, FacilityProviderPrimaryKey remoteProviderPk) throws MalformedURLException
+	{
+		List<CachedProviderInfo> providers=getAllProviderInfos(facilityId);
+		
+		for (CachedProviderInfo cachedProviderInfo : providers) {
+			if (facilityProviderPrimaryKeyEquals(cachedProviderInfo.getFacilityProviderPrimaryKey(), remoteProviderPk)) {
+				return (cachedProviderInfo);
+			}
+		}
+
+		return (null);
+	}
+	
+    private static boolean facilityProviderPrimaryKeyEquals(FacilityProviderPrimaryKey o1, FacilityProviderPrimaryKey o2)
+	{
+		try
+        {
+	        return(o1.getFacilityId().equals(o2.getFacilityId()) && o1.getFacilityProviderId().equals(o2.getFacilityProviderId()));
+        }
+        catch (RuntimeException e)
+        {
+	        return(false);
+        }
 	}
 
 	public ReferralWs getReferralWs(int facilityId) throws MalformedURLException {

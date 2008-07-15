@@ -29,12 +29,19 @@ function removeFromQueue(id) {
 	document.programManagerForm.method.value='remove_queue';
 	document.programManagerForm.submit();
 }
+
+function removeFromRemoteQueue(remoteFacilityId, programId) {
+	document.programManagerForm.elements['remoteFacilityId'].value = remoteFacilityId;
+	document.programManagerForm.elements['remoteFacilityProgramId'].value = programId;
+	document.programManagerForm.method.value='remove_remote_queue';
+	document.programManagerForm.submit();
+}
 </script>
 <html:hidden property="queue.id" />
 <div class="tabs" id="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th title="Programs">Queue</th>
+			<th title="Programs">Local Queue</th>
 		</tr>
 	</table>
 </div>
@@ -53,3 +60,30 @@ function removeFromQueue(id) {
 	</caisi:isModuleLoad>
 	<display:column property="notes" sortable="true" title="Notes" />
 </display:table>
+
+<c:if test="${remoteQueue!=null}">
+	<br /><br />
+
+	<input type="hidden" name="remoteFacilityId" />
+	<input type="hidden" name="remoteFacilityProgramId" />
+
+	<div class="tabs" id="tabs">
+		<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+				<th title="Programs">Remote Queue</th>
+			</tr>
+		</table>
+	</div>
+	<!--  show current clients -->
+	<display:table class="simple" cellspacing="2" cellpadding="3" id="queue_entry" name="remoteQueue" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
+		<display:setProperty name="paging.banner.placement" value="bottom" />
+		<display:setProperty name="basic.msg.empty_list" value="Queue is empty." />
+		<display:column sortable="false" title="">
+			<a href="javascript:void(0);" onclick="removeFromRemoteQueue('<c:out value="${queue_entry.cachedReferral.destinationFacilityId}"/>','<c:out value="${queue_entry.cachedReferral.destinationFacilityProgramId}"/>')"> Remove </a>
+		</display:column>
+		<display:column property="clientName" sortable="true" title="Client Name" />
+		<display:column property="cachedReferral.referralDate" sortable="true" title="Referral Date" />
+		<display:column property="providerName" sortable="true" title="Referring Provider" />
+		<display:column property="cachedReferral.reasonForReferral" sortable="true" title="Notes" />
+	</display:table>
+</c:if>
