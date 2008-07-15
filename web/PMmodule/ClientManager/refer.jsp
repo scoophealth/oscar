@@ -116,7 +116,7 @@
 		</div>
 		<display:table class="simple" cellspacing="2" cellpadding="3" id="referral" name="remoteReferrals" export="false" pagesize="0" requestURI="/PMmodule/ClientManager.do">
 			<display:setProperty name="paging.banner.placement" value="bottom" />
-			<display:column property="programName" sortable="true" title="Program Name" />
+			<display:column property="programName" sortable="true" title="Facility / Program" />
 			<display:column sortable="true" title="Referral Date" >
 			<%
 				ClientReferral temp = (ClientReferral) pageContext.getAttribute("referral");
