@@ -8,11 +8,14 @@
 <c:import url="/SystemMessage.do?method=view" />
 <c:import url="/FacilityMessage.do?method=view" />
 <br/>
+<!-- remove all info about agency because table agency has been truncated -->
+<!--  
 Your Agency Domain <a href="javascript:void(0)" onclick="popupHelp('agency_domain')">?</a> includes:
 <display:table class="simple" cellspacing="2" cellpadding="3" id="agency" name="agencyDomain" export="false" requestURI="/PMmodule/ProviderInfo.do">
     <display:setProperty name="basic.msg.empty_list" value="No agencies." />
 </display:table>
 <br />
+-->
 <br />
 Your Program Domain <a href="javascript:void(0)" onclick="popupHelp('program_domain')">?</a> includes:
 <display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="programDomain" export="false" requestURI="/PMmodule/ProviderInfo.do">

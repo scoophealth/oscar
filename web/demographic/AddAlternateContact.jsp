@@ -28,12 +28,15 @@
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
   String demographic_no = request.getParameter("demographic_no"); 
   String creatorDemo = request.getParameter("demo");
+  
   if (creatorDemo == null){
       creatorDemo = request.getParameter("remarks");      
   }
   if (creatorDemo == null){
       creatorDemo = (String) request.getAttribute("demo");    
   }
+  
+  
 %>  
 
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*"%>
@@ -103,7 +106,7 @@ function newWindow(file,window) {
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn"  >
       Add Relation
-            </td>
+            </td>            
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
                     <tr>
@@ -123,7 +126,7 @@ function newWindow(file,window) {
         <tr>
             <td class="MainTableLeftColumn" valign="top">
             &nbsp;
-            
+            <a href="<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=creatorDemo%>" >Back to PMM </a>
             
             </td>
             <td valign="top" class="MainTableRightColumn">
@@ -146,7 +149,7 @@ function newWindow(file,window) {
                 <input type="hidden" name="type" value="" />
                 <input type="hidden" name="duration" value="15"  />
                 <input type="hidden" name="end_time" value="10:59"   onchange="checkTimeTypeIn(this)" />       
-                <input type="hidden" name="demographic_no"   value=""  />
+                <input type="hidden" name="demographic_no"   value=""  />              
                 <input type="hidden" name="location"  tabindex="4" value="" />
                 <input type="hidden" name="resources"  tabindex="5" value="" />
                 <input type="hidden" name="user_id"  value="oscardoc, doctor" />
@@ -158,7 +161,7 @@ function newWindow(file,window) {
             </div>    
             </form>
             
-               <%String demoNo = request.getParameter("demographic_no");
+               <%String demoNo = request.getParameter("demographic_no");               
                  String name = request.getParameter("name");
                  String origDemo = request.getParameter("remarks");
                if ( demoNo != null ) {%>

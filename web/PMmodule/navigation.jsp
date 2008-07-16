@@ -239,28 +239,37 @@
 </div>
 
 <div id="admintools" class="toolgroup">
+	<%
+    if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
+	%>
     <div class="label">
         <strong>Administration</strong>
     </div>
+    <%} %>
     <div class="body">
 
         <div>
-            <span>Facilities</span>
-            <security:oscarSec roleName="<%=roleName$%>"
+        	<security:oscarSec roleName="<%=roleName$%>"
                                objectName="_pmm.manageFacilities"
                                rights="r">
+            <span>Facilities</span>
+            
             <div>
                 <html:link action="/PMmodule/FacilityManager.do?method=list">Manage Facilities</html:link>
             </div>
             </security:oscarSec>
-           
+            
+            <security:oscarSec roleName="<%=roleName$%>"
+                               objectName="_pmm.editor"
+                               rights="r">
+            <span>Editor</span>
                 <div>
                     <span><a href='<%=request.getContextPath()%>/PMmodule/EditIntake.do'>Registration Editor</a></span>
                 </div>
                 <div>
                     <span><a href="javascript:void(0)" onclick="window.open('<%=request.getContextPath()%>/PMmodule/GenericIntake/EditIntake.jsp?id=1');">Intake Form Editor</a></span>
                 </div>
-            
+            </security:oscarSec>
         </div>
         
         <div>

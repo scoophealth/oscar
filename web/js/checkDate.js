@@ -103,11 +103,12 @@ function check_date_format1(dateStr) {
 }
 
 function calculateAge(year, month, date) {
-	 month = month - 1;
-	
-	 if (month != parseInt(month)) { alert('Type Month of birth in digits only!'); return false; }
-	 if (date != parseInt(date)) { alert('Type Date of birth in digits only!'); return false; }
-	 if (year != parseInt(year)) { alert('Type Year of birth in digits only!'); return false; }
+
+	 month = parseInt(month,10) - 1;
+
+	 if (month != parseInt(month,10)) { alert('Type Month of birth in digits only!' ); return false; }
+	 if (date != parseInt(date,10)) { alert('Type Date of birth in digits only!'); return false; }
+	 if (year != parseInt(year,10)) { alert('Type Year of birth in digits only!'); return false; }
 	 if (year.length < 4) { alert('Type Year of birth in full!'); return false; }
 	
 	 today = new Date();

@@ -362,25 +362,23 @@ var maxYear=9900;
 
 <table width="100%" border="0"  cellspacing="0" cellpadding="0" >
     <tr width="100%">
-     <th align="left">Client Name:</th>
-     <td><%= props.getProperty("clientName", "") %></td>
-     <th align="left">DOB<small>(yyyy/mm/dd)</small>: </th>
-     <td><%= props.getProperty("birthDate", "") %></td>
-	 <th align="left">OHIP#: </th>
-     <td><%= props.getProperty("ohip", "") %></td>
+     <td align="left"><b>Client Name:</b>
+     <%= props.getProperty("clientName", "") %></td>
+     <td align="left"><b>DOB<small>(yyyy/mm/dd)</small>: </b>
+     <%= props.getProperty("birthDate", "") %></td>
+	 <td align="left"><b>OHIP#: </b>
+     <%= props.getProperty("ohip", "") %></td>
     </tr>    
 
     <tr width="100%">
-     <th align="left">Admit Date:</th>
-     <td><%= props.getProperty("admitDate", "") %></td>
-     <th align="left">Discharge Date<small>(yyyy/mm/dd):</small> </th>
-     <td><%= props.getProperty("dischargeDate", "") %></td>
-	 <th align="left">Allergies: </th>
-	 <td><%= props.getProperty("allergies", "") %></td>
-	 
-   	<tr><td>&nbsp;</td></tr>  
+     <td align="left"><b>Admit Date:</b>
+     <%= props.getProperty("admitDate", "") %></td>
+     <td align="left"><b>Discharge Date<small>(yyyy/mm/dd):</small> </b>
+     <%= props.getProperty("dischargeDate", "") %></td>
+	 <td align="left"><b>Allergies: </b>
+	 <%= props.getProperty("allergies", "") %></td>   	
 </table>
-
+<br>
 <table width="100%" border="0"  cellspacing="0" cellpadding="0" >
 <tr><th align="left">Admitting Diagnosis/Primary Diagnosis:</th></tr>
 <tr><td><%= props.getProperty("admissionNotes", "") %></td></tr>
