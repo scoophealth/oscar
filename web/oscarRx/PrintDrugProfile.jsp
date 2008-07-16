@@ -144,7 +144,7 @@ span { display:none; }
 				                        }
                                     %>
                                 <tr>
-                                   <td width=20%>
+                                   <td width=20% valign="top">
                                       <a <%= styleColor%>
                                             href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
@@ -155,7 +155,7 @@ span { display:none; }
                                       <a <%= styleColor%> 
                                             href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
-                                                <%= drug.getRxDisplay() %>
+                                                <%= drug.getFullOutLine().replaceAll(";"," ") %>
                                       </a>
                                    </td>                                        
                                 </tr>

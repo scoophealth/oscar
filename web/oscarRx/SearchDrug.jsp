@@ -349,7 +349,7 @@ function load() {
 				    }
                                     %>
                                     <tr>
-                                        <td>
+                                        <td valign="top">
                                             <a <%= styleColor%>
                                             href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
@@ -360,7 +360,9 @@ function load() {
                                             <a <%= styleColor%>
                                             href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
-                                                <%= drug.getRxDisplay() %>
+                                                
+                                                
+                                                <%=drug.getFullOutLine().replaceAll(";"," ")%>
                                             </a>
                                         </td>
                                         <td width="100px" align="center">

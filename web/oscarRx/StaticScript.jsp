@@ -145,7 +145,7 @@ oscar.oscarRx.data.RxPrescriptionData.Prescription[] drugs =
                             <td><%= prov.getFirstName() %> <%= prov.getSurname() %></td>
                             <td><%= oscar.oscarRx.util.RxUtil.DateToString(drugs[i].getRxDate()) %></td>
                             <td><%= oscar.oscarRx.util.RxUtil.DateToString(drugs[i].getEndDate()) %></td>
-                            <td><%= drugs[i].getRxDisplay() %></td>
+                            <td><%= drugs[i].getFullOutLine().replaceAll(";"," ") %></td>
                             <td>
                             <% if (! drugs[i].isCustom()) { %>
                                 <a href="javascript:ShowDrugInfo('<%= drugs[i].getGenericName() %>');">Info</a>
