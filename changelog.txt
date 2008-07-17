@@ -1,0 +1,54 @@
+---------------------------
+Changes prior to 2008-07-17
+---------------------------
+PMM:
+
+-Home and Logout buttons are now in the top right hand corner
+
+-“Oscar Medical” the link used to bring you back to case management screen has been renamed, the link on the navigator bar is now called “Case Management”
+
+-New Report link: User Created Form Report: This will create a report based on a specific user created form
+
+-Dependencies (spouse, partner, child, sibling, etc.): With the upgrade comes the new feature that allows a provider to link more then one file together. For example, a woman and her 2 children are staying in a shelter; the provider can create separate files for all 3 individuals, but can link them based on their relationship. Follow these steps:
+-Program Management Module
+-Summary Page for a client
+-Second Tab down says “family”
+-Click on update and enter in the last name to search for family members/dependents
+-Add member to client file
+
+-Health and Safety Message on client PMM Summary: On the summary tab for a client, in the Program Management Module, users can add in a health and safety message simply by clicking on “New Health and Safety”, entering message and pressing save
+
+-Integrator Consent: This consent is in place to indicate the level of information sharing a client would like (ranging from no information shared to all information shared). This will not be in use until the integrator is functional and if Seaton House agrees to participate in integration. 
+
+
+-Addition of the concept of facilities: A facility is a larger entity that holds together smaller programs. For example, the City of Toronto would be a Facility and the agencies would be the City run shelters. For the purposes of Seaton House, Seaton House will be the Facility.  
+
+
+-Registration Editor: This would allow for the customization of questions that must be mandatory in the intake. This will not need to be used by Seaton House Administration.
+-Intake Editor: This is the ability to customize an intake (adding questions, removing questions, etc). This will not need to be used by Seaton House Administration
+
+-(Admin set these rights, but the rights will affect all roles) New Program: New Access Rights: As discussed in Administrator training, each program has a set of access rights that must be set for that program. These access rights define what each Seaton House role can perform within that given program.  A new series of Access Rights have been added into the Access tab. A provider needs to set these when editing a program.
+-Click on Edit beside a program
+-Click on Access tab
+-Select the Right and then decide what roles in that given program will have access to that right
+New Access Rights:
+-perform admission
+-perform discharge
+-perform bed reservation
+-perform intake
+-Read doctor/nurse/counselor/csw ticklers
+-Service Restriction override on referral and on admission
+-Create Service Restriction
+-Disable Service Restriction
+-Sex/Gender/Age Restriction override on referral/admission
+-Duplicate client merge
+
+Program Restrictions: (Admin set the restrictions up) Age/Gender/Sex. When setting up a new program or editing an existing program, a provider can set restrictions for that specific program based on Age/Gender/Sex. These restrictions will not allow a referral or an admission if the person does not fall within the set range for that program.
+There are also Access Rights to set who can override a restriction, for example, a shift leader could override an age restriction upon referral if they knew the client would be the appropriate age by the time the admission was processed. 
+
+-Service Restriction: (Admin set up the Service Restrictions, but all staff can apply service restrictions to a client within a program) Service restrictions are set when editing a program or making a new program. The provider sets the minimum number and default number of days for a service restriction within a given program. These restrictions are applied to specific clients via a service restriction tab within their Program Management section of their file. 
+
+Merge Records: If a duplicate file is created, based on the access rights of the provider, the files can be merged. This merging does not technically merge any of the notes, if there are notes in both files. Rather it links the master files and marks one of the master files as a duplicate. 
+
+
+
