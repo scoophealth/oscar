@@ -25,6 +25,7 @@
 
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
+<%@ page import="org.oscarehr.common.model.*"%>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
 <%@ page import="java.util.*"%>
 
