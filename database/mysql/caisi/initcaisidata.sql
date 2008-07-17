@@ -16212,9 +16212,6 @@ insert into encounterForm values("Discharge Summary","../form/formDischargeSumma
 -- measurements
 INSERT INTO `measurementType` VALUES (333,'REBG','Review Blood Glucose Records','Review Glucose Records','Reviewed','7'),(334,'A1C','A1C','A1C','','3'),(335,'DMED','Diabetes Medication Changes','DM Med Changes','Changed','7'),(336,'BMED','Blood Pressure Medication Changes','BP Med Changes','Changed','7'),(337,'BMI','Body Mass Index','BMI','BMI','4'),(338,'DIER','Diet and Exercise','Diet and Exercise','Reviewed','7'),(339,'NOSK','Number of Cigarettes per day','Smoking','Cigarettes per day','5'),(340,'LMED','Lipid Lowering Medication Changes','Lipid Med Changes','Changed','7'),(341,'FGLC','Fasting Glucose meter , lab comparison','Fasting glucose meter, lab comparison','Within 20 percent','7'),(342,'EYEE','Dilated Eye Exam','Eye Exam','Exam Done','7'),(343,'ACR','Alb creat ratio','ACR','','5'),(344,'EGFR','EGFR','EGFR','','11'),(345,'FTE','Foot Exam','Foot Exam','Normal','7'),(346,'FTLS','Foot Exam  Test loss of Sensation','Foot Exam  Loss of Sensation','Normal','7'),(347,'PANE','Painful Neuropathy','Painful Neuropathy','Present','7'),(348,'EDGI','Autonomic Neuropathy','Autonomic Neuropathy','Present','7'),(349,'DMME','Diabetes Education','Diabetes Education','Discussed','7'),(350,'BP','Blood Pressure','BP','sitting position','6'),(351,'TG','LIPIDS TG','TG','monitor every 1-3 year','3'),(352,'LDL','LIPIDS LDL','LDL','monitor every 1-3 year','3'),(353,'TCHD','LIPIDS TD/HDL','TC/HDL','monitor every 1-3 year','3'),(354,'BG','Blood Glucose','Blood Glucose','in mmol/L (nn.n) Range:1.5-30.0','12'),(355,'SODI','Salt Intake','Salt Intake','On Low Sodium Diet','7'),(356,'DRPW','Drinks per Week','Drinks per Week','Number of Drinks per week','5'),(357,'WT','Wt','Weight','in kg (nnn.n) Range:0-300 Interval:3mo.','5'),(358,'CD4','CD4','CD4','','13'),(359,'VLOA','Viral Load','Viral Load','','14'),(360,'Hb','Hb','Hb','','15'),(361,'ALT','ALT','ALT','','5'),(362,'TCHL','Total Cholestorol','Total Cholestorol','in mmol/L (nn.n) Range:2.0-12.0','16'),(363,'FBS','Fasting Blood Sugar','FBS','FBS value','4'),(364,'HDL','HDL','High Density Lipid','in mmol/L (n.n) Range:0.4-4.0','17'),(365,'VB12','Vit B12','Vitamin B12','','13'),(366,'FTST','Free Testost','Free Testost','','13'),(367,'VDRL','VDRL','VDRL','Positive','7'),(368,'TOXP','Toxoplasma IgG','Toxoplasma IgG','Positive','7'),(369,'HpAI','Hep A IgG','Hep A IgG','Positive','7'),(370,'HpBS','Hep BS Ag','Hep BS Ag','Positive','7'),(371,'HpBA','Hep BS Ab','Hep BS Ab','Positive','7'),(372,'HpCA','Hep C Ab','Hep C Ab','Positive','7'),(373,'CMVI','CMV IgG','CMV IgG','Positive','7'),(374,'G6PD','G6PD','G6PD','Positive','7'),(375,'URBH','Update Risk Behaviours','Update Risk Behaviours','Changed','7'),(376,'USSH','Update Sexual Identity in Social History','Update Sexual Identity in Social History','Changed','7'),(377,'UDUS','Update Drug Use','Update Drug Use','Changed','7'),(378,'UAIP','Update AIDS defining illness in PMH','Update AIDS defining illness in PMH','Changed','7'),(379,'UHTP','Update HIV Test History in PMH','Update HIV Test History in PMH','Changed','7'),(380,'Regn','Registration Assessment completed','Regn','all clients must have registration intake completed in CAISI','7'),(381,'Quat','Most recent admission in Quattro','Quat','Most recent admission in Quattro','7'),(382,'CAIS','Entered into CAISI','CAIS','Entered into CAISI','7'),(383,'info','Information Package given to client','info','Information Package given to client','7'),(384,'pink','Application for Social Assistance (Pink form) filled out','pink','Application for Social Assistance (Pink form) filled out','7'),(385,'ROI','Consent to Release Information (Form 3) completed','ROI','Consent to Release Information (Form 3) completed','7'),(386,'Cons','other consents completed','Cons','other consents completed','7'),(387,'Ornt','Orientation to Current Program Completed','Ornt','Orientation to Current Program Completed','7'),(388,'OW','OW Obtained','OW','OW Obtained','7'),(389,'ODSP','ODSP Obtained','ODSP','ODSP Obtained','7'),(390,'CPP','CPP Obtained','CPP','CPP Obtained','7'),(391,'OAS','OAS Obtained','OAS','OAS Obtained','7'),(392,'GAIN','GAIN Obtained','GAIN','GAIN Obtained','7'),(393,'Empl','Employment Obtained','Empl','Employment Obtained','7'),(394,'FTHR','Other Income Obtained','FTHR','Other Income Obtained','7'),(395,'PGT','Public Guardian and Trustee Found','PGT','Public Guardian and Trustee Found','7'),(396,'SPDT','Special Diet Allowance Obtained','SPDT','Special Diet Allowance Obtained','7'),(397,'Fsup','reviewed by supervisor','Fsup','reviewed by supervisor','7'),(398,'OHIP','OHIP Card in File','OHIP','OHIP Card in File','7'),(399,'SIN','SIN Card in File','SIN','SIN Card in File','7'),(400,'BCRT','Birth Cert. in File','BCRT','Birth Cert. in File','7'),(401,'LAND','Landing Docs in File','LAND','Landing Docs in File','7'),(402,'Citz','Citizenship card in file','Citz','Citizenship card in file','7'),(403,'Othi','Other ID in file','Othi','Other ID in file','7'),(404,'Isup','reviewed by supervisor','Isup','reviewed by supervisor','7'),(405,'Hass','Housing Assessment Obtained','Hass','Housing Assessment Obtained','7'),(406,'CnAp','Connection Application Obtained','CnAp','Connection Application Obtained','7'),(407,'HAP','HAP Application Completed','HAP','HAP Application Completed','7'),(408,'CCAC','CCAC Placement Application Completed','CCAC','CCAC Placement Application Completed','7'),(409,'CMSP','Community Support Application','CMSP','Community Support Application','7'),(410,'HVIS','Housing Visits Log Completed','HVIS','Housing Visits Log Completed','7'),(411,'HltA','Health addressed','HltA','address health with all clients even if no health issues','7'),(412,'MHA','Mental Health addressedr','MHA','address health with all clients even if no health issues','7'),(413,'SUA','Substance Use addressed','SUA','address substance use with all clients even if no apparent problems','7'),(414,'Lwil','Living Will filled out','Lwil','client wants advance directive for medical care','7'),(415,'SoCm','Social/Community Supports addressed','SoCm','address Social and Community supports with all clients even if none desired','7'),(416,'EdTr','Education/Training addressed','EdTr','address education and training with all clients even if none desired','7'),(417,'EmpA','Employment addressed','EmpA','address employment with all clients even if employment not applicable','7'),(418,'LegA','legal Issues addressed','LegA','address legal issues with all clients even if no apparent problems','7'),(419,'Osup','reviewed by supervisor','Osup','reviewed by supervisor','7');
 
--- RFQ : caisi_editor
-
-INSERT INTO `caisi_editor` VALUES (1,'intake','Gender','','Male','M','','Yes'),(2,'intake','Gender','','Female','F','','Yes'),(3,'intake','Gender','','Transgender','T','','Yes'),(4,'Agency','Sector','','Men','1','','Yes'),(5,'Agency','Sector','','women','2','','Yes'),(6,'Agency','Sector','','Families','3','','Yes'),(7,'Agency','Sector','','Youth','4','','Yes'),(8,'Agency','Organization','','City of Toronto','1','','Yes'),(9,'Agency','Organization','','Salvation Army','2','','Yes'),(10,'Agency','Organization','','Fred Victor','3','','Yes'),(11,'Agency','Organization','','Good Shepherd','4','','Yes'),(12,'Client','Service Restriction','','Assault of client','1','','Yes'),(13,'Client','Service Restriction','','Assault of staff','2','','Yes'),(14,'Client','Service Restriction','','other','3','','Yes'),(15,'Program','Discharge Reason','','Service restriction','1','','Yes'),(16,'Program','Discharge Reason','','Client self discharge','2','','Yes'),(17,'Program','Discharge Reason','','More appropriate for other program','3','','Yes'),(18,'Program','Discharge Reason','','Completed care','4','','Yes');
 
 -- RFQ: secObjectName
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.clientSearch', 'Client - Search', 0);
@@ -16256,50 +16253,48 @@ insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values(
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.bedCheck', 'Program - Bed Check',0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.clientStatus', 'Program - Client Status',0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.serviceRestrictions', 'Program - Service Restrictions',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values ('_pmm.eidtor','Caisi Intake Editor',0);
+
 -- Quatro Group Report
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_reportRunner', 'Report Runner', 0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_reportWriter', 'Report Writer', 0);
 
 -- 
-insert into `secObjPrivilege` values('admin','_admin.facilityMessage','x',0,999998);
-insert into `secObjPrivilege` values('admin','_admin.systemMessage','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.facilityMessage','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.systemMessage','x',0,999998);
 
-insert into `secObjPrivilege` values('admin','_admin.provider','x',0,999998);
-insert into `secObjPrivilege` values('admin','_admin.security','x',0,999998);
-insert into `secObjPrivilege` values('admin','_admin.securityLogReport','x',0,999998);
-insert into `secObjPrivilege` values('admin','_admin.unlockAccount','x',0,999998);
-insert into `secObjPrivilege` values('admin','_admin.cookieRevolver','x',0,999998);
-insert into `secObjPrivilege` values('admin','_admin.caisi','x',0,999998);
-insert into `secObjPrivilege` values('admin','_admin.lookupFieldEditor','x',0,999998);
-insert into `secObjPrivilege` values('admin','_admin.issueEditor','x',0,999998);
-insert into `secObjPrivilege` values('admin','_admin.caisiRoles','x',0,999998);
-insert into `secObjPrivilege` values('admin','_admin.userCreatedForms','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.provider','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.security','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.securityLogReport','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.unlockAccount','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.cookieRevolver','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.caisi','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.lookupFieldEditor','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.issueEditor','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.caisiRoles','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.userCreatedForms','x',0,999998);
 
 insert into `secObjPrivilege` values('doctor','_pmm.clientSearch','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.newClient','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm.mergeRecords','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.mergeRecords','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.caseManagement','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm.agencyInformation','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm.manageFacilities','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm.staffList','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm.programList','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm.addProgram','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm.globalRoleAccess','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm.caisiRoles','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.agencyInformation','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.manageFacilities','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.staffList','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.programList','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.addProgram','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.globalRoleAccess','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.caisiRoles','x',0,999998);
 
-insert into `secObjPrivilege` values('admin','_pmm_editProgram.general','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm_editProgram.staff','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm_editProgram.functionUser','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm_editProgram.teams','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm_editProgram.clients','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm_editProgram.queue','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm_editProgram.access','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm_editProgram.bedCheck','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm_editProgram.clientStatus','x',0,999998);
-insert into `secObjPrivilege` values('admin','_pmm_editProgram.serviceRestrictions','x',0,999998);
-
-insert into `secObjPrivilege` values('admin','_pmm.editor','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.general','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.staff','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.functionUser','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.teams','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.clients','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.queue','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.access','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.bedCheck','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.clientStatus','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.serviceRestrictions','x',0,999998);
 
 INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
 	VALUES ('admin', '_reportRunner', 'x', 0, '999998');

@@ -30,9 +30,8 @@ function removeFromQueue(id) {
 	document.programManagerForm.submit();
 }
 
-function removeFromRemoteQueue(remoteFacilityId, programId) {
-	document.programManagerForm.elements['remoteFacilityId'].value = remoteFacilityId;
-	document.programManagerForm.elements['remoteFacilityProgramId'].value = programId;
+function removeFromRemoteQueue(remoteReferralId) {
+	document.programManagerForm.elements['remoteReferralId'].value = remoteReferralId;
 	document.programManagerForm.method.value='remove_remote_queue';
 	document.programManagerForm.submit();
 }
@@ -64,8 +63,7 @@ function removeFromRemoteQueue(remoteFacilityId, programId) {
 <c:if test="${remoteQueue!=null}">
 	<br /><br />
 
-	<input type="hidden" name="remoteFacilityId" />
-	<input type="hidden" name="remoteFacilityProgramId" />
+	<input type="hidden" name="remoteReferralId" />
 
 	<div class="tabs" id="tabs">
 		<table cellpadding="3" cellspacing="0" border="0">
@@ -79,7 +77,7 @@ function removeFromRemoteQueue(remoteFacilityId, programId) {
 		<display:setProperty name="paging.banner.placement" value="bottom" />
 		<display:setProperty name="basic.msg.empty_list" value="Queue is empty." />
 		<display:column sortable="false" title="">
-			<a href="javascript:void(0);" onclick="removeFromRemoteQueue('<c:out value="${queue_entry.cachedReferral.destinationFacilityId}"/>','<c:out value="${queue_entry.cachedReferral.destinationFacilityProgramId}"/>')"> Remove </a>
+			<a href="javascript:void(0);" onclick="removeFromRemoteQueue('<c:out value="${queue_entry.cachedReferral.cachedReferralId}"/>')"> Remove </a>
 		</display:column>
 		<display:column property="clientName" sortable="true" title="Client Name" />
 		<display:column property="cachedReferral.referralDate" sortable="true" title="Referral Date" />

@@ -14,9 +14,6 @@
         <form-bean name="issueAdminForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="issueAdmin" type="org.caisi.model.IssueAdmin" />
         </form-bean>
-        <form-bean name="caisiEditorForm" type="org.apache.struts.validator.DynaValidatorForm">
-            <form-property name="caisiEditor" type="org.caisi.model.CaisiEditor"/>
-        </form-bean>
         <form-bean name="lookupListForm" type="com.quatro.web.lookup.LookupListForm" />
         <form-bean name="lookupTableListForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="modules" type="java.util.List"></form-property>
@@ -388,10 +385,6 @@
             <forward name="edit" path="/caisicore/CaisiRoleForm.jsp" />
         </action>
         <action path="/infirm" type="org.caisi.core.web.InfirmAction" name="inputForm" scope="request" parameter="action"></action>
-        <action path="/CaisiEditor" type="org.springframework.web.struts.DelegatingActionProxy" name="caisiEditorForm" scope="request" parameter="method" validate="false">
-            <forward name="list" path="/caisicore/CaisiEditorList.jsp" />
-            <forward name="edit" path="/caisicore/CaisiEditorForm.jsp" />
-        </action>
         <!-- Login -->
         <action input="/login.jsp" name="loginForm" path="/login" scope="request" type="oscar.login.LoginAction" validate="true">
             <forward name="receptionist" path="/receptionist/receptionistcontrol.jsp" redirect="true" />

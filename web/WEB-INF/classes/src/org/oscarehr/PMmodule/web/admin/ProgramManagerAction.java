@@ -525,7 +525,17 @@ public class ProgramManagerAction extends BaseAction {
 		DynaActionForm programForm = (DynaActionForm) form;
 		Program program = (Program) programForm.get("program");
 
-System.err.println("************** FOO1 : "+request.getParameter("remoteFacilityId")+":"+request.getParameter("remoteFacilityProgramId"));
+		Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+		
+		Integer remoteReferralId=Integer.valueOf(request.getParameter("remoteReferralId"));
+		
+		try {
+			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
+			referralWs.removeReferral(remoteReferralId);
+		}
+		catch (MalformedURLException e) {
+			logger.error("Unexpected error", e);
+		}
 		
 		setEditAttributes(request, String.valueOf(program.getId()));
 		return mapping.findForward("edit");
@@ -976,7 +986,7 @@ System.err.println("************** FOO1 : "+request.getParameter("remoteFacility
 			for (CachedReferral cachedReferral : remoteReferrals) {
 				RemoteQueueEntry remoteQueueEntry = new RemoteQueueEntry();
 				remoteQueueEntry.setCachedReferral(cachedReferral);
-				
+
 				CachedDemographicInfo cachedDemographicInfo = demographicInfoWs.getCachedDemographicInfoByFacilityAndFacilityDemographicId(cachedReferral.getSourceFacilityId(),
 						cachedReferral.getSourceFacilityDemographicId());
 				if (cachedDemographicInfo != null) {
