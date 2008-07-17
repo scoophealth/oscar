@@ -976,7 +976,7 @@ public class ProgramManagerAction extends BaseAction {
 
 	}
 
-	private List<RemoteQueueEntry> getRemoteQueue(int facilityId, int programId) {
+	protected List<RemoteQueueEntry> getRemoteQueue(int facilityId, int programId) {
 		try {
 			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(facilityId);
 			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
@@ -1009,7 +1009,6 @@ public class ProgramManagerAction extends BaseAction {
 
 				results.add(remoteQueueEntry);
 			}
-
 			return (results);
 		}
 		catch (MalformedURLException e) {

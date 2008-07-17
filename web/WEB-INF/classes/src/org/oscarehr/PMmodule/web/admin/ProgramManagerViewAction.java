@@ -67,6 +67,7 @@ import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.SessionConstants;
 import org.springframework.beans.factory.annotation.Required;
 
 public class ProgramManagerViewAction extends BaseAction {
@@ -92,6 +93,8 @@ public class ProgramManagerViewAction extends BaseAction {
     private LogManager logManager;
 
     private ProgramManager programManager;
+    
+    private ProgramManagerAction programManagerAction;
 
     private ProgramQueueManager programQueueManager;
 
@@ -99,13 +102,19 @@ public class ProgramManagerViewAction extends BaseAction {
         this.facilityDao = facilityDao;
     }
     
-    public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    public void setProgramManagerAction(ProgramManagerAction programManagerAction) {
+		this.programManagerAction = programManagerAction;
+	}
+
+	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return view(mapping, form, request, response);
     }
 
     @SuppressWarnings("unchecked")
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
+		Facility loggedInFacility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
+
+		ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
 
         // find the program id
         String programId = request.getParameter("id");
@@ -130,6 +139,10 @@ public class ProgramManagerViewAction extends BaseAction {
         // need the queue to determine which tab to go to first
         List<ProgramQueue> queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
         request.setAttribute("queue", queue);
+
+		if (loggedInFacility.isIntegratorEnabled() && loggedInFacility.isEnableIntegratedReferrals()) {
+			request.setAttribute("remoteQueue", programManagerAction.getRemoteQueue(loggedInFacility.getId(), Integer.parseInt(programId)));
+		}
 
         HashSet<Long> genderConflict = new HashSet<Long>();
         HashSet<Long> ageConflict = new HashSet<Long>();
