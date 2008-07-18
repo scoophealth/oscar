@@ -222,6 +222,24 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_CREATE).append(PARAM_AND);
         parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
 
+        String remoteReferralId=request.getParameter("remoteReferralId");
+        if (remoteReferralId!=null)
+        {
+        	parameters.append("&");
+        	parameters.append("remoteReferralId");
+        	parameters.append("=");
+        	parameters.append(remoteReferralId);
+        }
+        
+        String destinationProgramId=request.getParameter("destinationProgramId");
+        if (destinationProgramId!=null)
+        {
+        	parameters.append("&");
+        	parameters.append("destinationProgramId");
+        	parameters.append("=");
+        	parameters.append(destinationProgramId);
+        }
+        
         request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
 
         return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);

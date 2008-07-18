@@ -279,10 +279,10 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             	Integer currentFacilityId = currentFacility.getId();
             	intake.setFacilityId(currentFacilityId);
            
-            	admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich);
+            	admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich, null);
             
             	if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
-            		admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
+            		admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds(), null);
             	}
          
             
@@ -538,9 +538,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         }
     }
 
-    private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId, String saveWhich) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+    private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId, String saveWhich, String admissionText) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
         Program bedCommunityProgram = null;
         Integer currentBedCommunityProgramId = getCurrentBedCommunityProgramId(clientId);
+        
+        if (admissionText==null) admissionText="intake admit";
         
         if("RFQ_notAdmit".equals(saveWhich) && bedCommunityProgramId == null && currentBedCommunityProgramId == null) {
         	return;
@@ -588,12 +590,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         		Integer familyId = familyIds[i];
 		        if (bedCommunityProgram != null) {
 		            if (currentBedCommunityProgramId == null) {
-		                admissionManager.processAdmission(familyId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+		                admissionManager.processAdmission(familyId, providerNo, bedCommunityProgram, "intake discharge", admissionText);
 		            }
 		            else if (!currentBedCommunityProgramId.equals(bedCommunityProgramId)) {
 		                if (programManager.getProgram(currentBedCommunityProgramId).isBed()) {
 		                    if (bedCommunityProgram.isBed()) {
-		                        admissionManager.processAdmission(familyId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+		                        admissionManager.processAdmission(familyId, providerNo, bedCommunityProgram, "intake discharge", admissionText);
 		                    }
 		                    else {
 		                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, familyId, providerNo, "intake discharge", "0");
@@ -605,7 +607,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		                    }
 		                    else {
 		                        admissionManager.processDischarge(currentBedCommunityProgramId, familyId, "intake discharge", "0");
-		                        admissionManager.processAdmission(familyId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+		                        admissionManager.processAdmission(familyId, providerNo, bedCommunityProgram, "intake discharge", admissionText);
 		                    }
 		                }
 		            }
@@ -618,13 +620,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         
 	        if (bedCommunityProgram != null) {
 	            if (currentBedCommunityProgramId == null) {	            	
-	                admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+	                admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", admissionText);
 	            }
 	            else if (!currentBedCommunityProgramId.equals(bedCommunityProgramId)) {
 	                if (programManager.getProgram(currentBedCommunityProgramId).isBed()) {
 	                    if (bedCommunityProgram.isBed()) {
 	                        //automatic discharge from one bed program to another bed program.
-	                    	admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+	                    	admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", admissionText);
 	                    }
 	                    else {
 	                        admissionManager.processDischargeToCommunity(bedCommunityProgramId, clientId, providerNo, "intake discharge", "0");
@@ -636,7 +638,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	                    }
 	                    else {
 	                        admissionManager.processDischarge(currentBedCommunityProgramId, clientId, "intake discharge", "0");
-	                        admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+	                        admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", admissionText);
 	                    }
 	                }
 	            }
@@ -644,8 +646,10 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         }
     }
 
-    private void admitServicePrograms(Integer clientId, String providerNo, Set<Integer> serviceProgramIds) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+    private void admitServicePrograms(Integer clientId, String providerNo, Set<Integer> serviceProgramIds, String admissionText) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
         SortedSet<Integer> currentServicePrograms = getCurrentServiceProgramIds(clientId);
+
+        if (admissionText==null) admissionText="intake admit";
 
         Collection<?> discharge = CollectionUtils.subtract(currentServicePrograms, serviceProgramIds);
 
@@ -657,7 +661,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         for (Object programId : admit) {
             Program program = programManager.getProgram((Integer) programId);
-            admissionManager.processAdmission(clientId, providerNo, program, "intake discharge", "intake admit");
+            admissionManager.processAdmission(clientId, providerNo, program, "intake discharge", admissionText);
         }
     }
 

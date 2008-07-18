@@ -246,9 +246,10 @@
                 </c:if>
             </tr>
             <tr>
+				<input type="hidden" name="remoteReferralId" value="<%=request.getParameter("remoteReferralId")%>" />
                 <c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms}">
                     <td class="intakeBedCommunityProgramCell">
-                        <html:select property="bedCommunityProgramId">
+                        <html:select property="bedCommunityProgramId" value='<%=request.getParameter("destinationProgramId")%>' >
                             <html:optionsCollection property="bedCommunityPrograms" value="value" label="label"/>
                         </html:select>
                     </td>
