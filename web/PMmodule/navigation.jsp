@@ -92,6 +92,20 @@
         location.href = '<html:rewrite action="/PMmodule/IntakeCMentalHealthReportAction.do"/>?startDate=' + startDate;
     }
 
+    function createStreetHealthReport()
+    {
+        var startDate = prompt("Please enter start date (e.g. 2006-01-01)", "<%=dateStr%>");
+
+        while (startDate.length != 10 || startDate.substring(4, 5) != "-" || startDate.substring(7, 8) != "-")
+        {
+            startDate = prompt("Please enter start date (e.g. 2006-01-01)", "<%=dateStr%>");
+        }
+
+        alert('creating report until ' + startDate);
+
+        location.href = '<html:rewrite action="/PMmodule/StreetHealthIntakeReportAction.do"/>?startDate=' + startDate;
+    }
+
     function popupPage2(varpage, windowname) {
         var page = "" + varpage;
         windowprops = "height=700,width=1000,location=no,"
@@ -216,6 +230,13 @@
 				<html:link action="QuatroReport/ReportList.do">Quatro Report Runner</html:link>
 			</div>
 			</caisi:isModuleLoad>
+			<caisi:isModuleLoad moduleName="streethealth">
+                <div>
+                    <a href="javascript:void(0)" onclick="javascript:createStreetHealthReport();return false;">Street Health
+                        Mental Health Report</a>
+                </div>
+            </caisi:isModuleLoad>
+
         </div>
     </c:if>
 

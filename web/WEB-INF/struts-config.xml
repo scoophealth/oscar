@@ -215,6 +215,7 @@
         </form-bean>
         <form-bean name="intakeAReport1Form" type="org.apache.struts.validator.LazyValidatorForm" />
         <form-bean name="intakeCReport1Form" type="org.apache.struts.validator.LazyValidatorForm" />
+        <form-bean name="StreetHealthIntakeReportForm" type="org.apache.struts.validator.LazyValidatorForm" />
         <form-bean name="intakeCReportForm" type="org.apache.struts.validator.LazyValidatorForm"/>
         <form-bean name="intakeCForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="intake" type="org.oscarehr.PMmodule.model.Formintakec" />
@@ -1400,6 +1401,11 @@
         <action path="/PMmodule/IntakeCReport1Action" type="org.oscarehr.PMmodule.web.IntakeCReport1Action" name="intakeCReport1Form" scope="request" input="/PMmodule/IntakeCReport1.jsp">
             <forward name="success" path="/PMmodule/IntakeCReport1.jsp" />
             <forward name="error" path="/PMmodule/IntakeCReport1.jsp" />
+            <forward name="timeout" path="/PMmodule/Timeout.jsp" />
+        </action>
+        <action path="/PMmodule/StreetHealthIntakeReportAction" type="org.oscarehr.PMmodule.streethealth.StreetHealthIntakeReportAction" name="StreetHealthIntakeReportForm" scope="request" input="/PMmodule/StreetHealthIntakeReport.jsp">
+            <forward name="success" path="/PMmodule/StreetHealthIntakeReport.jsp" />
+            <forward name="error" path="/PMmodule/StreetHealthIntakeReport.jsp" />
             <forward name="timeout" path="/PMmodule/Timeout.jsp" />
         </action>
         <action path="/PMmodule/ProgramManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="programManagerForm" scope="session">

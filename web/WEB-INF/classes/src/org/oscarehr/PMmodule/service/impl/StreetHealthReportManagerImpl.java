@@ -1,0 +1,98 @@
+package org.oscarehr.PMmodule.service.impl;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.PMmodule.dao.StreetHealthDao;
+import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
+import org.oscarehr.PMmodule.service.StreetHealthReportManager;
+
+public class StreetHealthReportManagerImpl implements StreetHealthReportManager {
+
+	private Log log = LogFactory.getLog(StreetHealthReportManagerImpl.class);
+
+	private ClientDao clientDao;
+	private GenericIntakeManager intakeMgr;
+	private StreetHealthDao streetHealthDao;
+	
+	public void setStreetHealthDao(StreetHealthDao dao) {
+		this.streetHealthDao = dao;
+	}
+	
+	public void setClientDao(ClientDao dao) {
+		this.clientDao = dao;
+	}
+	
+	public void setGenericIntakeManager(GenericIntakeManager mgr) {
+		this.intakeMgr = mgr;
+	}
+	
+	public List getCohort(Date beginDate, Date endDate) {
+		List<Demographic> clients = clientDao.getClients();
+//		//return streetHealthDao.getCohort(beginDate, endDate, clientDao.getClients());
+	        if (beginDate == null && endDate == null) {
+	            return new ArrayList();
+	        }
+	        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+	        List results = new ArrayList();
+
+	        if (log.isDebugEnabled()) {
+	            log.debug("Getting Cohort: " + beginDate + " to " + endDate);
+	        }
+
+	        for (int x = 0; x < clients.size(); x++) {
+	            Demographic client = (Demographic)clients.get(x);
+	            if (client.getPatientStatus().equals("AC")) {
+	                // get current intake
+	                //Formintakec intake = this.getCurrentForm(client.getDemographicNo());
+	            	Intake intake = this.intakeMgr.getMostRecentQuickIntake(client.getDemographicNo(),1);	            	
+
+	            	if(intake==null) {continue;}
+	            	
+	            	// parse date
+	                Date admissionDate = null;
+	                try {	                	
+	                    admissionDate = formatter.parse(intake.getAnswerKeyValues().get("Admission Date"));
+	                }
+	                catch (Exception e) {
+	                }
+	                if (admissionDate == null) {
+	                    log.warn("invalid admission date for client #" + client.getDemographicNo());
+	                    continue;
+	                }
+	                // does it belong in this cohort?
+	                if (beginDate != null && endDate != null) {
+	                    if (admissionDate.after(beginDate) && admissionDate.before(endDate)) {
+	                        log.debug("admissionDate=" + admissionDate);
+	                        // ok, add this client
+	                        Object[] ar = new Object[2];
+	                        ar[0] = intake;
+	                        ar[1] = client;
+	                        results.add(ar);
+	                    }
+	                }
+	                if (beginDate == null && admissionDate.before(endDate)) {
+	                    log.debug("admissionDate=" + admissionDate);
+	                    // ok, add this client
+	                    Object[] ar = new Object[2];
+	                    ar[0] = intake;
+	                    ar[1] = client;
+	                    results.add(ar);
+	                }
+	            }
+	        }
+
+	        log.info("getCohort: found " + results.size() + " results. (" + beginDate + " - " + endDate + ")");
+
+	        return results;
+	    }
+
+
+}

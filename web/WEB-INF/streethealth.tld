@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" 
+"http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+    <tlibversion>1.0</tlibversion>
+    <jspversion>1.1</jspversion>
+    <shortname>StreetHealth</shortname>
+    <uri>http://streethealth.caisi.ca</uri>
+    <info>Street Health Tags Library</info>
+<tag>
+    <name>report_element</name>
+    <tagclass>org.oscarehr.PMmodule.streethealth.ReportElementTag</tagclass>
+    <bodycontent>jsp</bodycontent>
+    <info>Write Report Element</info>
+    <attribute>
+	<name>question</name>
+	<required>true</required>
+	<rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+	<name>answers</name>
+	<required>false</required>
+	<rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+	<name>answerProps</name>
+	<required>false</required>
+	<rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+	<name>num</name>
+	<required>false</required>
+	<rtexprvalue>true</rtexprvalue>
+    </attribute>  
+</tag>
+</taglib>

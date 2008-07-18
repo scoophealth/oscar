@@ -26,6 +26,7 @@
     <bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
     <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.BedDAO" autowire="byName"/>
     <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
+    <bean id="streetHealthDao" class="org.oscarehr.PMmodule.dao.StreetHealthDao" autowire="byName" />
     <bean id="countryCodeDAO"  class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName"/>
     <bean id="consultationRequestDAO"  class="org.oscarehr.consultationRequest.dao.ConsultationRequestDAO" autowire="byName"/>
 <!-- 

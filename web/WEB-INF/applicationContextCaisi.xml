@@ -118,6 +118,16 @@
             </bean>
         </property>
     </bean>
+    <bean id="streetHealthReportManager" parent="baseTransactionProxy" lazy-init="default"
+          dependency-check="default">
+        <property name="target">
+            <bean class="org.oscarehr.PMmodule.service.impl.StreetHealthReportManagerImpl" lazy-init="default"
+                  dependency-check="default">
+                <property name="clientDao" ref="clientDao"/>    
+                <property name="genericIntakeManager" ref="genericIntakeManager"/>            
+            </bean>
+        </property>
+    </bean>    
     <!-- Generic Intake -->
     <bean id="healthSafetyManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
