@@ -34,7 +34,6 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	private String clientId;
 	private String queueId;
 	private Bed[] reservedBeds;
-	private String remoteReferralId=null;
 	private String switchBed1;
 	private String switchBed2;
 
@@ -48,14 +47,6 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	public void setRadioRejectionReason(String radioRejectionReason) {
 		this.radioRejectionReason = radioRejectionReason;
 	}
-
-    public String getRemoteReferralId() {
-        return remoteReferralId;
-    }
-
-    public void setRemoteReferralId(String remoteReferralId) {
-        this.remoteReferralId = remoteReferralId;
-    }
 
     /**
 	 * @return Returns the tab.

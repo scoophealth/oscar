@@ -171,6 +171,11 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         return forwardIntakeEditUpdate(mapping, intakeSearchBean.getDemographicId());
     }
 
+    /**
+     * This method is run from at least 2 locations, 
+     * 1 is from "new client" and a remote client is found.
+     * 2 is from admitting remote referrals. 
+     */
     public ActionForward copyRemote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             int remoteFacilityId=Integer.parseInt(request.getParameter("remoteFacilityId"));
