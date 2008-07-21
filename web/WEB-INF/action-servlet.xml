@@ -72,17 +72,8 @@
     <bean name="/PMmodule/GenericIntake/Search" class="org.oscarehr.PMmodule.web.GenericIntakeSearchAction" singleton="false" autowire="byName">
         <property name="surveyManager" ref="oscarSurveyManager"/>
     </bean>
-    <bean name="/PMmodule/GenericIntake/Edit" class="org.oscarehr.PMmodule.web.GenericIntakeEditAction" singleton="false">
-        <property name="admissionManager" ref="admissionManager"/>
-        <property name="clientManager" ref="clientManager"/>
-        <property name="genericIntakeManager" ref="genericIntakeManager"/>
-        
-        <property name="programManager" ref="programManager"/>
-        <property name="surveyManager" ref="oscarSurveyManager"/>
-        <property name="lookupManager" ref="lookupManager"/>   
-        <property name="caseManagementManager" ref="caseManagementManager"/>       
-    </bean>
-    <bean name="/PMmodule/GenericIntake/Report" class="org.oscarehr.PMmodule.web.GenericIntakeReportAction" singleton="false"  autowire="byName" />
+    <bean name="/PMmodule/GenericIntake/Edit" class="org.oscarehr.PMmodule.web.GenericIntakeEditAction" singleton="false" autowire="byName" />
+    <bean name="/PMmodule/GenericIntake/Report" class="org.oscarehr.PMmodule.web.GenericIntakeReportAction" singleton="false" autowire="byName" />
     <bean name="/PMmodule/EditIntake" class="org.oscarehr.PMmodule.web.EditIntakeAction" singleton="false" />
     <!-- Generic Intake -->
     <bean name="/SurveyManager" class="org.oscarehr.survey.web.SurveyManagerAction" singleton="false">
