@@ -88,9 +88,9 @@
         popup("caseManagement" + clientId, "../oscarEncounter/IncomingEncounter.do?case_program_id=" + programId + "&demographicNo=" + clientId + "&status=B");
     }
 
-	function admitFromRemote(remoteReferralId,sourceFacilityId,sourceFacilityDemographicId, destinationProgramId)
+	function admitFromRemote(remoteReferralId)
 	{
-		window.location="<%=request.getContextPath()%>/PMmodule/GenericIntake/Search.do?method=copyRemote&remoteReferralId="+remoteReferralId+"&remoteFacilityId="+sourceFacilityId+"&remoteDemographicId="+sourceFacilityDemographicId+"&destinationProgramId="+destinationProgramId;
+		window.location="<%=request.getContextPath()%>/PMmodule/GenericIntake/Search.do?method=searchFromRemoteAdmit&remoteReferralId="+remoteReferralId;
 	}
 
 </script>
@@ -240,7 +240,7 @@
 		<display:setProperty name="paging.banner.placement" value="bottom" />
 		<display:setProperty name="basic.msg.empty_list" value="Queue is empty." />
 		<display:column sortable="false" title="">
-			<a href="javascript:void(0);" onclick="admitFromRemote('<c:out value="${queue_entry.cachedReferral.cachedReferralId}"/>','<c:out value="${queue_entry.cachedReferral.sourceFacilityId}"/>','<c:out value="${queue_entry.cachedReferral.sourceFacilityDemographicId}"/>','<c:out value="${queue_entry.cachedReferral.destinationFacilityProgramId}"/>')"> Admit </a>
+    	    <input type="button" value="Admit" onclick="admitFromRemote('<c:out value="${queue_entry.cachedReferral.cachedReferralId}"/>')" />
 		</display:column>
 		<display:column property="clientName" sortable="true" title="Client Name" />
 		<display:column property="cachedReferral.referralDate" sortable="true" title="Referral Date" />

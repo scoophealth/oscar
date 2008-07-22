@@ -10,6 +10,9 @@
 <html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateSearchForm()">
 <html:hidden property="method" />
 <html:hidden property="demographicId" />
+<input type="hidden" name="remoteFacilityId" />
+<input type="hidden" name="remoteDemographicId" />
+<input type="hidden" name="remoteReferralId" value='<%=request.getParameter("remoteReferralId")%>' />
 
 <table id="genericIntakeSearch" width="50%">
     <tr>
@@ -89,8 +92,6 @@
     	@SuppressWarnings("unchecked")
 		HashMap<Integer,String> facilitiesNameMap=(HashMap<Integer,String>)request.getAttribute("facilitiesNameMap");
 	%>
-	<input type="hidden" name="remoteFacilityId" />
-	<input type="hidden" name="remoteDemographicId" />
 	<script>
 		function copyRemote(remoteFacilityId, remoteDemographicId)
 		{

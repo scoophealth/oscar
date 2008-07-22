@@ -18,6 +18,7 @@
  */
 package org.oscarehr.PMmodule.web;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,9 +43,11 @@ import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoParameters;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoScore;
+import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.util.SessionConstants;
 
 import com.quatro.service.LookupManager;
@@ -79,6 +82,36 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         return mapping.findForward(FORWARD_SEARCH_FORM);
     }
 
+    public ActionForward searchFromRemoteAdmit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        
+        try {
+        	Integer remoteReferralId=Integer.parseInt(request.getParameter("remoteReferralId"));
+        	
+			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(currentFacilityId);
+			CachedReferral cachedReferral=referralWs.getReferral(remoteReferralId);
+
+			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
+			CachedDemographicInfo cachedDemographicInfo=demographicInfoWs.getCachedDemographicInfoByFacilityAndFacilityDemographicId(cachedReferral.getSourceFacilityId(), cachedReferral.getSourceFacilityDemographicId());
+			
+	        GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
+	        intakeSearchBean.setFirstName(cachedDemographicInfo.getFirstName());
+	        intakeSearchBean.setGender(cachedDemographicInfo.getGender());
+	        intakeSearchBean.setHealthCardNumber(cachedDemographicInfo.getHin());
+	        intakeSearchBean.setHealthCardVersion(cachedDemographicInfo.getHinVersion());
+	        intakeSearchBean.setLastName(cachedDemographicInfo.getLastName());
+	        intakeSearchBean.setYearOfBirth(String.valueOf(cachedDemographicInfo.getBirthDate().getYear()));
+	        intakeSearchBean.setMonthOfBirth(String.valueOf(cachedDemographicInfo.getBirthDate().getMonth()));
+	        intakeSearchBean.setDayOfBirth(String.valueOf(cachedDemographicInfo.getBirthDate().getDay()));
+        }
+		catch (MalformedURLException e) {
+			LOG.error("Unexpected Error.", e);
+		}
+
+        return(search(mapping, form, request, response));
+    }
+    
+    
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
@@ -95,59 +128,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
         if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId)) {
-            try {
-                DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
-
-                MatchingDemographicInfoParameters parameters = new MatchingDemographicInfoParameters();
-                parameters.setMaxEntriesToReturn(10);
-                parameters.setMinScore(13);
-
-                String temp = StringUtils.trimToNull(intakeSearchBean.getFirstName());
-                parameters.setFirstName(temp);
-
-                temp = StringUtils.trimToNull(intakeSearchBean.getLastName());
-                parameters.setLastName(temp);
-
-                temp = StringUtils.trimToNull(intakeSearchBean.getHealthCardNumber());
-                parameters.setHin(temp);
-
-                XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-                {
-                    temp = StringUtils.trimToNull(intakeSearchBean.getYearOfBirth());
-                    if (temp != null) cal.setYear(Integer.parseInt(temp));
-
-                    temp = StringUtils.trimToNull(intakeSearchBean.getMonthOfBirth());
-                    if (temp != null) cal.setMonth(Integer.parseInt(temp));
-
-                    temp = StringUtils.trimToNull(intakeSearchBean.getDayOfBirth());
-                    if (temp != null) cal.setDay(Integer.parseInt(temp));
-
-                    cal.setTime(0, 0, 0);
-                }
-                parameters.setBirthDate(cal);
-
-                List<MatchingDemographicInfoScore> integratedMatches = demographicInfoWs.getMatchingDemographicInfos(parameters);
-                if (LOG.isDebugEnabled()) {
-                    for (MatchingDemographicInfoScore r : integratedMatches)
-                        LOG.debug("*** do itegrated search results : " + r.getCachedDemographicInfo() + " : " + r.getScore());
-                }
-
-                request.setAttribute("remoteMatches", integratedMatches);
-
-                List<CachedFacilityInfo> allFacilities = caisiIntegratorManager.getRemoteFacilities(currentFacilityId);
-                HashMap<Integer, String> facilitiesNameMap = new HashMap<Integer, String>();
-                for (CachedFacilityInfo cachedFacilityInfo : allFacilities)
-                    facilitiesNameMap.put(cachedFacilityInfo.getFacilityId(), cachedFacilityInfo.getName());
-
-                request.setAttribute("facilitiesNameMap", facilitiesNameMap);
-            }
-            catch (WebServiceException e) {
-                LOG.warn("Error connecting to integrator. " + e.getMessage());
-                LOG.debug("Error connecting to integrator.", e);
-            }
-            catch (Exception e) {
-                LOG.error("Unexpected error.", e);
-            }
+            createRemoteList(request, intakeSearchBean, currentFacilityId);
         }
 
         // if matches found display results, otherwise create local intake
@@ -159,6 +140,62 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         }
     }
 
+	private void createRemoteList(HttpServletRequest request, GenericIntakeSearchFormBean intakeSearchBean, int currentFacilityId) {
+		try {
+		    DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
+
+		    MatchingDemographicInfoParameters parameters = new MatchingDemographicInfoParameters();
+		    parameters.setMaxEntriesToReturn(10);
+		    parameters.setMinScore(13);
+
+		    String temp = StringUtils.trimToNull(intakeSearchBean.getFirstName());
+		    parameters.setFirstName(temp);
+
+		    temp = StringUtils.trimToNull(intakeSearchBean.getLastName());
+		    parameters.setLastName(temp);
+
+		    temp = StringUtils.trimToNull(intakeSearchBean.getHealthCardNumber());
+		    parameters.setHin(temp);
+
+		    XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+		    {
+		        temp = StringUtils.trimToNull(intakeSearchBean.getYearOfBirth());
+		        if (temp != null) cal.setYear(Integer.parseInt(temp));
+
+		        temp = StringUtils.trimToNull(intakeSearchBean.getMonthOfBirth());
+		        if (temp != null) cal.setMonth(Integer.parseInt(temp));
+
+		        temp = StringUtils.trimToNull(intakeSearchBean.getDayOfBirth());
+		        if (temp != null) cal.setDay(Integer.parseInt(temp));
+
+		        cal.setTime(0, 0, 0);
+		    }
+		    parameters.setBirthDate(cal);
+
+		    List<MatchingDemographicInfoScore> integratedMatches = demographicInfoWs.getMatchingDemographicInfos(parameters);
+		    if (LOG.isDebugEnabled()) {
+		        for (MatchingDemographicInfoScore r : integratedMatches)
+		            LOG.debug("*** do itegrated search results : " + r.getCachedDemographicInfo() + " : " + r.getScore());
+		    }
+
+		    request.setAttribute("remoteMatches", integratedMatches);
+
+		    List<CachedFacilityInfo> allFacilities = caisiIntegratorManager.getRemoteFacilities(currentFacilityId);
+		    HashMap<Integer, String> facilitiesNameMap = new HashMap<Integer, String>();
+		    for (CachedFacilityInfo cachedFacilityInfo : allFacilities)
+		        facilitiesNameMap.put(cachedFacilityInfo.getFacilityId(), cachedFacilityInfo.getName());
+
+		    request.setAttribute("facilitiesNameMap", facilitiesNameMap);
+		}
+		catch (WebServiceException e) {
+		    LOG.warn("Error connecting to integrator. " + e.getMessage());
+		    LOG.debug("Error connecting to integrator.", e);
+		}
+		catch (Exception e) {
+		    LOG.error("Unexpected error.", e);
+		}
+	}
+
     public ActionForward createLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
@@ -168,7 +205,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     public ActionForward updateLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
-        return forwardIntakeEditUpdate(mapping, intakeSearchBean.getDemographicId());
+        return forwardIntakeEditUpdate(mapping, intakeSearchBean.getDemographicId(), request);
     }
 
     /**
@@ -222,34 +259,55 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_CREATE).append(PARAM_AND);
         parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
 
-        String remoteReferralId=request.getParameter("remoteReferralId");
-        if (remoteReferralId!=null)
-        {
-        	parameters.append("&");
-        	parameters.append("remoteReferralId");
-        	parameters.append("=");
-        	parameters.append(remoteReferralId);
-        }
+        copyParameter(request, "remoteReferralId", parameters);
+        copyParameter(request, "remoteFacilityId", parameters);
+        copyParameter(request, "remoteDemographicId", parameters);        
         
-        String destinationProgramId=request.getParameter("destinationProgramId");
-        if (destinationProgramId!=null)
-        {
-        	parameters.append("&");
-        	parameters.append("destinationProgramId");
-        	parameters.append("=");
-        	parameters.append(destinationProgramId);
-        }
+        addDestinationProgramId(request, parameters);
         
         request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
 
         return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
     }
 
-    protected ActionForward forwardIntakeEditUpdate(ActionMapping mapping, Integer clientId) {
+	private void addDestinationProgramId(HttpServletRequest request, StringBuilder parameters) {
+		String remoteReferralId=request.getParameter("remoteReferralId");
+        if (remoteReferralId!=null)
+        {
+			try {
+	        	int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+
+	        	ReferralWs referralWs = caisiIntegratorManager.getReferralWs(currentFacilityId);
+				CachedReferral cachedReferral=referralWs.getReferral(Integer.parseInt(remoteReferralId));
+				parameters.append("&destinationProgramId=");
+				parameters.append(cachedReferral.getDestinationFacilityProgramId());
+			}
+			catch (MalformedURLException e) {
+				LOG.error("Unexpected error.", e);
+			}
+        }
+	}
+
+	private void copyParameter(HttpServletRequest request, String parameterName, StringBuilder url) {
+		String temp=request.getParameter(parameterName);
+		if (temp!=null)
+        {
+        	if (url.indexOf("?")<0) url.append("?");
+        	else url.append("&");
+        	url.append(parameterName);
+        	url.append("=");
+        	url.append(temp);
+        }
+	}
+    
+    protected ActionForward forwardIntakeEditUpdate(ActionMapping mapping, Integer clientId, HttpServletRequest request) {
         StringBuilder parameters = new StringBuilder(PARAM_START);
         parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_UPDATE).append(PARAM_AND);
         parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK).append(PARAM_AND);
         parameters.append(CLIENT_ID).append(PARAM_EQUALS).append(clientId);
+
+        copyParameter(request, "remoteReferralId", parameters);
+        addDestinationProgramId(request, parameters);
 
         return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
     }

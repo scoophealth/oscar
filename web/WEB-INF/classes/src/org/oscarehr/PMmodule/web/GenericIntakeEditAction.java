@@ -19,7 +19,6 @@
 
 package org.oscarehr.PMmodule.web;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -208,7 +207,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 
 		ProgramUtils.addProgramRestrictions(request);
-
+		
 		return mapping.findForward(EDIT);
 	}
 
