@@ -1,3 +1,5 @@
+2008-07-22 : caisi integrator supports referrals between facilities. 
+
 ---------------------------
 Changes prior to 2008-07-17
 ---------------------------
