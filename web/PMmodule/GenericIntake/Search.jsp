@@ -12,7 +12,11 @@
 <html:hidden property="demographicId" />
 <input type="hidden" name="remoteFacilityId" />
 <input type="hidden" name="remoteDemographicId" />
-<input type="hidden" name="remoteReferralId" value='<%=request.getParameter("remoteReferralId")%>' />
+<%
+	String remoteReferralId=request.getParameter("remoteReferralId");
+	if (remoteReferralId==null) remoteReferralId="";
+%>
+<input type="hidden" name="remoteReferralId" value='<%=remoteReferralId%>' />
 
 <table id="genericIntakeSearch" width="50%">
     <tr>
