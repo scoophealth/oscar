@@ -271,7 +271,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     }
 
 	private void addDestinationProgramId(HttpServletRequest request, StringBuilder parameters) {
-		String remoteReferralId=request.getParameter("remoteReferralId");
+		String remoteReferralId=StringUtils.trimToNull(request.getParameter("remoteReferralId"));
         if (remoteReferralId!=null)
         {
 			try {
@@ -289,7 +289,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	}
 
 	private void copyParameter(HttpServletRequest request, String parameterName, StringBuilder url) {
-		String temp=request.getParameter(parameterName);
+		String temp=StringUtils.trimToNull(request.getParameter(parameterName));
 		if (temp!=null)
         {
         	if (url.indexOf("?")<0) url.append("?");
