@@ -100,6 +100,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	        intakeSearchBean.setHealthCardNumber(cachedDemographicInfo.getHin());
 	        intakeSearchBean.setHealthCardVersion(cachedDemographicInfo.getHinVersion());
 	        intakeSearchBean.setLastName(cachedDemographicInfo.getLastName());
+System.err.println("!!!!!! Y "+cachedDemographicInfo.getBirthDate().getYear());
+System.err.println("!!!!!! M "+cachedDemographicInfo.getBirthDate().getMonth());
+System.err.println("!!!!!! D "+cachedDemographicInfo.getBirthDate().getDay());
 	        intakeSearchBean.setYearOfBirth(String.valueOf(cachedDemographicInfo.getBirthDate().getYear()));
 	        intakeSearchBean.setMonthOfBirth(String.valueOf(cachedDemographicInfo.getBirthDate().getMonth()));
 	        intakeSearchBean.setDayOfBirth(String.valueOf(cachedDemographicInfo.getBirthDate().getDay()));
@@ -223,7 +226,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
             CachedDemographicInfo demographicInfo=demographicInfoWs.getCachedDemographicInfoByFacilityAndFacilityDemographicId(remoteFacilityId, remoteDemographicId);
             
             XMLGregorianCalendar cal=demographicInfo.getBirthDate();
-            Demographic demographic = Demographic.create(demographicInfo.getFirstName(), demographicInfo.getLastName(), cal==null?null:String.valueOf(cal.getMonth()), cal==null?null:String.valueOf(cal.getDay()), cal==null?null:String.valueOf(cal.getYear()), demographicInfo.getHin(), null, true);
+            Demographic demographic = Demographic.create(demographicInfo.getFirstName(), demographicInfo.getLastName(), cal==null?null:make0PrependedDateString(cal.getMonth()), cal==null?null:make0PrependedDateString(cal.getDay()), cal==null?null:String.valueOf(cal.getYear()), demographicInfo.getHin(), null, true);
             demographic.setCity(demographicInfo.getCity());
             demographic.setProvince(demographicInfo.getProvince());
             demographic.setSin(demographicInfo.getSin());
@@ -236,6 +239,12 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         }
     }
 
+    private String make0PrependedDateString(int i)
+    {
+    	if (i<=9) return("0"+i);
+    	else return(""+i);
+    }
+    
     private List<Demographic> localSearch(GenericIntakeSearchFormBean intakeSearchBean, boolean allowOnlyOptins) {
         ClientSearchFormBean clientSearchBean = new ClientSearchFormBean();
         clientSearchBean.setFirstName(intakeSearchBean.getFirstName());

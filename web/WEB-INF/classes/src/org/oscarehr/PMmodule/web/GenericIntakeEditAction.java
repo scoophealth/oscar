@@ -400,12 +400,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				sb.append(")");
 			}
 			
-			sb.append(".\n\n");
-			sb.append("Reason for Referral : \n");
+			sb.append(".<br /><br />");
+			sb.append("Reason for Referral : <br />");
 			sb.append(cachedReferral.getReasonForReferral());
 			
-			sb.append("\n\n");
-			sb.append("Presenting Problem : \n");
+			sb.append("<br /><br />");
+			sb.append("Presenting Problem : <br />");
 			sb.append(cachedReferral.getPresentingProblem());
 
 			admissionText = sb.toString();
