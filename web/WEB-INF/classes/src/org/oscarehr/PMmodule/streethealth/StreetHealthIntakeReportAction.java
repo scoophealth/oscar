@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,18 +44,33 @@ public class StreetHealthIntakeReportAction extends BaseAction {
 	 *	if the form were to change, these might need to be adjusted. Possibly a good idea
 	 *	to move to the properties file
 	*/
-	private static final int NODEID_BASELINE_RESIDENCE_TYPE=8528;
-	private static final int NODEID_CURRENT_RESIDENCE_TYPE=8529;
-	private static final int NODEID_HOSPITALIZATION_START=8474;
+	private static int NODEID_BASELINE_RESIDENCE_TYPE=8528;
+	private static int NODEID_CURRENT_RESIDENCE_TYPE=8529;
+	private static int NODEID_HOSPITALIZATION_START=8474;
 	
 	
 	private StreetHealthReportManager mgr;	
 	
+	public void loadNodeIdsWithNoLabels() {
+		Properties p = new Properties();
+		try {
+			p.load(getClass().getClassLoader().getResourceAsStream("streethealth_report.properties"));
+		}catch(IOException e) {log.warn(e);}
+		
+		try {
+			NODEID_BASELINE_RESIDENCE_TYPE = Integer.parseInt((String)p.get("NODEID_BASELINE_RESIDENCE_TYPE"));
+			NODEID_CURRENT_RESIDENCE_TYPE = Integer.parseInt((String)p.get("NODEID_CURRENT_RESIDENCE_TYPE"));
+			NODEID_HOSPITALIZATION_START = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION_START"));
+		}catch(NumberFormatException e) {log.warn(e);}
+	}
 	
     @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String target = "success";       
         Map<StreetHealthReportKey,Integer> results = new HashMap<StreetHealthReportKey,Integer>();
+        
+        
+        loadNodeIdsWithNoLabels();
         
         //initialize business manager
         this.mgr = (StreetHealthReportManager) getAppContext().getBean("streetHealthReportManager");
