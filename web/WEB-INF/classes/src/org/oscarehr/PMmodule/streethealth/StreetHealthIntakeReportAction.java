@@ -46,7 +46,38 @@ public class StreetHealthIntakeReportAction extends BaseAction {
 	*/
 	private static int NODEID_BASELINE_RESIDENCE_TYPE=8528;
 	private static int NODEID_CURRENT_RESIDENCE_TYPE=8529;
-	private static int NODEID_HOSPITALIZATION_START=8474;
+	
+	
+	private static int NODEID_HOSPITALIZATION1_DATE;
+	private static int NODEID_HOSPITALIZATION1_LENGTH;
+	private static int NODEID_HOSPITALIZATION1_PSYCH;
+	private static int NODEID_HOSPITALIZATION1_PHYS;
+	private static int NODEID_HOSPITALIZATION1_DECLINED;
+	
+	private static int NODEID_HOSPITALIZATION2_DATE;
+	private static int NODEID_HOSPITALIZATION2_LENGTH;
+	private static int NODEID_HOSPITALIZATION2_PSYCH;
+	private static int NODEID_HOSPITALIZATION2_PHYS;
+	private static int NODEID_HOSPITALIZATION2_DECLINED;
+	
+	private static int NODEID_HOSPITALIZATION3_DATE;
+	private static int NODEID_HOSPITALIZATION3_LENGTH;
+	private static int NODEID_HOSPITALIZATION3_PSYCH;
+	private static int NODEID_HOSPITALIZATION3_PHYS;
+	private static int NODEID_HOSPITALIZATION3_DECLINED;
+	
+	private static int NODEID_HOSPITALIZATION4_DATE;
+	private static int NODEID_HOSPITALIZATION4_LENGTH;
+	private static int NODEID_HOSPITALIZATION4_PSYCH;
+	private static int NODEID_HOSPITALIZATION4_PHYS;
+	private static int NODEID_HOSPITALIZATION4_DECLINED;
+	
+	private static int NODEID_HOSPITALIZATION5_DATE;
+	private static int NODEID_HOSPITALIZATION5_LENGTH;
+	private static int NODEID_HOSPITALIZATION5_PSYCH;
+	private static int NODEID_HOSPITALIZATION5_PHYS;
+	private static int NODEID_HOSPITALIZATION5_DECLINED;
+	
 	
 	
 	private StreetHealthReportManager mgr;	
@@ -60,13 +91,49 @@ public class StreetHealthIntakeReportAction extends BaseAction {
 		try {
 			NODEID_BASELINE_RESIDENCE_TYPE = Integer.parseInt((String)p.get("NODEID_BASELINE_RESIDENCE_TYPE"));
 			NODEID_CURRENT_RESIDENCE_TYPE = Integer.parseInt((String)p.get("NODEID_CURRENT_RESIDENCE_TYPE"));
-			NODEID_HOSPITALIZATION_START = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION_START"));
+			//NODEID_HOSPITALIZATION_START = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION_START"));
+			
+			NODEID_HOSPITALIZATION1_DATE = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION1_DATE"));
+			NODEID_HOSPITALIZATION1_LENGTH = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION1_LENGTH"));
+			NODEID_HOSPITALIZATION1_PSYCH = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION1_PSYCH"));
+			NODEID_HOSPITALIZATION1_PHYS = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION1_PHYS"));
+			NODEID_HOSPITALIZATION1_DECLINED = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION1_DECLINED"));
+			
+			NODEID_HOSPITALIZATION2_DATE = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION2_DATE"));
+			NODEID_HOSPITALIZATION2_LENGTH = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION2_LENGTH"));
+			NODEID_HOSPITALIZATION2_PSYCH = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION2_PSYCH"));
+			NODEID_HOSPITALIZATION2_PHYS = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION2_PHYS"));
+			NODEID_HOSPITALIZATION2_DECLINED = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION2_DECLINED"));
+			
+			NODEID_HOSPITALIZATION3_DATE = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION3_DATE"));
+			NODEID_HOSPITALIZATION3_LENGTH = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION3_LENGTH"));
+			NODEID_HOSPITALIZATION3_PSYCH = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION3_PSYCH"));
+			NODEID_HOSPITALIZATION3_PHYS = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION3_PHYS"));
+			NODEID_HOSPITALIZATION3_DECLINED = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION3_DECLINED"));
+			
+			NODEID_HOSPITALIZATION4_DATE = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION4_DATE"));
+			NODEID_HOSPITALIZATION4_LENGTH = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION4_LENGTH"));
+			NODEID_HOSPITALIZATION4_PSYCH = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION4_PSYCH"));
+			NODEID_HOSPITALIZATION4_PHYS = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION4_PHYS"));
+			NODEID_HOSPITALIZATION4_DECLINED = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION4_DECLINED"));
+			
+			NODEID_HOSPITALIZATION5_DATE = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION5_DATE"));
+			NODEID_HOSPITALIZATION5_LENGTH = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION5_LENGTH"));
+			NODEID_HOSPITALIZATION5_PSYCH = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION5_PSYCH"));
+			NODEID_HOSPITALIZATION5_PHYS = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION5_PHYS"));
+			NODEID_HOSPITALIZATION5_DECLINED = Integer.parseInt((String)p.get("NODEID_HOSPITALIZATION5_DECLINED"));
+			
 		}catch(NumberFormatException e) {log.warn(e);}
 	}
 	
     @SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String target = "success";       
+        String target = "success";   
+        
+        if(request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("download")) {
+        	target="download";
+        }
+        
         Map<StreetHealthReportKey,Integer> results = new HashMap<StreetHealthReportKey,Integer>();
         
         
@@ -266,11 +333,12 @@ public class StreetHealthIntakeReportAction extends BaseAction {
             //hospitalizations
             if(!preAdmission) {
 	            List<HospitalizationBean> hospitalizations = new ArrayList<HospitalizationBean>();
-	            hospitalizations.add(getHospitalizationInfo(intake,"h1",NODEID_HOSPITALIZATION_START));
-	            hospitalizations.add(getHospitalizationInfo(intake,"h1",NODEID_HOSPITALIZATION_START+5));
-	            hospitalizations.add(getHospitalizationInfo(intake,"h1",NODEID_HOSPITALIZATION_START+10));
-	            hospitalizations.add(getHospitalizationInfo(intake,"h1",NODEID_HOSPITALIZATION_START+15));
-	            hospitalizations.add(getHospitalizationInfo(intake,"h1",NODEID_HOSPITALIZATION_START+20));
+	            hospitalizations.add(getHospitalizationInfo(intake,"h1",NODEID_HOSPITALIZATION1_DATE,NODEID_HOSPITALIZATION1_LENGTH,NODEID_HOSPITALIZATION1_PSYCH,NODEID_HOSPITALIZATION1_PHYS,NODEID_HOSPITALIZATION1_DECLINED));
+	            hospitalizations.add(getHospitalizationInfo(intake,"h2",NODEID_HOSPITALIZATION2_DATE,NODEID_HOSPITALIZATION2_LENGTH,NODEID_HOSPITALIZATION2_PSYCH,NODEID_HOSPITALIZATION2_PHYS,NODEID_HOSPITALIZATION2_DECLINED));
+	            hospitalizations.add(getHospitalizationInfo(intake,"h3",NODEID_HOSPITALIZATION3_DATE,NODEID_HOSPITALIZATION3_LENGTH,NODEID_HOSPITALIZATION3_PSYCH,NODEID_HOSPITALIZATION3_PHYS,NODEID_HOSPITALIZATION3_DECLINED));
+	            hospitalizations.add(getHospitalizationInfo(intake,"h4",NODEID_HOSPITALIZATION4_DATE,NODEID_HOSPITALIZATION4_LENGTH,NODEID_HOSPITALIZATION4_PSYCH,NODEID_HOSPITALIZATION4_PHYS,NODEID_HOSPITALIZATION4_DECLINED));
+	            hospitalizations.add(getHospitalizationInfo(intake,"h5",NODEID_HOSPITALIZATION5_DATE,NODEID_HOSPITALIZATION5_LENGTH,NODEID_HOSPITALIZATION5_PSYCH,NODEID_HOSPITALIZATION5_PHYS,NODEID_HOSPITALIZATION5_DECLINED));
+
 	            
 	            //current psychiatric hospitalizations
 	            int numDaysHospitalized=0;
@@ -374,13 +442,13 @@ public class StreetHealthIntakeReportAction extends BaseAction {
         addToResults(results,idx,"Age","Average Age (ACT only)",(int)((double)avgAgeTotal/(double)avgAgeSize));
     }
     
-    public HospitalizationBean getHospitalizationInfo(Intake intake, String label, int startNode) {
+    public HospitalizationBean getHospitalizationInfo(Intake intake, String label, int date, int length, int psych, int phys, int declined) {
     	HospitalizationBean bean = new HospitalizationBean();
-    	bean.setDate(getIntakeAnswerByNodeId(intake, label + " year",startNode));
-    	bean.setLength(getIntakeAnswerByNodeId(intake, label + " length",startNode+1));
-    	bean.setPsychiatric(getIntakeAnswerByNodeId(intake, label + " psychiatric",startNode+2));
-    	bean.setPhysical(getIntakeAnswerByNodeId(intake, label + " physical",startNode+3));
-    	bean.setDeclined(getIntakeAnswerByNodeId(intake, label + " declined",startNode+4));    
+    	bean.setDate(getIntakeAnswerByNodeId(intake, label + " year",date));
+    	bean.setLength(getIntakeAnswerByNodeId(intake, label + " length",length));
+    	bean.setPsychiatric(getIntakeAnswerByNodeId(intake, label + " psychiatric",psych));
+    	bean.setPhysical(getIntakeAnswerByNodeId(intake, label + " physical",phys));
+    	bean.setDeclined(getIntakeAnswerByNodeId(intake, label + " declined",declined));    
     	return bean;
     }
      

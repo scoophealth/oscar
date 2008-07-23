@@ -1405,6 +1405,7 @@
         </action>
         <action path="/PMmodule/StreetHealthIntakeReportAction" type="org.oscarehr.PMmodule.streethealth.StreetHealthIntakeReportAction" name="StreetHealthIntakeReportForm" scope="request" input="/PMmodule/StreetHealthIntakeReport.jsp">
             <forward name="success" path="/PMmodule/StreetHealthIntakeReport.jsp" />
+            <forward name="download" path="/PMmodule/StreetHealthIntakeReportDownload.jsp" />
             <forward name="error" path="/PMmodule/StreetHealthIntakeReport.jsp" />
             <forward name="timeout" path="/PMmodule/Timeout.jsp" />
         </action>

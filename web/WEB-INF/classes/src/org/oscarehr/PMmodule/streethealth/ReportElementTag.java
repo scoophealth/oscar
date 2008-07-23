@@ -25,17 +25,86 @@ public class ReportElementTag extends TagSupport {
 	private int cohortSize;
 	
 	private String num;
+	private String format;
 	
 
-	@Override
-	public int doStartTag() throws JspException {
+	public int doStartTagCSV() throws JspException {
 		HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
 		cohortSize = (Integer)req.getAttribute("nCohorts");
 		Map<StreetHealthReportKey,Integer> results = (Map<StreetHealthReportKey,Integer>) req.getAttribute("results");
 		
-		if(this.getQuestion().equals("Aboriginal Origin")) {
-			logger.info("Aboriginal Origin");
+		
+		String answerArray[] = null;
+		
+		if(getAnswerProps() != null && getAnswerProps().length()>0) {
+			Properties p = new Properties();
+			try {
+				p.load(getClass().getClassLoader().getResourceAsStream("streethealth_report.properties"));
+			}catch(IOException e) {logger.warn(e);}
+			String temp=null;
+			int idx=1;
+			List<String> answerValues = new ArrayList<String>();
+			while((temp=p.getProperty(getAnswerProps() + idx)) != null) {
+				answerValues.add(temp.trim());
+				idx++;
+			}
+			answerArray = answerValues.toArray(new String[answerValues.size()]);
+		} else {
+			answerArray = answers.split(",");
 		}
+				
+		JspWriter out = pageContext.getOut();
+		
+		int idx=0;
+		for(String answer:answerArray) {
+			try {							
+				if(idx == 0 && num.length() > 0) {
+					out.print("\""+num+"\"");					
+				} else {
+					out.print("\"\"");
+				}
+				if(idx==0) {
+					out.print(",\""+question+"\"");							
+				} else {
+					out.print(",\"\"");
+				}
+				out.print(",\""+answer+"\"");
+				int total=0;
+				for(int x=0;x<cohortSize;x++) {
+					Integer value = results.get(new StreetHealthReportKey(x,question,answer));
+					if(value==null) {
+						value = new Integer(0);
+					}
+					total+=value;
+				}				
+				out.print(",\""+total+"\"");
+				
+				for(int x=0;x<cohortSize;x++) {
+					Integer value = results.get(new StreetHealthReportKey(x,question,answer));
+					if(value==null) {
+						value = new Integer(0);
+					}
+					out.print(",\""+value+"\"");
+				}							
+				
+			} catch (IOException e) {
+				throw new JspTagException("An IOException occurred.");
+			}
+			idx++;
+		}
+		return SKIP_BODY;
+	}
+	
+	@Override
+	public int doStartTag() throws JspException {
+		if(format != null && format.equals("csv")) {
+			return doStartTagCSV();
+		}
+		HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
+		cohortSize = (Integer)req.getAttribute("nCohorts");
+		Map<StreetHealthReportKey,Integer> results = (Map<StreetHealthReportKey,Integer>) req.getAttribute("results");
+		
+		
 		String answerArray[] = null;
 		
 		if(getAnswerProps() != null && getAnswerProps().length()>0) {
@@ -142,6 +211,16 @@ public class ReportElementTag extends TagSupport {
 
 	public void setNum(String num) {
 		this.num = num;
+	}
+
+
+	public String getFormat() {
+		return format;
+	}
+
+
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
 

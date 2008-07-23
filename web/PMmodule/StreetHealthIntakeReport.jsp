@@ -32,6 +32,22 @@
 	StreetHealth Intake Report
 	<br/>
 	
+	<script type="text/javascript">
+			function download() {
+				location.href="/oscar/PMmodule/StreetHealthIntakeReportAction.do?action=download&startDate=<%=request.getParameter("startDate")%>";
+			}
+		</script>
+		<table height="15" align="center">
+			<tr>
+				<td class="style76" align="center">
+					<input type="button" name="backToClientSearch" value="Back" onclick="javascript:history.back();" />
+					<input type="button" name="downLoadCSVFile" value="Download" onclick="javascript:download();" />
+
+				</td>
+			</tr>
+		</table>
+	
+	
 	<table width="100%" border="1">
 	
 		<!-- header -->
