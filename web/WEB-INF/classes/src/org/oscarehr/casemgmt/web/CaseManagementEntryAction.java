@@ -87,7 +87,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
 
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-
+        cform.setChain("");
         request.setAttribute("change_flag", "false");
         request.setAttribute("from", "casemgmt");
 
@@ -983,6 +983,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             ActionForward forward = new ActionForward();
             forward.setPath(path.toString());
             return forward;
+        }
+        
+        String chain = request.getParameter("chain");
+        if (chain != null && !chain.equals("")) {           
+        	ActionForward fwd = new ActionForward();           
+        	fwd.setPath(chain);
+        	return fwd;
         }
         return mapping.findForward("windowClose");
     }

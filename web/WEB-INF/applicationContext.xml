@@ -37,6 +37,8 @@
     <bean id="caseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName"/>
     <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" autowire="byName"/>
     <bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.CaseManagementCPPDAO" autowire="byName"/>
+    <bean id="OnCallDAO" class="org.oscarehr.casemgmt.dao.OnCallDAO" autowire="byName"/>
+    
     <bean id="AllergyDAO" class="org.oscarehr.casemgmt.dao.AllergyDAO" autowire="byName"/>
     <bean id="PrescriptionDAO" class="org.oscarehr.casemgmt.dao.PrescriptionDAO" autowire="byName"/>
     <bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.IssueDAO" autowire="byName"/>
@@ -390,5 +392,18 @@
                 </property>
             </bean>
         </property>
+    </bean>
+    
+    <bean id="onCallManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="target" ref="onCallManagerTarget"/>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="onCallManagerTarget" class="org.oscarehr.casemgmt.service.OnCallManager">
+        <property name="onCallDao" ref="OnCallDAO"/>        
     </bean>
 </beans>

@@ -51,6 +51,8 @@ public class CaseManagementEntryFormBean extends ActionForm {
 	private String demoName;
 	private String caseNote_note;
 	private String caseNote_history;	
+	private String chain;
+	
         private String observation_date;
 	
         public CaseManagementEntryFormBean() {
@@ -235,6 +237,14 @@ public class CaseManagementEntryFormBean extends ActionForm {
 		
 		this.caseNote.setNote(caseNote_note);
 		this.caseNote_note = caseNote_note;
+	}
+
+	public String getChain() {
+		return chain;
+	}
+
+	public void setChain(String chain) {
+		this.chain = chain;
 	}
 	
 }

@@ -29,6 +29,7 @@
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="oscar.OscarProperties" %>
+<%@ page import="org.apache.log4j.Logger" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <html:form action="/CaseManagementView" method="get">
@@ -38,6 +39,7 @@
 <html:hidden property="hideActiveIssue"/>
 <input type="hidden" name="method" value="view"/>
 
+<% Logger logger = Logger.getLogger("CaseManagementView.jsp"); %>
 <script>
 	function clickTab(name) {
 		document.caseManagementViewForm.tab.value=name;
@@ -243,7 +245,7 @@ Progress Note Report View:
 Provider:
 	<html:select property="filter_provider" onchange="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.submit();">
 		<html:option value="">&nbsp;</html:option>
-		<html:options collection="providers" property="provider_no" labelProperty="formattedName"/>
+		<html:options collection="providers" property="providerNo" labelProperty="formattedName"/>
 	</html:select>
 
 &nbsp;
@@ -286,8 +288,8 @@ Sort:
 					<c:when test="${(!note.signed) and (sessionScope.readonly=='false')}">
 						<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}&forceNote=true" var="notesURL" />
 						<img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit/Sign Note" style="cursor:pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
-					</c:when>				
-					<c:when test="${note.signed and note.provider_no eq param.providerNo and (note.locked !=true)}">
+					</c:when>								
+					<c:when test="${note.signed and note.providerNo eq param.providerNo and (note.locked !=true)}">
 						<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}&forceNote=true" var="notesURL" />
 						<img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit Note" style="cursor:pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
 					</c:when>
@@ -371,7 +373,7 @@ Sort:
 				<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
 				<input type="button" value="Edit and Sign" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" >
 			</c:if>
-			<c:if test="${note.signed and note.provider_no eq param.providerNo}">
+			<c:if test="${note.signed and note.providerNo eq param.providerNo}">
 				<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
 				<input type="button" value="Edit This Note" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" >
 			</c:if>

@@ -24,6 +24,7 @@
 
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
 
 <html>
 <head>
@@ -129,7 +130,7 @@
 		else 
 			return false;
 	}
-	
+		
 	function validateSave(){
 	
 		var str1="You cannot save a note when there is no issue checked, please add an issue or check a currently available issue before save." ;
@@ -143,12 +144,18 @@
 			alert(str1); return false;
 		}
 		if (!validateSignStatus()){
-			if(confirm(str4)) return true;
-			else return false;
+			if(!confirm(str4)) return false;
 		}
 		if (!validateIssueStatus())
-			if (confirm(str2)) return true;
-			else return false;
+			if (!confirm(str2)) return false;
+			
+		
+		<oscarProp:oscarPropertiesCheck property="oncall" value="yes">		
+			var s = document.caseManagementEntryForm.elements['caseNote.encounter_type'];		
+			if(s.options[s.selectedIndex].value == 'telephone encounter weekdays 8am-6pm' || s.options[s.selectedIndex].value == 'telephone encounter weekends or 6pm-8am') {
+				document.caseManagementEntryForm.elements['chain'].value='/OnCallQuestionnaire.do?method=form&providerNo='+ document.caseManagementEntryForm.providerNo.value + '&type=' + s.options[s.selectedIndex].value;		
+			}				
+		</oscarProp:oscarPropertiesCheck>
 		return true;
 	}
 
@@ -231,6 +238,7 @@ String pId=(String)session.getAttribute("case_program_id");
 if (pId==null) pId="";
 %>
 <nested:form action="/CaseManagementEntry">
+	<html:hidden property="chain"/>
 	<html:hidden property="demographicNo"/>
 	<c:if test="${param.providerNo==null}">
 	<input type="hidden" name="providerNo" value="<%=session.getAttribute("user")%>">
@@ -408,7 +416,13 @@ if (pId==null) pId="";
 				property="caseNote.encounter_type" onchange="setChangeFlag(true);">
 				<html:option value=""></html:option>>
 				<html:option value="face to face encounter with client">face to face encounter with client</html:option>>
-				<html:option value="telephone encounter with client">telephone encounter with client</html:option>>
+				<oscarProp:oscarPropertiesCheck property="oncall" value="yes" reverse="true">
+					<html:option value="telephone encounter with client">telephone encounter with client</html:option>
+				</oscarProp:oscarPropertiesCheck>
+				<oscarProp:oscarPropertiesCheck property="oncall" value="yes">
+					<html:option value="telephone encounter weekdays 8am-6pm">Telephone encounter weekdays 8am-6pm</html:option>
+					<html:option value="telephone encounter weekends or 6pm-8am">Telephone encounter weekends or 6pm-8am</html:option>
+				</oscarProp:oscarPropertiesCheck>
 				<html:option value="encounter without client">encounter without client</html:option>
 			</html:select></td>
 		</tr>

@@ -339,6 +339,8 @@
         <form-bean name="clientImageForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="clientImage" type="org.oscarehr.casemgmt.web.formbeans.ClientImageFormBean" />
         </form-bean>
+        <form-bean name="onCallQuestionnaireForm" type="org.oscarehr.casemgmt.web.formbeans.OnCallQuestionnaireFormBean"/>
+
         <!-- Generic Intake -->
         <form-bean name="genericIntakeSearchForm" type="org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean" />
         <form-bean name="genericIntakeEditForm" type="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean" />
@@ -1649,6 +1651,11 @@
         <action path="/ClientImage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="clientImageForm" input="/casemgmt/uploadimage.jsp">
             <forward name="success" path="/casemgmt/uploadimage.jsp" />
         </action>
+        <action path="/OnCallQuestionnaire" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/casemgmt/CaseManagementView.jsp" name="onCallQuestionnaireForm">
+        <forward name="form" path="/casemgmt/OnCallQuestionnaireForm.jsp" />
+        <forward name="windowClose" path="/casemgmt/close.jsp" />
+        </action>
+        
         <!-- OSCAR Report By Template -->
         <action input="/oscarReport/reportByTemplate/reportConfiguration.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/GenerateReportAction" scope="request" type="oscar.oscarReport.reportByTemplate.actions.GenerateReportAction">
             <forward name="success" path="/oscarReport/reportByTemplate/resultReport.jsp" />
