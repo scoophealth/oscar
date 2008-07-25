@@ -1,16 +1,15 @@
 alter table facility change id id int auto_increment;
 
-
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.provider', 'Administration - Provider',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.security', 'Administration - Security',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.securityLogReport', 'Administration - Security Log Report',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.unlockAccount', 'Administration - Unlock Account',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.cookieRevolver', 'Administration - Cookie Revolver',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.caisi', 'Administration - Caisi',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.lookupFieldEditor', 'Administration - Lookup Field Editor',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.issueEditor', 'Administration - Issue Editor',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.caisiRoles', 'Administration - Manage Caisi Roles',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.userCreatedForms', 'Administration - User Created Forms',0);
+insert into `secObjectName` values('_admin.provider');
+insert into `secObjectName` values('_admin.security');
+insert into `secObjectName` values('_admin.securityLogReport');
+insert into `secObjectName` values('_admin.unlockAccount');
+insert into `secObjectName` values('_admin.cookieRevolver');
+insert into `secObjectName` values('_admin.caisi');
+insert into `secObjectName` values('_admin.lookupFieldEditor');
+insert into `secObjectName` values('_admin.issueEditor');
+insert into `secObjectName` values('_admin.caisiRoles');
+insert into `secObjectName` values('_admin.userCreatedForms');
 
 
 insert into `secObjPrivilege` values('admin','_admin.provider','x',0,999998);

@@ -1,3 +1,4 @@
+drop table if exists `IntegratorConsent`;
 create table IntegratorConsent
 (
 	id int primary key auto_increment,

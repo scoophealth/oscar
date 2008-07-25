@@ -68609,27 +68609,27 @@ values ('doctor', '_pmm.clientSearch', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
 values ('doctor', '_pmm.newClient', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
-values ('doctor', '_pmm.mergeRecords', '|*|', 0, '999998');
+values ('admin', '_pmm.mergeRecords', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
 values ('doctor', '_pmm.caseManagement', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
-values ('doctor', '_admin.facilityMessage', '|*|', 0, '999998');
+values ('admin', '_admin.facilityMessage', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
-values ('doctor', '_admin.systemMessage', '|*|', 0, '999998');
+values ('admin', '_admin.systemMessage', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
-values ('doctor', '_pmm.agencyInformation', '|*|', 0, '999998');
+values ('admin', '_pmm.agencyInformation', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
-values ('doctor', '_pmm.manageFacilities', '|*|', 0, '999998');
+values ('admin', '_pmm.manageFacilities', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
-values ('doctor', '_pmm.staffList', '|*|', 0, '999998');
+values ('admin', '_pmm.staffList', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
-values ('doctor', '_pmm.programList', '|*|', 0, '999998');
+values ('admin', '_pmm.programList', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
-values ('doctor', '_pmm.addProgram', '|*|', 0, '999998');
+values ('admin', '_pmm.addProgram', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
-values ('doctor', '_pmm.globalRoleAccess', '|*|', 0, '999998');
+values ('admin', '_pmm.globalRoleAccess', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
-values ('doctor', '_pmm.caisiRoles', '|*|', 0, '999998');
+values ('admin', '_pmm.caisiRoles', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)
 values ('receptionist', '_appointment', '|*|', 0, '999998');
 insert into SECOBJPRIVILEGE (ROLEUSERGROUP, OBJECTNAME, PRIVILEGE, PRIORITY, PROVIDER_NO)

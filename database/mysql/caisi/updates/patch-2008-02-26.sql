@@ -1,21 +1,18 @@
-
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.clientSearch', 'Client - Search', 0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.newClient', 'Client - New Client',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.mergeRecords', 'Client - Merge Records',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.caseManagement','PMM - Case Management',0);
+insert into `secObjectName` values('_pmm.clientSearch');
+insert into `secObjectName` values('_pmm.newClient');
+insert into `secObjectName` values('_pmm.mergeRecords');
+insert into `secObjectName` values('_pmm.caseManagement');
 
 -- PMM administration part
-
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.facilityMessage', 'Administration - Facility Message',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.systemMessage', 'Administration - System Message',0);
-
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.agencyInformation','Program - Agency Information',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.manageFacilities','Program - Manage Facilities',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.staffList','Program - Staff List',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.programList','Program - Program List',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.addProgram','Program - Add Program',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.globalRoleAccess','Program - Global Role Access',0);
-
+insert into `secObjectName` values('_admin.facilityMessage');
+insert into `secObjectName` values('_admin.systemMessage');
+insert into `secObjectName` values('_pmm.agencyInformation');
+insert into `secObjectName` values('_pmm.manageFacilities');
+insert into `secObjectName` values('_pmm.staffList');
+insert into `secObjectName` values('_pmm.programList');
+insert into `secObjectName` values('_pmm.addProgram');
+insert into `secObjectName` values('_pmm.globalRoleAccess');
+insert into `secObjectName` values('_pmm.caisiRoles');
 
 insert into `secObjPrivilege` values('doctor','_pmm.clientSearch','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.newClient','x',0,999998);
