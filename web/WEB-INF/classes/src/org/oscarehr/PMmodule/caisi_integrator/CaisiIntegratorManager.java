@@ -90,6 +90,7 @@ public class CaisiIntegratorManager {
 		FacilityInfoWsService service = new FacilityInfoWsService(buildURL(facility, "FacilityInfoService"));
 		FacilityInfoWs port = service.getFacilityInfoWsPort();
 
+		SslUtils.configureSsl(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -125,6 +126,7 @@ public class CaisiIntegratorManager {
 		DemographicInfoWsService service = new DemographicInfoWsService(buildURL(facility, "DemographicInfoService"));
 		DemographicInfoWs port = service.getDemographicInfoWsPort();
 
+		SslUtils.configureSsl(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -136,6 +138,7 @@ public class CaisiIntegratorManager {
 		ProgramInfoWsService service = new ProgramInfoWsService(buildURL(facility, "ProgramInfoService"));
 		ProgramInfoWs port = service.getProgramInfoWsPort();
 
+		SslUtils.configureSsl(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -200,6 +203,7 @@ public class CaisiIntegratorManager {
 		ProviderInfoWsService service = new ProviderInfoWsService(buildURL(facility, "ProviderInfoService"));
 		ProviderInfoWs port = service.getProviderInfoWsPort();
 
+		SslUtils.configureSsl(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -250,6 +254,7 @@ public class CaisiIntegratorManager {
 		ReferralWsService service = new ReferralWsService(buildURL(facility, "ReferralService"));
 		ReferralWs port = service.getReferralWsPort();
 
+		SslUtils.configureSsl(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
