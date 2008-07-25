@@ -60,6 +60,12 @@
                 <rtexprvalue>true</rtexprvalue>
                 <type>String</type>            
         </attribute>
+        <attribute>
+            <name>reverse</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+                <type>String</type>            
+        </attribute>        
     </tag>
     
     <!-- Validators are new in JSP1.2. You may have zero or one validator

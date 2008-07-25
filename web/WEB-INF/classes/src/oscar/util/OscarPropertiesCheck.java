@@ -42,8 +42,17 @@ public class OscarPropertiesCheck extends TagSupport {
     protected String value = null;
     protected String property = null;
     protected String defaultVal = null;
+    protected String reverse = null;
     
-    public String getValue() {
+    public String getReverse() {
+		return reverse;
+	}
+
+	public void setReverse(String reverse) {
+		this.reverse = reverse;
+	}
+
+	public String getValue() {
         return (this.value);
     }
 
@@ -68,15 +77,26 @@ public class OscarPropertiesCheck extends TagSupport {
         String prop = getProperty();
         String val  = getValue();
         
+        boolean rev=false;
+        if(getReverse() != null && getReverse().equalsIgnoreCase("true")) {
+        	rev=true;
+        }
+        
         try{            
             String oscarVal = OscarProperties.getInstance().getProperty(prop);
             if (oscarVal.equals(val)){
                 conditionMet = true;
             }
             
+            if(rev) {
+            	conditionMet = !conditionMet;
+            }
         }catch(Exception invalidProp){             
             if (defaultVal != null && defaultVal.equalsIgnoreCase("true")){
                conditionMet = true;
+            }
+            if(rev) {
+            	conditionMet=true;
             }
         }
                
