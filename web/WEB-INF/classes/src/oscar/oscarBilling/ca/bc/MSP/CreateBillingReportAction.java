@@ -188,7 +188,10 @@ public class CreateBillingReportAction extends OscarAction {
             //This is the S23 summary subreport stream
             InputStream subS23 = osc.getDocumentStream(REPORTS_PATH + this.reportCfg.getProperty("REP_MSPREMSUM_S23"));
             reportParams.put("adj", osc.getJasperReport(subS23));
-
+            
+            InputStream subS23orphan = osc.getDocumentStream(REPORTS_PATH + this.reportCfg.getProperty("REP_MSPREMSUM_S23_ORPHAN"));
+            reportParams.put("orphanAdj", osc.getJasperReport(subS23orphan));
+           
             //This is the broadcast messages subreport stream
             InputStream msgs = osc.getDocumentStream(REPORTS_PATH + this.reportCfg.getProperty("MSGS"));
             reportParams.put("msgs", osc.getJasperReport(msgs));
@@ -294,6 +297,7 @@ public class CreateBillingReportAction extends OscarAction {
         this.reportCfg.setProperty(MSPReconcile.REP_MSPREMSUM, "rep_mspremsum.jrxml");
         this.reportCfg.setProperty(MSPReconcile.REP_MSPREMSUM_PRACTSUM, "msppremsum.practsum.jrxml");
         this.reportCfg.setProperty(MSPReconcile.REP_MSPREMSUM_S23, "msppremsum.s23.jrxml");
+        this.reportCfg.setProperty(MSPReconcile.REP_MSPREMSUM_S23_ORPHAN, "msppremsum.s23_orphan.jrxml");
         this.reportCfg.setProperty("MSGS", "broadcastmessages.jrxml");
     }
 
