@@ -136,26 +136,41 @@ public class Hl7textResultsData {
                     String insertID = null;
                     if(rs.next())
                         insertID = db.getString(rs,1);
-
-                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'lab_no', '"+lab_no+"')";
-                    logger.info(sql);
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.executeUpdate();
-
-                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'abnormal', '"+abnormal+"')";
-                    logger.info(sql);
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.executeUpdate();
-
-                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'identifier', '"+identifier+"')";
-                    logger.info(sql);
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.executeUpdate();
                     
-                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"','name', '"+name+"')";
-                    logger.info(sql);
-                    pstmt = conn.prepareStatement(sql);
+                    String measurementExt = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES (?,?, ?)";
+                    
+                    pstmt = conn.prepareStatement(measurementExt);
+                    
+                    logger.info("Inserting into measurementsExt id "+insertID+ " lab_no "+ lab_no);
+                    pstmt.setString(1, insertID);
+                    pstmt.setString(2, "lab_no");
+                    pstmt.setString(3, lab_no);
                     pstmt.executeUpdate();
+                    pstmt.clearParameters();
+                    
+                    
+                    logger.info("Inserting into measurementsExt id "+insertID+ " abnormal "+ abnormal);
+                    pstmt.setString(1, insertID);
+                    pstmt.setString(2, "abnormal");
+                    pstmt.setString(3, abnormal);
+                    pstmt.executeUpdate();
+                    pstmt.clearParameters();
+                    
+                    
+                    logger.info("Inserting into measurementsExt id "+insertID+ " identifier "+ identifier);
+                    pstmt.setString(1, insertID);
+                    pstmt.setString(2, "identifier");
+                    pstmt.setString(3, identifier);
+                    pstmt.executeUpdate();
+                    pstmt.clearParameters();
+                    
+                    
+                    logger.info("Inserting into measurementsExt id "+insertID+ " name "+ name);
+                    pstmt.setString(1, insertID);
+                    pstmt.setString(2, "name");
+                    pstmt.setString(3, name);
+                    pstmt.executeUpdate();
+                    pstmt.clearParameters();
                     
                     pstmt.close();
                     
