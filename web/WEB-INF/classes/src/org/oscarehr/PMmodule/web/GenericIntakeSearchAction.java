@@ -100,9 +100,6 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	        intakeSearchBean.setHealthCardNumber(cachedDemographicInfo.getHin());
 	        intakeSearchBean.setHealthCardVersion(cachedDemographicInfo.getHinVersion());
 	        intakeSearchBean.setLastName(cachedDemographicInfo.getLastName());
-System.err.println("!!!!!! Y "+cachedDemographicInfo.getBirthDate().getYear());
-System.err.println("!!!!!! M "+cachedDemographicInfo.getBirthDate().getMonth());
-System.err.println("!!!!!! D "+cachedDemographicInfo.getBirthDate().getDay());
 	        intakeSearchBean.setYearOfBirth(String.valueOf(cachedDemographicInfo.getBirthDate().getYear()));
 	        intakeSearchBean.setMonthOfBirth(String.valueOf(cachedDemographicInfo.getBirthDate().getMonth()));
 	        intakeSearchBean.setDayOfBirth(String.valueOf(cachedDemographicInfo.getBirthDate().getDay()));
@@ -135,7 +132,7 @@ System.err.println("!!!!!! D "+cachedDemographicInfo.getBirthDate().getDay());
         }
 
         // if matches found display results, otherwise create local intake
-        if (!localMatches.isEmpty()) {
+        if (!localMatches.isEmpty() || request.getAttribute("remoteMatches")!=null) {
             return mapping.findForward(FORWARD_SEARCH_FORM);
         }
         else {
@@ -149,7 +146,7 @@ System.err.println("!!!!!! D "+cachedDemographicInfo.getBirthDate().getDay());
 
 		    MatchingDemographicInfoParameters parameters = new MatchingDemographicInfoParameters();
 		    parameters.setMaxEntriesToReturn(10);
-		    parameters.setMinScore(13);
+		    parameters.setMinScore(7);
 
 		    String temp = StringUtils.trimToNull(intakeSearchBean.getFirstName());
 		    parameters.setFirstName(temp);
