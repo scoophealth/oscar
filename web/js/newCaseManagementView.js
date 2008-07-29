@@ -65,7 +65,8 @@
         function measurementLoaded(name) {
             measurementWindows.push(openWindows[name]);
         }
-        
+       
+	var okToClose = false; 
         function onClosing() {    
             for( var idx = 0; idx < measurementWindows.length; ++idx ) {
                 if( !measurementWindows[idx].closed )
@@ -73,8 +74,15 @@
             }
             
             //check to see if we need to back up case note
-            if( tmpSaveNeeded && (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) )
+            if( tmpSaveNeeded && (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) ) {
                 autoSave(false);
+	
+		while(1) {
+
+			if( okToClose )
+				break;
+		} //end while
+	    } //end if tmpsave needed
         }
         
         var numMenus = 3;
@@ -1844,6 +1852,10 @@ function autoSave(async) {
                                 method: 'post',
                                 postBody: params,
                                 asynchronous: async,
+				onComplete: function(req) {
+						if( async == false )
+							okToClose = true;
+				},
                                 onSuccess: function(req) {     
                                                 var nId = caseNote.substr(13);
                                                 var sig = "sig" + nId;                                                
