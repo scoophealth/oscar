@@ -37,9 +37,11 @@
    
    if (!window.opener.closed) {
         var parentAjaxId = "<%=request.getParameter("parentAjaxId")%>";
-        if( parentAjaxId != "null" ) {
-            window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
-            window.opener.updateNeeded = true;            
+        
+        if( window.opener. writeToEncounterNote ) {
+            //window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
+            //window.opener.updateNeeded = true;            
+            ;
         }
         else        
             window.opener.location.reload();
