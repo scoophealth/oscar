@@ -132,7 +132,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         }
 
         // if matches found display results, otherwise create local intake
-        if (!localMatches.isEmpty() || request.getAttribute("remoteMatches")!=null) {
+        List<MatchingDemographicInfoScore> remoteMatches=(List<MatchingDemographicInfoScore>) request.getAttribute("remoteMatches");
+        if (!localMatches.isEmpty() || (remoteMatches!=null && remoteMatches.size()>0)) {
             return mapping.findForward(FORWARD_SEARCH_FORM);
         }
         else {
@@ -177,7 +178,6 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		        for (MatchingDemographicInfoScore r : integratedMatches)
 		            LOG.debug("*** do itegrated search results : " + r.getCachedDemographicInfo() + " : " + r.getScore());
 		    }
-
 		    request.setAttribute("remoteMatches", integratedMatches);
 
 		    List<CachedFacilityInfo> allFacilities = caisiIntegratorManager.getRemoteFacilities(currentFacilityId);

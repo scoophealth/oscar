@@ -19,14 +19,37 @@
 
 package org.oscarehr.common.dao;
 
-import org.oscarehr.common.model.FacilityDemographicPrimaryKey;
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.IntegratorConsent;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class IntegratorConsentDao extends AbstractDao {
 
-    public IntegratorConsent find(FacilityDemographicPrimaryKey id) {
+    public IntegratorConsent find(Integer id) {
         return(entityManager.find(IntegratorConsent.class, id));
-    }    
+    }
+    
+    public IntegratorConsent findLatestByFacilityAndDemographic(int facilityId, int demographicId) {
+		Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2 order by x.createdDate desc");
+		query.setParameter(1, facilityId);
+		query.setParameter(2, demographicId);
+		query.setMaxResults(1);
+
+		return((IntegratorConsent)getSingleResultOrNull(query));
+    }
+
+	public List<IntegratorConsent> findByFacilityAndDemographic(int facilityId, int demographicId) {
+		Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2 order by x.createdDate desc");
+		query.setParameter(1, facilityId);
+		query.setParameter(2, demographicId);
+
+	    @SuppressWarnings("unchecked")
+		List<IntegratorConsent> results=query.getResultList();
+		
+		return(results);
+    }
 }

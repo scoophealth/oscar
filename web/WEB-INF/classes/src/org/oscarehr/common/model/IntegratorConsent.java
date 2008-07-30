@@ -3,19 +3,25 @@ package org.oscarehr.common.model;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Version;
+
+import org.apache.commons.lang.StringUtils;
 
 @Entity
 public class IntegratorConsent {
 
-	@EmbeddedId
-	private FacilityDemographicPrimaryKey id;
-	@Column(name="provider_no")
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+	private int facilityId;
+	private int demographicId;
 	private String providerNo = null;
 	@Version
-	private Date lastUpdate = null;
+	private Date createdDate = null;
 
 	private boolean consentToStatistics = false;
 	private boolean consentToBasicPersonalId = false;
@@ -24,32 +30,40 @@ public class IntegratorConsent {
 	private boolean consentToNotes = false;
 	private boolean restrictConsentToHic = false;
 
-	public void setId(FacilityDemographicPrimaryKey id) {
-		this.id = id;
+	private String formVersion;
+	private String printedFormLocation = null;
+	private boolean refusedToSign = false;
+
+	public int getFacilityId() {
+		return facilityId;
 	}
 
-	public boolean isRestrictConsentToHic() {
-		return restrictConsentToHic;
+	public void setFacilityId(int facilityId) {
+		this.facilityId = facilityId;
 	}
 
-	public void setRestrictConsentToHic(boolean restrictConsentToHic) {
-		this.restrictConsentToHic = restrictConsentToHic;
+	public int getDemographicId() {
+		return demographicId;
 	}
 
-	public FacilityDemographicPrimaryKey getId() {
-		return id;
+	public void setDemographicId(int demographicId) {
+		this.demographicId = demographicId;
 	}
 
 	public String getProviderNo() {
 		return providerNo;
 	}
 
-	public void setProviderNo(String provider_no) {
-		this.providerNo = provider_no;
+	public void setProviderNo(String providerNo) {
+		this.providerNo = StringUtils.trimToNull(providerNo);
 	}
 
-	public Date getLastUpdate() {
-		return lastUpdate;
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	public boolean isConsentToStatistics() {
@@ -90,6 +104,42 @@ public class IntegratorConsent {
 
 	public void setConsentToNotes(boolean consentToNotes) {
 		this.consentToNotes = consentToNotes;
+	}
+
+	public boolean isRestrictConsentToHic() {
+		return restrictConsentToHic;
+	}
+
+	public void setRestrictConsentToHic(boolean restrictConsentToHic) {
+		this.restrictConsentToHic = restrictConsentToHic;
+	}
+
+	public String getFormVersion() {
+		return formVersion;
+	}
+
+	public void setFormVersion(String formVersion) {
+		this.formVersion = StringUtils.trimToNull(formVersion);
+	}
+
+	public String getPrintedFormLocation() {
+		return printedFormLocation;
+	}
+
+	public void setPrintedFormLocation(String printedFormLocation) {
+		this.printedFormLocation = StringUtils.trimToNull(printedFormLocation);
+	}
+
+	public boolean isRefusedToSign() {
+		return refusedToSign;
+	}
+
+	public void setRefusedToSign(boolean refusedToSign) {
+		this.refusedToSign = refusedToSign;
+	}
+
+	public Integer getId() {
+		return id;
 	}
 
 }

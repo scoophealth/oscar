@@ -37,9 +37,6 @@
 	Demographic currentDemographic=demographicDao.getDemographic(""+currentDemographicId);
 	int currentFacilityId = (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	Facility currentFacility = (Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-	IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
-	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(currentFacilityId, currentDemographicId);
-	IntegratorConsent integratorConsent = integratorConsentDao.find(pk);
     Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 %>
 

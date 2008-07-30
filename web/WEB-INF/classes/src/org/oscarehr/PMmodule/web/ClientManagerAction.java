@@ -98,7 +98,6 @@ import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.Facility;
-import org.oscarehr.common.model.FacilityDemographicPrimaryKey;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.util.SessionConstants;
@@ -392,8 +391,7 @@ public class ClientManagerAction extends BaseAction {
 		request.getSession().setAttribute("demographicId", demographic.getDemographicNo());
 
 		// --- consent status ---
-		FacilityDemographicPrimaryKey pk = new FacilityDemographicPrimaryKey(facilityId, demographic.getDemographicNo());
-		IntegratorConsent integratorConsent = integratorConsentDao.find(pk);
+		IntegratorConsent integratorConsent = integratorConsentDao.findLatestByFacilityAndDemographic(facilityId, demographic.getDemographicNo());
 		String consentText = "Have not asked client yet.";
 		if (integratorConsent != null) {
 			if (integratorConsent.isConsentToBasicPersonalId() && integratorConsent.isConsentToHealthCardId() && integratorConsent.isConsentToIssues()

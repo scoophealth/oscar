@@ -9,8 +9,7 @@
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
-	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(currentFacilityId, currentDemographicId);
-	IntegratorConsent integratorConsent=integratorConsentDao.find(pk);
+	IntegratorConsent integratorConsent=integratorConsentDao.findLatestByFacilityAndDemographic(currentFacilityId, currentDemographicId);
 %>
 
 <form action="integrator_consent_action.jsp" onsubmit="if (readToClient.checked) {return(true);} else {alert('You must read the statement to the client.');return(false);}" >
