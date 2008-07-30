@@ -42,6 +42,7 @@ import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 
 import oscar.oscarClinic.ClinicData;
+import oscar.OscarProperties;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -51,10 +52,12 @@ import com.lowagie.text.HeaderFooter;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.PdfPageEventHelper;
 
 /**
  *
@@ -92,7 +95,8 @@ public class CaseManagementPrintPdf {
         //Create the document we are going to write to
         document = new Document();
         PdfWriter writer = PdfWriter.getInstance(document,response.getOutputStream());
-        document.setPageSize(PageSize.LETTER);
+        writer.setPageEvent(new EndPage());
+        document.setPageSize(PageSize.LETTER);                
         document.open();
         
         //Create the font we are going to print to        
@@ -118,15 +122,7 @@ public class CaseManagementPrintPdf {
         Phrase headerPhrase = new Phrase(LEADING, title, font);
         HeaderFooter header = new HeaderFooter(headerPhrase,false);
         header.setAlignment(HeaderFooter.ALIGN_CENTER);
-        document.setHeader(header);
-        
-        //Footer contains page numbers and date printed        
-        Date date = new Date();
-        String now = "Printed " + formatter.format(date) + "\nPage ";
-        Phrase footerPhrase = new Phrase(LEADING, now, font);
-        HeaderFooter footer = new HeaderFooter(footerPhrase, true);
-        footer.setAlignment(HeaderFooter.ALIGN_CENTER);
-        document.setFooter(footer);
+        document.setHeader(header);                
         
         //Write title with top and bottom borders on p1
         cb = writer.getDirectContent();
@@ -380,4 +376,44 @@ public class CaseManagementPrintPdf {
         document.close();
     }
     
+    /*
+     *Used to print footers on each page
+     */
+    class EndPage extends PdfPageEventHelper {
+        private Date now;
+        private String promoTxt;
+        
+        public EndPage() {
+            now = new Date();
+            promoTxt = OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT");
+            if( promoTxt == null ) {
+                promoTxt = "";
+            }
+        }
+        
+        public void onEndPage( PdfWriter writer, Document document ) {
+            //Footer contains page numbers and date printed on all pages            
+            PdfContentByte cb = writer.getDirectContent();
+            cb.saveState();
+            
+            String strFooter = promoTxt + " " + formatter.format(now);
+            float textSize = font.getBaseFont().getWidthPoint(strFooter,FONTSIZE);
+            float textBase = document.bottom();
+            cb.beginText();
+            cb.setFontAndSize(font.getBaseFont(),FONTSIZE);
+            Rectangle page = document.getPageSize();
+            float width = page.width();            
+                        
+            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase - 20, 0);
+            
+            strFooter = "-" + writer.getPageNumber() + "-";
+            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase-10, 0);
+
+            cb.endText();
+            cb.restoreState();
+        }
+    }
+    
+    
 }
+
