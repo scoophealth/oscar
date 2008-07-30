@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -105,11 +106,12 @@ public class CaseManagementPrintPdf {
         float leading = font.leading(LINESPACING);
         
         //set up document title and header
-        String title = "Documentation for " + (String)request.getAttribute("demoName") + "\n";
-        String gender = "Gender: " + (String)request.getAttribute("demoSex") + "\n";
-        String dob = "Date of Birth: " + (String)request.getAttribute("demoDOB") + "\n";
-        String age = "Age: " + (String)request.getAttribute("demoAge") + "\n";
-        String mrp = "MRP: " + (String)request.getAttribute("mrp") + "\n";
+        ResourceBundle propResource = ResourceBundle.getBundle("oscarResources");
+        String title = propResource.getString("oscarEncounter.pdfPrint.title") + " " + (String)request.getAttribute("demoName") + "\n";
+        String gender = propResource.getString("oscarEncounter.pdfPrint.gender") + " " + (String)request.getAttribute("demoSex") + "\n";
+        String dob = propResource.getString("oscarEncounter.pdfPrint.dob") + " " + (String)request.getAttribute("demoDOB") + "\n";
+        String age = propResource.getString("oscarEncounter.pdfPrint.age") + " " + (String)request.getAttribute("demoAge") + "\n";
+        String mrp = propResource.getString("oscarEncounter.pdfPrint.mrp") + " " + (String)request.getAttribute("mrp") + "\n";
         String[] info = new String[] { title, gender, dob, age, mrp };
         
         ClinicData clinicData = new ClinicData();
