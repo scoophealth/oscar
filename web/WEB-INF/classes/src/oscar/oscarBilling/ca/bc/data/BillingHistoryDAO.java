@@ -171,7 +171,7 @@ public class BillingHistoryDAO {
    */
   private BillHistory getCurrentBillItemState(String billMasterNo) {
     BillHistory history = null;
-    String bmQuery = "SELECT b.providerNo, b.billingtype,bm.billingstatus, bm.bill_amount,bm.paymentMethod FROM billing b, billingmaster bm " +
+    String bmQuery = "SELECT b.provider_no, b.billingtype,bm.billingstatus, bm.bill_amount,bm.paymentMethod FROM billing b, billingmaster bm " +
         " WHERE b.billing_no=bm.billing_no AND bm.billingmaster_no = " +
         billMasterNo;
     List billValues = SqlUtils.getQueryResultsList(bmQuery);
