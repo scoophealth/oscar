@@ -195,3 +195,31 @@ New User Created Form:&nbsp;
 	<html:option value="0">&nbsp;</html:option>
 	<html:options collection="survey_list" property="formId" labelProperty="description" />
 </html:select>
+
+<div class="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="Programs">Consent History</th>
+		</tr>
+	</table>
+</div>
+<table class="simple" cellspacing="2" cellpadding="3">
+	<thead>
+		<tr>		
+			<th>Date</th>
+			<th>Form Name</th>
+			<th>Provider</th>
+			<th></th>
+		</tr>
+	</thead>
+	<c:forEach var="form" items="${consents}">
+		<tr>			
+			<td><c:out value="${form.createdDate}" /></td>
+			<td><c:out value="${form.formVersion}" /></td>
+			<td><c:out value="${form.provider}" /></td>		
+			<td><a href="../view_consent_details.jsp?id=<c:out value="${form.consentId}" />">details</a></td>		
+		</tr>
+	</c:forEach>
+</table>
+<br />
+<br />

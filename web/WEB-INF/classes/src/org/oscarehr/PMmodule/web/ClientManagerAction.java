@@ -38,6 +38,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -115,37 +116,20 @@ public class ClientManagerAction extends BaseAction {
 	private HealthSafetyManager healthSafetyManager;
 	private ClientRestrictionManager clientRestrictionManager;
 	private ProviderDao providerDao;
-	
 	private SurveyManager surveyManager;
-
 	private LookupManager lookupManager;
-
 	private CaseManagementManager caseManagementManager;
-
 	private AdmissionManager admissionManager;
-
 	private GenericIntakeManager genericIntakeManager;
-
 	private RoomDemographicManager roomDemographicManager;
-
 	private BedDemographicManager bedDemographicManager;
-
 	private BedManager bedManager;
-
 	private ClientManager clientManager;
-
-	private ConsentManager consentManager;
-
 	private LogManager logManager;
-
 	private ProgramManager programManager;
-
 	private ProviderManager providerManager;
-
 	private ProgramQueueManager programQueueManager;
-
 	private RoomManager roomManager;
-
 	private IntegratorConsentDao integratorConsentDao;
 
 	public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
@@ -1472,9 +1456,6 @@ public class ClientManagerAction extends BaseAction {
 			HealthSafety healthsafety = healthSafetyManager.getHealthSafetyByDemographic(Long.valueOf(demographicNo));
 			request.setAttribute("healthsafety", healthsafety);
 
-			Consent consent = consentManager.getMostRecentConsent(Long.valueOf(demographicNo));
-			request.setAttribute("consent", consent);
-
 			request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, String.valueOf(facilityId)));
 		}
 
@@ -1604,6 +1585,20 @@ public class ClientManagerAction extends BaseAction {
 			/* survey module */
 			request.setAttribute("survey_list", surveyManager.getAllForms(facilityId));
 			request.setAttribute("surveys", surveyManager.getFormsByFacility(demographicNo, facilityId));
+			
+			List<IntegratorConsent> consentTemp=integratorConsentDao.findByFacilityAndDemographic(facilityId, Integer.parseInt(demographicNo));
+			ArrayList<HashMap<String,Object>> consents=new ArrayList<HashMap<String,Object>>();
+			for (IntegratorConsent x : consentTemp){
+				HashMap<String,Object> map=new HashMap<String,Object>();
+				map.put("createdDate", DateFormatUtils.ISO_DATE_FORMAT.format(x.getCreatedDate())+" "+DateFormatUtils.ISO_TIME_NO_T_FORMAT.format(x.getCreatedDate()));
+				map.put("formVersion", x.getFormVersion());
+				Provider provider=providerDao.getProvider(x.getProviderNo());
+				map.put("provider",provider.getFormattedName());
+				map.put("consentId",x.getId());
+				consents.add(map);
+			}
+			
+			request.setAttribute("consents", consents);
 		}
 
 		/* refer */
@@ -1774,10 +1769,6 @@ public class ClientManagerAction extends BaseAction {
 
 	public void setClientManager(ClientManager mgr) {
 		this.clientManager = mgr;
-	}
-
-	public void setConsentManager(ConsentManager mgr) {
-		this.consentManager = mgr;
 	}
 
 	public void setLogManager(LogManager mgr) {
