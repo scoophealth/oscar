@@ -23,6 +23,7 @@
 package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -173,7 +174,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		facilityDao.merge(facility);
 	}
 
-	private void pushProviders(Facility facility) {
+	private void pushProviders(Facility facility) throws MalformedURLException {
 		try {
 			List<String> providerIds = ProviderDao.getProviderIds(facility.getId());
 
@@ -195,12 +196,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			ProviderInfoWs service = caisiIntegratorManager.getProviderInfoWs(facility.getId());
 			service.setCachedProviderInfos(cachedProviderInfos);
-		} catch (Exception e) {
+		}
+		catch (IllegalAccessException e) {
+			logger.error("Unexpected error.", e);
+		}
+		catch (InvocationTargetException e) {
 			logger.error("Unexpected error.", e);
 		}
 	}
 
-	private void pushPrograms(Facility facility) {
+	private void pushPrograms(Facility facility) throws MalformedURLException {
 		try {
 			List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
 
@@ -228,7 +233,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			ProgramInfoWs service = caisiIntegratorManager.getProgramInfoWs(facility.getId());
 			service.setCachedProgramInfos(cachedProgramInfos);
-		} catch (Exception e) {
+		}
+		catch (IllegalAccessException e) {
+			logger.error("Unexpected Error", e);
+		}
+		catch (InvocationTargetException e) {
 			logger.error("Unexpected Error", e);
 		}
 	}
@@ -285,7 +294,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				issueTransfer.setIssueDescription(issue.getDescription());
 
 				issueTransfers.add(issueTransfer);
-			} catch (Exception e) {
+			}
+			catch (IllegalAccessException e) {
+				logger.error("Unexpected Error.", e);
+			}
+			catch (InvocationTargetException e) {
 				logger.error("Unexpected Error.", e);
 			}
 		}
@@ -336,8 +349,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushFacilityInfo(Facility facility) throws IOException {
-
+	private void pushFacilityInfo(Facility facility) throws MalformedURLException   {
 		try {
 			CachedFacilityInfo cachedFacilityInfo = new CachedFacilityInfo();
 			BeanUtils.copyProperties(cachedFacilityInfo, facility);
@@ -346,7 +358,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			logger.debug("pushing facilityInfo");
 			service.setMyFacilityInfo(cachedFacilityInfo);
-		} catch (Exception e) {
+		}
+		catch (IllegalAccessException e) {
+			logger.error("Unexpected Error.", e);
+		}
+		catch (InvocationTargetException e) {
 			logger.error("Unexpected Error.", e);
 		}
 	}
