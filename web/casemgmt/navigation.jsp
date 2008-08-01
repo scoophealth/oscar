@@ -447,7 +447,7 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 
 <caisirole:SecurityAccess accessName="read ticklers" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <tr><td>
-        <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/Tickler.do?method=filter&filter.client=<%=bean.demographicNo%>');return false;">View Tickler</a><br>
+        <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/Tickler.do?method=filter&filter.demographic_no=<%=bean.demographicNo%>');return false;">View Tickler</a><br>
     </td></tr>
 </caisirole:SecurityAccess>
 

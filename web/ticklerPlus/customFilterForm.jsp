@@ -14,7 +14,15 @@
 <script type="text/javascript" src="../js/checkDate.js"></script>
 	<script>	
 		function search_demographic() {
-			window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch.jsp?form=customFilterForm&elementName=filter.demographic_webName&elementId=filter.demographic_no&query=' + document.customFilterForm.elements['filter.demographic_webName'].value,'demographic_search');
+			var popup = window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch.jsp?form=customFilterForm&elementName=filter.demographic_webName&elementId=filter.demographic_no&query=' + document.customFilterForm.elements['filter.demographic_webName'].value,'demographic_search');
+			
+			if (popup != null) {
+    			if (popup.opener == null) {
+      			popup.opener = self;
+    			}
+    			popup.focus();
+  			}	
+			
 		}
 		
 		function check_custom_filter_date() {

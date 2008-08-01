@@ -75,7 +75,7 @@ function openSurvey(methodId) {
 			<th>Actions</th>
 		</tr>
 	</thead>
-	<c:forEach var="intake" items="${regIntakes}">
+	<c:forEach var="intake" items="${quickIntakes}">
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>

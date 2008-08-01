@@ -538,12 +538,16 @@ function importFromEnct(reqInfo,txtArea)
               <%
                  if( demo != null )
                  {
-                     if( useNewCmgmt ) {
+                   if(OscarProperties.getInstance().getBooleanProperty("caisi","on")) {
+                		 value = demographic.EctInfo.getFamilyHistory();
+                   }else{
+					if( useNewCmgmt ) {
                         value = listNotes(cmgmtMgr, "SocHistory", providerNo, demo);
                     }
                     else {
                         value = demographic.EctInfo.getSocialHistory();
                     }
+				  }	
                     if( pasteFmt == null || pasteFmt.equalsIgnoreCase("single") ) {
                         value = StringUtils.lineBreaks(value);
                     }
@@ -556,13 +560,17 @@ function importFromEnct(reqInfo,txtArea)
               <%
                  if( demo != null )
                  {
-                    if( useNewCmgmt ) {
+                  if(OscarProperties.getInstance().getBooleanProperty("caisi","on")) {
+                		 value = "";
+                  }else{
+					if( useNewCmgmt ) {
                         value = listNotes(cmgmtMgr, "OMeds", providerNo, demo);
                     }
                     else {
                     //family history was used as bucket for Other Meds in old encounter
                         value = demographic.EctInfo.getFamilyHistory();
                     }
+				  }
                     if( pasteFmt == null || pasteFmt.equalsIgnoreCase("single") ) {
                         value = StringUtils.lineBreaks(value);
                     }

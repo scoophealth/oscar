@@ -33,7 +33,7 @@
 	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 	ProgramDao programDao = (ProgramDao) applicationContext.getBean("programDao");
 	
-	List<Program> allPrograms=programDao.getAllPrograms();
+	List<Program> allPrograms=programDao.getAllActivePrograms();
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>

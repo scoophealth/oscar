@@ -26,13 +26,26 @@
 		}
 		
 		function search_demographic() {
-			window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch.jsp?query=' + document.ticklerForm.elements['tickler.demographic_webName'].value,'demographic_search');
+			var popup = window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch.jsp?query=' + document.ticklerForm.elements['tickler.demographic_webName'].value,'demographic_search');
+		
+			if (popup != null) {
+	    			if (popup.opener == null) {
+	      			popup.opener = self;
+	    			}
+	    			popup.focus();
+	  			}	
 		}
 		
 		function search_provider() {
 			url = '<c:out value="${ctx}"/>/provider/receptionistfindprovider.jsp';
 			url += '?caisi=true&pyear=<%=curYear%>&pmonth=<%=curMonth%>&pday=<%=curDay%>&providername=';
-			window.open(url + document.ticklerForm.elements['tickler.task_assigned_to_name'].value,'provider_search');
+			var popup = window.open(url + document.ticklerForm.elements['tickler.task_assigned_to_name'].value,'provider_search');
+			if (popup != null) {
+    			if (popup.opener == null) {
+      			popup.opener = self;
+    			}
+    			popup.focus();
+  			}	
 		}
 		
 		function validateTicklerForm(form) {
@@ -80,7 +93,10 @@
 			</td>
 			<td class="fieldValue">
 				<html:hidden property="tickler.demographic_no" />
-				<html:text property="tickler.demographic_webName" />
+				<html:text property="tickler.demographic_webName" readonly="true" />
+				
+				<!--  add the tickler for the specific client,not all clients -->
+				<!--  
 				<input type="button" value="Search" onclick="search_demographic();" />
 			</td>
 		</tr>

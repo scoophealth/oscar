@@ -17,27 +17,29 @@
     }
     
     function addBeds(){
-      if(bedManagerForm.bedslines.value!=null && parseInt(bedManagerForm.bedslines.value)>=10){
-        alert("You cannot add more than 10 beds at a time.");
-        return;
-      }else{  
-        bedManagerForm.method.value='addBeds';
-        var obj= document.getElementsByName("submit.addBed")[0]
-        obj.value='Add Beds';
-        bedManagerForm.submit();
-      }  
-    }    
-
-    function addRooms(){
-      if(bedManagerForm.roomslines.value!=null && parseInt(bedManagerForm.roomslines.value)>=10){
-        alert("You cannot add more than 10 rooms at a time.");
-        return;
-      }else{  
-        bedManagerForm.method.value='addRooms';
-        var obj= document.getElementsByName("submit.addRoom")[0]
-        obj.value='Add Rooms';
-        bedManagerForm.submit();
-      }  
+    	var num = bedManagerForm.numBeds.value;       
+        if(num>=10) {
+        	alert("You cannot add more than 10 beds at a time.");
+        	return;
+      	}else{  
+      		bedManagerForm.method.value='addBeds'; 
+      		var obj= document.getElementsByName("submit.addBed")[0]   	        
+	        obj.value='Add Beds';
+	        bedManagerForm.submit();
+	    }  
+    }
+           
+    function addRooms(){ 
+        var num = bedManagerForm.numRooms.value;       
+        if(num>=10) {
+        	alert("You cannot add more than 10 rooms at a time.");
+        	return;
+      	}else{  
+      		bedManagerForm.method.value='addRooms'; 
+      		var obj= document.getElementsByName("submit.addRoom")[0]   	        
+	        obj.value='Add Rooms';
+	        bedManagerForm.submit();
+	    }  
     }    
     
     function saveBeds(){
@@ -143,7 +145,7 @@
         
 <!-- end room status & bed program filter -->           
         
-        <display:table class="simple" name="sessionScope.bedManagerForm.rooms" uid="room" requestURI="/PMmodule/BedManager.do" summary="Edit rooms">
+        <display:table class="simple" name="sessionScope.bedManagerForm.rooms" id="room" requestURI="/PMmodule/BedManager.do" summary="Edit rooms">
             <display:column title="Name" sortable="true">
                 <input type="text" name="rooms[<c:out value="${room_rowNum - 1}" />].name" value="<c:out value="${room.name}" />" />
             </display:column>
@@ -185,7 +187,7 @@
             <display:column title="Room Capacity">
 				<select name="rooms[<c:out value="${room_rowNum - 1}" />].occupancy">
        
-					<c:forEach var="num" begin="1" end="20" step="1">
+					<c:forEach var="num" begin="1" end="50" step="1">
                			<c:choose>
                    			<c:when test="${room.occupancy == num}">
 								<option value="<c:out value='${num}' />" selected="selected"> 
@@ -280,14 +282,14 @@
 				<td width="30%" align="right"  style="font-weight:bold">
  					Room<br/>
 					<html:select property="bedRoomFilterForBed" name="bedManagerForm" onchange="bedFilter();" >
-						<html:optionsCollection  property="rooms"  value="id"  label="name"/>
+						<html:optionsCollection  property="assignedBedRooms"  value="id"  label="name"/>
 					</html:select>
 				</td>
 			</tr>
 		</table>
 <!-- end bed status & bedRoom filter -->           
         
-        <display:table class="simple" name="sessionScope.bedManagerForm.beds" uid="bed" requestURI="/PMmodule/BedManager.do" summary="Edit beds">
+        <display:table class="simple" name="sessionScope.bedManagerForm.beds" id="bed" requestURI="/PMmodule/BedManager.do" summary="Edit beds">
 
             <display:column title="Name" sortable="true">
                 <input type="text" name="beds[<c:out value="${bed_rowNum - 1}" />].name" value="<c:out value="${bed.name}" />" />

@@ -623,7 +623,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 		<span id="oscar_new_tickler"><bean:message key="global.btntickler"/></span></a>
            </caisi:isModuleLoad>
            <caisi:isModuleLoad moduleName="ticklerplus">
-	    <a HREF="#" ONCLICK ="popupPage2('../Tickler.do','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'+'+'>
+	    <a HREF="#" ONCLICK ="popupPage2('../Tickler.do?filter.demographic_no=','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'+'+'>
 		<span id="oscar_new_tickler"><bean:message key="global.btntickler"/></span></a>
            </caisi:isModuleLoad>
         </li>
