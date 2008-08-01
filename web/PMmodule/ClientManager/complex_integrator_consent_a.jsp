@@ -27,17 +27,33 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.model.Provider"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.common.model.Facility"%>
 <%@page import="org.caisi.dao.DemographicDao"%>
 <%@page import="org.oscarehr.PMmodule.model.Demographic"%>
 
 <%
-	int currentDemographicId = Integer.parseInt(request.getParameter("demographicId"));
+	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+
+	String currentDemographicId = request.getParameter("demographicId");
+    Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+	IntegratorConsent integratorConsent=new IntegratorConsent();
+    // if a consentId is passed it that means it's an existing consent, i.e. some one is viewing it, so saving shouldn't be allowed.
+	boolean viewOnly=false;
+
+	String consentId=request.getParameter("consentId");
+	if (consentId!=null)
+	{
+		integratorConsent=integratorConsentDao.find(Integer.parseInt(consentId));
+		provider=providerDao.getProvider(integratorConsent.getProviderNo());
+		viewOnly=true;
+	}
+	
 	Demographic currentDemographic=demographicDao.getDemographic(""+currentDemographicId);
 	int currentFacilityId = (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-	Facility currentFacility = (Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-    Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+	Facility currentFacility = (Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);    
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -191,7 +207,7 @@
 	<tr>
 		<td>
 		<p>
-		<input type="radio" name="consent" value="ALL" checked="checked">
+		<input type="radio" name="consent" value="ALL" <%=integratorConsent.isConsentToAll()?"checked=\"checked\"":""%> >
 		&nbsp;&nbsp;&nbsp; I, <b><%=currentDemographic.getFormattedName()%></b>,
 		permit <b><%=currentFacility.getName()%></b>
 
@@ -202,7 +218,7 @@
 	<tr>
 		<td>
 		<p>
-		<input type="radio" name="consent" value="HIC_ALL">
+		<input type="radio" name="consent" value="HIC_ALL" <%=integratorConsent.isConsentToAllHic()?"checked=\"checked\"":""%> >
 		&nbsp;&nbsp;&nbsp; I, <b><%=currentDemographic.getFormattedName()%></b>,
 		permit only health care providers to record, send and use my
 		personal information for the purposes above.</p>
@@ -212,7 +228,7 @@
 	<tr>
 		<td>
 		<p>
-		<input type="radio" name="consent" value="NONE">
+		<input type="radio" name="consent" value="NONE" <%=integratorConsent.isConsentToNone()?"checked=\"checked\"":""%> >
 		&nbsp;&nbsp;&nbsp; I, <b><%=currentDemographic.getFormattedName()%></b>,
 		do <b>not</b> permit <b><%=currentFacility.getName()%></b>
 
@@ -258,18 +274,14 @@
 		</td>
 	</tr>	
 		
-	
 	</table>
-
 	
-	</form>
-	
-	
+	</form>	
 	
 	<tr>
 	<td>
 	<br>
-	<input type="button" value="Save Consent" onclick="submitConsent(document.consentForm)" />
+	<input <%=viewOnly?"disabled=\"disabled\"":""%> type="button" value="Save Consent" onclick="submitConsent(document.consentForm)" />
 	<input type="button" value="Cancel"	onclick="window.close()" />
 	<input type="button" value="Print to Sign" onClick="window.print()" />
 	

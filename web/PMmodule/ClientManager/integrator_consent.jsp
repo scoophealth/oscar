@@ -10,6 +10,16 @@
 	int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
 	IntegratorConsent integratorConsent=integratorConsentDao.findLatestByFacilityAndDemographic(currentFacilityId, currentDemographicId);
+	
+    // if a consentId is passed it that means it's an existing consent, i.e. some one is viewing it, so saving shouldn't be allowed.
+	boolean viewOnly=false;
+
+	String consentId=request.getParameter("consentId");
+	if (consentId!=null)
+	{
+		integratorConsent=integratorConsentDao.find(Integer.parseInt(consentId));
+		viewOnly=true;
+	}
 %>
 
 <form action="integrator_consent_action.jsp" onsubmit="if (readToClient.checked) {return(true);} else {alert('You must read the statement to the client.');return(false);}" >
@@ -36,7 +46,7 @@
 	</div>
 	<br /><br />
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
-	<input type="submit" value="save" /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
+	<input <%=viewOnly?"disabled=\"disabled\"":""%> type="submit" value="save" /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
 </form>
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>

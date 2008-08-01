@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 import javax.persistence.Version;
 
 import org.apache.commons.lang.StringUtils;
@@ -141,4 +143,49 @@ public class IntegratorConsent {
 		return id;
 	}
 
+	@PreRemove
+	protected void jpa_preventDelete()
+	{
+		throw(new IllegalArgumentException("Remove is not allowed for this type of item."));
+	}
+
+	@PreUpdate
+	protected void jpa_preventUpdate()
+	{
+		throw(new IllegalArgumentException("Update is not allowed for this type of item."));
+	}
+	
+	public boolean isConsentToAll()
+	{
+		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&!restrictConsentToHic); 
+	}
+
+	public boolean isConsentToAllHic()
+	{
+		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&restrictConsentToHic); 
+	}
+
+	public boolean isConsentToNone()
+	{
+		return(!consentToStatistics&&!consentToBasicPersonalId&&!consentToHealthCardId&&!consentToIssues&&!consentToNotes);
+	}
+	
+	public void setConsentToAll()
+	{
+		consentToStatistics=true;
+		consentToBasicPersonalId=true;
+		consentToHealthCardId=true;
+		consentToIssues=true;
+		consentToNotes=true;
+		restrictConsentToHic=false;
+	}
+	
+	public void setConsentToNone()
+	{
+		consentToStatistics=false;
+		consentToBasicPersonalId=false;
+		consentToHealthCardId=false;
+		consentToIssues=false;
+		consentToNotes=false;
+	}
 }

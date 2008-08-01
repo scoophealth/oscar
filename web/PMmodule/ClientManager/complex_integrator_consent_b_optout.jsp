@@ -27,17 +27,33 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.model.Provider"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.common.model.Facility"%>
 <%@page import="org.caisi.dao.DemographicDao"%>
 <%@page import="org.oscarehr.PMmodule.model.Demographic"%>
 
 <%
-	int currentDemographicId = Integer.parseInt(request.getParameter("demographicId"));
+	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+	
+	String currentDemographicId = request.getParameter("demographicId");
+	Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+	IntegratorConsent integratorConsent=new IntegratorConsent();
+	// if a consentId is passed it that means it's an existing consent, i.e. some one is viewing it, so saving shouldn't be allowed.
+	boolean viewOnly=false;
+	
+	String consentId=request.getParameter("consentId");
+	if (consentId!=null)
+	{
+		integratorConsent=integratorConsentDao.find(Integer.parseInt(consentId));
+		provider=providerDao.getProvider(integratorConsent.getProviderNo());
+		viewOnly=true;
+	}
+	
 	Demographic currentDemographic=demographicDao.getDemographic(""+currentDemographicId);
 	int currentFacilityId = (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-	Facility currentFacility = (Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-    Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+	Facility currentFacility = (Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);    
 %>
 
 
@@ -124,7 +140,7 @@
 	</tr>
 	<tr>
 		<td>
-			<input type="checkbox" name="consent" value="NONE"/>I, <b><%=currentDemographic.getFormattedName()%></b>, do not permit 
+			<input type="checkbox" name="consent" value="NONE" <%=integratorConsent.isConsentToNone()?"checked=\"checked\"":""%>  />I, <b><%=currentDemographic.getFormattedName()%></b>, do not permit 
 			<b><%=currentFacility.getName()%></b> and any other CAISI partner agencies to record, 
 			send and use my personal information for the purposes above.
 		</td>
@@ -132,7 +148,7 @@
 
 	<tr>
 		<td>
-			<input type="checkbox" name="consent" value="HIC_ALL"/>I, <b><%=currentDemographic.getFormattedName()%></b>, do not permit 
+			<input type="checkbox" name="consent" value="HIC_ALL" <%=integratorConsent.isConsentToAllHic()?"checked=\"checked\"":""%> />I, <b><%=currentDemographic.getFormattedName()%></b>, do not permit 
 			any non-health providing programs to record, send and use my personal information for the purposes above.
 		</td>
 	</tr>	
@@ -166,7 +182,7 @@
 	<br>
 
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
-	<input type="button" value="Save the form and Exit" onclick="submitConsent(document.consentForm)" />
+	<input <%=viewOnly?"disabled=\"disabled\"":""%>  type="button" value="Save the form and Exit" onclick="submitConsent(document.consentForm)" />
 	<input type="button" value="Cancel"	onclick="window.close()" />
 	<input type="button" value="Print to Sign" onClick="window.print()" />
 	

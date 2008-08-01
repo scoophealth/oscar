@@ -19,30 +19,16 @@
 	String consent=request.getParameter("consent");
 	if ("ALL".equals(consent))
 	{
-		integratorConsent.setConsentToBasicPersonalId(true);
-		integratorConsent.setConsentToHealthCardId(true);
-		integratorConsent.setConsentToIssues(true);
-		integratorConsent.setConsentToNotes(true);
-		integratorConsent.setConsentToStatistics(true);
-		integratorConsent.setRestrictConsentToHic(false);
+		integratorConsent.setConsentToAll();
 	}
 	else if ("HIC_ALL".equals(consent))
 	{
-		integratorConsent.setConsentToBasicPersonalId(true);
-		integratorConsent.setConsentToHealthCardId(true);
-		integratorConsent.setConsentToIssues(true);
-		integratorConsent.setConsentToNotes(true);
-		integratorConsent.setConsentToStatistics(true);
+		integratorConsent.setConsentToAll();
 		integratorConsent.setRestrictConsentToHic(true);
 	}
 	else if ("NONE".equals(consent))
 	{
-		integratorConsent.setConsentToBasicPersonalId(false);
-		integratorConsent.setConsentToHealthCardId(false);
-		integratorConsent.setConsentToIssues(false);
-		integratorConsent.setConsentToNotes(false);
-		integratorConsent.setConsentToStatistics(false);
-		integratorConsent.setRestrictConsentToHic(false);
+		integratorConsent.setConsentToNone();
 	}
 	else
 	{

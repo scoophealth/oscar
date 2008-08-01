@@ -27,17 +27,33 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.model.Provider"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.common.model.Facility"%>
 <%@page import="org.caisi.dao.DemographicDao"%>
 <%@page import="org.oscarehr.PMmodule.model.Demographic"%>
 
 <%
-	int currentDemographicId = Integer.parseInt(request.getParameter("demographicId"));
+	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+	
+	String currentDemographicId = request.getParameter("demographicId");
+	Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+	IntegratorConsent integratorConsent=new IntegratorConsent();
+	// if a consentId is passed it that means it's an existing consent, i.e. some one is viewing it, so saving shouldn't be allowed.
+	boolean viewOnly=false;
+	
+	String consentId=request.getParameter("consentId");
+	if (consentId!=null)
+	{
+		integratorConsent=integratorConsentDao.find(Integer.parseInt(consentId));
+		provider=providerDao.getProvider(integratorConsent.getProviderNo());
+		viewOnly=true;
+	}
+	
 	Demographic currentDemographic=demographicDao.getDemographic(""+currentDemographicId);
 	int currentFacilityId = (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	Facility currentFacility = (Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-    Provider provider=(Provider)request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -264,10 +280,12 @@
 <tr>
 
 	<td><br>
-	<input type="button" value="Continue to Opt-Out Form"
-		onclick="submitConsent(document.consentForm,true)" /> <input
+	<input <%=viewOnly?"disabled=\"disabled\"":""%>  type="button" value="Continue to Opt-Out Form"
+		onclick="submitConsent(document.consentForm,true)" /> 
+   <input <%=viewOnly?"disabled=\"disabled\"":""%> 
 		type="button" value="Save the Form"
-		onclick="submitConsent(document.consentForm,false)" /> <input
+		onclick="submitConsent(document.consentForm,false)" /> 
+   <input
 		type="button" value="Cancel" onclick="window.close()" /> <input
 		type="button" value="Print to Sign" onClick="window.print()" />
 	</td>
