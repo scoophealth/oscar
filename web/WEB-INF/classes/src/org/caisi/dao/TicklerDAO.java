@@ -132,8 +132,8 @@ public class TicklerDAO extends HibernateDaoSupport {
             if (filter.getEndDate() == null || filter.getEndDate().length() == 0) {
                 filter.setEndDate("8888-12-31");
             }
-             
-            if( filter.getProgramId() == null || filter.getProgramId().equals("All Programs")) {
+            
+            if( filter.getProgramId() == null || "".equals(filter.getProgramId()) || filter.getProgramId().equals("All Programs")) {
             		includeProgramClause = false;
             }
             if (filter.getProvider() == null || filter.getProvider().equals("All Providers")) {

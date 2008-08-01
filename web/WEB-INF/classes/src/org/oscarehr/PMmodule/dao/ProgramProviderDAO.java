@@ -193,6 +193,19 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         return results;
     }
 
+    public List<ProgramProvider> getActiveProgramDomain(String providerNo) {
+        if (providerNo == null || Long.valueOf(providerNo) == null) {
+            throw new IllegalArgumentException();
+        }
+
+        List results = this.getHibernateTemplate().find("select pp from ProgramProvider pp, Program p where pp.ProgramId=p.id and p.programStatus='active' and pp.ProviderNo = ?", providerNo);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProgramDomain: providerNo=" + providerNo + ",# of results=" + results.size());
+        }
+        return results;
+    }
+    
     public List<ProgramProvider> getProgramDomainByFacility(String providerNo, Integer facilityId) {
         if (providerNo == null || Long.valueOf(providerNo) == null) {
             throw new IllegalArgumentException();

@@ -95,6 +95,11 @@ public class ActivityReportAction extends DispatchAction {
 		List programs = programManager.getPrograms();
 		for(Iterator iter=programs.iterator();iter.hasNext();) {
 			Program p = (Program)iter.next();
+			
+			//Don't report inactive program
+			if("inactive".equalsIgnoreCase(p.getProgramStatus())) {
+				continue;
+			}
 			searchBean.setProgramId(p.getId());
 			List admissions = admissionManager.search(searchBean);
 			int totalAdmissions = admissions.size();

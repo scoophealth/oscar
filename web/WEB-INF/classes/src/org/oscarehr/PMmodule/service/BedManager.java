@@ -206,10 +206,15 @@ public class BedManager {
     	List<Bed> beds = new ArrayList<Bed>();
         for (Bed bed : bedDAO.getBedsByFilter(facilityId, roomId, active)) {
             setAttributes(bed);
-
+            
+            // We have decided that all beds(reserved and non-reserved) should be shown up
+            // not only show the beds are not being reserved.
+            /* so filterBed(..) is not useful anymore until we hear other's idea
             if (!filterBed(bed, reserved)) {
                 beds.add(bed);
             }
+            */
+            beds.add(bed);
         }
         return beds;
     }

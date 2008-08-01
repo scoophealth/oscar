@@ -221,6 +221,10 @@ public class CustomFilterAction extends DispatchAction {
 	        filter.setAssignees(sAssignees);
         }
         filter.setProviderNo(this.getProviderNo(request));
+        
+        if("All Programs".equals(filter.getProgramId())) {
+        	filter.setProgramId("");
+        }
         ticklerMgr.saveCustomFilter(filter);
         
         ActionMessages messages = new ActionMessages();

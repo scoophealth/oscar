@@ -124,12 +124,16 @@ public class TicklerManager {
 	        boolean add = false;	        
 	        List ppList = new ArrayList();
 	        
-	        //If there is no selected program
-	        if(programNo==null || "".equals(programNo) || "null".equals(programNo))
+	        //If there is no selected program, show all ticklers in domain
+	        //if(programNo==null || "".equals(programNo) || "null".equals(programNo))
 	        	programId = String.valueOf(t.getProgram_id());
 	        
-	        if(programId==null || "".equals(programId) || "null".equals(programId))
-		        continue;
+	        //If the ticklers are not in any problem (old ticklers), show them.
+	        //They will not be filtered by the role access.
+	        if(programId==null || "".equals(programId) || "null".equals(programId)) {
+	        	filteredTicklers.add(t);
+	        	continue;
+	        }
 	        
 	        ppList = roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, new Long(programId));
 	        if (ppList == null || ppList.isEmpty()) {

@@ -259,7 +259,8 @@ public class BedManagerAction extends BaseAction {
     public ActionForward addRooms(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         BedManagerForm bForm = (BedManagerForm) form;
         Integer numRooms = bForm.getNumRooms();
-
+        
+/*????what is roomlines used for?
         Integer roomslines = 0;
         if ("".equals(request.getParameter("roomslines")) == false) {
             roomslines = Integer.valueOf(request.getParameter("roomslines"));
@@ -273,7 +274,7 @@ public class BedManagerAction extends BaseAction {
                 numRooms = 10 - roomslines;
             }
         }
-
+*/
         if (numRooms != null && numRooms > 0) {
             try {
                 roomManager.addRooms(bForm.getFacilityId(), numRooms);
@@ -293,7 +294,10 @@ public class BedManagerAction extends BaseAction {
         BedManagerForm bForm = (BedManagerForm) form;
         Integer numBeds = bForm.getNumBeds();
         Integer roomId = bForm.getBedRoomFilterForBed();
-
+        
+        int occupancyOfRoom = roomManager.getRoom(roomId).getOccupancy().intValue();
+        
+        //bedslines is the current total number of bed in the room.
         Integer bedslines = 0;
         if ("".equals(request.getParameter("bedslines")) == false) {
             bedslines = Integer.valueOf(request.getParameter("bedslines"));
@@ -303,8 +307,8 @@ public class BedManagerAction extends BaseAction {
             if (numBeds <= 0) {
                 numBeds = 0;
             }
-            else if (numBeds + bedslines > 10) {
-                numBeds = 10 - bedslines;
+            else if (numBeds + bedslines > occupancyOfRoom) {
+                numBeds = occupancyOfRoom - bedslines;
             }
         }
 
@@ -317,6 +321,12 @@ public class BedManagerAction extends BaseAction {
                 messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
                 saveMessages(request, messages);
             }
+        } else {
+        	
+	        	ActionMessages messages = new ActionMessages();
+	            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message", "The number of the beds in this room already reaches the maximum."));
+	            saveMessages(request, messages);
+        	
         }
 
         return manage(mapping, form, request, response);
