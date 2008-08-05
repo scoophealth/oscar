@@ -66,11 +66,24 @@
 	    }
 		//-->
 
+            
+            function OnSubmitForm(){
+                var cForm = document.getElementById("clientform");
+                var newAR = document.getElementById("bcartype");
+                //console.log("dd" +cForm.action + " "+newAR.checked);
+                if(newAR.checked == true){
+                    cForm.action ="reportBCARDemo3.jsp";
+                }else{
+                    cForm.action ="reportBCARDemo2.jsp";
+                }
+                return true;
+            }
+
       </script>
     </head>
     <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
     <center>
-	<form method="post" name="baseurl" action="reportBCARDemo2.jsp">
+	<form method="post" id ="clientform" name="baseurl" action="reportBCARDemo2.jsp" onSubmit="return OnSubmitForm();">
       <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
         <tr BGCOLOR="#CCFFFF">
           <th>Client Database Report</th>
@@ -82,6 +95,11 @@
               <input type="hidden" name="demoReport" value="1">
               <input type="submit" name="submit" value="Report in HTML">
               | <input type="submit" name="submit" value="Report in CSV">
+                  
+              BCAR: <input type="radio" name="bcartype"   value="BCAR"/>
+              BCAR2007: <input type="radio" id="bcartype"  checked name="bcartype"  value="BCAR2007"/>
+              
+                  
       </table>
       
       <table width="100%" border="0" cellspacing="1" cellpadding="0">
