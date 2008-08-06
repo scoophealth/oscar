@@ -28,8 +28,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -37,17 +35,15 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.model.SystemMessage;
-import org.caisi.service.SystemMessageManager;
+import org.oscarehr.common.dao.SystemMessageDao;
+import org.oscarehr.common.model.SystemMessage;
 
 public class SystemMessageAction extends DispatchAction {
 
-	private static Log log = LogFactory.getLog(SystemMessageAction.class);
+	private SystemMessageDao systemMessageDao = null;
 	
-	protected SystemMessageManager mgr = null;
-	
-	public void setSystemMessageManager(SystemMessageManager mgr) {
-		this.mgr = mgr;
+	public void setSystemMessageDao(SystemMessageDao systemMessageDao) {
+		this.systemMessageDao = systemMessageDao;
 	}
 	
 	public ActionForward unspecified(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -55,7 +51,7 @@ public class SystemMessageAction extends DispatchAction {
 	}
 		
 	public ActionForward list(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		List activeMessages = mgr.getMessages();
+		List<SystemMessage> activeMessages = systemMessageDao.findAll();
 		request.setAttribute("ActiveMessages",activeMessages);
 		return mapping.findForward("list");
 	}
@@ -65,7 +61,7 @@ public class SystemMessageAction extends DispatchAction {
 		String messageId = request.getParameter("id");
 		
 		if(messageId != null) {
-			SystemMessage msg = mgr.getMessage(messageId);
+			SystemMessage msg = systemMessageDao.find(Integer.parseInt(messageId));
 			
 			if(msg == null) {
 				ActionMessages webMessage = new ActionMessages();
@@ -82,8 +78,8 @@ public class SystemMessageAction extends DispatchAction {
 	public ActionForward save(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm userForm = (DynaActionForm)form;
 		SystemMessage msg = (SystemMessage)userForm.get("system_message");
-		msg.setCreation_date(new Date());
-		mgr.saveSystemMessage(msg);
+		msg.setCreationDate(new Date());
+		systemMessageDao.persist(msg);
 		
         ActionMessages messages = new ActionMessages();
         messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("system_message.saved"));
@@ -93,7 +89,7 @@ public class SystemMessageAction extends DispatchAction {
 	}
 	
 	public ActionForward view(ActionMapping mapping,ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		List messages = mgr.getMessages();
+		List<SystemMessage> messages = systemMessageDao.findAll();
 		if(messages.size()>0) {
 			request.setAttribute("messages",messages);
 		}

@@ -1903,16 +1903,12 @@ CREATE TABLE `survey_test_instance` (
   PRIMARY KEY  (`id`)
 );
 
---
--- Table structure for table `system_message`
---
-
-CREATE TABLE `system_message` (
-  `id` int(10) NOT NULL auto_increment,
-  `message` text NOT NULL,
-  `creation_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `expiry_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`id`)
+create table SystemMessage 
+(
+  id int primary key auto_increment,
+  message text NOT NULL,
+  creationDate datetime NOT NULL,
+  expiryDate datetime NOT NULL
 );
 
 

@@ -20,29 +20,28 @@
 * Toronto, Ontario, Canada 
 */
 
-package org.caisi.dao;
+package org.oscarehr.common.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.caisi.model.SystemMessage;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import javax.persistence.Query;
 
-public class SystemMessageDAO extends HibernateDaoSupport  {
+import org.oscarehr.common.model.SystemMessage;
+import org.springframework.stereotype.Repository;
 
-	private static Log log = LogFactory.getLog(SystemMessageDAO.class);
+@Repository
+public class SystemMessageDao extends AbstractDao {
 	
-	public SystemMessage getMessage(Long id) {
-		return (SystemMessage)this.getHibernateTemplate().get(SystemMessage.class,id);
+	public SystemMessage find(Integer id) {
+        return(entityManager.find(SystemMessage.class, id));
 	}
 	
-	public List getMessages() {
-		return this.getHibernateTemplate().find("from SystemMessage sm order by sm.expiry_date desc");
-	}
-	
-	public void saveMessage(SystemMessage mesg) {
-		this.getHibernateTemplate().saveOrUpdate(mesg);
-	}
+	public List<SystemMessage> findAll() {
+		Query query = entityManager.createQuery("select x from SystemMessage x order by x.expiryDate desc");
+		
+		@SuppressWarnings("unchecked")
+		List<SystemMessage> results = query.getResultList();
 
+		return(results);
+	}
 }

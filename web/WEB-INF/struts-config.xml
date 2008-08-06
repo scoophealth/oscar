@@ -4,7 +4,7 @@
     <form-beans>
         <!-- caisi core -->
         <form-bean name="systemMessageForm" type="org.apache.struts.validator.DynaValidatorForm">
-            <form-property name="system_message" type="org.caisi.model.SystemMessage" />
+            <form-property name="system_message" type="org.oscarehr.common.model.SystemMessage" />
         </form-bean>
         <form-bean name="facilityMessageForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="facility_message" type="org.caisi.model.FacilityMessage" />
