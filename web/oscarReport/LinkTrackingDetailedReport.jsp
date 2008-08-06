@@ -24,6 +24,8 @@
 <%@page import="org.caisi.model.*"%>
 <%@page import="org.oscarehr.PMmodule.dao.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
+<%@page import="org.oscarehr.common.dao.*"%>
+<%@page import="org.oscarehr.common.model.*"%>
 <%
 	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 	RedirectLinkDao redirectLinkDao = (RedirectLinkDao) applicationContext.getBean("redirectLinkDao");
@@ -51,7 +53,7 @@
 		<%
 			for (RedirectLinkTracking redirectLinkTracking : trackingResults)
 			{
-				%>
+		%>
 					<tr class="genericTableRow">
 						<td class="genericTableData"><%=DateFormatUtils.ISO_DATETIME_FORMAT.format(redirectLinkTracking.date)%></td>
 						<%

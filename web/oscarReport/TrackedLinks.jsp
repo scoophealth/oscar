@@ -19,6 +19,8 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.dao.*"%>
 <%@page import="org.caisi.model.*"%>
+<%@page import="org.oscarehr.common.dao.*"%>
+<%@page import="org.oscarehr.common.model.*"%>
 <%
 	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 	RedirectLinkDao redirectLinkDao = (RedirectLinkDao) applicationContext.getBean("redirectLinkDao");

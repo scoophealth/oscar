@@ -17,7 +17,7 @@
 * Toronto, Ontario, Canada 
 */
 
-package org.caisi.dao;
+package org.oscarehr.common.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,8 +28,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.caisi.model.RedirectLinkTracking;
 import org.hibernate.HibernateException;
+import org.oscarehr.common.model.RedirectLinkTracking;
 import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.util.SqlUtils;

@@ -1,4 +1,4 @@
-package org.caisi.model;
+package org.oscarehr.common.model;
 
 import java.util.Date;
 

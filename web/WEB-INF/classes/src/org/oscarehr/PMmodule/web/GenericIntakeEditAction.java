@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -294,7 +295,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			intake.setFacilityId(currentFacilityId);
 
 			String admissionText = null;
-			String remoteReferralId = request.getParameter("remoteReferralId");
+			String remoteReferralId = StringUtils.trimToNull(request.getParameter("remoteReferralId"));
 			if (remoteReferralId != null) {
 				admissionText = getAdmissionText(facilityId, admissionText, remoteReferralId);
 			}
