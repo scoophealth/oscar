@@ -264,6 +264,13 @@
                         WHERE demographic_no=${demographic} AND SUBSTRING(demographic.family_doctor,9,6)=billingreferral.referral_no</ap-sql>
                 <ap-output>${fax}</ap-output>
         </databaseap>
+        <databaseap>
+                <ap-name>allergies_des</ap-name>
+                <ap-sql>SELECT allergies.DESCRIPTION
+                        FROM allergies, demographic
+                        WHERE demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no</ap-sql>
+                <ap-output>${allergies}</ap-output>
+        </databaseap>
         
 
 </eformap-config>
