@@ -83,7 +83,7 @@
     </head>
     <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
     <center>
-	<form method="post" id ="clientform" name="baseurl" action="reportBCARDemo2.jsp" onSubmit="return OnSubmitForm();">
+	<form method="post" id ="clientform" name="baseurl" action="reportBCARDemo2.jsp" >
       <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
         <tr BGCOLOR="#CCFFFF">
           <th>Client Database Report</th>
