@@ -10,6 +10,13 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
     }
 }
 
+String ARTYPE = "formBCAR";
+if (request.getParameter("bcartype") != null && request.getParameter("bcartype").equals("BCAR2007")){
+    ARTYPE = "formBCAR2007";
+}
+
+System.out.println("AR TYPE "+ARTYPE);
+
 DBHelp dbObj = new DBHelp();
 
 Properties propDemoSelect = new Properties();
@@ -93,7 +100,7 @@ while (enumVar.hasMoreElements()) {
         if(name.equals("b_primiparous")) bARSelectPrimiparous = true;
         
         if(!name.equals("ga") && !name.equals("b_primiparous"))
-	        sARSelect += (sARSelect.length()<1?"":",") + "formBCAR."+name; 
+	        sARSelect += (sARSelect.length()<1?"":",") + ARTYPE+"."+name; 
     }
     if(propSpecSelect.containsKey(name)) { 
         bSpecSelect = true; 
@@ -118,7 +125,7 @@ for(int i=0; i<vecSeqDemoSelect.size(); i++) {
 }
 for(int i=0; i<vecSeqARSelect.size(); i++) {
     if(propTempARSelect.getProperty((String)vecSeqARSelect.get(i)) != null) {
-        sARSelect += (sARSelect.length()<1?"":",") + "formBCAR." + vecSeqARSelect.get(i); 
+        sARSelect += (sARSelect.length()<1?"":",") + ARTYPE+"." + vecSeqARSelect.get(i); 
     }
 }
 for(int i=0; i<vecSeqSpecSelect.size(); i++) {
@@ -167,7 +174,7 @@ for (int i = 0; i < vecValue.size(); i++) {
 	    bSpecFilter = true;
 	    sSpecFilter += (sSpecFilter.length()<1?"":" and ") + strFilter; 
 	}
-	if(strFilter.indexOf("formBCAR.")>=0) {
+	if(strFilter.indexOf(ARTYPE+".")>=0) {
 	    bARFilter = true;
         //"formBCAR.demographic_no in (select distinct demographic_no from formBCBirthSumMo)"
 		if(strFilter.indexOf("formBCBirthSumMo") > 0) {
@@ -177,7 +184,7 @@ for (int i = 0; i < vecValue.size(); i++) {
 			    sBirthSumNo += (sBirthSumNo.length()>0? ",":"") + rs.getInt("demographic_no") ;
 			}
 			sBirthSumNo = sBirthSumNo.length()>0 ? sBirthSumNo : "0";
-			strFilter = "formBCAR.demographic_no in (" + sBirthSumNo + ")";
+			strFilter = ARTYPE+".demographic_no in (" + sBirthSumNo + ")";
 		}
 
 	    sARFilter += (sARFilter.length()<1?"":" and ") + strFilter; 
@@ -300,12 +307,12 @@ Vector vecARCaption = new Vector();
 Properties propARValue = new Properties();
 if( (bDemoSelect && bARSelect && !bSpecSelect && !bSpecFilter) || (!bSpecSelect && bARFilter && !bSpecFilter) ) {
     String sTempEle = sARFilter.length()>0? (" and "+sARFilter) : "";
-    String subQuery = "select max(ID) from formBCAR, demographic where demographic.demographic_no=formBCAR.demographic_no ";
+    String subQuery = "select max(ID) from "+ARTYPE+", demographic where demographic.demographic_no="+ARTYPE+".demographic_no ";
     
     ///here is the prob
     
-    subQuery += " and " + sDemoFilter + sTempEle + " group by formBCAR.demographic_no,formBCAR.formCreated ";
-	System.out.println(" demographic and formBCAR subQuery: " + subQuery);
+    subQuery += " and " + sDemoFilter + sTempEle + " group by "+ARTYPE+".demographic_no,"+ARTYPE+".formCreated ";
+	System.out.println(" demographic and "+ARTYPE+" subQuery: " + subQuery);
     String subFormId = "";
     ResultSet rs = dbObj.searchDBRecord(subQuery);
 	while (rs.next()) {
@@ -317,9 +324,9 @@ if( (bDemoSelect && bARSelect && !bSpecSelect && !bSpecFilter) || (!bSpecSelect 
         
         
         
-    String sql = "select demographic.demographic_no," + sDemoSelect + sTempEle + " from demographic,formBCAR where ";
-    sql += " formBCAR.ID in (" + subFormId + ") and demographic.demographic_no=formBCAR.demographic_no " + ORDER_BY;
-	System.out.println(" demographic and formBCAR: " + sql);
+    String sql = "select demographic.demographic_no," + sDemoSelect + sTempEle + " from demographic,"+ARTYPE+" where ";
+    sql += ARTYPE+".ID in (" + subFormId + ") and demographic.demographic_no="+ARTYPE+".demographic_no " + ORDER_BY;
+	System.out.println(" demographic and "+ARTYPE+": " + sql);
 
 	String [] temp = sDemoSelect.replaceAll("demographic.","").split(",");
 	for(int i=0; i<temp.length; i++) {
@@ -328,7 +335,7 @@ if( (bDemoSelect && bARSelect && !bSpecSelect && !bSpecFilter) || (!bSpecSelect 
 	    System.out.println(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
 	}
 	if(bARSelect) {
-		temp = sARSelect.replaceAll("formBCAR.","").split(",");
+		temp = sARSelect.replaceAll(ARTYPE+".","").split(",");
 		for(int i=0; i<temp.length; i++) {
 		    vecFieldCaption.add(propARSelect.getProperty(temp[i].trim()));
 		    vecFieldName.add(temp[i].trim());
@@ -345,9 +352,9 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
     if(bDemoSelect && bARSelect && bSpecSelect && !bSpecFilter) {
         vecFieldName.add("demographic_no");
         String sTempEle = sARFilter.length()>0? (" and "+sARFilter) : "";
-        String subQuery = "select max(ID) from formBCAR, demographic where demographic.demographic_no=formBCAR.demographic_no ";
-        subQuery += " and " + sDemoFilter + sTempEle + " group by formBCAR.demographic_no,formBCAR.formCreated ";
-    	System.out.println(" demographic and formBCAR subQuery: " + subQuery);
+        String subQuery = "select max(ID) from "+ARTYPE+", demographic where demographic.demographic_no="+ARTYPE+".demographic_no ";
+        subQuery += " and " + sDemoFilter + sTempEle + " group by "+ARTYPE+".demographic_no,"+ARTYPE+".formCreated ";
+        System.out.println(" demographic and "+ARTYPE+" subQuery: " + subQuery);
         String subFormId = "";
         ResultSet rs = dbObj.searchDBRecord(subQuery);
     	while (rs.next()) {
@@ -356,9 +363,9 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
 
     	sTempEle = sARSelect.length()>0? (","+sARSelect) : "";
     	subFormId = subFormId.length()>0? subFormId : "0";
-        String sql = "select demographic.demographic_no," + sDemoSelect + sTempEle + " from demographic,formBCAR where ";
-        sql += " formBCAR.ID in (" + subFormId + ") and demographic.demographic_no=formBCAR.demographic_no " + ORDER_BY;
-    	System.out.println(" demographic and formBCAR: " + sql);
+        String sql = "select demographic.demographic_no," + sDemoSelect + sTempEle + " from demographic,"+ARTYPE+" where ";
+        sql += ARTYPE+".ID in (" + subFormId + ") and demographic.demographic_no="+ARTYPE+".demographic_no " + ORDER_BY;
+        System.out.println(" demographic and "+ARTYPE+": " + sql);
 
     	String [] temp = sDemoSelect.replaceAll("demographic.","").split(",");
     	for(int i=0; i<temp.length; i++) {
@@ -367,7 +374,7 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
     	    System.out.println(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
     	}
     	if(bARSelect) {
-    		temp = sARSelect.replaceAll("formBCAR.","").split(",");
+    		temp = sARSelect.replaceAll(ARTYPE+".","").split(",");
     		for(int i=0; i<temp.length; i++) {
     		    vecFieldCaption.add(propARSelect.getProperty(temp[i].trim()));
     		    vecFieldName.add(temp[i].trim());
@@ -426,9 +433,9 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
 
     	// formAR second
         sTempEle = sARFilter.length()>0? (" and "+sARFilter) : "";
-        subQuery = "select max(ID) from formBCAR, demographic where demographic.demographic_no=formBCAR.demographic_no ";
-        subQuery += " and " + sDemoFilter + sTempEle + " group by formBCAR.demographic_no,formBCAR.formCreated ";
-    	System.out.println(" demographic and formBCAR subQuery: " + subQuery);
+        subQuery = "select max(ID) from "+ARTYPE+", demographic where demographic.demographic_no="+ARTYPE+".demographic_no ";
+        subQuery += " and " + sDemoFilter + sTempEle + " group by "+ARTYPE+".demographic_no,"+ARTYPE+".formCreated ";
+    	System.out.println(" demographic and "+ARTYPE+" subQuery: " + subQuery);
         String subFormId = "";
         rs = dbObj.searchDBRecord(subQuery);
     	while (rs.next()) {
@@ -438,9 +445,9 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
     	// total
     	sTempEle = sARSelect.length()>0? (","+sARSelect) : "";
     	subFormId = subFormId.length()>0? subFormId : "0";
-        sql = "select demographic.demographic_no," + sDemoSelect + sTempEle + " from demographic,formBCAR where ";
+        sql = "select demographic.demographic_no," + sDemoSelect + sTempEle + " from demographic,"+ARTYPE+" where ";
         sql += " demographic.demographic_no in (" +  subFormDemoNo + ") and ";
-        sql += " formBCAR.ID in (" + subFormId + ") and demographic.demographic_no=formBCAR.demographic_no " + ORDER_BY;
+        sql += ARTYPE+".ID in (" + subFormId + ") and demographic.demographic_no="+ARTYPE+".demographic_no " + ORDER_BY;
     	System.out.println(" total: " + sql);
 
     	temp = sDemoSelect.replaceAll("demographic.","").split(",");
@@ -450,7 +457,7 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
     	    System.out.println(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
     	}
     	if(bARSelect) {
-    		temp = sARSelect.replaceAll("formBCAR.","").split(",");
+    		temp = sARSelect.replaceAll(ARTYPE+".","").split(",");
     		for(int i=0; i<temp.length; i++) {
     		    vecFieldCaption.add(propARSelect.getProperty(temp[i].trim()));
     		    vecFieldName.add(temp[i].trim());
