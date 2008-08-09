@@ -550,7 +550,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
     </td>
     <td width="46%"  class="bCellData">
         Billing Physician#:
-        <select style="font-size:80%;" name="provider_no">
+        <select style="font-size:80%;" name="providerNo">
             <option value="">--- Select Provider ---</option>
             <% ResultSet rslocal = null;
                // Retrieving Provider
