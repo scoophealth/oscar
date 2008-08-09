@@ -115,6 +115,7 @@ public class BillingReProcessBillAction
     String birthDate = demo.getDob(); //d
     String correspondenceCode = frm.getCorrespondenceCode(); //f
     String claimComment = frm.getShortComment(); //f
+    String icbcClaimNo = frm.getIcbcClaim();
 
     String billingStatus = frm.getStatus(); //f
 
@@ -280,6 +281,7 @@ public class BillingReProcessBillAction
         + "original_claim = '" + originalMSPNumber + "',"
         + "facility_no = '" + facilityNum + "',"
         + "facility_sub_no = '" + facilitySubNum + "',"
+        + "icbc_claim_no = '"+icbcClaimNo+"',"
 
         + "oin_insurer_code = '" + oinInsurerCode + "', "
         + "oin_registration_no = '" + UtilMisc.mysqlEscape(oinRegistrationNo) +
