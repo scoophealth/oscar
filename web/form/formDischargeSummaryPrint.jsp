@@ -344,7 +344,7 @@ var maxYear=9900;
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
  <tr>
-      <td align="center" ><b>Sherbourne Health Centre</b></td>
+      <td align="center" ><b>Sherbourne Health Centre Infirmary</b></td>
  </tr>
  <tr>
  	<td align="center" ><b>(ph) 416-324-4108</b></td>
@@ -525,10 +525,15 @@ var maxYear=9900;
 
 <br>
 
-<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
-<tr>
-	<th align="left">Notes:</th>
-</tr>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<th align="left">Notes:</th>
+	</tr>
+	<tr>
+		<td>
+		<%= props.getProperty("notes", "") %>
+		</td>
+	</tr>
 </table>
 <br>
 <table>
