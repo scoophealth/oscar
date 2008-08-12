@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta http-equiv="Content-Language" content="en-us" />
+		
+		<title>Framingham Risk Calculator</title>
+		
+		<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+	
+		<link href="css/css.css" rel="stylesheet" type="text/css" media="all" />
+			
+	</head>
+		
+	<script type="text/javascript" language="javascript" charset="utf-8" src="js/js.js"></script>
+		
+<body onload="UpdateNonDiabetic()">
+	
+	<div id="wrapper">
+		
+		<div id="header">
+		
+			<div id="ubc">University of British Columbia: Department of Family Practice</div>
+			<div id="evidocs">Evidocs: Tools for better informed shared decision making</div>
+			
+		</div>
+					
+		<div id="nav">
+			You are using the <span class="ttl">Framingham Risk Calculator</span>, intended<br />for patients with no history of diabetes. <a href="diabetic.html">Is the patient diabetic?</a>
+		</div>
+							
+		<div id="content">
+			
+			<h1>Your Details</h1>
+			
+			<p>This calculator is for use only in <b>primary prevention</b>, and should not be used for individuals with known heart disease.</p>
+	
+			<form onsubmit="UpdateNonDiabetic(); return false;">
+	
+			<table>
+				<tr>
+					<td class="label">Age now:</td>
+					<td><input id="cAge" class="bdr" type="text" size="5" value="55" onchange="UpdateNonDiabetic()" /></td>
+					<td class="label">Sex:</td>
+					<td>
+						<input id="cMale" type="radio" name="sex" onclick="UpdateNonDiabetic()" checked="checked" /> <label class="radio" for="cMale">Male</label><br />
+						<input id="cFemale" type="radio" name="sex" onclick="UpdateNonDiabetic()" /> <label class="radio" for="cFemale">Female</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Systolic BP:</td>
+					<td><input id="cSystolic" class="bdr" type="text" size="5" value="140" onchange="UpdateNonDiabetic()" /> mmHg</td>
+					<td class="label">Smoker?</td>
+					<td>
+						<input id="cNonSmoker" type="radio" name="smoking" onclick="UpdateNonDiabetic()" checked="checked" /> <label class="radio" for="cNonSmoker">Non- or Ex-smoker</label><br />
+						<input id="cCurSmoker" type="radio" name="smoking" onclick="UpdateNonDiabetic()" /> <label class="radio" for="cCurSmoker">Current Smoker</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Total Cholesterol:</td>
+					<td><input id="cCholesterol" class="bdr" type="text" size="5" value="5" onchange="UpdateNonDiabetic()" /> mmol/L</td>
+					<td class="label">HDL Cholesterol:</td>
+					<td><input id="cHDL" class="bdr" type="text" size="5" value="1" onchange="UpdateNonDiabetic()" /> mmol/L</td>
+				</tr>	
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><input class="btn" type="button" value="Calculate" onclick="UpdateNonDiabetic()" /></td>
+				</tr>	
+								
+			</table>
+		
+			</form>	
+			
+			<h1>Your Results</h1>	
+				
+			<table id="FraminghamChart">
+				<tr>
+					<td colspan="12">Framingham Ten-Year Coronary Heart Disease And Stroke Risk</td>
+				</tr>
+				<tr>
+					<td rowspan="2">Systolic BP</td>
+					<td colspan="5">Total Cholesterol / HDL Cholesterol</td>
+				</tr>
+				<tr>
+					<td id="c1">4</td>
+					<td id="c2">4.5</td>
+					<td id="c3">5</td>
+					<td id="c4">5.5</td>
+					<td id="c5">6</td>
+				</tr>	
+				<tr>
+					<td id="bp2">&le;100</td>
+					<td id="bp2c1"></td>	
+					<td id="bp2c2"></td>	
+					<td id="bp2c3"></td>	
+					<td id="bp2c4"></td>	
+					<td id="bp2c5"></td>	
+				</tr>	
+				<tr>
+					<td id="bp3">110</td>
+					<td id="bp3c1"></td>	
+					<td id="bp3c2"></td>	
+					<td id="bp3c3"></td>	
+					<td id="bp3c4"></td>	
+					<td id="bp3c5"></td>	
+				</tr>	
+				<tr>
+					<td id="bp4">120</td>
+					<td id="bp4c1"></td>	
+					<td id="bp4c2"></td>	
+					<td id="bp4c3"></td>	
+					<td id="bp4c4"></td>	
+					<td id="bp4c5"></td>	
+				</tr>	
+				<tr>
+					<td id="bp5">130</td>
+					<td id="bp5c1"></td>	
+					<td id="bp5c2"></td>	
+					<td id="bp5c3"></td>	
+					<td id="bp5c4"></td>	
+					<td id="bp5c5"></td>	
+				</tr>
+				<tr>
+					<td id="bp6">140</td>
+					<td id="bp6c1"></td>	
+					<td id="bp6c2"></td>	
+					<td id="bp6c3"></td>	
+					<td id="bp6c4"></td>	
+					<td id="bp6c5"></td>	
+				</tr>
+				<tr>
+					<td id="bp7">150</td>
+					<td id="bp7c1"></td>	
+					<td id="bp7c2"></td>	
+					<td id="bp7c3"></td>	
+					<td id="bp7c4"></td>	
+					<td id="bp7c5"></td>	
+				</tr>
+				<tr>
+					<td id="bp8">&ge;160</td>
+					<td id="bp8c1"></td>	
+					<td id="bp8c2"></td>	
+					<td id="bp8c3"></td>	
+					<td id="bp8c4"></td>	
+					<td id="bp8c5"></td>	
+				</tr>		
+			</table>
+			
+			<div id="theScript"></div>
+				
+		</div>
+
+	</div>
+	
+</body>
+</html>
+

@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta http-equiv="Content-Language" content="en-us" />
+		
+		<title>UKPDS Risk Calculator</title>
+		
+		<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+	
+		<link href="css/css.css" rel="stylesheet" type="text/css" media="all" />
+			
+	</head>
+		
+	<script type="text/javascript" language="javascript" charset="utf-8" src="js/js.js">
+
+	</script>
+	
+<body onload="UpdateDiabetic()">
+	
+	<div id="wrapper">
+		
+		<div id="header">
+		
+			<div id="ubc">University of British Columbia: Department of Family Practice</div>
+			<div id="evidocs">Evidocs: Tools for better informed shared decision making</div>
+			
+		</div>
+					
+		<div id="nav">
+			You are using the <span class="ttl">UKPDS Risk Calculator</span>, intended<br />for patients who are diabetic. <a href="index.html">Is the patient not diabetic?</a>
+		</div>
+		
+		<div id="content">
+			
+			<h1>Your Details</h1>
+			
+			<p>This calculator is for use only in <b>primary prevention</b>, and should not be used for individuals with known heart disease.</p>
+	
+			<form onsubmit="UpdateDiabetic(); return false;">
+	
+			<table id="input">
+				<tr>
+					<td class="label">Age now:</td>
+					<td><input id="cAge" class="bdr" type="text" size="5" value="55" onchange="UpdateDiabetic()" /></td>
+					<td class="label">Sex:</td>
+					<td>
+						<input id="cMale" type="radio" name="sex" onclick="UpdateDiabetic()" checked="checked" /> <label class="radio" for="cMale">Male</label><br />
+						<input id="cFemale" type="radio" name="sex" onclick="UpdateDiabetic()" /> <label class="radio" for="cFemale">Female</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Systolic BP:</td>
+					<td><input class="bdr" id="cSystolic" type="text" size="5" value="140" onchange="UpdateDiabetic()" /> mmHg</td>
+					<td class="label">Smoker?</td>
+					<td>
+						<input id="cNonSmoker" type="radio" name="smoking" onclick="UpdateDiabetic()" checked="checked" /> <label class="radio" for="cNonSmoker">Non- or Ex-smoker</label><br />
+						<input id="cCurSmoker" type="radio" name="smoking" onclick="UpdateDiabetic()" /> <label class="radio" for="cCurSmoker">Current Smoker</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Total Cholesterol:</td>
+					<td><input class="bdr" id="cCholesterol" type="text" size="5" value="5" onchange="UpdateDiabetic()" /> mmol/L</td>
+					<td class="label">HDL Cholesterol:</td>
+					<td><input class="bdr" id="cHDL" type="text" size="5" value="1" onchange="UpdateDiabetic()" /> mmol/L</td>
+				</tr>
+				<tr>					
+					<td class="label">Duration of Diabetes:
+					<td><input id="cDuration"class="bdr"  type="text" size="5" value="0" onchange="UpdateDiabetic()" /> years</td>
+					<td class="label">A1C:</td>
+					<td><input id="cALC"class="bdr"  type="text" size="5" value="6" onchange="UpdateDiabetic()" /> %</td>
+				</tr>
+				<tr>
+					<td class="label">Atrial Fibrillation:</td> 
+					<td>
+						<input id="cAtrialNo" type="radio" name="atrial" onclick="UpdateDiabetic()" checked="checked" /> <label class="radio" for="cAtrialNo">No</label><br />
+						<input id="cAtrialYes" type="radio" name="atrial" onclick="UpdateDiabetic()" /> <label class="radio" for="cAtrialYes">Yes</label>
+					</td>
+					<td class="label">Ethnicity:</td> 
+					<td>
+						<input id="cWhite" type="radio" name="ethnicity" onclick="UpdateDiabetic()" checked="checked" /> <label class="radio" for="cWhite">White</label><br />
+						<input id="cAfroCaribbean" type="radio" name="ethnicity" onclick="UpdateDiabetic()" /> <label class="radio" for="cAfroCaribbean">Afro-Caribbean</label><br />
+						<input id="cAsianIndian" type="radio" name="ethnicity" onclick="UpdateDiabetic()" /> <label class="radio" for="cAsianIndian">Asian-Indian</label>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><input class="btn" type="button" value="Calculate" onclick="UpdateDiabetic()" /></td>
+				</tr>	
+			</table>		
+		
+			</form>
+			
+			<h1>Your Results</h1>
+			
+			<table id="UKPDSChart">
+				<tr>
+					<td colspan="6">UKPDS Ten-Year Coronary Heart Disease and Stroke Risk</td>
+				</tr>
+				<tr>
+					<td rowspan="2">Systolic BP</td>
+					<td rowspan="2">TC/HDL</td>
+					<td colspan="4">HBA1c</td>
+				</tr>
+				<tr>
+					<td id="UKPDS_h1">5</td>
+					<td id="UKPDS_h2">6</td>
+					<td id="UKPDS_h3">7</td>
+					<td id="UKPDS_h4">8</td>
+				</tr>
+				<tr>
+					<td rowspan="3" id="UKPDS_bp0">&le;100</td>
+					<td id="UKPDS_bp0c1">4</td>
+					<td id="UKPDS_bp0c1h1"></td>	
+					<td id="UKPDS_bp0c1h2"></td>
+					<td id="UKPDS_bp0c1h3"></td>
+					<td id="UKPDS_bp0c1h4"></td>
+				</tr>	
+				<tr>
+					<td id="UKPDS_bp0c2">5</td>
+					<td id="UKPDS_bp0c2h1"></td>	
+					<td id="UKPDS_bp0c2h2"></td>
+					<td id="UKPDS_bp0c2h3"></td>
+					<td id="UKPDS_bp0c2h4"></td>
+				</tr>	
+				<tr>
+					<td id="UKPDS_bp0c3">6</td>
+					<td id="UKPDS_bp0c3h1"></td>	
+					<td id="UKPDS_bp0c3h2"></td>
+					<td id="UKPDS_bp0c3h3"></td>
+					<td id="UKPDS_bp0c3h4"></td>
+				</tr>	
+				<tr>
+					<td rowspan="3" id="UKPDS_bp1">120</td>
+					<td id="UKPDS_bp1c1">4</td>
+					<td id="UKPDS_bp1c1h1"></td>	
+					<td id="UKPDS_bp1c1h2"></td>
+					<td id="UKPDS_bp1c1h3"></td>
+					<td id="UKPDS_bp1c1h4"></td>
+				</tr>	
+				<tr>
+					<td id="UKPDS_bp1c2">5</td>
+					<td id="UKPDS_bp1c2h1"></td>	
+					<td id="UKPDS_bp1c2h2"></td>
+					<td id="UKPDS_bp1c2h3"></td>
+					<td id="UKPDS_bp1c2h4"></td>
+				</tr>	
+				<tr>
+					<td id="UKPDS_bp1c3">6</td>
+					<td id="UKPDS_bp1c3h1"></td>	
+					<td id="UKPDS_bp1c3h2"></td>
+					<td id="UKPDS_bp1c3h3"></td>
+					<td id="UKPDS_bp1c3h4"></td>
+				</tr>	
+				<tr>
+					<td rowspan="3" id="UKPDS_bp2">140</td>
+					<td id="UKPDS_bp2c1">4</td>
+					<td id="UKPDS_bp2c1h1"></td>	
+					<td id="UKPDS_bp2c1h2"></td>
+					<td id="UKPDS_bp2c1h3"></td>
+					<td id="UKPDS_bp2c1h4"></td>
+				</tr>	
+				<tr>
+					<td id="UKPDS_bp2c2">5</td>
+					<td id="UKPDS_bp2c2h1"></td>	
+					<td id="UKPDS_bp2c2h2"></td>
+					<td id="UKPDS_bp2c2h3"></td>
+					<td id="UKPDS_bp2c2h4"></td>
+				</tr>	
+				<tr>
+					<td id="UKPDS_bp2c3">6</td>
+					<td id="UKPDS_bp2c3h1"></td>	
+					<td id="UKPDS_bp2c3h2"></td>
+					<td id="UKPDS_bp2c3h3"></td>
+					<td id="UKPDS_bp2c3h4"></td>
+				</tr>	
+				<tr>
+					<td rowspan="3" id="UKPDS_bp3">&ge;160</td>
+					<td id="UKPDS_bp3c1">4</td>
+					<td id="UKPDS_bp3c1h1"></td>	
+					<td id="UKPDS_bp3c1h2"></td>
+					<td id="UKPDS_bp3c1h3"></td>
+					<td id="UKPDS_bp3c1h4"></td>
+				</tr>	
+				<tr>
+					<td id="UKPDS_bp3c2">5</td>
+					<td id="UKPDS_bp3c2h1"></td>	
+					<td id="UKPDS_bp3c2h2"></td>
+					<td id="UKPDS_bp3c2h3"></td>
+					<td id="UKPDS_bp3c2h4"></td>
+				</tr>	
+				<tr>
+					<td id="UKPDS_bp3c3">6</td>
+					<td id="UKPDS_bp3c3h1"></td>	
+					<td id="UKPDS_bp3c3h2"></td>
+					<td id="UKPDS_bp3c3h3"></td>
+					<td id="UKPDS_bp3c3h4"></td>
+				</tr>	
+			</table>
+			
+			<div id="theScript"></div>
+				
+		</div>
+
+	</div>
+	
+</body>
+</html>
+
