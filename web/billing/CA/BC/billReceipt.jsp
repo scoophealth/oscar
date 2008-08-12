@@ -459,7 +459,7 @@ System.out.println(lnTotal);
                             </tr>
                             <tr>
                              <td class="title4">
-                              <%=bean.getDefaultPayeeFirstName() + " " + bean.getDefaultPayeeLastName() %>
+                             Dr. <%=bean.getDefaultPayeeFirstName() + " " + bean.getDefaultPayeeLastName() %>
                             </td>
                             </tr>
                              <tr>
