@@ -6221,7 +6221,11 @@ CREATE TABLE messagelisttbl (
   message mediumint(9) default NULL,
   provider_no varchar(6) default NULL,
   status varchar(10) default NULL,
-  remoteLocation int(10) default NULL
+  remoteLocation int(10) default NULL,
+  KEY `message` (`message`),
+  KEY `provider_no` (`provider_no`),
+  KEY `status` (`status`),
+  KEY `remoteLocation` (`remoteLocation`)
 ) TYPE=MyISAM;
 
 --
