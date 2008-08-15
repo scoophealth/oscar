@@ -205,7 +205,7 @@ public class StreetHealthIntakeReportAction extends BaseAction {
             
             //pre-admission
             String strPreAdmission =  intake.getAnswerKeyValues().get("Pre-Admission");
-            if(strPreAdmission.equals("T")) {
+            if(strPreAdmission!=null && strPreAdmission.equals("T")) {
             	preAdmission=true;
             	addToResults(results,idx,"Total Service Recipients","Unique individuals - pre-admission");
             }  else {
@@ -274,10 +274,10 @@ public class StreetHealthIntakeReportAction extends BaseAction {
             String languageEnglish = getIntakeAnswer(intake,"First Language English");
             String languageOther = getIntakeAnswer(intake,"If No, Service Recipient Preferred Language");
             String language="";
-            if(languageEnglish.equalsIgnoreCase("yes")) {
+            if(languageEnglish!=null && languageEnglish.equalsIgnoreCase("yes")) {
             	language="English";
             }
-            if(languageOther.indexOf("french") != -1) {
+            if(languageOther!=null && languageOther.indexOf("french") != -1) {
             	language="French";
             } else {
             	language="Other";
@@ -318,7 +318,7 @@ public class StreetHealthIntakeReportAction extends BaseAction {
           	//source of referral
             if(!preAdmission) {
             	String srcOfReferral = getIntakeAnswer(intake,"Source of Referral");
-            	if(srcOfReferral.equals("Criminal Justice System")) {
+            	if(srcOfReferral!=null && srcOfReferral.equals("Criminal Justice System")) {
             		srcOfReferral = getIntakeAnswer(intake,"If Criminal Justice System");
             	}
             	addToResults(results,idx,"Source of Referral",srcOfReferral);
@@ -535,7 +535,7 @@ public class StreetHealthIntakeReportAction extends BaseAction {
     
     public String getIntakeAnswer(Intake intake, String key) {
     	String value = intake.getAnswerKeyValues().get(key);
-    	if(value.equals("Declined")) {
+    	if(value!=null && value.equals("Declined")) {
     		value="Unknown or Service Recipient Declined";
     	}
     	log.info(key + "=" + value);

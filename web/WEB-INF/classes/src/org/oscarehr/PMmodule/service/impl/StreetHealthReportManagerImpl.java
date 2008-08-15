@@ -59,7 +59,8 @@ public class StreetHealthReportManagerImpl implements StreetHealthReportManager 
 	            	// parse date
 	                Date admissionDate = null;
 	                try {	                	
-	                    admissionDate = formatter.parse(intake.getAnswerKeyValues().get("Admission Date"));
+	                    //admissionDate = formatter.parse(intake.getAnswerKeyValues().get("Admission Date"));
+	                	admissionDate = intake.getCreatedOn().getTime();
 	                }
 	                catch (Exception e) {
 	                }
