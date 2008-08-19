@@ -39,7 +39,13 @@
       groupView = (String) request.getAttribute("group_view");
   }
   if (groupView == null) {
-      groupView = "";
+      if( groups.size() > 0 ) {
+        Hashtable tmphash = (Hashtable) groups.get(0);
+        groupView = (String) tmphash.get("groupName");
+      }
+      else {
+        groupView = "";
+      }
   }
   
 String orderByRequest = request.getParameter("orderby");
