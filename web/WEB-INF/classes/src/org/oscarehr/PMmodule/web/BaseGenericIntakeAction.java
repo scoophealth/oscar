@@ -100,7 +100,17 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 	}
 
 	protected Integer getClientId(HttpServletRequest request) {
-		return Integer.valueOf(getParameter(request, CLIENT_ID));
+		Integer clientId = null;
+		String clientId_str = getParameter(request, CLIENT_ID);
+		if(clientId_str!=null) {
+			try {
+				clientId = Integer.valueOf(clientId_str);
+			} catch (NumberFormatException e) {
+				LOG.error(e);
+			}
+		}
+		return clientId;
+		
 	}
 
 	protected Integer getIntakeId(HttpServletRequest request) {
