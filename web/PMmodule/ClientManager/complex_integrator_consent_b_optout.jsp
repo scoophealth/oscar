@@ -172,7 +172,7 @@
 
 	<tr>
 		<td>
-			<input type="checkbox" name="consent.signatureDeclaration" value="on">
+			<input type="checkbox" name="consent.signatureDeclaration" value="on" <%=viewOnly?"checked=\"checked\"":""%> >
 			I, <%=provider.getFormattedName()%>, state that I have aquired the client's signature on a printed copy of this form
 		</td>
 	</tr>	

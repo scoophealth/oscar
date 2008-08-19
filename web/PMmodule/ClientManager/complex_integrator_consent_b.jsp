@@ -92,7 +92,7 @@
 				}
 			}
 			
-			if(form.elements['consent.refusedToSign'].checked == false && form.elements['consent.signatureDeclaration'].checked == false) {
+			if(form.elements['consent.signatureDeclaration'].checked == false) {
 				alert('You must declare that you have obtained the client\'s signature');
 				return;
 			}
@@ -189,19 +189,19 @@
 
 		<td width="100%">
 		<p>1.<i>What is the purpose of the CAISI project? </i><br>
-		<input type="radio" name="consent.answer1" value="1">Correct <input
+		<input type="radio" name="consent.answer1" value="1" <%=viewOnly?"checked=\"checked\"":""%> >Correct <input
 			type="radio" name="consent.answer1" value="0">Incorrect</p>
 		<p>[Correct includes any one of: to send information to agencies
 		when they care for you; to provide better care for clients; to give
 		clients control over their information or any combination of these]</p>
 		<p>2.<i>When are you able to withdraw from CAISI?</i><input
-			type="radio" name="consent.answer2" value="1">Correct <input
+			type="radio" name="consent.answer2" value="1" <%=viewOnly?"checked=\"checked\"":""%> >Correct <input
 			type="radio" name="consent.answer2" value="0">Incorrect</p>
 
 		<p>[Correct includes: any time]</p>
 		<p>3.<i>Will your care at <%=currentFacility.getName()%> be affected by your
 		participation in CAISI? </i> <input type="radio" name="consent.answer3"
-			value="1"> Correct <input type="radio" name="consent.answer3"
+			value="1" <%=viewOnly?"checked=\"checked\"":""%> > Correct <input type="radio" name="consent.answer3"
 			value="0">Incorrect</p>
 		<p>[Correct = no]</p>
 		</td>
@@ -243,29 +243,32 @@
 
 	</tr>
 
-
+	<%
+		String location="";
+		if (integratorConsent.getPrintedFormLocation()!=null) location=integratorConsent.getPrintedFormLocation();
+	%>
 	<tr>
 		<td>This form has been printed and signed manually. It is kept in
 		the location: <input type="text" name="consent.location" size="40"
-			value=""></td>
+			value="<%=location%>"></td>
 	</tr>
 	<tr>
 
 		<td><input type="checkbox" name="consent.signatureDeclaration"
-			value="on" onclick="doSignatureDeclaration(this)"> I,
+			value="on" onclick="if (form.elements['consent.signatureDeclaration'].checked) form.elements['consent.refusedToSign'].checked=false" <%=viewOnly?"checked=\"checked\"":""%> > I,
 		<%=provider.getFormattedName()%>, state that I have aquired the client's signature
 		on a printed copy of this form</td>
 	</tr>
 
 	<tr>
 		<td><input type="checkbox" name="consent.refusedToSign"
-			value="on" onclick="refusedToSign(this)"> The Client has
+			value="on" onclick="if (form.elements['consent.refusedToSign'].checked) form.elements['consent.signatureDeclaration'].checked=false"> The Client has
 		refused to sign the form.</td>
 
 	</tr>
 
 	<tr>
-		<td><input type="checkbox" id="readOptOutStatement" /> I have
+		<td><input type="checkbox" id="readOptOutStatement" <%=viewOnly?"checked=\"checked\"":""%> /> I have
 		read the following to the client "You may withdraw permission to send
 		information to other CAISI agencies thatare caring for you at any
 		time."</td>
