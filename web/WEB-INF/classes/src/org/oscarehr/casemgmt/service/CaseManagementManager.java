@@ -1040,7 +1040,8 @@ public class CaseManagementManager {
 
         for (CaseManagementIssue caseManagementIssue : issues) {
             Integer programId = caseManagementIssue.getProgram_id();
-            if (programManager.hasAccessBasedOnFacility(currentFacilityId, programId)) results.add(caseManagementIssue);
+            if (programManager.hasAccessBasedOnFacility(currentFacilityId, programId)) 
+            	results.add(caseManagementIssue);
         }
 
         return results;
@@ -1052,7 +1053,13 @@ public class CaseManagementManager {
 
         for (CaseManagementNote caseManagementNote : notes) {
             String programId = caseManagementNote.getProgram_no();
-            if (programId==null || programManager.hasAccessBasedOnFacility(currentFacilityId, Integer.parseInt(programId))) results.add(caseManagementNote);
+            
+            if (programId==null || "".equals(programId)) {
+            	results.add(caseManagementNote);
+            } else {
+            	if (programManager.hasAccessBasedOnFacility(currentFacilityId, Integer.parseInt(programId)))
+            		results.add(caseManagementNote);
+            }
         }
 
         return results;

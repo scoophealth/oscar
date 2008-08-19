@@ -79,7 +79,7 @@
         }
         
         function search_demographic() {
-                window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch2.jsp?query=' + document.ticklerForm.elements['filter.demographic_webName'].value,'demographic_search');
+                var popup = window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch2.jsp?query=' + document.ticklerForm.elements['filter.demographic_webName'].value,'demographic_search');
                 demo_no_orig = document.ticklerForm.elements['filter.demographic_no'].value;
                 check_demo_no = setInterval("if (demo_no_orig != document.ticklerForm.elements['filter.demographic_no'].value) updTklrList()",100);
        		

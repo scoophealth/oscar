@@ -43,8 +43,8 @@ function updateQuickIntake(clientId) {
 	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=quick&clientId=" + clientId;
 }
 
-function printQuickIntake(clientId) {
-	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=quick&clientId=" + clientId;
+function printQuickIntake(clientId,intakeId) {
+	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=quick&clientId=" + clientId+"&intakeId=" + intakeId;
 	window.open(url, 'quickIntakePrint', 'width=1024,height=768,scrollbars=1');
 }
 
@@ -403,7 +403,7 @@ function openSurvey() {
 						<%
 					}
 				%>			
-				<input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />')" />
+				<input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />', '<c:out value="${mostRecentQuickIntake.id}"/>')" />
 			</td>
 		</c:if>
 		<c:if test="${mostRecentQuickIntake == null}">

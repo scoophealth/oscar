@@ -1,7 +1,7 @@
 create table IntakeRequiredFields (fieldKey varchar(255) not null primary key , isRequired tinyint not null);
 
 create table facility (
-     `id` bigint(22) NOT NULL auto_increment,
+     `id` int NOT NULL auto_increment,
      `name` varchar(32) NOT NULL default '',
      `description` VARCHAR(150) NOT NULL default '',
      `disabled` tinyint(1) NOT NULL default '0',

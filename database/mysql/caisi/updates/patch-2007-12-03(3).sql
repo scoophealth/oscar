@@ -1,4 +1,4 @@
-insert into secObjectName values ('_merge');
+#insert into secObjectName values ('_merge');
 
 insert into access_type (name, type) values("Sex restriction override on referral","access");
 insert into access_type (name, type) values("Sex restriction override on admission","access");

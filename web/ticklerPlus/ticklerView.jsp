@@ -20,10 +20,10 @@
 	function onsubmit()
 	{
 		document.ticklerForm.id.value=<c:out value="${tickler.tickler_no}"/>;
-		document.ticklerForm.method.value='add_comment';
+		document.ticklerForm.method.value='add_comment'; 
 	}
 </script>
-<html:form action="/Tickler" onsubmit="onsubmit();" >
+<html:form action="/Tickler" >
 <input type="hidden" name="id" value=""/>
 <input type="hidden" name="method" value=""/>
 		
@@ -156,7 +156,7 @@
 		</tr>
 		  
 		  <!--  Task Re-Assigned To:  Marc: following code is a non-working case,drag and choose, the file should be deleted from CVS-->
-		
+		 
 		<td>
 			Task Re-Assigned To:
 			<%
@@ -223,8 +223,8 @@
 		</tr>
 		<tr>
 				<td class="fieldValue" colspan=3">
-					<input type="text" size="50" name="comment"/>
-					<input type="submit" value="Add Comment"  />
+					<input type="text" size="50" name="comment"/>					
+					<input type="button" value="Add Comment" onclick="document.ticklerForm.id.value='<c:out value="${tickler.tickler_no}"/>';document.ticklerForm.method.value='add_comment';document.ticklerForm.submit();"/>
 				</td>
 		</tr>
 </table>
