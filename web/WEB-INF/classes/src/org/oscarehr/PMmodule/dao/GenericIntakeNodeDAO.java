@@ -18,17 +18,25 @@
  */
 package org.oscarehr.PMmodule.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.IntakeAnswerElement;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.model.IntakeNodeLabel;
 import org.oscarehr.PMmodule.model.IntakeNodeTemplate;
+import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -65,8 +73,78 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
         return l;
     }
     
+    public List<IntakeNode> getIntakeNodeByEqToId(Integer iNodeEqToId) throws SQLException {
+	//Ronnie here!
+	if (iNodeEqToId == null) {
+		throw new IllegalArgumentException("Parameters iNodeEqToId must be non-null");
+	}
+
+	List<IntakeNode> nwIntakeNodes = new ArrayList<IntakeNode>();
+	Set<Integer> iNodeIds = getIntakeNodeIdByEqToId(iNodeEqToId);
+	for (Integer id : iNodeIds) {
+	    nwIntakeNodes.add(getIntakeNode(id));
+	}
+	return nwIntakeNodes;
+    }
+
+    public Set<Integer> getIntakeNodeIdByEqToId(Integer iNodeEqToId) throws SQLException {
+	    if (iNodeEqToId == null) {
+		    throw new IllegalArgumentException("Parameters intakdNodeId must be non-null");
+	    }
+	    Connection c = DbConnectionFilter.getThreadLocalDbConnection();
+	    Set<Integer> results = new TreeSet<Integer>();
+	    try {
+		    PreparedStatement ps = c.prepareStatement("select intake_node_id from intake_node where eq_to_id=?");
+		    ps.setInt(1, iNodeEqToId);
+		    ResultSet rs = ps.executeQuery();
+		    while (rs.next()) {
+			    results.add(rs.getInt(1));
+		    }
+	    }
+	    finally {
+		    c.close();
+	    }
+	    return results;
+    }
+
+	public Set<Integer> getEqToIdByIntakeNodeId(Integer intakeNodeId) throws SQLException {
+		if (intakeNodeId == null) {
+			throw new IllegalArgumentException("Parameters intakdNodeId must be non-null");
+		}
+		Connection c = DbConnectionFilter.getThreadLocalDbConnection();
+		Set<Integer> results = new TreeSet<Integer>();
+		try {
+			PreparedStatement ps = c.prepareStatement("select eq_to_id from intake_node where intake_node_id=?");
+			ps.setInt(1, intakeNodeId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				results.add(rs.getInt(1));
+			}
+		}
+		finally {
+			c.close();
+		}
+		return results;
+	}
+	
+    public List<IntakeNode> getIntakeNodeByEqToId(Set<IntakeNode> iNodes) throws SQLException {
+	if (iNodes == null) {
+		throw new IllegalArgumentException("Parameters iNodes must be non-null");
+	}
+
+	List<IntakeNode> nwIntakeNodes = new ArrayList<IntakeNode>();
+	for (IntakeNode iN : iNodes) {
+	    nwIntakeNodes.add(getIntakeNode(iN.getEq_to_id()));
+	}
+	return nwIntakeNodes;
+    }
+
     public void saveNodeLabel(IntakeNodeLabel intakeNodeLabel){
         getHibernateTemplate().save(intakeNodeLabel);   
+    }
+    
+    public void updateIntakeNode(IntakeNode intakeNode) {
+	getHibernateTemplate().update(intakeNode);
     }
     
     public void updateNodeLabel(IntakeNodeLabel intakeNodeLabel){
