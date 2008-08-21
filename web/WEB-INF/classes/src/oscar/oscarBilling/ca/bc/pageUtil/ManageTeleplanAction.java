@@ -263,6 +263,16 @@ public class ManageTeleplanAction extends DispatchAction {
            request.setAttribute("filename",tr.getRealFilename());
            return mapping.findForward("remit");
     }
+    
+    public ActionForward setPass(ActionMapping mapping, ActionForm  form,
+           HttpServletRequest request, HttpServletResponse response)
+           throws Exception {
+           String newpass  = (String) request.getParameter("newpass");
+           TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
+           dao.saveUpdatePasssword(newpass);
+           return mapping.findForward("success");
+    }
+    
             
     public ActionForward changePass(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
