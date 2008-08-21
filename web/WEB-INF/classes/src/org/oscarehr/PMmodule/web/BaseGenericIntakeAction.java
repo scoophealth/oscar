@@ -43,6 +43,7 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 	protected static final String PROGRAM_ID = "programId";
 	protected static final String START_DATE = "startDate";
 	protected static final String END_DATE = "endDate";
+	protected static final String INCLUDE_PAST = "includePast";
 	
 	// Method Names
 	protected static final String EDIT_CREATE = "create";
@@ -139,6 +140,10 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 
 	protected Date getEndDate(HttpServletRequest request) {
 		return DateTimeFormatUtils.getDateFromString(getParameter(request, END_DATE));
+	}
+
+	protected String getIncludePast(HttpServletRequest request) {
+		return getParameter(request, INCLUDE_PAST);
 	}
 
 	// Session Attribute Accessors

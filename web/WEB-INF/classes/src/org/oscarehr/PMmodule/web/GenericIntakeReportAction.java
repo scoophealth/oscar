@@ -1,5 +1,6 @@
 package org.oscarehr.PMmodule.web;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,14 +28,15 @@ public class GenericIntakeReportAction extends BaseGenericIntakeAction {
 	// Forwards
 	private static final String FORWARD_REPORT = "report";
 
-	public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws SQLException {
 		
 		String intakeType = getType(request);
 		Integer programId = getProgramId(request);
 		Date startDate = getStartDate(request);
 		Date endDate = getEndDate(request);
+		boolean includePast = new Boolean(getIncludePast(request));
 
-		Map<String, SortedSet<ReportStatistic>> questionStatistics = genericIntakeManager.getQuestionStatistics(intakeType, programId, startDate, endDate);
+		Map<String, SortedSet<ReportStatistic>> questionStatistics = genericIntakeManager.getQuestionStatistics(intakeType, programId, startDate, endDate, includePast);
 		
 		request.setAttribute("intakeType", StringUtils.capitalize(intakeType));
 		request.setAttribute("startDate", DateTimeFormatUtils.getStringFromDate(startDate, DATE_FORMAT));
