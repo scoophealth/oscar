@@ -359,7 +359,7 @@ div.recommendations li{
                 
                
                <div class="leftBox">
-                  <h3>&nbsp;Change Password</h3>
+                  <h3>&nbsp;Change Teleplan Password</h3>
                   <div style="background-color: #EEEEFF;" >
                     <html:form action="/billing/CA/BC/ManageTeleplan">
                          <input type="hidden" name="method" value="changePass"/>
@@ -367,6 +367,18 @@ div.recommendations li{
                          <br>
                          New Password:     <input type="password" name="newpass" />
                          Confirm Password: <input type="password" name="confpass" />
+                         <input type="submit"/>
+                    </html:form>
+                
+                  </div>
+               </div> 
+               
+               <div class="leftBox">
+                  <h3>&nbsp;Set Teleplan Password</h3>
+                  <div style="background-color: #EEEEFF;" >
+                    <html:form action="/billing/CA/BC/ManageTeleplan">
+                         <input type="hidden" name="method" value="setPass"/>
+                         New Password:     <input type="password" name="newpass" />
                          <input type="submit"/>
                     </html:form>
                 
