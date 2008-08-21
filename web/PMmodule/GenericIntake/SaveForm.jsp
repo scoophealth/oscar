@@ -17,6 +17,8 @@
     IntakeNode nwItn = new IntakeNode();
     copyIntakeNode(itn, nwItn);
     genericIntakeManager.saveIntakeNode(nwItn);
+    updateEqId(nwItn, genericIntakeManager);
+
     if (published!=null) {
         genericIntakeManager.updateAgencyIntakeQuick(nwItn.getId());
     }
@@ -88,11 +90,22 @@ void saveAnswerElements(IntakeNode in, GenericIntakeManager gim) {
     }
 }
 
+void updateEqId(IntakeNode in, GenericIntakeManager gim) {
+    if (in.getEq_to_id()==null || in.getEq_to_id()<0) {
+	in.setEq_to_id(in.getId());
+	gim.updateIntakeNode(in);
+    }
+    for (IntakeNode iN : in.getChildren()) {
+	updateEqId(iN, gim);
+    }
+}
+
 void copyIntakeNode(IntakeNode org, IntakeNode cpy) {
     cpy.setLabel(org.getLabel());
     cpy.setNodeTemplate(org.getNodeTemplate());
     cpy.setPos(org.getPos());
     cpy.setMandatory(org.getMandatory());
+    cpy.setEq_to_id(org.getEq_to_id());
     
     ArrayList children = new ArrayList();
     for (IntakeNode iN : org.getChildren()) {
