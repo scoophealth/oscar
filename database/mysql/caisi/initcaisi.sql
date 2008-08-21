@@ -1559,6 +1559,7 @@ CREATE TABLE `intake_node` (
   `pos` int(10) unsigned default '0',  
   `parent_intake_node_id` int(10) unsigned default NULL,
   `mandatory` boolean NOT NULL default false,
+  `eq_to_id` int(10) default NULL,
   PRIMARY KEY  (`intake_node_id`),
   KEY `IDX_intake_node_intake_node_template` (`intake_node_template_id`),
   KEY `IDX_intake_node_intake_node_label` (`intake_node_label_id`),
