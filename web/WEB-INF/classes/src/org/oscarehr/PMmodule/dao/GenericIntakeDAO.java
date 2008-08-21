@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -269,20 +270,19 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 	/**
 	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getReportStatistics(java.util.List, java.util.List)
 	 */
-	public SortedMap<Integer, SortedMap<String, ReportStatistic>> getReportStatistics(Set<Integer> answerIds, Set<Integer> intakeIds) {
+	public SortedMap<Integer, SortedMap<String, ReportStatistic>> getReportStatistics(Hashtable<Integer,Integer> answerIds, Set<Integer> intakeIds) {
 		if (intakeIds == null || answerIds == null) {
-			throw new IllegalArgumentException("Parameters intakeIds and answerIds must be non-null");
+			throw new IllegalArgumentException("Parameters intakeIds, answerIds must be non-null");
 		}
 
 		SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics = new TreeMap<Integer, SortedMap<String, ReportStatistic>>();
-
+		
 		if (!intakeIds.isEmpty() && !answerIds.isEmpty()) {
 			List<?> results = getHibernateTemplate().find(
-					"select ia.node.id, ia.value, count(ia.value) from IntakeAnswer ia where ia.node.id in (" + convertToString(answerIds)
+					"select ia.node.id, ia.value, count(ia.value) from IntakeAnswer ia where ia.node.id in (" + convertToString(answerIds.keySet())
 							+ ") and ia.intake.id in (" + convertToString(intakeIds) + ") group by ia.node.id, ia.value");
-			convertToReportStatistics(results, intakeIds.size(), reportStatistics);
+			convertToReportStatistics(results, intakeIds.size(), reportStatistics, answerIds);
 		}
-
 		LOG.info("get reportStatistics: " + reportStatistics.size());
 
 		return reportStatistics;
@@ -396,20 +396,24 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		return builder.toString();
 	}
 
-	private void convertToReportStatistics(List<?> results, int size, SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics) {
+	private void convertToReportStatistics(List<?> results, int size, SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics, Hashtable<Integer, Integer> resultHash) {
 		for (Object o : results) {
 			Object[] tuple = (Object[]) o;
 
 			Integer nodeId = (Integer) tuple[0];
 			String value = (String) tuple[1];
-
 			Integer count = Integer.valueOf(tuple[2].toString());
-
+			
 			if (!reportStatistics.containsKey(nodeId)) {
-				reportStatistics.put(nodeId, new TreeMap<String, ReportStatistic>());
+			    reportStatistics.put(nodeId, new TreeMap<String, ReportStatistic>());
 			}
-
-			reportStatistics.get(nodeId).put(value, new ReportStatistic(count, size));
+			
+			SortedMap<String, ReportStatistic> rpStNodeId = reportStatistics.get(nodeId);
+			if (rpStNodeId.containsKey(value)) {
+			    count += rpStNodeId.get(value).getCount();
+			    rpStNodeId.remove(value);
+			}
+			rpStNodeId.put(value, new ReportStatistic(count, size));
 		}
 	}
 
