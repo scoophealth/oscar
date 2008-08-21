@@ -37,6 +37,7 @@ public class IntakeNode implements Serializable {
     private IntakeNodeLabel label;
     private Integer pos;
     private boolean mandatory;
+    private Integer eq_to_id;
     private IntakeNode parent;// collections
     private List<IntakeNode> children;
     private Set<Intake> intakes;
@@ -362,6 +363,17 @@ public class IntakeNode implements Serializable {
     public void setMandatory(boolean mandatory) {
         this.mandatory = mandatory;
     }
+    
+    
+    public Integer getEq_to_id() {
+	return eq_to_id;
+    }
+    
+    
+    public void setEq_to_id(Integer eq_to_id) {
+	this.eq_to_id = eq_to_id;
+    }
+
     
     
 
