@@ -216,6 +216,9 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         if(hasChildren){
             out.write(" <a href=\"javascript: void(0);\" onclick=\"reorder('"+in.getId()+"');\">[reorder children]</a>");
         }
+	if (in.getEq_to_id()==null || in.getEq_to_id()<0) {
+	    out.write(" <font color=red>(new)</font>");
+	}
         out.write("</h3>");
     } else if (node.isAnswerCompound()) {
         out.write("<div  style=\"border:1px solid blue;\">");
@@ -232,6 +235,9 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         if(hasChildren){
             out.write(" <a href=\"javascript: void(0);\" onclick=\"reorder('"+in.getId()+"');\">[reorder children]</a>");
         }
+	if (in.getEq_to_id()==null || in.getEq_to_id()<0) {
+	    out.write(" <font color=red>(new)</font>");
+	}
         out.write("</h3>");
         exitElement = "</div>";
     } else if (node.isAnswerChoice()) {
@@ -254,6 +260,9 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
 	    out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
 	    out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit]</a>");
 	}
+	if (in.getEq_to_id()==null || in.getEq_to_id()<0) {
+	    out.write(" <font color=red>(new)</font>");
+	}
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
 //out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
         
@@ -262,6 +271,9 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         out.write("<label>"+in.getLabelStr()+ "<input type=\"text\"  /> </label>");
 	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
         out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit]</a>");
+	if (in.getEq_to_id()==null || in.getEq_to_id()<0) {
+	    out.write(" <font color=red>(new)</font>");
+	}
         
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
 //out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
@@ -273,6 +285,9 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
 //out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','"+in.getNodeTemplate().getId()+"','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
 	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
         out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"');\">[edit]</a>");
+	if (in.getEq_to_id()==null || in.getEq_to_id()<0) {
+	    out.write(" <font color=red>(new)</font>");
+	}
     } else {
         throw new IllegalStateException("No html adapter for type: " + node.getType());
     }
