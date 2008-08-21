@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,7 +247,7 @@ public class GenericIntakeManager {
 		return reportStatistics;
 	}
 
-	public Map<String, SortedSet<ReportStatistic>> getQuestionStatistics(String intakeType, Integer programId, Date startDate, Date endDate) {
+	public Map<String, SortedSet<ReportStatistic>> getQuestionStatistics(String intakeType, Integer programId, Date startDate, Date endDate, boolean includePast) throws SQLException {
 		Map<String, SortedSet<ReportStatistic>> questionStatistics = new LinkedHashMap<String, SortedSet<ReportStatistic>>();
 
 		// get node
@@ -259,38 +260,132 @@ public class GenericIntakeManager {
 		} else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
 			node = getProgramIntakeNode(programId);
 		}
-
+		
 		// get report statistics
-		Set<Integer> choiceAnswerIds = node.getChoiceAnswerIds();
-		SortedSet<Integer> latestIntakeIds = genericIntakeDAO.getLatestIntakeIds(node.getId(), startDate, endDate);
+		List<IntakeNode> nodeList = getEqIntakeNodes(node, includePast);
+		Hashtable<Integer,Integer> choiceAnswerIds = new Hashtable<Integer,Integer>();
+		SortedSet<Integer> latestIntakeIds = new TreeSet<Integer>();
+		for (IntakeNode iN : nodeList) {
+		    choiceAnswerIds.putAll(getEqAnswerIds(iN.getChoiceAnswerIds(), includePast));
+		    latestIntakeIds.addAll(genericIntakeDAO.getLatestIntakeIds(iN.getId(), startDate, endDate));
+		}
+		if (includePast) buildlastIndex(choiceAnswerIds);
+		
 		SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics = genericIntakeDAO.getReportStatistics(choiceAnswerIds, latestIntakeIds);
-
 		// populate map
 		if (!reportStatistics.isEmpty()) {
-			for (IntakeNode question : node.getQuestionsWithChoiceAnswers()) {
-				SortedSet<ReportStatistic> statistics = new TreeSet<ReportStatistic>();
-				int total=0;
-				
+		    List<IntakeNode> questionList = new ArrayList<IntakeNode>();
+		    for (IntakeNode n : nodeList) {
+			questionList.addAll(n.getQuestionsWithChoiceAnswers());
+		    }
+		    Hashtable<Integer,Integer> questionIds = getEqQuestionIds(questionList, includePast);
+		    if (includePast) buildlastIndex(questionIds);
+		    
+			List<Integer> nodeIds = new ArrayList<Integer>();
+			List<Integer> counts = new ArrayList<Integer>();
+			List<Integer> totals = new ArrayList<Integer>();
+			List<String> labels = new ArrayList<String>();
+			List<String> keys = new ArrayList<String>();
+			for (IntakeNode question : questionList) {
 				for (IntakeNode answer : question.getChoiceAnswers()) {
 					SortedMap<String, ReportStatistic> valueStatistics = reportStatistics.get(answer.getId());
-
-					for (Entry<String, ReportStatistic> valueStatistic : valueStatistics.entrySet()) {
+					
+					if (valueStatistics!=null) {
+					    int total=0;
+					    for (Entry<String, ReportStatistic> valueStatistic : valueStatistics.entrySet()) {
 						ReportStatistic statistic = valueStatistic.getValue();
-						statistic.setLabel(createStatisticLabel(answer.getLabelStr(), valueStatistic.getKey()));
-						statistics.add(statistic);
-						total=total+statistic.getCount();
+						nodeIds.add(answer.getId());
+						counts.add(statistic.getCount());
+						total += statistic.getCount();
+						labels.add(answer.getLabelStr());
+						keys.add(valueStatistic.getKey());
+					    }
+					    for (int i=totals.size(); i<counts.size(); i++) {
+						totals.add(total);
+					    }
 					}
 				}
+			}
+			
+			if (includePast) {
+			    List<Integer> chngttl = new ArrayList<Integer>();
+			    int maxttl = 0;
+			    for (int id : choiceAnswerIds.keySet()) {
+				int cid = choiceAnswerIds.get(id);
+				if (id==cid) continue;
 
-				for (ReportStatistic reportStatistic : statistics)
-				{
-				    reportStatistic.setSize(total);
+				int x=nodeIds.indexOf(cid), idx_t=-1, idx_f=-1, cnt_t=0, cnt_f=0, ttl_t=0, ttl_f=0;
+				for (int i=0; i<nodeIds.size(); i++) {
+				    int nid = nodeIds.get(i);
+				    if (nid!=id && nid!=cid) continue;
+				    if (counts.get(i).equals(-1)) continue;
+				    
+				    if (nid==id) {
+					nodeIds.set(i, cid);
+					if (x!=-1) labels.set(i, labels.get(x));
+				    }
+				    if (keys.get(i).equals("T")) {
+					cnt_t += counts.get(i);
+					ttl_t += totals.get(i);
+					idx_t = i;
+				    } else {
+					cnt_f += counts.get(i);
+					ttl_f += totals.get(i);
+					idx_f = i;
+				    }
+				    counts.set(i, -1);
+				    chngttl.add(i);
+				}
+				if (idx_t!=-1) {
+				    counts.set(idx_t, cnt_t);
+				    totals.set(idx_t, ttl_t);
+				}
+				if (idx_f!=-1) {
+				    counts.set(idx_f, cnt_f);
+				    totals.set(idx_f, ttl_f);
+				}
+				maxttl = ttl_t>maxttl ? ttl_t : maxttl;
+				maxttl = ttl_f>maxttl ? ttl_f : maxttl;
+			    }
+			    for (int i : chngttl) totals.set(i, maxttl);
+			}
+			
+			List<ReportStatistic> missResponses = new ArrayList<ReportStatistic>();
+			List<Integer> missResponseIds = new ArrayList<Integer>();
+			for (IntakeNode question : questionList) {
+				SortedSet<ReportStatistic> statistics = new TreeSet<ReportStatistic>();
+				Integer eqQuestionId = questionIds.get(question.getId());
+				boolean showQuestion = false;
+				if (eqQuestionId.equals(question.getId())) showQuestion = true;
+				
+				for (IntakeNode answer : question.getChoiceAnswers()) {
+				    for (int i=0; i<nodeIds.size(); i++) {
+					if (!nodeIds.get(i).equals(answer.getId())) continue;
+					if (counts.get(i).equals(-1)) continue;
+					
+					ReportStatistic statistic = new ReportStatistic(counts.get(i), totals.get(i));
+					if (showQuestion) {
+					    statistic.setLabel(createStatisticLabel(labels.get(i), keys.get(i)));
+					    statistics.add(statistic);
+					} else {
+					    statistic.setLabel(createStatisticLabel(labels.get(i)+" (missing responses)", keys.get(i)));
+					    missResponseIds.add(eqQuestionId);
+					    missResponses.add(statistic);
+					}
+				    }
 				}
 				
-				questionStatistics.put(question.getLabelStr(), statistics);
+				if (showQuestion) {
+				    for (int i=0; i<missResponseIds.size(); i++) {
+					if (!missResponseIds.get(i).equals(question.getId())) continue;
+					
+					statistics.add(missResponses.get(i));
+					missResponseIds.set(i, -1);
+				    }
+				    questionStatistics.put(question.getLabelStr(), statistics);
+				}
 			}
 		}
-
 		return questionStatistics;
 	}
 
@@ -398,7 +493,68 @@ public class GenericIntakeManager {
 		return getIntakeNode(programIntakeNodeId);
 	}
 
-        public List<IntakeNode> getIntakeNodes(){
+	private List<IntakeNode> getEqIntakeNodes(IntakeNode iNode, boolean incpast) throws SQLException {
+	    if (incpast) {
+		return genericIntakeNodeDAO.getIntakeNodeByEqToId(iNode.getEq_to_id());
+	    }
+	    List<IntakeNode> iNodeList = new ArrayList<IntakeNode>();
+	    iNodeList.add(iNode);
+	    return iNodeList;
+	}
+	
+        private Hashtable<Integer,Integer> getEqAnswerIds(Set<Integer> caIds, boolean incpast) throws SQLException {
+	    Hashtable<Integer,Integer> eqNodeIdsHash = new Hashtable<Integer,Integer>();
+	    
+	    for (Integer Id : caIds) {
+		if (incpast) {
+		    for (Integer nodeId : genericIntakeNodeDAO.getEqToIdByIntakeNodeId(Id)) {
+			eqNodeIdsHash.put(Id,nodeId);
+		    }
+		} else {
+		    eqNodeIdsHash.put(Id,Id);
+		}
+	    }
+	    return eqNodeIdsHash;
+	}
+	
+        private Hashtable<Integer,Integer> getEqQuestionIds(List<IntakeNode> qNodes, boolean incpast) throws SQLException {
+	    Hashtable<Integer,Integer> eqNodeIdsHash = new Hashtable<Integer,Integer>();
+	    
+	    for (IntakeNode qNode : qNodes) {
+		if (incpast) {
+		    for (Integer nodeId : genericIntakeNodeDAO.getEqToIdByIntakeNodeId(qNode.getId())) {
+			eqNodeIdsHash.put(qNode.getId(),nodeId);
+		    }
+		} else {
+		    eqNodeIdsHash.put(qNode.getId(),qNode.getId());
+		}
+	    }
+	    return eqNodeIdsHash;
+	}
+	
+	private void buildlastIndex(Hashtable<Integer,Integer> eqNodeIds) {
+	    Hashtable<Integer,Integer> eqNodeIdsLastIdx = new Hashtable<Integer,Integer>();
+	    
+	    for (Integer i : eqNodeIds.keySet()) {
+		int nid = -1;
+		for (Integer j : eqNodeIds.keySet()) {
+		    if (i==j) continue;
+		    if (eqNodeIds.get(i)==eqNodeIds.get(j)) {
+			nid = i>j ? i : j;
+		    }
+		}
+		nid = nid==-1 ? i : nid;
+		eqNodeIdsLastIdx.put(i,nid);
+	    }
+	    eqNodeIds.clear();
+	    eqNodeIds.putAll(eqNodeIdsLastIdx);
+	}
+	
+	
+	
+	
+	
+	public List<IntakeNode> getIntakeNodes(){
             return genericIntakeNodeDAO.getIntakeNodes();
         }
         
@@ -409,6 +565,10 @@ public class GenericIntakeManager {
         public void saveIntakeNode(IntakeNode intakeNode){
             genericIntakeNodeDAO.saveIntakeNode(intakeNode);
         }
+	
+	public void updateIntakeNode(IntakeNode intakeNode) {
+	    genericIntakeNodeDAO.updateIntakeNode(intakeNode);
+	}
 	
 	public void saveIntakeNodeTemplate(IntakeNodeTemplate intakeNodeTemplate) {
 	    genericIntakeNodeDAO.saveIntakeNodeTemplate(intakeNodeTemplate);
@@ -464,6 +624,7 @@ public class GenericIntakeManager {
 
 		return builder.toString();
 	}
+	
 /*street health report, not finished yet
 	public List getCohort(Date beginDate, Date endDate) {
 		return genericIntakeDAO.getCohort(beginDate, endDate, clientDao.getClients());
