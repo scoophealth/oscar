@@ -13,9 +13,11 @@
     String lblEdit = request.getParameter("lbledit");
     String id = request.getParameter("id");
     String mandatory = request.getParameter("mandatory");
+    String cutPast = request.getParameter("cutpast");
     
     IntakeNode theNode = findNodeByLabel(Integer.parseInt(id), nodes);
     boolean hasMandatory = (theNode.isQuestion() || theNode.isAnswerCompound());
+    boolean hasCutPast = (!theNode.isIntake() && !theNode.isPage() && !theNode.isSection() && theNode.getEq_to_id()!=null);
     boolean isDropbox = (theNode.isAnswerChoice() && !theNode.isAnswerBoolean());
     if (isDropbox) {
 	session.setAttribute("dropboxNode", theNode);
@@ -29,6 +31,9 @@
 	writeLabel(iLabel, nodes);
 	if (hasMandatory) {
 	    writeMandatory(mandatory, theNode);
+	}
+	if (hasCutPast) {
+	    writeCutPast(cutPast, theNode);
 	}
 	
         response.sendRedirect("close.jsp");
@@ -65,6 +70,9 @@
         <input type="submit" value="update"/>
      <%	if (hasMandatory) { %>
 	<br><input type="checkbox" name="mandatory" value="true" <%=theNode.getMandatory() ? "checked" : ""%>>Mandatory</input>
+     <%	} %>
+     <%	if (hasCutPast) { %>
+	<br><input type="checkbox" name="cutpast" value="true" <%=(theNode.getEq_to_id()==null || theNode.getEq_to_id()<0) ? "checked" : ""%>>Not related to past forms</input>
      <%	} %>
      <%	if (isDropbox) { %>
 	<br><input type="button" value="Edit Dropbox Items..." onclick="editDropbox();" />
@@ -115,4 +123,11 @@ void writeMandatory(String mand, IntakeNode iNode) {
     iNode.setMandatory(mandatoryFlag);
 }
 
+void writeCutPast(String cp, IntakeNode iNode) {
+    int eqId = -iNode.getEq_to_id();
+    if (cp!=null) {
+	eqId = cp.equals("true") ? eqId : -eqId;
+    }
+    iNode.setEq_to_id(eqId);
+}
 %>
