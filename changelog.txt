@@ -1,3 +1,4 @@
+2008-08-22 : Old CME has option to sort asc and desc now. (Ted)
 2008-08-01 : detailed history of caisi integrator consent is viewable. (Ted)
 2008-07-28 : caisi integrator uses ssl. (Ted)
 2008-07-22 : caisi integrator supports referrals between facilities. (Ted)
