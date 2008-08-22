@@ -105,7 +105,9 @@ void copyIntakeNode(IntakeNode org, IntakeNode cpy) {
     cpy.setNodeTemplate(org.getNodeTemplate());
     cpy.setPos(org.getPos());
     cpy.setMandatory(org.getMandatory());
-    cpy.setEq_to_id(org.getEq_to_id());
+    if (!org.isIntake() && !org.isPage() && !org.isSection() && !org.isAnswerCompound()) {
+        cpy.setEq_to_id(org.getEq_to_id());
+    }
     
     ArrayList children = new ArrayList();
     for (IntakeNode iN : org.getChildren()) {
