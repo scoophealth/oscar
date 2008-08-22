@@ -235,9 +235,6 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         if(hasChildren){
             out.write(" <a href=\"javascript: void(0);\" onclick=\"reorder('"+in.getId()+"');\">[reorder children]</a>");
         }
-	if (in.getEq_to_id()==null || in.getEq_to_id()<0) {
-	    out.write(" <font color=red>(new)</font>");
-	}
         out.write("</h3>");
         exitElement = "</div>";
     } else if (node.isAnswerChoice()) {
