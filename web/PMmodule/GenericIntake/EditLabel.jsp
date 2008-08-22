@@ -17,7 +17,7 @@
     
     IntakeNode theNode = findNodeByLabel(Integer.parseInt(id), nodes);
     boolean hasMandatory = (theNode.isQuestion() || theNode.isAnswerCompound());
-    boolean hasCutPast = (!theNode.isIntake() && !theNode.isPage() && !theNode.isSection() && theNode.getEq_to_id()!=null);
+    boolean hasCutPast = (!theNode.isIntake() && !theNode.isPage() && !theNode.isSection() && !theNode.isAnswerCompound() && theNode.getEq_to_id()!=null);
     boolean isDropbox = (theNode.isAnswerChoice() && !theNode.isAnswerBoolean());
     if (isDropbox) {
 	session.setAttribute("dropboxNode", theNode);
