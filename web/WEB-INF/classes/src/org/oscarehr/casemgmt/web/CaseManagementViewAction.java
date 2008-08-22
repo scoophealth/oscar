@@ -388,7 +388,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			start = current;
 
 			/*
-			 * Notes are by default sorted from the past to the most recent So we sort only if preference is set in form or site wide setting in oscar.properties
+			 * people are changing the default sorting of notes so it's safer to explicity set it here, some one already changed it once and it reversed our sorting.
 			 */
 			log.debug("Apply sorting to notes");
 			String noteSort = caseForm.getNote_sort();
@@ -401,7 +401,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				if (noteSort.trim().equalsIgnoreCase("UP"))
 					request.setAttribute("Notes", sort_notes(notes, "update_date_asc"));
 				else
-					request.setAttribute("Notes", notes);
+					request.setAttribute("Notes", sort_notes(notes, "update_date_desc"));
 			}
 			current = System.currentTimeMillis();
 			log.debug("Apply sorting to notes " + String.valueOf(current - start));
@@ -572,7 +572,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (noteSort.trim().equalsIgnoreCase("UP"))
 			request.setAttribute("Notes", sort_notes(notes, "update_date_asc"));
 		else
-			request.setAttribute("Notes", notes);
+			request.setAttribute("Notes", sort_notes(notes, "update_date_desc"));
 
 		return mapping.findForward("listNotes");
 	}
@@ -615,7 +615,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			Collections.sort(notes, CaseManagementNote.getRoleComparator());
 		}
 		if (field.equals("update_date_asc")) {
+			Collections.sort(notes, CaseManagementNote.getUpdateComparator());
 			Collections.reverse(notes);
+		}
+		if (field.equals("update_date_desc")) {
+			Collections.sort(notes, CaseManagementNote.getUpdateComparator());
 		}
 
 		return notes;

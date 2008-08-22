@@ -355,6 +355,21 @@ public class CaseManagementNote extends BaseObject {
         };
     }
 
+    public static Comparator getUpdateComparator() {
+        return new Comparator() {
+            public int compare(Object o1, Object o2) {
+                CaseManagementNote note1 = (CaseManagementNote) o1;
+                CaseManagementNote note2 = (CaseManagementNote) o2;
+
+                if (note1 == null || note2 == null) {
+                    return 0;
+                }
+                
+                return note2.getUpdate_date().compareTo(note1.getUpdate_date());
+          }  
+        };
+    }
+
     public boolean getHasHistory() {
         if (getHistory() != null) {
             if (getHistory().indexOf("----------------History Record----------------") != -1) {

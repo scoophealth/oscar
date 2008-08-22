@@ -254,7 +254,8 @@ Provider:
 
 Sort:
 	<html:select property="note_sort" onchange="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.submit()">
-		<html:option value="update_date">Date</html:option>
+		<html:option value="update_date_desc">Date Desc</html:option>
+		<html:option value="update_date_asc">Date Asc</html:option>
 		<html:option value="providerName">Provider</html:option>
 		<html:option value="programName">Program</html:option>
 		<html:option value="roleName">Role</html:option>
