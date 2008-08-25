@@ -92,7 +92,7 @@ import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
-import org.oscarehr.caisi_integrator.ws.client.FacilityProgramPrimaryKey;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.IntegratorConsentDao;
@@ -376,11 +376,9 @@ public class ClientManagerAction extends BaseAction {
 		IntegratorConsent integratorConsent = integratorConsentDao.findLatestByFacilityAndDemographic(facilityId, demographic.getDemographicNo());
 		String consentText = "Have not asked client yet.";
 		if (integratorConsent != null) {
-			if (integratorConsent.isConsentToBasicPersonalId() && integratorConsent.isConsentToHealthCardId() && integratorConsent.isConsentToIssues()
-					&& integratorConsent.isConsentToNotes() && integratorConsent.isConsentToStatistics() && !integratorConsent.isRestrictConsentToHic())
+			if (integratorConsent.isConsentToAll())
 				consentText = "Consented to all";
-			else if (!integratorConsent.isConsentToBasicPersonalId() && !integratorConsent.isConsentToHealthCardId() && !integratorConsent.isConsentToIssues()
-					&& !integratorConsent.isConsentToNotes() && !integratorConsent.isConsentToStatistics())
+			else if (integratorConsent.isConsentToNone())
 				consentText = "Consented to none";
 			else
 				consentText = "Consented to some";
@@ -422,12 +420,12 @@ public class ClientManagerAction extends BaseAction {
 		else if (referral.getRemoteFacilityId() != null && referral.getRemoteProgramId() != null) {
 			try {
 				CachedReferral cachedReferral=new CachedReferral();
-				cachedReferral.setDestinationFacilityId(Integer.parseInt(referral.getRemoteFacilityId()));
-				cachedReferral.setDestinationFacilityProgramId(Integer.parseInt(referral.getRemoteProgramId()));
+				cachedReferral.setDestinationIntegratorFacilityId(Integer.parseInt(referral.getRemoteFacilityId()));
+				cachedReferral.setDestinationCaisiProgramId(Integer.parseInt(referral.getRemoteProgramId()));
 				cachedReferral.setPresentingProblem(referral.getPresentProblems());
 				cachedReferral.setReasonForReferral(referral.getNotes());
-				cachedReferral.setSourceFacilityDemographicId(clientId);
-				cachedReferral.setSourceFacilityProviderId(providerId);
+				cachedReferral.setSourceCaisiDemographicId(clientId);
+				cachedReferral.setSourceCaisiProviderId(providerId);
 				
 				ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
 				referralWs.makeReferral(cachedReferral);
@@ -512,9 +510,9 @@ public class ClientManagerAction extends BaseAction {
 		// if it's a remote referal
 		else if (r.getRemoteFacilityId() != null && r.getRemoteProgramId() != null) {
 			try {
-				FacilityProgramPrimaryKey pk = new FacilityProgramPrimaryKey();
-				pk.setFacilityId(Integer.parseInt(r.getRemoteFacilityId()));
-				pk.setFacilityProgramId(Integer.parseInt(r.getRemoteProgramId()));
+				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
+				pk.setIntegratorFacilityId(Integer.parseInt(r.getRemoteFacilityId()));
+				pk.setCaisiItemId(Integer.parseInt(r.getRemoteProgramId()));
 				CachedProgramInfo cachedProgramInfo = caisiIntegratorManager.getRemoteProgram(facilityId, pk);
 
 				p.setName(cachedProgramInfo.getName());
@@ -1618,20 +1616,20 @@ public class ClientManagerAction extends BaseAction {
 							ClientReferral clientReferral=new ClientReferral();
 							
 							StringBuilder programName=new StringBuilder();
-							CachedFacilityInfo cachedFacilityInfo=caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getDestinationFacilityId());
+							CachedFacilityInfo cachedFacilityInfo=caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getDestinationIntegratorFacilityId());
 							programName.append(cachedFacilityInfo.getName());
 							programName.append(" / ");
 							
-							FacilityProgramPrimaryKey pk=new FacilityProgramPrimaryKey();
-							pk.setFacilityId(cachedReferral.getDestinationFacilityId());
-							pk.setFacilityProgramId(cachedReferral.getDestinationFacilityProgramId());
+							FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
+							pk.setIntegratorFacilityId(cachedReferral.getDestinationIntegratorFacilityId());
+							pk.setCaisiItemId(cachedReferral.getDestinationCaisiProgramId());
 							CachedProgramInfo cachedProgramInfo=caisiIntegratorManager.getRemoteProgram(facilityId, pk);
 							programName.append(cachedProgramInfo.getName());
 							
 							clientReferral.setProgramName(programName.toString());
 							clientReferral.setReferralDate(cachedReferral.getReferralDate().toGregorianCalendar().getTime());
 							
-							Provider tempProvider=providerDao.getProvider(cachedReferral.getSourceFacilityProviderId());
+							Provider tempProvider=providerDao.getProvider(cachedReferral.getSourceCaisiProviderId());
 							clientReferral.setProviderFirstName(tempProvider.getFirstName());
 							clientReferral.setProviderLastName(tempProvider.getLastName());
 							

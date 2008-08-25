@@ -2,7 +2,7 @@
 <%@page import="org.oscarehr.common.dao.IntegratorConsentComplexExitInterviewDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.IntegratorConsentComplexExitInterview"%>
-<%@page import="org.oscarehr.common.model.FacilityDemographicPrimaryKey"%>
+<%@page import="org.oscarehr.common.model.FacilityIdIntegerCompositePk"%>
 <%@page import="org.apache.commons.lang.StringUtils"%><br />
 <%
 	int demographicId=Integer.parseInt(request.getParameter("demographicId"));
@@ -11,7 +11,7 @@
 	IntegratorConsentComplexExitInterviewDao integratorConsentComplexExitInterviewDao=(IntegratorConsentComplexExitInterviewDao)SpringUtils.getBean("integratorConsentComplexExitInterviewDao");
 	IntegratorConsentComplexExitInterview integratorConsentComplexExitInterview=new IntegratorConsentComplexExitInterview();
 	
-	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(facilityId,demographicId);
+	FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk(facilityId,demographicId);
 	integratorConsentComplexExitInterview.setId(pk);
 	
 	String temp=null;

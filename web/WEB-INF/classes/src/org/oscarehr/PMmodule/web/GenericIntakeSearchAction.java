@@ -92,7 +92,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			CachedReferral cachedReferral=referralWs.getReferral(remoteReferralId);
 
 			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
-			CachedDemographicInfo cachedDemographicInfo=demographicInfoWs.getCachedDemographicInfoByFacilityAndFacilityDemographicId(cachedReferral.getSourceFacilityId(), cachedReferral.getSourceFacilityDemographicId());
+			CachedDemographicInfo cachedDemographicInfo=demographicInfoWs.getCachedDemographicInfoByFacilityIdAndDemographicId(cachedReferral.getSourceIntegratorFacilityId(), cachedReferral.getSourceCaisiDemographicId());
 			
 	        GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 	        intakeSearchBean.setFirstName(cachedDemographicInfo.getFirstName());
@@ -183,7 +183,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		    List<CachedFacilityInfo> allFacilities = caisiIntegratorManager.getRemoteFacilities(currentFacilityId);
 		    HashMap<Integer, String> facilitiesNameMap = new HashMap<Integer, String>();
 		    for (CachedFacilityInfo cachedFacilityInfo : allFacilities)
-		        facilitiesNameMap.put(cachedFacilityInfo.getFacilityId(), cachedFacilityInfo.getName());
+		        facilitiesNameMap.put(cachedFacilityInfo.getIntegratorFacilityId(), cachedFacilityInfo.getName());
 
 		    request.setAttribute("facilitiesNameMap", facilitiesNameMap);
 		}
@@ -220,7 +220,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
             int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
             DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
-            CachedDemographicInfo demographicInfo=demographicInfoWs.getCachedDemographicInfoByFacilityAndFacilityDemographicId(remoteFacilityId, remoteDemographicId);
+            CachedDemographicInfo demographicInfo=demographicInfoWs.getCachedDemographicInfoByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
             
             XMLGregorianCalendar cal=demographicInfo.getBirthDate();
             Demographic demographic = Demographic.create(demographicInfo.getFirstName(), demographicInfo.getLastName(), cal==null?null:make0PrependedDateString(cal.getMonth()), cal==null?null:make0PrependedDateString(cal.getDay()), cal==null?null:String.valueOf(cal.getYear()), demographicInfo.getHin(), null, true);
@@ -286,7 +286,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	        	ReferralWs referralWs = caisiIntegratorManager.getReferralWs(currentFacilityId);
 				CachedReferral cachedReferral=referralWs.getReferral(Integer.parseInt(remoteReferralId));
 				parameters.append("&destinationProgramId=");
-				parameters.append(cachedReferral.getDestinationFacilityProgramId());
+				parameters.append(cachedReferral.getDestinationCaisiProgramId());
 			}
 			catch (MalformedURLException e) {
 				LOG.error("Unexpected error.", e);

@@ -54,7 +54,7 @@ import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedProviderInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
-import org.oscarehr.caisi_integrator.ws.client.FacilityProviderPrimaryKey;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.SessionConstants;
@@ -164,7 +164,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			intake = genericIntakeManager.copyRegIntake(clientId, providerNo, facilityId);
 			if (intake == null) {
 				intake = genericIntakeManager.createQuickIntake(providerNo);
-				;
 				intake.setClientId(clientId);
 				intake.setFacilityId(facilityId);
 			}
@@ -173,7 +172,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			intake = genericIntakeManager.copyIndepthIntake(clientId, providerNo, facilityId);
 			if (intake == null) {
 				intake = genericIntakeManager.createIndepthIntake(providerNo);
-				;
 				intake.setClientId(clientId);
 				intake.setFacilityId(facilityId);
 			}
@@ -383,13 +381,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			CachedReferral cachedReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 			StringBuilder sb = new StringBuilder();
 
-			CachedFacilityInfo cachedFacilityInfo = caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getSourceFacilityId());
+			CachedFacilityInfo cachedFacilityInfo = caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getSourceIntegratorFacilityId());
 			sb.append("Referred from : ");
 			sb.append(cachedFacilityInfo.getName());
 
-			FacilityProviderPrimaryKey facilityProviderPrimaryKey = new FacilityProviderPrimaryKey();
-			facilityProviderPrimaryKey.setFacilityId(cachedReferral.getSourceFacilityId());
-			facilityProviderPrimaryKey.setFacilityProviderId(cachedReferral.getSourceFacilityProviderId());
+			FacilityIdProviderIdCompositePk facilityProviderPrimaryKey = new FacilityIdProviderIdCompositePk();
+			facilityProviderPrimaryKey.setIntegratorFacilityId(cachedReferral.getSourceIntegratorFacilityId());
+			facilityProviderPrimaryKey.setCaisiProviderId(cachedReferral.getSourceCaisiProviderId());
 			CachedProviderInfo cachedProviderInfo = caisiIntegratorManager.getProviderInfo(facilityId, facilityProviderPrimaryKey);
 			sb.append(" by ");
 			sb.append(cachedProviderInfo.getLastName());

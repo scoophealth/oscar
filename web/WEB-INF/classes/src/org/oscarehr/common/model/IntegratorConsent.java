@@ -29,6 +29,7 @@ public class IntegratorConsent {
 	private boolean consentToHealthCardId = false;
 	private boolean consentToIssues = false;
 	private boolean consentToNotes = false;
+	private boolean consentToPreventions = false;
 	private boolean restrictConsentToHic = false;
 
 	private String formVersion;
@@ -107,6 +108,14 @@ public class IntegratorConsent {
 		this.consentToNotes = consentToNotes;
 	}
 
+	public boolean isConsentToPreventions() {
+		return consentToPreventions;
+	}
+
+	public void setConsentToPreventions(boolean consentToPreventions) {
+		this.consentToPreventions = consentToPreventions;
+	}
+
 	public boolean isRestrictConsentToHic() {
 		return restrictConsentToHic;
 	}
@@ -157,17 +166,17 @@ public class IntegratorConsent {
 	
 	public boolean isConsentToAll()
 	{
-		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&!restrictConsentToHic); 
+		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&consentToPreventions&&!restrictConsentToHic); 
 	}
 
 	public boolean isConsentToAllHic()
 	{
-		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&restrictConsentToHic); 
+		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&consentToPreventions&&restrictConsentToHic); 
 	}
 
 	public boolean isConsentToNone()
 	{
-		return(!consentToStatistics&&!consentToBasicPersonalId&&!consentToHealthCardId&&!consentToIssues&&!consentToNotes);
+		return(!consentToStatistics&&!consentToBasicPersonalId&&!consentToHealthCardId&&!consentToIssues&&!consentToPreventions&&!consentToNotes);
 	}
 	
 	public void setConsentToAll()
@@ -177,6 +186,7 @@ public class IntegratorConsent {
 		consentToHealthCardId=true;
 		consentToIssues=true;
 		consentToNotes=true;
+		consentToPreventions=true;
 		restrictConsentToHic=false;
 	}
 	
@@ -187,5 +197,6 @@ public class IntegratorConsent {
 		consentToHealthCardId=false;
 		consentToIssues=false;
 		consentToNotes=false;
+		consentToPreventions=false;
 	}
 }

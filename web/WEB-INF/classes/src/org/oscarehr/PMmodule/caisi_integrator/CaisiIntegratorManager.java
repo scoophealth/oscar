@@ -36,10 +36,10 @@ import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedProviderInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWsService;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWsService;
-import org.oscarehr.caisi_integrator.ws.client.FacilityProgramPrimaryKey;
-import org.oscarehr.caisi_integrator.ws.client.FacilityProviderPrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWs;
@@ -114,7 +114,7 @@ public class CaisiIntegratorManager {
 	{
 		for (CachedFacilityInfo facility : getRemoteFacilities(myFacilityId))
 		{
-			if (facility.getFacilityId().equals(remoteFacilityId)) return(facility);
+			if (facility.getIntegratorFacilityId().equals(remoteFacilityId)) return(facility);
 		}
 		
 		return(null);
@@ -158,11 +158,11 @@ public class CaisiIntegratorManager {
 		return (new ArrayList<CachedProgramInfo>(results));
 	}
 
-	public CachedProgramInfo getRemoteProgram(int facilityId, FacilityProgramPrimaryKey remoteProgramPk) throws MalformedURLException {
+	public CachedProgramInfo getRemoteProgram(int facilityId, FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
 		List<CachedProgramInfo> programs = getRemotePrograms(facilityId);
 		
 		for (CachedProgramInfo cachedProgramInfo : programs) {
-			if (facilityProgramPrimaryKeyEquals(cachedProgramInfo.getFacilityProgramPrimaryKey(), remoteProgramPk)) {
+			if (facilityProgramPrimaryKeyEquals(cachedProgramInfo.getFacilityIdIntegerCompositePk(), remoteProgramPk)) {
 				return (cachedProgramInfo);
 			}
 		}
@@ -170,11 +170,11 @@ public class CaisiIntegratorManager {
 		return (null);
 	}
 
-    private static boolean facilityProgramPrimaryKeyEquals(FacilityProgramPrimaryKey o1, FacilityProgramPrimaryKey o2)
+    private static boolean facilityProgramPrimaryKeyEquals(FacilityIdIntegerCompositePk o1, FacilityIdIntegerCompositePk o2)
 	{
 		try
         {
-	        return(o1.getFacilityId().equals(o2.getFacilityId()) && o1.getFacilityProgramId().equals(o2.getFacilityProgramId()));
+	        return(o1.getIntegratorFacilityId().equals(o2.getIntegratorFacilityId()) && o1.getCaisiItemId().equals(o2.getCaisiItemId()));
         }
         catch (RuntimeException e)
         {
@@ -223,12 +223,12 @@ public class CaisiIntegratorManager {
 		return (new ArrayList<CachedProviderInfo>(results));
 	}
 
-	public CachedProviderInfo getProviderInfo(int facilityId, FacilityProviderPrimaryKey remoteProviderPk) throws MalformedURLException
+	public CachedProviderInfo getProviderInfo(int facilityId, FacilityIdProviderIdCompositePk remoteProviderPk) throws MalformedURLException
 	{
 		List<CachedProviderInfo> providers=getAllProviderInfos(facilityId);
 		
 		for (CachedProviderInfo cachedProviderInfo : providers) {
-			if (facilityProviderPrimaryKeyEquals(cachedProviderInfo.getFacilityProviderPrimaryKey(), remoteProviderPk)) {
+			if (facilityProviderPrimaryKeyEquals(cachedProviderInfo.getFacilityIdProviderIdCompositePk(), remoteProviderPk)) {
 				return (cachedProviderInfo);
 			}
 		}
@@ -236,11 +236,11 @@ public class CaisiIntegratorManager {
 		return (null);
 	}
 	
-    private static boolean facilityProviderPrimaryKeyEquals(FacilityProviderPrimaryKey o1, FacilityProviderPrimaryKey o2)
+    private static boolean facilityProviderPrimaryKeyEquals(FacilityIdProviderIdCompositePk o1, FacilityIdProviderIdCompositePk o2)
 	{
 		try
         {
-	        return(o1.getFacilityId().equals(o2.getFacilityId()) && o1.getFacilityProviderId().equals(o2.getFacilityProviderId()));
+	        return(o1.getIntegratorFacilityId().equals(o2.getIntegratorFacilityId()) && o1.getCaisiProviderId().equals(o2.getCaisiProviderId()));
         }
         catch (RuntimeException e)
         {

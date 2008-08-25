@@ -51,11 +51,10 @@ import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
 import org.oscarehr.caisi_integrator.ws.client.CachedProviderInfo;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicIssuePrimaryKey;
-import org.oscarehr.caisi_integrator.ws.client.FacilityDemographicPrimaryKey;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdDemographicIssueCompositePk;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.FacilityProgramPrimaryKey;
-import org.oscarehr.caisi_integrator.ws.client.FacilityProviderPrimaryKey;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWs;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
@@ -137,7 +136,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException {
+	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
 		logger.debug("Pushing data for facility : " + facility.getId());
 
 		// check all parameters are present
@@ -187,9 +186,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 				BeanUtils.copyProperties(cachedProviderInfo, provider);
 
-				FacilityProviderPrimaryKey pk = new FacilityProviderPrimaryKey();
-				pk.setFacilityProviderId(provider.getProviderNo());
-				cachedProviderInfo.setFacilityProviderPrimaryKey(pk);
+				FacilityIdProviderIdCompositePk pk = new FacilityIdProviderIdCompositePk();
+				pk.setCaisiProviderId(provider.getProviderNo());
+				cachedProviderInfo.setFacilityIdProviderIdCompositePk(pk);
 
 				cachedProviderInfos.add(cachedProviderInfo);
 			}
@@ -216,9 +215,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 				BeanUtils.copyProperties(cachedProgramInfo, program);
 
-				FacilityProgramPrimaryKey pk = new FacilityProgramPrimaryKey();
-				pk.setFacilityProgramId(program.getId());
-				cachedProgramInfo.setFacilityProgramPrimaryKey(pk);
+				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
+				pk.setCaisiItemId(program.getId());
+				cachedProgramInfo.setFacilityIdIntegerCompositePk(pk);
 
 				cachedProgramInfo.setGender(program.getManOrWoman());
 				if (program.isTransgender())
@@ -257,10 +256,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		CachedDemographicImage cachedDemographicImage = new CachedDemographicImage();
 
-		FacilityDemographicPrimaryKey facilityDemographicPrimaryKey = new FacilityDemographicPrimaryKey();
-		facilityDemographicPrimaryKey.setFacilityDemographicId(demographicId);
+		FacilityIdIntegerCompositePk facilityDemographicPrimaryKey = new FacilityIdIntegerCompositePk();
+		facilityDemographicPrimaryKey.setCaisiItemId(demographicId);
 
-		cachedDemographicImage.setFacilityDemographicPrimaryKey(facilityDemographicPrimaryKey);
+		cachedDemographicImage.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
 		cachedDemographicImage.setImage(clientImage.getImage_data());
 
 		service.setCachedDemographicImage(cachedDemographicImage);
@@ -285,10 +284,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				Issue issue = caseManagementIssue.getIssue();
 				CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
 
-				FacilityDemographicIssuePrimaryKey facilityDemographicIssuePrimaryKey = new FacilityDemographicIssuePrimaryKey();
-				facilityDemographicIssuePrimaryKey.setFacilityDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
+				FacilityIdDemographicIssueCompositePk facilityDemographicIssuePrimaryKey = new FacilityIdDemographicIssueCompositePk();
+				facilityDemographicIssuePrimaryKey.setCaisiDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
 				facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
-				issueTransfer.setFacilityDemographicIssuePrimaryKey(facilityDemographicIssuePrimaryKey);
+				issueTransfer.setFacilityDemographicIssuePk(facilityDemographicIssuePrimaryKey);
 
 				BeanUtils.copyProperties(issueTransfer, caseManagementIssue);			
 				issueTransfer.setIssueDescription(issue.getDescription());
@@ -306,17 +305,26 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedDemographicIssues(issueTransfers);
 	}
 
-	private void pushDemographics(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) throws MalformedURLException, DatatypeConfigurationException {
+	private void pushDemographics(Facility facility, DemographicInfoWs service, List<Integer> demographicIds) throws MalformedURLException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
 		for (Integer demographicId : demographicIds) {
 			logger.debug("pushing demographicInfo facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-			Demographic demographic = demographicDao.getDemographicById(demographicId);
-
 			CachedDemographicInfo cachedDemographicInfo = new CachedDemographicInfo();
 
-			FacilityDemographicPrimaryKey facilityDemographicPrimaryKey = new FacilityDemographicPrimaryKey();
-			facilityDemographicPrimaryKey.setFacilityDemographicId(demographic.getDemographicNo());
-			cachedDemographicInfo.setFacilityDemographicPrimaryKey(facilityDemographicPrimaryKey);
+			// set consent info
+			IntegratorConsent consent = integratorConsentDao.findLatestByFacilityAndDemographic(facility.getId(), demographicId);
+			if (consent != null) {
+				BeanUtils.copyProperties(cachedDemographicInfo, consent);
+			}
+
+			// set demographic info
+			Demographic demographic = demographicDao.getDemographicById(demographicId);
+
+			BeanUtils.copyProperties(cachedDemographicInfo, demographic);
+
+			FacilityIdIntegerCompositePk facilityDemographicPrimaryKey = new FacilityIdIntegerCompositePk();
+			facilityDemographicPrimaryKey.setCaisiItemId(demographic.getDemographicNo());
+			cachedDemographicInfo.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
 
 			XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
 			if (demographic.getYearOfBirth() != null)
@@ -327,24 +335,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));
 			cachedDemographicInfo.setBirthDate(cal);
 
-			cachedDemographicInfo.setCity(demographic.getCity());
 			cachedDemographicInfo.setFirstName(demographic.getFirstName());
 			cachedDemographicInfo.setGender(demographic.getSex());
-			cachedDemographicInfo.setHin(demographic.getHin());
-			cachedDemographicInfo.setLastName(demographic.getLastName());
-			cachedDemographicInfo.setProvince(demographic.getProvince());
-			cachedDemographicInfo.setSin(demographic.getSin());
 
-			IntegratorConsent consent = integratorConsentDao.findLatestByFacilityAndDemographic(facility.getId(), demographicId);
-			if (consent != null) {
-				cachedDemographicInfo.setConsentToBasicPersonalId(consent.isConsentToBasicPersonalId());
-				cachedDemographicInfo.setConsentToHealthCardId(consent.isConsentToHealthCardId());
-				cachedDemographicInfo.setConsentToIssues(consent.isConsentToIssues());
-				cachedDemographicInfo.setConsentToNotes(consent.isConsentToNotes());
-				cachedDemographicInfo.setConsentToStatistics(consent.isConsentToStatistics());
-				cachedDemographicInfo.setRestrictConsentToHic(consent.isRestrictConsentToHic());
-			}
-
+			// send the request
 			service.setCachedDemographicInfo(cachedDemographicInfo);
 		}
 	}
