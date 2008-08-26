@@ -101,13 +101,17 @@ You have no rights to access the data!
 %>
     <caisi:isModuleLoad moduleName="caisi" reverse="true">
         <%
-            EctProgram prgrmMgr = new EctProgram(session);
+            
+            EctProgram prgrmMgr = new EctProgram(session);            
             session.setAttribute("case_program_id", prgrmMgr.getProgram(bean.providerNo));
             System.out.println("case_program_id " + session.getAttribute("case_program_id"));
             session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
-            session.setAttribute("casemgmt_oscar_bean", bean);
+            String strBeanName = "casemgmt_oscar_bean" + bean.getDemographicNo();
+            session.setAttribute(strBeanName, bean);
             session.setAttribute("casemgmt_bean_flag", "true");
-            String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;          
+            session.setAttribute("caisiLoaded",null);
+            String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+            System.out.println("Enc_type: " + request.getParameter("encType"));
             if( !response.isCommitted())                
                 response.sendRedirect(hrefurl);
         %>
@@ -124,6 +128,8 @@ You have no rights to access the data!
 <%
 session.setAttribute("caisiLoaded","true");
 session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
+String strBeanName = "casemgmt_oscar_bean" + bean.getDemographicNo();
+session.setAttribute(strBeanName, bean);
 session.setAttribute("casemgmt_oscar_bean", bean);
 session.setAttribute("casemgmt_bean_flag", "true");
 String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
