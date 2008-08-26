@@ -121,6 +121,16 @@
         <form-bean name="RptByExamplesFavoriteForm" type="oscar.oscarReport.pageUtil.RptByExamplesFavoriteForm" />
         <form-bean name="RptByExamplesAllFavoritesForm" type="oscar.oscarReport.pageUtil.RptByExamplesAllFavoritesForm" />
         <form-bean name="GstControlForm" type="oscar.oscarBilling.ca.on.administration.GstControlForm" /> 
+        <form-bean name="batchBillingFrm" type="org.apache.struts.action.DynaActionForm">
+            <form-property name="providers" type="java.util.List" />
+            <form-property name="provider" type="org.oscarehr.PMmodule.model.Provider" />
+            <form-property name="serviceCode" type="java.lang.String" />
+            <form-property name="serviceDate" type="java.lang.String" />
+            <form-property name="DxCode" type="java.lang.String" />
+            <form-property name="billingDate" type="java.lang.String" />
+            <form-property name="method" type="java.lang.String" />
+            <form-property name="unlink" type="java.lang.String" />
+        </form-bean>            
         <form-bean name="ObecForm" type="oscar.oscarReport.pageUtil.ObecForm" />
         <form-bean name="RptSelectCDMReportForm" type="oscar.oscarReport.oscarMeasurements.pageUtil.RptSelectCDMReportForm" />
         <form-bean name="RptInitializePatientsMetGuidelineCDMReportForm" type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializePatientsMetGuidelineCDMReportForm" />
@@ -1260,6 +1270,9 @@
         <action input="/demographic/demographicImport.jsp" name="CMLLabUploadForm" path="/lab/CMLlabUpload" scope="request" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadAction">
             <forward name="success" path="/lab/CA/ON/uploadComplete.jsp" />
         </action>
+        <action input="/billing/CA/ON/batchBillingCode.jsp" path="/oscarBilling/batchBillingbyCode" name="batchBillingFrm" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="report" path="/billing/CA/ON/batchBillingCode.jsp" />
+        </action>
         <action input="/demographic/demographicImport.jsp" name="LabUploadForm" path="/billing/CA/ON/benefitScheduleUpload" scope="request" type="oscar.oscarBilling.ca.on.OHIP.ScheduleOfBenefitsUploadAction">
             <forward name="success" path="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp" />
         </action>
@@ -1621,7 +1634,7 @@
         <action path="/ReceptionistReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="report" path="/er/receptionist_report.jsp" />
         </action>
-        <action path="/CaseManagementView" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" input="/casemgmt/CaseManagementView.jsp" name="caseManagementViewForm">
+        <action path="/CaseManagementView" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/casemgmt/CaseManagementView.jsp" name="caseManagementViewForm">
             <forward name="view" path="/casemgmt/CaseManagementView.jsp" />
             <forward name="page.casemgmt.view" path="page.casemgmt.view" />
             <forward name="page.newcasemgmt.view" path="page.newcasemgmt.view" />
@@ -1635,7 +1648,7 @@
             <forward name="displayNote" path="/casemgmt/displayNote.jsp"/>
             <forward name="clientHistoryPrintPreview" path="/casemgmt/client_history_printPreview.jsp"/>
         </action>
-        <action path="/CaseManagementEntry" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" input="/casemgmt/CaseManagementEntry.jsp" name="caseManagementEntryForm">
+        <action path="/CaseManagementEntry" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/casemgmt/CaseManagementEntry.jsp" name="caseManagementEntryForm">
             <forward name="view" path="/casemgmt/CaseManagementEntry.jsp" />
             <forward name="list" path="/CaseManagementView.do?method=view" redirect="true" />
             <forward name="listCPPNotes" path="/CaseManagementView.do" redirect="true" />
