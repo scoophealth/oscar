@@ -33,9 +33,15 @@
 <link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
 <script language="JavaScript" src="<c:out value="${ctx}"/>/jspspellcheck/spellcheck-caller.js"></script>
 <script type="text/javascript">
-	var flag=<%=request.getAttribute("change_flag")%>;
+	var flag=<%=request.getAttribute("change_flag")%>;                
  
-	<%org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean form=(org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean) session.getAttribute("caseManagementEntryForm");
+	<%
+        
+        String demographicNo = request.getParameter("demographicNo");
+        String sessionFrmName = "caseManagementEntryForm" + demographicNo;
+        org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean form=(org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
+        pageContext.setAttribute("caseManagementEntryForm", form);
+        
 	int size=form.getIssueCheckList().length;
 	
 	if (session.getAttribute("newNote")!=null && "true".equalsIgnoreCase((String)session.getAttribute("newNote")))
