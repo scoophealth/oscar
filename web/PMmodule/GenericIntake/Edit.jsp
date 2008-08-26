@@ -29,7 +29,10 @@
     GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
     Intake intake = intakeEditForm.getIntake();
     String clientId = String.valueOf(intake.getClientId());
-   
+    String intakeFrmDate = intake.getNode().getPublishDateStr();
+    String intakeFrmName = intake.getNode().getLabelStr();
+    Integer intakeFrmVer = intake.getNode().getForm_version();
+    intakeFrmName += intakeFrmVer==null ? " (1)" : " ("+intakeFrmVer+")";
 %>
 <html:html xhtml="true" locale="true">
 <head>
@@ -440,7 +443,10 @@
 
 <caisi:intake base="<%=5%>" intake="<%=intake%>"/>
 </div>
+
 <div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
+    Version: <%=intakeFrmName%> &nbsp; &nbsp; &nbsp; &nbsp; Published: <%=intakeFrmDate%>
+    <p>&nbsp;</p>
     <table class="intakeTable">
         <logic:messagesPresent>
             <html:messages id="error" bundle="pmm">
