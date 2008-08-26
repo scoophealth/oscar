@@ -19,7 +19,10 @@
 package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +34,7 @@ public class IntakeNode implements Serializable {
     private IntakeNodeWalker walker;
 
     public static String REF = "IntakeNode";
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// many to one
     private IntakeNodeTemplate nodeTemplate;
@@ -38,6 +42,9 @@ public class IntakeNode implements Serializable {
     private Integer pos;
     private boolean mandatory;
     private Integer eq_to_id;
+    private Integer form_version;
+    private Calendar publish_date;
+    private String publish_by;
     private IntakeNode parent;// collections
     private List<IntakeNode> children;
     private Set<Intake> intakes;
@@ -373,8 +380,44 @@ public class IntakeNode implements Serializable {
     public void setEq_to_id(Integer eq_to_id) {
 	this.eq_to_id = eq_to_id;
     }
+    
+    
+    public Integer getForm_version() {
+	return form_version;
+    }
+    
+    
+    public void setForm_version(Integer form_version) {
+	this.form_version = form_version;
+    }
+    
+    
+    public Calendar getPublish_date() {
+        return publish_date;
+    }
+    
+    public String getPublishDateStr() {
+	return DATE_FORMAT.format(getPublish_date().getTime());
+    }
+    
+    
+    public void setPublish_date(Calendar publishDate) {
+        this.publish_date = publishDate;
+    }
+
+    public void setPublishDateCurrent() {
+        setPublish_date(Calendar.getInstance());
+    }
 
     
+    public String getPublish_by() {
+	return publish_by;
+    }
+    
+    
+    public void setPublish_by(String publishBy) {
+	this.publish_by = publishBy;
+    }
     
 
     public boolean equals(Object obj) {
