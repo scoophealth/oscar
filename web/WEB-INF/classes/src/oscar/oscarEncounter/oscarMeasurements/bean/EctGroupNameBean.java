@@ -24,8 +24,9 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
+import java.io.Serializable;
 
-public class EctGroupNameBean{
+public class EctGroupNameBean implements Serializable {
 
        String groupName;
        
