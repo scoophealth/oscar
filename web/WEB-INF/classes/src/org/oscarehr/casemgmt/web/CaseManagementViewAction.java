@@ -482,10 +482,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		se.setAttribute("casemgmt_VlCountry", vLocale.getCountry());
 
 		// if we have just saved a note, remove saveNote flag
-		Boolean saved = (Boolean) se.getAttribute("saveNote");
+                String varName = "saveNote" + demoNo;
+		Boolean saved = (Boolean) se.getAttribute(varName);
 		if (saved != null && saved == true) {
 			request.setAttribute("saveNote", saved);
-			se.removeAttribute("saveNote");
+			se.removeAttribute(varName);
 		}
 		current = System.currentTimeMillis();
 		log.debug("VIEW Exiting " + String.valueOf(current - beginning));
