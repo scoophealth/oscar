@@ -8,6 +8,8 @@
     GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
     String published = request.getParameter("published");
     IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
+    Integer frmVersion = (Integer) session.getAttribute("form_version");
+    String publisher = session.getAttribute("publisher").toString();
     
     String frmLabel = itn.getLabelStr();
     
@@ -16,16 +18,21 @@
     saveAnswerElements(itn, genericIntakeManager);
     IntakeNode nwItn = new IntakeNode();
     copyIntakeNode(itn, nwItn);
+    nwItn.setForm_version(frmVersion);
     genericIntakeManager.saveIntakeNode(nwItn);
     updateEqId(nwItn, genericIntakeManager);
 
     if (published!=null) {
+	updatePublish(nwItn, publisher, genericIntakeManager);
         genericIntakeManager.updateAgencyIntakeQuick(nwItn.getId());
     }
     session.removeAttribute("intakeNode");
     session.removeAttribute("lastNodeId");
     session.removeAttribute("lastTemplateId");
     session.removeAttribute("lastElementId");
+    session.removeAttribute("form_version");
+    
+    session.setAttribute("latestFrmId", nwItn.getId());
     response.sendRedirect("close.jsp");
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -98,6 +105,12 @@ void updateEqId(IntakeNode in, GenericIntakeManager gim) {
     for (IntakeNode iN : in.getChildren()) {
 	updateEqId(iN, gim);
     }
+}
+
+void updatePublish(IntakeNode in, String publisher, GenericIntakeManager gim) {
+    in.setPublishDateCurrent();
+    in.setPublish_by(publisher);
+    gim.updateIntakeNode(in);
 }
 
 void copyIntakeNode(IntakeNode org, IntakeNode cpy) {
