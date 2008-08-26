@@ -29,6 +29,7 @@ import java.util.Properties;
 
 import oscar.login.DBHelp;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarProvider.data.ProviderData;
 import oscar.util.UtilDateUtilities;
 
 public class FrmBCHPRecord extends FrmRecord {
@@ -39,8 +40,9 @@ public class FrmBCHPRecord extends FrmRecord {
 
         if (existingID <= 0) {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT demographic_no, last_name, first_name, phone, phone2, hin FROM demographic WHERE demographic_no = "
+            String sql = "SELECT demographic_no, last_name, first_name, phone, phone2, hin,provider_no FROM demographic WHERE demographic_no = "
                     + demographicNo;
+            String providerNo = null;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
                 props.setProperty("demographic_no", rs.getString("demographic_no"));
@@ -53,9 +55,19 @@ public class FrmBCHPRecord extends FrmRecord {
                 props.setProperty("pg1_phone", rs.getString("phone") + "  " + rs.getString("phone2"));
                 props.setProperty("pg1_formDate", UtilDateUtilities
                         .DateToString(UtilDateUtilities.Today(), _dateFormat));
-
+                providerNo = rs.getString("provider_no");
             }
             rs.close();
+            
+            if(providerNo != null && !providerNo.trim().equals("")){
+                ProviderData proData = new ProviderData();
+                proData.getProvider(providerNo);
+                
+                props.setProperty("pg1_msp",proData.getOhip_no());
+                props.setProperty("pg1_md", "Dr. "+proData.getLast_name());
+                
+            }
+                
             db.CloseConn();
         } else {
             String sql = "SELECT * FROM formBCHP WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
