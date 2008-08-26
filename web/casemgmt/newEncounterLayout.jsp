@@ -42,6 +42,7 @@
 <nested:define id="rowTwoSize" name="caseManagementViewForm" property="ectWin.rowTwoSize"/>
 <html:html locale="true">
   <head>      
+        
   	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
 	<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
         <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">         
@@ -331,7 +332,7 @@
     <script type="text/javascript">
         
 function init() {       
-    
+        
     //console.log("Begin init");
     //var start = new Date();
     //var current;
@@ -360,10 +361,12 @@ function init() {
     Calendar.setup({ inputField : "printStartDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printStartDate_cal", singleClick : true, step : 1 });    
     Calendar.setup({ inputField : "printEndDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printEndDate_cal", singleClick : true, step : 1 });    
     
+    strToday = $F("serverDate");
+    
     <nested:notEmpty name="DateError">
         alert("<nested:write name="DateError"/>");
     </nested:notEmpty>
-    
+
 }
 
 </script>
