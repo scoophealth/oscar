@@ -129,7 +129,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 province = ((String) oscarVariables.getProperty("billregion", "")).trim().toUpperCase();
             }
 
-            EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("casemgmt_oscar_bean");
+            String strBeanName = "casemgmt_oscar_bean" + demono;
+            EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute(strBeanName);
 
             if (bean.appointmentNo == null) {
                 bean.appointmentNo = "0";
@@ -162,7 +163,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         log.debug("Get Issues and filter them");
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
+        System.out.println("EDIT " + providerNo + " " + demono + " " + programId + " " + currentFacilityId);
         List issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), providerNo, programId,currentFacilityId);
+        
         current = System.currentTimeMillis();
         log.debug("Get Issues and filter them " + String.valueOf(current-start));
         start = current;
@@ -335,20 +338,37 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         log.debug("The End of Edit " + String.valueOf(current - beginning));
         start = current;
         
+        String frmName = "caseManagementEntryForm" + demono;
+        request.getSession().setAttribute(frmName, cform);
+        ActionForward fwd, finalFwd = null;
         if (chain != null && chain.length() > 0) {
             request.getSession().setAttribute("passwordEnabled", passwd);
-            return mapping.findForward(chain);
+            fwd = mapping.findForward(chain);
         }
+        else {
+            request.setAttribute("passwordEnabled", passwd);
 
-        request.setAttribute("passwordEnabled", passwd);
-
-        String ajax = request.getParameter("ajax");
-        if (ajax != null && ajax.equalsIgnoreCase("true")) {
-            request.getSession().setAttribute("caseManagementEntryForm", cform);
-            return mapping.findForward("issueList_ajax");
+            String ajax = request.getParameter("ajax");
+            if (ajax != null && ajax.equalsIgnoreCase("true")) {            
+                fwd = mapping.findForward("issueList_ajax");
+            }
+            else {
+                fwd = mapping.findForward("view");
+            }
         }
+        
+        if( fwd != null ) {
+            StringBuffer path = new StringBuffer(fwd.getPath());
 
-        return mapping.findForward("view");
+            if( path.indexOf("?") == -1 )
+                path.append("?");
+            else
+                path.append("&");
+
+            path.append("demographicNo="+demono);
+            finalFwd = new ActionForward(path.toString());        
+        }
+        return finalFwd;
     }
 
     public void resetTemp(String providerNo, String demoNo, String programId) {
@@ -517,16 +537,21 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
     public long noteSave(CaseManagementEntryFormBean cform, HttpServletRequest request) throws Exception {
 
-        // we don't want to save empty notes!
-        CaseManagementNote note = (CaseManagementNote) cform.getCaseNote();
-        String noteTxt = note.getNote();
+        // we don't want to save empty notes!        
+        String noteTxt = cform.getCaseNote_note();        
+        
         if (noteTxt == null || noteTxt.equals("")) return -1;
 
+        String demo = getDemographicNo(request);
+        String sessionFrmName = "caseManagementEntryForm" + demo;
+        CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean)request.getSession().getAttribute(sessionFrmName);
+        CaseManagementNote note = (CaseManagementNote) sessionFrm.getCaseNote();                
+        note.setNote(noteTxt);
+        
         String providerNo = getProviderNo(request);
         Provider provider = getProvider(request);
         String userName = provider != null ? provider.getFullName() : "";
-
-        String demo = getDemographicNo(request);
+        
         CaseManagementCPP cpp = this.caseManagementMgr.getCPP(demo);
         if (cpp == null) {
             cpp = new CaseManagementCPP();
@@ -541,14 +566,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         /* get the checked issue save into note */
         List issuelist = new ArrayList();
-        CheckBoxBean[] checkedlist = (CheckBoxBean[]) cform.getIssueCheckList();
+        
+        CheckBoxBean[] checkedlist = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
 
         String sign = (String) request.getParameter("sign");
         String includeIssue = (String) request.getParameter("includeIssue");
         if (sign == null || !sign.equals("on")) {
             note.setSigning_provider_no("");
             note.setSigned(false);
-            cform.setSign("off");
+            sessionFrm.setSign("off");
         }
         else {
             note.setSigning_provider_no(providerNo);
@@ -599,18 +625,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         for (int i = 0; i < checkedlist.length; i++) {
             if (!checkedlist[i].getIssue().isResolved()) ongoing = ongoing + checkedlist[i].getIssue().getIssue().getDescription() + "\n";
             String ischecked = request.getParameter("issueCheckList[" + i + "].checked");
+            CaseManagementIssue iss = checkedlist[i].getIssue();
             if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
-                checkedlist[i].setChecked("on");
-                CaseManagementIssue iss = checkedlist[i].getIssue();
-                iss.setNotes(noteSet);
+                checkedlist[i].setChecked("on");                                
+                checkedlist[i].setUsed(true);
+                iss.setNotes(noteSet);                 
                 issueset.add(checkedlist[i].getIssue());
             }
             else {
                 checkedlist[i].setChecked("off");
+                checkedlist[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), note.getId(), demo));
+                checkedlist[i].setUsed(false);
             }
+            
             issuelist.add(checkedlist[i].getIssue());
         }
 
+        sessionFrm.setIssueCheckList(checkedlist);
         note.setIssues(issueset);
 
         /* remove signature and the related issues from note */
@@ -623,7 +654,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         if (includeIssue == null || !includeIssue.equals("on")) {
             /* set includeissue in note */
             note.setIncludeissue(false);
-            cform.setIncludeIssue("off");
+            sessionFrm.setIncludeIssue("off");
         }
         else {
             note.setIncludeissue(true);
@@ -649,7 +680,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         if (inCaisi) cpp.setOngoingConcerns(ongoing);
 
         // update appointment and add verify message to note if verified
-        EctSessionBean sessionBean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
+        String strBeanName = "casemgmt_oscar_bean" + demo;
+        EctSessionBean sessionBean = (EctSessionBean) request.getSession().getAttribute(strBeanName);
         String verify = request.getParameter("verify");
         ResourceBundle prop;
         Date now = new Date();
@@ -727,6 +759,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         /* remember the str written into echart */
         request.getSession().setAttribute("lastSavedNoteString", savedStr);
         caseManagementMgr.getEditors(note);
+        cform.setCaseNote(note);
 
         try {
             this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
@@ -763,9 +796,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         // are we in the new encounter and chaining actions?
         String chain = request.getParameter("chain");
-        if (chain != null) {
-            request.getSession().setAttribute("newNote", false);
-            request.getSession().setAttribute("saveNote", new Boolean(true)); // tell CaseManagementView we have just saved note
+        if (chain != null && !chain.equals("") ) {
+            String varName = "newNote";
+            request.getSession().setAttribute(varName, false);
+            varName = "saveNote" + demono;
+            request.getSession().setAttribute(varName, new Boolean(true)); // tell CaseManagementView we have just saved note
             ActionForward fwd = mapping.findForward(chain);            
             StringBuffer path = new StringBuffer(fwd.getPath());
             
@@ -872,16 +907,17 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         
         note.setReporter_program_team(team);
         
-        
+        String sessionName = "caseManagementEntryForm" + demo;
+        CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean)request.getSession().getAttribute(sessionName);
         List issuelist = new ArrayList();
         Set issueset = new HashSet();
         Set noteSet = new HashSet();
-        String ongoing = "";
+        
         int numIssues = Integer.parseInt(request.getParameter("numIssues"));
-        CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-        CheckBoxBean[] checkedlist = (CheckBoxBean[]) cform.getIssueCheckList();
-        for (int i = 0; i < numIssues; i++) {
-            if (!checkedlist[i].getIssue().isResolved()) ongoing = ongoing + checkedlist[i].getIssue().getIssue().getDescription() + "\n";
+        //CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;        
+        
+        CheckBoxBean[] checkedlist = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
+        for (int i = 0; i < numIssues; i++) {            
             String ischecked = request.getParameter("issue" + i);
             if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
                 checkedlist[i].setChecked("on");
@@ -898,6 +934,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         note.setIssues(issueset);
         note.setIncludeissue(false);
         caseManagementMgr.saveAndUpdateCaseIssues(issuelist);
+        sessionFrm.setIssueCheckList(checkedlist);
         
         int revision;
 
@@ -913,25 +950,27 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         note.setUpdate_date(now);
         if (note.getCreate_date() == null) note.setCreate_date(now);
        
+        note.setEncounter_type(request.getParameter("encType"));
         this.caseManagementMgr.saveNoteSimple(note);
         this.caseManagementMgr.getEditors(note);
         
         try {
             this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
         }
-        catch (Throwable e) {
+        catch (Throwable e) {            
             log.warn(e);
         }
         
-        request.getSession().setAttribute("newNote", false);
-        request.setAttribute("ajaxsave",note.getId());
-        request.setAttribute("origNoteId", noteId);
+        request.getSession().setAttribute(sessionName, sessionFrm);
         CaseManagementEntryFormBean newform = new CaseManagementEntryFormBean();
         newform.setCaseNote(note);
         newform.setIssueCheckList(checkedlist);
         request.setAttribute("caseManagementEntryForm", newform);
-        log.debug("OLD ID " + noteId + " NEW ID " + String.valueOf(note.getId()));
-        
+        String varName = "newNote";
+        request.getSession().setAttribute(varName, false);
+        request.setAttribute("ajaxsave",note.getId());
+        request.setAttribute("origNoteId", noteId);        
+                
         return mapping.findForward("issueList_ajax");
         /*CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
        
@@ -968,8 +1007,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         cform.setMethod("view");
         String error = (String)request.getAttribute("DateError");
         if (error != null) {
-            request.getSession().setAttribute("newNote", false);
-            request.getSession().setAttribute("saveNote", new Boolean(true)); // tell CaseManagementView we have just saved note
+            String demoNo = getDemographicNo(request);;
+            String varName = "newNote";
+            request.getSession().setAttribute(varName, false);
+            varName = "saveNote" + demoNo;
+            request.getSession().setAttribute(varName, new Boolean(true)); // tell CaseManagementView we have just saved note
             ActionForward fwd = mapping.findForward("list");            
             StringBuffer path = new StringBuffer(fwd.getPath());
             
@@ -982,7 +1024,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             
             ActionForward forward = new ActionForward();
             forward.setPath(path.toString());
-            return forward;
+            return forward;                
         }
         
         String chain = request.getParameter("chain");
@@ -991,17 +1033,18 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         	fwd.setPath(chain);
         	return fwd;
         }
+                
         return mapping.findForward("windowClose");
     }
 
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
-
+        
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-        String providerNo = getProviderNo(request);
+        String providerNo = getProviderNo(request);               
         CaseManagementNote note = (CaseManagementNote) cform.getCaseNote();
 
-        try {
+        try {            
             this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
         }
         catch (Throwable e) {
@@ -1134,7 +1177,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             issueList[i].setIssue((Issue) filteredSearchResults.get(i));
 
         }
-        cform.setNewIssueCheckList(issueList);
+        String sessionFrmName = "caseManagementEntryForm" + demono;
+        CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean)request.getSession().getAttribute(sessionFrmName);        
+        sessionFrm.setNewIssueCheckList(issueList);
+        sessionFrm.setShowList("true");
 
         if (request.getParameter("change_diagnosis") != null) request.setAttribute("change_diagnosis", request.getParameter("change_diagnosis"));
         if (request.getParameter("change_diagnosis_id") != null) request.setAttribute("change_diagnosis_id", request.getParameter("change_diagnosis_id"));
@@ -1150,11 +1196,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String providerNo = getProviderNo(request);
 
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
+        String sessionFrmName = "caseManagementEntryForm" + this.getDemographicNo(request);
+        CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
 
         // check to see if this issue has already been associated with this demographic
         boolean issueExists = false;
         long lIssueId = Long.parseLong(issueId);
-        CheckBoxBean[] existingCaseIssueList = cform.getIssueCheckList();
+        CheckBoxBean[] existingCaseIssueList = sessionFrm.getIssueCheckList();
         for (int idx = 0; idx < existingCaseIssueList.length; ++idx) {
             if (existingCaseIssueList[idx].getIssue().getIssue_id() == lIssueId) {
                 issueExists = true;
@@ -1171,7 +1219,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             Issue issue = caseManagementMgr.getIssue(issueId);
             caseIssueList[0].setIssue(issue);
             caseIssueList[0].setChecked(true);
-            cform.setNewIssueCheckList(caseIssueList);
+            sessionFrm.setNewIssueCheckList(caseIssueList);
 
             return issueAdd(mapping, cform, request, response);
         }
@@ -1194,12 +1242,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         request.setAttribute("demoName", getDemoName(demono));
         request.setAttribute("demoAge", getDemoAge(demono));
         request.setAttribute("demoDOB", getDemoDOB(demono));
+        
+        String sessionFrmName = "caseManagementEntryForm" + demono;
+        CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
 
         // add checked new issues to client's issue list
         // client's old issues
-        CheckBoxBean[] oldList = (CheckBoxBean[]) cform.getIssueCheckList();
+        CheckBoxBean[] oldList = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
         // client's new issues
-        CheckIssueBoxBean[] issueList = (CheckIssueBoxBean[]) cform.getNewIssueCheckList();
+        CheckIssueBoxBean[] issueList = (CheckIssueBoxBean[]) sessionFrm.getNewIssueCheckList();
         int k = 0;
         for (int i = 0; i < issueList.length; i++) {
             if (issueList[i].isChecked()) k++;
@@ -1221,17 +1272,18 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         for (int i = 0; i < issueList.length; i++) {
             if (issueList[i].isChecked()) {
                 caseIssueList[oldList.length + k] = new CheckBoxBean();
-                caseIssueList[oldList.length + k].setIssue(newIssueToCIssue(cform, issueList[i].getIssue(), programId));
+                caseIssueList[oldList.length + k].setIssue(newIssueToCIssue(sessionFrm, issueList[i].getIssue(), programId));
                 caseIssueList[oldList.length + k].setChecked("on");
                 k++;
             }
         }
 
         cform.setIssueCheckList(caseIssueList);
+        sessionFrm.setIssueCheckList(caseIssueList);
 
         String ajax = request.getParameter("ajax");
         if (ajax != null && ajax.equalsIgnoreCase("true")) {
-            request.setAttribute("caseManagementEntryForm", cform);
+            request.setAttribute("caseManagementEntryForm", sessionFrm);
             return mapping.findForward("issueList_ajax");
         }
         else return mapping.findForward("view");
@@ -1318,9 +1370,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         int idx = Integer.parseInt(strIndex);
 
         String substitution = request.getParameter("newIssueId");
-
+        String sessionFrmName = "caseManagementEntryForm" + getDemographicNo(request);        
+        CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-        CheckBoxBean[] curIssues = cform.getIssueCheckList();
+        CheckBoxBean[] curIssues = sessionFrm.getIssueCheckList();
 
         if (substitution != null) {
 
@@ -1334,14 +1387,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             for (int i = 0; i < curIssues.length; ++i) {
                 if (curIssues[i].getChecked().equalsIgnoreCase("on")) issueset.add(curIssues[i].getIssue());
             }
-
-            cform.getCaseNote().setIssues(issueset);
+            
+            sessionFrm.getCaseNote().setIssues(issueset);
         }
 
-        cform.setIssueCheckList(curIssues);
+        sessionFrm.setIssueCheckList(curIssues);
+        request.setAttribute("caseManagementEntryForm", sessionFrm);
         // updateIssueToConcern(cform);
-
-        request.setAttribute("caseManagementEntryForm", cform);
+        
         // request.setAttribute("issueCheckList", curIssues);
         return mapping.findForward("issueList_ajax");
     }
@@ -1354,16 +1407,19 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
 
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
+        String demono = getDemographicNo(request);
+        String sessionFrmName = "caseManagementEntryForm" + demono;
+        CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean)request.getSession().getAttribute(sessionFrmName);
+        
         // noteSave(cform, request);
         request.setAttribute("change_flag", "true");
         request.setAttribute("from", request.getParameter("from"));
-
-        String demono = getDemographicNo(request);
+        
         request.setAttribute("demoName", getDemoName(demono));
         request.setAttribute("demoAge", getDemoAge(demono));
         request.setAttribute("demoDOB", getDemoDOB(demono));
 
-        CheckBoxBean[] oldList = (CheckBoxBean[]) cform.getIssueCheckList();
+        CheckBoxBean[] oldList = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
 
         String inds = (String) cform.getDeleteId();
         Integer ind = new Integer(inds);
@@ -1393,7 +1449,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
         }
         cform.setIssueCheckList(caseIssueList);
-
+        sessionFrm.setIssueCheckList(caseIssueList);
+        
         String inCaisi = (String) request.getSession().getAttribute("caisiLoaded");
         if (inCaisi != null && inCaisi.equalsIgnoreCase("true") && iss != null) {
             // reset current concern in CPP
@@ -1403,7 +1460,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         String ajax = request.getParameter("ajax");
         if (ajax != null && ajax.equalsIgnoreCase("true")) {
-            request.setAttribute("caseManagementEntryForm", cform);
+            request.setAttribute("caseManagementEntryForm", sessionFrm);
             return mapping.findForward("issueList_ajax");
         }
         else return mapping.findForward("view");
@@ -1419,14 +1476,16 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         request.setAttribute("change_flag", "true");
         request.getSession().setAttribute("issueStatusChanged", "true");
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-
         String demono = getDemographicNo(request);
+        String sessionFrmName = "caseManagementEntryForm" + demono;
+        CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+        
         request.setAttribute("demoName", getDemoName(demono));
         request.setAttribute("demoAge", getDemoAge(demono));
         request.setAttribute("demoDOB", getDemoDOB(demono));
 
         // noteSave(cform, request);
-        CheckBoxBean[] oldList = (CheckBoxBean[]) cform.getIssueCheckList();
+        CheckBoxBean[] oldList = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
 
         String inds = (String) cform.getLineId();
 
@@ -1452,7 +1511,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         String ajax = request.getParameter("ajax");
         if (ajax != null && ajax.equalsIgnoreCase("true")) {
-            request.setAttribute("caseManagementEntryForm", cform);
+            request.setAttribute("caseManagementEntryForm", sessionFrm);
             return mapping.findForward("issueList_ajax");
         }
         else return mapping.findForward("view");
@@ -1553,6 +1612,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             log.warn("AutoSave Error: " + e);
         }
 
+        CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;        
+        cform.getCaseNote().setNote(note);        
+        
         response.setStatus(response.SC_OK);
         return null;
     }
@@ -1564,6 +1626,18 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         return edit(mapping, form, request, response);
     }
+    
+     public ActionForward cleanup(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+         String demoNo = this.getDemographicNo(request);
+         String sessionFrmName = "caseManagementEntryForm" + demoNo;
+         String strBeanName = "casemgmt_oscar_bean" + demoNo;
+         
+         request.getSession().setAttribute(sessionFrmName, null);
+         request.getSession().setAttribute(strBeanName, null);
+         
+         
+         return null;
+     }
 
     public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ids = request.getParameter("notes2print");
@@ -1628,8 +1702,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         CaseManagementNote note = null;
         List notes = null;
 
-        UserProperty prop = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
-        notes = caseManagementMgr.getNotes(demono, prop);
+        //UserProperty prop = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
+        notes = caseManagementMgr.getNotes(demono);
         notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
 
         String programId = (String) request.getSession().getAttribute("case_program_id");
@@ -1684,7 +1758,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
      * Grab family physician or MRP for demo
      */
     protected String getMRP(HttpServletRequest request) {
-        oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean) request.getSession().getAttribute("casemgmt_oscar_bean");
+        String strBeanName = "casemgmt_oscar_bean" + this.getDemographicNo(request);
+        oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean) request.getSession().getAttribute(strBeanName);
         if (bean == null) return new String("");
 
         if (bean.familyDoctorNo.equals("")) return new String("");
@@ -1698,7 +1773,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
      * Insert encounter reason for new note
      */
     protected void insertReason(HttpServletRequest request, CaseManagementNote note) {
-        oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean) request.getSession().getAttribute("casemgmt_oscar_bean");
+        String strBeanName = "casemgmt_oscar_bean" + note.getDemographic_no();
+        oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean) request.getSession().getAttribute(strBeanName);
 
         if (bean != null) {
             String encounterText = "";
@@ -1716,13 +1792,19 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                  * +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"; encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n"; }
                  */
             // System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+" bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
-            if (!bean.oscarMsg.equals("")) {
-                encounterText += "\n\n" + bean.oscarMsg;
-            }
+            //if (!bean.oscarMsg.equals("")) {
+            //    encounterText += "\n\n" + bean.oscarMsg;
+            //}
 
             note.setNote(encounterText);
-            note.setEncounter_type(bean.encType);
-
+            String encType = request.getParameter("encType");
+           
+            if( encType == null || encType.equals("") ) {
+                note.setEncounter_type(bean.encType);
+            }
+            else {
+                note.setEncounter_type(encType);
+            }
         }
 
     }

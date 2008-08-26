@@ -12,7 +12,7 @@
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
 * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
 * along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *  
 * 
 * <OSCAR TEAM>
 * 
@@ -26,6 +26,7 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <%@page import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.HashSet, java.util.Iterator, java.text.SimpleDateFormat, java.util.Calendar, java.util.Date, java.text.ParseException"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@page import="org.oscarehr.common.model.UserProperty, org.oscarehr.casemgmt.model.*" %>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*" %>
 <%@page import="org.oscarehr.PMmodule.model.*" %>
@@ -39,15 +40,17 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
 <%
+    String demographicNo = request.getParameter("demographicNo");
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
-    if((bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null) {
+    String strBeanName = "casemgmt_oscar_bean" + demographicNo;
+    if((bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute(strBeanName))==null) {
         response.sendRedirect("error.jsp");
         return;
     }
     long start = System.currentTimeMillis();
     long beginning = start;
     long current = 0;    
-    String provNo = bean.providerNo;
+    String provNo = bean.providerNo;    
     //Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo); 
     
     String pId=(String)session.getAttribute("case_program_id");
@@ -67,13 +70,17 @@
     SimpleDateFormat jsfmt = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
     Date dToday = new Date();
     String strToday = jsfmt.format(dToday);
+    
+    String frmName = "caseManagementEntryForm" + demographicNo;
+    CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute(frmName);    
+    pageContext.setAttribute("caseManagementEntryForm", cform);
 %>
 <script type="text/javascript">  
     numNotes = <%=noteSize%>; //How many saved notes do we have?
     ctx = "<c:out value="${ctx}"/>";
     imgPrintgreen.src = ctx + "/oscarEncounter/graphics/printerGreen.png"; //preload green print image so firefox will update properly
     providerNo = "<%=provNo%>";
-    demographicNo = "<%=bean.getDemographicNo()%>";
+    demographicNo = "<%=demographicNo%>";
     case_program_id = "<%=pId%>";
     
     <caisi:isModuleLoad moduleName="caisi">
@@ -209,7 +216,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 --%>
 
         <html:form action="/CaseManagementView" method="post">        
-            <html:hidden property="demographicNo"/>
+            <html:hidden property="demographicNo" value="<%=demographicNo%>"/>
             <html:hidden property="providerNo" value="<%=provNo%>" />
             <html:hidden property="tab" value="Current Issues"/>
             <html:hidden property="hideActiveIssue"/>
@@ -358,12 +365,12 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
                         <li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox>All</li>
                         <%
-                        Set<Provider> providers = (Set<Provider>)request.getAttribute("providers"); 
+                        Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");                                                
                         
                         String providerNo;
                         Provider prov;
                         Iterator<Provider>iter = providers.iterator();
-                        while(iter.hasNext() ) {
+                        while(iter.hasNext()) {
                         prov = iter.next();
                         providerNo = prov.getProviderNo();
                         %>
@@ -441,8 +448,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
     start = current;
 %>
     <nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0;">
-        <html:hidden property="demographicNo"/>
-        <html:hidden property="providerNo"/>
+        <html:hidden property="demographicNo" value="<%=demographicNo%>"/>        
         <html:hidden property="includeIssue" value="off"/>
         <input type="hidden" name="deleteId" value="0">
         <input type="hidden" name="lineId" value="0">
@@ -464,6 +470,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
         <input type="hidden" name="notes2print" id="notes2print" value="">
         <input type="hidden" name="printCPP" id="printCPP" value="false">
         <input type="hidden" name="printRx" id="printRx" value="false">
+        <input type="hidden" name="encType" id="encType" value="">
         <div id="mainContent" style="background-color:#FFFFFF; width:100%; margin-right:-2px; display:inline; float:left;"> 
             <span id="issueList" style="background-color:#FFFFFF; height:440px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
                 <table id="issueTable" class="enTemplate_name_auto_complete" style="position:relative; left:0px; display:none;">
@@ -486,23 +493,24 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     int idx = 0;
                     
                     //Notes list will contain all notes including most recently saved
-                    //we need to skip this one when displaying
-                    CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute("caseManagementEntryForm");
+                    //we need to skip this one when displaying                    
                     
                     //if we're editing a note, display it
                     //else check for last unsigned note and use it if present
                     if( cform.getCaseNote().getId() != null ) {
                     savedId = cform.getCaseNote().getId();                
                     }  
+                    System.out.println("savedId " + savedId);
                     
                     //Check user property for stale date and show appropriately
                     UserProperty uProp = (UserProperty)request.getAttribute(UserProperty.STALE_NOTEDATE);
                     
                     Date dStaleDate = null;
-                    int numToDisplay = 3;
+                    int numToDisplay = 5;
+                    int numDisplayed = 0;
+                    Calendar cal = Calendar.getInstance();
                     if( uProp != null ) {
-                        String strStaleDate = uProp.getValue();                    
-                        Calendar cal = Calendar.getInstance();
+                        String strStaleDate = uProp.getValue();                                            
                         if( strStaleDate.equalsIgnoreCase("A") ) {                            
                             cal.set(0,1,1);
                         }
@@ -510,49 +518,65 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             int pastMths = Integer.parseInt(strStaleDate);
                             cal.add(Calendar.MONTH, pastMths);
                         }
-                        
-                        dStaleDate = cal.getTime();
+                                                
                     }
                     else {
-                        numToDisplay = 3;
+                        cal.add(Calendar.MONTH,-1);                        
                     }
-
+                    
+                    dStaleDate = cal.getTime();
+                    System.out.println("STALE DATE " + dStaleDate);
                     long time1,time2;
 		    String noteStr;
 		    int length;
-                    String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "Reminders"};
+                    String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "Reminders"};                    
                     
-                    boolean isCPP, fulltxt = false;
+                    /*
+                     *  Cycle through notes starting from the most recent and marking them for full inclusion or one line display
+                     *  Need to do this now as we only count face to face encounters against limit of how many to fully display
+                     *  If no user preference, show at most five face to face encounter notes 
+                     *  Else show all notes withing the user preference
+                    */
+                    ArrayList<Boolean>fullTxtFormat = new ArrayList<Boolean>(noteSize);                    
+                    int pos;
+                    idx = 0;
+                    for(pos = noteSize-1; pos >= 0; --pos) {
+                        CaseManagementNote cmNote = (CaseManagementNote)noteList.get(pos);
+                        
+                        if( noteSize > numToDisplay ) {
+                            if( uProp == null ) {
+                                if( numDisplayed < numToDisplay && cmNote.getObservation_date().compareTo(dStaleDate) >= 0 ) {
+                                    fullTxtFormat.add(Boolean.TRUE);
+
+                                    if( cmNote.getEncounter_type().equalsIgnoreCase("face to face encounter with client") ) {
+                                        ++numDisplayed;
+                                    }
+                                }
+                                else {
+                                    fullTxtFormat.add(Boolean.FALSE);
+                                }
+                            }
+                            else {
+                                if( cmNote.getObservation_date().compareTo(dStaleDate) >= 0 ) {
+                                    fullTxtFormat.add(Boolean.TRUE);
+                                }
+                                else {
+                                    fullTxtFormat.add(Boolean.FALSE);
+                                }
+                            }
+                        }
+                        else {
+                            fullTxtFormat.add(Boolean.TRUE);
+                        }                        
+                    }
+
+                    boolean isCPP, fulltxt;
+                    pos = noteSize - 1;
 		    for( idx = 0; idx < noteSize; ++idx ) {
                     
                     CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
                     noteStr = note.getNote();
-                    
-                    if( dStaleDate == null ) {
-                        if( noteSize > numToDisplay && idx < (noteSize - numToDisplay) ) { 
-                            fulltxt = false;
-                        }
-                        else {
-                            fulltxt = true;
-                        }
-                    }
-                    else {
-                        if( note.getObservation_date().compareTo(dStaleDate) >= 0 ) {
-                            fulltxt = true;
-                        }
-                        else {
-                            fulltxt = false;
-                        }
-                    }
-                    
-                    if( fulltxt ) { 
-                        noteStr = noteStr.replaceAll("\n","<br>");                        
-                    }
-                    else {
-                        length = noteStr.length() > 50 ? 50 : noteStr.length();
-                        noteStr = noteStr.substring(0,length);                                                
-                    }
-                    
+
                     isCPP = false; 
                     bgColour = "color:#000000;background-color:#CCCCFF;";
                     Set nIssues = note.getIssues();
@@ -571,6 +595,15 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             break;
                     }
                     
+                    noteStr = StringEscapeUtils.escapeHtml(noteStr);
+                    fulltxt = fullTxtFormat.get(pos--);                    
+                    if( fulltxt ) { 
+                        noteStr = noteStr.replaceAll("\n","<br>");                        
+                    }
+                    else {
+                        length = noteStr.length() > 50 ? 50 : noteStr.length();
+                        noteStr = noteStr.substring(0,length);                                                
+                    }                                        
                     
                     //System.out.println("Starting " + note.getId());
 		    time1 = System.currentTimeMillis();
@@ -579,6 +612,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                         <input type="hidden" id="signed<%=note.getId()%>" value="<%=note.isSigned()%>">
                         <input type="hidden" id="full<%=note.getId()%>" value="<%=fulltxt || note.getId() == savedId%>">
                         <input type="hidden" id="bgColour<%=note.getId()%>" value="<%=bgColour%>">
+                        <input type="hidden" name="caseNote.id" value="<%=note.getId()%>">
+                        <input type="hidden" name="caseNote.demographic_no" value="<%=note.getDemographic_no()%>">
                         <div id="n<%=note.getId()%>">
                             <%
                             //display last saved note for editing
@@ -747,7 +782,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     <div id="n<%=savedId%>" style="line-height:1.1em;">                                     
                         <textarea  tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
                         <div class="sig" id="sig0">
-                            <%@ include file="noteIssueList.jsp" %>                                        
+                            <%@ include file="noteIssueList.jsp" %>
                         </div>
                         
                         <c:if test="${sessionScope.passwordEnabled=='true'}">
@@ -769,10 +804,10 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
             </div>
             <div id='save' style="width:99%; background-color:#CCCCFF; padding-top:5px; margin-left:2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">  
                 <span style="float:right; margin-right:5px;">                                
-                    <input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return savePage('save');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;                              
+                    <input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return savePage('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;                              
                     <input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;                              
-                    <input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
-                    <input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
+                    <input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
+                    <input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
                     <input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
                     <input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp;
                     <input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>'>                              
@@ -793,6 +828,22 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
     
         
     caseNote = "caseNote_note" + "<%=savedId%>"; 
+    //are we editing existing note?  if not init newNoteIdx as we are dealing with a new note
+   //save initial note to determine whether save is necessary
+   origCaseNote = $F(caseNote);
+   <%    
+   if(!bean.oscarMsg.equals("")){
+   %>
+        $(caseNote).value +="\n\n<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(bean.oscarMsg)%>";
+   <%
+        bean.reason = "";
+        bean.oscarMsg = "";
+   }   
+   %>
+   <% if( found != true ) { %>
+        document.forms["caseManagementEntryForm"].newNoteIdx.value = <%=savedId%>;
+   <%}%>
+   
     setupNotes();
     Element.observe(caseNote, "keyup", monitorCaseNote); 
     Element.observe(caseNote, 'click', getActiveText);
@@ -822,7 +873,6 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
     <%
         }
     %>   
-   
     
     //flag for determining if we want to submit case management entry form with enter key pressed in auto completer text box
     var submitIssues = false;
@@ -856,19 +906,10 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
    new Autocompleter.Local('enTemplate', 'enTemplate_list', autoCompList, { colours: itemColours, afterUpdateElement: menuAction }  );      
    
    //start timer for autosave
-   setTimer();  
-   
-   //are we editing existing note?  if not init newNoteIdx as we are dealing with a new note
-   //save initial note to determine whether save is necessary
-   origCaseNote = $F(caseNote);
-   <% if( found != true ) { %>
-        document.forms["caseManagementEntryForm"].newNoteIdx.value = <%=savedId%>;
-   <%}%>
-                       
-    
+   setTimer();        
+                           
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
-    strToday = $F("serverDate");
-    reason = "<%=insertReason(request)%>";    //function defined bottom of file
+    reason = "<%=insertReason(request, bean)%>";    //function defined bottom of file
    </script>
    
 <%
@@ -880,8 +921,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
     /*
      *Insert encounter reason for new note
      */
-    protected String insertReason(HttpServletRequest request) {
-        oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("casemgmt_oscar_bean");
+    protected String insertReason(HttpServletRequest request, oscar.oscarEncounter.pageUtil.EctSessionBean bean) {
         String encounterText = "";
         if( bean != null ) {            
             String apptDate = convertDateFmt(bean.appointmentDate);
@@ -896,10 +936,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                    //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                    encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n";
             }*/
-           //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
-           if(!bean.oscarMsg.equals("")){
-              encounterText +="\n\n"+bean.oscarMsg;
-           }
+           //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));           
 
         }
         encounterText = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(encounterText);
