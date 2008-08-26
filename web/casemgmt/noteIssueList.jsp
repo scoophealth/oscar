@@ -33,6 +33,16 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <% String noteIndex = "";
    String encSelect = "encTypeSelect";
+   String demoNo = request.getParameter("demographicNo");
+   String caseMgmtEntryFrm = "caseManagementEntryForm" + demoNo;
+   CaseManagementEntryFormBean frm = (CaseManagementEntryFormBean)request.getAttribute("caseManagementEntryForm");
+   System.out.println("Fetching form bean from request");
+   if( frm == null ) {
+        System.out.println("No form bean in request - Fetching from session");
+        frm = (CaseManagementEntryFormBean)session.getAttribute(caseMgmtEntryFrm);
+        pageContext.setAttribute("caseManagementEntryForm", frm);
+   }
+        
 %>
 <nested:empty name="caseManagementEntryForm" property="caseNote.id">
     <nested:notEmpty name="newNoteIdx">
@@ -47,13 +57,9 @@
     </nested:empty>
 </nested:empty>
 <nested:notEmpty name="caseManagementEntryForm" property="caseNote.id">   
-    <% 
-       CaseManagementEntryFormBean frm = (CaseManagementEntryFormBean)request.getAttribute("caseManagementEntryForm");
-       if( frm == null )
-           frm = (CaseManagementEntryFormBean)session.getAttribute("caseManagementEntryForm");
-       
-       noteIndex = String.valueOf(frm.getCaseNote().getId());
-       
+    <%        
+       noteIndex = String.valueOf(frm.getCaseNote().getId());       
+       System.out.println("SETTING noteIndex " + noteIndex);
     %>
     <div id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
     <div id="observation<nested:write name="caseManagementEntryForm" property="caseNote.id" />" style="float:right;margin-right:3px;">
@@ -129,6 +135,7 @@
                                 <%
                                 String winame = "window" + issueCheckList.getIssue().getIssue().getDescription();
                                 winame = winame.replaceAll("\\s|\\/", "_");
+                                winame = winame.replaceAll("'","");
                                 winame = StringEscapeUtils.escapeJavaScript(winame);
                                 if( ind % 2 == 0 ) {%>
                                 <tr>
@@ -201,8 +208,8 @@
        updatedNoteId = newId;
       
        <%
-            CaseManagementEntryFormBean form = (CaseManagementEntryFormBean)request.getAttribute("caseManagementEntryForm");
-            String noteTxt = form.getCaseNote().getNote();
+            //CaseManagementEntryFormBean form = (CaseManagementEntryFormBean)request.getAttribute("caseManagementEntryForm");
+            String noteTxt = frm.getCaseNote().getNote();
             noteTxt = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(noteTxt);
        %>
        completeChangeToView("<%=noteTxt%>",newId);
@@ -221,9 +228,11 @@
    var txtColour = txtStyles[0].substr(txtStyles[0].indexOf("#"));
    var background = txtStyles[1].substr(txtStyles[1].indexOf("#"));
    var summary = "sumary" + "<%=noteIndex%>";
-   
-   $("observationDate").style.color = txtColour;
-   $("observationDate").style.backgroundColor = background; 
+   console.log("Summary " + summary);
+   if( $("observationDate") != null ) {
+        $("observationDate").style.color = txtColour;
+        $("observationDate").style.backgroundColor = background; 
+   }
    $(summary).style.color = txtColour;
    $(summary).style.backgroundColor = background; 
    
