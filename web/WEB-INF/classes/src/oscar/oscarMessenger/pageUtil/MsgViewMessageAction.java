@@ -157,6 +157,8 @@ public class MsgViewMessageAction extends Action {
             e.printStackTrace(System.out); 
         }
         
+        request.setAttribute("today", oscar.util.UtilDateUtilities.getToday("dd-MMM-yyyy"));
+        
         ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
         actionforward.addParameter("boxType", boxType);
         if(from.equalsIgnoreCase("encounter")){
