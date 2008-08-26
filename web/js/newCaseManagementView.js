@@ -65,8 +65,8 @@
         function measurementLoaded(name) {
             measurementWindows.push(openWindows[name]);
         }
-       
-	var okToClose = false; 
+        
+        var okToClose = false;
         function onClosing() {    
             for( var idx = 0; idx < measurementWindows.length; ++idx ) {
                 if( !measurementWindows[idx].closed )
@@ -76,13 +76,15 @@
             //check to see if we need to back up case note
             if( tmpSaveNeeded && (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) ) {
                 autoSave(false);
-	
-		while(1) {
 
-			if( okToClose )
-				break;
-		} //end while
-	    } //end if tmpsave needed
+                while(1) {
+                    
+                    if( okToClose ) {
+                        break;
+                    }
+                } //end while
+            } //end if tmpsave needed
+            
         }
         
         var numMenus = 3;
@@ -187,6 +189,7 @@ function setupNotes(){
     //need to set focus after rounded is called
     adjustCaseNote();    
     setCaretPosition($(caseNote), $(caseNote).value.length);
+    
     $(caseNote).focus();
     
 }
@@ -561,6 +564,7 @@ function loadDiv(div,url,limit) {
  var expandedIssues = new Array();
  function displayIssue(id) {
         //if issue has been changed/deleted remove it from array and return
+
         if( $(id) == null ) {
             removeIssue(id);
             return false;
@@ -750,6 +754,7 @@ function loadDiv(div,url,limit) {
         $(caseNote).value += "\n" + txt;
         adjustCaseNote();
         setCaretPosition($(caseNote),$(caseNote).value.length);    
+        
     }
 
     function writeToEncounterNote(request) {
@@ -1550,10 +1555,12 @@ function ajaxSaveNote(div,noteId,noteTxt) {
     }            
     
     var demoNo = demographicNo;
-    
+    var encType = "encTypeSelect" + noteId;
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
     var url = ctx + "/CaseManagementEntry.do";
-    var params = "method=ajaxsave&nId="+noteId+issueParams+"&demographicNo=" + demographicNo +"&providerNo=" + providerNo + "&numIssues="+idx+"&obsDate="+$F("observationDate")+"&noteTxt="+encodeURI(noteTxt);
+    var params = "nId="+noteId+issueParams+"&demographicNo=" + demographicNo +"&providerNo=" + providerNo + "&numIssues="+idx+"&obsDate="+$F("observationDate")+"&encType="+encodeURI($F(encType))+"&noteTxt="+encodeURI(noteTxt);
+    params += "&" + Form.serialize(caseMgtEntryfrm);
+
     var objAjax = new Ajax.Updater (
                     {success:div},
                     url,
@@ -1573,7 +1580,7 @@ function ajaxSaveNote(div,noteId,noteTxt) {
     return true;
 }
 
-function savePage(method) {
+function savePage(method, chain) {
     
     if( $("observationDate") != undefined && $("observationDate").value.length > 0 && !validDate() ) {
         alert("Observation date must be in the past");
@@ -1598,13 +1605,16 @@ function savePage(method) {
     }
     document.forms["caseManagementEntryForm"].method.value = method;
     document.forms["caseManagementEntryForm"].ajax.value = false;
-    document.forms["caseManagementEntryForm"].chain.value = "list";
+    document.forms["caseManagementEntryForm"].chain.value = chain;
     document.forms["caseManagementEntryForm"].includeIssue.value = "off";
     
     document.forms["caseManagementViewForm"].method.value = method;
      
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
-    var frm = document.forms["caseManagementViewForm"];
+    tmpSaveNeeded = false;
+    caseMgtEntryfrm.submit(); 
+
+    /*var frm = document.forms["caseManagementViewForm"];
     var url = ctx + "/CaseManagementView.do";
     var objAjax = new Ajax.Request (
                     url,
@@ -1623,6 +1633,7 @@ function savePage(method) {
                         }
                      }
                    );          
+*/
     return false;
 }
     
@@ -1767,12 +1778,28 @@ function filterCheckBox(checkbox) {
      
 }
 
+function writeNewNote(newReason,txt, encType) {
+    var origReason = reason;
+    reason = newReason;
+
+    $("encType").value = encType;
+
+    newNote(null);
+
+    $(caseNote).value += txt;
+    adjustCaseNote();
+    setCaretPosition($(caseNote),$(caseNote).value.length);
+    reason = origReason;
+    $("encType").value = "";
+}
+
 //we insert a new note div with textarea etc
 //newNoteIdx guarantees unique id for successive calls to newNote
 var newNoteCounter = 0;
 var reason;
 function newNote(e) {
-    Event.stop(e);    
+    if( e != null )
+        Event.stop(e);    
    
     ++newNoteCounter;
     var newNoteIdx = "0" + newNoteCounter;
@@ -1804,10 +1831,10 @@ function newNote(e) {
         Element.observe(caseNote, 'keyup', monitorCaseNote);
         Element.observe(caseNote, 'click', getActiveText);
 
-        origCaseNote = $F(caseNote);             
-        ajaxUpdateIssues("edit", sigId); 
+        origCaseNote = $F(caseNote);
+        ajaxUpdateIssues("edit", sigId);
         addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, sigId);
-        Element.observe('asgnIssues', 'click', addIssueFunc);        
+        Element.observe('asgnIssues', 'click', addIssueFunc);
 
         //AutoCompleter for Issues
         var issueURL = "/CaseManagementEntry.do?method=issueList&demographicNo=" + demographicNo + "&providerNo=" + providerNo;
@@ -1845,16 +1872,17 @@ function autoSave(async) {
     var url = ctx + "/CaseManagementEntry.do";
     var programId = case_program_id;
     var demoNo = demographicNo;
-    var nId = document.forms["caseManagementEntryForm"].noteId.value < 0 ? 0 : document.forms["caseManagementEntryForm"].noteId.value;
+    var cmeFrm = document.forms["caseManagementEntryForm"];
+    var nId = cmeFrm.noteId.value < 0 ? 0 : cmeFrm.noteId.value;
     var params = "method=autosave&demographicNo=" + demoNo + "&programId=" + programId + "&note_id=" + nId + "&note=" + escape($F(caseNote));
-
+    
     new Ajax.Request( url, {
                                 method: 'post',
                                 postBody: params,
                                 asynchronous: async,
-				onComplete: function(req) {
-						if( async == false )
-							okToClose = true;
+                                onComplete: function(req) {
+                                    if( async == false )
+                                        okToClose = true;
 				},
                                 onSuccess: function(req) {     
                                                 var nId = caseNote.substr(13);
