@@ -1,5 +1,6 @@
 <%@page import="org.oscarehr.PMmodule.web.ProgramUtils"%>
 <%@page import="org.oscarehr.common.dao.IntakeRequiredFieldsDao"%>
+<%@ page import="org.oscarehr.PMmodule.model.Intake" %>
 <%@page contentType="text/javascript"%>
 
 if (!Array.prototype.indexOf)
@@ -341,9 +342,12 @@ function updateLocal(demographicId) {
 }
 
 function save() {
-	if(!validBedCommunityProgram()) {
-		alert( "Bed program is mandatory");
-		return false;
+	var intakeType = document.forms[0].elements['intakeType'].value;
+	if(intakeType!="indepth") {
+		if(!validBedCommunityProgram()) {
+			alert( "Bed program is mandatory");
+			return false;
+		}
 	}
 	
 	setMethod('save');
