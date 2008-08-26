@@ -25,6 +25,7 @@ package org.oscarehr.casemgmt.web.formbeans;
 import java.util.List;
 
 import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.web.CheckBoxBean;
@@ -59,6 +60,18 @@ public class CaseManagementEntryFormBean extends ActionForm {
             super();           
             this.caseNote = new CaseManagementNote();
         }               
+        
+        public void reset(ActionMapping mapping, javax.servlet.http.HttpServletRequest request) {
+            String strDemo;
+            if( (strDemo = request.getParameter("demographicNo")) != null) {                
+                String sessionName = "caseManagementEntryForm" + strDemo;
+                CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean)request.getSession().getAttribute(sessionName);
+                if( sessionFrm != null ) {
+                    this.issueCheckList = sessionFrm.getIssueCheckList();
+                    this.newIssueCheckList = sessionFrm.newIssueCheckList;
+                }
+            }
+        }
         
         public String getObservation_date() {
             return this.observation_date;
@@ -95,10 +108,14 @@ public class CaseManagementEntryFormBean extends ActionForm {
 	}
 	public CheckBoxBean[] getIssueCheckList()
 	{
+                System.out.println("Get IssueChecklist " + String.valueOf(issueCheckList == null));
 		return issueCheckList;
 	}
 	public void setIssueCheckList(CheckBoxBean[] issueCheckList)
 	{
+            System.out.println("Set IssueChecklist " + String.valueOf(issueCheckList == null));
+            System.out.println("Checking Index " + issueCheckList.length);
+            
 		this.issueCheckList = issueCheckList;
 	}
 	public String getLineId()
