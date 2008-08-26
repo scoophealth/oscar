@@ -106,7 +106,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
   //alert("popup is called and the demographicNo is: " + demographicNo);
   if (demographicNo!=null){      
       windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";    
-      var page = 'WriteToEncounter.do?demographic_no='+demographicNo+'&msgId='+msgId+'&providerNo='+providerNo;
+      var page = 'WriteToEncounter.do?demographic_no='+demographicNo+'&msgId='+msgId+'&providerNo='+providerNo+'&encType=oscarMessenger';
       var popUp=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
       if (popUp != null) {
         if (popUp.opener == null) {
@@ -117,6 +117,46 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
   }
    
 }
+
+//format and paste msg txt into open encounter
+function paste2Encounter(demoNo) {
+    
+    var win = window.open("","apptProvider");
+    var txt;
+    var tmp;
+    if( win.pasteToEncounterNote && win.demographicNo == demoNo ) {
+        txt = "From: ";
+        tmp = document.getElementById("sentBy").innerHTML;
+        tmp = tmp.replace(/^\s+|\s+$/g,"");
+        txt += tmp;
+        txt += "\nTo: ";
+        tmp = document.getElementById("sentTo").innerHTML;
+        tmp = tmp.replace(/^\s+|\s+$/g,"");
+        txt += tmp;
+        txt += "\nDate: ";
+        tmp = document.getElementById("sentDate").innerHTML;
+        tmp = tmp.replace(/\s+|\n+/g,"");
+        tmp = tmp.replace(/&nbsp;/g," ");
+        txt += tmp;
+        txt += "\nSubject: ";
+        tmp = document.getElementById("msgSubject").innerHTML;
+        tmp = tmp.replace(/^\s+|\s+$/g,"");
+        txt += tmp;        
+        txt += "\n";
+        tmp = document.getElementById("msgBody").innerHTML;
+        tmp = tmp.replace(/^\s+|\s+$/g,"");
+        txt += tmp;
+        
+        win.pasteToEncounterNote(txt);
+    }
+    else {
+        win.close();
+        alert("Cannot find the Encounter window to paste into.\nSelect 'Write to Encounter' instead");
+    }
+    
+    return false;
+}
+
 </script>
 
 </head>
@@ -192,7 +232,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                     <td class="Printable" bgcolor="#DDDDFF">
                                     <bean:message key="oscarMessenger.ViewMessage.msgFrom"/>:
                                     </td>
-                                    <td class="Printable" bgcolor="#CCCCFF">
+                                    <td id="sentBy" class="Printable" bgcolor="#CCCCFF">
                                     <%= request.getAttribute("viewMessageSentby") %>
                                     </td>
                                 </tr>
@@ -200,7 +240,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                     <td class="Printable" bgcolor="#DDDDFF">
                                     <bean:message key="oscarMessenger.ViewMessage.msgTo"/>:
                                     </td>
-                                    <td class="Printable" bgcolor="#BFBFFF">
+                                    <td id="sentTo" class="Printable" bgcolor="#BFBFFF">
                                     <%= request.getAttribute("viewMessageSentto") %>
                                     </td>
                                 </tr>
@@ -208,7 +248,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                     <td class="Printable" bgcolor="#DDDDFF">
                                         <bean:message key="oscarMessenger.ViewMessage.msgSubject"/>:
                                     </td>
-                                    <td class="Printable" bgcolor="#BBBBFF">
+                                    <td id="msgSubject" class="Printable" bgcolor="#BBBBFF">
                                         <%= request.getAttribute("viewMessageSubject") %>
                                     </td>
                                 </tr>
@@ -217,7 +257,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                   <td class="Printable" bgcolor="#DDDDFF">
                                       <bean:message key="oscarMessenger.ViewMessage.msgDate"/>:
                                   </td>
-                                  <td class="Printable" bgcolor="#B8B8FF">
+                                  <td id="sentDate" class="Printable" bgcolor="#B8B8FF">
                                       <%= request.getAttribute("viewMessageDate") %>&nbsp;&nbsp;
                                       <%= request.getAttribute("viewMessageTime") %>
                                   </td>
@@ -244,7 +284,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                     <html:form action="/oscarMessenger/HandleMessages" >
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
-                                        <textarea name="Message" wrap="hard" readonly="true" rows="18" cols="60"><%= request.getAttribute("viewMessageMessage") %></textarea><br>
+                                        <textarea id="msgBody" name="Message" wrap="hard" readonly="true" rows="18" cols="60"><%= request.getAttribute("viewMessageMessage") %></textarea><br>
                                         
                                     </td>
                                     </html:form>
@@ -270,6 +310,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                             <%=(String)demoMap.get(demoID)%>     
                                             <% if ( demoID.equals(demographic_no ) ) { %> 
                                             <input onclick="javascript:popup(<%=demographic_no%>, <%=messageId%>, <%=provider_no%>);" class="ControlPushButton" type="button" name="writeToEncounter" value="Write To Encounter">
+                                            <input onclick="return paste2Encounter(<%=demographic_no%>);" class="ControlPushButton" type="button" name="pasteToEncounter" value="Paste To Encounter">
                                             <% } %>
                                             </td>
                                         </tr>

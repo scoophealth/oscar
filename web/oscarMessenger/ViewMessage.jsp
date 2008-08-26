@@ -79,12 +79,23 @@ function BackToOscar()
 function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "oscarMVA", windowprops);
+  var winName;
+  
+  if( page.indexOf("IncomingEncounter.do") > -1 ) {
+    winName = "apptProvider";
+  }
+  else {
+    winName = "oscarMVA";
+  }
+    
+  var popup=window.open(varpage, winName, windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
     }
   }
+  
+  
 }
 
 function popup(demographicNo, msgId, providerNo, action) { //open a new popup window
@@ -95,16 +106,30 @@ function popup(demographicNo, msgId, providerNo, action) { //open a new popup wi
       //alert("demographicNo is not null!");
       windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";    
       var page = "";
+      var win;
+      var today = "<%=request.getAttribute("today")%>";
+      var header = "oscarMessenger";
+      var encType = "oscarMessenger";
+      var txt;
+      
       if ( action == "writeToEncounter") {
-          page = 'WriteToEncounter.do?demographic_no='+demographicNo+'&msgId='+msgId+'&providerNo='+providerNo;
-          var popUp=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
-          if (popUp != null) {
-            if (popUp.opener == null) {
-              popUp.opener = self; 
-            }
-            popUp.focus();
+          win = window.open("","<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>");
+          if( win.writeNewNote && win.demographicNo == demographicNo ) {            
+            header = "\n[" + today + " .: " + header + "]\n\n";
+            txt = fmtOscarMsg();
+            win.writeNewNote(header, txt, encType);
           }
-
+          else {
+            win.close();                          
+              page = 'WriteToEncounter.do?demographic_no='+demographicNo+'&msgId='+msgId+'&providerNo='+providerNo+'&encType=oscarMessenger';         
+              var popUp=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
+              if (popUp != null) {
+                if (popUp.opener == null) {
+                  popUp.opener = self; 
+                }
+                popUp.focus();
+              }
+          }
       }
       else if ( action == "linkToDemographic"){
           page = 'ViewMessage.do?linkMsgDemo=true&demographic_no='+demographicNo+'&messageID='+msgId+'&providerNo='+providerNo;
@@ -133,11 +158,108 @@ function popupSearchDemo(keyword){ // open a new popup window
         popUp.focus();
     }
 }
+
+//format msg for pasting into encounter
+function fmtOscarMsg() {
+    txt = "From: ";
+    tmp = document.getElementById("sentBy").innerHTML;
+    tmp = tmp.replace(/^\s+|\s+$/g,"");
+    txt += tmp;
+    txt += "\nTo: ";
+    tmp = document.getElementById("sentTo").innerHTML;
+    tmp = tmp.replace(/^\s+|\s+$/g,"");
+    txt += tmp;
+    txt += "\nDate: ";
+    tmp = document.getElementById("sentDate").innerHTML;
+    tmp = tmp.replace(/\s+|\n+/g,"");
+    tmp = tmp.replace(/&nbsp;/g," ");
+    txt += tmp;
+    txt += "\nSubject: ";
+    tmp = document.getElementById("msgSubject").innerHTML;
+    tmp = tmp.replace(/^\s+|\s+$/g,"");
+    txt += tmp;        
+    txt += "\n";
+    tmp = document.getElementById("msgBody").innerHTML;
+    tmp = tmp.replace(/^\s+|\s+$/g,"");
+    txt += tmp;
+    
+    return txt;
+
+}
+
+//paste msg txt into open encounter
+function paste2Encounter(demoNo) {
+    var win = window.open("","apptProvider");
+    var txt;
+    if( win.pasteToEncounterNote && win.demographicNo == demoNo ) {  
+        txt = fmtOscarMsg();
+        win.pasteToEncounterNote(txt);
+    }
+    else {
+        win.close();
+    }
+    return false;
+}
+
+
+//enable paste button for linked demographic if encounter window is open
+function init() {
+    var win = window.open("","apptProvider");
+    var idx = 0;
+    var pasteEnc = "pasteEnc";
+    var demo = "demoId";
+    var btnId;
+    var demoId;
+    var elem;
+    if( win.pasteToEncounterNote ) {
+       demoId = demo + idx;
+       elem = document.getElementById(demoId);
+       while( elem != null ) {            
+            if( win.demographicNo == elem.value ) {
+                btnId = pasteEnc + elem.value;
+                elem = document.getElementById(btnId);
+                elem.disabled = false;
+            }
+            ++idx;
+            demoId = demo + idx;
+            elem = document.getElementById(demoId);
+       }
+    }
+    else {        
+        win.close();
+    }
+}
+
+function managePasteBtns(demoNo) {
+    var demoId = "demoId";
+    var pasteEnc = "pasteEnc";
+    var tmp;
+    var elem;
+    var idx = 0;
+    
+    tmp = demoId + idx;
+    elem = document.getElementById(tmp);
+    while( elem != null ) {
+        if( demoNo != elem.value ) {
+            tmp = pasteEnc + elem.value;
+            elem = document.getElementById(tmp);
+            elem.disabled = true;
+        }
+        
+        ++idx;
+        tmp = demoId + idx;
+        elem = document.getElementById(tmp);
+    }
+    
+    tmp = pasteEnc + demoNo;
+    elem = document.getElementById(tmp);
+    elem.disabled = false;
+}
 </script>
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF" onload="init();">
 <html:form action="/oscarMessenger/HandleMessages" >
 
 <!--  -->
@@ -221,15 +343,15 @@ function popupSearchDemo(keyword){ // open a new popup window
                                     <td class="Printable" bgcolor="#DDDDFF">
                                     <bean:message key="oscarMessenger.ViewMessage.msgFrom"/>:
                                     </td>
-                                    <td class="Printable" bgcolor="#CCCCFF">
-                                    <%= request.getAttribute("viewMessageSentby") %>
+                                    <td id="sentBy" class="Printable" bgcolor="#CCCCFF">
+                                    <%= request.getAttribute("viewMessageSentby") %>                                    
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="Printable" bgcolor="#DDDDFF">
                                     <bean:message key="oscarMessenger.ViewMessage.msgTo"/>:
                                     </td>
-                                    <td class="Printable" bgcolor="#BFBFFF">
+                                    <td id="sentTo" class="Printable" bgcolor="#BFBFFF">
                                     <%= request.getAttribute("viewMessageSentto") %>
                                     </td>
                                 </tr>
@@ -237,7 +359,7 @@ function popupSearchDemo(keyword){ // open a new popup window
                                     <td class="Printable" bgcolor="#DDDDFF">
                                         <bean:message key="oscarMessenger.ViewMessage.msgSubject"/>:
                                     </td>
-                                    <td class="Printable" bgcolor="#BBBBFF">
+                                    <td id="msgSubject" class="Printable" bgcolor="#BBBBFF">
                                         <%= request.getAttribute("viewMessageSubject") %>
                                     </td>
                                 </tr>
@@ -246,7 +368,7 @@ function popupSearchDemo(keyword){ // open a new popup window
                                   <td class="Printable" bgcolor="#DDDDFF">
                                       <bean:message key="oscarMessenger.ViewMessage.msgDate"/>:
                                   </td>
-                                  <td  class="Printable" bgcolor="#B8B8FF">
+                                  <td id="sentDate" class="Printable" bgcolor="#B8B8FF">
                                       <%= request.getAttribute("viewMessageDate") %>&nbsp;&nbsp;
                                       <%= request.getAttribute("viewMessageTime") %>
                                   </td>
@@ -290,7 +412,7 @@ function popupSearchDemo(keyword){ // open a new popup window
                                     
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
-                                        <textarea name="Message" wrap="hard" readonly="true" rows="18" cols="60" ><%= request.getAttribute("viewMessageMessage") %></textarea><br>
+                                        <textarea id="msgBody" name="Message" wrap="hard" readonly="true" rows="18" cols="60" ><%= request.getAttribute("viewMessageMessage") %></textarea><br>
                                         <html:submit styleClass="ControlPushButton" property="reply">
 					<bean:message key="oscarMessenger.ViewMessage.btnReply"/>
 					</html:submit>
@@ -374,23 +496,25 @@ function popupSearchDemo(keyword){ // open a new popup window
                                 </tr>
                                 
    
-                                <% if(demoMap !=null){ %>
+                                <%      
+                                        if(demoMap !=null){ %>
                                              
-                                        <% for (Enumeration e=demoMap.keys(); e.hasMoreElements(); ) { 
-                                            String demoID = (String)e.nextElement(); %>
+                                        <%  int idx = 0;                                           
+                                            for (Enumeration e=demoMap.keys(); e.hasMoreElements(); ) { 
+                                                String demoID = (String)e.nextElement(); 
+                                        %>
                                         <tr>
                                             <td bgcolor="#EEEEFF"></td>
                                             <td bgcolor="#EEEEFF">        
                                             <input type="text" size="30" readonly style="background:#EEEEFF;border:none" value="<%=(String)demoMap.get(demoID)%>"/>
 <a href="javascript:popupViewAttach(700,960,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoID%>&displaymode=edit&dboperation=search_detail')">M</a>
-<a href="javascript:popupViewAttach(700,960,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=demoID%>&curProviderNo=<%=request.getAttribute("providerNo")%>')">E</a>
+<a href="#" onclick="popupViewAttach(700,960,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=demoID%>&curProviderNo=<%=request.getAttribute("providerNo")%>');managePasteBtns('<%=demoID%>');return false;">E</a>
 <a href="javascript:popupViewAttach(700,960,'../oscarRx/choosePatient.do?providerNo=<%=request.getAttribute("providerNo")%>&demographicNo=<%=demoID%>')">Rx</a>
 
 
                                             <input type="button" class="ControlPushButton" name="writeEncounter" value="Write to encounter" onclick="popup( '<%=demoID%>','<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','writeToEncounter')" />
-                                    
-
-
+                                            <input type="button" class="ControlPushButton" name="pasteEncounter" value="Paste to encounter" onclick="return paste2Encounter(<%=demoID%>);" disabled id="pasteEnc<%=demoID%>">
+                                            <input type="hidden" id="demoId<%=idx%>" value="<%=demoID%>">
                                             </td>
                                          </tr>
                                          <tr>
@@ -401,7 +525,8 @@ function popupSearchDemo(keyword){ // open a new popup window
 
                                            </td>
                                         </tr>
-                                        <%}
+                                        <%     ++idx;
+                                            }                                                                                                                           
                                     }
                                 else{%>
                                 <tr>
@@ -410,7 +535,7 @@ function popupSearchDemo(keyword){ // open a new popup window
                                     o demographic is linked to this message
                                     </td>
                                 </tr>
-                                <%}%>                                
+                                <%}%>                                               
                             </table>
                         </td>                        
                     </tr>
