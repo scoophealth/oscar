@@ -107,15 +107,11 @@ public class CaseManagementEntryFormBean extends ActionForm {
 		this.includeIssue = includeIssue;
 	}
 	public CheckBoxBean[] getIssueCheckList()
-	{
-                System.out.println("Get IssueChecklist " + String.valueOf(issueCheckList == null));
+	{               
 		return issueCheckList;
 	}
 	public void setIssueCheckList(CheckBoxBean[] issueCheckList)
-	{
-            System.out.println("Set IssueChecklist " + String.valueOf(issueCheckList == null));
-            System.out.println("Checking Index " + issueCheckList.length);
-            
+	{            
 		this.issueCheckList = issueCheckList;
 	}
 	public String getLineId()
