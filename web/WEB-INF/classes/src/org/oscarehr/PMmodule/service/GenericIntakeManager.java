@@ -471,9 +471,14 @@ public class GenericIntakeManager {
 	}
 
 	private IntakeNode getLatestRegIntakeNodes(Integer clientId) {
-		List<Integer> nodeIds = genericIntakeDAO.getIntakeNodesIdByClientId(clientId);
-		IntakeNode node = getIntakeNode(nodeIds.get(0));
-		return node;
+		//List<Integer> nodeIds = genericIntakeDAO.getIntakeNodesIdByClientId(clientId);
+		
+		//IntakeNode node = getIntakeNode(nodeIds.get(0));
+		//return node;
+		
+		Agency agency = Agency.getLocalAgency();
+		Integer quickIntakeNodeId = (agency != null) ? agency.getIntakeQuick() : null;
+		return getIntakeNode(quickIntakeNodeId);
 	}
 
 	private IntakeNode getIndepthIntakeNode() {
