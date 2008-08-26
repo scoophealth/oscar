@@ -24,6 +24,7 @@ package org.oscarehr.casemgmt.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -565,6 +566,25 @@ public class CaseManagementManager {
         return filteredNotes;
     }
 
+    public boolean haveIssue(Long issid, Long noteId, String demoNo) {
+        List allNotes = caseManagementNoteDAO.getNotesByDemographic(demoNo);
+        Iterator itr = allNotes.iterator();
+        while (itr.hasNext()) {
+            CaseManagementNote note = (CaseManagementNote)itr.next();
+            if( note.getId() == noteId ) {
+                continue;
+            }
+            Set issues = note.getIssues();
+            Iterator its = issues.iterator();
+            while (its.hasNext()) {
+                CaseManagementIssue iss = (CaseManagementIssue)its.next();
+                if (iss.getId().intValue() == issid.intValue()) return true;
+            }
+        }
+        return false;
+    }
+    
+    
     public boolean haveIssue(Long issid, String demoNo) {
         List allNotes = caseManagementNoteDAO.getNotesByDemographic(demoNo);
         Iterator itr = allNotes.iterator();
@@ -1233,4 +1253,5 @@ public class CaseManagementManager {
     public void setUserPropertyDAO( UserPropertyDAO dao) {
         this.userPropertyDAO = dao;
     }
+    
 }
