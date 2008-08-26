@@ -107,24 +107,28 @@
         WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
         GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
         
-        List<IntakeNode> lis = genericIntakeManager.getIntakeNodes();
-        
         String id = request.getParameter("id");
         if (id == null){ id = "41333";};
         int iNum = Integer.parseInt(id);
 	
-        if (lis != null){%>
+        List<IntakeNode> lis = genericIntakeManager.getIntakeNodes();
+        if (lis != null){ %>
 	<select>
-                    <% int n=1;
-                       for (IntakeNode i: lis){ %>
-	    <option <%=i.getId()==iNum?"selected":""%> onclick="location.href='EditIntake.jsp?id=<%=i.getId()%>'"> - <%=n%>. <%=i.getLabelStr()%> - </option>
-                    <%     n++;
-                       } %>
+                    <% for (IntakeNode i : lis) {
+			   String frmLabel = i.getForm_version()!=null ? i.getLabelStr()+" ("+i.getForm_version()+")" : i.getLabelStr();
+			   if (i.getPublish_date()!=null) frmLabel += " PUBLISHED " +i.getPublishDateStr()+ " BY " +i.getPublish_by();
+			   %>
+	    <option <%=i.getId()==iNum?"selected":""%> onclick="location.href='EditIntake.jsp?id=<%=i.getId()%>'"><%=frmLabel%></option>
+                    <% } %>
 	</select>
 	<%}
+	if (session.getAttribute("publisher")==null) session.setAttribute("publisher", request.getParameter("pub"));
+	
 	IntakeNode iNode = (IntakeNode) session.getAttribute("intakeNode");
         if (iNode==null || !iNode.getId().equals(iNum)) iNode = genericIntakeManager.getIntakeNode(iNum);
         
+	session.setAttribute("form_version", getFrmVersion(iNode.getLabelStr(), lis));
+	
         goRunner(iNode,out);
         session.setAttribute("intakeNode", iNode);
 	
@@ -294,6 +298,15 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
     }
     
     out.write(exitElement);
+}
+
+int getFrmVersion(String frmLabel, List<IntakeNode> iList) {
+    int n=1;
+    for (int i=0; i<iList.size(); i++) {
+	String iLabel = iList.get(i).getLabelStr().trim();
+	if (iLabel.equals(frmLabel.trim())) n++;
+    }
+    return n;
 }
 
 %>
