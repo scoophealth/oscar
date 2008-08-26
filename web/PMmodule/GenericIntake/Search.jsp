@@ -109,13 +109,13 @@
        	<%
        		MatchingDemographicInfoScore mdir=(MatchingDemographicInfoScore)pageContext.getAttribute("x");
        		CachedDemographicInfo cdi=mdir.getCachedDemographicInfo();
-   			int facilityId=cdi.getFacilityIdIntegerCompositePk().getFacilityId();
+   			int facilityId=cdi.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
 			String facilityName=facilitiesNameMap.get(facilityId);
    		%>
         <display-el:setProperty name="paging.banner.placement" value="bottom" />
 
         <display-el:column title="">
-        	<input type="submit" value="Copy to Local" onclick="copyRemote(<%=facilityId%>,<%=cdi.getFacilityIdIntegerCompositePk().getFacilityDemographicId()%>)" />
+        	<input type="submit" value="Copy to Local" onclick="copyRemote(<%=facilityId%>,<%=cdi.getFacilityIdIntegerCompositePk().getCaisiItemId()%>)" />
         </display-el:column>
         <display-el:column title="Facility Name">
         	<%=facilityName%>
