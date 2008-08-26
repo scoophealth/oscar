@@ -68,7 +68,11 @@ public class MsgWriteToEncounterAction extends Action {
             forward.addParameter("appointmentDate", "");
             forward.addParameter("startTime", "");
             forward.addParameter("status", "");
-            forward.addParameter("msgId", request.getParameter("msgId"));            
+            forward.addParameter("msgId", request.getParameter("msgId"));
+            String encType = request.getParameter("encType");
+            
+            if( encType != null )
+                forward.addParameter("encType", encType);
             return forward;       
             //if(request.getParameter("name")!=null)               
     }
