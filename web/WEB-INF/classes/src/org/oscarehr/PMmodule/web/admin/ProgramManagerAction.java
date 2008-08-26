@@ -59,8 +59,8 @@ import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.PMmodule.web.BaseAction;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
-import org.oscarehr.caisi_integrator.ws.client.CachedProviderInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
+import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
@@ -988,10 +988,10 @@ public class ProgramManagerAction extends BaseAction {
 				RemoteQueueEntry remoteQueueEntry = new RemoteQueueEntry();
 				remoteQueueEntry.setCachedReferral(cachedReferral);
 
-				CachedDemographicInfo cachedDemographicInfo = demographicInfoWs.getCachedDemographicInfoByFacilityIdAndDemographicId(cachedReferral.getSourceIntegratorFacilityId(),
+				CachedDemographic cachedDemographic = demographicInfoWs.getCachedDemographicByFacilityIdAndDemographicId(cachedReferral.getSourceIntegratorFacilityId(),
 						cachedReferral.getSourceCaisiDemographicId());
-				if (cachedDemographicInfo != null) {
-					remoteQueueEntry.setClientName(cachedDemographicInfo.getLastName() + ", " +cachedDemographicInfo.getFirstName());
+				if (cachedDemographic != null) {
+					remoteQueueEntry.setClientName(cachedDemographic.getLastName() + ", " +cachedDemographic.getFirstName());
 				}
 				else {
 					remoteQueueEntry.setClientName("N/A");
@@ -1000,9 +1000,9 @@ public class ProgramManagerAction extends BaseAction {
 				FacilityIdProviderIdCompositePk pk = new FacilityIdProviderIdCompositePk();
 				pk.setIntegratorFacilityId(cachedReferral.getSourceIntegratorFacilityId());
 				pk.setCaisiProviderId(cachedReferral.getSourceCaisiProviderId());
-				CachedProviderInfo cachedProviderInfo = caisiIntegratorManager.getProviderInfo(facilityId, pk);
-				if (cachedProviderInfo != null) {
-					remoteQueueEntry.setProviderName(cachedProviderInfo.getLastName() + ", " +cachedProviderInfo.getFirstName());
+				CachedProvider cachedProvider = caisiIntegratorManager.getProviderInfo(facilityId, pk);
+				if (cachedProvider != null) {
+					remoteQueueEntry.setProviderName(cachedProvider.getLastName() + ", " +cachedProvider.getFirstName());
 				}
 				else {
 					remoteQueueEntry.setProviderName("N/A");

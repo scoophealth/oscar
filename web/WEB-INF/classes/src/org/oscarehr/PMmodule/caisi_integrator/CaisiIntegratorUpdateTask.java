@@ -45,11 +45,11 @@ import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
-import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
-import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
-import org.oscarehr.caisi_integrator.ws.client.CachedProviderInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
+import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdDemographicIssueCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
@@ -177,24 +177,24 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		try {
 			List<String> providerIds = ProviderDao.getProviderIds(facility.getId());
 
-			ArrayList<CachedProviderInfo> cachedProviderInfos = new ArrayList<CachedProviderInfo>();
+			ArrayList<CachedProvider> cachedProviders = new ArrayList<CachedProvider>();
 
 			for (String providerId : providerIds) {
 				Provider provider = providerDao.getProvider(providerId);
 
-				CachedProviderInfo cachedProviderInfo = new CachedProviderInfo();
+				CachedProvider cachedProvider = new CachedProvider();
 
-				BeanUtils.copyProperties(cachedProviderInfo, provider);
+				BeanUtils.copyProperties(cachedProvider, provider);
 
 				FacilityIdProviderIdCompositePk pk = new FacilityIdProviderIdCompositePk();
 				pk.setCaisiProviderId(provider.getProviderNo());
-				cachedProviderInfo.setFacilityIdProviderIdCompositePk(pk);
+				cachedProvider.setFacilityIdProviderIdCompositePk(pk);
 
-				cachedProviderInfos.add(cachedProviderInfo);
+				cachedProviders.add(cachedProvider);
 			}
 
 			ProviderInfoWs service = caisiIntegratorManager.getProviderInfoWs(facility.getId());
-			service.setCachedProviderInfos(cachedProviderInfos);
+			service.setCachedProviders(cachedProviders);
 		}
 		catch (IllegalAccessException e) {
 			logger.error("Unexpected error.", e);
@@ -208,30 +208,30 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		try {
 			List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
 
-			ArrayList<CachedProgramInfo> cachedProgramInfos = new ArrayList<CachedProgramInfo>();
+			ArrayList<CachedProgram> cachedPrograms = new ArrayList<CachedProgram>();
 
 			for (Program program : programs) {
-				CachedProgramInfo cachedProgramInfo = new CachedProgramInfo();
+				CachedProgram cachedProgram = new CachedProgram();
 
-				BeanUtils.copyProperties(cachedProgramInfo, program);
+				BeanUtils.copyProperties(cachedProgram, program);
 
 				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 				pk.setCaisiItemId(program.getId());
-				cachedProgramInfo.setFacilityIdIntegerCompositePk(pk);
+				cachedProgram.setFacilityIdIntegerCompositePk(pk);
 
-				cachedProgramInfo.setGender(program.getManOrWoman());
+				cachedProgram.setGender(program.getManOrWoman());
 				if (program.isTransgender())
-					cachedProgramInfo.setGender("T");
+					cachedProgram.setGender("T");
 
-				cachedProgramInfo.setMaxAge(program.getAgeMax());
-				cachedProgramInfo.setMinAge(program.getAgeMin());
-				cachedProgramInfo.setStatus(program.getProgramStatus());
+				cachedProgram.setMaxAge(program.getAgeMax());
+				cachedProgram.setMinAge(program.getAgeMin());
+				cachedProgram.setStatus(program.getProgramStatus());
 
-				cachedProgramInfos.add(cachedProgramInfo);
+				cachedPrograms.add(cachedProgram);
 			}
 
 			ProgramInfoWs service = caisiIntegratorManager.getProgramInfoWs(facility.getId());
-			service.setCachedProgramInfos(cachedProgramInfos);
+			service.setCachedPrograms(cachedPrograms);
 		}
 		catch (IllegalAccessException e) {
 			logger.error("Unexpected Error", e);
@@ -309,22 +309,22 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		for (Integer demographicId : demographicIds) {
 			logger.debug("pushing demographicInfo facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-			CachedDemographicInfo cachedDemographicInfo = new CachedDemographicInfo();
+			CachedDemographic cachedDemographic = new CachedDemographic();
 
 			// set consent info
 			IntegratorConsent consent = integratorConsentDao.findLatestByFacilityAndDemographic(facility.getId(), demographicId);
 			if (consent != null) {
-				BeanUtils.copyProperties(cachedDemographicInfo, consent);
+				BeanUtils.copyProperties(cachedDemographic, consent);
 			}
 
 			// set demographic info
 			Demographic demographic = demographicDao.getDemographicById(demographicId);
 
-			BeanUtils.copyProperties(cachedDemographicInfo, demographic);
+			BeanUtils.copyProperties(cachedDemographic, demographic);
 
 			FacilityIdIntegerCompositePk facilityDemographicPrimaryKey = new FacilityIdIntegerCompositePk();
 			facilityDemographicPrimaryKey.setCaisiItemId(demographic.getDemographicNo());
-			cachedDemographicInfo.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
+			cachedDemographic.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
 
 			XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
 			if (demographic.getYearOfBirth() != null)
@@ -333,25 +333,25 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cal.setMonth(Integer.parseInt(demographic.getMonthOfBirth()));
 			if (demographic.getDateOfBirth() != null)
 				cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));
-			cachedDemographicInfo.setBirthDate(cal);
+			cachedDemographic.setBirthDate(cal);
 
-			cachedDemographicInfo.setFirstName(demographic.getFirstName());
-			cachedDemographicInfo.setGender(demographic.getSex());
+			cachedDemographic.setFirstName(demographic.getFirstName());
+			cachedDemographic.setGender(demographic.getSex());
 
 			// send the request
-			service.setCachedDemographicInfo(cachedDemographicInfo);
+			service.setCachedDemographic(cachedDemographic);
 		}
 	}
 
 	private void pushFacilityInfo(Facility facility) throws MalformedURLException   {
 		try {
-			CachedFacilityInfo cachedFacilityInfo = new CachedFacilityInfo();
-			BeanUtils.copyProperties(cachedFacilityInfo, facility);
+			CachedFacility cachedFacility = new CachedFacility();
+			BeanUtils.copyProperties(cachedFacility, facility);
 
 			FacilityInfoWs service = caisiIntegratorManager.getFacilityInfoWs(facility.getId());
 
 			logger.debug("pushing facilityInfo");
-			service.setMyFacilityInfo(cachedFacilityInfo);
+			service.setMyFacilityInfo(cachedFacility);
 		}
 		catch (IllegalAccessException e) {
 			logger.error("Unexpected Error.", e);

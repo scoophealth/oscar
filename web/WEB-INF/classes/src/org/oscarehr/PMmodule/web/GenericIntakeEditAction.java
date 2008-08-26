@@ -51,8 +51,8 @@ import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
-import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
-import org.oscarehr.caisi_integrator.ws.client.CachedProviderInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
@@ -381,21 +381,21 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			CachedReferral cachedReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 			StringBuilder sb = new StringBuilder();
 
-			CachedFacilityInfo cachedFacilityInfo = caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getSourceIntegratorFacilityId());
+			CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getSourceIntegratorFacilityId());
 			sb.append("Referred from : ");
-			sb.append(cachedFacilityInfo.getName());
+			sb.append(cachedFacility.getName());
 
 			FacilityIdProviderIdCompositePk facilityProviderPrimaryKey = new FacilityIdProviderIdCompositePk();
 			facilityProviderPrimaryKey.setIntegratorFacilityId(cachedReferral.getSourceIntegratorFacilityId());
 			facilityProviderPrimaryKey.setCaisiProviderId(cachedReferral.getSourceCaisiProviderId());
-			CachedProviderInfo cachedProviderInfo = caisiIntegratorManager.getProviderInfo(facilityId, facilityProviderPrimaryKey);
+			CachedProvider cachedProvider = caisiIntegratorManager.getProviderInfo(facilityId, facilityProviderPrimaryKey);
 			sb.append(" by ");
-			sb.append(cachedProviderInfo.getLastName());
+			sb.append(cachedProvider.getLastName());
 			sb.append(", ");
-			sb.append(cachedProviderInfo.getFirstName());
-			if (cachedProviderInfo.getWorkPhone() != null) {
+			sb.append(cachedProvider.getFirstName());
+			if (cachedProvider.getWorkPhone() != null) {
 				sb.append("(");
-				sb.append(cachedProviderInfo.getWorkPhone());
+				sb.append(cachedProvider.getWorkPhone());
 				sb.append(")");
 			}
 			

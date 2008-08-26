@@ -1,13 +1,13 @@
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.PMmodule.web.admin.IntegratorJspBean"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedFacility"%>
 <%@page import="java.util.List"%>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 <%
 	int facilityId=Integer.parseInt(request.getParameter("facilityId"));
-	List<CachedFacilityInfo> facilities=IntegratorJspBean.getIntegratorFacilityCommunity(facilityId);
+	List<CachedFacility> facilities=IntegratorJspBean.getIntegratorFacilityCommunity(facilityId);
 %>
 
 
@@ -23,7 +23,7 @@
 		<td style="border:solid black 1px">Last Updated</td>
 	</tr>
 	<%
-		for (CachedFacilityInfo x : facilities)
+		for (CachedFacility x : facilities)
 		{
 			%>
 				<tr style="border:solid black 2px;background:white;color:gray">

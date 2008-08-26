@@ -89,8 +89,8 @@ import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
-import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
-import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
@@ -513,12 +513,12 @@ public class ClientManagerAction extends BaseAction {
 				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 				pk.setIntegratorFacilityId(Integer.parseInt(r.getRemoteFacilityId()));
 				pk.setCaisiItemId(Integer.parseInt(r.getRemoteProgramId()));
-				CachedProgramInfo cachedProgramInfo = caisiIntegratorManager.getRemoteProgram(facilityId, pk);
+				CachedProgram cachedProgram = caisiIntegratorManager.getRemoteProgram(facilityId, pk);
 
-				p.setName(cachedProgramInfo.getName());
+				p.setName(cachedProgram.getName());
 
 				Program program = new Program();
-				BeanUtils.copyProperties(program, cachedProgramInfo);
+				BeanUtils.copyProperties(program, cachedProgram);
 
 				request.setAttribute("program", program);
 			}
@@ -1104,7 +1104,7 @@ public class ClientManagerAction extends BaseAction {
 		Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 		if (facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals()) {
 			try {
-				List<CachedProgramInfo> results = caisiIntegratorManager.getRemoteProgramsAcceptingReferrals(facility.getId());
+				List<CachedProgram> results = caisiIntegratorManager.getRemoteProgramsAcceptingReferrals(facility.getId());
 				filterResultsByCriteria(results, criteria);
 				request.setAttribute("remotePrograms", results);
 			}
@@ -1118,14 +1118,14 @@ public class ClientManagerAction extends BaseAction {
 		return mapping.findForward("search_programs");
 	}
 
-	private void filterResultsByCriteria(List<CachedProgramInfo> results, Program criteria) {
+	private void filterResultsByCriteria(List<CachedProgram> results, Program criteria) {
 
-		Iterator<CachedProgramInfo> it = results.iterator();
+		Iterator<CachedProgram> it = results.iterator();
 		while (it.hasNext()) {
-			CachedProgramInfo cachedProgramInfo = it.next();
+			CachedProgram cachedProgram = it.next();
 			String temp = StringUtils.trimToNull(criteria.getName());
 			if (temp != null) {
-				if (!cachedProgramInfo.getName().toLowerCase().contains(temp.toLowerCase())) {
+				if (!cachedProgram.getName().toLowerCase().contains(temp.toLowerCase())) {
 					it.remove();
 					continue;
 				}
@@ -1133,7 +1133,7 @@ public class ClientManagerAction extends BaseAction {
 
 			temp = StringUtils.trimToNull(criteria.getType());
 			if (temp != null) {
-				if (!cachedProgramInfo.getType().equals(temp)) {
+				if (!cachedProgram.getType().equals(temp)) {
 					it.remove();
 					continue;
 				}
@@ -1141,51 +1141,51 @@ public class ClientManagerAction extends BaseAction {
 
 			temp = StringUtils.trimToNull(criteria.getManOrWoman());
 			if (temp != null) {
-				if (!cachedProgramInfo.getGender().equals(temp)) {
+				if (!cachedProgram.getGender().equals(temp)) {
 					it.remove();
 					continue;
 				}
 			}
 
-			if (criteria.isTransgender() && !cachedProgramInfo.getGender().equals("T")) {
+			if (criteria.isTransgender() && !cachedProgram.getGender().equals("T")) {
 				it.remove();
 				continue;
 			}
 
-			if (criteria.isFirstNation() && !cachedProgramInfo.isFirstNation()) {
+			if (criteria.isFirstNation() && !cachedProgram.isFirstNation()) {
 				it.remove();
 				continue;
 			}
 
-			if (criteria.isBedProgramAffiliated() && !cachedProgramInfo.isBedProgramAffiliated()) {
+			if (criteria.isBedProgramAffiliated() && !cachedProgram.isBedProgramAffiliated()) {
 				it.remove();
 				continue;
 			}
 
-			if (criteria.isAlcohol() && !cachedProgramInfo.isAlcohol()) {
+			if (criteria.isAlcohol() && !cachedProgram.isAlcohol()) {
 				it.remove();
 				continue;
 			}
 
 			temp = StringUtils.trimToNull(criteria.getAbstinenceSupport());
 			if (temp != null) {
-				if (!cachedProgramInfo.getAbstinenceSupport().equals(temp)) {
+				if (!cachedProgram.getAbstinenceSupport().equals(temp)) {
 					it.remove();
 					continue;
 				}
 			}
 
-			if (criteria.isPhysicalHealth() && !cachedProgramInfo.isPhysicalHealth()) {
+			if (criteria.isPhysicalHealth() && !cachedProgram.isPhysicalHealth()) {
 				it.remove();
 				continue;
 			}
 
-			if (criteria.isMentalHealth() && !cachedProgramInfo.isMentalHealth()) {
+			if (criteria.isMentalHealth() && !cachedProgram.isMentalHealth()) {
 				it.remove();
 				continue;
 			}
 
-			if (criteria.isHousing() && !cachedProgramInfo.isHousing()) {
+			if (criteria.isHousing() && !cachedProgram.isHousing()) {
 				it.remove();
 				continue;
 			}
@@ -1616,15 +1616,15 @@ public class ClientManagerAction extends BaseAction {
 							ClientReferral clientReferral=new ClientReferral();
 							
 							StringBuilder programName=new StringBuilder();
-							CachedFacilityInfo cachedFacilityInfo=caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getDestinationIntegratorFacilityId());
-							programName.append(cachedFacilityInfo.getName());
+							CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getDestinationIntegratorFacilityId());
+							programName.append(cachedFacility.getName());
 							programName.append(" / ");
 							
 							FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
 							pk.setIntegratorFacilityId(cachedReferral.getDestinationIntegratorFacilityId());
 							pk.setCaisiItemId(cachedReferral.getDestinationCaisiProgramId());
-							CachedProgramInfo cachedProgramInfo=caisiIntegratorManager.getRemoteProgram(facilityId, pk);
-							programName.append(cachedProgramInfo.getName());
+							CachedProgram cachedProgram=caisiIntegratorManager.getRemoteProgram(facilityId, pk);
+							programName.append(cachedProgram.getName());
 							
 							clientReferral.setProgramName(programName.toString());
 							clientReferral.setReferralDate(cachedReferral.getReferralDate().toGregorianCalendar().getTime());

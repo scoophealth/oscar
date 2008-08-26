@@ -31,9 +31,9 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
-import org.oscarehr.caisi_integrator.ws.client.CachedFacilityInfo;
-import org.oscarehr.caisi_integrator.ws.client.CachedProgramInfo;
-import org.oscarehr.caisi_integrator.ws.client.CachedProviderInfo;
+import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
+import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
@@ -96,9 +96,9 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public List<CachedFacilityInfo> getRemoteFacilities(int facilityId) throws MalformedURLException {
+	public List<CachedFacility> getRemoteFacilities(int facilityId) throws MalformedURLException {
 		@SuppressWarnings("unchecked")
-		List<CachedFacilityInfo> results = (List<CachedFacilityInfo>) simpleTimeCache.get(facilityId, "ALL_REMOTE_FACILITIES");
+		List<CachedFacility> results = (List<CachedFacility>) simpleTimeCache.get(facilityId, "ALL_REMOTE_FACILITIES");
 
 		if (results == null) {
 			FacilityInfoWs facilityInfoWs = getFacilityInfoWs(facilityId);
@@ -107,12 +107,12 @@ public class CaisiIntegratorManager {
 		}
 
 		// cloned so alterations don't affect the cached data
-		return (new ArrayList<CachedFacilityInfo>(results));
+		return (new ArrayList<CachedFacility>(results));
 	}
 
-	public CachedFacilityInfo getRemoteFacility(int myFacilityId, int remoteFacilityId) throws MalformedURLException
+	public CachedFacility getRemoteFacility(int myFacilityId, int remoteFacilityId) throws MalformedURLException
 	{
-		for (CachedFacilityInfo facility : getRemoteFacilities(myFacilityId))
+		for (CachedFacility facility : getRemoteFacilities(myFacilityId))
 		{
 			if (facility.getIntegratorFacilityId().equals(remoteFacilityId)) return(facility);
 		}
@@ -144,9 +144,9 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public List<CachedProgramInfo> getRemotePrograms(int facilityId) throws MalformedURLException {
+	public List<CachedProgram> getRemotePrograms(int facilityId) throws MalformedURLException {
 		@SuppressWarnings("unchecked")
-		List<CachedProgramInfo> results = (List<CachedProgramInfo>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS");
+		List<CachedProgram> results = (List<CachedProgram>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS");
 
 		if (results == null) {
 			ProgramInfoWs programInfoWs = getProgramInfoWs(facilityId);
@@ -155,15 +155,15 @@ public class CaisiIntegratorManager {
 		}
 
 		// cloned so alterations don't affect the cached data
-		return (new ArrayList<CachedProgramInfo>(results));
+		return (new ArrayList<CachedProgram>(results));
 	}
 
-	public CachedProgramInfo getRemoteProgram(int facilityId, FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
-		List<CachedProgramInfo> programs = getRemotePrograms(facilityId);
+	public CachedProgram getRemoteProgram(int facilityId, FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
+		List<CachedProgram> programs = getRemotePrograms(facilityId);
 		
-		for (CachedProgramInfo cachedProgramInfo : programs) {
-			if (facilityProgramPrimaryKeyEquals(cachedProgramInfo.getFacilityIdIntegerCompositePk(), remoteProgramPk)) {
-				return (cachedProgramInfo);
+		for (CachedProgram cachedProgram : programs) {
+			if (facilityProgramPrimaryKeyEquals(cachedProgram.getFacilityIdIntegerCompositePk(), remoteProgramPk)) {
+				return (cachedProgram);
 			}
 		}
 
@@ -183,9 +183,9 @@ public class CaisiIntegratorManager {
 	}
 
 	
-	public List<CachedProgramInfo> getRemoteProgramsAcceptingReferrals(int facilityId) throws MalformedURLException {
+	public List<CachedProgram> getRemoteProgramsAcceptingReferrals(int facilityId) throws MalformedURLException {
 		@SuppressWarnings("unchecked")
-		List<CachedProgramInfo> results = (List<CachedProgramInfo>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS");
+		List<CachedProgram> results = (List<CachedProgram>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS");
 
 		if (results == null) {
 			ProgramInfoWs programInfoWs = getProgramInfoWs(facilityId);
@@ -194,7 +194,7 @@ public class CaisiIntegratorManager {
 		}
 
 		// cloned so alterations don't affect the cached data
-		return (new ArrayList<CachedProgramInfo>(results));
+		return (new ArrayList<CachedProgram>(results));
 	}
 
 	public ProviderInfoWs getProviderInfoWs(int facilityId) throws MalformedURLException {
@@ -209,9 +209,9 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public List<CachedProviderInfo> getAllProviderInfos(int facilityId) throws MalformedURLException {
+	public List<CachedProvider> getAllProviderInfos(int facilityId) throws MalformedURLException {
 		@SuppressWarnings("unchecked")
-		List<CachedProviderInfo> results = (List<CachedProviderInfo>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROVIDERS");
+		List<CachedProvider> results = (List<CachedProvider>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROVIDERS");
 
 		if (results == null) {
 			ProviderInfoWs providerInfoWs = getProviderInfoWs(facilityId);
@@ -220,16 +220,16 @@ public class CaisiIntegratorManager {
 		}
 
 		// cloned so alterations don't affect the cached data
-		return (new ArrayList<CachedProviderInfo>(results));
+		return (new ArrayList<CachedProvider>(results));
 	}
 
-	public CachedProviderInfo getProviderInfo(int facilityId, FacilityIdProviderIdCompositePk remoteProviderPk) throws MalformedURLException
+	public CachedProvider getProviderInfo(int facilityId, FacilityIdProviderIdCompositePk remoteProviderPk) throws MalformedURLException
 	{
-		List<CachedProviderInfo> providers=getAllProviderInfos(facilityId);
+		List<CachedProvider> providers=getAllProviderInfos(facilityId);
 		
-		for (CachedProviderInfo cachedProviderInfo : providers) {
-			if (facilityProviderPrimaryKeyEquals(cachedProviderInfo.getFacilityIdProviderIdCompositePk(), remoteProviderPk)) {
-				return (cachedProviderInfo);
+		for (CachedProvider cachedProvider : providers) {
+			if (facilityProviderPrimaryKeyEquals(cachedProvider.getFacilityIdProviderIdCompositePk(), remoteProviderPk)) {
+				return (cachedProvider);
 			}
 		}
 

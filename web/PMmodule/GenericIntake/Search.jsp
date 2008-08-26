@@ -2,7 +2,7 @@
 <%@ taglib uri="http://displaytag.sf.net/el" prefix="display-el" %>
 <%@ include file="/common/messages.jsp"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographicInfo"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographic"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoScore"%>
 <%@page import="java.util.HashMap"%>
 <h3>New Client</h3>
@@ -108,7 +108,7 @@
     <display-el:table class="simple" name="requestScope.remoteMatches" id="x">
        	<%
        		MatchingDemographicInfoScore mdir=(MatchingDemographicInfoScore)pageContext.getAttribute("x");
-       		CachedDemographicInfo cdi=mdir.getCachedDemographicInfo();
+       		CachedDemographic cdi=mdir.getCachedDemographic();
    			int facilityId=cdi.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
 			String facilityName=facilitiesNameMap.get(facilityId);
    		%>
@@ -121,13 +121,13 @@
         	<%=facilityName%>
         </display-el:column>
         <display-el:column title="Client Name" >
-        	<c:out value="${x.cachedDemographicInfo.lastName}" />, <c:out value="${x.cachedDemographicInfo.firstName}" />
+        	<c:out value="${x.cachedDemographic.lastName}" />, <c:out value="${x.cachedDemographic.firstName}" />
         </display-el:column>
         <display-el:column title="BirthDate">
-        	<c:out value="${x.cachedDemographicInfo.birthDate.year}" />-<c:out value="${x.cachedDemographicInfo.birthDate.month}" />-<c:out value="${x.cachedDemographicInfo.birthDate.day}" />
+        	<c:out value="${x.cachedDemographic.birthDate.year}" />-<c:out value="${x.cachedDemographic.birthDate.month}" />-<c:out value="${x.cachedDemographic.birthDate.day}" />
         </display-el:column>
-        <display-el:column property="cachedDemographicInfo.gender" title="Gender" />
-        <display-el:column property="cachedDemographicInfo.hin" title="Health Number" />
+        <display-el:column property="cachedDemographic.gender" title="Gender" />
+        <display-el:column property="cachedDemographic.hin" title="Health Number" />
         <display-el:column property="score" title="Matching Score" />
     </display-el:table>
 </c:if>
