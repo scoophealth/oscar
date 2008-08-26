@@ -25,10 +25,14 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="org.oscarehr.common.dao.IntakeRequiredFieldsDao" %>
 <%@ page import="org.oscarehr.util.SessionConstants" %>
+<% response.setHeader("Cache-Control","no-cache");%>
+
 <%
     GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
     Intake intake = intakeEditForm.getIntake();
     String clientId = String.valueOf(intake.getClientId());
+    String intakeType = intake.getType();
+   
     String intakeFrmDate = intake.getNode().getPublishDateStr();
     String intakeFrmName = intake.getNode().getLabelStr();
     Integer intakeFrmVer = intake.getNode().getForm_version();
@@ -194,6 +198,7 @@
 <html:form action="/PMmodule/GenericIntake/Edit" onsubmit="return validateEdit()" >
 <html:hidden property="method"/>
 <input type="hidden" name="currentBedCommunityProgramId_old" value=<%=session.getAttribute("intakeCurrentBedCommunityId")%> />
+<input type="hidden" name="intakeType" value=<%=intakeType %> />
 
 <div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
 <div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
@@ -323,7 +328,7 @@
 </table>
 </div>
 
-
+<%if(!Intake.INDEPTH.equalsIgnoreCase(intakeType)) { %>
 <c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms || not empty sessionScope.genericIntakeEditForm.servicePrograms}">
     <div id="admissionsTable" dojoType="TitlePane" label="Program Admissions" labelNodeClass="intakeSectionLabel"
          containerNodeClass="intakeSectionContainer">
@@ -368,6 +373,7 @@
     </div>
 
 </c:if>
+<%} %>
 
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
 	<div id="admissionsTable" dojoType="TitlePane" label="Intake Location" labelNodeClass="intakeSectionLabel"
@@ -443,10 +449,7 @@
 
 <caisi:intake base="<%=5%>" intake="<%=intake%>"/>
 </div>
-
 <div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
-    Version: <%=intakeFrmName%> &nbsp; &nbsp; &nbsp; &nbsp; Published: <%=intakeFrmDate%>
-    <p>&nbsp;</p>
     <table class="intakeTable">
         <logic:messagesPresent>
             <html:messages id="error" bundle="pmm">
