@@ -397,7 +397,13 @@ public class IntakeNode implements Serializable {
     }
     
     public String getPublishDateStr() {
-	return DATE_FORMAT.format(getPublish_date().getTime());
+    	Calendar c = getPublish_date();
+    	if(c!=null) {
+    		return DATE_FORMAT.format(c.getTime());
+    	} else {
+    		return null;
+    	}
+	//return DATE_FORMAT.format(getPublish_date().getTime());
     }
     
     
