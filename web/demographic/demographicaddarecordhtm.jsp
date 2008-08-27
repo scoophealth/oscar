@@ -573,10 +573,18 @@ function checkFormTypeIn() {
     </tr>
      <tr valign="top">
       <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneC"/>: </b> </td>
-      <td align="left" colspan="3" >
+      <td align="left" >
         <input type="text" name="cellphone" onBlur="formatPhoneNum()" >
-
       </td>
+      <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formNewsLetter"/>: </b> </td>
+          <td align="left" >              
+                <select name="newsletter">
+                    <option value="Unknown" selected><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optUnknown"/></option>
+                    <option value="No"><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optNo"/></option>
+                    <option value="Paper"><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optPaper"/></option>
+                    <option value="Electronic"><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic"/></option>
+                </select>
+          </td>      
     </tr>
     <tr valign="top">
       <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formEMail"/>: </b> </td>

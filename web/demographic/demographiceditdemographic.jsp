@@ -156,7 +156,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 function popupEChart(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
-  var popup=window.open(page, "apptProvider", windowprops);
+  var popup=window.open(page, "apptProvider1", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
@@ -940,6 +940,9 @@ if ( PatStat.equals(Dead) ) {%>
                                         <li>
                                             <bean:message key="demographic.demographiceditdemographic.formEmail"/>: <b> <%=apptMainBean.getString(rs,"email")!=null? apptMainBean.getString(rs,"email") : ""%></b>
                                         </li>
+                                        <li>
+                                            <bean:message key="demographic.demographiceditdemographic.formNewsLetter"/>: <b> <%=apptMainBean.getString(rs,"newsletter")!=null? apptMainBean.getString(rs,"newsletter") : "Unknown"%></b>
+                                        </li>
                                     </ul>
                                     </div>
                                 </div>
@@ -1199,6 +1202,22 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                     <%if (apptMainBean.getString(rs,"pin")==null || apptMainBean.getString(rs,"pin").equals("")) {%>
                                     <a href="javascript:" onclick="popup(600, 650, '../phr/indivo/RegisterIndivo.jsp?demographicNo=<%=demographic_no%>', 'indivoRegistration');"><sub style="white-space: nowrap;">Register for MyOSCAR</sub></a>
                                     <%}%>
+                              </td>
+                            </tr>
+                            <tr valign="top">
+                                <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formNewsLetter"/>: </b> </td>
+                              <td colspan="3" align="left" >
+                                  <% String newsletter = apptMainBean.getString(rs,"newsletter").trim();
+                                     if( newsletter == null || newsletter.equals("")) {
+                                        newsletter = "Unknown";
+                                     }
+                                  %>
+                                    <select name="newsletter">
+                                        <option value="Unknown" <%if(newsletter.equals("Unknown")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optUnknown"/></option>
+                                        <option value="No" <%if(newsletter.equals("No")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optNo"/></option>
+                                        <option value="Paper" <%if(newsletter.equals("Paper")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optPaper"/></option>
+                                        <option value="Electronic" <%if(newsletter.equals("Electronic")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic"/></option>
+                                    </select>
                               </td>
                             </tr>
                             <tr valign="top">

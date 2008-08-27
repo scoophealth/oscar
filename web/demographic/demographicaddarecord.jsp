@@ -70,7 +70,7 @@
 	  //param[0]=Integer.parseIntdemographicaddarecord((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
 	  //temp variables for test/set null dates
 	  String year, month, day;
-      DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[28];
+      DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[29];
 	  param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));
 	  param[1]=new DBPreparedHandlerParam(request.getParameter("first_name"));
 	  param[2]=new DBPreparedHandlerParam(request.getParameter("address"));
@@ -163,7 +163,7 @@
 	  param[25] =new DBPreparedHandlerParam(MyDateFormat.getSysDate( year + "-" + month + "-" + day));
 	  param[26] =new DBPreparedHandlerParam("<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : ""));
           param[27] =new DBPreparedHandlerParam(request.getParameter("countryOfOrigin"));
-          
+          param[28] =new DBPreparedHandlerParam(request.getParameter("newsletter"));          
           
 	String[] paramName =new String[5];
 	  paramName[0]=param[0].getStringValue().trim(); //last name
