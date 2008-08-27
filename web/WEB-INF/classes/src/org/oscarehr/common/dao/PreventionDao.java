@@ -19,33 +19,63 @@
 
 package org.oscarehr.common.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Prevention;
+import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class PreventionDao extends AbstractDao {
 
-    public Prevention find(Integer id) {
-        return(entityManager.find(Prevention.class, id));
-    }    
-    
-    /**
-     * Find all ordered by name.
-     * @param active, null is find all, true is find only active, false is find only inactive.
-     */
-    public List<Prevention> findByDemographicId(Integer demographicId)
-	{
+	public Prevention find(Integer id) {
+		return (entityManager.find(Prevention.class, id));
+	}
+
+	/**
+	 * Find all ordered by name.
+	 * 
+	 * @param active
+	 *            , null is find all, true is find only active, false is find only inactive.
+	 */
+	public List<Prevention> findByDemographicId(Integer demographicId) {
 		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1");
 		query.setParameter(1, demographicId);
-		
+
 		@SuppressWarnings("unchecked")
 		List<Prevention> results = query.getResultList();
 
-		return(results);
+		return (results);
 	}
 
+	public HashMap<String, String> getPreventionExt(Integer preventionId) {
+		try {
+			Connection c = DbConnectionFilter.getThreadLocalDbConnection();
+			PreparedStatement ps = c.prepareStatement("select * from preventionsExt where prevention_id=?");
+			ps.setInt(1, preventionId);
+			ResultSet rs = ps.executeQuery();
+
+			HashMap<String, String> results=new HashMap<String, String>();
+			while (rs.next()) {
+				results.put(rs.getString("keyval"), rs.getString("val"));
+			}
+			
+			return(results);
+		}
+		catch (SQLException e) {
+			throw(new PersistenceException(e));
+		}
+		finally {
+			DbConnectionFilter.releaseThreadLocalDbConnection();
+		}
+	}
 }

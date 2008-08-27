@@ -28,7 +28,9 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimerTask;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -37,7 +39,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.dao.DemographicDao;
@@ -58,6 +59,7 @@ import org.oscarehr.caisi_integrator.ws.client.FacilityIdDemographicIssueComposi
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.PreventionExtTransfer;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWs;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
@@ -368,6 +370,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
+		ArrayList<PreventionExtTransfer> preventionExtsToSend = new ArrayList<PreventionExtTransfer>();
 
 		// get all preventions 
 		// for each prevention, copy fields to an integrator prevention
@@ -407,13 +410,24 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			}
 			
 			cachedDemographicPrevention.setPreventionType(localPrevention.getPreventionType());
-
-			// add ext info
 			
 			preventionsToSend.add(cachedDemographicPrevention);
+
+			
+			// add ext info
+			Integer preventionId=localPrevention.getId();
+			HashMap<String,String> localPreventionExts=preventionDao.getPreventionExt(preventionId);
+			for (Map.Entry<String, String> entry : localPreventionExts.entrySet())
+			{
+				PreventionExtTransfer preventionExtTransfer=new PreventionExtTransfer();
+				preventionExtTransfer.setPreventionId(preventionId);
+				preventionExtTransfer.setKey(entry.getKey());
+				preventionExtTransfer.setValue(entry.getValue());
+				preventionExtsToSend.add(preventionExtTransfer);
+			}
 		}
 
 
-		service.setCachedDemographicPreventions(preventionsToSend);
+		service.setCachedDemographicPreventions(preventionsToSend, preventionExtsToSend);
 	}
 }
