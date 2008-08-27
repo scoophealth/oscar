@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
@@ -36,6 +37,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.dao.DemographicDao;
@@ -44,8 +46,8 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
@@ -65,8 +67,10 @@ import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.Prevention;
 import org.oscarehr.util.DbConnectionFilter;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
@@ -81,6 +85,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private IntegratorConsentDao integratorConsentDao;
 	private ProgramDao programDao;
 	private ProviderDao providerDao;
+	private PreventionDao preventionDao;
 
 	public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
 		this.caisiIntegratorManager = mgr;
@@ -112,6 +117,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	public void setProviderDao(ProviderDao providerDao) {
 		this.providerDao = providerDao;
+	}
+
+	public void setPreventionDao(PreventionDao preventionDao) {
+		this.preventionDao = preventionDao;
 	}
 
 	public void run() {
@@ -355,15 +364,56 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedDemographicIssues(issues);
 	}
 
-	private void pushDemographicPreventions(Facility facility, DemographicInfoWs service, Integer demographicId) {
+	private void pushDemographicPreventions(Facility facility, DemographicInfoWs service, Integer demographicId) throws DatatypeConfigurationException {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		ArrayList<CachedDemographicPrevention> preventions = new ArrayList<CachedDemographicPrevention>();
+		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
 
 		// get all preventions 
 		// for each prevention, copy fields to an integrator prevention
-		// add prevention to array list
-		
-		service.setCachedDemographicPreventions(preventions);
+		// need to copy ext info
+		// add prevention to array list to send
+		List<Prevention> localPreventions=preventionDao.findByDemographicId(demographicId);
+		for (Prevention localPrevention : localPreventions)
+		{
+			CachedDemographicPrevention cachedDemographicPrevention=new CachedDemographicPrevention();
+			cachedDemographicPrevention.setCaisiDemographicId(demographicId);
+			cachedDemographicPrevention.setCaisiProviderId(localPrevention.getProviderNo());
+			
+			{
+				FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
+				pk.setCaisiItemId(localPrevention.getId());
+				cachedDemographicPrevention.setFacilityPreventionPk(pk);
+			}
+			
+			if (localPrevention.getNextDate()!=null) {
+				XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+				Calendar localCalendar=Calendar.getInstance();
+				localCalendar.setTimeInMillis(localPrevention.getNextDate().getTime());
+				soapCalendar.setYear(localCalendar.get(Calendar.YEAR));
+				soapCalendar.setMonth(localCalendar.get(Calendar.MONTH));
+				soapCalendar.setDay(localCalendar.get(Calendar.DAY_OF_MONTH));
+				cachedDemographicPrevention.setNextDate(soapCalendar);
+			}
+			
+			if (localPrevention.getPreventionDate()!=null) {
+				XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+				Calendar localCalendar=Calendar.getInstance();
+				localCalendar.setTimeInMillis(localPrevention.getPreventionDate().getTime());
+				soapCalendar.setYear(localCalendar.get(Calendar.YEAR));
+				soapCalendar.setMonth(localCalendar.get(Calendar.MONTH));
+				soapCalendar.setDay(localCalendar.get(Calendar.DAY_OF_MONTH));
+				cachedDemographicPrevention.setPreventionDate(soapCalendar);
+			}
+			
+			cachedDemographicPrevention.setPreventionType(localPrevention.getPreventionType());
+
+			// add ext info
+			
+			preventionsToSend.add(cachedDemographicPrevention);
+		}
+
+
+		service.setCachedDemographicPreventions(preventionsToSend);
 	}
 }
