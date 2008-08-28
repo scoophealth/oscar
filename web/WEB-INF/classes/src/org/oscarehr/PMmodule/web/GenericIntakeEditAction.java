@@ -19,6 +19,7 @@
 
 package org.oscarehr.PMmodule.web;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -54,6 +55,7 @@ import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
+import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.common.model.Facility;
@@ -114,32 +116,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		request.getSession().setAttribute("intakeCurrentBedCommunityId", null);
 
 		ProgramUtils.addProgramRestrictions(request);
-
-		return mapping.findForward(EDIT);
-	}
-
-	public ActionForward create_remote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
-
-		String intakeType = getType(request);
-		String providerNo = getProviderNo(request);
-
-		Intake intake = null;
-
-		if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
-			intake = genericIntakeManager.createQuickIntake(providerNo);
-		}
-		else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
-			intake = genericIntakeManager.createIndepthIntake(providerNo);
-		}
-		else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
-			intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
-		}
-
-		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-
-		setBeanProperties(formBean, intake, null, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(
-				intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null, null, null, facilityId);
 
 		return mapping.findForward(EDIT);
 	}
@@ -367,6 +343,19 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(client.getDemographicNo()));
 		request.getSession().setAttribute("intakeCurrentBedCommunityId", oldBedProgramId);
 
+		String remoteFacilityId=StringUtils.trimToNull(request.getParameter("remoteFacilityId"));
+		String remoteDemographicId=StringUtils.trimToNull(request.getParameter("remoteDemographicId"));
+		if (remoteFacilityId!=null && remoteDemographicId!=null)
+		{
+			try {
+				DemographicInfoWs demographicInfoWs=caisiIntegratorManager.getDemographicInfoWs(facilityId);
+				demographicInfoWs.linkDemographics(providerNo, client.getDemographicNo(), Integer.parseInt(remoteFacilityId), Integer.parseInt(remoteDemographicId));
+			}
+			catch (MalformedURLException e) {
+				LOG.error(e);
+			}
+		}
+		
 		if (("RFQ_admit".equals(saveWhich) || "RFQ_notAdmit".equals(saveWhich)) && oldId != null) {
 			return clientEdit(mapping, form, request, response);
 		}

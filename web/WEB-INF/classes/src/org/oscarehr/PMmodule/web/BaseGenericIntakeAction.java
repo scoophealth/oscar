@@ -47,7 +47,6 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 	
 	// Method Names
 	protected static final String EDIT_CREATE = "create";
-    protected static final String EDIT_CREATE_REMOTE = "create_remote";
 
     protected static final String EDIT_UPDATE = "update";
 	

@@ -38,7 +38,8 @@
     Integer intakeFrmVer = intake.getNode().getForm_version();
     intakeFrmName += intakeFrmVer==null ? " (1)" : " ("+intakeFrmVer+")";
 %>
-<html:html xhtml="true" locale="true">
+
+<%@page import="org.apache.commons.lang.StringUtils"%><html:html xhtml="true" locale="true">
 <head>
     <title>Generic Intake Edit</title>
     <style type="text/css">
@@ -199,6 +200,8 @@
 <html:hidden property="method"/>
 <input type="hidden" name="currentBedCommunityProgramId_old" value=<%=session.getAttribute("intakeCurrentBedCommunityId")%> />
 <input type="hidden" name="intakeType" value=<%=intakeType %> />
+<input type="hidden" name="remoteFacilityId" value=<%=StringUtils.trimToEmpty(request.getParameter("remoteFacilityId"))%> />
+<input type="hidden" name="remoteDemographicId" value=<%=StringUtils.trimToEmpty(request.getParameter("remoteDemographicId"))%> />
 
 <div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
 <div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
@@ -352,7 +355,7 @@
                 </c:if>
             </tr>
             <tr>
-				<input type="hidden" name="remoteReferralId" value="<%=request.getParameter("remoteReferralId")%>" />
+				<input type="hidden" name="remoteReferralId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteReferralId"))%>" />
                 <c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms}">
                     <td class="intakeBedCommunityProgramCell">
                         <html:select property="bedCommunityProgramId" value='<%=request.getParameter("destinationProgramId")%>' >
