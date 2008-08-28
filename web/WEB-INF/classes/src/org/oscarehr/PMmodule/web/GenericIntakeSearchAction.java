@@ -43,7 +43,7 @@ import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
-import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
+import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoParameters;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoScore;
@@ -89,10 +89,10 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         	Integer remoteReferralId=Integer.parseInt(request.getParameter("remoteReferralId"));
         	
 			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(currentFacilityId);
-			CachedReferral cachedReferral=referralWs.getReferral(remoteReferralId);
+			Referral remoteReferral=referralWs.getReferral(remoteReferralId);
 
 			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
-			CachedDemographic cachedDemographic=demographicInfoWs.getCachedDemographicByFacilityIdAndDemographicId(cachedReferral.getSourceIntegratorFacilityId(), cachedReferral.getSourceCaisiDemographicId());
+			CachedDemographic cachedDemographic=demographicInfoWs.getCachedDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
 			
 	        GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 	        intakeSearchBean.setFirstName(cachedDemographic.getFirstName());
@@ -284,9 +284,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	        	int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
 	        	ReferralWs referralWs = caisiIntegratorManager.getReferralWs(currentFacilityId);
-				CachedReferral cachedReferral=referralWs.getReferral(Integer.parseInt(remoteReferralId));
+				Referral remoteReferral=referralWs.getReferral(Integer.parseInt(remoteReferralId));
 				parameters.append("&destinationProgramId=");
-				parameters.append(cachedReferral.getDestinationCaisiProgramId());
+				parameters.append(remoteReferral.getDestinationCaisiProgramId());
 			}
 			catch (MalformedURLException e) {
 				LOG.error("Unexpected error.", e);

@@ -54,7 +54,7 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
+import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
@@ -367,16 +367,16 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	private String getAdmissionText(Integer facilityId, String admissionText, String remoteReferralId) {
 		try {
 			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
-			CachedReferral cachedReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
+			Referral remoteReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 			StringBuilder sb = new StringBuilder();
 
-			CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getSourceIntegratorFacilityId());
+			CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(facilityId, remoteReferral.getSourceIntegratorFacilityId());
 			sb.append("Referred from : ");
 			sb.append(cachedFacility.getName());
 
 			FacilityIdProviderIdCompositePk facilityProviderPrimaryKey = new FacilityIdProviderIdCompositePk();
-			facilityProviderPrimaryKey.setIntegratorFacilityId(cachedReferral.getSourceIntegratorFacilityId());
-			facilityProviderPrimaryKey.setCaisiProviderId(cachedReferral.getSourceCaisiProviderId());
+			facilityProviderPrimaryKey.setIntegratorFacilityId(remoteReferral.getSourceIntegratorFacilityId());
+			facilityProviderPrimaryKey.setCaisiProviderId(remoteReferral.getSourceCaisiProviderId());
 			CachedProvider cachedProvider = caisiIntegratorManager.getProviderInfo(facilityId, facilityProviderPrimaryKey);
 			sb.append(" by ");
 			sb.append(cachedProvider.getLastName());
@@ -390,11 +390,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			
 			sb.append(". ");
 			sb.append("Reason for Referral : ");
-			sb.append(cachedReferral.getReasonForReferral());
+			sb.append(remoteReferral.getReasonForReferral());
 			
 			sb.append(". ");
 			sb.append("Presenting Problem : ");
-			sb.append(cachedReferral.getPresentingProblem());
+			sb.append(remoteReferral.getPresentingProblem());
 
 			admissionText = sb.toString();
 		}

@@ -91,7 +91,7 @@ import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
-import org.oscarehr.caisi_integrator.ws.client.CachedReferral;
+import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -419,16 +419,16 @@ public class ClientManagerAction extends BaseAction {
 		// remote referral
 		else if (referral.getRemoteFacilityId() != null && referral.getRemoteProgramId() != null) {
 			try {
-				CachedReferral cachedReferral=new CachedReferral();
-				cachedReferral.setDestinationIntegratorFacilityId(Integer.parseInt(referral.getRemoteFacilityId()));
-				cachedReferral.setDestinationCaisiProgramId(Integer.parseInt(referral.getRemoteProgramId()));
-				cachedReferral.setPresentingProblem(referral.getPresentProblems());
-				cachedReferral.setReasonForReferral(referral.getNotes());
-				cachedReferral.setSourceCaisiDemographicId(clientId);
-				cachedReferral.setSourceCaisiProviderId(providerId);
+				Referral remoteReferral=new Referral();
+				remoteReferral.setDestinationIntegratorFacilityId(Integer.parseInt(referral.getRemoteFacilityId()));
+				remoteReferral.setDestinationCaisiProgramId(Integer.parseInt(referral.getRemoteProgramId()));
+				remoteReferral.setPresentingProblem(referral.getPresentProblems());
+				remoteReferral.setReasonForReferral(referral.getNotes());
+				remoteReferral.setSourceCaisiDemographicId(clientId);
+				remoteReferral.setSourceCaisiProviderId(providerId);
 				
 				ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
-				referralWs.makeReferral(cachedReferral);
+				referralWs.makeReferral(remoteReferral);
 			}
 			catch (Exception e) {
 				logger.error("Unexpected Error.", e);
@@ -1606,35 +1606,35 @@ public class ClientManagerAction extends BaseAction {
 				try {
 					ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
 					
-					List<CachedReferral> referrals=referralWs.getReferralsFor(Integer.parseInt(demographicNo));
+					List<Referral> referrals=referralWs.getReferralsFor(Integer.parseInt(demographicNo));
 					if (referrals!=null)
 					{
 						ArrayList<ClientReferral> processedReferrals=new ArrayList<ClientReferral>();
 						
-						for (CachedReferral cachedReferral : referrals)
+						for (Referral remoteReferral : referrals)
 						{
 							ClientReferral clientReferral=new ClientReferral();
 							
 							StringBuilder programName=new StringBuilder();
-							CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(facilityId, cachedReferral.getDestinationIntegratorFacilityId());
+							CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(facilityId, remoteReferral.getDestinationIntegratorFacilityId());
 							programName.append(cachedFacility.getName());
 							programName.append(" / ");
 							
 							FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
-							pk.setIntegratorFacilityId(cachedReferral.getDestinationIntegratorFacilityId());
-							pk.setCaisiItemId(cachedReferral.getDestinationCaisiProgramId());
+							pk.setIntegratorFacilityId(remoteReferral.getDestinationIntegratorFacilityId());
+							pk.setCaisiItemId(remoteReferral.getDestinationCaisiProgramId());
 							CachedProgram cachedProgram=caisiIntegratorManager.getRemoteProgram(facilityId, pk);
 							programName.append(cachedProgram.getName());
 							
 							clientReferral.setProgramName(programName.toString());
-							clientReferral.setReferralDate(cachedReferral.getReferralDate().toGregorianCalendar().getTime());
+							clientReferral.setReferralDate(remoteReferral.getReferralDate().toGregorianCalendar().getTime());
 							
-							Provider tempProvider=providerDao.getProvider(cachedReferral.getSourceCaisiProviderId());
+							Provider tempProvider=providerDao.getProvider(remoteReferral.getSourceCaisiProviderId());
 							clientReferral.setProviderFirstName(tempProvider.getFirstName());
 							clientReferral.setProviderLastName(tempProvider.getLastName());
 							
-							clientReferral.setNotes(cachedReferral.getReasonForReferral());
-							clientReferral.setPresentProblems(cachedReferral.getPresentingProblem());
+							clientReferral.setNotes(remoteReferral.getReasonForReferral());
+							clientReferral.setPresentProblems(remoteReferral.getPresentingProblem());
 							
 							processedReferrals.add(clientReferral);
 						}
