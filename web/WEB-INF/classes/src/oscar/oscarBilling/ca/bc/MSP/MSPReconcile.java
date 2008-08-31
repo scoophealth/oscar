@@ -2335,8 +2335,8 @@ public class MSPReconcile {
     }
     String qry =
         "select first_name,last_name from provider where " + criteriaStr +
-        " = " +
-        providerNo;
+        " = '" +
+        providerNo+"'";
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       rs = db.GetSQL(qry);
