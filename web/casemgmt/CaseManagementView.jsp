@@ -37,6 +37,8 @@
 <html:hidden property="providerNo"/>
 <html:hidden property="tab"/>
 <html:hidden property="hideActiveIssue"/>
+<input type="hidden" name="issue_code" value=""/>
+
 <input type="hidden" name="method" value="view"/>
 
 <% Logger logger = Logger.getLogger("CaseManagementView.jsp"); %>

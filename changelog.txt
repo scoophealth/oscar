@@ -1,3 +1,5 @@
+2008-09-02 : Changed icd10 table to be supported by desease registry
+2008-09-02 : Added support for adding caisi issues set as 'major' to desease registry
 2008-08-27 : Added newsletter option to demographic (Randy)
 2008-08-26 : Tagged repositiory with  B4_MULTIPLE-ECHARTS (Randy)
              Changed cme/encounter to work off of request scope forms in

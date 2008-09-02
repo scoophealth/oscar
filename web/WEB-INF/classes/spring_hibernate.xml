@@ -33,6 +33,7 @@
                 <value>classpath:/com/quatro/model</value>
                 <value>classpath:/oscar/appt/status/model</value>
                 <value>classpath:/org/oscarehr/consultationRequest/model</value>
+                <value>classpath:/org/oscarehr/dx/model</value>
                 
             </list>
         </property>

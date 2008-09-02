@@ -27,6 +27,7 @@
     <bean id="streetHealthDao" class="org.oscarehr.PMmodule.dao.StreetHealthDao" autowire="byName" />
     <bean id="countryCodeDAO"  class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName"/>
     <bean id="consultationRequestDAO"  class="org.oscarehr.consultationRequest.dao.ConsultationRequestDAO" autowire="byName"/>
+    <bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName"/>
 <!-- 
     <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" />
  -->
@@ -204,6 +205,7 @@
         <property name="admissionManager" ref="admissionManager"/>
         <property name="enabled" value="${casemgmt.note.password.enabled}"/>
         <property name="programManager" ref="programManager"/>
+        <property name="dxResearchDAO" ref="dxResearchDao"/>
     </bean>
     <bean id="roleManager" parent="baseTransactionProxy" >
         <property name="target">

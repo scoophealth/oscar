@@ -24,7 +24,6 @@ package org.oscarehr.casemgmt.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -76,6 +75,8 @@ import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.dx.dao.DxResearchDAO;
+import org.oscarehr.dx.model.DxResearch;
 
 import oscar.OscarProperties;
 
@@ -103,6 +104,7 @@ public class CaseManagementManager {
     protected HashAuditDAO hashAuditDAO;
     protected EncounterWindowDAO ectWindowDAO;
     protected UserPropertyDAO userPropertyDAO;
+    protected DxResearchDAO dxResearchDAO;
    
     private boolean enabled;
     
@@ -1254,4 +1256,23 @@ public class CaseManagementManager {
         this.userPropertyDAO = dao;
     }
     
+    public void setDxResearchDAO(DxResearchDAO dao) {
+    	this.dxResearchDAO = dao;
+    }
+    
+    public void saveToDx(String demographicNo, String code) {
+    	DxResearch dx = new DxResearch();
+    	dx.setCode(code);
+    	dx.setCodingSystem("icd10");
+    	dx.setDemographicNo(Integer.parseInt(demographicNo));
+    	dx.setStartDate(new Date());
+    	dx.setUpdateDate(new Date());
+    	dx.setStatus("A");
+    	    	
+    	this.dxResearchDAO.save(dx);
+    }
+    
+    public List<DxResearch> getDxByDemographicNo(String demographicNo) {
+    	return this.dxResearchDAO.getByDemographicNo(Integer.parseInt(demographicNo));
+    }
 }

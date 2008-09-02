@@ -27,8 +27,12 @@
 <%@ page import="org.oscarehr.casemgmt.model.*" %>
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.*" %>
 <%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="java.util.Map"%>
 
 
+<%
+	Map dxMap = (Map)request.getAttribute("dxMap");
+%>
 Issue Filter Create Report View:
 
 <table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
@@ -40,6 +44,7 @@ Issue Filter Create Report View:
 		<td>Major</td>
 		<td>Resolved</td>
 		<td>type</td>
+		<td></td>
 	</tr>
 	<%int index=0; String bgcolor="white"; %>
 	<c:forEach var="issue" items="${Issues}">
@@ -88,6 +93,19 @@ Issue Filter Create Report View:
 			<c:if test="${issue.resolved=='false'}">unresolved</c:if>
 			</td>
 			<td><c:out value="${issue.type }"/></td>
+			<td>
+				<%
+					CaseManagementIssue i = (CaseManagementIssue) pageContext.getAttribute("issue");
+					if(i.isMajor()) {
+						String code = i.getIssue().getCode();
+						if(dxMap.get(code) != null) {
+							%>Dx<%
+						} else {
+							%><span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.hideActiveIssue.value='false';document.caseManagementViewForm.method.value='addToDx';document.caseManagementViewForm.issue_code.value='<c:out value="${issue.issue.code}"/>';document.caseManagementViewForm.submit(); return false;" >+Dx</span><%
+						}
+					}
+				%>
+			</td>
 		</tr>
 	</c:forEach>
 </table>

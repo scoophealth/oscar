@@ -56,6 +56,7 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.SessionConstants;
 
 import oscar.oscarRx.pageUtil.RxSessionBean;
@@ -269,6 +270,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					.getAttribute("case_program_id"))));
 
 		}
+		/* Dx */
+		List<DxResearch> dxList = this.caseManagementMgr.getDxByDemographicNo(demoNo);
+		Map<String,DxResearch> dxMap = new HashMap<String,DxResearch>();
+		for(DxResearch dx:dxList) {
+			dxMap.put(dx.getCode(), dx);
+		}
+		request.setAttribute("dxMap",dxMap);
+		
 		/* ISSUES */
 		current = System.currentTimeMillis();
 		log.debug("Prep work " + String.valueOf(current - start));
@@ -796,4 +805,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return issues;
 	}
 
+	public ActionForward addToDx(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		this.caseManagementMgr.saveToDx(getDemographicNo(request), request.getParameter("issue_code"));
+		return view(mapping,form,request,response);
+	}		
 }

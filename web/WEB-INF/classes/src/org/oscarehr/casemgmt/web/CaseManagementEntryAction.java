@@ -22,6 +22,8 @@
 
 package org.oscarehr.casemgmt.web;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,7 +61,6 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
-import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -1269,18 +1270,33 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         Integer programId=null;
         if (programIdStr!=null) programId=Integer.valueOf(programIdStr);
 
+        Properties dxProps = new Properties();
+        try {
+        	InputStream is = getClass().getResourceAsStream("/caisi_issues_dx.properties");   
+        	dxProps.load(is);
+        }catch(IOException e) {log.warn("Unable to load Dx properties file");}
+        
         for (int i = 0; i < issueList.length; i++) {
             if (issueList[i].isChecked()) {
                 caseIssueList[oldList.length + k] = new CheckBoxBean();
                 caseIssueList[oldList.length + k].setIssue(newIssueToCIssue(sessionFrm, issueList[i].getIssue(), programId));
                 caseIssueList[oldList.length + k].setChecked("on");
                 k++;
+                
+                //should issue be automagically added to Dx? check config file
+                if(dxProps.get(issueList[i].getIssue().getCode()) != null) {
+                	log.info("adding to Dx");
+                	this.caseManagementMgr.saveToDx(getDemographicNo(request),issueList[i].getIssue().getCode());
+                	caseIssueList[oldList.length + k].getIssue().setMajor(true);
+                }
+                
             }
         }
 
         cform.setIssueCheckList(caseIssueList);
         sessionFrm.setIssueCheckList(caseIssueList);
-
+       
+        
         String ajax = request.getParameter("ajax");
         if (ajax != null && ajax.equalsIgnoreCase("true")) {
             request.setAttribute("caseManagementEntryForm", sessionFrm);
