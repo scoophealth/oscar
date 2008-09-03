@@ -26,81 +26,91 @@
  * Created on May 23, 2005, 3:18 PM
  */
 
-
 package oscar.oscarPrevention;
 
 import java.util.Date;
 
 /**
- *
+ * 
  * @author Jay Gallagher
  */
 public class PreventionItem {
-   
-   
-   public PreventionItem() {
-   }
-   
-   public PreventionItem(String name,Date d) {
-      this.name = name;
-      datePreformed = d;
-   }
-   
-   public PreventionItem(String name,Date dPreformed,String never,Date dNext) {
-      this.name = name;
-      this.datePreformed = dPreformed;
-      this.never = never;
-      this.nextDate = dNext;
-   }
-   
-   public boolean getNeverVal(){
-      boolean ret = false;      
-      if (never != null && never.equals("1")){
-         ret = true;
-      }
-      return ret;     
-   }
-   
-   
-   /**
-    * Getter for property datePreformed.
-    * @return Value of property datePreformed.
-    */
-   public java.util.Date getDatePreformed() {
-      return datePreformed;
-   }
-   
-   /**
-    * Setter for property datePreformed.
-    * @param datePreformed New value of property datePreformed.
-    */
-   public void setDatePreformed(java.util.Date datePreformed) {
-      this.datePreformed = datePreformed;
-   }
-   
-   /**
-    * Getter for property next_date.
-    * @return Value of property next_date.
-    */
-   public java.util.Date getNextDate() {
-      return nextDate;
-   }
-   
-   /**
-    * Setter for property next_date.
-    * @param next_date New value of property next_date.
-    */
-   public void setNextDate(java.util.Date nextDate) {
-      this.nextDate = nextDate;
-   }
-   
-   String id = null;
-   String name = null;
-   Date datePreformed= null;
-   Date nextDate = null;
-   String never = null;
-   //boolean deleted = null; ???
-   boolean refused;
-   
-   
+
+	public PreventionItem() {
+	}
+
+	public PreventionItem(String name, Date d) {
+		this.name = name;
+		datePreformed = d;
+	}
+
+	public PreventionItem(String name, Date dPreformed, String never, Date dNext) {
+		this.name = name;
+		this.datePreformed = dPreformed;
+		this.never = never;
+		this.nextDate = dNext;
+	}
+
+	public boolean getNeverVal() {
+		boolean ret = false;
+		if (never != null && never.equals("1")) {
+			ret = true;
+		}
+		return ret;
+	}
+
+	/**
+	 * Getter for property datePreformed.
+	 * 
+	 * @return Value of property datePreformed.
+	 */
+	public java.util.Date getDatePreformed() {
+		return datePreformed;
+	}
+
+	/**
+	 * Setter for property datePreformed.
+	 * 
+	 * @param datePreformed
+	 *            New value of property datePreformed.
+	 */
+	public void setDatePreformed(java.util.Date datePreformed) {
+		this.datePreformed = datePreformed;
+	}
+
+	/**
+	 * Getter for property next_date.
+	 * 
+	 * @return Value of property next_date.
+	 */
+	public java.util.Date getNextDate() {
+		return nextDate;
+	}
+
+	/**
+	 * Setter for property next_date.
+	 * 
+	 * @param next_date
+	 *            New value of property next_date.
+	 */
+	public void setNextDate(java.util.Date nextDate) {
+		this.nextDate = nextDate;
+	}
+
+	String id = null;
+	String name = null;
+	Date datePreformed = null;
+	Date nextDate = null;
+	String never = null;
+	// boolean deleted = null; ???
+	boolean refused;
+	private boolean remoteEntry=false;
+	
+	public boolean isRemoteEntry() {
+		return remoteEntry;
+	}
+
+	public void setRemoteEntry(boolean remoteEntry) {
+		this.remoteEntry = remoteEntry;
+	}
 }

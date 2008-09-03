@@ -123,14 +123,14 @@ public class Prevention {
       return retval;
    }
    
-   public void addPreventionItem(PreventionItem pItem,String prevName){
-      if (preventionTypes.containsKey(prevName)){
-         Vector v = (Vector) preventionTypes.get(prevName);
+   public void addPreventionItem(PreventionItem pItem){
+      if (preventionTypes.containsKey(pItem.name)){
+         Vector v = (Vector) preventionTypes.get(pItem.name);
          v.add(pItem);
       }else{
          Vector v = new Vector();
          v.add(pItem);
-         preventionTypes.put(prevName,v);
+         preventionTypes.put(pItem.name,v);
       }      
    }
    

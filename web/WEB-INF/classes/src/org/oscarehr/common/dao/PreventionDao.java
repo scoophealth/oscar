@@ -26,7 +26,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
@@ -41,12 +40,6 @@ public class PreventionDao extends AbstractDao {
 		return (entityManager.find(Prevention.class, id));
 	}
 
-	/**
-	 * Find all ordered by name.
-	 * 
-	 * @param active
-	 *            , null is find all, true is find only active, false is find only inactive.
-	 */
 	public List<Prevention> findByDemographicId(Integer demographicId) {
 		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1");
 		query.setParameter(1, demographicId);

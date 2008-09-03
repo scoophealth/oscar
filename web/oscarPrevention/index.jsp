@@ -44,6 +44,10 @@
   PreventionData pd = new PreventionData();    
   Prevention p = pd.getPrevention(demographic_no);
   
+  Integer facilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+  Integer demographicId=Integer.parseInt(demographic_no);
+  pd.addRemotePreventions(p, facilityId, demographicId);
+  
   PreventionDS pf = PreventionDS.getInstance();
   
   
@@ -67,7 +71,8 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
       
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.SessionConstants"%><html:html locale="true">
 
 <head>
 <title>
@@ -382,8 +387,9 @@ div.recommendations li{
                   for (int i = 0 ; i < prevList.size(); i++){ 
                         Hashtable h = (Hashtable) prevList.get(i);
                         String prevName = (String) h.get("name");
-                        ArrayList alist = pd.getPreventionData((String)h.get("name"), demographic_no); 
-                        boolean show = pdc.display(h, demographic_no,alist.size()) ;                        
+                        ArrayList alist = pd.getPreventionData(prevName, demographic_no); 
+                        pd.addRemotePreventions(alist, facilityId, demographicId,prevName);
+                        boolean show = pdc.display(h, demographic_no,alist.size());                        
                         if(!show){  
                             Hashtable h2 = new Hashtable();
                             h2.put("prev",h);
@@ -495,7 +501,10 @@ div.recommendations li{
                                         <br/>                                 
                                     </p>
                                 </div>
-                                <%ArrayList alist = pd.getPreventionData((String)h.get("name"), demographic_no);                            
+                                <%
+                                String prevType=(String)h.get("name");
+                                ArrayList alist = pd.getPreventionData(prevType, demographic_no);
+                                pd.addRemotePreventions(alist, facilityId, demographicId, prevType);
                                 for (int k = 0; k < alist.size(); k++){
                                 Hashtable hdata = (Hashtable) alist.get(k);
                                 %>                            
@@ -531,7 +540,8 @@ div.recommendations li{
     for (int i = 0 ; i < prevList.size(); i++){ 
         Hashtable h = (Hashtable) prevList.get(i);
         String prevName = (String) h.get("name");
-        ArrayList alist = pd.getPreventionData((String)h.get("name"), demographic_no);                
+        ArrayList alist = pd.getPreventionData(prevName, demographic_no); 
+        pd.addRemotePreventions(alist, facilityId, demographicId, prevName);
         if( alist.size() > 0 ) { %>                    
             <input type="hidden" id="preventionHeader<%=i%>" name="preventionHeader<%=i%>" value="<%=h.get("name")%>">
     

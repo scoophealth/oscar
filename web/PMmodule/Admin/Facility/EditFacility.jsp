@@ -117,7 +117,7 @@
             <td><html:password property="facility.integratorPassword" /></td>
         </tr>
         <tr class="b">
-            <td width="20%">Use Quick Consent:</td>
+            <td width="20%">Use Quick/Detailed Consent:</td>
             <td><html:checkbox property="facility.useQuickConsent" /></td>
         </tr>
         <tr class="b">
