@@ -92,7 +92,7 @@ public class ChildImmunizationReport implements PreventionReport{
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
-             /*if (totalImmunizations == 0){// no info
+             if (totalImmunizations == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
                 prd.state = "No Info";                
@@ -105,7 +105,7 @@ public class ChildImmunizationReport implements PreventionReport{
                 prd.numMonths = "------";
                 prd.color = "grey";
                 inList++;
-            }else{*/
+            }else{
                 
                 boolean refused = false;                                
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -232,7 +232,7 @@ public class ChildImmunizationReport implements PreventionReport{
                 }
                 
                 
-             //}
+             }
              
              letterProcessing( prd,"CIMF",asofDate);
              returnReport.add(prd);
