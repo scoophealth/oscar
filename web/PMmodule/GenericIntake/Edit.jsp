@@ -198,10 +198,10 @@
 
 <html:form action="/PMmodule/GenericIntake/Edit" onsubmit="return validateEdit()" >
 <html:hidden property="method"/>
-<input type="hidden" name="currentBedCommunityProgramId_old" value=<%=session.getAttribute("intakeCurrentBedCommunityId")%> />
-<input type="hidden" name="intakeType" value=<%=intakeType %> />
-<input type="hidden" name="remoteFacilityId" value=<%=StringUtils.trimToEmpty(request.getParameter("remoteFacilityId"))%> />
-<input type="hidden" name="remoteDemographicId" value=<%=StringUtils.trimToEmpty(request.getParameter("remoteDemographicId"))%> />
+<input type="hidden" name="currentBedCommunityProgramId_old" value="<%=session.getAttribute("intakeCurrentBedCommunityId")%>" />
+<input type="hidden" name="intakeType" value="<%=intakeType %>" />
+<input type="hidden" name="remoteFacilityId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteFacilityId"))%>" />
+<input type="hidden" name="remoteDemographicId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteDemographicId"))%>" />
 
 <div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
 <div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
