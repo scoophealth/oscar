@@ -39,6 +39,7 @@ import java.util.List;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
@@ -273,11 +274,22 @@ public class PreventionData {
 
 	// //////
 
+	private Date demographicDateOfBirth=null;
+	public Date getDemographicDateOfBirth(String demoNo)
+	{
+		if (demographicDateOfBirth==null)
+		{
+			DemographicData dd = new DemographicData();
+			demographicDateOfBirth = dd.getDemographicDOB(demoNo);
+		}
+		
+		return(demographicDateOfBirth);
+	}	
+	
 	public ArrayList getPreventionData(String preventionType, String demoNo) {
 		ArrayList list = new ArrayList();
 		String sql = null;
-		DemographicData dd = new DemographicData();
-		java.util.Date dob = dd.getDemographicDOB(demoNo);
+		java.util.Date dob = getDemographicDateOfBirth(demoNo);
 
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -351,7 +363,7 @@ public class PreventionData {
 
 	public Prevention getPrevention(String demoNo) {
 		DemographicData dd = new DemographicData();
-		java.util.Date dob = dd.getDemographicDOB(demoNo);
+		java.util.Date dob = getDemographicDateOfBirth(demoNo);
 		String sex = dd.getDemographicSex(demoNo);
 		String sql = null;
 		Prevention p = new Prevention(sex, dob);
@@ -409,7 +421,7 @@ public class PreventionData {
 		return (prevention);
 	}
 
-	public ArrayList addRemotePreventions(ArrayList preventions, Integer facilityId, Integer demographicId, String preventionType) {
+	public ArrayList addRemotePreventions(ArrayList preventions, Integer facilityId, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
 		populateRemotePreventions(facilityId, demographicId);
 
 		if (remotePreventions != null) {
@@ -419,16 +431,23 @@ public class PreventionData {
 					Date preventionDate = xmlCal.toGregorianCalendar().getTime();
 
 					Hashtable h = new Hashtable();
-					h.put("id", "remote:" + cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId() + "."
-							+ cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
+					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+					h.put("integratorDemographicId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
 					h.put("type", cachedDemographicPrevention.getPreventionType());
 					h.put("provider_no", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
 					h.put("provider_name", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
-					h.put("prevention_date", cachedDemographicPrevention.getPreventionDate().toGregorianCalendar().getTime());
+					h.put("prevention_date", DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographicPrevention.getPreventionDate().toGregorianCalendar().getTime()));
 					h.put("prevention_date_asDate", cachedDemographicPrevention.getPreventionDate().toGregorianCalendar().getTime());
-					h.put("age", "N/A");
-					h.put("remote", "true");
 
+					if (demographicDateOfBirth != null) {
+						String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, cachedDemographicPrevention.getPreventionDate().toGregorianCalendar().getTime());
+						h.put("age", age);
+					}
+					else
+					{
+						h.put("age", "N/A");						
+					}
+										
 					preventions.add(h);
 				}
 			}

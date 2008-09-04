@@ -47,6 +47,8 @@
   Integer facilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
   Integer demographicId=Integer.parseInt(demographic_no);
   pd.addRemotePreventions(p, facilityId, demographicId);
+  Date demographicDateOfBirth=pd.getDemographicDateOfBirth(demographic_no);
+  String fromOtherFacility="<span style=\"color:#990000\">(At Other Facility)<span>";
   
   PreventionDS pf = PreventionDS.getInstance();
   
@@ -388,7 +390,7 @@ div.recommendations li{
                         Hashtable h = (Hashtable) prevList.get(i);
                         String prevName = (String) h.get("name");
                         ArrayList alist = pd.getPreventionData(prevName, demographic_no); 
-                        pd.addRemotePreventions(alist, facilityId, demographicId,prevName);
+                        pd.addRemotePreventions(alist, facilityId, demographicId,prevName,demographicDateOfBirth);
                         boolean show = pdc.display(h, demographic_no,alist.size());                        
                         if(!show){  
                             Hashtable h2 = new Hashtable();
@@ -427,6 +429,7 @@ div.recommendations li{
                         <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
                             <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
                                 <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+								<%=hdata.get("id")==null?fromOtherFacility:""%>
                             </p>
                         </div>
                         <%}%>                           
@@ -504,13 +507,14 @@ div.recommendations li{
                                 <%
                                 String prevType=(String)h.get("name");
                                 ArrayList alist = pd.getPreventionData(prevType, demographic_no);
-                                pd.addRemotePreventions(alist, facilityId, demographicId, prevType);
+                                pd.addRemotePreventions(alist, facilityId, demographicId, prevType,demographicDateOfBirth);
                                 for (int k = 0; k < alist.size(); k++){
                                 Hashtable hdata = (Hashtable) alist.get(k);
                                 %>                            
                                 <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
                                     <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
                                         <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+										<%=hdata.get("id")==null?fromOtherFacility:""%>
                                     </p>
                                 </div>
                                 <%}%>                           
@@ -541,7 +545,7 @@ div.recommendations li{
         Hashtable h = (Hashtable) prevList.get(i);
         String prevName = (String) h.get("name");
         ArrayList alist = pd.getPreventionData(prevName, demographic_no); 
-        pd.addRemotePreventions(alist, facilityId, demographicId, prevName);
+        pd.addRemotePreventions(alist, facilityId, demographicId, prevName,demographicDateOfBirth);
         if( alist.size() > 0 ) { %>                    
             <input type="hidden" id="preventionHeader<%=i%>" name="preventionHeader<%=i%>" value="<%=h.get("name")%>">
     
@@ -551,7 +555,7 @@ div.recommendations li{
     %>                            
                 <input type="hidden" id="preventProcedureAge<%=i%>-<%=k%>" name="preventProcedureAge<%=i%>-<%=k%>" value="Age: <%=hdata.get("age")%>">
                 <input type="hidden" id="preventProcedureDate<%=i%>-<%=k%>" name="preventProcedureDate<%=i%>-<%=k%>" value="Date: <%=hdata.get("prevention_date")%>">
-    
+    			<%=hdata.get("id")==null?fromOtherFacility:""%>
             <%}                    
         }               
     } //for there are preventions
