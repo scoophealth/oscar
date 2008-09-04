@@ -48,7 +48,6 @@
   Integer demographicId=Integer.parseInt(demographic_no);
   pd.addRemotePreventions(p, facilityId, demographicId);
   Date demographicDateOfBirth=pd.getDemographicDateOfBirth(demographic_no);
-  String fromOtherFacility="<span style=\"color:#990000\">(At Other Facility)<span>";
   
   PreventionDS pf = PreventionDS.getInstance();
   
@@ -68,6 +67,13 @@
   boolean printError = request.getAttribute("printError") != null;
 %>  
 
+<%!
+	public String getFromFacilityMsg(Hashtable ht)
+	{
+		if (ht.get("id")==null)	return("<br /><span style=\"color:#990000\">(At facility : "+ht.get("remoteFacilityName")+")<span>");
+		else return("");
+	}
+%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -429,7 +435,7 @@ div.recommendations li{
                         <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
                             <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
                                 <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
-								<%=hdata.get("id")==null?fromOtherFacility:""%>
+								<%=getFromFacilityMsg(hdata)%>
                             </p>
                         </div>
                         <%}%>                           
@@ -514,7 +520,7 @@ div.recommendations li{
                                 <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
                                     <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
                                         <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
-										<%=hdata.get("id")==null?fromOtherFacility:""%>
+										<%=getFromFacilityMsg(hdata)%>
                                     </p>
                                 </div>
                                 <%}%>                           
@@ -555,7 +561,6 @@ div.recommendations li{
     %>                            
                 <input type="hidden" id="preventProcedureAge<%=i%>-<%=k%>" name="preventProcedureAge<%=i%>-<%=k%>" value="Age: <%=hdata.get("age")%>">
                 <input type="hidden" id="preventProcedureDate<%=i%>-<%=k%>" name="preventProcedureDate<%=i%>-<%=k%>" value="Date: <%=hdata.get("prevention_date")%>">
-    			<%=hdata.get("id")==null?fromOtherFacility:""%>
             <%}                    
         }               
     } //for there are preventions

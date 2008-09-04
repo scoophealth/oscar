@@ -28,6 +28,7 @@
 
 package oscar.oscarPrevention;
 
+import java.net.MalformedURLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,6 +45,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention;
+import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.util.SpringUtils;
 
@@ -432,6 +434,16 @@ public class PreventionData {
 
 					Hashtable h = new Hashtable();
 					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+					String remoteFacilityName="N/A";
+					CachedFacility remoteFacility=null;
+					try {
+						remoteFacility = caisiIntegratorManager.getRemoteFacility(facilityId, cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+					}
+					catch (Exception e) {
+						log.error(e);
+					}
+					if (remoteFacility!=null) remoteFacilityName=remoteFacility.getName();
+					h.put("remoteFacilityName", remoteFacilityName);
 					h.put("integratorDemographicId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
 					h.put("type", cachedDemographicPrevention.getPreventionType());
 					h.put("provider_no", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
