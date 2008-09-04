@@ -28,11 +28,11 @@
 
 package oscar.oscarPrevention;
 
-import java.net.MalformedURLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -53,6 +53,8 @@ import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.util.UtilDateUtilities;
+
+import java.util.Comparator;
 
 /**
  * 
@@ -463,11 +465,34 @@ public class PreventionData {
 					preventions.add(h);
 				}
 			}
+			
+			Collections.sort(preventions, new PreventionsComparator());
 		}
 		
 		return(preventions);
 	}
 
+	public static class PreventionsComparator implements Comparator
+	{
+		@Override
+		public int compare(Object o1, Object o2) {
+			Hashtable ht1=(Hashtable)o1;
+			Hashtable ht2=(Hashtable)o2;
+			
+			Date date1=(Date)ht1.get("prevention_date_asDate");
+			Date date2=(Date)ht2.get("prevention_date_asDate");
+			
+			if (date1!=null)
+			{
+				return(date1.compareTo(date2));
+			}
+			else
+			{
+				return(0);
+			}
+		}
+	}
+	
 	public Hashtable getPreventionById(String id) {
 		String sql = null;
 		Hashtable h = null;
