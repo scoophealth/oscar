@@ -36,6 +36,8 @@
         <a href="SelectPharmacy.jsp">Edit Pharmacy</a></p>
         <p class="PropSheetMenuItemLevel1">
         <a href="EditFavorites.jsp">Edit Favorites</a></p>
+        <p class="PropSheetMenuItemLevel1"> 
+        <a href="CloneFavorites.jsp">Clone Favorites</a></p>         
         <p class="PropSheetLevel1CurrentItem<%=alle%>">Allergies</p>
         <p class="PropSheetMenuItemLevel1">                
         <%

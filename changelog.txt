@@ -1,3 +1,4 @@
+2008-09-03 : Add copy favorite prescriptions function (Toby)
 2008-09-02 : Changed icd10 table to be supported by desease registry
 2008-09-02 : Added support for adding caisi issues set as 'major' to desease registry
 2008-08-27 : Added newsletter option to demographic (Randy)

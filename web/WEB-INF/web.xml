@@ -223,7 +223,11 @@
         <servlet-name>PatientListByAppointment</servlet-name>
         <servlet-class>oscar.oscarReport.data.PatientListByAppt</servlet-class>
     </servlet>
-     
+    <servlet> 
+ 	<servlet-name>RxCloneService</servlet-name> 
+ 	<servlet-class>oscar.oscarRx.server.service.RxCloneServiceImpl</servlet-class> 
+    </servlet> 
+    
     <servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
@@ -285,6 +289,10 @@
         <servlet-name>redirectLinkTracking</servlet-name>
         <url-pattern>/redirectLinkTracking</url-pattern>
     </servlet-mapping>
+    <servlet-mapping> 
+ 	<servlet-name>RxCloneService</servlet-name> 
+ 	<url-pattern>/oscar.oscarRx.CloneRx/service/rxcloneservice</url-pattern> 
+    </servlet-mapping>  
     
     <session-config>
     	<session-timeout>120</session-timeout> <!-- 120minutes -->

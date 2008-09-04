@@ -80,6 +80,7 @@
     <bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
     <bean id="userAccessDao" class="com.quatro.dao.security.UserAccessDao" autowire="byName" />
     <bean id="appointStatusDao" class="oscar.appt.status.dao.hibernate.AppointmentStatusDAOHibernate" autowire="byName" />
+    <bean id="rxCloneDao" class="oscar.oscarRx.dao.hibernate.RxCloneFavoritesDAOHibernate" autowire="byName" /> 
     
     <bean id="scratchPadManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
         <property name="target" ref="scratchPadManagerTarget"/>
@@ -386,4 +387,13 @@
     <bean id="onCallManagerTarget" class="org.oscarehr.casemgmt.service.OnCallManager">
         <property name="onCallDao" ref="OnCallDAO"/>        
     </bean>
+    <bean id="RxPrescriptionMgr" parent="baseTransactionProxy"> 
+ 	<property name="target"> 
+            <bean class="oscar.oscarRx.service.impl.RxPrescriptionMgrImpl" > 
+                <property name="rxCloneDao"> 
+                    <ref local="rxCloneDao"/> 
+                </property> 
+            </bean> 
+ 	</property> 
+    </bean> 
 </beans>

@@ -34,6 +34,7 @@
                 <value>classpath:/oscar/appt/status/model</value>
                 <value>classpath:/org/oscarehr/consultationRequest/model</value>
                 <value>classpath:/org/oscarehr/dx/model</value>
+                <value>classpath:/oscar/oscarRx/model</value> 
                 
             </list>
         </property>
@@ -72,6 +73,7 @@
                 <value>classpath:/org/oscarehr/casemgmt/model</value>
                 <value>classpath:/com/quatro/model</value>
                 <value>classpath:/oscar/appt/status/model</value>
+                <value>classpath:/oscar/oscarRx/model</value> 
             </list>
         </property>
         <property name="hibernateProperties">

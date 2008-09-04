@@ -145,7 +145,31 @@
       </fileset>
   </copy> 
  </target>
-
+ <target name="cloneRx-gwt" depends="init">
+        <property file="gwt.properties" />
+        <property name="gwt.compiler.output.style" value="OBFUSCATED"/>
+        <property name="gwt.compiler.logLevel" value="WARN"/>
+        <property name="gwt.module" value="oscar.oscarRx.CloneRx"/>
+        <java classname="com.google.gwt.dev.GWTCompiler" dir="." fork="true">
+            <jvmarg value="-Xmx256M"/>
+            <classpath>
+                <path refid="classpath.path"/>
+                <pathelement path="${classes_web}/"/>
+                <pathelement location="${src_web}"/>
+            </classpath>
+            <arg value="-out"/>
+            <arg path="tmp/web/"/>
+            <arg value="-style"/>
+            <arg value="${gwt.compiler.output.style}"/>
+            <arg value="-logLevel"/>
+            <arg value="${gwt.compiler.logLevel}"/>
+            <arg value="${gwt.module}"/>
+        </java>
+        <property name="gwt.output.dir" value="${gwt.module}"/>
+        <move todir="../web/${gwt.output.dir}">
+            <fileset dir="tmp/web/${gwt.module}"/>
+        </move>
+ </target>
  <target name="testprep" depends="init">
   <copy todir="${test}/polls">
    <fileset dir="polls" includes="**" />
@@ -209,7 +233,7 @@
   </copy>
  </target>
 
- <target name="dist" depends="web, document">
+ <target name="dist" depends="web, document, cloneRx-gwt">
   <!-- make the webapp clean, so even files that haven't changed get
   their filters updated -->
   <propertyfile file="../web/WEB-INF/classes/build.properties">
