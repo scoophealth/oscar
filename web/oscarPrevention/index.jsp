@@ -431,8 +431,11 @@ div.recommendations li{
                         <%     
                         for (int k = 0; k < alist.size(); k++){
                         Hashtable hdata = (Hashtable) alist.get(k);
+                        
+                        String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
+                        if (hdata.get("id")==null) onClickCode="alert('no remote data is available in this version')";
                         %>                            
-                        <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
+                        <div class="preventionProcedure"  onclick="<%=onClickCode%>" >
                             <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
                                 <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
 								<%=getFromFacilityMsg(hdata)%>
@@ -516,8 +519,11 @@ div.recommendations li{
                                 pd.addRemotePreventions(alist, facilityId, demographicId, prevType,demographicDateOfBirth);
                                 for (int k = 0; k < alist.size(); k++){
                                 Hashtable hdata = (Hashtable) alist.get(k);
+                                
+                                String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
+                                if (hdata.get("id")==null) onClickCode="alert('No remote data is available in this version')";
                                 %>                            
-                                <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
+                                <div class="preventionProcedure"  onclick="<%=onClickCode%>" >
                                     <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
                                         <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
 										<%=getFromFacilityMsg(hdata)%>
