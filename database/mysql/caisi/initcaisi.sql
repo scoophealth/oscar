@@ -1856,26 +1856,26 @@ CREATE TABLE `survey` (
 
 --
 -- Table structure for table `surveyData`
---
+-- surveyData is moved to oscarinit.sql.
 
-CREATE TABLE IF NOT EXISTS `surveyData` (
-  `surveyDataId` int(10) NOT NULL auto_increment,
-  `surveyId` varchar(5) default NULL,
-  `demographic_no` int(10) default NULL,
-  `provider_no` varchar(6) default NULL,
-  `status` char(2) default NULL,
-  `survey_date` date default NULL,
-  `answer` varchar(10) default NULL,
-  `processed` int(10) default NULL,
-  PRIMARY KEY  (`surveyDataId`),
-  KEY `surveyId_index` (`surveyId`),
-  KEY `demographic_no_index` (`demographic_no`),
-  KEY `provider_no_index` (`provider_no`),
-  KEY `status_index` (`status`),
-  KEY `survey_date_index` (`survey_date`),
-  KEY `answer_index` (`answer`),
-  KEY `processed_index` (`processed`)
-);
+-- CREATE TABLE IF NOT EXISTS `surveyData` (
+--   `surveyDataId` int(10) NOT NULL auto_increment,
+--   `surveyId` varchar(5) default NULL,
+--   `demographic_no` int(10) default NULL,
+--   `provider_no` varchar(6) default NULL,
+--   `status` char(2) default NULL,
+--   `survey_date` date default NULL,
+--   `answer` varchar(10) default NULL,
+--   `processed` int(10) default NULL,
+--   PRIMARY KEY  (`surveyDataId`),
+--   KEY `surveyId_index` (`surveyId`),
+--   KEY `demographic_no_index` (`demographic_no`),
+--   KEY `provider_no_index` (`provider_no`),
+--   KEY `status_index` (`status`),
+--   KEY `survey_date_index` (`survey_date`),
+--   KEY `answer_index` (`answer`),
+--   KEY `processed_index` (`processed`)
+-- );
 
 --
 -- Table structure for table `survey_test_data`
