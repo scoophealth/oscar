@@ -15,14 +15,14 @@ CREATE TABLE billingreferral (
   PRIMARY KEY  (billingreferral_no),
   KEY referral_no (referral_no),
   UNIQUE (referral_no) 
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billingperclimit (
   service_code varchar(10) NOT NULL ,
   min varchar(8) default '0',
   max varchar(8) default '0',
   PRIMARY KEY  (service_code)
-) TYPE=MyISAM;
+) ;
 
 
 
@@ -948,7 +948,7 @@ CREATE TABLE formONAR(
   pg4_signature2 varchar(50) default NULL,
   pg4_formDate2 date default NULL,
   PRIMARY KEY (ID)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE `formovulation` (
   `ID` bigint(11) NOT NULL auto_increment,
@@ -1331,7 +1331,7 @@ CREATE TABLE billing_on_diskname (
   total varchar(20) default null,
   timestamp timestamp,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_filename (
   id int(11) NOT NULL auto_increment,
@@ -1344,7 +1344,7 @@ CREATE TABLE billing_on_filename (
   total varchar(20) default null,
   timestamp timestamp,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_repo (
   id int(11) NOT NULL auto_increment,
@@ -1353,7 +1353,7 @@ CREATE TABLE billing_on_repo (
   content text,
   createdatetime datetime,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_proc (
   id int(11) NOT NULL auto_increment,
@@ -1363,7 +1363,7 @@ CREATE TABLE billing_on_proc (
   object varchar(60) default '',
   createdatetime datetime,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_header (
   id int(11) NOT NULL auto_increment,
@@ -1388,7 +1388,7 @@ CREATE TABLE billing_on_header (
   action varchar(60)  default '',
   comment varchar(200)  default '',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_cheader1 (
   id int(12) NOT NULL auto_increment,
@@ -1436,7 +1436,7 @@ CREATE TABLE billing_on_cheader1 (
   KEY apptProvider_no (apptProvider_no),
   KEY creator (creator),
   KEY status (status)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_cheader2 (
   id int(12) NOT NULL auto_increment,
@@ -1451,7 +1451,7 @@ CREATE TABLE billing_on_cheader2 (
   timestamp timestamp,
   PRIMARY KEY  (id),
   KEY ch1_id (ch1_id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_item (
   id int(12) NOT NULL auto_increment,
@@ -1470,7 +1470,7 @@ CREATE TABLE billing_on_item (
   timestamp timestamp,
   PRIMARY KEY  (id),
   KEY ch1_id (ch1_id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_favourite (
   id int(12) NOT NULL auto_increment,
@@ -1480,7 +1480,7 @@ CREATE TABLE billing_on_favourite (
   timestamp timestamp,
   deleted boolean NOT NULL default false,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_private_service (
   id int(6) NOT NULL auto_increment,
@@ -1490,19 +1490,19 @@ CREATE TABLE billing_private_service (
   percentage varchar(8) default NULL,
   update_date date default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_payment_type (
   id int(11) NOT NULL auto_increment,
   payment_type varchar(25) NOT NULL default '',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_errorCode (
   code varchar(5) NOT NULL,
   description varchar(255) NOT NULL default '',
   PRIMARY KEY  (code)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_3rdPartyAddress (
   id int(6) NOT NULL auto_increment,
@@ -1515,7 +1515,7 @@ CREATE TABLE billing_on_3rdPartyAddress (
   telephone varchar(15) NOT NULL default '',
   fax varchar(15) NOT NULL default '',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_eareport (
   id int(12) NOT NULL auto_increment,
@@ -1546,7 +1546,7 @@ CREATE TABLE billing_on_eareport (
   key (providerohip_no),
   key (code_date),
   key (process_date)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE billing_on_ext (
   id int(12) NOT NULL auto_increment,
@@ -1559,7 +1559,7 @@ CREATE TABLE billing_on_ext (
   PRIMARY KEY  (id),
   key (key_val),
   key (billing_no)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE ctl_billingtype (
     servicetype varchar(10) not null,
@@ -1689,7 +1689,7 @@ CREATE TABLE `formLabReq07` (
 	`v_immune_HepatitisB` tinyint(1) default NULL,
 	`v_immune_HepatitisA` tinyint(1) default NULL,
 	PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM;
+) ;
 
 CREATE TABLE `appointment_status` (
   `id` int(11) NOT NULL auto_increment,
@@ -1700,4 +1700,4 @@ CREATE TABLE `appointment_status` (
   `active` int(1) NOT NULL default '1',
   `editable` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ;

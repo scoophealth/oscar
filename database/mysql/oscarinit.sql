@@ -17,7 +17,7 @@ CREATE TABLE FaxClientLog (
   requestId varchar(10) default NULL,
   faxId varchar(10) default NULL,
   PRIMARY KEY  (faxLogId)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `allergies`
@@ -40,7 +40,7 @@ CREATE TABLE allergies (
   severity_of_reaction char(1) default '0',
   onset_of_reaction char(1) default '0', 
   PRIMARY KEY  (allergyid)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `appointment`
@@ -69,7 +69,7 @@ CREATE TABLE appointment (
   PRIMARY KEY  (appointment_no),
   KEY appointment_date (appointment_date,start_time,demographic_no),
   KEY demographic_no (demographic_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table batchEligibility
@@ -79,7 +79,7 @@ CREATE TABLE batchEligibility(
   MOHResponse varchar(100) NOT NULL,
   reason varchar(255) NOT NULL,
   PRIMARY KEY  (responseCode)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `billactivity`
@@ -99,7 +99,7 @@ CREATE TABLE billactivity (
   updatedatetime datetime default NULL,
   status char(1) default NULL,
   total varchar(20) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `billcenter`
@@ -108,7 +108,7 @@ CREATE TABLE billactivity (
 CREATE TABLE billcenter (
   billcenter_code char(2) NOT NULL default '',
   billcenter_desc varchar(20) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `billing`
@@ -148,7 +148,7 @@ CREATE TABLE billing (
   KEY apptProvider_no (apptProvider_no),
   KEY creator (creator),
   KEY status (status)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `billingdetail`
@@ -166,7 +166,7 @@ CREATE TABLE billingdetail (
   billingunit char(2) default NULL,
   PRIMARY KEY  (billing_dt_no),
   KEY billingno (billing_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `billinginr`
@@ -190,7 +190,7 @@ CREATE TABLE billinginr (
   createdatetime datetime NOT NULL default '0001-01-01 00:00:00',
   status char(1) default NULL,
   PRIMARY KEY  (billinginr_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `billingservice`
@@ -209,7 +209,7 @@ CREATE TABLE billingservice (
   anaesthesia char(2) default NULL,
   PRIMARY KEY  (billingservice_no),
   KEY billingservice_service_code_index (service_code)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `clinic`
@@ -229,7 +229,7 @@ CREATE TABLE clinic (
   clinic_delim_phone text,
   clinic_delim_fax text,
   PRIMARY KEY  (clinic_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `clinic_location`
@@ -239,7 +239,7 @@ CREATE TABLE clinic_location (
   clinic_location_no varchar(15) NOT NULL default '',
   clinic_no int(10) NOT NULL default '0',
   clinic_location_name varchar(40) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `config_Immunization`
@@ -253,7 +253,7 @@ CREATE TABLE config_Immunization (
   providerNo varchar(6) default NULL,
   archived tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (setId)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `consultationRequests`
@@ -279,7 +279,7 @@ CREATE TABLE consultationRequests (
   urgency char(2) default NULL,
   patientWillBook tinyint(1),
   PRIMARY KEY  (requestId)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `consultationServices`
@@ -290,7 +290,7 @@ CREATE TABLE consultationServices (
   serviceDesc varchar(255) default NULL,
   active char(2) default NULL,
   PRIMARY KEY  (serviceId)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `ctl_billingservice`
@@ -304,7 +304,7 @@ CREATE TABLE ctl_billingservice (
   service_group varchar(20) default NULL,
   status char(1) default NULL,
   service_order int(4) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `ctl_billingservice_premium`
@@ -315,7 +315,7 @@ CREATE TABLE ctl_billingservice_premium (
   service_code varchar(10) default '',
   status char(1) default '',
   update_date date default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `ctl_diagcode`
@@ -325,7 +325,7 @@ CREATE TABLE ctl_diagcode (
   servicetype varchar(10) default NULL,
   diagnostic_code varchar(5) default NULL,
   status char(1) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `ctl_doctype`
@@ -335,7 +335,7 @@ CREATE TABLE ctl_doctype (
   module varchar(30) NOT NULL default '',
   doctype varchar(60) NOT NULL default '',
   status char(1) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `ctl_document`
@@ -346,7 +346,7 @@ CREATE TABLE ctl_document (
   module_id int(6) NOT NULL default '0',
   document_no int(6) NOT NULL default '0',
   status char(1) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `ctl_frequency`
@@ -358,7 +358,7 @@ CREATE TABLE ctl_frequency (
   dailymin varchar(5) NOT NULL default '0',
   dailymax varchar(5) NOT NULL default '0',
   PRIMARY KEY  (freqid)
-) TYPE=MyISAM;
+) ;
 
 
 
@@ -370,7 +370,7 @@ CREATE TABLE ctl_provider (
   clinic_no int(10) NOT NULL default '0',
   provider_no int(10) NOT NULL default '0',
   status char(1) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `ctl_specialinstructions`
@@ -380,7 +380,7 @@ CREATE TABLE ctl_specialinstructions (
   id tinyint(4) NOT NULL auto_increment,
   description varchar(50) NOT NULL default '',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `demographic`
@@ -437,7 +437,7 @@ CREATE TABLE demographicaccessory (
   demographic_no int(10) NOT NULL default '0',
   content text,
   PRIMARY KEY  (demographic_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `demographiccust`
@@ -455,7 +455,7 @@ CREATE TABLE demographiccust (
   KEY cust2 (cust2),
   KEY cust3 (cust3),
   KEY cust4 (cust4)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `demographicstudy`
@@ -467,7 +467,7 @@ CREATE TABLE demographicstudy (
   provider_no varchar(6) NOT NULL default '',
   timestamp timestamp(14) NOT NULL,
   PRIMARY KEY  (demographic_no,study_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `desannualreviewplan`
@@ -483,7 +483,7 @@ CREATE TABLE desannualreviewplan (
   risk_content text,
   checklist_content text,
   PRIMARY KEY  (des_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `desaprisk`
@@ -499,7 +499,7 @@ CREATE TABLE desaprisk (
   risk_content text,
   checklist_content text,
   PRIMARY KEY  (desaprisk_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `diagnosticcode`
@@ -513,7 +513,7 @@ CREATE TABLE diagnosticcode (
   region varchar(5) default NULL,
   PRIMARY KEY  (diagnosticcode_no),
   KEY diagnosticcode_diagnostic_code_index (diagnostic_code)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `diseases`
@@ -525,7 +525,7 @@ CREATE TABLE diseases (
   ICD9_E char(6) NOT NULL default '',
   entry_date date default NULL,
   PRIMARY KEY  (diseaseid)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `document`
@@ -545,7 +545,7 @@ CREATE TABLE document (
   public1 int(1) NOT NULL default '0',
   observationdate date default NULL,
   PRIMARY KEY  (document_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `reportTemplates`
@@ -596,7 +596,7 @@ CREATE TABLE drugs (
   custom_instructions boolean default false,
   unitName varchar(10) default NULL,
   PRIMARY KEY  (drugid)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `dxresearch`
@@ -611,7 +611,7 @@ CREATE TABLE dxresearch (
   dxresearch_code varchar(10) default '',
   coding_system varchar(20),
   PRIMARY KEY  (dxresearch_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `eChart`
@@ -631,7 +631,7 @@ CREATE TABLE eChart (
   encounter text,
   PRIMARY KEY  (eChartId),
   KEY demographicno (demographicNo)
-) TYPE=MyISAM MAX_ROWS=200000000 AVG_ROW_LENGTH=9000;
+)  MAX_ROWS=200000000 AVG_ROW_LENGTH=9000;
 
 --
 -- Table structure for table `eform`
@@ -649,7 +649,7 @@ CREATE TABLE eform (
   form_html text,
   PRIMARY KEY  (fid),
   UNIQUE KEY id (fid)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `eform_data`
@@ -675,7 +675,7 @@ CREATE TABLE eform_data (
   KEY `idx_eform_data_subject` (`subject`),
   KEY `idx_eform_data_fid` (`fid`),
   KEY `idx_eform_data_form_provider` (`form_provider`)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `eforms`
@@ -693,7 +693,7 @@ CREATE TABLE eforms (
   form_html mediumtext,
   PRIMARY KEY  (fid),
   UNIQUE KEY id (fid)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `eforms_data`
@@ -713,7 +713,7 @@ CREATE TABLE eforms_data (
   form_fields mediumtext,
   PRIMARY KEY  (fdid),
   UNIQUE KEY id (fdid)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `eform_values`
@@ -754,7 +754,7 @@ CREATE TABLE encounter (
   content text,
   encounterattachment text,
   PRIMARY KEY  (encounter_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `encounterForm`
@@ -766,7 +766,7 @@ CREATE TABLE encounterForm (
   form_table varchar(50) NOT NULL default '',
   hidden int(5) NOT NULL default '0',  
   PRIMARY KEY  (form_value)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `encountertemplate`
@@ -779,7 +779,7 @@ CREATE TABLE encountertemplate (
   creator varchar(6) default NULL,
   PRIMARY KEY  (encountertemplate_name),
   KEY encountertemplate_url (createdatetime)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `encounterWindow`
@@ -792,7 +792,7 @@ CREATE TABLE encounterWindow (
   presBoxSize int(10) NOT NULL default '30',
   rowThreeSize int(10) NOT NULL default '378',
   PRIMARY KEY  (provider_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `favorites`
@@ -825,7 +825,7 @@ CREATE TABLE favorites (
   custom_instructions boolean default false,
   unitName varchar(10) default NULL,
   PRIMARY KEY  (favoriteid)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `form`
@@ -841,7 +841,7 @@ CREATE TABLE form (
   content text,
   PRIMARY KEY  (form_no),
   KEY form_select (demographic_no, form_name)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table form2MinWalk
@@ -870,7 +870,7 @@ CREATE TABLE form2MinWalk(
   Q3From13To16s tinyint(1),
   Q3Cmt varchar(255),    
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 
 --
@@ -1552,7 +1552,7 @@ CREATE TABLE formAR (
   pg2_formDate date default NULL,
   pg3_formDate date default NULL,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formAdf`
@@ -1622,7 +1622,7 @@ CREATE TABLE formAdf (
   sigDate date default NULL,
   signature varchar(60) default NULL,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE formAdfV2(
   ID int(10) NOT NULL  auto_increment,
@@ -1694,7 +1694,7 @@ CREATE TABLE formAdfV2(
   signature varchar(60),
   sigName varchar(60),
   PRIMARY KEY (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formAlpha`
@@ -1750,7 +1750,7 @@ CREATE TABLE formAlpha (
   resources tinyint(1) default NULL,
   comments text,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formAnnual`
@@ -1877,7 +1877,7 @@ CREATE TABLE formAnnual (
   plan text,
   signature varchar(60) default NULL,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formAnnualV2`
@@ -2083,7 +2083,7 @@ CREATE TABLE formAnnualV2 (
   examGenitalia varchar(100) default NULL,
   toDoProstateCancer text,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formCaregiver
@@ -2143,7 +2143,7 @@ CREATE TABLE formCaregiver(
   score1 int(2),
   SRBScore int(3),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formCESD
@@ -2237,7 +2237,7 @@ CREATE TABLE formCESD(
   Q20Most tinyint(1),  
   score int(2),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formCostQuestionnaire
@@ -2309,7 +2309,7 @@ CREATE TABLE formCostQuestionnaire(
   retired tinyint(1),
   homemakerWithOutPaid tinyint(1),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 
 --
@@ -2331,7 +2331,7 @@ CREATE TABLE formGripStrength(
   domAvg varchar(5),
   nonDomAvg varchar(5),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formLateLifeFDIDisability
@@ -2504,7 +2504,7 @@ CREATE TABLE formLateLifeFDIDisability(
   D16Alot tinyint(1),
   D16Completely tinyint(1),  
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 
 --
@@ -2718,7 +2718,7 @@ CREATE TABLE formLateLifeFDIFunction(
   FD32ALot tinyint(1),
   FD32Cannot tinyint(1),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formFall
@@ -2743,7 +2743,7 @@ CREATE TABLE formFalls(
   limitActY tinyint(1),
   limitActN tinyint(1),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formImmunAllergy`
@@ -2776,7 +2776,7 @@ CREATE TABLE formImmunAllergy (
   InstrFU tinyint(1) default NULL,
   disChNoComp tinyint(1) default NULL,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formHomeFalls
@@ -2852,7 +2852,7 @@ CREATE TABLE formHomeFalls(
   mobility25N tinyint(1),
   mobility25NA tinyint(1),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formIntakeInfo
@@ -3015,7 +3015,7 @@ CREATE TABLE formIntakeInfo(
   weight varchar(10),
   height varchar(10),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formInternetAccess`
@@ -3040,7 +3040,7 @@ CREATE TABLE formInternetAccess(
   infoY tinyint(1),
   infoN tinyint(1),
   PRIMARY KEY (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formSatisfactionScale`
@@ -3081,7 +3081,7 @@ CREATE TABLE `formSatisfactionScale` (
   `dissatisfied17` char(2) default NULL,
   `abletogetrehabilitation18` char(2) default NULL,
   PRIMARY KEY  (`ID`)
-) TYPE=MyISAM ;
+)  ;
 
 
 
@@ -3161,7 +3161,7 @@ CREATE TABLE formLabReq (
   formDate date default NULL,
   signature varchar(60) default NULL,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formMMSE`
@@ -3199,7 +3199,7 @@ CREATE TABLE formMMSE (
   i_depression tinyint(1) default NULL,
   i_normal tinyint(1) default NULL,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formMentalHealth`
@@ -3280,7 +3280,7 @@ CREATE TABLE formMentalHealth (
   o_outComments text,
   a_formDate date default NULL,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formPalliativeCare`
@@ -3383,7 +3383,7 @@ CREATE TABLE formPalliativeCare (
   signature3 varchar(50) default NULL,
   signature4 varchar(50) default NULL,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formPeriMenopausal`
@@ -3607,7 +3607,7 @@ CREATE TABLE formPeriMenopausal (
   other33 varchar(100) default NULL,
   other34 varchar(100) default NULL,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formRourke2006`
@@ -4242,7 +4242,7 @@ CREATE TABLE `formRourke2006` (
   `p1_signature1m` varchar(250) default NULL,
   `p2_signature6m` varchar(250) default NULL,
   PRIMARY KEY  (`ID`)
-) TYPE=MyISAM;
+) ;
 
 
 --
@@ -4676,7 +4676,7 @@ CREATE TABLE `formRourke` (
   `p3_signature2y` varchar(50) default NULL,
   `p3_signature4y` varchar(50) default NULL,
   PRIMARY KEY  (`ID`)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formSF36
@@ -4893,7 +4893,7 @@ CREATE TABLE formSF36(
   Q12aMuch tinyint(1),
   Q12aCmt varchar(255),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formSF36Caregiver
@@ -5111,7 +5111,7 @@ CREATE TABLE formSF36Caregiver(
   Q12aMuch tinyint(1),
   Q12aCmt varchar(255),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formSelfAdministered
@@ -5151,7 +5151,7 @@ CREATE TABLE formSelfAdministered(
   relativeTakeCareY tinyint(1),
   relativeTakeCareN tinyint(1),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 
 --
@@ -5208,7 +5208,7 @@ CREATE TABLE formSelfEfficacy(
   controlDepress6 varchar(2),  
   manDprScore varchar(5),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table formSelfManagement
@@ -5270,7 +5270,7 @@ CREATE TABLE formSelfManagement(
   communicate3  varchar(1),
   communicateScore varchar(4),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formTreatmentPref`
@@ -5286,7 +5286,7 @@ CREATE TABLE formTreatmentPref(
   controlGr tinyint(1),
   eitherGr tinyint(1),
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `formType2Diabetes`
@@ -5432,7 +5432,7 @@ CREATE TABLE formType2Diabetes (
   resource1 tinyint(1) default NULL,
   resource2 tinyint(1) default NULL,
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
+) ;
 
 # Connection: root@localhost:mysql.sock
 # Host: localhost
@@ -5603,7 +5603,7 @@ CREATE TABLE formVTForm(
   INDEX (ID),
   INDEX (demographic_no)
 
-) TYPE=MyISAM;
+) ;
 
 CREATE TABLE `formGrowth0_36` (
   `ID` int(10) NOT NULL auto_increment,
@@ -5867,7 +5867,7 @@ CREATE TABLE `formConsult` (
 CREATE TABLE groupMembers_tbl (
   groupID int(10) default NULL,
   provider_No varchar(6) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `groups_tbl`
@@ -5878,7 +5878,7 @@ CREATE TABLE groups_tbl (
   parentID int(10) default NULL,
   groupDesc varchar(50) default NULL,
   PRIMARY KEY  (groupID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `ichppccode`
@@ -5888,7 +5888,7 @@ CREATE TABLE ichppccode (
   ichppccode varchar(10) default NULL,
   diagnostic_code varchar(10) default NULL,
   description varchar(255) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `immunizations`
@@ -5903,7 +5903,7 @@ CREATE TABLE immunizations (
   archived tinyint(1) NOT NULL default '0',
   PRIMARY KEY (ID),
   KEY demographic_no (demographic_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsMSH`
@@ -5921,7 +5921,7 @@ CREATE TABLE mdsMSH (
   appAckType char(2) default NULL,
   demographic_no int(10) default '0',
   PRIMARY KEY  (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsNTE`
@@ -5933,7 +5933,7 @@ CREATE TABLE mdsNTE (
   comment varchar(255) default NULL,
   associatedOBX int(10) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsOBR`
@@ -5949,7 +5949,7 @@ CREATE TABLE mdsOBR (
   fillerFieldOne char(60) default NULL,
   quantityTiming char(200) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsOBX`
@@ -5967,7 +5967,7 @@ CREATE TABLE mdsOBX (
   producersID varchar(60) default NULL,
   associatedOBR int(10) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsPID`
@@ -5983,7 +5983,7 @@ CREATE TABLE mdsPID (
   homePhone char(40) default NULL,
   healthNumber char(16) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsPV1`
@@ -6000,7 +6000,7 @@ CREATE TABLE mdsPV1 (
   accStatus char(2) default NULL,
   admDateTime char(26) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsZCL`
@@ -6020,7 +6020,7 @@ CREATE TABLE mdsZCL (
   clientFaxNumber char(40) default NULL,
   clientBakFax char(40) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsZCT`
@@ -6032,7 +6032,7 @@ CREATE TABLE mdsZCT (
   placerGroupNo char(14) default NULL,
   observationDateTime char(26) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsZFR`
@@ -6047,7 +6047,7 @@ CREATE TABLE mdsZFR (
   editFlag varchar(255) default NULL,
   abnormalFlag varchar(255) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsZLB`
@@ -6063,7 +6063,7 @@ CREATE TABLE mdsZLB (
   MDSLU varchar(5) default NULL,
   MDSLV varchar(5) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsZMC`
@@ -6078,7 +6078,7 @@ CREATE TABLE mdsZMC (
   sigFlag varchar(5) default NULL,
   messageCodeDesc varchar(255) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsZMN`
@@ -6097,7 +6097,7 @@ CREATE TABLE mdsZMN (
   reportGroup varchar(10) default NULL,
   reportGroupVersion varchar(255) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `mdsZRG`
@@ -6113,7 +6113,7 @@ CREATE TABLE mdsZRG (
   MDSIndex varchar(255) default NULL,
   reportGroupHeading varchar(255) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
+) ;
 
 
 --
@@ -6133,7 +6133,7 @@ CREATE TABLE measurements(
   KEY type (type),
   KEY measuringInstruction (measuringInstruction),
   KEY demographicNo (demographicNo)
-) TYPE=MYISAM;
+) ;
 
 --
 -- Table structure for table `measurementCSSLocation`
@@ -6143,7 +6143,7 @@ CREATE TABLE measurementCSSLocation(
   cssID int(9) NOT NULL auto_increment,
   location varchar(255) NOT NULL,  
   PRIMARY KEY  (cssID) 
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `measurementsDeleted`
@@ -6160,7 +6160,7 @@ CREATE TABLE measurementsDeleted(
   dateEntered datetime NOT NULL,
   dateDeleted datetime NOT NULL,
   PRIMARY KEY(id)
-) TYPE=MYISAM;
+) ;
 
 --
 -- Table structure for table `measurementGroup`
@@ -6170,7 +6170,7 @@ CREATE TABLE measurementGroup(
   name varchar(100) NOT NULL,
   typeDisplayName varchar(255), 
   KEY name (name)
-) TYPE =MyISAM;
+);
 
 --
 -- Table structure for table `measurementGroupStyle`
@@ -6180,7 +6180,7 @@ CREATE TABLE measurementGroupStyle(
   groupName varchar(100) NOT NULL,
   cssID int(9) NOT NULL,
   PRIMARY KEY  (groupID) 
-) TYPE=MyISAM;
+) ;
 
 
 
@@ -6199,7 +6199,7 @@ CREATE TABLE measurementType (
   KEY id (id),
   KEY type (type),
   KEY measuringInstruction (measuringInstruction)
-) TYPE =MyISAM;
+);
 
 --
 -- Table structure for table `measurementTypeDeleted`
@@ -6213,7 +6213,7 @@ CREATE TABLE measurementTypeDeleted (
   validation varchar(100) NOT NULL,
   dateDeleted datetime NOT NULL,
   PRIMARY KEY(id)
-) TYPE =MyISAM;
+);
 --
 -- Table structure for table `messagelisttbl`
 --
@@ -6227,7 +6227,7 @@ CREATE TABLE messagelisttbl (
   KEY `provider_no` (`provider_no`),
   KEY `status` (`status`),
   KEY `remoteLocation` (`remoteLocation`)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `messagetbl`
@@ -6247,7 +6247,7 @@ CREATE TABLE messagetbl (
   pdfattachment blob,
   actionstatus char(2) default NULL,
   PRIMARY KEY  (messageid)
-) TYPE=MyISAM;
+) ;
 
 
 --
@@ -6258,7 +6258,7 @@ CREATE TABLE msgDemoMap (
   messageID mediumint(9),
   demographic_no int(10),
   PRIMARY KEY  (messageID, demographic_no)
-) TYPE=MyISAM;
+) ;
 
 
 --
@@ -6272,7 +6272,7 @@ CREATE TABLE mygroup (
   first_name varchar(30) NOT NULL default '',
   vieworder char(2) default NULL,
   PRIMARY KEY  (mygroup_no,provider_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `oscarcommlocations`
@@ -6286,7 +6286,7 @@ CREATE TABLE oscarcommlocations (
   addressBook text,
   remoteServerURL varchar(30) default NULL,
   PRIMARY KEY  (locationId)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `patientLabRouting`
@@ -6302,7 +6302,7 @@ CREATE TABLE patientLabRouting (
   KEY `lab_type_index` (`lab_type`),
   KEY `lab_no_index` (`lab_no`),
   KEY `all_index` (`lab_type`,`lab_no`,`demographic_no`)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `preference`
@@ -6320,7 +6320,7 @@ CREATE TABLE preference (
   default_caisi_pmm varchar(10) default 'disabled',
   PRIMARY KEY  (preference_no),
   KEY provider_no (provider_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `prescribe`
@@ -6334,7 +6334,7 @@ CREATE TABLE prescribe (
   prescribe_time time NOT NULL default '00:00:00',
   content text,
   PRIMARY KEY  (prescribe_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `prescription`
@@ -6349,7 +6349,7 @@ CREATE TABLE prescription (
   dates_reprinted text,
   textView text,
   PRIMARY KEY  (script_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `professionalSpecialists`
@@ -6367,7 +6367,7 @@ CREATE TABLE professionalSpecialists (
   email varchar(128) default NULL,
   specType varchar(128) default NULL,
   PRIMARY KEY  (specId)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `property`
@@ -6379,7 +6379,7 @@ CREATE TABLE professionalSpecialists (
   id int(10) NOT NULL auto_increment,
   provider_no varchar(6) default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+)  ;
 
 --
 -- Table structure for table `provider`
@@ -6414,7 +6414,7 @@ CREATE TABLE provider (
 CREATE TABLE providerExt (
   provider_no varchar(6) default NULL,
   signature varchar(255) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `providerLabRouting`
@@ -6429,7 +6429,7 @@ CREATE TABLE providerLabRouting (
   lab_type char(3) default 'MDS',
   id int(10) NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM; 
+) ; 
 
  
 --
@@ -6440,7 +6440,7 @@ CREATE TABLE quickList(
   createdByProvider int(10),
   dxResearchCode varchar(10),
   codingSystem varchar(20)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table quickListUser
@@ -6449,7 +6449,7 @@ CREATE TABLE quickListUser(
   providerNo int(10) NOT NULL,
   quickListName varchar(10) NOT NULL,
   lastUsed datetime
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `radetail`
@@ -6469,7 +6469,7 @@ CREATE TABLE radetail (
   error_code char(2) NOT NULL default '',
   billtype char(3) NOT NULL default '',
   PRIMARY KEY  (radetail_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `raheader`
@@ -6487,7 +6487,7 @@ CREATE TABLE raheader (
   readdate varchar(12) NOT NULL default '',
   content text,
   PRIMARY KEY  (raheader_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `recycle_bin`
@@ -6498,7 +6498,7 @@ CREATE TABLE recycle_bin (
   table_name varchar(30) NOT NULL default '',
   table_content text,
   updatedatetime datetime default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `recyclebin`
@@ -6513,7 +6513,7 @@ CREATE TABLE recyclebin (
   table_content text,
   PRIMARY KEY  (recyclebin_no),
   KEY keyword (keyword)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `rehabStudy2004`
@@ -6522,7 +6522,7 @@ CREATE TABLE rehabStudy2004(
   studyID int(10) NOT NULL,
   demographic_no int(10) NOT NULL,   
   PRIMARY KEY  (studyID)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `remoteAttachments`
@@ -6534,7 +6534,7 @@ CREATE TABLE remoteAttachments (
   savedBy varchar(255) default NULL,
   date date default NULL,
   time time default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `reportagesex`
@@ -6549,7 +6549,7 @@ CREATE TABLE reportagesex (
   reportdate date default NULL,
   status char(2) default '',
   date_joined date default '0001-01-01'
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table reportByExamples
@@ -6560,7 +6560,7 @@ CREATE TABLE reportByExamples(
   query blob NOT NULL,
   date datetime NOT NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table reportByExamplesFavorite
@@ -6571,7 +6571,7 @@ CREATE TABLE reportByExamplesFavorite(
   query blob NOT NULL,  
   name varchar(255) NOT NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `reportprovider`
@@ -6582,7 +6582,7 @@ CREATE TABLE reportprovider (
   team varchar(10) default '',
   action varchar(20) default '',
   status char(1) default ''
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `reporttemp`
@@ -6596,7 +6596,7 @@ CREATE TABLE reporttemp (
   address text,
   creator varchar(10) default NULL,
   PRIMARY KEY  (demographic_no,edb)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `rschedule`
@@ -6614,7 +6614,7 @@ CREATE TABLE `rschedule` (
   `creator` varchar(50) default NULL,
   `status` char(1) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `scheduledate`
@@ -6631,7 +6631,7 @@ CREATE TABLE `scheduledate` (
   `creator` varchar(50) default NULL,
   `status` char(1) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `scheduledaytemplate`
@@ -6642,7 +6642,7 @@ CREATE TABLE scheduledaytemplate (
   day date NOT NULL default '0001-01-01',
   template_name varchar(20) default NULL,
   PRIMARY KEY  (provider_no,day)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `scheduleholiday`
@@ -6652,7 +6652,7 @@ CREATE TABLE scheduleholiday (
   sdate date NOT NULL default '0001-01-01',
   holiday_name varchar(100) NOT NULL default '',
   PRIMARY KEY  (sdate)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `scheduletemplate`
@@ -6664,7 +6664,7 @@ CREATE TABLE scheduletemplate (
   summary varchar(80) default NULL,
   timecode text,
   PRIMARY KEY  (provider_no,name)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `scheduletemplatecode`
@@ -6677,7 +6677,7 @@ CREATE TABLE scheduletemplatecode (
   color varchar(10) default NULL,
   confirm char(3) NOT NULL default 'No',
   KEY code (code)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `security`
@@ -6691,7 +6691,7 @@ CREATE TABLE security (
   pin varchar(6) default NULL,
   PRIMARY KEY  (security_no),
   UNIQUE user_name (user_name)
-) TYPE=MyISAM;
+) ;
 
 alter table `security` add b_RemoteLockSet int(1) default 1 after pin;
 alter table `security` add b_LocalLockSet int(1) default 1 after pin;
@@ -6706,7 +6706,7 @@ alter table `security` add b_ExpireSet int(1) default 1 after pin;
 CREATE TABLE serviceSpecialists (
   serviceId int(10) default NULL,
   specId int(10) default NULL
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `specialistsJavascript`
@@ -6715,7 +6715,7 @@ CREATE TABLE serviceSpecialists (
 CREATE TABLE specialistsJavascript (
   setId char(1) default NULL,
   javascriptString mediumtext
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `study`
@@ -6732,7 +6732,7 @@ CREATE TABLE study (
   provider_no varchar(6) NOT NULL default '',
   timestamp timestamp(14) NOT NULL,
   PRIMARY KEY  (study_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `studydata`
@@ -6747,7 +6747,7 @@ CREATE TABLE studydata (
   status varchar(30) default NULL,
   content text,
   PRIMARY KEY  (studydata_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `studylogin`
@@ -6766,7 +6766,7 @@ CREATE TABLE studylogin (
   creator varchar(6) NOT NULL default '',
   timestamp timestamp(14) NOT NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `tickler`
@@ -6784,7 +6784,7 @@ CREATE TABLE tickler (
   priority varchar(6) default 'Normal',
   task_assigned_to varchar(255),
   PRIMARY KEY  (tickler_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `tmpdiagnosticcode`
@@ -6796,7 +6796,7 @@ CREATE TABLE tmpdiagnosticcode (
   description text,
   status char(1) default NULL,
   PRIMARY KEY  (diagnosticcode_no)
-) TYPE=MyISAM;
+) ;
 
 --
 -- Table structure for table `validations`
@@ -6813,7 +6813,7 @@ CREATE TABLE validations(
   isTrue bool,
   isDate bool,
  PRIMARY KEY(id)
-) TYPE =MyISAM;
+);
 
 --
 -- Table structure for table `waitingListName`
@@ -6826,7 +6826,7 @@ CREATE TABLE `waitingListName` (
   `create_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `is_history` char(1) default 'N',
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1; 
+); 
 
 
 --
@@ -7261,7 +7261,7 @@ CREATE TABLE hash_audit (
     `type` char(3) NOT NULL,
     `algorithm` varchar(127),
     PRIMARY KEY (pkid)
-) TYPE=MyISAM;
+) ;
 
 
 --
@@ -7270,7 +7270,7 @@ CREATE TABLE hash_audit (
 CREATE TABLE `gstControl` (
   `gstFlag` int(1) NOT NULL default '0',
   `gstPercent` int(3) NOT NULL default '0'
-)ENGINE=MyISAM;
+);
 
 --
 -- provider -- bill center table 
@@ -7279,7 +7279,7 @@ CREATE TABLE `providerbillcenter` (
   `provider_no` varchar(6) NOT NULL default '""',
   `billcenter_code` char(2) NOT NULL default '""',
   PRIMARY KEY  (`provider_no`)
-) ENGINE=MyISAM ;
+);
 
 --
 -- Needed by Program Managaer
@@ -7758,7 +7758,7 @@ CREATE TABLE `formGrowthChart` (
   `comment_42` varchar(25) default NULL,
   `bmi_42` varchar(5) default NULL,
   PRIMARY KEY  (`ID`)
-) TYPE=MyISAM;
+) ;
 
 
  create table user_ds_message_prefs(
