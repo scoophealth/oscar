@@ -717,7 +717,9 @@ public class DemographicData {
                 StringBuffer stringBuffer = new StringBuffer();
                 for (int i = 0; i < arr.length; i++){
                    if (arr[i].isCurrent()  ){
-                      stringBuffer.append(arr[i].getRxDisplay()+"\n");
+                       
+                       stringBuffer.append(arr[i].getFullOutLine().replaceAll(";"," ")+"\n");
+                      //stringBuffer.append(arr[i].getRxDisplay()+"\n");
                    }
                 }
                 this.currentMedication = stringBuffer.toString();
