@@ -245,6 +245,13 @@ function upCaseCtrl(ctrl) {
         </td>
       </tr>
       <tr>
+        <td align="right"><bean:message key="admin.provider.formPractitionerNo"/>: </td>
+        <td>
+          <input type="text" name="practitionerNo" >
+        </td>
+      </tr>
+
+      <tr>
           <td align="right">Bill Center:</td>
           <td>
               <select name="billcenter">

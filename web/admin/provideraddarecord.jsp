@@ -54,7 +54,7 @@
 boolean isOk = false;
 int retry = 0;
 String curUser_no = (String)session.getAttribute("user");
-String [] param = new String[18];
+String [] param = new String[19];
   param[0]=request.getParameter("provider_no");
   param[1]=request.getParameter("last_name");
   param[2]=request.getParameter("first_name");
@@ -76,6 +76,7 @@ String [] param = new String[18];
   param[15]=request.getParameter("status");
   param[16]=SxmlMisc.createXmlDataString(request,"xml_p");
   param[17]=request.getParameter("provider_activity");
+  param[18]=request.getParameter("practitionerNo");
 }
 for(int i=0; i< 18; i++) 
 {
@@ -88,7 +89,7 @@ while ((!isOk) && retry < 3) {
   {
   	param[0]= dbObj.getNewProviderNo();
   }
-  String	sql   = "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity) values (";
+  String	sql   = "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity,practitionerNo) values (";
 	sql += "'" + param[0] + "',";
 	sql += "'" + StringEscapeUtils.escapeSql(param[1]) + "',";
 	sql += "'" + StringEscapeUtils.escapeSql(param[2]) + "',";
@@ -106,7 +107,8 @@ while ((!isOk) && retry < 3) {
 	sql += "'" + param[14] + "',";
 	sql += "'" + param[15] + "',";
 	sql += "'" + param[16] + "',";
-	sql += "'" + param[17] + "')";
+	sql += "'" + param[17] + "',";
+	sql += "'" + param[18] + "')";
 	DBPreparedHandlerParam[] param2= new DBPreparedHandlerParam[1];
 	param2[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));
 	isOk = (dbObj.queryExecuteUpdate(sql, param2)>0);

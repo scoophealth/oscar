@@ -188,6 +188,10 @@ function setfocus() {
     <td><input type="text" name="xml_p_billinggroup_no" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_billinggroup_no") %>" datafld='xml_p_billinggroup_no'></td>
   </tr>
   <tr>
+    <td align="right"><bean:message key="admin.provider.formPractitionerNo"/>: </td>
+    <td><input type="text" name="practitionerNo" value="<%= apptMainBean.getString(rs,"practitionerNo") %>" maxlength="10"></td>
+  </tr>
+  <tr>
       <td align="right">Bill Center:</td>
       <td>
           <select name="billcenter">
@@ -219,6 +223,8 @@ function setfocus() {
   <% } else { %>
      <input type="hidden" name="provider_activity" value="">
   <% }  %>
+
+
 </caisi:isModuleLoad>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSlpUsername"/>: </td>
