@@ -1,3 +1,4 @@
+2008-09-07 : Added practitioner number field in provider settings. (Dan)
 2008-09-06 : Changed current prescription description in consultation from the short version to the long version. (Jay,2097084)
 2008-09-05 : Caisi Integrator now shares prevention data across facilities (Ted)
 2008-09-03 : Add copy favorite prescriptions function (Toby)
