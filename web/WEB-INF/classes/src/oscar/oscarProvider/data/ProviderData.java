@@ -67,6 +67,7 @@ public class ProviderData {
  | status            | char(1)     | YES  |     | NULL    |       |
  | comments          | text        | YES  |     | NULL    |       |
  | provider_activity | char(3)     | YES  |     | NULL    |       |
+ | practitionerNo    | varchar(20) | YES  |     | NULL    |       |
  +-------------------+-------------+------+-----+---------+-------+
 */
    
@@ -88,6 +89,7 @@ public class ProviderData {
    String status;
    String comments;
    String provider_activity;
+   String practitionerNo;
    
    /** Creates a new instance of ProviderData */
    public ProviderData() {            
@@ -150,6 +152,7 @@ public class ProviderData {
                    this.status= db.getString(rs,"status");
                    this.comments= db.getString(rs,"comments");
                    this.provider_activity= db.getString(rs,"provider_activity");
+                   this.practitionerNo= db.getString(rs,"practitionerNo");
                 }
 
                 rs.close();
@@ -449,6 +452,23 @@ public class ProviderData {
       this.provider_activity = provider_activity;
    }
 
+   /**
+   * getter for practitionerNo.
+   **/
+
+   public java.lang.String getPractitionerNo() {
+        return practitionerNo;
+   }
+
+   /**
+   * Setter for property practitioner_no.
+   **/
+
+   public void setPractitionerNo(java.lang.String practitionerNo) {
+	this.practitionerNo = practitionerNo;
+   }
+
+
    //TODO: Add a cache of providers
    public static ArrayList getProviderList (boolean inactive) {
         try {            
@@ -527,7 +547,7 @@ public class ProviderData {
     }
     
     public int addProvider(String providerNo, String firstName, String lastName, String ohipNo) throws SQLException {
-	String add_record_string = "insert into provider values (?,?,?,'doctor','','','','','','','',?,'','','','1','','')";
+	String add_record_string = "insert into provider values (?,?,?,'doctor','','','','','','','',?,'','','','1','','','')";
 	int key = 0;
 	
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
