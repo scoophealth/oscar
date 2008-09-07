@@ -100,9 +100,15 @@ if (hasSig){
    doctorName = (provider.getFirstName() + ' ' + provider.getSurname());
 }
 
+
+
 doctorName = doctorName.replaceAll("\\d{6}","");
 doctorName = doctorName.replaceAll("\\-","");
 OscarProperties props = OscarProperties.getInstance();
+
+String pracNo = provider.getPractitionerNo();
+
+
 %>
 <html:form action="/form/formname">
 
@@ -212,7 +218,9 @@ OscarProperties props = OscarProperties.getInstance();
                         
                     </td>
                 </tr>
+
                 <% if ( oscar.OscarProperties.getInstance().getProperty("RX_FOOTER") != null ){ out.write(oscar.OscarProperties.getInstance().getProperty("RX_FOOTER")); }%>
+
                 
                 <tr valign=bottom>
                     <td height=25px width=25%>
@@ -224,7 +232,17 @@ OscarProperties props = OscarProperties.getInstance();
                 </tr>
                 <tr valign=bottom>
                     <td height=25px></td>
-                    <td height=25px>&nbsp; <%= doctorName%></td>
+                    <td height=25px>&nbsp; <%= doctorName%> 
+               <% if ( pracNo == null || pracNo.equals("") ) { %> 
+		<% } else { %>
+			Pract. No. <%= pracNo%>
+
+		<% } %>
+
+			</td>
+
+
+
                 </tr>
                 <% if( rePrint.equalsIgnoreCase("true") && rx != null ) { %>
                 <tr valign=bottom style="font-size:6px;">
