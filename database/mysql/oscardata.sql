@@ -184,7 +184,7 @@ INSERT INTO ctl_specialinstructions VALUES (26,'Insert in both eyes');
 -- Dumping data for table 'demographic'
 --
 
-INSERT INTO demographic VALUES (1,'TEST','PATIENT','','','ON','','905-','','','','1998','06','15','','','','AC','2003-06-04','','999998','M','0001-01-01','0001-01-01',NULL,'ON','0001-01-01','<rdohip></rdohip><rd></rd>','','','','','','','');
+INSERT INTO demographic VALUES (1,'TEST','PATIENT','','','ON','','905-','','','','1998','06','15','','','','AC','2003-06-04','','999998','M','0001-01-01','0001-01-01',NULL,'ON','0001-01-01','<rdohip></rdohip><rd></rd>','','','','','','','','');
 
 --
 -- Dumping data for table 'demographicaccessory'
