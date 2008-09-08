@@ -5,9 +5,17 @@
 <%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="java.util.Date"%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.util.SessionConstants"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <%@page import="oscar.OscarProperties"%>
+<%
+	CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
+	Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+%>
+
 <input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
@@ -209,7 +217,20 @@ function openSurvey() {
 				<input type="button" value="Change Consent (Complex)" onclick="window.open('ClientManager/complex_integrator_consent.jsp?demographicId=<c:out value="${demographicId}" />')" />
 			</c:if>
 		</td>
-	</tr>	
+	</tr>
+	<%
+		if (caisiIntegratorManager.isIntegratorEnabled(loggedInFacilityId))
+		{
+			%>
+			<tr>
+				<th width="20%">Integrator linked clients : </th>
+				<td>
+					<input type="button" value="Manage linked clients" onclick="document.location='ClientManager/view_integrator_linked_demographics.jsp?demographicId=<c:out value="${demographicId}" />'" />
+				</td>
+			</tr>
+			<%
+		}
+	%>	
 </table>
 
 <br />
