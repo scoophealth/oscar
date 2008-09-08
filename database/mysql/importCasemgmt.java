@@ -244,18 +244,19 @@ public class importCasemgmt {
                         
                         System.out.println("Grabbing cpp issues from issue table");
                         PreparedStatement pstmt = con.prepareStatement("select issue_id from issue where code =?");
-                        insert = con.prepareStatement("insert into issue (code, description, role, update_date) values(?,?,'nurse',now()",PreparedStatement.RETURN_GENERATED_KEYS);
+                        insert = con.prepareStatement("insert into issue (code, description, role, update_date) values(?,?,'nurse',now())",PreparedStatement.RETURN_GENERATED_KEYS);
                         String[][] iCodes = {{"OMeds","Other Meds as part of cpp"},{"SocHistory","Social History as part of cpp"},{"MedHistory","Medical History as part of cpp"},{"Concerns","Ongoing Concerns as part of cpp"},{"Reminders","Reminders as part of cpp"}};
                         long[] issueIds = new long[iCodes.length];
                         for( int idx = 0; idx < iCodes.length; ++idx) {
                             pstmt.setString(1,iCodes[idx][0]);
                             rs = pstmt.executeQuery();                            
                             if( !rs.next() ) {
-                                System.out.println(iCodes[idx] + " not found. Inserting");
+                                System.out.println(iCodes[idx][0] + " not found. Inserting");
                                 insert.setString(1,iCodes[idx][0]);
                                 insert.setString(2,iCodes[idx][1]);
                                 insert.executeUpdate();
                                 rs1 = insert.getGeneratedKeys();
+                                rs1.next();
                                 issueIds[idx] = rs1.getLong(1);
                                 rs1.close();
                             }
