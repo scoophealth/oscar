@@ -1,0 +1,34 @@
+__INVOICE	 : left, 250, 203, 0, BaseFont.HELVETICA, 20 , INVOICE
+patientName		: left, 370, 67, 0, BaseFont.HELVETICA, 11
+c_address		: left, 370, 80, 0, BaseFont.HELVETICA, 11
+c_address2		: left, 370, 93, 0, BaseFont.HELVETICA, 11
+c_phone		: left, 370, 106, 0, BaseFont.HELVETICA, 11
+dateOfBirth		: left, 370, 119, 0, BaseFont.HELVETICA, 11
+patientSex		: left, 450, 119, 0, BaseFont.HELVETICA, 11
+c_phn		: left, 370, 132, 0, BaseFont.HELVETICA, 11
+
+__date	 : left, 60, 250, 0, BaseFont.HELVETICA, 12 , Date
+__dateDot	 : left, 145, 250, 0, BaseFont.HELVETICA, 12 , \:
+date_invoice		: left, 150, 250, 0, BaseFont.HELVETICA, 12
+__to	 : left, 60, 265, 0, BaseFont.HELVETICA, 12 , To
+__toDot	 : left, 145, 265, 0, BaseFont.HELVETICA, 12 , \:
+invoiceTo		: left, 150, 265, 0, BaseFont.HELVETICA, 12
+__invoiceRef	 : left, 60, 280, 0, BaseFont.HELVETICA, 12 , Ref.
+__invoiceRefDot	 : left, 145, 280, 0, BaseFont.HELVETICA, 12 ,  \:
+invoiceRef		: left, 150, 280, 0, BaseFont.HELVETICA, 12
+__date_service	 : left, 60, 295, 0, BaseFont.HELVETICA, 12 , Service date
+__date_serviceDot	 : left, 145, 295, 0, BaseFont.HELVETICA, 12 , \:
+date_service		: left, 150, 295, 0, BaseFont.HELVETICA, 12
+__serviceType	 : left, 60, 310, 0, BaseFont.HELVETICA, 12 , Service type
+__serviceTypeDot	 : left, 145, 310, 0, BaseFont.HELVETICA, 12 ,  \:
+serviceType		: left, 150, 310, 0, BaseFont.HELVETICA, 12
+__amountBilled	 : left, 60, 325, 0, BaseFont.HELVETICA, 12 , Amount billed
+__amountBilledDot	 : left, 145, 325, 0, BaseFont.HELVETICA, 12 ,\: $
+amountBilled		: left, 160, 325, 0, BaseFont.HELVETICA, 12
+__comments	 : left, 60, 355, 0, BaseFont.HELVETICA, 12 , Comments
+__commentsDot	 : left, 145, 355, 0, BaseFont.HELVETICA, 12 , \:
+comments		: left, 150, 365, 0, BaseFont.TIMES_ROMAN, 12, _, 520, 650, 12
+__Dr	 : left, 60, 660, 0, BaseFont.HELVETICA, 12 , Dr.
+signature		: left, 100, 660, 0, BaseFont.HELVETICA, 12
+__sidate	 : left, 60, 675, 0, BaseFont.HELVETICA, 12 , Date\:
+date_signature		: left, 100, 675, 0, BaseFont.HELVETICA, 12
