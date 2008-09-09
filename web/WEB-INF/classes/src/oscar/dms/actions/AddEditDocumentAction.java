@@ -31,11 +31,11 @@ import java.util.Hashtable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
+import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.util.SessionConstants;
 
@@ -43,9 +43,66 @@ import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.dms.data.AddEditDocumentForm;
 
-public class AddEditDocumentAction extends Action {
+public class AddEditDocumentAction extends DispatchAction {
+        
+    public ActionForward multifast(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
+        System.out.println("IN MULTIFAST content len"+request.getContentLength());
+        Hashtable errors = new Hashtable();
+        AddEditDocumentForm fm = (AddEditDocumentForm) form;
+        
+        FormFile docFile = fm.getFiledata();
+        
+         String fileName = docFile.getFileName();
+            EDoc newDoc = new EDoc("", "", fileName, "", (String) request.getSession().getAttribute("user") , 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "demographic", "-1");
+            newDoc.setDocPublic("0");
+            fileName = newDoc.getFileName();
+            //save local file;
+            if (docFile.getFileSize() == 0) {
+                errors.put("uploaderror", "dms.error.uploadError");
+                throw new FileNotFoundException();
+            }
+            writeLocalFile(docFile, fileName);
+            newDoc.setContentType(docFile.getContentType());
+            
+            EDocUtil.addDocumentSQL(newDoc);
+        
+        if (docFile != null){
+            System.out.println("Content type "+docFile.getContentType()+" filename "+docFile.getFileName()+"  size: "+docFile.getFileSize());        
+        }
+        
+        return mapping.findForward("fastUploadSuccess"); 
     
-    public ActionForward execute(ActionMapping mapping, ActionForm form,
+    }
+    
+    public ActionForward fastUpload(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
+        AddEditDocumentForm fm = (AddEditDocumentForm) form;
+        Hashtable errors = new Hashtable();
+        FormFile docFile = fm.getDocFile();
+            String fileName = docFile.getFileName();
+            EDoc newDoc = new EDoc("", "", fileName, "", (String) request.getSession().getAttribute("user") , 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "demographic", "-1");
+            newDoc.setDocPublic("0");
+            fileName = newDoc.getFileName();
+            //save local file;
+            if (docFile.getFileSize() == 0) {
+                errors.put("uploaderror", "dms.error.uploadError");
+                throw new FileNotFoundException();
+            }
+            writeLocalFile(docFile, fileName);
+            newDoc.setContentType(docFile.getContentType());
+            
+            EDocUtil.addDocumentSQL(newDoc);
+   
+          
+          return mapping.findForward("fastUploadSuccess"); 
+    }
+    
+    public ActionForward unspecified(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response){
+       System.out.println("IN UNSPECIFIED");
+        
+        return execute2(mapping, form,request, response);
+    }
+    
+    public ActionForward execute2(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
         if (fm.getMode().equals("add")) {
