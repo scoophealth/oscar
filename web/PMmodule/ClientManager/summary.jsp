@@ -206,7 +206,7 @@ function openSurvey() {
 		</td>
 	</tr>
 	<tr>
-		<th width="20%">Integrator Consent : </th>
+		<th width="20%">Integrator Consent</th>
 		<td>
 			<c:out value="${integratorConsent}" />
 			&nbsp;&nbsp;&nbsp;
@@ -223,9 +223,9 @@ function openSurvey() {
 		{
 			%>
 			<tr>
-				<th width="20%">Integrator linked clients : </th>
+				<th width="20%">Integrator linked clients</th>
 				<td>
-					<input type="button" value="Manage linked clients" onclick="document.location='ClientManager/view_integrator_linked_demographics.jsp?demographicId=<c:out value="${demographicId}" />'" />
+					<input type="button" value="Manage linked clients" onclick="document.location='ClientManager/manage_integrator_linked_demographics.jsp?demographicId=<c:out value="${demographicId}" />'" />
 				</td>
 			</tr>
 			<%

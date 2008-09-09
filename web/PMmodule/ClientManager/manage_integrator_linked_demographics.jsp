@@ -14,4 +14,11 @@
 currentDemographicId=<%=currentDemographicId%><br />
 currentFacilityId=<%=currentFacilityId%>
 
+<hr />
+- get possible matches
+- get current matches
+- display entire list
+- check current matches
+- on submit work out removals + additions, send removals and send links
+
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>
