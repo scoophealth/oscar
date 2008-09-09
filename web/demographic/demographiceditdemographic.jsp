@@ -625,7 +625,7 @@ div.demographicWrapper {
                     </td>
                 </tr>
                 <tr><td>
-                    <a href='demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&last_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>&first_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25'><bean:message key="demographic.demographiceditdemographic.btnApptHist"/></a>
+                    <a href='demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&last_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>&first_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25'><bean:message key="demographic.demographiceditdemographic.btnApptHist"/></a>
                 </td></tr>
                 <%
                     String wLReadonly = ""; 
