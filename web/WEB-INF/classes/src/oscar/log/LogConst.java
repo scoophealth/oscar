@@ -27,6 +27,7 @@ public class LogConst {
     public static final String CON_JASPERREPORTLETER = "jr_letter";
     public static final String CON_TICKLER = "tickler";
     public static final String CON_CME_NOTE = "CME note";
-   
+    public static final String CON_DOCUMENT = "document";
+    
     
 }
