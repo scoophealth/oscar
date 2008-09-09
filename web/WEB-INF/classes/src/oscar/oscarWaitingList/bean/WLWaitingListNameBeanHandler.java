@@ -49,7 +49,7 @@ public class WLWaitingListNameBeanHandler {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             
             String sql = " SELECT * FROM waitingListName WHERE group_no='" + groupNo + "' " +
-                         " AND is_history='N'";
+                         " AND is_history='N' order by `name` asc";
             ResultSet rs;
             
             for(rs = db.GetSQL(sql); rs.next(); )
