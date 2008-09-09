@@ -120,9 +120,9 @@
  <%--If TEXT field --%>        <% } else if (curparam.getParamType().equals(curparam.TEXT)) {%>
                                  <input type="text" size="20" name="<%=curparam.getParamId()%>">
  <%--If DATE field --%>        <% } else if (curparam.getParamType().equals(curparam.DATE)) {%>
-                                 <input type="text" class="datefield" id="datefield<%=i%>" name="<%=curparam.getParamId()%>"><a id="obsdate"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a>
+                                 <input type="text" class="datefield" id="datefield<%=i%>" name="<%=curparam.getParamId()%>"><a id="obsdate<%=i%>"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a>
                                  <script type="text/javascript">
-                                    Calendar.setup( { inputField : "datefield<%=i%>", ifFormat : "%Y-%m-%d", showsTime :false, button : "obsdate", singleClick : true, step : 1 } );
+                                    Calendar.setup( { inputField : "datefield<%=i%>", ifFormat : "%Y-%m-%d", showsTime :false, button : "obsdate<%=i%>", singleClick : true, step : 1 } );
                                  </script>  
  <%--If CHECK field --%>       <% } else if (curparam.getParamType().equals(curparam.CHECK)) {%>
                                         <input type="hidden" name="<%=curparam.getParamId()%>:check" value="">
