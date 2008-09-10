@@ -78,6 +78,7 @@
 	<!--  configure the scratch pad -->
     <bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
     <bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
+    <bean id="documentDAO" class="org.oscarehr.document.dao.DocumentDAO" autowire="byName"/>
     <bean id="userAccessDao" class="com.quatro.dao.security.UserAccessDao" autowire="byName" />
     <bean id="appointStatusDao" class="oscar.appt.status.dao.hibernate.AppointmentStatusDAOHibernate" autowire="byName" />
     <bean id="rxCloneDao" class="oscar.oscarRx.dao.hibernate.RxCloneFavoritesDAOHibernate" autowire="byName" /> 
