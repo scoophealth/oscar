@@ -4,6 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
+
+/**
+ * This class is used for (at least) 2 purposes, 1) as a PrimaryKey for JPA objects,
+ * 2) as a primary key for integrator processing (the reason being the pk's passed
+ * by the integrator doesn't have equals/hashcode so we just use this one when
+ * we need to have the keys that support equals/hashcode).  
+ */
 @Embeddable
 public class FacilityDemographicPrimaryKey implements Serializable {
 	private Integer facilityId = null;
@@ -18,6 +26,12 @@ public class FacilityDemographicPrimaryKey implements Serializable {
 	{
 		this.facilityId=facilityId;
 		this.demographicId=demographicId;
+	}
+	
+	public FacilityDemographicPrimaryKey(FacilityIdIntegerCompositePk pk)
+	{
+		this.facilityId=pk.getIntegratorFacilityId();
+		this.demographicId=pk.getCaisiItemId();
 	}
 	
 	public Integer getFacilityId() {
