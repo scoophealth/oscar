@@ -102,9 +102,8 @@ public class EDocUtil extends SqlUtilBaseS {
         }
         return doctypes;
     }
-
-    public static void addDocumentSQL(EDoc newDocument) {
-
+ 
+    public static String addDocumentSQL(EDoc newDocument) {
         String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, program_id, updatedatetime, status, contenttype, public1, observationdate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[11];
         int counter = 0;
@@ -137,6 +136,7 @@ public class EDocUtil extends SqlUtilBaseS {
         String ctlDocumentSql = "INSERT INTO ctl_document VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "')";
         System.out.println("add ctl_document: " + ctlDocumentSql);
         runSQL(ctlDocumentSql);
+        return document_no;
     }
 
     public static void detachDocConsult(String docNo, String consultId) {
