@@ -10,6 +10,12 @@
         <property name="topazManager" ref="topazManager"/>
 	</bean>
  -->
+ 
+ 
+    <bean name="/dms/ManageDocument" class="org.oscarehr.document.web.ManageDocumentAction" >
+        <property name="documentDAO" ref="documentDAO"/>
+    </bean>
+ 
 	<bean name="/Admin" class="com.quatro.web.admin.AdminAction" singleton="true" />
     <bean name="/Tickler" class="org.caisi.tickler.web.TicklerAction" singleton="false">
         <property name="ticklerManager" ref="ticklerManagerT"/>
