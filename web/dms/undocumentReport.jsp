@@ -473,8 +473,7 @@ div.autocomplete ul li {
                     else if ((curdoc.getStatus() + "").compareTo("H") == 0) dStatus="html";
                                 
                                 
-                                String url = "documentGetFile2.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
-                                        
+                                String url = "ManageDocument.do?method=view&doc_no=" + curdoc.getDocId();  
                                     %>
                                     <div id="document<%=curdoc.getDocId()%>">
                                     <table class="docTable" >
