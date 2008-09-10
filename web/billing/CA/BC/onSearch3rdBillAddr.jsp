@@ -57,10 +57,10 @@
 				}
 				String sql = "select * from billing_on_3rdPartyAddress where " + where + " order by " + orderBy;// + " limit "
 //						+ strLimit1 + "," + strLimit2;
-				ResultSet rs = dbObj.queryResults_paged(sql,Integer.parseInt(strLimit2));
+				ResultSet rs = dbObj.queryResults_paged(sql,Integer.parseInt(strLimit1));
 				// System.out.println(sql);
 				int idx = 0;
-				while (rs.next() && idx < Integer.parseInt(strLimit1)) {
+				while (rs.next() && idx < Integer.parseInt(strLimit2)) {
 					prop = new Properties();
 					prop.setProperty("id", dbObj.getString(rs,"id"));
 					prop.setProperty("attention", dbObj.getString(rs,"attention"));
