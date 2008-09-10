@@ -1,4 +1,4 @@
-/* $Id: tigris.css,v 1.2 2008-02-13 05:52:38 tonywzt1 Exp $
+/* $Id: tigris.css,v 1.3 2008-09-10 20:55:41 tedleung Exp $
 	
 	This file defines basic default formatting for HTML conforming to Tigris application style. To extend or override these rules for your instance, edit inst.css instead of this file. */
 
@@ -821,3 +821,30 @@ td.filebrowse h3 {
 	color:black;
 	background:white;
 }
+
+/* ----- generic table ----- */
+
+	.genericTable
+	{
+		border-collapse:collapse; 
+		border:1px solid black;
+	}
+	
+	.genericTableHeader
+	{
+		border: 1px solid black;
+		background-color: #ccccff;
+		font-weight: bold;
+		padding: 0px 2px 0px 2px;
+	}
+	
+	.genericTableRow
+	{
+		border: 1px solid black;
+	}
+	
+	.genericTableData
+	{
+		border: 1px solid black;
+		padding: 4px 4px 4px 4px;
+	}
