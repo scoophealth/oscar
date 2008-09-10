@@ -42,6 +42,8 @@ import org.oscarehr.util.SessionConstants;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.dms.data.AddEditDocumentForm;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 
 public class AddEditDocumentAction extends DispatchAction {
         
@@ -64,8 +66,8 @@ public class AddEditDocumentAction extends DispatchAction {
             writeLocalFile(docFile, fileName);
             newDoc.setContentType(docFile.getContentType());
             
-            EDocUtil.addDocumentSQL(newDoc);
-        
+            String doc_no = EDocUtil.addDocumentSQL(newDoc);
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
         if (docFile != null){
             System.out.println("Content type "+docFile.getContentType()+" filename "+docFile.getFileName()+"  size: "+docFile.getFileSize());        
         }
@@ -163,7 +165,8 @@ public class AddEditDocumentAction extends DispatchAction {
             if (programIdStr!=null) newDoc.setProgramId(Integer.valueOf(programIdStr));
             
             //---
-            EDocUtil.addDocumentSQL(newDoc);
+            String doc_no = EDocUtil.addDocumentSQL(newDoc);
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
         } catch (Exception e) {
             //ActionRedirect redirect = new ActionRedirect(mapping.findForward("failAdd"));
             request.setAttribute("docerrors", errors);
@@ -201,6 +204,7 @@ public class AddEditDocumentAction extends DispatchAction {
                 throw new FileNotFoundException();
             }
             EDocUtil.editDocumentSQL(newDoc);
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE, LogConst.CON_DOCUMENT, newDoc.getDocId(), request.getRemoteAddr());
         } catch (Exception e) {
             request.setAttribute("docerrors", errors);
             request.setAttribute("completedForm", fm);
