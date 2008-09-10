@@ -1728,11 +1728,10 @@
         <action path="/admin/ManageClinic" name="clinicForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="success" path="/admin/clinicAdmin.jsp" />
         </action>
-        <!--
+        
         <action path="/dms/ManageDocument" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
            <forward name="success" path="/dms/undocument.jsp"/>
         </action>
-        -->
         
         <action path="/PhrRetrieve" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="report" path="/PMmodule/vaccine/vaccine_provider_report.jsp" />
