@@ -1,3 +1,5 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <!--  
 /*
  * 
@@ -128,7 +130,7 @@
     <script type="text/javascript" src="../share/javascript/controls.js"></script>
         
     <link rel="stylesheet" type="text/css" href="../share/css/niftyCorners.css" />
-    <link rel="stylesheet" type="text/css" href="dms.css"/>
+    <link rel="stylesheet" type="text/css" href="dms.css" />
     <link rel="stylesheet" type="text/css" href="../share/css/niftyPrint.css" media="print" />
     
     <style type="text/css">
@@ -460,6 +462,7 @@ div.autocomplete ul li {
                                   
                                     
                                     <%
+                                    int tabindex = 1;
                             for (int i2 = 0; i2 < category.size(); i2++) {
                                 EDoc curdoc = (EDoc) category.get(i2);
                                 //content type (take everything following '/')
@@ -488,14 +491,14 @@ div.autocomplete ul li {
                                         <td align="left" valign="top"  >
                                            <fieldset  >
                                                 <legend>Document Uploaded :<%=curdoc.getDateTimeStamp() %> - Content Type: <%=contentType%></legend>
-                                                <form id="forms<%=curdoc.getDocId()%>">
+                                                <form id="forms<%=curdoc.getDocId()%>" action="undocumentReport.jsp" onsubmit="return sendToServer('forms<%=curdoc.getDocId()%>');" >
                                                 <input type="hidden" name="method" value="documentUpdate"/>
                                                 <input type="hidden" name="documentId" value="<%=curdoc.getDocId()%>"/>
                                                    <table>
                                                       <tr>
                                                           <td><bean:message key="dms.documentReport.msgDocType"/>:</td>
                                                           <td>
-                                                            <select name="docType" id="docType" >
+                                                            <select tabindex="<%=tabindex++ %>"name="docType" id="docType" >
                                                                 <option value=""><bean:message key="dms.addDocument.formSelect"/></option>
                                                                 <%for (int j=0; j<doctypes.size(); j++) {
                                                                      String doctype = (String) doctypes.get(j); %>
@@ -506,12 +509,12 @@ div.autocomplete ul li {
                                                       </tr>
                                                       <tr>
                                                           <td><bean:message key="dms.documentReport.msgDocDesc"/>:</td>
-                                                          <td><input type="text" name="documentDescription" value="<%=curdoc.getDescription()%>"/></td>
+                                                          <td><input tabindex="<%=tabindex++ %>" type="text" name="documentDescription" value="<%=curdoc.getDescription()%>"/></td>
                                                       </tr>
                                                       <tr>
                                                           <td>Observation Date:</td>
                                                           <td>
-                                                              <input id="observationDate" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>"><a id="obsdate"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a>
+                                                              <input tabindex="<%=tabindex++ %>" id="observationDate" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>"><a id="obsdate"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a>
                                                           </td>
                                                       </tr>
                                                       <tr>
@@ -523,7 +526,7 @@ div.autocomplete ul li {
                                                           </td>
                                                           <td>
                                                             <input type="hidden" name="demog" id="demofind<%=curdoc.getDocId()%>"/>
-                                                    <input type="text" id="autocompletedemo<%=curdoc.getDocId()%>" name="demographicKeyword"/>
+                                                    <input tabindex="<%=tabindex++ %>" type="text" id="autocompletedemo<%=curdoc.getDocId()%>" name="demographicKeyword"/>
                                                     <div id="autocomplete_choices<%=curdoc.getDocId()%>" class="autocomplete"></div>
 
 <script type="text/javascript">
@@ -536,7 +539,7 @@ div.autocomplete ul li {
                                                       <tr>
                                                           <td valign="top">Flag Provider: </td>
                                                           <td> 
-                                                          <input type="text" id="autocompleteprov<%=curdoc.getDocId()%>" name="demographicKeyword"/>
+                                                          <input tabindex="<%=tabindex++ %>" type="text" id="autocompleteprov<%=curdoc.getDocId()%>" name="demographicKeyword"/>
                                                           <div id="autocomplete_choicesprov<%=curdoc.getDocId()%>" class="autocomplete"></div>
 
 <script type="text/javascript">
@@ -553,7 +556,7 @@ div.autocomplete ul li {
                                                       </tr>
                                                         
                                                       <tr>
-                                                          <td colspan="2" align="right"><input type="submit" name="save" value="Save" onclick="return sendToServer('forms<%=curdoc.getDocId()%>');"/></td>
+                                                          <td colspan="2" align="right"><input tabindex="<%=tabindex++ %>" type="submit" name="save" value="Save" /></td>
                                                       </tr>   
                                                   </table>
 
