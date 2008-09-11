@@ -28,7 +28,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.FacilityDao;
@@ -57,6 +57,7 @@ public final class LoginAction extends DispatchAction {
         String ip = request.getRemoteAddr();
 
         String nextPage=request.getParameter("nextPage");
+        _logger.debug("nextPage: "+nextPage);
         if (nextPage!=null) {
             // set current facility
             String facilityIdString=request.getParameter(SessionConstants.CURRENT_FACILITY_ID);
@@ -75,6 +76,7 @@ public final class LoginAction extends DispatchAction {
         String pin = ((LoginForm) form).getPin();
         String propName = request.getContextPath().substring(1) + ".properties";
         if (userName.equals("")) {
+            _logger.debug("username was blank");
             return mapping.findForward(where);
         }
 
@@ -84,6 +86,7 @@ public final class LoginAction extends DispatchAction {
             newURL = newURL + "?errormsg=Unable to open the properties file " + cl.propFileName + ".";
             return(new ActionForward(newURL));
         }
+        _logger.debug("Property file was found");
 
         if (cl.isBlock(ip, userName)) {
             _logger.info(LOG_PRE + " Blocked: " + userName);
@@ -93,7 +96,7 @@ public final class LoginAction extends DispatchAction {
             newURL = newURL + "?errormsg=Your account is locked. Please contact your administrator to unlock.";
             return(new ActionForward(newURL));
         }
-
+        _logger.debug("ip was not blocked: "+ip);
         String[] strAuth;
         try {
             strAuth = cl.auth(userName, password, pin, ip);
@@ -108,7 +111,8 @@ public final class LoginAction extends DispatchAction {
             }
             return(new ActionForward(newURL));
         }
-
+        
+        _logger.debug("strAuth : "+strAuth);
         if (strAuth != null && strAuth.length != 1) { // login successfully
             // invalidate the existing sesson
             HttpSession session = request.getSession(false);

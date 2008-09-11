@@ -3,7 +3,7 @@
 <%@page import="org.oscarehr.common.model.Facility"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
-<%@page import="org.oscarehr.PMmodule.model.Provider"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>

@@ -123,7 +123,7 @@
         <form-bean name="GstControlForm" type="oscar.oscarBilling.ca.on.administration.GstControlForm" /> 
         <form-bean name="batchBillingFrm" type="org.apache.struts.action.DynaActionForm">
             <form-property name="providers" type="java.util.List" />
-            <form-property name="provider" type="org.oscarehr.PMmodule.model.Provider" />
+            <form-property name="provider" type="org.oscarehr.common.model.Provider" />
             <form-property name="serviceCode" type="java.lang.String" />
             <form-property name="serviceDate" type="java.lang.String" />
             <form-property name="DxCode" type="java.lang.String" />
@@ -290,13 +290,13 @@
             <form-property name="unreservedBeds" type="org.oscarehr.PMmodule.model.Bed[]" />
             <form-property name="bedDemographicStatuses" type="org.oscarehr.PMmodule.model.BedDemographicStatus[]" />
             <form-property name="agency" type="org.oscarehr.PMmodule.model.Agency"/>
-            <form-property name="provider" type="org.oscarehr.PMmodule.model.Provider"/>            
+            <form-property name="provider" type="org.oscarehr.common.model.Provider"/>            
             <form-property name="programWithIntakeId" type="java.lang.String" />
             <form-property name="serviceRestriction" type="org.oscarehr.PMmodule.model.ProgramClientRestriction" />
             <form-property name="serviceRestrictionLength" type="java.lang.Integer" />
         </form-bean>
         <form-bean name="staffManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
-            <form-property name="provider" type="org.oscarehr.PMmodule.model.Provider" />
+            <form-property name="provider" type="org.oscarehr.common.model.Provider" />
             <form-property name="program_provider" type="org.oscarehr.PMmodule.model.ProgramProvider" />
             <form-property name="view" type="org.oscarehr.PMmodule.web.formbean.StaffManagerViewFormBean" />
             <form-property name="facilityId" type="java.lang.String" />
