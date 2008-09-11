@@ -204,20 +204,15 @@ public final class LoginAction extends DispatchAction {
                 LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIds.get(0), ip);
             }
             else {
-                // do nothing, not in any facilities
-            	//CAISI:
-            	//If the provider is not in any facilities, we should put him/her into the default facility which is 1st one in the db.
-            	if(IsPropertiesOn.isCaisiEnable()) {
-            		List facilities = facilityDao.findAll(null);
-            		if(facilities!=null && facilities.size()>=1) {
-            			Facility fac = (Facility)facilities.get(0);
-            			int first_id = fac.getId();
-            			ProviderDao.addProviderToFacility(providerNo, first_id);
-            			Facility facility=facilityDao.find(first_id);
-            			request.getSession().setAttribute("currentFacility", facility);
-            			request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, first_id);
-            			LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+first_id, ip);
-            		}
+        		List facilities = facilityDao.findAll(null);
+        		if(facilities!=null && facilities.size()>=1) {
+        			Facility fac = (Facility)facilities.get(0);
+        			int first_id = fac.getId();
+        			ProviderDao.addProviderToFacility(providerNo, first_id);
+        			Facility facility=facilityDao.find(first_id);
+        			request.getSession().setAttribute("currentFacility", facility);
+        			request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, first_id);
+        			LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+first_id, ip);
             	}
             }
         }
