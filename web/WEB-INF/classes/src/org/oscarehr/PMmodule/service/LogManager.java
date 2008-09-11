@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.oscarehr.PMmodule.dao.LogDAO;
 import org.oscarehr.PMmodule.model.Log;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 
 
 public class LogManager {

@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ReportStatistic;
 import org.oscarehr.util.AccumulatorMap;
 import org.oscarehr.util.DbConnectionFilter;

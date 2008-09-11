@@ -29,6 +29,6 @@
 			<many-to-many class="org.oscarehr.PMmodule.model.ProgramTeam" />
 		</set>
 		<many-to-one name="role" class="org.caisi.model.Role" column="role_id" update="false" insert="false" lazy="false" />
-		<many-to-one name="provider" class="org.oscarehr.PMmodule.model.Provider" column="provider_no" update="false" insert="false" lazy="false" />
+		<many-to-one name="provider" class="org.oscarehr.common.model.Provider" column="provider_no" update="false" insert="false" lazy="false" />
 	</class>
 </hibernate-mapping>

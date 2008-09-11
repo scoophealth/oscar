@@ -47,7 +47,7 @@ import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;

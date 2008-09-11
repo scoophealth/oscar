@@ -24,7 +24,7 @@ package org.oscarehr.PMmodule.web.formbean;
 
 import java.util.Comparator;
 
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 
 public class StaffManagerViewFormBean {
 	private String tab;

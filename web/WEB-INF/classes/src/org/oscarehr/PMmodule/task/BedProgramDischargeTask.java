@@ -31,7 +31,7 @@ import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;

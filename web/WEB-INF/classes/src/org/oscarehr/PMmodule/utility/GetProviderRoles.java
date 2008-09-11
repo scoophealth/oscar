@@ -31,7 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.springframework.context.ApplicationContext;

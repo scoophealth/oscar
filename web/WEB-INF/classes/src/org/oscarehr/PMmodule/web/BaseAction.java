@@ -30,7 +30,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.RedirectingActionForward;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.ClientManager;

@@ -22,6 +22,7 @@
 
 package org.oscarehr.PMmodule.model;
 
+import org.oscarehr.common.model.Provider;
 import java.io.Serializable;
 import java.util.Date;
 

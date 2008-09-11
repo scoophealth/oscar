@@ -3,6 +3,7 @@ package org.oscarehr.PMmodule.model;
 import java.io.Serializable;
 import java.util.Date;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 
 /**
  * Service restriction

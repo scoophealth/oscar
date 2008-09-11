@@ -25,6 +25,6 @@
 		<property column="user_type_id" name="UserTypeId" not-null="false" type="long" />
 		<property column="provider_no" length="11" name="ProviderNo" not-null="false" type="java.lang.Long" />
 		<many-to-one name="UserType" class="org.oscarehr.PMmodule.model.FunctionalUserType" column="user_type_id" update="false" insert="false" lazy="false" />
-		<many-to-one name="Provider" class="org.oscarehr.PMmodule.model.Provider" column="provider_no" update="false" insert="false" lazy="false" />
+		<many-to-one name="Provider" class="org.oscarehr.common.model.Provider" column="provider_no" update="false" insert="false" lazy="false" />
 	</class>
 </hibernate-mapping>

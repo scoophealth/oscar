@@ -67,7 +67,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.common.model.Demographic.ConsentGiven;

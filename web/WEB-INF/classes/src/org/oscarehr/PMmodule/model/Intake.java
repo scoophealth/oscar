@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 
 
 public class Intake implements Serializable {

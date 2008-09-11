@@ -31,7 +31,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;

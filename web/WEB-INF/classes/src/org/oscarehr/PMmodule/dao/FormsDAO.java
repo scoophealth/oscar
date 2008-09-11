@@ -30,7 +30,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.FormInfo;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class FormsDAO extends HibernateDaoSupport {

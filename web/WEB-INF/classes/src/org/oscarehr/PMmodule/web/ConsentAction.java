@@ -37,7 +37,7 @@ import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.model.Consent;
 import org.oscarehr.PMmodule.model.ConsentInterview;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ConsentManager;
 

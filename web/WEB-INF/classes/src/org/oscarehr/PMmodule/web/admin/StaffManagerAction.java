@@ -43,7 +43,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;

@@ -13,7 +13,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.HealthSafety;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.HealthSafetyManager;
 
 public class HealthSafetyAction extends DispatchAction {

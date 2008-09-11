@@ -53,7 +53,7 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.util.DbConnectionFilter;

@@ -31,7 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
