@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -32,6 +33,7 @@ public class ManageIntegratorLinkedDemographics {
 		private CachedDemographic cachedDemographic = null;
 		private int matchingScore = 0;
 		private boolean linked = false;
+		private boolean directlyLinked=false; 
 
 		public CachedDemographic getCachedDemographic() {
 			return cachedDemographic;
@@ -57,6 +59,14 @@ public class ManageIntegratorLinkedDemographics {
 			this.linked = linked;
 		}
 
+		public boolean isDirectlyLinked() {
+			return directlyLinked;
+		}
+
+		public void setDirectlyLinked(boolean directlyLinked) {
+			this.directlyLinked = directlyLinked;
+		}
+
 	}
 
 	public static ArrayList<IntegratorLinkedDemographicHolder> getDemographicsToDisplay(Integer facilityId, Integer demographicId) {
@@ -67,74 +77,77 @@ public class ManageIntegratorLinkedDemographics {
 			Demographic demographic = demographicDao.getDemographicById(demographicId);
 			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(facilityId);
 
-			HashMap<FacilityDemographicPrimaryKey,IntegratorLinkedDemographicHolder> results=new HashMap<FacilityDemographicPrimaryKey,IntegratorLinkedDemographicHolder>();
-			
-			MatchingDemographicInfoParameters parameters = getMatchingDemographicInfoParameters(demographic);
-			List<MatchingDemographicInfoScore> potentialMatches = demographicInfoWs.getMatchingDemographicInfos(parameters);
-			addPotentialMatches(results, potentialMatches);
-			
-			List<CachedDemographic> currentLinks = demographicInfoWs.getLinkedCachedDemographicByDemographicId(demographicId);
-			addCurrentLinks(results, currentLinks);
-			
-			ArrayList<IntegratorLinkedDemographicHolder> sortedResult=getSortedResults(results);
-			
-			return(sortedResult);
+			HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results = new HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder>();
+
+			addPotentialMatches(results, demographic, demographicInfoWs);
+			addCurrentLinks(results, demographic, demographicInfoWs);
+
+			ArrayList<IntegratorLinkedDemographicHolder> sortedResult = getSortedResults(results);
+
+			return (sortedResult);
 		}
 		catch (Exception e) {
 			logger.error(e);
-			return(null);
+			return (null);
 		}
 	}
 
-	public static class ScoreSorter implements Comparator<IntegratorLinkedDemographicHolder>
-	{
-// commented out until we stop supporting jdk 1.5 which has a compiler bug for inner class/annotations.
-//		@Override
+	public static class ScoreSorter implements Comparator<IntegratorLinkedDemographicHolder> {
+		// commented out until we stop supporting jdk 1.5 which has a compiler bug for inner class/annotations.
+		// @Override
 		public int compare(IntegratorLinkedDemographicHolder o1, IntegratorLinkedDemographicHolder o2) {
-			return(o1.getMatchingScore()-o2.getMatchingScore());
+			return (o1.getMatchingScore() - o2.getMatchingScore());
 		}
 	}
-	
+
 	private static ArrayList<IntegratorLinkedDemographicHolder> getSortedResults(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results) {
-		ArrayList<IntegratorLinkedDemographicHolder> sortedResults=new ArrayList<IntegratorLinkedDemographicHolder>();
+		ArrayList<IntegratorLinkedDemographicHolder> sortedResults = new ArrayList<IntegratorLinkedDemographicHolder>();
 		sortedResults.addAll(results.values());
 		Collections.sort(sortedResults, new ScoreSorter());
-		return(sortedResults);
+		return (sortedResults);
 	}
 
-	private static void addCurrentLinks(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, List<CachedDemographic> currentLinks) {
-		if (currentLinks==null) return;
-		
-		for (CachedDemographic cachedDemographic : currentLinks)
-		{
-			FacilityDemographicPrimaryKey facilityDemographicPrimaryKey=new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk());
-			IntegratorLinkedDemographicHolder integratorLinkedDemographicHolder=results.get(facilityDemographicPrimaryKey);
+	private static void addCurrentLinks(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic, DemographicInfoWs demographicInfoWs) {
+		List<CachedDemographic> currentLinks = demographicInfoWs.getAllLinkedCachedDemographicByDemographicId(demographic.getDemographicNo());
 
-			if (integratorLinkedDemographicHolder==null) 
-			{
-				integratorLinkedDemographicHolder=new IntegratorLinkedDemographicHolder();
+		List<CachedDemographic> directLinksTemp = demographicInfoWs.getDirectlyLinkedCachedDemographicByDemographicId(demographic.getDemographicNo());
+		HashSet<FacilityDemographicPrimaryKey> directLinks=new HashSet<FacilityDemographicPrimaryKey>();
+		for(CachedDemographic cachedDemographic : directLinksTemp) directLinks.add(new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk()));		
+		
+		if (currentLinks == null) return;
+
+		for (CachedDemographic cachedDemographic : currentLinks) {
+			FacilityDemographicPrimaryKey facilityDemographicPrimaryKey = new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk());
+			IntegratorLinkedDemographicHolder integratorLinkedDemographicHolder = results.get(facilityDemographicPrimaryKey);
+
+			if (integratorLinkedDemographicHolder == null) {
+				integratorLinkedDemographicHolder = new IntegratorLinkedDemographicHolder();
 				results.put(facilityDemographicPrimaryKey, integratorLinkedDemographicHolder);
 			}
-			
+
 			integratorLinkedDemographicHolder.setCachedDemographic(cachedDemographic);
 			integratorLinkedDemographicHolder.setLinked(true);
+			
+			if (directLinks.contains(facilityDemographicPrimaryKey)) integratorLinkedDemographicHolder.setDirectlyLinked(true);
 		}
 	}
 
-	private static void addPotentialMatches(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, List<MatchingDemographicInfoScore> potentialMatches) {
-		if (potentialMatches==null) return;
-		
-		for (MatchingDemographicInfoScore matchingDemographicInfoScore : potentialMatches)
-		{
-			FacilityDemographicPrimaryKey facilityDemographicPrimaryKey=new FacilityDemographicPrimaryKey(matchingDemographicInfoScore.getCachedDemographic().getFacilityIdIntegerCompositePk());
-			IntegratorLinkedDemographicHolder integratorLinkedDemographicHolder=results.get(facilityDemographicPrimaryKey);
+	private static void addPotentialMatches(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic, DemographicInfoWs demographicInfoWs) throws DatatypeConfigurationException {
+		MatchingDemographicInfoParameters parameters = getMatchingDemographicInfoParameters(demographic);
+		List<MatchingDemographicInfoScore> potentialMatches = demographicInfoWs.getMatchingDemographicInfos(parameters);
 
-			if (integratorLinkedDemographicHolder==null) 
-			{
-				integratorLinkedDemographicHolder=new IntegratorLinkedDemographicHolder();
+		if (potentialMatches == null) return;
+
+		for (MatchingDemographicInfoScore matchingDemographicInfoScore : potentialMatches) {
+			FacilityDemographicPrimaryKey facilityDemographicPrimaryKey = new FacilityDemographicPrimaryKey(matchingDemographicInfoScore.getCachedDemographic()
+					.getFacilityIdIntegerCompositePk());
+			IntegratorLinkedDemographicHolder integratorLinkedDemographicHolder = results.get(facilityDemographicPrimaryKey);
+
+			if (integratorLinkedDemographicHolder == null) {
+				integratorLinkedDemographicHolder = new IntegratorLinkedDemographicHolder();
 				results.put(facilityDemographicPrimaryKey, integratorLinkedDemographicHolder);
 			}
-			
+
 			integratorLinkedDemographicHolder.setCachedDemographic(matchingDemographicInfoScore.getCachedDemographic());
 			integratorLinkedDemographicHolder.setMatchingScore(matchingDemographicInfoScore.getScore());
 		}
@@ -169,5 +182,29 @@ public class ManageIntegratorLinkedDemographics {
 		}
 		parameters.setBirthDate(cal);
 		return parameters;
+	}
+
+	public static void saveLinkedClients(Integer facilityId, Integer demographicId, HashSet<FacilityDemographicPrimaryKey> linkedIds) {
+		try {
+//			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(facilityId);
+//			List<CachedDemographic> tempLinks = demographicInfoWs.getLinkedCachedDemographicByDemographicId(demographicId);
+//			HashSet<FacilityDemographicPrimaryKey> currentLinks=new HashSet<FacilityDemographicPrimaryKey>();
+//			
+//			// check for removals and populate a hashSet (for later use)
+//			for (CachedDemographic cachedDemographic : tempLinks)
+//			{
+//				FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk());
+//				currentLinks.add(pk);
+//				
+//				if (!linkedIds.contains(pk))
+//				{
+//					demographicInfoWs.unLinkDemographics(arg0, arg1, arg2, arg3)
+//				}
+//			}
+			
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
 	}
 }
