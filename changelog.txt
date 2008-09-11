@@ -1,4 +1,6 @@
 2008-09-11 : Fixed error when correcting invoices duplicate codes can be created for ON billing (Randy,2105933)
+2008-09-09 : Fixed bug with Report By Template with dates in Firefox 3 and Safari which only the bottom date param would work (Jay,2102612)
+             Fixed bug with Clinic Admin page that would log the user out if they clicked on the page (Jay,2102572)
 2008-09-07 : Added practitioner number field in provider settings. Added Practitioner number to signature of Rx pad. (Dan)
 2008-09-06 : Changed current prescription description in consultation from the short version to the long version. (Jay,2097084)
 2008-09-05 : Caisi Integrator now shares prevention data across facilities (Ted)
