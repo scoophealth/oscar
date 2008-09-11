@@ -32,6 +32,35 @@ public class BillingItemData {
 
 	String status;
 	String timestamp;
+        
+        /*
+         *Default Constructor
+         */
+        public BillingItemData() {
+            
+        }
+        
+        /*
+         *Copy constructor
+         */
+        public BillingItemData( BillingItemData copy ) {
+            
+            this.setId(copy.getId());
+            this.setCh1_id(copy.getCh1_id());
+            this.setTransc_id(copy.getTransc_id()); 
+            this.setRec_id(copy.getRec_id());
+            this.setService_code(copy.getService_code());
+            this.setFee(copy.getFee());
+            this.setSer_num(copy.getSer_num());
+            this.setService_date(copy.getService_date());
+            this.setDx(copy.getDx());
+            this.setDx1(copy.getDx1());
+            this.setDx2(copy.getDx2());
+            this.setStatus(copy.getStatus());
+            this.setTimestamp(copy.getTimestamp());
+            
+        }
+        
 	public String getCh1_id() {
 		return ch1_id;
 	}
