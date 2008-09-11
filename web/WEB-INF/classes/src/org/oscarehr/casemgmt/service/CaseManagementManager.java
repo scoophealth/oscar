@@ -1260,16 +1260,24 @@ public class CaseManagementManager {
     	this.dxResearchDAO = dao;
     }
     
-    public void saveToDx(String demographicNo, String code) {
+    public void saveToDx(String demographicNo, String code, String codingSystem) {
+    	if(codingSystem == null) {
+    		codingSystem = "icd10";
+    	}
+    	
     	DxResearch dx = new DxResearch();
     	dx.setCode(code);
-    	dx.setCodingSystem("icd10");
+    	dx.setCodingSystem(codingSystem);
     	dx.setDemographicNo(Integer.parseInt(demographicNo));
     	dx.setStartDate(new Date());
     	dx.setUpdateDate(new Date());
     	dx.setStatus("A");
     	    	
     	this.dxResearchDAO.save(dx);
+    }
+    
+    public void saveToDx(String demographicNo, String code) {
+    	saveToDx(demographicNo,code,null);
     }
     
     public List<DxResearch> getDxByDemographicNo(String demographicNo) {

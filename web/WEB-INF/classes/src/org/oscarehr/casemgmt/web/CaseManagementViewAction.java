@@ -22,6 +22,8 @@
 
 package org.oscarehr.casemgmt.web;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -806,7 +809,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	}
 
 	public ActionForward addToDx(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		this.caseManagementMgr.saveToDx(getDemographicNo(request), request.getParameter("issue_code"));
+		String codingSystem = null;
+		Properties dxProps = new Properties();
+        try {
+        	InputStream is = getClass().getResourceAsStream("/caisi_issues_dx.properties");   
+        	dxProps.load(is);
+        	codingSystem = dxProps.getProperty("coding_system");
+        }catch(IOException e) {log.warn("Unable to load Dx properties file");}
+        
+		this.caseManagementMgr.saveToDx(getDemographicNo(request), request.getParameter("issue_code"),codingSystem);
+		
 		return view(mapping,form,request,response);
 	}		
 }
