@@ -131,6 +131,8 @@ public class BillingCorrectionPrep {
 								: "S");
 			}
 		}
+                
+                //System.out.println("ItemObj size " + lItemObj.size() + " Vector Size " + vecName.size());
 
 		// update item first
 		String claimId = "0";
@@ -262,8 +264,8 @@ public class BillingCorrectionPrep {
 			String serviceDate, Vector vecName, Vector vecUnit, Vector vecFee,
 			Vector vecStatus) {
 		boolean ret = true;
-		// System.out.println("status:" + oldObj.getService_code() + ":" +
-		// vecName.get(0) + ":");
+		//System.out.println("status:" + oldObj.getService_code() + ":" +
+		//vecName.get(0) + ":");
 		if (vecName.contains(oldObj.getService_code())) {
 			ret = true;
 			int i = vecName.indexOf(oldObj.getService_code());
@@ -292,12 +294,14 @@ public class BillingCorrectionPrep {
 				oldObj.setService_date(serviceDate);
 				oldObj.setDx(sDx);
 				oldObj.setStatus(cStatus);
+                                //System.out.println("Updating " + oldObj.getService_code());
 				ret = dbObj.updateBillingOneItem(oldObj);
 				if (!ret)
 					return ret;
 			}
 		} else {
 			// delete the old item
+                        //System.out.println("Deleting old item " + oldObj.getService_code());
 			oldObj.setStatus("D");
 			ret = dbObj.updateBillingOneItem(oldObj);
 		}
@@ -309,24 +313,30 @@ public class BillingCorrectionPrep {
 			String sName, String sUnit, String sFee, String sStatus) {
 		boolean ret = true;
 		BillingItemData oldObj = null;
+                BillingItemData newObj = null;
 		for (int i = 0; i < lItemObj.size(); i++) {
 			oldObj = (BillingItemData) lItemObj.get(i);
+                        //System.out.println("comparing oldobj to new " + oldObj.getService_code() + " : " + sName);
 			if (sName.equals((String) oldObj.getService_code())) {
+                                //System.out.println(oldObj.getService_code() + " already present skipping");
 				ret = false;
 				break;
 			}
 		}
 		if (ret) {
-			oldObj.setService_code(sName);
-			oldObj.setSer_num(getUnit(sUnit));
-			oldObj.setFee(getFee(sFee, getUnit(sUnit), sName));
-			oldObj.setService_date(serviceDate);
-			oldObj.setDx(sDx);
-			oldObj.setStatus(sStatus);
+                        newObj = new BillingItemData(oldObj);
+			newObj.setService_code(sName);
+			newObj.setSer_num(getUnit(sUnit));
+			newObj.setFee(getFee(sFee, getUnit(sUnit), sName));
+			newObj.setService_date(serviceDate);
+			newObj.setDx(sDx);
+			newObj.setStatus(sStatus);
 			JdbcBillingClaimImpl myObj = new JdbcBillingClaimImpl();
-			int i = myObj.addOneItemRecord(oldObj);
+                        //System.out.println("Adding item " + newObj.getService_code());
+			int i = myObj.addOneItemRecord(newObj);
 			if (i == 0)
 				return false;
+                        lItemObj.add(newObj);
 		}
 		ret = true;
 		return ret;
