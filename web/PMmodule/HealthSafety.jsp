@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
-<%@page import="org.oscarehr.PMmodule.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
 <html>
 <head>
 	<title>Health and Safety</title>

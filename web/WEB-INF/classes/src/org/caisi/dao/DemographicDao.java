@@ -35,7 +35,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

@@ -37,7 +37,7 @@ import org.caisi.dao.ProviderDefaultProgramDao;
 import org.caisi.model.ProviderDefaultProgram;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
-import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.springframework.beans.factory.annotation.Required;

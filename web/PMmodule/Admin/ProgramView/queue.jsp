@@ -3,7 +3,7 @@
 <%@ page import="java.net.URLEncoder" %>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.PMmodule.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
 
 <!--
 /*

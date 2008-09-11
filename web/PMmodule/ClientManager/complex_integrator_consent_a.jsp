@@ -30,7 +30,7 @@
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.common.model.Facility"%>
 <%@page import="org.caisi.dao.DemographicDao"%>
-<%@page import="org.oscarehr.PMmodule.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
 
 <%
 	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");

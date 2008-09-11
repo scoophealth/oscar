@@ -68,6 +68,7 @@
         <property name="mappingDirectoryLocations">
             <!-- only *.hbm.xml will be loaded -->
             <list>
+                <value>classpath:/org/oscarehr/common/model</value>
                 <value>classpath:/org/caisi/model</value>
                 <value>classpath:/org/oscarehr/PMmodule/model</value>
                 <value>classpath:/org/oscarehr/survey/model</value>

@@ -19,7 +19,7 @@ import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;

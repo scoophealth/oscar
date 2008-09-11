@@ -282,7 +282,7 @@
             <form-property name="view" type="org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean" />
             <form-property name="admission" type="org.oscarehr.PMmodule.model.Admission" />
             <form-property name="bedDemographic" type="org.oscarehr.PMmodule.model.BedDemographic" />
-            <form-property name="client" type="org.oscarehr.PMmodule.model.Demographic" />
+            <form-property name="client" type="org.oscarehr.common.model.Demographic" />
             <form-property name="erconsent" type="org.oscarehr.PMmodule.web.formbean.ErConsentFormBean" />
             <form-property name="form" type="org.oscarehr.survey.model.oscar.OscarFormInstance" />
             <form-property name="program" type="org.oscarehr.PMmodule.model.Program" />
@@ -1164,6 +1164,12 @@
         <action path="/oscarPrevention/printPrevention" scope="request" type="oscar.oscarPrevention.pageUtil.PreventionPrintAction">
             <forward name="error" path="/oscarPrevention/index.jsp" />
         </action>
+        
+        <!--
+        action name="FrmForm" path="/demographic/SearchDemographic" scope="request" type="oscar.oscarDemographic.pageUtil.SearchDemographicAutoCompleteAction">
+            <forward name="success" path="/dms/testDemocomp2.jsp" />
+            
+        </action -->
         
         <action input="/demographic/AddAlternateContact.jsp" name="FrmForm" path="/demographic/AddRelation" scope="request" type="oscar.oscarDemographic.pageUtil.AddDemographicRelationshipAction">
             <forward name="success" path="/demographic/AddAlternateContact.jsp" />

@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
 

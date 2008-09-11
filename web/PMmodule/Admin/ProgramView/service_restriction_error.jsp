@@ -6,8 +6,8 @@
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.PMmodule.service.ClientManager"%>
-<%@page import="org.oscarehr.PMmodule.model.Demographic"%>
-<%@page import="org.oscarehr.PMmodule.model.DemographicExt"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.DemographicExt"%>
 
 
 <html:form action="/PMmodule/ProgramManagerView">

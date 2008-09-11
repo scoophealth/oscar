@@ -3,7 +3,7 @@
 <%@page import="oscar.OscarProperties" %>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="java.util.*" %>
-<%@page import="org.oscarehr.PMmodule.model.Demographic" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
 <%@page import="org.oscarehr.PMmodule.model.Program" %>
 
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>

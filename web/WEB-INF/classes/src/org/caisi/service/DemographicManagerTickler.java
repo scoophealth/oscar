@@ -25,7 +25,7 @@ package org.caisi.service;
 import java.util.List;
 
 import org.caisi.dao.DemographicDao;
-import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.common.model.Demographic;
 
 /**
  */

@@ -22,7 +22,7 @@ import java.util.Collection;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.util.LabelValueBean;
-import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.common.model.Demographic;
 
 public class GenericIntakeSearchFormBean extends ActionForm {
 

@@ -1,7 +1,7 @@
 <%@ include file="/taglibs.jsp"%>
 
 <%@page import="org.oscarehr.PMmodule.model.Admission"%>
-<%@page import="org.oscarehr.PMmodule.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="java.util.Date"%>

@@ -26,7 +26,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 
 import org.apache.struts.validator.LazyValidatorForm;
-import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.utility.Utility;
 

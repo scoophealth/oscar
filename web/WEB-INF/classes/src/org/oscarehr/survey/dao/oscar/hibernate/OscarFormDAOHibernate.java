@@ -35,7 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
