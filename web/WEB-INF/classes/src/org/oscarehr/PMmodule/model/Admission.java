@@ -61,7 +61,7 @@ public class Admission implements Serializable {
 	private Program program;
 	private org.oscarehr.PMmodule.model.ProgramTeam team;
 	private org.oscarehr.PMmodule.model.ProgramClientStatus clientStatus;
-	private org.oscarehr.PMmodule.model.Demographic client;
+	private org.oscarehr.common.model.Demographic client;
 	private Integer teamId;
 	private String teamName;
 	private Integer clientStatusId;
@@ -147,7 +147,7 @@ public class Admission implements Serializable {
 	/**
      * Return the value associated with the column: client_id
      */
-    public org.oscarehr.PMmodule.model.Demographic getClient() {
+    public org.oscarehr.common.model.Demographic getClient() {
     	return client;
     }
 
@@ -155,7 +155,7 @@ public class Admission implements Serializable {
      * Set the value related to the column: client_id
      * @param client the client_id value
      */
-    public void setClient(org.oscarehr.PMmodule.model.Demographic client) {
+    public void setClient(org.oscarehr.common.model.Demographic client) {
     	this.client = client;
     }
 

@@ -125,7 +125,7 @@
 			not-found="ignore" />				
 		<many-to-one
 			name="client"
-			class="org.oscarehr.PMmodule.model.Demographic"
+			class="org.oscarehr.common.model.Demographic"
 			column="client_id"
 			update="false"
 			insert="false"

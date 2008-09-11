@@ -26,6 +26,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.oscarehr.common.model.Demographic;
 
 public class BedDemographicHistorical implements Serializable {
 

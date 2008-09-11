@@ -33,7 +33,7 @@ import org.oscarehr.PMmodule.dao.ConsentDAO;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Consent;
 import org.oscarehr.PMmodule.model.ConsentInterview;
-import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.common.model.Demographic;
 
 public class ConsentManager {
     private static Log log = LogFactory.getLog(ConsentManager.class);

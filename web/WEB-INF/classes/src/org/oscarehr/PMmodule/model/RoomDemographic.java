@@ -28,6 +28,7 @@ import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.common.dao.Auditable;
+import org.oscarehr.common.model.Demographic;
 
 /**
  * RoomDemographic
