@@ -26,7 +26,7 @@ package org.caisi.service;
 import java.util.List;
 
 import org.caisi.dao.ProviderDAO;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 
 /**
  * It doesn't look like anyone implements this, but meh, some one references it so it'll stay for now.

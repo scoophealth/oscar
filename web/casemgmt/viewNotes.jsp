@@ -29,7 +29,7 @@
 <%@page pageEncoding="UTF-8"%>
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@page import="java.util.List"%>
-<%@page import="org.oscarehr.PMmodule.model.Provider" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
  <nested:size id="num" name="Notes"/>
 

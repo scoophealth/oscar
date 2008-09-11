@@ -2,7 +2,7 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
-<%@page import="org.oscarehr.PMmodule.model.Provider"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%

@@ -24,7 +24,7 @@ package org.caisi.model;
 
 import java.util.Date;
 
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 
 public class TicklerComment extends BaseObject {
 	private Long id;

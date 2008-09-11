@@ -49,7 +49,7 @@ import org.caisi.service.TicklerManager;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.util.SessionConstants;

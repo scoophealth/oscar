@@ -36,7 +36,7 @@
 		<property name="reporter_program_team" />
 		<property name="history" />
                 <property name="uuid" />
-		<many-to-one name="provider" class="org.oscarehr.PMmodule.model.Provider" column="provider_no" update="false" not-found='ignore' insert="false" lazy="false" />                
+		<many-to-one name="provider" class="org.oscarehr.common.model.Provider" column="provider_no" update="false" not-found='ignore' insert="false" lazy="false" />                
 		<set name="issues" table="casemgmt_issue_notes" lazy="false">   
 			<key column="note_id" />
 			<many-to-many column="id" class="org.oscarehr.casemgmt.model.CaseManagementIssue" />

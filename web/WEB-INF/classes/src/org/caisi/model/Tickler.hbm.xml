@@ -39,8 +39,8 @@
 			<one-to-many class="org.caisi.model.TicklerUpdate" />
 		</set>
 		<many-to-one name="demographic" class="org.oscarehr.common.model.Demographic" column="demographic_no" update="false" insert="false" lazy="false" not-found="ignore" />
-		<many-to-one name="provider" class="org.oscarehr.PMmodule.model.Provider" column="creator" update="false" insert="false" lazy="false" not-found="ignore" />
-		<many-to-one name="assignee" class="org.oscarehr.PMmodule.model.Provider" column="task_assigned_to" update="false" insert="false" lazy="false" not-found="ignore" />
+		<many-to-one name="provider" class="org.oscarehr.common.model.Provider" column="creator" update="false" insert="false" lazy="false" not-found="ignore" />
+		<many-to-one name="assignee" class="org.oscarehr.common.model.Provider" column="task_assigned_to" update="false" insert="false" lazy="false" not-found="ignore" />
 		<many-to-one name="program" class="org.oscarehr.PMmodule.model.Program" column="id" update="false" insert="false" lazy="false" not-found="ignore" />
 		
 	</class>

@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.caisi.model.BaseObject;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 
 
 public class CaseManagementNote extends BaseObject {

@@ -33,7 +33,7 @@ import org.caisi.model.CustomFilter;
 import org.caisi.model.Tickler;
 import org.caisi.model.TicklerComment;
 import org.caisi.model.TicklerUpdate;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 

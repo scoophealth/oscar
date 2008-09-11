@@ -30,7 +30,7 @@ import java.util.Set;
 
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 
 public class Tickler extends BaseObject {
 	private Long tickler_no;

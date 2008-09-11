@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 
 /**
 * Object representation of 'custom_filter' table in OSCAR

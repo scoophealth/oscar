@@ -28,7 +28,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.caisi.model.CustomFilter;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**

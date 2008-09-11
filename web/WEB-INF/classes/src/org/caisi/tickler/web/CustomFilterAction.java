@@ -42,7 +42,7 @@ import org.caisi.model.CustomFilter;
 import org.caisi.service.DemographicManagerTickler;
 import org.caisi.service.TicklerManager;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.util.SessionConstants;

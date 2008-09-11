@@ -28,11 +28,11 @@
 		<property name="end_date" column="end_date" type="java.util.Date" />
 		<set name="providers" table="custom_filter_providers" lazy="false">
 			<key column="filter_id" />
-			<many-to-many column="provider_no" class="org.oscarehr.PMmodule.model.Provider" />
+			<many-to-many column="provider_no" class="org.oscarehr.common.model.Provider" />
 		</set>
 		<set name="assignees" table="custom_filter_assignees" lazy="false">
 			<key column="filter_id" />
-			<many-to-many column="provider_no" class="org.oscarehr.PMmodule.model.Provider" />
+			<many-to-many column="provider_no" class="org.oscarehr.common.model.Provider" />
 		</set>			
 		<many-to-one name="program" class="org.oscarehr.PMmodule.model.Program" column="programId" update="false" insert="false" lazy="false" not-found="ignore" />	
 		<property name="demographic_no" />

@@ -7,7 +7,7 @@
 <%@ page import="java.util.Set, java.util.List, java.util.Iterator"%>
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNote" %>
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementIssue" %>
-<%@ page import="org.oscarehr.PMmodule.model.Provider" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
 <%@ page import="oscar.util.DateUtils" %>
 
 <% CaseManagementNote note = (CaseManagementNote)request.getAttribute("Note");

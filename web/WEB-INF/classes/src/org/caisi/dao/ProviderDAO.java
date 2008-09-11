@@ -24,7 +24,7 @@ package org.caisi.dao;
 
 import java.util.List;
 
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.common.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**

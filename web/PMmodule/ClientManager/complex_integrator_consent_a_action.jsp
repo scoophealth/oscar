@@ -1,7 +1,7 @@
 <%@page import="org.oscarehr.util.*"%>
 <%@page import="org.oscarehr.common.dao.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
-<%@page import="org.oscarehr.PMmodule.model.Provider"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
 
 <%
 	int demographicId=Integer.parseInt(request.getParameter("demographicId"));
