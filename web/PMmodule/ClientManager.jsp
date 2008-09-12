@@ -5,7 +5,7 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.PMmodule.service.ClientManager"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.oscarehr.PMmodule.model.DemographicExt"%>
+<%@page import="org.oscarehr.common.model.DemographicExt"%>
 <%@ page import="oscar.OscarProperties" %>
 <%
 	// This section is an obnoxtious security check with not so glamourous user feedback, but I don't really
