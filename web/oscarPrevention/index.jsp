@@ -433,7 +433,7 @@ div.recommendations li{
                         Hashtable hdata = (Hashtable) alist.get(k);
                         
                         String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
-                        if (hdata.get("id")==null) onClickCode="alert('no remote data is available in this version')";
+                        if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"')";
                         %>                            
                         <div class="preventionProcedure"  onclick="<%=onClickCode%>" >
                             <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
@@ -521,7 +521,7 @@ div.recommendations li{
                                 Hashtable hdata = (Hashtable) alist.get(k);
                                 
                                 String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
-                                if (hdata.get("id")==null) onClickCode="alert('No remote data is available in this version')";
+                                if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"')";
                                 %>                            
                                 <div class="preventionProcedure"  onclick="<%=onClickCode%>" >
                                     <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>

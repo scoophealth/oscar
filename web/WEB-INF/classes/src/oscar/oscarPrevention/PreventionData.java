@@ -435,6 +435,7 @@ public class PreventionData {
 
 					Hashtable h = new Hashtable();
 					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+					h.put("integratorPreventionId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
 					String remoteFacilityName="N/A";
 					CachedFacility remoteFacility=null;
 					try {
@@ -445,7 +446,7 @@ public class PreventionData {
 					}
 					if (remoteFacility!=null) remoteFacilityName=remoteFacility.getName();
 					h.put("remoteFacilityName", remoteFacilityName);
-					h.put("integratorDemographicId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
+					h.put("integratorDemographicId", cachedDemographicPrevention.getCaisiDemographicId());
 					h.put("type", cachedDemographicPrevention.getPreventionType());
 					h.put("provider_no", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
 					h.put("provider_name", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
