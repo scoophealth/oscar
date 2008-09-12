@@ -33,7 +33,7 @@ public class ManageIntegratorLinkedDemographics {
 		private CachedDemographic cachedDemographic = null;
 		private int matchingScore = 0;
 		private boolean linked = false;
-		private boolean directlyLinked=false; 
+		private boolean directlyLinked = false;
 
 		public CachedDemographic getCachedDemographic() {
 			return cachedDemographic;
@@ -107,13 +107,15 @@ public class ManageIntegratorLinkedDemographics {
 		return (sortedResults);
 	}
 
-	private static void addCurrentLinks(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic, DemographicInfoWs demographicInfoWs) {
+	private static void addCurrentLinks(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic,
+			DemographicInfoWs demographicInfoWs) {
 		List<CachedDemographic> currentLinks = demographicInfoWs.getAllLinkedCachedDemographicsByDemographicId(demographic.getDemographicNo());
 
 		List<CachedDemographic> directLinksTemp = demographicInfoWs.getDirectlyLinkedCachedDemographicsByDemographicId(demographic.getDemographicNo());
-		HashSet<FacilityDemographicPrimaryKey> directLinks=new HashSet<FacilityDemographicPrimaryKey>();
-		for(CachedDemographic cachedDemographic : directLinksTemp) directLinks.add(new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk()));		
-		
+		HashSet<FacilityDemographicPrimaryKey> directLinks = new HashSet<FacilityDemographicPrimaryKey>();
+		for (CachedDemographic cachedDemographic : directLinksTemp)
+			directLinks.add(new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk()));
+
 		if (currentLinks == null) return;
 
 		for (CachedDemographic cachedDemographic : currentLinks) {
@@ -127,12 +129,13 @@ public class ManageIntegratorLinkedDemographics {
 
 			integratorLinkedDemographicHolder.setCachedDemographic(cachedDemographic);
 			integratorLinkedDemographicHolder.setLinked(true);
-			
+
 			if (directLinks.contains(facilityDemographicPrimaryKey)) integratorLinkedDemographicHolder.setDirectlyLinked(true);
 		}
 	}
 
-	private static void addPotentialMatches(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic, DemographicInfoWs demographicInfoWs) throws DatatypeConfigurationException {
+	private static void addPotentialMatches(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic,
+			DemographicInfoWs demographicInfoWs) throws DatatypeConfigurationException {
 		MatchingDemographicInfoParameters parameters = getMatchingDemographicInfoParameters(demographic);
 		List<MatchingDemographicInfoScore> potentialMatches = demographicInfoWs.getMatchingDemographicInfos(parameters);
 
@@ -188,23 +191,20 @@ public class ManageIntegratorLinkedDemographics {
 		try {
 			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(facilityId);
 			List<CachedDemographic> tempLinks = demographicInfoWs.getDirectlyLinkedCachedDemographicsByDemographicId(demographicId);
-			HashSet<FacilityDemographicPrimaryKey> currentLinks=new HashSet<FacilityDemographicPrimaryKey>();
-			
+			HashSet<FacilityDemographicPrimaryKey> currentLinks = new HashSet<FacilityDemographicPrimaryKey>();
+
 			// check for removals and populate a hashSet (for later use)
-			for (CachedDemographic cachedDemographic : tempLinks)
-			{
-				FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk());
+			for (CachedDemographic cachedDemographic : tempLinks) {
+				FacilityDemographicPrimaryKey pk = new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk());
 				currentLinks.add(pk);
-				
-				if (!linkedIds.contains(pk))
-				{
+
+				if (!linkedIds.contains(pk)) {
 					demographicInfoWs.unLinkDemographics(demographicId, pk.getFacilityId(), pk.getDemographicId());
 				}
 			}
-			
+
 			// process additions
-			for (FacilityDemographicPrimaryKey pk : linkedIds)
-			{
+			for (FacilityDemographicPrimaryKey pk : linkedIds) {
 				if (!currentLinks.contains(pk)) demographicInfoWs.linkDemographics(providerId, demographicId, pk.getFacilityId(), pk.getDemographicId());
 			}
 		}
