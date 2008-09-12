@@ -21,7 +21,7 @@
 	int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	
 	Demographic demographic=demographicDao.getDemographicById(currentDemographicId);
-	ArrayList<ManageIntegratorLinkedDemographics.IntegratorLinkedDemographicHolder> demographicsToDisplay=ManageIntegratorLinkedDemographics.getDemographicsToDisplay(currentFacilityId, currentDemographicId);
+	ArrayList<ManageIntegratorLinkedDemographics.IntegratorLinkedDemographicHolder> demographicsToDisplay=ManageIntegratorLinkedDemographics.getDemographicsToDisplay(currentFacilityId, currentDemographicId);	
 %>
 
 <h3>Manage integrator linked demographics</h3>

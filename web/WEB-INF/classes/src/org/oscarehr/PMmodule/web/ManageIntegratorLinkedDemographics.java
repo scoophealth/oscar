@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -108,9 +109,9 @@ public class ManageIntegratorLinkedDemographics {
 	}
 
 	private static void addCurrentLinks(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic, DemographicInfoWs demographicInfoWs) {
-		List<CachedDemographic> currentLinks = demographicInfoWs.getAllLinkedCachedDemographicByDemographicId(demographic.getDemographicNo());
+		List<CachedDemographic> currentLinks = demographicInfoWs.getAllLinkedCachedDemographicsByDemographicId(demographic.getDemographicNo());
 
-		List<CachedDemographic> directLinksTemp = demographicInfoWs.getDirectlyLinkedCachedDemographicByDemographicId(demographic.getDemographicNo());
+		List<CachedDemographic> directLinksTemp = demographicInfoWs.getDirectlyLinkedCachedDemographicsByDemographicId(demographic.getDemographicNo());
 		HashSet<FacilityDemographicPrimaryKey> directLinks=new HashSet<FacilityDemographicPrimaryKey>();
 		for(CachedDemographic cachedDemographic : directLinksTemp) directLinks.add(new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk()));		
 		
@@ -184,24 +185,29 @@ public class ManageIntegratorLinkedDemographics {
 		return parameters;
 	}
 
-	public static void saveLinkedClients(Integer facilityId, Integer demographicId, HashSet<FacilityDemographicPrimaryKey> linkedIds) {
+	public static void saveLinkedClients(Integer facilityId, String providerId, Integer demographicId, HashSet<FacilityDemographicPrimaryKey> linkedIds) {
 		try {
-//			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(facilityId);
-//			List<CachedDemographic> tempLinks = demographicInfoWs.getLinkedCachedDemographicByDemographicId(demographicId);
-//			HashSet<FacilityDemographicPrimaryKey> currentLinks=new HashSet<FacilityDemographicPrimaryKey>();
-//			
-//			// check for removals and populate a hashSet (for later use)
-//			for (CachedDemographic cachedDemographic : tempLinks)
-//			{
-//				FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk());
-//				currentLinks.add(pk);
-//				
-//				if (!linkedIds.contains(pk))
-//				{
-//					demographicInfoWs.unLinkDemographics(arg0, arg1, arg2, arg3)
-//				}
-//			}
+			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(facilityId);
+			List<CachedDemographic> tempLinks = demographicInfoWs.getDirectlyLinkedCachedDemographicsByDemographicId(demographicId);
+			HashSet<FacilityDemographicPrimaryKey> currentLinks=new HashSet<FacilityDemographicPrimaryKey>();
 			
+			// check for removals and populate a hashSet (for later use)
+			for (CachedDemographic cachedDemographic : tempLinks)
+			{
+				FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk());
+				currentLinks.add(pk);
+				
+				if (!linkedIds.contains(pk))
+				{
+					demographicInfoWs.unLinkDemographics(demographicId, pk.getFacilityId(), pk.getDemographicId());
+				}
+			}
+			
+			// process additions
+			for (FacilityDemographicPrimaryKey pk : linkedIds)
+			{
+				if (!currentLinks.contains(pk)) demographicInfoWs.linkDemographics(providerId, demographicId, pk.getFacilityId(), pk.getDemographicId());
+			}
 		}
 		catch (Exception e) {
 			logger.error(e);
