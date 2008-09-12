@@ -1,5 +1,5 @@
 <%@page import="java.util.List" %>
-<%@page import="org.oscarehr.PMmodule.model.*" %>
+<%@page import="org.oscarehr.PMmodule.model.*,org.oscarehr.common.model.*" %>
 <%@ include file="/taglibs.jsp" %>
 
 <div class="h4">
