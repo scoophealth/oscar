@@ -1281,7 +1281,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 caseIssueList[oldList.length + k] = new CheckBoxBean();
                 caseIssueList[oldList.length + k].setIssue(newIssueToCIssue(sessionFrm, issueList[i].getIssue(), programId));
                 caseIssueList[oldList.length + k].setChecked("on");
-                k++;
+           
                 
                 //should issue be automagically added to Dx? check config file
                 if(dxProps != null && dxProps.get(issueList[i].getIssue().getCode()) != null) {
@@ -1290,6 +1290,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 	this.caseManagementMgr.saveToDx(getDemographicNo(request),issueList[i].getIssue().getCode(),codingSystem);
                 	caseIssueList[oldList.length + k].getIssue().setMajor(true);
                 }
+                
+                k++;
                 
             }
         }
