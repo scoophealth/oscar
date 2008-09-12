@@ -19,6 +19,7 @@
 
 <%
 	response.setHeader("Cache-Control", "no-cache");
+String project_home = request.getContextPath().substring(1);
 %>
 
 
@@ -34,7 +35,7 @@
 	
 	<script type="text/javascript">
 			function download() {
-				location.href="/oscar/PMmodule/StreetHealthIntakeReportAction.do?action=download&startDate=<%=request.getParameter("startDate")%>";
+				location.href="/<%=project_home%>/PMmodule/StreetHealthIntakeReportAction.do?action=download&startDate=<%=request.getParameter("startDate")%>";
 			}
 		</script>
 		<table height="15" align="center">
@@ -79,20 +80,21 @@
 		<sh:report_element num="17" question="Presenting Issues" answerProps="presenting_issues"></sh:report_element>
 		<sh:report_element num="18" question="Source of Referral" answerProps="referral"></sh:report_element>
 		<sh:report_element num="19" question="Exit Disposition" answerProps="exit"></sh:report_element>
-		<sh:report_element num="20" question="Baseline Psychiatric Hospitalizations" answerProps="psych_hospitalizations"></sh:report_element>
+		<!-- <sh:report_element num="20" question="Baseline Psychiatric Hospitalizations" answerProps="psych_hospitalizations"></sh:report_element>
+		-->
 		<sh:report_element num="21" question="Current Psychiatric Hospitalizations" answerProps="cpsych_hospitalizations"></sh:report_element>
 		
 		<sh:report_element num="22" question="Baseline Living Arrangement" answerProps="living_arrangement"></sh:report_element>
 		<sh:report_element num="23" question="Current Living Arrangement" answerProps="living_arrangement"></sh:report_element>
-		<sh:report_element num="24" question="Baseline Residence Type" answerProps="residence_type"></sh:report_element>
+		<sh:report_element num="24" question="Baseline Primary Residence Type" answerProps="residence_type"></sh:report_element>
 		<sh:report_element num="24a" question="Baseline Residence Status" answerProps="residence_status"></sh:report_element>
-		<sh:report_element num="25" question="Current Residence Type" answerProps="residence_type"></sh:report_element>
+		<sh:report_element num="25" question="Current Primary Residence Type" answerProps="residence_type"></sh:report_element>
 		<sh:report_element num="25a" question="Current Residence Status" answerProps="residence_status"></sh:report_element>
 		<sh:report_element num="26" question="Baseline Employment Status" answerProps="employment_status"></sh:report_element>
 		<sh:report_element num="27" question="Current Employment Status" answerProps="employment_status"></sh:report_element>
 		<sh:report_element num="28" question="Baseline Educational Status" answerProps="educational_status"></sh:report_element>
 		<sh:report_element num="29" question="Current Educational Status" answerProps="educational_status"></sh:report_element>
-		<sh:report_element num="29a" question="Highest Level of Education" answerProps="level_education"></sh:report_element>
+		<sh:report_element num="29a" question="Current Highest Level of Education" answerProps="level_education"></sh:report_element>
 		<sh:report_element num="30" question="Baseline Primary Income Source" answerProps="income_source"></sh:report_element>
 		<sh:report_element num="31" question="Current Primary Income Source" answerProps="income_source"></sh:report_element>
 	</table>
