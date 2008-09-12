@@ -6,6 +6,6 @@ import java.util.List;
 public interface StreetHealthReportManager {
 
 	@SuppressWarnings("unchecked")
-	public List getCohort(Date BeginDate, Date EndDate);
+	public List getCohort(Date BeginDate, Date EndDate, int facilityId);
 	
 }

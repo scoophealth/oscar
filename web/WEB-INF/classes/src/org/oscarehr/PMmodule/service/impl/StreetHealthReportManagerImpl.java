@@ -9,10 +9,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.StreetHealthDao;
-import org.oscarehr.common.model.Demographic;
+//import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.StreetHealthReportManager;
+import org.oscarehr.common.model.Demographic;
 
 public class StreetHealthReportManagerImpl implements StreetHealthReportManager {
 
@@ -34,7 +35,7 @@ public class StreetHealthReportManagerImpl implements StreetHealthReportManager 
 		this.intakeMgr = mgr;
 	}
 	
-	public List getCohort(Date beginDate, Date endDate) {
+	public List getCohort(Date beginDate, Date endDate, int facilityId) {
 		List<Demographic> clients = clientDao.getClients();
 //		//return streetHealthDao.getCohort(beginDate, endDate, clientDao.getClients());
 	        if (beginDate == null && endDate == null) {
@@ -52,7 +53,8 @@ public class StreetHealthReportManagerImpl implements StreetHealthReportManager 
 	            if (client.getPatientStatus().equals("AC")) {
 	                // get current intake
 	                //Formintakec intake = this.getCurrentForm(client.getDemographicNo());
-	            	Intake intake = this.intakeMgr.getMostRecentQuickIntake(client.getDemographicNo(),1);	            	
+	            	
+	            	Intake intake = this.intakeMgr.getMostRecentQuickIntake(client.getDemographicNo(),facilityId);	            	
 
 	            	if(intake==null) {continue;}
 	            	
