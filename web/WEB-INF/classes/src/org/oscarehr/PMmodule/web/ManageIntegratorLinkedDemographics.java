@@ -14,7 +14,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.caisi.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;

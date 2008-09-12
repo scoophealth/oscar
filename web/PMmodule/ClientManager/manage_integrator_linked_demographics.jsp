@@ -2,7 +2,7 @@
 <%@page import="org.oscarehr.common.dao.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.caisi.dao.DemographicDao"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographic"%>

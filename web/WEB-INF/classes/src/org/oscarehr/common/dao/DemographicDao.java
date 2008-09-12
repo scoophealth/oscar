@@ -20,7 +20,7 @@
  * Toronto, Ontario, Canada 
  */
 
-package org.caisi.dao;
+package org.oscarehr.common.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

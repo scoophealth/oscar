@@ -32,7 +32,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.dao.BedProgramDao;
-import org.caisi.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.caisi.dao.ProviderDefaultProgramDao;
 import org.caisi.model.ProviderDefaultProgram;
 import org.oscarehr.PMmodule.dao.ProgramDao;
