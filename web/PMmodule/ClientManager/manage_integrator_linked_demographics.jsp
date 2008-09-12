@@ -54,7 +54,7 @@
 		</tr>
 	
 		<%
-			id (demographicsToDisplay!=null)
+			if (demographicsToDisplay!=null)
 			{
 				for (ManageIntegratorLinkedDemographics.IntegratorLinkedDemographicHolder temp : demographicsToDisplay)
 				{
