@@ -54,23 +54,26 @@
 		</tr>
 	
 		<%
-			for (ManageIntegratorLinkedDemographics.IntegratorLinkedDemographicHolder temp : demographicsToDisplay)
+			id (demographicsToDisplay!=null)
 			{
-				CachedDemographic tempDemographic=temp.getCachedDemographic();
-				CachedFacility tempFacility=caisiIntegratorManager.getRemoteFacility(currentFacilityId, tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
-				%>
-					<tr class="genericTableRow" style="background-color:#f3f3f3">
-						<td class="genericTableData"><input type="checkbox" name="linked.<%=tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()%>.<%=tempDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId()%>" <%=temp.isLinked()?"checked=\"on\"":""%> <%=temp.isLinked()&&!temp.isDirectlyLinked()?"disabled=\"disabled\"":""%> /></td>
-						<td class="genericTableData"><%=temp.getMatchingScore()%></td>
-						<td class="genericTableData"><%=tempFacility.getName()%></td>
-						<td class="genericTableData"><%=tempDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId()%></td>
-						<td class="genericTableData"><%=tempDemographic.getLastName()%></td>
-						<td class="genericTableData"><%=tempDemographic.getFirstName()%></td>
-						<td class="genericTableData"><%=DateFormatUtils.ISO_DATE_FORMAT.format(tempDemographic.getBirthDate().toGregorianCalendar())%></td>
-						<td class="genericTableData"><%=tempDemographic.getHin()%></td>
-						<td class="genericTableData"><%=tempDemographic.getGender()%></td>
-					</tr>
-				<%
+				for (ManageIntegratorLinkedDemographics.IntegratorLinkedDemographicHolder temp : demographicsToDisplay)
+				{
+					CachedDemographic tempDemographic=temp.getCachedDemographic();
+					CachedFacility tempFacility=caisiIntegratorManager.getRemoteFacility(currentFacilityId, tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
+					%>
+						<tr class="genericTableRow" style="background-color:#f3f3f3">
+							<td class="genericTableData"><input type="checkbox" name="linked.<%=tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()%>.<%=tempDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId()%>" <%=temp.isLinked()?"checked=\"on\"":""%> <%=temp.isLinked()&&!temp.isDirectlyLinked()?"disabled=\"disabled\"":""%> /></td>
+							<td class="genericTableData"><%=temp.getMatchingScore()%></td>
+							<td class="genericTableData"><%=tempFacility.getName()%></td>
+							<td class="genericTableData"><%=tempDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId()%></td>
+							<td class="genericTableData"><%=tempDemographic.getLastName()%></td>
+							<td class="genericTableData"><%=tempDemographic.getFirstName()%></td>
+							<td class="genericTableData"><%=DateFormatUtils.ISO_DATE_FORMAT.format(tempDemographic.getBirthDate().toGregorianCalendar())%></td>
+							<td class="genericTableData"><%=tempDemographic.getHin()%></td>
+							<td class="genericTableData"><%=tempDemographic.getGender()%></td>
+						</tr>
+					<%
+				}
 			}
 		%>
 	</table>
