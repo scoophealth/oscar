@@ -183,4 +183,33 @@ public class DemographicDao extends HibernateDaoSupport {
         }
     }
 
+    
+     public List<Demographic> searchDemographic(String searchStr){
+        String fieldname = "", regularexp = "like";
+          
+        System.out.println("searchStr" + searchStr);
+
+        if (searchStr.indexOf(",") == -1) {
+            fieldname = "last_name";
+        } else if (searchStr.trim().indexOf(",") == (searchStr.trim().length() - 1)) {
+            fieldname = "last_name";
+        } else {
+            fieldname = "last_name " + regularexp + " ?" + " and first_name ";
+        }
+        
+        String hql = "From Demographic d where " + fieldname + " " + regularexp + " ? ";
+        System.out.println("====" + hql);
+        
+        String[] lastfirst = searchStr.split(",");
+        Object[] object = null;
+        if (lastfirst.length > 1) {
+            object = new Object[] { lastfirst[0].trim()+"%",lastfirst[1].trim()+"%" };
+        }else{
+            object = new Object[] { lastfirst[0].trim()+"%" };
+        }
+        List list = getHibernateTemplate().find(hql,object );
+        return list;
+    }
+    
+    
 }
