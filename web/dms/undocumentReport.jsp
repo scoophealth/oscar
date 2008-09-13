@@ -529,13 +529,13 @@ div.autocomplete ul li {
                                                     <input tabindex="<%=tabindex++ %>" type="text" id="autocompletedemo<%=curdoc.getDocId()%>" name="demographicKeyword"/>
                                                     <div id="autocomplete_choices<%=curdoc.getDocId()%>" class="autocomplete"></div>
 
-<script type="text/javascript">
-    new Ajax.Autocompleter("autocompletedemo<%=curdoc.getDocId()%>", "autocomplete_choices<%=curdoc.getDocId()%>", "testDemocomp.jsp", {minChars: 3, afterUpdateElement: saveDemoId});
+<script type="text/javascript">       <%-- testDemocomp2.jsp    --%>
+    new Ajax.Autocompleter("autocompletedemo<%=curdoc.getDocId()%>", "autocomplete_choices<%=curdoc.getDocId()%>", "../demographic/SearchDemographic.do", {minChars: 3, afterUpdateElement: saveDemoId});
 </script>
                                                           
                                                           </td>
                                                       </tr>
-                                                      
+                                                      <%--
                                                       <tr>
                                                           <td valign="top">Flag Provider: </td>
                                                           <td> 
@@ -548,7 +548,7 @@ div.autocomplete ul li {
                                                           <div id="providerList"></div>
                                                           </td>
                                                       </tr>
-                                                                                                       
+                                                      --%>                                                           
                                             
                                                       <tr>
                                                           <td><bean:message key="dms.documentReport.msgCreator"/>:</td>
