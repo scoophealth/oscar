@@ -30,6 +30,7 @@
 <%@page import="org.oscarehr.common.model.UserProperty, org.oscarehr.casemgmt.model.*" %>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*" %>
 <%@page import="org.oscarehr.PMmodule.model.*" %>
+<%@page import="org.oscarehr.common.model.*" %>
 <%@page import="oscar.util.DateUtils" %>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
