@@ -1165,11 +1165,9 @@
             <forward name="error" path="/oscarPrevention/index.jsp" />
         </action>
         
-        <!--
-        action name="FrmForm" path="/demographic/SearchDemographic" scope="request" type="oscar.oscarDemographic.pageUtil.SearchDemographicAutoCompleteAction">
-            <forward name="success" path="/dms/testDemocomp2.jsp" />
-            
-        </action -->
+        <action name="FrmForm" path="/demographic/SearchDemographic" scope="request" type="org.oscarehr.common.web.SearchDemographicAutoCompleteAction">
+            <forward name="success" path="/demographic/autocomplete.jsp" /> 
+        </action>
         
         <action input="/demographic/AddAlternateContact.jsp" name="FrmForm" path="/demographic/AddRelation" scope="request" type="oscar.oscarDemographic.pageUtil.AddDemographicRelationshipAction">
             <forward name="success" path="/demographic/AddAlternateContact.jsp" />
