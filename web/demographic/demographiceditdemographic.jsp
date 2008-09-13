@@ -74,7 +74,7 @@ You have no rights to access the data!
         OscarProperties oscarProps = OscarProperties.getInstance();
 
         ProvinceNames pNames = ProvinceNames.getInstance();
-   DemographicExt ext = new DemographicExt();
+   oscar.oscarDemographic.data.DemographicExt ext = new oscar.oscarDemographic.data.DemographicExt();
    ArrayList arr = ext.getListOfValuesForDemo(demographic_no);
    Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
    
