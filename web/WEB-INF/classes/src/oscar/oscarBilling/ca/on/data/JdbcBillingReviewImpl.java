@@ -141,11 +141,11 @@ public class JdbcBillingReviewImpl {
 
 		_logger.info("getBill(sql = " + sql + ")");
 		ResultSet rs = dbObj.searchDBRecord(sql);
-                boolean bSameBillCh1 = false;
                 
 		try {
 			while (rs.next()) {
 
+				boolean bSameBillCh1 = false;
 				sql = "select fee, service_code, dx from billing_on_item where ch1_id=" + rs.getInt("id")
 						+ " and service_code like '" + serviceCode + "' and status!='D'" + dx;
 				ResultSet rs1 = dbObj.searchDBRecord(sql);
