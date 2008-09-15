@@ -88,11 +88,6 @@ public class Demographic implements Serializable {
     private int activeCount = 0;
     private int hsAlertCount = 0;
     
-    public enum MethodObtained
-    {
-        IMPLICIT, EXPLICIT
-    }
-    
     public enum PatientStatus {
         AC,IN,DE,IC,ID,MO,FI
     }
