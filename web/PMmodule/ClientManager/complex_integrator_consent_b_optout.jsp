@@ -65,7 +65,7 @@
 	<script>
 		function submitConsent(form) {
 			var doSubmission = true;
-			if(form.elements['consent.signatureDeclaration'].checked == false) {
+			if(form.elements['signatureDeclaration'].checked == false) {
 				alert('You must declare that you have obtained the client\'s signature');
 				return;
 			}
@@ -79,24 +79,24 @@
 
 		function clickOptOut(ctl) {
 			if(ctl.checked) {
-				document.consentForm.elements['consent.exclusionString'].value='all';
+				document.consentForm.elements['exclusionString'].value='all';
 			} else {
-				document.consentForm.elements['consent.exclusionString'].value='';			
+				document.consentForm.elements['exclusionString'].value='';			
 			}
 			document.getElementById('chk_hic').checked=false;
 		}
 		
 		function clickHicOptOut(ctl) {
 			if(ctl.checked) {
-				document.consentForm.elements['consent.exclusionString'].value='non-hic';
+				document.consentForm.elements['exclusionString'].value='non-hic';
 			} else {
-				document.consentForm.elements['consent.exclusionString'].value='';			
+				document.consentForm.elements['exclusionString'].value='';			
 			}
 			document.getElementById('chk_all').checked=false;
 		}
 
 		function setCheckboxes() {
-			var exclusion = document.consentForm.elements['consent.exclusionString'].value;
+			var exclusion = document.consentForm.elements['exclusionString'].value;
 			
 			if(exclusion == 'all') {
 				var ctl = document.getElementById('chk_all');
@@ -118,15 +118,11 @@
 		<form name="consentForm" method="post" action="complex_integrator_consent_b_optout_action.jsp">
 			<input type="hidden" name="id" value="">
 			<input type="hidden" name="method" value="saveConsent" />
-			<input type="hidden" name="consent.status" value="consent given">
-			<input type="hidden" name="consent.formName" value="formB">
-			<input type="hidden" name="consent.formVersion" value="1.0">
 
-			<input type="hidden" name="consent.exclusionString" value="">
-			<input type="hidden" name="consent.answer1" value="">
-			<input type="hidden" name="consent.answer2" value="">
-			<input type="hidden" name="consent.answer3" value="">
-			<input type="hidden" name="consent.location" value="">
+			<input type="hidden" name="answer1" value="">
+			<input type="hidden" name="answer2" value="">
+			<input type="hidden" name="answer3" value="">
+			<input type="hidden" name="location" value="">
 	<tr>
 		<td width="100%">
 		<p><b><font color="blue">Part 3b: Read the following prompt and 
@@ -172,7 +168,7 @@
 
 	<tr>
 		<td>
-			<input type="checkbox" name="consent.signatureDeclaration" value="on" <%=viewOnly?"checked=\"checked\"":""%> >
+			<input type="checkbox" name="signatureDeclaration" value="on" <%=viewOnly?"checked=\"checked\"":""%> >
 			I, <%=provider.getFormattedName()%>, state that I have aquired the client's signature on a printed copy of this form
 		</td>
 	</tr>	

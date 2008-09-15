@@ -37,7 +37,6 @@
     <bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeDAO" autowire="byName"/>
     <bean id="intakeADao" class="org.oscarehr.PMmodule.dao.IntakeADao" autowire="byName" />
     <bean id="intakeCDao" class="org.oscarehr.PMmodule.dao.IntakeCDao" autowire="byName" />
-    <bean id="consentDao" class="org.oscarehr.PMmodule.dao.ConsentDAO" autowire="byName" />
     <bean id="healthSafetyDao" class="org.oscarehr.PMmodule.dao.HealthSafetyDao" autowire="byName" />
     <bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
     <bean id="formsDAO" class="org.oscarehr.PMmodule.dao.FormsDAO" autowire="byName"/>

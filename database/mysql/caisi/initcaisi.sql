@@ -385,54 +385,6 @@ CREATE TABLE `client_referral` (
   PRIMARY KEY  (`referral_id`)
 );
 
-CREATE TABLE `consent` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `demographic_no` bigint(20) NOT NULL default '0',
-  `provider_no` varchar(255) NOT NULL default '',
-  `provider_name` varchar(255) default NULL,
-  `date_signed` datetime default NULL,
-  `answer_1` int(11) default NULL,
-  `answer_2` int(11) default NULL,
-  `answer_3` int(11) default NULL,
-  `status` varchar(255) default NULL,
-  `hardcopy` tinyint(1) default NULL,
-  `location` varchar(255) default NULL,
-  `form_name` varchar(255) default NULL,
-  `form_version` varchar(255) default NULL,
-  `signature_declaration` tinyint(1) default NULL,
-  `exclusions` varchar(255) default NULL,
-  `refused` tinyint(1) default NULL,
-  PRIMARY KEY  (`id`)
-);
-
---
--- Table structure for table `consent_interview`
---
-
-CREATE TABLE `consent_interview` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `consent_id` bigint(20) NOT NULL default '0',
-  `demographic_no` bigint(20) NOT NULL default '0',
-  `provider_no` varchar(255) NOT NULL default '',
-  `form_name` varchar(255) default NULL,
-  `form_version` varchar(255) default NULL,
-  `language` varchar(255) default NULL,
-  `language_other` varchar(255) default NULL,
-  `language_read` varchar(255) default NULL,
-  `language_read_other` varchar(255) default NULL,
-  `education` varchar(255) default NULL,
-  `review` varchar(255) default NULL,
-  `review_other` varchar(255) default NULL,
-  `pressure` varchar(255) default NULL,
-  `pressure_other` varchar(255) default NULL,
-  `information` varchar(255) default NULL,
-  `information_other` varchar(255) default NULL,
-  `followup` varchar(255) default NULL,
-  `followup_other` varchar(255) default NULL,
-  `comments` varchar(255) default NULL,
-  `comments_other` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
-);
 
 CREATE TABLE `cr_cert` (
   `cert_id` varchar(37) NOT NULL default '',

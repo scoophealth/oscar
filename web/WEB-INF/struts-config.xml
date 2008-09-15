@@ -239,10 +239,6 @@
         <form-bean name="healthSafetyForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="healthsafety" type="org.oscarehr.PMmodule.model.HealthSafety" />
         </form-bean>
-        <form-bean name="consentForm" type="org.apache.struts.validator.DynaValidatorForm">
-            <form-property name="consent" type="org.oscarehr.PMmodule.model.Consent" />
-            <form-property name="interview" type="org.oscarehr.PMmodule.model.ConsentInterview" />
-        </form-bean>
         <form-bean name="programManagerViewForm" type="org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean" />
         <form-bean name="programManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="view" type="org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean" />
