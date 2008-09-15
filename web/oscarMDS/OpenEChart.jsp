@@ -26,6 +26,7 @@
  * Ontario, Canada 
  */
 -->
+<%@ page import="java.net.URLEncoder"%>
 <html>
 <head><title>E-Chart</title>
   
@@ -53,14 +54,14 @@ function popupPage(vheight,vwidth,varpage) {
   }
 }
 
-popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=Lab+Results-Notes&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&status=');
+popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=Lab+Results-Notes&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&encType=<%=URLEncoder.encode("Lab Results","UTF-8")%>&status=');
 //window.close();
 </script>
 
 </head>
 <body>
 
-<a href="javascript:popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=Lab+Results-Notes&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&status=');window.close();">Please click here to go to the patient's E-Chart.</a>
+<a href="javascript:popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=Lab+Results-Notes&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&encType=<%=URLEncoder.encode("Lab Results","UTF-8")%>&status=');window.close();">Please click here to go to the patient's E-Chart.</a>
 
 </body>
 </html>
