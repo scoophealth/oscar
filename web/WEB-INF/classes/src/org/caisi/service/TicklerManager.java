@@ -170,7 +170,7 @@ public class TicklerManager {
 	        ProgramAccess pa = null;        
 	
 	        //read
-	        pa = (ProgramAccess)programAccessMap.get("read " + ticklerRole + " ticklers");
+	        pa = (ProgramAccess)programAccessMap.get("read ticklers assigned to a " + ticklerRole );
 	        if (pa != null) {
 	            if (pa.isAllRoles() || caseManagementManager.isRoleIncludedInAccess(pa, role)) {                
 	                add = true;
