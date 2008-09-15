@@ -288,8 +288,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				}
 			}
 
-			if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
-				admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds(), null);
+			//if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
+			if (!formBean.getSelectedServiceProgramIds().isEmpty()) {
+			admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds(), null);
 			}
 
 			if ("normal".equals(saveWhich)) {
