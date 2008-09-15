@@ -28,18 +28,15 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
-import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 
 import com.quatro.service.LookupManager;
 
@@ -88,20 +85,9 @@ public class ClientSearchAction2 extends BaseAction {
 		request.setAttribute("allBedPrograms", allBedPrograms);
 		
 		formBean.setProgramDomain((List)request.getSession().getAttribute("program_domain"));
-		boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
 		
 		/* do the search */
-		request.setAttribute("clients",clientManager.search(formBean, allowOnlyOptins));
-		
-		// sort out the consent type used to search
-		String consentSearch=StringUtils.trimToNull(request.getParameter("search_with_consent"));
-		String emergencySearch=StringUtils.trimToNull(request.getParameter("emergency_search"));
-		String consent=null;
-		
-		if (consentSearch!=null && emergencySearch!=null) throw(new IllegalStateException("This is an unexpected state, both search_with_consent and emergency_search are not null."));
-		else if (consentSearch!=null) consent=Demographic.ConsentGiven.ALL.name();
-		else if (emergencySearch!=null) consent=Demographic.ConsentGiven.ALL.name();
-		request.setAttribute("consent", consent);
+		request.setAttribute("clients",clientManager.search(formBean));		
 
 		if(formBean.isSearchOutsideDomain()) {
 			logManager.log("read","out of domain client search","",request);

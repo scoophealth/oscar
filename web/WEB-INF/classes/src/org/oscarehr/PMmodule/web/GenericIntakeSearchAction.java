@@ -118,8 +118,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         // UCF
         request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
 
-        boolean allowOnlyOptins = UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
-        List<Demographic> localMatches = localSearch(intakeSearchBean, allowOnlyOptins);
+        List<Demographic> localMatches = localSearch(intakeSearchBean);
         intakeSearchBean.setLocalMatches(localMatches);
 
         intakeSearchBean.setSearchPerformed(true);
@@ -242,7 +241,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     	else return(""+i);
     }
     
-    private List<Demographic> localSearch(GenericIntakeSearchFormBean intakeSearchBean, boolean allowOnlyOptins) {
+    private List<Demographic> localSearch(GenericIntakeSearchFormBean intakeSearchBean) {
         ClientSearchFormBean clientSearchBean = new ClientSearchFormBean();
         clientSearchBean.setFirstName(intakeSearchBean.getFirstName());
         clientSearchBean.setLastName(intakeSearchBean.getLastName());
@@ -250,7 +249,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         clientSearchBean.setSearchOutsideDomain(true);
         clientSearchBean.setSearchUsingSoundex(true);
 
-        return clientManager.search(clientSearchBean, allowOnlyOptins);
+        return clientManager.search(clientSearchBean);
     }
 
     private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean, boolean populateDefaultBirthDate) {

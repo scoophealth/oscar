@@ -72,8 +72,8 @@ public class ClientManager {
         return dao.getClients();
     }
 
-    public List<Demographic> search(ClientSearchFormBean criteria, boolean returnOptinsOnly) {
-        return dao.search(criteria, returnOptinsOnly);
+    public List<Demographic> search(ClientSearchFormBean criteria) {
+        return dao.search(criteria);
     }
 
     public java.util.Date getMostRecentIntakeADate(String demographicNo) {

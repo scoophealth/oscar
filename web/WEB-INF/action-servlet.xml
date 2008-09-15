@@ -58,7 +58,6 @@
     <bean name="/PMmodule/IntakeA" class="org.oscarehr.PMmodule.web.IntakeAAction2" singleton="false"  autowire="byName" />
     <bean name="/PMmodule/IntakeC" class="org.oscarehr.PMmodule.web.IntakeCAction2" singleton="false" autowire="byName" />
     <bean name="/PMmodule/HealthSafety" class="org.oscarehr.PMmodule.web.HealthSafetyAction" singleton="false" autowire="byName" />
-    <bean name="/PMmodule/Consent" class="org.oscarehr.PMmodule.web.ConsentAction" singleton="false"  autowire="byName" />
     <bean name="/PMmodule/StaffManager" class="org.oscarehr.PMmodule.web.admin.StaffManagerAction" singleton="false"  autowire="byName" />
     <bean name="/PMmodule/Intake" class="org.oscarehr.PMmodule.web.IntakeAction" singleton="false"  autowire="byName" />
     <bean name="/PMmodule/Forms/FollowUp" class="org.oscarehr.PMmodule.web.forms.FollowUpAction" singleton="false"  autowire="byName" />

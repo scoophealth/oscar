@@ -35,12 +35,6 @@ function summary_load() {
 	showEMPILinks();
 }
 
-function consent_mandatory() {
-	<c:if test="${empty consent}">
-		openConsent();
-	</c:if>
-}
-
 function openRelations(){
         var url = '../demographic/AddAlternateContact.jsp';
 		url += '?demo='+ '<c:out value="${client.demographicNo}"/>&pmmClient=yes';
@@ -55,19 +49,6 @@ function printQuickIntake(clientId,intakeId) {
 	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=quick&clientId=" + clientId+"&intakeId=" + intakeId;
 	window.open(url, 'quickIntakePrint', 'width=1024,height=768,scrollbars=1');
 }
-
-function openConsent(){
-	var url = '<html:rewrite action="/PMmodule/Consent.do"/>';
-		url += '?method=form&id='+ '<c:out value="${client.demographicNo}"/>';
-	window.open(url,'consent');
-}	
-
-function showConsent(){
-	var url = '<html:rewrite action="/PMmodule/Consent.do?method=view" />';
-		url += "&clientName="+'<c:out value="${client.formattedName}"/>';
-		url += "&demographicNo="+'<c:out value="${client.demographicNo}"/>';
-	window.open(url);	
-}		
 
 function openHealthSafety(){
 	var url = '<html:rewrite action="/PMmodule/HealthSafety.do"/>';
@@ -92,18 +73,11 @@ function showEMPILinks() {
 	}
 }
 
-function updateSharingOpting(state) {
-	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=update_sharing_opting&state="+state+"&id=<c:out value='${client.demographicNo}'/>";
-}
-
 function saveJointAdmission(clientId,headClientId,jType){
 	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=save_joint_admission&clientId=<c:out value='${client.demographicNo}'/>&headClientId="+headClientId+"&dependentClientId="+clientId+"&type="+jType;
 }
 function removeJointAdmission(clientId){
 	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=remove_joint_admission&clientId=<c:out value='${client.demographicNo}'/>&dependentClientId="+clientId;
-}
-function goToClient(clientId){
-	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=edit&clientId="+clientId;
 }
 
 function openSurvey() {	

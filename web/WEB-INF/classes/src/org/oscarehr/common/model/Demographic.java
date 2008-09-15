@@ -90,10 +90,6 @@ public class Demographic implements Serializable {
     
     private int activeCount = 0;
     private int hsAlertCount = 0;
-    public enum ConsentGiven
-    {
-        ALL, CIRCLE_OF_CARE, EMPI, INCAPACITATED_EMERGENCY, NONE
-    }
     
     public enum MethodObtained
     {

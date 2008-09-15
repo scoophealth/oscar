@@ -77,9 +77,7 @@ public class IntakeAction extends BaseAction {
         searchBean.setSearchOutsideDomain(true);
         searchBean.setSearchUsingSoundex(true);
 
-        boolean allowOnlyOptins = UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
-
-        List resultList = clientManager.search(searchBean, allowOnlyOptins);
+        List resultList = clientManager.search(searchBean);
         results = (Demographic[]) resultList.toArray(new Demographic[resultList.size()]);
         log.debug("local search found " + results.length + " match(es)");
 

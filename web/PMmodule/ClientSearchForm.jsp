@@ -129,24 +129,7 @@
 			</table>
 			<table>
 				<tr>
-					<%
-						String externalConsentPhrase=OscarProperties.getInstance().getProperty("EXTERNAL_PROVIDER_CONSENT_NOTIFICATION_PHRASE");
-						boolean userHasExternalOrErClerkRole=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
-						userHasExternalOrErClerkRole=userHasExternalOrErClerkRole || UserRoleUtils.hasRole(request, UserRoleUtils.Roles.er_clerk);
-						if (externalConsentPhrase!=null && userHasExternalOrErClerkRole)
-						{
-							%>
-							<td align="center"><input type="submit" value="search" name="search_with_consent" onclick="return confirm('<%=externalConsentPhrase%>')" /></td>
-							<td align="center"><input type="submit" value="emergency" name="emergency_search" /></td>
-							<%
-						}
-						else
-						{
-							%>
-							<td align="center"><html:submit value="search" /></td>
-							<%
-						}
-					%>
+					<td align="center"><html:submit value="search" /></td>
 					<td align="center"><input type="button" name="reset" value="reset" onclick="resetClientFields()"/></td>
 				</tr>
 			</table>

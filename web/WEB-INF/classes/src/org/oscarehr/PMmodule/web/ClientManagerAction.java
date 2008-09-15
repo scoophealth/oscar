@@ -58,8 +58,6 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.ClientReferral;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.PMmodule.model.HealthSafety;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.JointAdmission;
@@ -67,10 +65,8 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
-import org.oscarehr.common.model.Demographic.ConsentGiven;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
@@ -91,13 +87,16 @@ import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
-import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
+import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.beans.factory.annotation.Required;
@@ -1325,31 +1324,6 @@ public class ClientManagerAction extends BaseAction {
 		return mapping.findForward("view_admission");
 	}
 
-	public ActionForward update_sharing_opting(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String sharingOptinChecked = request.getParameter("state");
-		if (sharingOptinChecked != null) {
-			int id = Integer.parseInt(request.getParameter("id"));
-
-			if ("true".equals(sharingOptinChecked)) {
-				String value = Demographic.ConsentGiven.CIRCLE_OF_CARE.name();
-				clientManager.saveDemographicExt(id, Demographic.CONSENT_GIVEN_KEY, value);
-				clientManager.saveDemographicExt(id, Demographic.METHOD_OBTAINED_KEY, Demographic.MethodObtained.EXPLICIT.name());
-				logManager.log("update", "DataSharingOpting:" + value, String.valueOf(id), request);
-			}
-			else if ("false".equals(sharingOptinChecked)) {
-				String value = Demographic.ConsentGiven.NONE.name();
-				clientManager.saveDemographicExt(id, Demographic.CONSENT_GIVEN_KEY, value);
-				clientManager.saveDemographicExt(id, Demographic.METHOD_OBTAINED_KEY, Demographic.MethodObtained.EXPLICIT.name());
-				logManager.log("update", "DataSharingOpting:" + value, String.valueOf(id), request);
-			}
-			else
-				throw (new IllegalStateException("Unexpected state, sharingOptinCheckbox state = " + sharingOptinChecked));
-
-		}
-
-		return (unspecified(mapping, form, request, response));
-	}
-
 	private boolean isInDomain(long programId, List<?> programDomain) {
 		for (int x = 0; x < programDomain.size(); x++) {
 			ProgramProvider p = (ProgramProvider) programDomain.get(x);
@@ -1371,20 +1345,6 @@ public class ClientManagerAction extends BaseAction {
 
 		request.setAttribute("id", demographicNo);
 		request.setAttribute("client", clientManager.getClientByDemographicNo(demographicNo));
-
-		DemographicExt demographicExtConsent = clientManager.getDemographicExt(Integer.parseInt(demographicNo), Demographic.CONSENT_GIVEN_KEY);
-		DemographicExt demographicExtConsentMethod = clientManager.getDemographicExt(Integer.parseInt(demographicNo), Demographic.METHOD_OBTAINED_KEY);
-
-		ConsentGiven consentGiven = ConsentGiven.NONE;
-		if (demographicExtConsent != null) consentGiven = ConsentGiven.valueOf(demographicExtConsent.getValue());
-
-		Demographic.MethodObtained methodObtained = Demographic.MethodObtained.IMPLICIT;
-		if (demographicExtConsentMethod != null) methodObtained = Demographic.MethodObtained.valueOf(demographicExtConsentMethod.getValue());
-
-		request.setAttribute("consentStatus", consentGiven.name());
-		request.setAttribute("consentMethod", methodObtained.name());
-		boolean consentStatusChecked = Demographic.ConsentGiven.ALL == consentGiven || Demographic.ConsentGiven.CIRCLE_OF_CARE == consentGiven;
-		request.setAttribute("consentCheckBoxState", consentStatusChecked ? "checked=\"checked\"" : "");
 
 		String providerNo = getProviderNo(request);
 

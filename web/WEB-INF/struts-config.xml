@@ -1496,12 +1496,6 @@
             <forward name="edit" path="/PMmodule/HealthSafety.jsp" />
             <forward name="success" path="/PMmodule/HealthSafetyExit.jsp" />
         </action>
-        <action path="/PMmodule/Consent" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="consentForm" input="/PMmodule/Consent/consentFormA.jsp" validate="false">
-            <forward name="formA" path="/PMmodule/Consent/consentFormA.jsp" />
-            <forward name="formB" path="/PMmodule/Consent/consentFormB.jsp" />
-            <forward name="interview" path="/PMmodule/Consent/consentInterview.jsp" />
-            <forward name="success" path="/PMmodule/Consent/exit.jsp" />
-        </action>
         <action path="/PMmodule/StaffManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="staffManagerForm" scope="request">
             <forward name="list" path="page.pmm.staff.list" />
             <forward name="edit" path="page.pmm.staff.edit" />

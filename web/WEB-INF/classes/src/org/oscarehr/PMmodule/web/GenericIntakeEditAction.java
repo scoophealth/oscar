@@ -46,7 +46,6 @@ import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
@@ -54,10 +53,11 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
+import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.SessionConstants;
 
@@ -564,21 +564,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	private void saveClient(Demographic client, String providerNo) {
 		client.setProviderNo(providerNo);
 
-		Demographic.ConsentGiven defaultConsentStatus = null;
-
-		String consentDefaultString = OscarProperties.getInstance().getProperty("CONSENT_DEFAULT");
-		if (consentDefaultString != null) consentDefaultString = consentDefaultString.trim();
-		// yes I know this step is silly since I convert it back to a string later but it ensures it's a valid option.
-		if (consentDefaultString != null) defaultConsentStatus = Demographic.ConsentGiven.valueOf(consentDefaultString);
-
-		// local save
 		clientManager.saveClient(client);
-
-		if (defaultConsentStatus != null) {
-			clientManager.saveDemographicExt(client.getDemographicNo(), Demographic.CONSENT_GIVEN_KEY, defaultConsentStatus.name());
-			clientManager.saveDemographicExt(client.getDemographicNo(), Demographic.METHOD_OBTAINED_KEY, Demographic.MethodObtained.IMPLICIT.name());
-		}
-
 	}
 
 	private void admitExternalProgram(Integer clientId, String providerNo, Integer externalProgramId) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
