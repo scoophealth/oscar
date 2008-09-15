@@ -61,7 +61,7 @@
        noteIndex = String.valueOf(frm.getCaseNote().getId());       
        System.out.println("SETTING noteIndex " + noteIndex);
     %>
-    <div id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
+    <div style="background-color:#CCCCFF;" id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
     <div id="observation<nested:write name="caseManagementEntryForm" property="caseNote.id" />" style="float:right;margin-right:3px;">
 </nested:notEmpty>
     <nested:notEmpty name="ajaxsave">
@@ -228,7 +228,7 @@
    var txtColour = txtStyles[0].substr(txtStyles[0].indexOf("#"));
    var background = txtStyles[1].substr(txtStyles[1].indexOf("#"));
    var summary = "sumary" + "<%=noteIndex%>";
-   console.log("Summary " + summary);
+   
    if( $("observationDate") != null ) {
         $("observationDate").style.color = txtColour;
         $("observationDate").style.backgroundColor = background; 
