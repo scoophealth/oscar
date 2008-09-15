@@ -12,7 +12,7 @@
 	Integer facilityId= (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	
 	IntegratorConsentComplexExitInterviewDao integratorConsentComplexExitInterviewDao=(IntegratorConsentComplexExitInterviewDao)SpringUtils.getBean("integratorConsentComplexExitInterviewDao");
-	FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk(facilityId,demographicId);
+	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(facilityId,demographicId);
 	IntegratorConsentComplexExitInterview integratorConsentComplexExitInterview=integratorConsentComplexExitInterviewDao.find(pk);
 	if (integratorConsentComplexExitInterview==null)
 	{
