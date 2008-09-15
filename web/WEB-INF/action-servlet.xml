@@ -69,8 +69,6 @@
         <property name="admissionManager" ref="admissionManager"/>
     </bean>
     <bean name="/PMmodule/Reports/BasicReport" class="org.oscarehr.PMmodule.web.reports.BasicReportAction" singleton="false" autowire="byName" />
-    <bean name="/PMmodule/Reports/ExitInterviewReport" class="org.oscarehr.PMmodule.web.reports.ExitInterviewReportAction" singleton="false"  autowire="byName" />
-    <bean name="/PMmodule/Reports/ExitInterviewReportDetailed" class="org.oscarehr.PMmodule.web.reports.ExitInterviewReportDetailedAction" singleton="false"  autowire="byName" />
     <bean name="/PMmodule/Reports/ClientListsReport" class="org.oscarehr.PMmodule.web.reports.ClientListsReportAction" singleton="false" autowire="byName" />
     <bean name="/PMmodule/Admin/DefaultRoleAccess" class="org.oscarehr.PMmodule.web.admin.DefaultRoleAccessAction" singleton="false"  autowire="byName" />
     <!-- Generic Intake -->

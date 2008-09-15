@@ -301,26 +301,6 @@
 			value="/PMmodule/reports/BasicReport.jsp" />
 	</definition>
 	<definition
-		name="page.report.exitinterviewform"
-		path="/PMmodule/layout.jsp">
-		<put
-			name="navigation"
-			value="/PMmodule/navigation.jsp" />
-		<put
-			name="body"
-			value="/PMmodule/reports/ExitInterviewReport.jsp" />
-	</definition>
-	<definition
-		name="page.report.exitinterviewformdetailed"
-		path="/PMmodule/layout.jsp">
-		<put
-			name="navigation"
-			value="/PMmodule/navigation.jsp" />
-		<put
-			name="body"
-			value="/PMmodule/reports/ExitInterviewReportDetailed.jsp" />
-	</definition>
-	<definition
 		name="page.pmm.admin.defaultroleaccess.list"
 		path="/PMmodule/layout.jsp">
 		<put

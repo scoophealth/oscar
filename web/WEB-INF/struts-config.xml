@@ -1598,12 +1598,6 @@
         <action path="/PMmodule/Reports/BasicReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
             <forward name="form" path="page.report.basicform" />
         </action>
-        <action path="/PMmodule/Reports/ExitInterviewReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
-            <forward name="form" path="page.report.exitinterviewform" />
-        </action>
-        <action path="/PMmodule/Reports/ExitInterviewReportDetailed" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
-            <forward name="form" path="page.report.exitinterviewformdetailed" />
-        </action>
         <action path="/PMmodule/Reports/ClientListsReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="clientListsReportForm" scope="request" validate="false">
             <forward name="form" path="page.report.clientlistsreportform" />
             <forward name="report" path="page.report.clientlistsreport" />

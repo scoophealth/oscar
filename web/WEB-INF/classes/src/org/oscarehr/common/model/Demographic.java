@@ -43,9 +43,6 @@ public class Demographic implements Serializable {
 
     private static final String SEPERATOR = "-";
 
-    public static final String CONSENT_GIVEN_KEY="CONSENT_GIVEN";
-    public static final String METHOD_OBTAINED_KEY="METHOD_OBTAINED";
-
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer demographicNo;// fields
     private String phone;

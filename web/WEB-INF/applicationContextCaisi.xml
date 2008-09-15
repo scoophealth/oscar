@@ -139,12 +139,6 @@
         </property>
     </bean>
    
-    <bean id="consentManager" parent="baseTransactionProxy" lazy-init="default"
-          dependency-check="default">
-        <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.ConsentManager" autowire="byName"/>
-        </property>
-    </bean>
     <bean id="logManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">

@@ -6,14 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.BedCheckTimeManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ClientManager;
-import org.oscarehr.PMmodule.service.ConsentManager;
 import org.oscarehr.PMmodule.service.FormsManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
@@ -27,6 +25,7 @@ import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.model.Demographic;
 
 import com.quatro.service.LookupManager;
 
@@ -72,8 +71,6 @@ abstract class BaseGenericIntakeAction extends BaseAction {
     protected BedManager bedManager;
 
     protected ClientManager clientManager;
-
-    protected ConsentManager consentManager;
 
     protected FormsManager formsManager;
 
@@ -190,10 +187,6 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 
     public void setClientManager(ClientManager mgr) {
     	this.clientManager = mgr;
-    }
-
-    public void setConsentManager(ConsentManager mgr) {
-    	this.consentManager = mgr;
     }
 
     public void setFormsManager(FormsManager mgr) {
