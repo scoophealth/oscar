@@ -64,7 +64,7 @@ String [][] dbQueries=new String[][] {
 
 <%      
   oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
-  String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
+  String strEditable = pros.getProperty("TEST_APPT_STATUS_DROPDOWN");
   WebApplicationContext wc = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
   AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)wc.getBean("AppointmentStatusMgr");
   List allStatus = apptStatusMgr.getAllActiveStatus();
