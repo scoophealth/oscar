@@ -1985,7 +1985,7 @@ CREATE TABLE `formDischargeSummary` (
   `providerName` varchar(60) default NULL,
   `signature` varchar(60) default NULL,
   `signatureDate` varchar(20) default NULL,
-  `notes` varchar(255) default NULL,
+  `notes` text default NULL,
   PRIMARY KEY  (`id`)  
 );
 
