@@ -54,8 +54,7 @@ insert into default_role_access (role_id,access_id) values ((select role_id from
 insert into default_role_access (role_id,access_id) values ((select role_id from caisi_role where name='doctor'),(select access_id from access_type where name='Run Report Runner'));
 insert into default_role_access (role_id,access_id) values ((select role_id from caisi_role where name='doctor'),(select access_id from access_type where name='Design Reports'));
 
--- issues
-INSERT INTO issue (code, description, role, update_date) SELECT icd10.code, icd10.short_desc, 'doctor', now() FROM icd10;
+
 
 INSERT INTO issue (code,description,role,update_date) values('CTCMM1000','Safety','counsellor',Now());
 INSERT INTO issue (code,description,role,update_date) values('CTCMM2000','Health','counsellor',Now());
@@ -224,11 +223,7 @@ INSERT INTO secRole (role_name)
 VALUES ('remote_access');
 
 
---
--- Populate issue
---
-INSERT INTO issue (code, description, role, update_date)
-	 SELECT icd9.icd9, icd9.description, 'doctor', now() FROM icd9;
+
 --
 -- Sherbourne Summary Discharge Form
 --
