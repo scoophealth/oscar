@@ -1,3 +1,4 @@
+2008-09-16 : add/edit appointment page, change input field for status to dropdown list box (Toby)
 2008-09-12 : Caisi Integrator has the ability to manage which demographics are linked together. (Ted)
 2008-09-11 : Fixed error when correcting invoices duplicate codes can be created for ON billing (Randy,2105933)
 2008-09-09 : Fixed bug with Report By Template with dates in Firefox 3 and Safari which only the bottom date param would work (Jay,2102612)

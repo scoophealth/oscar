@@ -14,6 +14,7 @@ import oscar.appt.status.model.AppointmentStatus;
  */
 public interface AppointmentStatusMgr {
 	public List getAllStatus();
+        public List getAllActiveStatus();
         public AppointmentStatus getStatus(int ID);
         public void changeStatus(int ID, int iActive);
 	public void modifyStatus(int ID, String strDesc, String strColor);

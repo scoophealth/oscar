@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Expression;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Order;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -16,6 +17,14 @@ public class AppointmentStatusDAOHibernate extends HibernateDaoSupport
 
     public List getAllStatus() {
         Criteria c = getSession().createCriteria(AppointmentStatus.class);
+        c = c.addOrder(Order.asc("id"));
+        List list = c.list();
+        return list;
+    }
+    
+    public List getAllActiveStatus() {
+        Criteria c = getSession().createCriteria(AppointmentStatus.class);
+        c.add(Expression.eq("Active",1));
         c = c.addOrder(Order.asc("id"));
         List list = c.list();
         return list;

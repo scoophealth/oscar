@@ -28,6 +28,10 @@ public class AppointmentStatusMgrImpl implements AppointmentStatusMgr {
     public List getAllStatus(){
         return appointStatusDao.getAllStatus();
     };
+    
+    public List getAllActiveStatus(){
+        return appointStatusDao.getAllActiveStatus();
+    };
 
     public AppointmentStatus getStatus(int ID){
         return appointStatusDao.getStatus(ID);

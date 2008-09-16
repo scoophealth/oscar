@@ -32,6 +32,10 @@
 
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*, oscar.appt.*, oscar.oscarDB.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="org.springframework.web.context.WebApplicationContext" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="oscar.appt.status.service.AppointmentStatusMgr" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="oscar.appt.status.model.AppointmentStatus" errorPage="../appointment/errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="addApptBean" class="oscar.AppointmentMainBean" scope="page" /><%@ include file="../admin/dbconnection.jsp" %>
@@ -56,6 +60,14 @@ String [][] dbQueries=new String[][] {
 
   addApptBean.doConfigure(dbParams,dbQueries);
   int iPageSize=5;
+%>
+
+<%      
+  oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
+  String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
+  WebApplicationContext wc = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+  AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)wc.getBean("AppointmentStatusMgr");
+  List allStatus = apptStatusMgr.getAllActiveStatus();
 %>
 <!--  
 
@@ -519,7 +531,22 @@ String disabled="";
             <td width="20%"> <INPUT TYPE="TEXT" NAME="appointment_date" VALUE="<%=dateString2%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td> 
             <td width="5%" ></td> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formStatus"/>:</font></div></td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="status" VALUE='<%=bFirstDisp?"t":request.getParameter("status").equals("")?"":request.getParameter("status")%>'  WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td> 
+            <td width="20%"> 
+            <%
+            if (strEditable!=null&&strEditable.equalsIgnoreCase("yes")){
+            %>
+              <select name="status" STYLE="width: 154px" HEIGHT="20" border="0">
+                <% for (int i = 0; i < allStatus.size(); i++) { %>
+                <option value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()%>" <%=((AppointmentStatus)allStatus.get(i)).getStatus().equals("t")?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
+                <% } %>
+              </select>
+            <%
+            }
+            if (strEditable==null || !strEditable.equalsIgnoreCase("yes")){
+            %>
+            <INPUT TYPE="TEXT" NAME="status" VALUE='<%=bFirstDisp?"t":request.getParameter("status").equals("")?"":request.getParameter("status")%>'  WIDTH="25" HEIGHT="20" border="0" hspace="2"> 
+            <%}%>
+            </td> 
           </tr> 
           <tr valign="middle" BGCOLOR="#EEEEFF"> 
             <td width="20%"> <div align="right"><font face="arial"><font face="arial"><bean:message key="Appointment.formStartTime"/>:</font></font></div></td> 

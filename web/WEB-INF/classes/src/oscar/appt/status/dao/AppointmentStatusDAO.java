@@ -9,4 +9,5 @@ public interface AppointmentStatusDAO {
         public void changeStatus(int ID, int iActive);
 	public void modifyStatus(int ID, String strDesc, String strColor);
         public int checkStatusUsuage(List allStatus);	
+        public List getAllActiveStatus();
 }

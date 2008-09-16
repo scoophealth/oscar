@@ -15,6 +15,10 @@
   ApptData apptObj = (new ApptOpt()).getApptObj(request);
 %>
 <%@ page import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" errorPage="errorpage.jsp" %>
+<%@ page import="org.springframework.web.context.WebApplicationContext" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.appt.status.service.AppointmentStatusMgr" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.appt.status.model.AppointmentStatus" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -44,6 +48,13 @@
  * Ontario, Canada 
  */
 -->
+<%      
+  oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
+  String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
+  WebApplicationContext wc = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+  AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)wc.getBean("AppointmentStatusMgr");
+  List allStatus = apptStatusMgr.getAllActiveStatus();
+%>
 <html:html locale="true">
 <head><title><bean:message key="appointment.editappointment.title"/></title>
 
@@ -270,9 +281,22 @@ function onCut() {
             <td width="20%"  ALIGN="LEFT"> 
               <div align="right"><font face="arial"> <bean:message key="Appointment.formStatus"/> :</font></div>
             </td>
-            <td width="20%"  ALIGN="LEFT"> 
+            <td width="20%"  ALIGN="LEFT">
+            <%
+            if (strEditable!=null&&strEditable.equalsIgnoreCase("yes")){
+            %>
+              <select name="status" STYLE="width: 154px" HEIGHT="20" border="0">
+                <% for (int i = 0; i < allStatus.size(); i++) { %>
+                <option value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()%>" <%=((AppointmentStatus)allStatus.get(i)).getStatus().equals(apptMainBean.getString(rs,"status"))?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
+                <% } %>
+              </select>
+            <%
+            }
+            if (strEditable==null || !strEditable.equalsIgnoreCase("yes")){
+            %>
               <INPUT TYPE="TEXT" NAME="status" VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"status"):request.getParameter("status")%>"  WIDTH="25" HEIGHT="20" border="0" hspace="2">
-            </td>
+            <%}%>
+	   </td>
           </tr>
           <tr valign="middle"> 
             <td width="20%"  ALIGN="LEFT"> 
