@@ -881,7 +881,8 @@ function changeToView(id) {
     var sig = 'sig' + nId;
 
     //check if case note has been changed
-    //if so, warn user that changes will be lost if not saved    
+    //if so, warn user that changes will be lost if not saved        
+
     if( origCaseNote != $F(id)  || origObservationDate != $("observationDate").value) {
         if( !confirm("Your changes to the current note have not been saved. Select Ok to save and continue or Cancel to continue editing current note"))
             return false;
@@ -918,7 +919,9 @@ function changeToView(id) {
     clearTimeout(autoSaveTimer);
     deleteAutoSave();      
 
-    Element.remove("notePasswd");
+    if( $("notePasswd") != null ) {
+        Element.remove("notePasswd");
+    }
 
     Element.stopObserving(id, 'keyup', monitorCaseNote);
     Element.stopObserving(id, 'click', getActiveText);   
