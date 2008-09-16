@@ -1890,15 +1890,6 @@ create table pmm_log (
     primary key (id)
 );
 
---
--- Table structure for table 'icd10'
---
-CREATE TABLE icd10 (
-    code CHAR(6) NOT NULL,
-    short_desc VARCHAR(40) NOT NULL,
-    long_desc VARCHAR(255) NOT NULL,
-    PRIMARY KEY(code)
-);
 
 --
 -- Table structure for table `program_clientstatus`
