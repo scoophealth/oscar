@@ -96,7 +96,7 @@ public class ManageIntegratorLinkedDemographics {
 		// commented out until we stop supporting jdk 1.5 which has a compiler bug for inner class/annotations.
 		// @Override
 		public int compare(IntegratorLinkedDemographicHolder o1, IntegratorLinkedDemographicHolder o2) {
-			return (o1.getMatchingScore() - o2.getMatchingScore());
+			return (o2.getMatchingScore() - o1.getMatchingScore());
 		}
 	}
 
