@@ -61,11 +61,9 @@ import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
-import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
-import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
+import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
@@ -997,9 +995,9 @@ public class ProgramManagerAction extends BaseAction {
 					remoteQueueEntry.setClientName("N/A");
 				}
 
-				FacilityIdProviderIdCompositePk pk = new FacilityIdProviderIdCompositePk();
+				FacilityIdStringCompositePk pk = new FacilityIdStringCompositePk();
 				pk.setIntegratorFacilityId(remoteReferral.getSourceIntegratorFacilityId());
-				pk.setCaisiProviderId(remoteReferral.getSourceCaisiProviderId());
+				pk.setCaisiItemId(remoteReferral.getSourceCaisiProviderId());
 				CachedProvider cachedProvider = caisiIntegratorManager.getProviderInfo(facilityId, pk);
 				if (cachedProvider != null) {
 					remoteQueueEntry.setProviderName(cachedProvider.getLastName() + ", " +cachedProvider.getFirstName());

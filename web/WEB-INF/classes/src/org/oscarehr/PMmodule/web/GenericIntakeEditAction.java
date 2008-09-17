@@ -54,7 +54,7 @@ import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.common.model.Demographic;
@@ -375,9 +375,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			sb.append("Referred from : ");
 			sb.append(cachedFacility.getName());
 
-			FacilityIdProviderIdCompositePk facilityProviderPrimaryKey = new FacilityIdProviderIdCompositePk();
+			FacilityIdStringCompositePk facilityProviderPrimaryKey = new FacilityIdStringCompositePk();
 			facilityProviderPrimaryKey.setIntegratorFacilityId(remoteReferral.getSourceIntegratorFacilityId());
-			facilityProviderPrimaryKey.setCaisiProviderId(remoteReferral.getSourceCaisiProviderId());
+			facilityProviderPrimaryKey.setCaisiItemId(remoteReferral.getSourceCaisiProviderId());
 			CachedProvider cachedProvider = caisiIntegratorManager.getProviderInfo(facilityId, facilityProviderPrimaryKey);
 			sb.append(" by ");
 			sb.append(cachedProvider.getLastName());

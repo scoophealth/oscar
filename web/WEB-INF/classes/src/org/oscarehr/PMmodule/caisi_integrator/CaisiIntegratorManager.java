@@ -37,7 +37,7 @@ import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
-import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWsService;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
@@ -223,12 +223,12 @@ public class CaisiIntegratorManager {
 		return (new ArrayList<CachedProvider>(results));
 	}
 
-	public CachedProvider getProviderInfo(int facilityId, FacilityIdProviderIdCompositePk remoteProviderPk) throws MalformedURLException
+	public CachedProvider getProviderInfo(int facilityId, FacilityIdStringCompositePk remoteProviderPk) throws MalformedURLException
 	{
 		List<CachedProvider> providers=getAllProviderInfos(facilityId);
 		
 		for (CachedProvider cachedProvider : providers) {
-			if (facilityProviderPrimaryKeyEquals(cachedProvider.getFacilityIdProviderIdCompositePk(), remoteProviderPk)) {
+			if (facilityProviderPrimaryKeyEquals(cachedProvider.getFacilityIdStringCompositePk(), remoteProviderPk)) {
 				return (cachedProvider);
 			}
 		}
@@ -236,11 +236,11 @@ public class CaisiIntegratorManager {
 		return (null);
 	}
 	
-    private static boolean facilityProviderPrimaryKeyEquals(FacilityIdProviderIdCompositePk o1, FacilityIdProviderIdCompositePk o2)
+    private static boolean facilityProviderPrimaryKeyEquals(FacilityIdStringCompositePk o1, FacilityIdStringCompositePk o2)
 	{
 		try
         {
-	        return(o1.getIntegratorFacilityId().equals(o2.getIntegratorFacilityId()) && o1.getCaisiProviderId().equals(o2.getCaisiProviderId()));
+	        return(o1.getIntegratorFacilityId().equals(o2.getIntegratorFacilityId()) && o1.getCaisiItemId().equals(o2.getCaisiItemId()));
         }
         catch (RuntimeException e)
         {

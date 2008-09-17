@@ -54,7 +54,7 @@ import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdDemographicIssueCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
-import org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
 import org.oscarehr.caisi_integrator.ws.client.PreventionExtTransfer;
 import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
@@ -251,9 +251,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 				BeanUtils.copyProperties(cachedProvider, provider);
 
-				FacilityIdProviderIdCompositePk pk = new FacilityIdProviderIdCompositePk();
-				pk.setCaisiProviderId(provider.getProviderNo());
-				cachedProvider.setFacilityIdProviderIdCompositePk(pk);
+				FacilityIdStringCompositePk pk = new FacilityIdStringCompositePk();
+				pk.setCaisiItemId(provider.getProviderNo());
+				cachedProvider.setFacilityIdStringCompositePk(pk);
 
 				cachedProviders.add(cachedProvider);
 			}

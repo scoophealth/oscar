@@ -9,7 +9,7 @@
 
 <%@page import="org.oscarehr.caisi_integrator.ws.client.CachedFacility"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.CachedProvider"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.FacilityIdProviderIdCompositePk"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention.Attributes"%>
 <%@page import="java.util.List"%><html xmlns="http://www.w3.org/1999/xhtml">
@@ -45,7 +45,7 @@
 			CachedDemographicPrevention remotePrevention = demographicInfoWs.getCachedDemographicPreventionsByPreventionId(pk);
 			
 			CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(loggedInFacilityId, remoteFacilityId);
-			FacilityIdProviderIdCompositePk providerPk=new FacilityIdProviderIdCompositePk();
+			FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 			providerPk.setIntegratorFacilityId(remotePrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 			providerPk.setCaisiProviderId(remotePrevention.getCaisiProviderId());
 			CachedProvider cachedProvider=caisiIntegratorManager.getProviderInfo(loggedInFacilityId, providerPk);
