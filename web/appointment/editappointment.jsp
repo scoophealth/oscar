@@ -50,7 +50,7 @@
 -->
 <%      
   oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
-  String strEditable = pros.getProperty("TEST_APPT_STATUS_DROPDOWN");
+  String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
   WebApplicationContext wc = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
   AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)wc.getBean("AppointmentStatusMgr");
   List allStatus = apptStatusMgr.getAllActiveStatus();
@@ -283,11 +283,19 @@ function onCut() {
             </td>
             <td width="20%"  ALIGN="LEFT">
             <%
+              String statusCode = apptMainBean.getString(rs,"status");
+              String signOrVerify = "";
+              if (statusCode.length()>=2){
+              signOrVerify = statusCode.substring(1,2);
+              statusCode = statusCode.substring(0,1);
+              }
+            %>
+            <%
             if (strEditable!=null&&strEditable.equalsIgnoreCase("yes")){
             %>
               <select name="status" STYLE="width: 154px" HEIGHT="20" border="0">
                 <% for (int i = 0; i < allStatus.size(); i++) { %>
-                <option value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()%>" <%=((AppointmentStatus)allStatus.get(i)).getStatus().equals(apptMainBean.getString(rs,"status"))?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
+                <option value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()+signOrVerify%>" <%=((AppointmentStatus)allStatus.get(i)).getStatus().equals(apptMainBean.getString(rs,"status"))?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
                 <% } %>
               </select>
             <%
