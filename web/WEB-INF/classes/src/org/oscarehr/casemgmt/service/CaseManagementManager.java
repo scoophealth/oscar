@@ -569,6 +569,8 @@ public class CaseManagementManager {
     }
 
     public boolean haveIssue(Long issid, Long noteId, String demoNo) {
+    	return caseManagementNoteDAO.haveIssue(issid, demoNo);
+    	/*
         List allNotes = caseManagementNoteDAO.getNotesByDemographic(demoNo);
         Iterator itr = allNotes.iterator();
         while (itr.hasNext()) {
@@ -584,6 +586,7 @@ public class CaseManagementManager {
             }
         }
         return false;
+        */
     }
     
     

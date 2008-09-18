@@ -25,15 +25,16 @@ package org.oscarehr.casemgmt.dao;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -234,4 +235,14 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		List results = this.getHibernateTemplate().find("select n.id from CaseManagementNote n");
 		return results;
 	}
+	
+    public boolean haveIssue(Long issid, String demoNo) {
+        SQLQuery query = this.getSession().createSQLQuery("select * from casemgmt_issue_notes where id="+issid.longValue());
+        List results = query.list();
+        //log.info("haveIssue - DAO - # of results = " + results.size());
+        if(results.size()>0)
+                return true;
+        return false;
+}
+
 }
