@@ -121,6 +121,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 		CaseManagementCPP cpp = caseForm.getCpp();
 		cpp.setUpdate_date(new Date());
+		cpp.setDemographic_no(caseForm.getDemographicNo());
 		String providerNo = getProviderNo(request);
 		caseManagementMgr.saveCPP(cpp, providerNo);
 		addMessage(request, "cpp.saved");
