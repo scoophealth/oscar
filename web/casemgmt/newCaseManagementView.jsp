@@ -401,8 +401,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 <div style="float:left; position:relative; left:30%;">
                     Sort:
                     <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
-                        <li><html:radio property="note_sort" value="update_date_asc">Date Asc</html:radio></li>
-                        <li><html:radio property="note_sort" value="update_date">Date Desc</html:radio></li>
+                        <li><html:radio property="note_sort" value="observation_date_asc">Observation Date Asc</html:radio></li>
+                        <li><html:radio property="note_sort" value="observation_date">Observation Date Desc</html:radio></li>
                         <li><html:radio property="note_sort" value="providerName">Provider</html:radio></li>
                         <li><html:radio property="note_sort" value="programName">Program</html:radio></li>
                         <li><html:radio property="note_sort" value="roleName">Role</html:radio></li>                        

@@ -406,15 +406,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			log.debug("Apply sorting to notes");
 			String noteSort = caseForm.getNote_sort();
 			if (noteSort != null && noteSort.length() > 0) {
-				request.setAttribute("Notes", sort_notes(notes, noteSort));
+				request.setAttribute("Notes", sortNotes(notes, noteSort));
 			}
 			else {
 				oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 				noteSort = p.getProperty("CMESort", "");
 				if (noteSort.trim().equalsIgnoreCase("UP"))
-					request.setAttribute("Notes", sort_notes(notes, "update_date_asc"));
+					request.setAttribute("Notes", sortNotes(notes, "observation_date_asc"));
 				else
-					request.setAttribute("Notes", sort_notes(notes, "update_date_desc"));
+					request.setAttribute("Notes", sortNotes(notes, "observation_date_desc"));
 			}
 			current = System.currentTimeMillis();
 			log.debug("Apply sorting to notes " + String.valueOf(current - start));
@@ -584,9 +584,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		String noteSort = p.getProperty("CMESort", "");
 		if (noteSort.trim().equalsIgnoreCase("UP"))
-			request.setAttribute("Notes", sort_notes(notes, "update_date_asc"));
+			request.setAttribute("Notes", sortNotes(notes, "observation_date_asc"));
 		else
-			request.setAttribute("Notes", sort_notes(notes, "update_date_desc"));
+			request.setAttribute("Notes", sortNotes(notes, "observation_date_desc"));
 
 		return mapping.findForward("listNotes");
 	}
@@ -608,12 +608,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		Integer currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 		List filteredResults = caseManagementMgr.filterNotes(filtered1, getProviderNo(request), programId, currentFacilityId);
 
-		List sortedResults = this.sort_notes(filteredResults, caseForm.getNote_sort());
+		List sortedResults = this.sortNotes(filteredResults, caseForm.getNote_sort());
 		request.setAttribute("search_results", sortedResults);
 		return view(mapping, form, request, response);
 	}
 
-	public List sort_notes(List notes, String field) throws Exception {
+	public List sortNotes(List notes, String field) throws Exception {
 		log.debug("Sorting notes by field: " + field);
 		if (field == null || field.equals("") || field.equals("update_date")) {
 			return notes;
@@ -628,12 +628,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (field.equals("roleName")) {
 			Collections.sort(notes, CaseManagementNote.getRoleComparator());
 		}
-		if (field.equals("update_date_asc")) {
-			Collections.sort(notes, CaseManagementNote.getObservationComparator());		
+		if (field.equals("observation_date_asc")) {
+			Collections.sort(notes, CaseManagementNote.noteObservationDateComparator);
+			Collections.reverse(notes);
 		}
-		if (field.equals("update_date_desc")) {
-			Collections.sort(notes, CaseManagementNote.getObservationComparator());
-                        Collections.reverse(notes);
+		if (field.equals("observation_date_desc")) {
+			Collections.sort(notes, CaseManagementNote.noteObservationDateComparator);
 		}
 
 		return notes;

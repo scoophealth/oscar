@@ -1680,7 +1680,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             notes.add(this.caseManagementMgr.getNote(noteIds[idx]));
 
         // we're not guaranteed any ordering of notes given to us, so sort by observation date
-        Collections.sort(notes, CaseManagementNote.getObservationComparator());
+        Collections.sort(notes, CaseManagementNote.noteObservationDateComparator);
         
         List<CaseManagementNote> issueNotes;
         HashMap<String,List<CaseManagementNote> >cpp = null; 
