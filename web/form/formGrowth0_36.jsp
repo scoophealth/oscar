@@ -357,8 +357,8 @@ function htEnglish2Metric(source) {
       <input type="text" name="fatherStature" size="50" maxlength="80" value="<%= props.getProperty("fatherStature", "") %>" @oscar.formDB />
 	</td>
     <td nowrap align="right">Expected Date of Confinement:</td><td>
-      <input type="text" name="edc" size="10" maxlength="10" value="<%= props.getProperty("edc", "") %>" @oscar.formDB />
-	  <img src="../images/cal.gif" id="edc_cal">
+	<input type="text" name="edc" id="edc" size="10" maxlength="10" value="<%= props.getProperty("edc", "") %>" @oscar.formDB />   
+	<img src="../images/cal.gif" id="edc_cal">
 	</td>
     </tr><tr>
     </tr>
