@@ -51,14 +51,14 @@ import org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdDemographicIssueCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
-import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.FacilityWs;
 import org.oscarehr.caisi_integrator.ws.client.PreventionExtTransfer;
-import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.ProgramWs;
+import org.oscarehr.caisi_integrator.ws.client.ProviderWs;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
@@ -171,7 +171,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		Date currentPushTime = new Date();
 
 		// do all the sync work
-		pushFacilityInfo(facility);
+		pushFacility(facility);
 		pushPrograms(facility);
 		pushProviders(facility);
 		pushAllDemographics(facility);
@@ -184,15 +184,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		facilityDao.merge(facility);
 	}
 
-	private void pushFacilityInfo(Facility facility) throws MalformedURLException {
+	private void pushFacility(Facility facility) throws MalformedURLException {
 		try {
 			CachedFacility cachedFacility = new CachedFacility();
 			BeanUtils.copyProperties(cachedFacility, facility);
 
-			FacilityInfoWs service = caisiIntegratorManager.getFacilityInfoWs(facility.getId());
+			FacilityWs service = caisiIntegratorManager.getFacilityWs(facility.getId());
 
-			logger.debug("pushing facilityInfo");
-			service.setMyFacilityInfo(cachedFacility);
+			logger.debug("pushing facility");
+			service.setMyFacility(cachedFacility);
 		}
 		catch (IllegalAccessException e) {
 			logger.error("Unexpected Error.", e);
@@ -227,7 +227,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedPrograms.add(cachedProgram);
 			}
 
-			ProgramInfoWs service = caisiIntegratorManager.getProgramInfoWs(facility.getId());
+			ProgramWs service = caisiIntegratorManager.getProgramWs(facility.getId());
 			service.setCachedPrograms(cachedPrograms);
 		}
 		catch (IllegalAccessException e) {
@@ -258,7 +258,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedProviders.add(cachedProvider);
 			}
 
-			ProviderInfoWs service = caisiIntegratorManager.getProviderInfoWs(facility.getId());
+			ProviderWs service = caisiIntegratorManager.getProviderWs(facility.getId());
 			service.setCachedProviders(cachedProviders);
 		}
 		catch (IllegalAccessException e) {
@@ -271,10 +271,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private void pushAllDemographics(Facility facility) throws MalformedURLException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
 		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
-		DemographicInfoWs service = caisiIntegratorManager.getDemographicInfoWs(facility.getId());
+		DemographicWs service = caisiIntegratorManager.getDemographicWs(facility.getId());
 
 		for (Integer demographicId : demographicIds) {
-			logger.debug("pushing demographicInfo facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 			pushDemographic(facility, service, demographicId);
 			pushDemographicIssues(facility, service, demographicId);
@@ -284,7 +284,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	}
 
-	private void pushDemographic(Facility facility, DemographicInfoWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException,
+	private void pushDemographic(Facility facility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException,
 			DatatypeConfigurationException {
 		CachedDemographic cachedDemographic = new CachedDemographic();
 
@@ -316,7 +316,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedDemographic(cachedDemographic);
 	}
 
-	private void pushDemographicImages(Facility facility, DemographicInfoWs service, Integer demographicId) {
+	private void pushDemographicImages(Facility facility, DemographicWs service, Integer demographicId) {
 		logger.debug("pushing demographicImage facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		ClientImage clientImage = clientImageDAO.getClientImage(demographicId.toString());
@@ -333,7 +333,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedDemographicImage(cachedDemographicImage);
 	}
 
-	private void pushDemographicIssues(Facility facility, DemographicInfoWs service, Integer demographicId) {
+	private void pushDemographicIssues(Facility facility, DemographicWs service, Integer demographicId) {
 		logger.debug("pushing demographicIssue facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
@@ -366,7 +366,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedDemographicIssues(issues);
 	}
 
-	private void pushDemographicPreventions(Facility facility, DemographicInfoWs service, Integer demographicId) throws DatatypeConfigurationException {
+	private void pushDemographicPreventions(Facility facility, DemographicWs service, Integer demographicId) throws DatatypeConfigurationException {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();

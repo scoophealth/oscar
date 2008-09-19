@@ -103,10 +103,10 @@ public class IntakeAAction2 extends BaseAction {
         }
 
         //this is the one set when the integrator/local imported a match
-        Demographic demographicInfo = (Demographic) request.getSession().getAttribute("demographic");
-        if (demographicInfo != null) {
+        Demographic demographic = (Demographic) request.getSession().getAttribute("demographic");
+        if (demographic != null) {
             log.debug("have demographic information from integrator/local");
-            intakeFormBean.setDemographicId(demographicInfo.getDemographicNo().longValue());
+            intakeFormBean.setDemographicId(demographic.getDemographicNo().longValue());
             //request.getSession().setAttribute("demographic",null);
         }
 
@@ -129,29 +129,29 @@ public class IntakeAAction2 extends BaseAction {
                 intakeAForm.setClientSurname(client.getLastName());
                 this.updateForm(intakeAForm, client);
             }
-            if (demographicInfo != null) {
-                intakeAForm.setClientFirstName(demographicInfo.getFirstName());
-                intakeAForm.setClientSurname(demographicInfo.getLastName());
-                intakeAForm.setDay(demographicInfo.getDateOfBirth());
-                intakeAForm.setMonth(demographicInfo.getMonthOfBirth());
-                intakeAForm.setYear(demographicInfo.getYearOfBirth());
+            if (demographic != null) {
+                intakeAForm.setClientFirstName(demographic.getFirstName());
+                intakeAForm.setClientSurname(demographic.getLastName());
+                intakeAForm.setDay(demographic.getDateOfBirth());
+                intakeAForm.setMonth(demographic.getMonthOfBirth());
+                intakeAForm.setYear(demographic.getYearOfBirth());
 
-                if (demographicInfo.getSex() != null) {
-                    if (demographicInfo.getSex().equalsIgnoreCase("M")) {
+                if (demographic.getSex() != null) {
+                    if (demographic.getSex().equalsIgnoreCase("M")) {
                         intakeAForm.setRadioSex("male");
-                    } else if (demographicInfo.getSex().equalsIgnoreCase("F")) {
+                    } else if (demographic.getSex().equalsIgnoreCase("F")) {
                         intakeAForm.setRadioSex("female");
-                    } else if (demographicInfo.getSex().equalsIgnoreCase("T")) {
+                    } else if (demographic.getSex().equalsIgnoreCase("T")) {
                         intakeAForm.setRadioSex("transgendered");
                     }
                 }
-                if (demographicInfo.getHin() != null && demographicInfo.getHin().length() > 0) {
+                if (demographic.getHin() != null && demographic.getHin().length() > 0) {
                     intakeAForm.setCboxHealthcard("Y");
-                    intakeAForm.setHealthCardNum(demographicInfo.getHin());
-                    intakeAForm.setHealthCardVer(demographicInfo.getVer());
-                    if (demographicInfo.getEffDate() != null) {
+                    intakeAForm.setHealthCardNum(demographic.getHin());
+                    intakeAForm.setHealthCardVer(demographic.getVer());
+                    if (demographic.getEffDate() != null) {
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                        intakeAForm.setEffDate(formatter.format(demographicInfo.getEffDate()));
+                        intakeAForm.setEffDate(formatter.format(demographic.getEffDate()));
                     }
                 }
             }

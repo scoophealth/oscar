@@ -44,9 +44,9 @@ import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.Referral;
-import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoParameters;
-import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoScore;
+import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
+import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicParameters;
+import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicScore;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.util.SessionConstants;
 
@@ -91,8 +91,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(currentFacilityId);
 			Referral remoteReferral=referralWs.getReferral(remoteReferralId);
 
-			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
-			CachedDemographic cachedDemographic=demographicInfoWs.getCachedDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
+			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
+			CachedDemographic cachedDemographic=demographicWs.getCachedDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
 			
 	        GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 	        intakeSearchBean.setFirstName(cachedDemographic.getFirstName());
@@ -131,7 +131,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         }
 
         // if matches found display results, otherwise create local intake
-        List<MatchingDemographicInfoScore> remoteMatches=(List<MatchingDemographicInfoScore>) request.getAttribute("remoteMatches");
+        List<MatchingDemographicScore> remoteMatches=(List<MatchingDemographicScore>) request.getAttribute("remoteMatches");
         if (!localMatches.isEmpty() || (remoteMatches!=null && remoteMatches.size()>0)) {
             return mapping.findForward(FORWARD_SEARCH_FORM);
         }
@@ -142,9 +142,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
 	private void createRemoteList(HttpServletRequest request, GenericIntakeSearchFormBean intakeSearchBean, int currentFacilityId) {
 		try {
-		    DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
+		    DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
 
-		    MatchingDemographicInfoParameters parameters = new MatchingDemographicInfoParameters();
+		    MatchingDemographicParameters parameters = new MatchingDemographicParameters();
 		    parameters.setMaxEntriesToReturn(10);
 		    parameters.setMinScore(7);
 
@@ -172,9 +172,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		    }
 		    parameters.setBirthDate(cal);
 
-		    List<MatchingDemographicInfoScore> integratedMatches = demographicInfoWs.getMatchingDemographicInfos(parameters);
+		    List<MatchingDemographicScore> integratedMatches = demographicWs.getMatchingDemographics(parameters);
 		    if (LOG.isDebugEnabled()) {
-		        for (MatchingDemographicInfoScore r : integratedMatches)
+		        for (MatchingDemographicScore r : integratedMatches)
 		            LOG.debug("*** do itegrated search results : " + r.getCachedDemographic() + " : " + r.getScore());
 		    }
 		    request.setAttribute("remoteMatches", integratedMatches);
@@ -218,14 +218,14 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
             int remoteDemographicId=Integer.parseInt(request.getParameter("remoteDemographicId"));
 
             int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-            DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(currentFacilityId);
-            CachedDemographic demographicInfo=demographicInfoWs.getCachedDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
+            DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
+            CachedDemographic cachedDemographic=demographicWs.getCachedDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
             
-            XMLGregorianCalendar cal=demographicInfo.getBirthDate();
-            Demographic demographic = Demographic.create(demographicInfo.getFirstName(), demographicInfo.getLastName(), cal==null?null:make0PrependedDateString(cal.getMonth()), cal==null?null:make0PrependedDateString(cal.getDay()), cal==null?null:String.valueOf(cal.getYear()), demographicInfo.getHin(), null, true);
-            demographic.setCity(demographicInfo.getCity());
-            demographic.setProvince(demographicInfo.getProvince());
-            demographic.setSin(demographicInfo.getSin());
+            XMLGregorianCalendar cal=cachedDemographic.getBirthDate();
+            Demographic demographic = Demographic.create(cachedDemographic.getFirstName(), cachedDemographic.getLastName(), cal==null?null:make0PrependedDateString(cal.getMonth()), cal==null?null:make0PrependedDateString(cal.getDay()), cal==null?null:String.valueOf(cal.getYear()), cachedDemographic.getHin(), null, true);
+            demographic.setCity(cachedDemographic.getCity());
+            demographic.setProvince(cachedDemographic.getProvince());
+            demographic.setSin(cachedDemographic.getSin());
             
             return forwardIntakeEditCreate(mapping, request, demographic);
         }

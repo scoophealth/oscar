@@ -53,7 +53,7 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
@@ -349,8 +349,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		if (remoteFacilityId!=null && remoteDemographicId!=null)
 		{
 			try {
-				DemographicInfoWs demographicInfoWs=caisiIntegratorManager.getDemographicInfoWs(facilityId);
-				demographicInfoWs.linkDemographics(providerNo, client.getDemographicNo(), Integer.parseInt(remoteFacilityId), Integer.parseInt(remoteDemographicId));
+				DemographicWs demographicWs=caisiIntegratorManager.getDemographicWs(facilityId);
+				demographicWs.linkDemographics(providerNo, client.getDemographicNo(), Integer.parseInt(remoteFacilityId), Integer.parseInt(remoteDemographicId));
 			}
 			catch (MalformedURLException e) {
 				LOG.error(e);

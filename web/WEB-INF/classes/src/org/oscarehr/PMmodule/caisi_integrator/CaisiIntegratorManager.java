@@ -34,16 +34,16 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWsService;
+import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
+import org.oscarehr.caisi_integrator.ws.client.DemographicWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
-import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.FacilityInfoWsService;
-import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.ProgramInfoWsService;
-import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWs;
-import org.oscarehr.caisi_integrator.ws.client.ProviderInfoWsService;
+import org.oscarehr.caisi_integrator.ws.client.FacilityWs;
+import org.oscarehr.caisi_integrator.ws.client.FacilityWsService;
+import org.oscarehr.caisi_integrator.ws.client.ProgramWs;
+import org.oscarehr.caisi_integrator.ws.client.ProgramWsService;
+import org.oscarehr.caisi_integrator.ws.client.ProviderWs;
+import org.oscarehr.caisi_integrator.ws.client.ProviderWsService;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWsService;
 import org.oscarehr.common.dao.FacilityDao;
@@ -84,11 +84,11 @@ public class CaisiIntegratorManager {
 		return (new URL(facility.getIntegratorUrl() + '/' + servicePoint + "?wsdl"));
 	}
 
-	public FacilityInfoWs getFacilityInfoWs(int facilityId) throws MalformedURLException {
+	public FacilityWs getFacilityWs(int facilityId) throws MalformedURLException {
 		Facility facility = getLocalFacility(facilityId);
 
-		FacilityInfoWsService service = new FacilityInfoWsService(buildURL(facility, "FacilityInfoService"));
-		FacilityInfoWs port = service.getFacilityInfoWsPort();
+		FacilityWsService service = new FacilityWsService(buildURL(facility, "FacilityService"));
+		FacilityWs port = service.getFacilityWsPort();
 
 		SslUtils.configureSsl(port);
 		addAuthenticationInterceptor(facility, port);
@@ -101,8 +101,8 @@ public class CaisiIntegratorManager {
 		List<CachedFacility> results = (List<CachedFacility>) simpleTimeCache.get(facilityId, "ALL_REMOTE_FACILITIES");
 
 		if (results == null) {
-			FacilityInfoWs facilityInfoWs = getFacilityInfoWs(facilityId);
-			results = facilityInfoWs.getAllFacilityInfo();
+			FacilityWs facilityWs = getFacilityWs(facilityId);
+			results = facilityWs.getAllFacility();
 			simpleTimeCache.put(facilityId, "ALL_REMOTE_FACILITIES", results);
 		}
 
@@ -120,11 +120,11 @@ public class CaisiIntegratorManager {
 		return(null);
 	}
 	
-	public DemographicInfoWs getDemographicInfoWs(int facilityId) throws MalformedURLException {
+	public DemographicWs getDemographicWs(int facilityId) throws MalformedURLException {
 		Facility facility = getLocalFacility(facilityId);
 
-		DemographicInfoWsService service = new DemographicInfoWsService(buildURL(facility, "DemographicInfoService"));
-		DemographicInfoWs port = service.getDemographicInfoWsPort();
+		DemographicWsService service = new DemographicWsService(buildURL(facility, "DemographicService"));
+		DemographicWs port = service.getDemographicWsPort();
 
 		SslUtils.configureSsl(port);
 		addAuthenticationInterceptor(facility, port);
@@ -132,11 +132,11 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public ProgramInfoWs getProgramInfoWs(int facilityId) throws MalformedURLException {
+	public ProgramWs getProgramWs(int facilityId) throws MalformedURLException {
 		Facility facility = getLocalFacility(facilityId);
 
-		ProgramInfoWsService service = new ProgramInfoWsService(buildURL(facility, "ProgramInfoService"));
-		ProgramInfoWs port = service.getProgramInfoWsPort();
+		ProgramWsService service = new ProgramWsService(buildURL(facility, "ProgramService"));
+		ProgramWs port = service.getProgramWsPort();
 
 		SslUtils.configureSsl(port);
 		addAuthenticationInterceptor(facility, port);
@@ -149,8 +149,8 @@ public class CaisiIntegratorManager {
 		List<CachedProgram> results = (List<CachedProgram>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS");
 
 		if (results == null) {
-			ProgramInfoWs programInfoWs = getProgramInfoWs(facilityId);
-			results = programInfoWs.getAllProgramInfo();
+			ProgramWs programWs = getProgramWs(facilityId);
+			results = programWs.getAllPrograms();
 			simpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS", results);
 		}
 
@@ -188,8 +188,8 @@ public class CaisiIntegratorManager {
 		List<CachedProgram> results = (List<CachedProgram>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS");
 
 		if (results == null) {
-			ProgramInfoWs programInfoWs = getProgramInfoWs(facilityId);
-			results = programInfoWs.getAllProgramInfoAllowingIntegratedReferrals();
+			ProgramWs programWs = getProgramWs(facilityId);
+			results = programWs.getAllProgramsAllowingIntegratedReferrals();
 			simpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS", results);
 		}
 
@@ -197,11 +197,11 @@ public class CaisiIntegratorManager {
 		return (new ArrayList<CachedProgram>(results));
 	}
 
-	public ProviderInfoWs getProviderInfoWs(int facilityId) throws MalformedURLException {
+	public ProviderWs getProviderWs(int facilityId) throws MalformedURLException {
 		Facility facility = getLocalFacility(facilityId);
 
-		ProviderInfoWsService service = new ProviderInfoWsService(buildURL(facility, "ProviderInfoService"));
-		ProviderInfoWs port = service.getProviderInfoWsPort();
+		ProviderWsService service = new ProviderWsService(buildURL(facility, "ProviderInfoService"));
+		ProviderWs port = service.getProviderWsPort();
 
 		SslUtils.configureSsl(port);
 		addAuthenticationInterceptor(facility, port);
@@ -214,8 +214,8 @@ public class CaisiIntegratorManager {
 		List<CachedProvider> results = (List<CachedProvider>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROVIDERS");
 
 		if (results == null) {
-			ProviderInfoWs providerInfoWs = getProviderInfoWs(facilityId);
-			results = providerInfoWs.getAllProviderInfo();
+			ProviderWs providerWs = getProviderWs(facilityId);
+			results = providerWs.getAllProviders();
 			simpleTimeCache.put(facilityId, "ALL_REMOTE_PROVIDERS", results);
 		}
 
