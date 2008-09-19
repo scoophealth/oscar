@@ -93,12 +93,12 @@ public class AddEditHtmlAction extends Action {
         EDoc currentDoc;
         System.out.println("mode: " + fm.getMode());
         if (fm.getMode().indexOf("add") != -1) {
-            currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, org.apache.commons.lang.StringEscapeUtils.escapeJava(fm.getHtml()), fm.getDocCreator(), 'H', fm.getObservationDate(), fm.getFunction(), fm.getFunctionId());
+            currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, fm.getHtml(), fm.getDocCreator(), 'H', fm.getObservationDate(), fm.getFunction(), fm.getFunctionId());
             currentDoc.setContentType("text/html");
             currentDoc.setDocPublic(fm.getDocPublic());
             EDocUtil.addDocumentSQL(currentDoc);
         } else {
-            currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), "", org.apache.commons.lang.StringEscapeUtils.escapeJava(fm.getHtml()), fm.getDocCreator(), 'H', fm.getObservationDate(), fm.getFunction(), fm.getFunctionId());
+            currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), "", fm.getHtml(), fm.getDocCreator(), 'H', fm.getObservationDate(), fm.getFunction(), fm.getFunctionId());
             currentDoc.setDocId(fm.getMode());
             currentDoc.setContentType("text/html");
             currentDoc.setDocPublic(fm.getDocPublic());

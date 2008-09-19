@@ -107,10 +107,10 @@ public class EDocUtil extends SqlUtilBaseS {
         String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, program_id, updatedatetime, status, contenttype, public1, observationdate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[11];
         int counter = 0;
-        param[counter++] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType()));
-        param[counter++] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription()));
-        param[counter++] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml()));
-        param[counter++] = new DBPreparedHandlerParam(org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName()));
+        param[counter++] = new DBPreparedHandlerParam(newDocument.getType());
+        param[counter++] = new DBPreparedHandlerParam(newDocument.getDescription());
+        param[counter++] = new DBPreparedHandlerParam(newDocument.getHtml());
+        param[counter++] = new DBPreparedHandlerParam(newDocument.getFileName());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getCreatorId());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getProgramId());
 
