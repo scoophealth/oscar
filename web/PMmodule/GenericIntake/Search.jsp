@@ -3,7 +3,7 @@
 <%@ include file="/common/messages.jsp"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographic"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.MatchingDemographicInfoScore"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.MatchingDemographicScore"%>
 <%@page import="java.util.HashMap"%>
 <h3>New Client</h3>
 <p>Please enter the following information. The system will try to determine if the client has already been entered into the system.</p>
@@ -107,7 +107,7 @@
    	<p>The following possible matches were found in the integrated community.</p>
     <display-el:table class="simple" name="requestScope.remoteMatches" id="x">
        	<%
-       		MatchingDemographicInfoScore mdir=(MatchingDemographicInfoScore)pageContext.getAttribute("x");
+       		MatchingDemographicScore mdir=(MatchingDemographicScore)pageContext.getAttribute("x");
        		CachedDemographic cdi=mdir.getCachedDemographic();
    			int facilityId=cdi.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
 			String facilityName=facilitiesNameMap.get(facilityId);

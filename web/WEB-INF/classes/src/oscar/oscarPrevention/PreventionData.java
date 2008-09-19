@@ -47,7 +47,7 @@ import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
-import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -396,8 +396,8 @@ public class PreventionData {
 	private List<CachedDemographicPrevention> populateRemotePreventions(Integer facilityId, Integer demographicId) {
 		if (remotePreventions == null && caisiIntegratorManager.isIntegratorEnabled(facilityId)) {
 			try {
-				DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(facilityId);
-				remotePreventions = demographicInfoWs.getLinkedCachedDemographicPreventionsByDemographicId(demographicId);
+				DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(facilityId);
+				remotePreventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(demographicId);
 			}
 			catch (Exception e) {
 				log.error(e);

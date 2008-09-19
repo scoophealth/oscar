@@ -61,7 +61,7 @@ import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs;
+import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
@@ -977,7 +977,7 @@ public class ProgramManagerAction extends BaseAction {
 
 	protected List<RemoteQueueEntry> getRemoteQueue(int facilityId, int programId) {
 		try {
-			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(facilityId);
+			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(facilityId);
 			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
 			List<Referral> remoteReferrals = referralWs.getReferralsToProgram(programId);
 
@@ -986,7 +986,7 @@ public class ProgramManagerAction extends BaseAction {
 				RemoteQueueEntry remoteQueueEntry = new RemoteQueueEntry();
 				remoteQueueEntry.setReferral(remoteReferral);
 
-				CachedDemographic cachedDemographic = demographicInfoWs.getCachedDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(),
+				CachedDemographic cachedDemographic = demographicWs.getCachedDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(),
 						remoteReferral.getSourceCaisiDemographicId());
 				if (cachedDemographic != null) {
 					remoteQueueEntry.setClientName(cachedDemographic.getLastName() + ", " +cachedDemographic.getFirstName());

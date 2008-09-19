@@ -153,10 +153,10 @@ public class IntakeCAction2 extends BaseAction {
 		}
 
 		// from using the /Intake action
-		Demographic demographicInfo = (Demographic) request.getSession().getAttribute("demographic");
-		if (demographicInfo != null) {
+		Demographic demographic = (Demographic) request.getSession().getAttribute("demographic");
+		if (demographic != null) {
 			log.debug("have demographic information");
-			intakeFormBean.setDemographicId(demographicInfo.getDemographicNo().longValue());
+			intakeFormBean.setDemographicId(demographic.getDemographicNo().longValue());
 		}
 
 		if (update) {
@@ -257,39 +257,39 @@ public class IntakeCAction2 extends BaseAction {
 				this.updateForm(intakeCForm, client);
 			}
 
-			if (demographicInfo != null) {
-				intakeCForm.setClientFirstName(demographicInfo.getFirstName());
-				intakeCForm.setClientSurname(demographicInfo.getLastName());
-				if (demographicInfo.getDateOfBirth().startsWith("0")) {
-					intakeCForm.setDayOfBirth(demographicInfo.getDateOfBirth().substring(1));
+			if (demographic != null) {
+				intakeCForm.setClientFirstName(demographic.getFirstName());
+				intakeCForm.setClientSurname(demographic.getLastName());
+				if (demographic.getDateOfBirth().startsWith("0")) {
+					intakeCForm.setDayOfBirth(demographic.getDateOfBirth().substring(1));
 				} else {
-					intakeCForm.setDayOfBirth(demographicInfo.getDateOfBirth());
+					intakeCForm.setDayOfBirth(demographic.getDateOfBirth());
 				}
-				if (demographicInfo.getMonthOfBirth().startsWith("0")) {
-					intakeCForm.setMonthOfBirth(demographicInfo.getMonthOfBirth().substring(1));
+				if (demographic.getMonthOfBirth().startsWith("0")) {
+					intakeCForm.setMonthOfBirth(demographic.getMonthOfBirth().substring(1));
 				} else {
-					intakeCForm.setMonthOfBirth(demographicInfo.getMonthOfBirth());
+					intakeCForm.setMonthOfBirth(demographic.getMonthOfBirth());
 				}
-				intakeCForm.setYearOfBirth(demographicInfo.getYearOfBirth());
-				if (demographicInfo.getSex() != null) {
-					if (demographicInfo.getSex().equalsIgnoreCase("M")) {
+				intakeCForm.setYearOfBirth(demographic.getYearOfBirth());
+				if (demographic.getSex() != null) {
+					if (demographic.getSex().equalsIgnoreCase("M")) {
 						intakeCForm.setRadioGender("2");
-					} else if (demographicInfo.getSex().equalsIgnoreCase("F")) {
+					} else if (demographic.getSex().equalsIgnoreCase("F")) {
 						intakeCForm.setRadioGender("1");
-					} else if (demographicInfo.getSex().equalsIgnoreCase("T")) {
+					} else if (demographic.getSex().equalsIgnoreCase("T")) {
 						// other
 						intakeCForm.setRadioGender("3");
 					}
 				}
-				if (demographicInfo.getHin() != null) {
-					if (demographicInfo.getHin() != null && demographicInfo.getHin().length() > 0) {
+				if (demographic.getHin() != null) {
+					if (demographic.getHin() != null && demographic.getHin().length() > 0) {
 						IntakeCIdentification id = new IntakeCIdentification();
-						if (demographicInfo.getHcType() != null) {
-							id.setType("Health Insurance # (" + demographicInfo.getHcType() + ")");
+						if (demographic.getHcType() != null) {
+							id.setType("Health Insurance # (" + demographic.getHcType() + ")");
 						} else {
 							id.setType("Health Insurance # (unknown province)");
 						}
-						id.setNumber(demographicInfo.getHin() + " " + demographicInfo.getVer());
+						id.setNumber(demographic.getHin() + " " + demographic.getVer());
 						identifications[0] = id;
 						formBean.setNumIdentification(1);
 					}

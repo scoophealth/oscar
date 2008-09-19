@@ -1,6 +1,6 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicWs"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention"%>
@@ -37,12 +37,12 @@
 			Integer remotePreventionId=Integer.valueOf(request.getParameter("remotePreventionId"));
 			Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 			
-			DemographicInfoWs demographicInfoWs = caisiIntegratorManager.getDemographicInfoWs(loggedInFacilityId);
+			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(loggedInFacilityId);
 
 			FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
 			pk.setIntegratorFacilityId(remoteFacilityId);
 			pk.setCaisiItemId(remotePreventionId);
-			CachedDemographicPrevention remotePrevention = demographicInfoWs.getCachedDemographicPreventionsByPreventionId(pk);
+			CachedDemographicPrevention remotePrevention = demographicWs.getCachedDemographicPreventionsByPreventionId(pk);
 			
 			CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(loggedInFacilityId, remoteFacilityId);
 			FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();

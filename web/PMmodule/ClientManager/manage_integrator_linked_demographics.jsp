@@ -4,7 +4,7 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicInfoWs"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicWs"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographic"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageIntegratorLinkedDemographics"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
