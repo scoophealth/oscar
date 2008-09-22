@@ -283,7 +283,7 @@ function onCut() {
             </td>
             <td width="20%"  ALIGN="LEFT">
             <%
-              String statusCode = apptMainBean.getString(rs,"status");
+              String statusCode = bFirstDisp?apptMainBean.getString(rs,"status"):request.getParameter("status");
               String signOrVerify = "";
               if (statusCode.length()>=2){
               signOrVerify = statusCode.substring(1,2);
