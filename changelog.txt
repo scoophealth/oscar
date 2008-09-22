@@ -1,3 +1,4 @@
+2008-09-22 : Only grab status from db if page is loading for first time else grab it from request (Randy)
 2008-09-16 : add/edit appointment page, change input field for status to dropdown list box (Toby)
 2008-09-12 : Caisi Integrator has the ability to manage which demographics are linked together. (Ted)
 2008-09-11 : Fixed error when correcting invoices duplicate codes can be created for ON billing (Randy,2105933)
