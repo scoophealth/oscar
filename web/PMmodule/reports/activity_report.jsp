@@ -1,4 +1,4 @@
-<!-- 
+<%-- 
 /*
 * Copyright (c) 2007-2008. CAISI, Toronto. All Rights Reserved.
 * This software is published under the GPL GNU General Public License. 
@@ -20,7 +20,7 @@
 * CAISI, 
 * Toronto, Ontario, Canada 
 */
- -->
+--%>
 <%@page import="java.util.*"%>
 <%@page import="org.caisi.model.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
@@ -61,9 +61,9 @@
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-<h1>Population Report : <%=program.getName()%> from <%=startDateString%> to <%=endDateString%></h1>
+<h1>Activity Report : <%=program.getName()%> from <%=startDateString%> to <%=endDateString%></h1>
 
-<input type="button" value="Back" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ProviderInfo.do'" />
+<input type="button" value="Back" onclick="history.go(-1);" />
 
 <table class="genericTable">
 	<tr class="genericTableRow">

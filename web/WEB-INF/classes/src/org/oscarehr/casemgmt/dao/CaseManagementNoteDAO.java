@@ -249,4 +249,13 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return false;
 	}
 
+	public List<CaseManagementNote> findLatestUnlockedByDemographicIdProgramId(Integer demographicId, Integer programId)
+	{
+		// yes I know this algorithm is inefficient, the data model for notes is pretty poor and should be fixed, I can't be bothered to "optimise" this for a bad data model right now as it'll create complex buggy code so I'll stick with simple slow code until the data model is fixed.
+		//---
+		// use a hashmap with key=uuid, compare for largest updateDate before adding
+		// resulting hashmap should be al the latest notes
+		
+		return(null);
+	}
 }

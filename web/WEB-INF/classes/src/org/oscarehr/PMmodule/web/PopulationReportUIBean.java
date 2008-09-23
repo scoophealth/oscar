@@ -41,79 +41,99 @@ import org.oscarehr.util.SpringUtils;
 
 public class PopulationReportUIBean {
 
-    private ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
-    private RoleDAO roleDAO = (RoleDAO)SpringUtils.getBean("roleDAO");
-    private IssueGroupDao issueGroupDao = (IssueGroupDao)SpringUtils.getBean("issueGroupDao");
-    private PopulationReportDao populationReportDao = (PopulationReportDao)SpringUtils.getBean("populationReportDao");
+	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	private RoleDAO roleDAO = (RoleDAO) SpringUtils.getBean("roleDAO");
+	private IssueGroupDao issueGroupDao = (IssueGroupDao) SpringUtils.getBean("issueGroupDao");
+	private PopulationReportDao populationReportDao = (PopulationReportDao) SpringUtils.getBean("populationReportDao");
 
-    private int programId = -1;
-    private Date startDate = null;
-    private Date endDate = null;
+	private int programId = -1;
+	private Date startDate = null;
+	private Date endDate = null;
 
-    public PopulationReportUIBean(int programId, Date startDate, Date endDate) {
+	public PopulationReportUIBean() {
 
-        this.programId = programId;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+	}
 
-    private Set<IssueGroup> allIssueGroups = null;
+	public PopulationReportUIBean(int programId, Date startDate, Date endDate) {
+		this.programId = programId;
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
 
-    public Set<IssueGroup> getIssueGroups() {
+	public void setProgramId(int programId) {
+		this.programId = programId;
+	}
 
-        if (allIssueGroups == null) allIssueGroups = new TreeSet<IssueGroup>(issueGroupDao.findAll());
-        return(allIssueGroups);
-    }
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
 
-    private Program program = null;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
-    public Program getProgram() {
+	private Set<IssueGroup> allIssueGroups = null;
 
-        if (program == null) program = programDao.getProgram(programId);
-        return(program);
-    }
+	public Set<IssueGroup> getIssueGroups() {
 
-    private List<Role> allRoles = null;
+		if (allIssueGroups == null) allIssueGroups = new TreeSet<IssueGroup>(issueGroupDao.findAll());
+		return (allIssueGroups);
+	}
 
-    public List<Role> getRoles() {
+	private Program program = null;
 
-        if (allRoles == null) allRoles = roleDAO.getRoles();
-        return(allRoles);
-    }
+	public Program getProgram() {
 
-    public RoleDataGrid getRoleDataGrid() {
+		if (program == null) program = programDao.getProgram(programId);
+		return (program);
+	}
 
-        RoleDataGrid roleDataGrid = new RoleDataGrid();
+	public List<Program> getAllPrograms() {
+		return (programDao.getAllActivePrograms());
+	}
 
-        for (Role role : getRoles()) {
-            roleDataGrid.put(role, getEncounterTypeDataGrid(role));
-        }
+	private List<Role> allRoles = null;
 
-        return(roleDataGrid);
-    }
+	public List<Role> getRoles() {
 
-    private EncounterTypeDataGrid getEncounterTypeDataGrid(Role role) {
+		if (allRoles == null) allRoles = roleDAO.getRoles();
+		return (allRoles);
+	}
 
-        EncounterTypeDataGrid result = new EncounterTypeDataGrid();
+	public RoleDataGrid getRoleDataGrid() {
 
-        for (EncounterUtil.EncounterType encounterType : EncounterUtil.EncounterType.values()) {
-            result.put(encounterType, getEncounterTypeDataRow(role, encounterType));
-        }
+		RoleDataGrid roleDataGrid = new RoleDataGrid();
 
-        return(result);
-    }
+		for (Role role : getRoles()) {
+			roleDataGrid.put(role, getEncounterTypeDataGrid(role));
+		}
 
-    private EncounterTypeDataRow getEncounterTypeDataRow(Role role, EncounterUtil.EncounterType encounterType) {
+		return (roleDataGrid);
+	}
 
-        EncounterTypeDataRow result = new EncounterTypeDataRow();
+	private EncounterTypeDataGrid getEncounterTypeDataGrid(Role role) {
 
-        Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(programId, (int)role.getId().longValue(), encounterType, startDate, endDate);
+		EncounterTypeDataGrid result = new EncounterTypeDataGrid();
 
-        for (IssueGroup issueGroup : getIssueGroups()) {
-            Integer count = counts.get(issueGroup.getId());
-            result.put(issueGroup, (count != null?count:0));
-        }
+		for (EncounterUtil.EncounterType encounterType : EncounterUtil.EncounterType.values()) {
+			result.put(encounterType, getEncounterTypeDataRow(role, encounterType));
+		}
 
-        return(result);
-    }
+		return (result);
+	}
+
+	private EncounterTypeDataRow getEncounterTypeDataRow(Role role, EncounterUtil.EncounterType encounterType) {
+
+		EncounterTypeDataRow result = new EncounterTypeDataRow();
+
+		Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(programId, (int) role.getId().longValue(), encounterType, startDate,
+				endDate);
+
+		for (IssueGroup issueGroup : getIssueGroups()) {
+			Integer count = counts.get(issueGroup.getId());
+			result.put(issueGroup, (count != null ? count : 0));
+		}
+
+		return (result);
+	}
 }

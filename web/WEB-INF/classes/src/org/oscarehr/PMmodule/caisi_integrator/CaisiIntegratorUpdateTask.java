@@ -60,8 +60,10 @@ import org.oscarehr.caisi_integrator.ws.client.PreventionExtTransfer;
 import org.oscarehr.caisi_integrator.ws.client.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.client.ProviderWs;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.DemographicDao;
@@ -88,6 +90,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private ProgramDao programDao;
 	private ProviderDao providerDao;
 	private PreventionDao preventionDao;
+	private CaseManagementNoteDAO caseManagementNoteDAO;
 
 	public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
 		this.caisiIntegratorManager = mgr;
@@ -123,6 +126,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	public void setPreventionDao(PreventionDao preventionDao) {
 		this.preventionDao = preventionDao;
+	}
+
+	public void setCaseManagementNoteDAO(CaseManagementNoteDAO caseManagementNoteDAO) {
+		this.caseManagementNoteDAO = caseManagementNoteDAO;
 	}
 
 	public void run() {
@@ -280,6 +287,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			pushDemographicIssues(facility, service, demographicId);
 			pushDemographicImages(facility, service, demographicId);
 			pushDemographicPreventions(facility, service, demographicId);
+			pushDemographicNotes(facility, service, demographicId);
 		}
 
 	}
@@ -334,7 +342,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	private void pushDemographicIssues(Facility facility, DemographicWs service, Integer demographicId) {
-		logger.debug("pushing demographicIssue facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
 		if (caseManagementIssues.size() == 0) return;
@@ -372,50 +380,47 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
 		ArrayList<PreventionExtTransfer> preventionExtsToSend = new ArrayList<PreventionExtTransfer>();
 
-		// get all preventions 
+		// get all preventions
 		// for each prevention, copy fields to an integrator prevention
 		// need to copy ext info
 		// add prevention to array list to send
-		List<Prevention> localPreventions=preventionDao.findByDemographicId(demographicId);
-		for (Prevention localPrevention : localPreventions)
-		{
-			CachedDemographicPrevention cachedDemographicPrevention=new CachedDemographicPrevention();
+		List<Prevention> localPreventions = preventionDao.findByDemographicId(demographicId);
+		for (Prevention localPrevention : localPreventions) {
+			CachedDemographicPrevention cachedDemographicPrevention = new CachedDemographicPrevention();
 			cachedDemographicPrevention.setCaisiDemographicId(demographicId);
 			cachedDemographicPrevention.setCaisiProviderId(localPrevention.getProviderNo());
-			
+
 			{
-				FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
+				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 				pk.setCaisiItemId(localPrevention.getId());
 				cachedDemographicPrevention.setFacilityPreventionPk(pk);
 			}
-			
-			if (localPrevention.getNextDate()!=null) {
-				GregorianCalendar localCalendar=(GregorianCalendar) GregorianCalendar.getInstance();
+
+			if (localPrevention.getNextDate() != null) {
+				GregorianCalendar localCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
 				localCalendar.setTimeInMillis(localPrevention.getNextDate().getTime());
-				
+
 				XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(localCalendar);
 				cachedDemographicPrevention.setNextDate(soapCalendar);
 			}
-			
-			if (localPrevention.getPreventionDate()!=null) {
-				GregorianCalendar localCalendar=(GregorianCalendar)GregorianCalendar.getInstance();
+
+			if (localPrevention.getPreventionDate() != null) {
+				GregorianCalendar localCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
 				localCalendar.setTimeInMillis(localPrevention.getPreventionDate().getTime());
 
 				XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(localCalendar);
 				cachedDemographicPrevention.setPreventionDate(soapCalendar);
 			}
-			
+
 			cachedDemographicPrevention.setPreventionType(localPrevention.getPreventionType());
-			
+
 			preventionsToSend.add(cachedDemographicPrevention);
 
-			
 			// add ext info
-			Integer preventionId=localPrevention.getId();
-			HashMap<String,String> localPreventionExts=preventionDao.getPreventionExt(preventionId);
-			for (Map.Entry<String, String> entry : localPreventionExts.entrySet())
-			{
-				PreventionExtTransfer preventionExtTransfer=new PreventionExtTransfer();
+			Integer preventionId = localPrevention.getId();
+			HashMap<String, String> localPreventionExts = preventionDao.getPreventionExt(preventionId);
+			for (Map.Entry<String, String> entry : localPreventionExts.entrySet()) {
+				PreventionExtTransfer preventionExtTransfer = new PreventionExtTransfer();
 				preventionExtTransfer.setPreventionId(preventionId);
 				preventionExtTransfer.setKey(entry.getKey());
 				preventionExtTransfer.setValue(entry.getValue());
@@ -423,7 +428,39 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			}
 		}
 
-
 		service.setCachedDemographicPreventions(preventionsToSend, preventionExtsToSend);
+	}
+
+	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) {
+		logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+//		List<CaseManagementNote> caseManagementNotes = caseManagementNoteDAO.findLatestUnlockedByDemographicIdProgramId(demographicId.toString());
+//		if (caseManagementIssues.size() == 0) return;
+//
+//		ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
+//		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
+//			try {
+//				Issue issue = caseManagementIssue.getIssue();
+//				CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
+//
+//				FacilityIdDemographicIssueCompositePk facilityDemographicIssuePrimaryKey = new FacilityIdDemographicIssueCompositePk();
+//				facilityDemographicIssuePrimaryKey.setCaisiDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
+//				facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
+//				issueTransfer.setFacilityDemographicIssuePk(facilityDemographicIssuePrimaryKey);
+//
+//				BeanUtils.copyProperties(issueTransfer, caseManagementIssue);
+//				issueTransfer.setIssueDescription(issue.getDescription());
+//
+//				issues.add(issueTransfer);
+//			}
+//			catch (IllegalAccessException e) {
+//				logger.error("Unexpected Error.", e);
+//			}
+//			catch (InvocationTargetException e) {
+//				logger.error("Unexpected Error.", e);
+//			}
+//		}
+//
+//		service.setCachedDemographicNotes(issues);
 	}
 }
