@@ -57,7 +57,7 @@
 	}
 
 	response.setContentType("application/x-download");
-	response.setHeader("Content-Disposition", "attachment; filename=" + agencyName+"_"+dateFormatter.format(startDate)+"_"+dateFormatter.format(endDate)+".csv");
+	response.setHeader("Content-Disposition", "attachment; filename=provider_service_" + agencyName+"_"+dateFormatter.format(startDate)+"_"+dateFormatter.format(endDate)+".csv");
 	
 	// print header
 	{

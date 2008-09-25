@@ -68,46 +68,45 @@
 	//    for each month...
 	//       print monthly data
 
-	boolean printedHeader = false;
 	PopulationReportUIBean populationReportUIBean = new PopulationReportUIBean();
+	
+	// print header
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("Agency Name");
+		sb.append(',');
+		sb.append("Program Name");
+		sb.append(',');
+		sb.append("Program Type");
+		sb.append(',');
+		sb.append("Date");
+		sb.append(',');
+		sb.append("Provider Role");
+		sb.append(',');
+		sb.append("Encounter Type");
+
+		for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())
+		{
+			sb.append(',');
+			sb.append(StringEscapeUtils.escapeCsv(issueGroup.getName()));
+		}
+
+		// for debugging
+		// System.err.println(sb.toString());
+		
+		response.setContentType("application/x-download");
+		response.setHeader("Content-Disposition", "attachment; filename=activity_report_" + agencyName+"_"+dateFormatter.format(startDate)+"_"+dateFormatter.format(endDate)+".csv");
+
+		out.write(sb.toString());
+		out.write('\n');
+	}
+
 	for (Program program : populationReportUIBean.getAllPrograms())
 	{
 		populationReportUIBean.setProgramId(program.getId());
 
 		String programType = program.getType();
 		if (!"Bed".equals(programType) && !"Service".equals(programType)) continue;
-
-		if (!printedHeader)
-		{
-			StringBuilder sb = new StringBuilder();
-			sb.append("Agency Name");
-			sb.append(',');
-			sb.append("Program Name");
-			sb.append(',');
-			sb.append("Program Type");
-			sb.append(',');
-			sb.append("Date");
-			sb.append(',');
-			sb.append("Provider Role");
-			sb.append(',');
-			sb.append("Encounter Type");
-
-			for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())
-			{
-				sb.append(',');
-				sb.append(StringEscapeUtils.escapeCsv(issueGroup.getName()));
-			}
-
-			// for debugging
-			// System.err.println(sb.toString());
-			
-			response.setContentType("application/x-download");
-			response.setHeader("Content-Disposition", "attachment; filename=" + agencyName+"_"+dateFormatter.format(startDate)+"_"+dateFormatter.format(endDate)+".csv");
-
-			out.write(sb.toString());
-			out.write('\n');
-			printedHeader = true;
-		}
 
 		// this line is here to ensure the calendar is materialised before cloning, it's a known "issue" in java and not considered a bug....
 		startCalendar.getTimeInMillis();
