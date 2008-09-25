@@ -333,7 +333,8 @@ CREATE TABLE `casemgmt_note` (
   KEY `FKA8D537806CCA0FC` (`provider_no`),
 	index(demographic_no),
 	index(uuid),
-	index(program_no)
+	index(program_no),
+	index(observation_date); 
 );
 
 --
