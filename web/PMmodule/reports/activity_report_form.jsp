@@ -92,15 +92,10 @@
 <form method="post" action="activity_report_export.jsp" >
 	<table>
 		<tr>
-			<td>Agency Name<br />(for display purposes only)</td>
 			<td>Start Date</td>
 			<td>EndDate (inclusive)</td>
 		</tr>
 		<tr>
-			<td>
-				<input type="text" name="agencyName" />
-			</td>
-			
 			<td>
 				<input type="text" name="startDate" />
 			</td>
@@ -111,13 +106,11 @@
 		</tr>	
 					
 		<tr>
-			<td></td>
 			<td>(YYYY-MM)</td>
 			<td>(YYYY-MM)</td>
 		</tr>
 
 		<tr>
-			<td></td>
 			<td></td>
 			<td><input type="submit" value="export" /><br />(This may take a long time on large systems.)</td>
 		</tr>

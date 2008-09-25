@@ -1,4 +1,5 @@
 
+<%@page import="oscar.util.SqlUtils"%>
 <%@page import="org.oscarehr.web.ProviderServiceReportUIBean"%><%-- 
 /*
 * Copyright (c) 2007-2008. CAISI, Toronto. All Rights Reserved.
@@ -31,7 +32,7 @@
 <%@page import="java.text.*"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
-	String agencyName = request.getParameter("agencyName");
+	String agencyName = SqlUtils.getCurrentDatabaseName();
 	String startDateString = request.getParameter("startDate");
 	String endDateString = request.getParameter("endDate");
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM");
