@@ -174,7 +174,7 @@ public class PopulationReportDao extends HibernateDaoSupport {
         ResultSet rs = null;
         try {
             c = DbConnectionFilter.getThreadLocalDbConnection();
-            ps = c.prepareStatement("select issueGroupId,count(distinct casemgmt_note.note_id) from IssueGroupIssues,casemgmt_issue,casemgmt_issue_notes,casemgmt_note where IssueGroupIssues.issue_id=casemgmt_issue.issue_id and casemgmt_issue_notes.id=casemgmt_issue.id and casemgmt_note.note_id=casemgmt_issue_notes.note_id and casemgmt_note.encounter_type=? and casemgmt_note.program_no=? and casemgmt_note.reporter_caisi_role=? and casemgmt_note.update_date>=? and casemgmt_note.update_date<=? group by issueGroupId");
+            ps = c.prepareStatement("select issueGroupId,count(distinct casemgmt_note.note_id) from IssueGroupIssues,casemgmt_issue,casemgmt_issue_notes,casemgmt_note where IssueGroupIssues.issue_id=casemgmt_issue.issue_id and casemgmt_issue_notes.id=casemgmt_issue.id and casemgmt_note.note_id=casemgmt_issue_notes.note_id and casemgmt_note.encounter_type=? and casemgmt_note.program_no=? and casemgmt_note.reporter_caisi_role=? and casemgmt_note.observation_date>=? and casemgmt_note.observation_date<=? group by issueGroupId");
             ps.setString(1, encounterType.getOldDbValue());
             ps.setInt(2, programId);
             ps.setInt(3, roleId);

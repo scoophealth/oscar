@@ -22,6 +22,11 @@
 
 package org.oscarehr.casemgmt.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +34,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
+
+import javax.persistence.PersistenceException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,9 +46,12 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
+import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.EncounterUtil;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;
+import oscar.util.SqlUtils;
 
 public class CaseManagementNoteDAO extends HibernateDaoSupport {
 
@@ -249,13 +259,42 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return false;
 	}
 
-	public List<CaseManagementNote> findLatestUnlockedByDemographicIdProgramId(Integer demographicId, Integer programId)
-	{
-		// yes I know this algorithm is inefficient, the data model for notes is pretty poor and should be fixed, I can't be bothered to "optimise" this for a bad data model right now as it'll create complex buggy code so I'll stick with simple slow code until the data model is fixed.
-		//---
+	/**
+	 * Get the unique count of demographic Id's based on the providerId and encounterType.
+	 */
+	public static int getUniqueDemographicCountByProviderAndEncounterType(String providerId, EncounterUtil.EncounterType encounterType, Date startDate, Date endDate) {
+		String sqlCommand = null;
+
+		if (encounterType == null) sqlCommand = "select count(*) from casemgmt_note where provider_no=? and observation_date>=? and observation_date<?";
+		else sqlCommand = "select count(*) from casemgmt_note where provider_no=? and observation_date>=? and observation_date<? and encounter_type=?";
+
+		Connection c = null;
+		try {
+			c = DbConnectionFilter.getThreadLocalDbConnection();
+			PreparedStatement ps = c.prepareStatement(sqlCommand);
+			ps.setString(1, providerId);
+			ps.setTimestamp(2, new Timestamp(startDate.getTime()));
+			ps.setTimestamp(3, new Timestamp(endDate.getTime()));
+			if (encounterType != null) ps.setString(4, encounterType.getOldDbValue());
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			return (rs.getInt(1));
+		}
+		catch (SQLException e) {
+			throw (new PersistenceException(e));
+		}
+		finally {
+			SqlUtils.closeResources(c, null, null);
+		}
+	}
+
+	public List<CaseManagementNote> findLatestUnlockedByDemographicIdProgramId(Integer demographicId, Integer programId) {
+		// yes I know this algorithm is inefficient, the data model for notes is pretty poor and should be fixed, I can't be bothered to "optimise" this for a bad data model right
+		// now as it'll create complex buggy code so I'll stick with simple slow code until the data model is fixed.
+		// ---
 		// use a hashmap with key=uuid, compare for largest updateDate before adding
 		// resulting hashmap should be al the latest notes
-		
-		return(null);
+
+		return (null);
 	}
 }

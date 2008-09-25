@@ -29,67 +29,17 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 
 <%
-	ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-	
-	List<Program> allPrograms=programDao.getAllActivePrograms();
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 	
-<h1>Activity Report Form</h1>
+<h1>Provider Service Report Form</h1>
 	
-<form method="post" action="activity_report.jsp" >
-	<table>
-		<tr>
-			<td>Program</td>
-			<td>Start Date</td>
-			<td>End Date</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<select name="programId">
-					<%
-						for (Program program : allPrograms)
-						{
-							%>
-								<option value="<%=program.getId() %>"><%=program.getName()%></option>
-							<%
-						}
-					%>
-				</select>
-			</td>
-			
-			<td>
-				<input type="text" name="startDate" />
-			</td>
-			
-			<td>
-				<input type="text" name="endDate" />
-			</td>
-		</tr>	
-					
-		<tr>
-			<td></td>
-			<td>(YYYY-MM-DD)</td>
-			<td>(YYYY-MM-DD)</td>
-		</tr>
-
-		<tr>
-			<td></td>
-			<td></td>
-			<td><input type="submit" /></td>
-		</tr>
-	</table>
-</form>
-	
-<hr />
-
 <h2>Export to csv</h2>
-(This will export all bed/service programs to a csv broken down by month.)
+(This will provide a break down of all unique encounters of a demographic to a provider, broken down by month and for the entire interval as well.)
 
-<form method="post" action="activity_report_export.jsp" >
+<form method="post" action="provider_service_report_export.jsp" >
 	<table>
 		<tr>
 			<td>Agency Name<br />(for display purposes only)</td>
@@ -119,7 +69,7 @@
 		<tr>
 			<td></td>
 			<td></td>
-			<td><input type="submit" value="export" /><br />(This may take a long time on large systems.)</td>
+			<td><input type="submit" value="export" /></td>
 		</tr>
 	</table>
 </form>

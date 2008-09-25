@@ -36,7 +36,8 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.model.Role"%>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+
+<%@page import="org.oscarehr.util.EncounterUtil"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
@@ -549,7 +550,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                                 if( numDisplayed < numToDisplay && cmNote.getObservation_date().compareTo(dStaleDate) >= 0 ) {
                                     fullTxtFormat.add(Boolean.TRUE);
 
-                                    if( cmNote.getEncounter_type().equalsIgnoreCase("face to face encounter with client") ) {
+                                    if( cmNote.getEncounter_type().equalsIgnoreCase(EncounterUtil.EncounterType.FACE_TO_FACE_WITH_CLIENT.getOldDbValue()) ) {
                                         ++numDisplayed;
                                     }
                                 }

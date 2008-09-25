@@ -25,6 +25,7 @@ package org.oscarehr.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Properties;
 
 public class MiscUtils {
@@ -42,5 +43,23 @@ public class MiscUtils {
 		p.loadFromXML(is);
 
 		return (p);
+	}
+	
+	/**
+	 * This method will set the calendar to the beginning of the month, i.e.
+	 * day=1, hour=0, minute=0, sec=0, ms=0. It will return the same instance passed in (not a clone of it).
+	 */
+	public static Calendar setToBeginningOfMonth(Calendar cal)
+	{
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		// force calculation / materialisation of actual time.
+		cal.getTimeInMillis();
+		
+		return(cal);
 	}
 }

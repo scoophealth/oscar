@@ -39,8 +39,6 @@
 
 	// default to this month calendar range.
 	Calendar startCalendar = Calendar.getInstance();
-	startCalendar.clear(Calendar.DAY_OF_MONTH);
-	Calendar endCalendar = Calendar.getInstance();
 	try
 	{
 		startDate = dateFormatter.parse(startDateString);
@@ -51,7 +49,9 @@
 	{
 		// do nothing, bad input
 	}
+	MiscUtils.setToBeginningOfMonth(startCalendar);
 
+	Calendar endCalendar = Calendar.getInstance();
 	try
 	{
 		endDate = dateFormatter.parse(endDateString);
@@ -62,8 +62,7 @@
 	{
 		// do nothing, bad input
 	}
-	endCalendar.clear(Calendar.DAY_OF_MONTH);
-	endCalendar.add(Calendar.MONTH, 1);
+	MiscUtils.setToBeginningOfMonth(endCalendar);
 
 	// for each program...
 	//    for each month...
@@ -99,16 +98,19 @@
 				sb.append(StringEscapeUtils.escapeCsv(issueGroup.getName()));
 			}
 
-			System.err.println(sb.toString());
+			// for debugging
+			// System.err.println(sb.toString());
 			
-			response.setContentType("text/x-csv");
+			response.setContentType("application/x-download");
+			response.setHeader("Content-Disposition", "attachment; filename=" + agencyName+"_"+dateFormatter.format(startDate)+"_"+dateFormatter.format(endDate)+".csv");
+
 			out.write(sb.toString());
 			out.write('\n');
 			printedHeader = true;
 		}
 
 		// this line is here to ensure the calendar is materialised before cloning, it's a known "issue" in java and not considered a bug....
-		startCalendar.toString();
+		startCalendar.getTimeInMillis();
 		Calendar tempStartCalendar = (Calendar)startCalendar.clone();
 		tempStartCalendar.clear(Calendar.DAY_OF_MONTH);
 
@@ -145,7 +147,9 @@
 						sb.append(issueGroupEntry);
 					}
 					
-					System.err.println(sb.toString());
+					// for debugging
+					// System.err.println(sb.toString());
+					
 					out.write(sb.toString());
 					out.write('\n');
 				}

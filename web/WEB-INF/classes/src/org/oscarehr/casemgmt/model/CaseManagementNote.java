@@ -33,6 +33,7 @@ import org.caisi.model.BaseObject;
 import org.oscarehr.common.model.Provider;
 
 public class CaseManagementNote extends BaseObject {
+	
 	private Long id;
 	private Date update_date;
 	private Date create_date;
