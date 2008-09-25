@@ -2,22 +2,33 @@ package oscar.oscarDemographic;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
+
+
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
 
 public class PrintDemoChartLabelAction extends OscarAction {
+
+    private static Log logger = LogFactory.getLog(PrintDemoChartLabelAction.class);
+
+
     public PrintDemoChartLabelAction() {
     }
 
@@ -30,18 +41,35 @@ public class PrintDemoChartLabelAction extends OscarAction {
         HashMap parameters = new HashMap();
         parameters.put("demo", request.getParameter("demographic_no"));
         ServletOutputStream sos = null;
+
+
+
         InputStream ins = null;
-//        System.err.println("ROOT: " + System.getProperty("user.home"));
+	logger.debug("user home: " + System.getProperty("user.home"));
+
         try {
-            ins = getClass().getResourceAsStream("/oscar/oscarDemographic/Chartlabel.xml");
+		ins = new FileInputStream(System.getProperty("user.home") + "Chartlabel.xml");
         }
-        catch (Exception ex1) {
-            ex1.printStackTrace();
+
+        catch (FileNotFoundException ex1) {
+		logger.debug("Chartlabel.xml not found in user's home directory. Using default instead");
         }
+
+	if (ins == null) {
+		try { 
+			ServletContext context = getServlet().getServletContext();
+			ins = getClass().getResourceAsStream("/oscar/oscarDemographic/Chartlabel.xml");
+			logger.debug("loading from : /oscar/oscarDemographic/Chartlabel.xml " + ins);
+		}
+		catch (Exception ex1) {
+			ex1.printStackTrace();	
+		}
+	}
 
         try {
             sos = response.getOutputStream();
         }
+
         catch (IOException ex) {
             ex.printStackTrace();
         }
