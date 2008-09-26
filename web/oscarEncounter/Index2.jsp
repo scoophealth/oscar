@@ -111,7 +111,10 @@ You have no rights to access the data!
             session.setAttribute("casemgmt_bean_flag", "true");
             session.setAttribute("caisiLoaded",null);
             String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
-            System.out.println("Enc_type: " + request.getParameter("encType"));
+            
+            if( request.getParameter("noteBody") != null )
+                hrefurl += "&noteBody=" + request.getParameter("noteBody");
+                
             if( !response.isCommitted())                
                 response.sendRedirect(hrefurl);
         %>
