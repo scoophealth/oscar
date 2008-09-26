@@ -364,7 +364,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
             <div id="filter" style="display:none;">
                 <div style="clear:both; height:150px; width:auto; overflow:auto; float:left; position:relative; left:10%;">
                     Provider:
-                    <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
+                    <ul style="margin-left:0px; padding-left:0px; margin-top:1px; list-style: none inside none;">
                         <li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox>All</li>
                         <%
                         Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");                                                
@@ -385,7 +385,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 
                 <div style="height:150px; width:auto; overflow:auto; float:left; position:relative; left:20%;">
                     Role:
-                    <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
+                    <ul style="margin-left:0px; padding-left:0px; margin-top:1px; list-style: none inside none;">
                         <li><html:multibox property="filter_roles" value="a" onclick="filterCheckBox(this)"></html:multibox>All</li>
                         <%
                         List roles = (List)request.getAttribute("roles");
@@ -399,11 +399,11 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     </ul>
                 </div>
                 
-                <div style="float:left; position:relative; left:30%;">
+                <div style="float:left; position:relative; left:25%;">
                     Sort:
-                    <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
+                    <ul style="margin-left:0px; padding-left:0px; margin-top:1px; list-style: none inside none;">
                         <li><html:radio property="note_sort" value="observation_date_asc">Observation Date Asc</html:radio></li>
-                        <li><html:radio property="note_sort" value="observation_date">Observation Date Desc</html:radio></li>
+                        <li><html:radio property="note_sort" value="observation_date_desc">Observation Date Desc</html:radio></li>
                         <li><html:radio property="note_sort" value="providerName">Provider</html:radio></li>
                         <li><html:radio property="note_sort" value="programName">Program</html:radio></li>
                         <li><html:radio property="note_sort" value="roleName">Role</html:radio></li>                        
@@ -840,9 +840,17 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
    <%
         bean.reason = "";
         bean.oscarMsg = "";
-   }   
+   } 
+    
+   if( request.getParameter("noteBody") != null ) {
+        String noteBody = request.getParameter("noteBody");
+        noteBody = noteBody.replaceAll("<br>|<BR>", "\n");
    %>
-   <% if( found != true ) { %>
+        $(caseNote).value +="\n\n<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(noteBody)%>";
+   <%
+   }
+   
+    if( found != true ) { %>
         document.forms["caseManagementEntryForm"].newNoteIdx.value = <%=savedId%>;
    <%}%>
    
