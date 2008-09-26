@@ -75,6 +75,12 @@ if(demo != null){
          <bean:message key="oscarEncounter.Index.coronary"/>
        </a>
   </td></tr>
+  <tr><td align="center" class="menuLayer">
+      <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/riskcalc/index.html?sex=<%= sex%>&age=<%=age%>','CoronaryArteryDiseaseRisk');">
+         Framingham Risk Calculator
+       </a>
+  </td></tr>
+
    <tr><td align="center" class="menuLayer">
        <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/OsteoporoticFracture.jsp?sex=<%=sex%>&age=<%=age%>','OsteoporoticFracture');">
          <bean:message key="oscarEncounter.Index.msgOsteoporotic"/>
