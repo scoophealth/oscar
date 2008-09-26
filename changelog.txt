@@ -1,6 +1,7 @@
+2008-09-26 : fix link to encounter in myOSCAR and added code to insert myOSCAR message into encounter note (Randy)
 2008-09-25 : new provider service reports export (Ted)
 2008-09-23 : ability to bulk export activity reports to csv (Ted)
-2008-09-22 : Only grab status from db if page is loading for first time else grab it from request (Randy)
+2008-09-22 : When editing appointment only grab status from db if page is loading for first time else grab it from request (Randy)
 2008-09-16 : add/edit appointment page, change input field for status to dropdown list box (Toby)
 2008-09-12 : Caisi Integrator has the ability to manage which demographics are linked together. (Ted)
 2008-09-11 : Fixed error when correcting invoices duplicate codes can be created for ON billing (Randy,2105933)
