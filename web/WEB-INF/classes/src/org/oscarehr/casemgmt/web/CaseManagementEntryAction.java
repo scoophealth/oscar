@@ -341,6 +341,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         
         String frmName = "caseManagementEntryForm" + demono;
         request.getSession().setAttribute(frmName, cform);
+        
+        
+        
         ActionForward fwd, finalFwd = null;
         if (chain != null && chain.length() > 0) {
             request.getSession().setAttribute("passwordEnabled", passwd);
@@ -367,6 +370,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 path.append("&");
 
             path.append("demographicNo="+demono);
+            String noteBody = request.getParameter("noteBody");
+            
+            if( noteBody != null )
+                path.append("&noteBody="+noteBody);
+                
             finalFwd = new ActionForward(path.toString());        
         }
         return finalFwd;
