@@ -112,7 +112,9 @@ public class importCasemgmt {
                         if( !rs1.next() ) {
                             rs1.close();
                             System.out.println("Creating dummy provider to sign imported notes");
-                            stmt.executeUpdate("INSERT INTO provider VALUES ('000000','doe','doctor','doctor','','','','0001-01-01','','','','','','','','1','','')");
+                            stmt.executeUpdate("INSERT INTO provider (provider_no, last_name, first_name, provider_type, specialty, team, sex, dob, address, phone, work_phone, ohip_no, rma_no," +
+                                    "billing_no, hso_no, status, comments, provider_activity) " +
+                                    "VALUES ('000000','doe','doctor','doctor','','','','0001-01-01','','','','','','','','1','','')");
                             stmt.executeUpdate("insert into `secUserRole` (provider_no, role_name, orgcd, activeyn) values('000000', 'doctor', 'R0000001', 1)");
                         }
                         else
@@ -274,7 +276,7 @@ public class importCasemgmt {
                         PreparedStatement pstmt4 = con.prepareStatement("insert into casemgmt_note (update_date, demographic_no, provider_no, note,  signed, signing_provider_no, include_issue_innote, program_no, " +
                                 "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,true,'000000'," +
                                 "false," + programId + ",'1','0',?,'','0',?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
-                        PreparedStatement pstmt5 = con.prepareStatement("insert into casemgmt_issue_notes Values(?,?)");
+                        PreparedStatement pstmt5 = con.prepareStatement("insert into casemgmt_issue_notes (id, note_id) Values(?,?)");
                         
                         
                         sql = "select * from eChart e left join (select max(eChartId) eChartId from eChart where subject != 'SPLIT CHART' group by demographicNo) " + 
