@@ -5,6 +5,7 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-nested" prefix="nested" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
@@ -20,6 +21,7 @@
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
 <%@ page import="org.oscarehr.phr.indivo.IndivoConstantsImpl"%>
 <%@ page import="org.oscarehr.phr.PHRConstants"%>
+<%@ page import="org.oscarehr.phr.model.PHRMessage"%>
 <%@ page import="org.oscarehr.phr.dao.PHRActionDAO, org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="java.util.*"%>
 <%@ page import="oscar.util.StringUtils"%>
@@ -73,7 +75,7 @@ if (pageMethod.equals("unarchive"))
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
-
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -219,6 +221,12 @@ if (pageMethod.equals("unarchive"))
                 $('statusDiv').show();
                 $("statusDiv").innerHTML = message;
             }
+        }
+        
+        function gotoEchart(demoNo, msgBody) {
+            var url = '<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=session.getAttribute("user")%>&appointmentNo=&demographicNo='+ demoNo + '&curProviderNo=&reason=<%=URLEncoder.encode("My Oscar Notes")%>&userName=<%=URLEncoder.encode(session.getAttribute("userfirstname")+" "+session.getAttribute("userlastname")) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&encType=<%=URLEncoder.encode("MyOSCAR Note","UTF-8")%>&noteBody=';
+            url += msgBody + '&appointmentDate=&startTime=&status=';
+            popup(755,1048,url,'apptProvider');
         }
         </script>
     </head>
@@ -575,8 +583,9 @@ if (pageMethod.equals("unarchive"))
                     </c:forEach>               
  <%-- Inbox-------------------------------------------------------------- --%>
                     
-                    
-                    <c:forEach var="iMessage" items="${indivoMessages}">
+                <nested:notEmpty name="indivoMessages">
+                    <% ArrayList<PHRMessage>phrMsgs = (ArrayList<PHRMessage>)session.getAttribute("indivoMessageBodies");%>
+                    <nested:iterate indexId="msgIdx" id="iMessage" name="indivoMessages" type="org.oscarehr.phr.model.PHRDocument">                           
                         <tr <c:choose>
                                 <c:when test="${iMessage.read}">class="normal"</c:when>
                                 <c:otherwise>class="new"</c:otherwise>
@@ -592,8 +601,9 @@ if (pageMethod.equals("unarchive"))
                                    <c:otherwise>new</c:otherwise>
                                 </c:choose>
                             </td>
-                            <td bgcolor="#EEEEFF"> 
-                                <a href="javascript: function myFunction() {return false; }" onClick="popup(755,1048,'../../oscarEncounter/IncomingEncounter.do?providerNo=<%=session.getAttribute("user")%>&appointmentNo=&demographicNo=<c:out value="${iMessage.senderDemographicNo}"/>&curProviderNo=&reason=<%=URLEncoder.encode("My Oscar Notes")%>&userName=<%=URLEncoder.encode(session.getAttribute("userfirstname")+" "+session.getAttribute("userlastname")) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=','apptProvider')" >
+                            <td bgcolor="#EEEEFF">                                
+                                
+                                <a href="javascript: function myFunction() {return false; }" onClick="gotoEchart(<c:out value="${iMessage.senderDemographicNo}"/>, '<%=URLEncoder.encode(phrMsgs.get(msgIdx).getBody().replaceAll("\n","<br>"))%>');" >
                                     <c:out value="${iMessage.senderPhr}"/>
                                 </a>
                             </td>
@@ -613,7 +623,8 @@ if (pageMethod.equals("unarchive"))
                                 </html-el:link>
                             </td>
                         </tr>
-                    </c:forEach> 
+                    </nested:iterate> 
+                 </nested:notEmpty>
                 </table>
             </td>
         </tr>
