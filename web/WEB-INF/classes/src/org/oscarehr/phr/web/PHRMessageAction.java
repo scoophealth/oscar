@@ -105,9 +105,19 @@ public class PHRMessageAction extends DispatchAction {
         clearSessionVariables(request);
         String providerNo = (String) request.getSession().getAttribute("user");
         List docs = phrDocumentDAO.getDocumentsReceived(phrConstants.DOCTYPE_MESSAGE(), providerNo);
+        ArrayList<PHRMessage> messages = null;
         List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
-        if(docs != null)
-            request.getSession().setAttribute("indivoMessages", docs);
+        if(docs != null) {
+            messages = new ArrayList(docs.size());            
+            for( int idx = 0; idx < docs.size(); ++idx ) {
+                PHRDocument doc = (PHRDocument)docs.get(idx);
+                PHRMessage msg = new PHRMessage(doc);
+                messages.add(msg);
+            }
+        }
+        request.getSession().setAttribute("indivoMessages", docs);
+        request.getSession().setAttribute("indivoMessageBodies", messages);
+
         if (actionsPendingApproval != null) {
             request.getSession().setAttribute("actionsPendingApproval", actionsPendingApproval);
             System.out.println("====actionPendinapproval is not null");
