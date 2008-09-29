@@ -6404,6 +6404,7 @@ CREATE TABLE provider (
   status char(1) default NULL,
   comments text,
   provider_activity char(3) default NULL,
+  practitionerNo varchar(20),
   PRIMARY KEY  (provider_no)
 );
 
