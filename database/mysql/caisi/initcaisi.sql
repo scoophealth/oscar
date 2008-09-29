@@ -334,7 +334,7 @@ CREATE TABLE `casemgmt_note` (
 	index(demographic_no),
 	index(uuid),
 	index(program_no),
-	index(observation_date); 
+	index(observation_date) 
 );
 
 --
