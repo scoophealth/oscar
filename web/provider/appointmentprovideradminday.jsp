@@ -581,11 +581,11 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
         </li>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
            <li>
-               <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
+               <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', 'Lab');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
 		   <span id="oscar_new_lab"><bean:message key="global.lab"/></span>
                </a>
                <oscar:newUnclaimedLab>
-               <a class="tabalert" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
+               <a class="tabalert" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', 'Lab');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
                </oscar:newUnclaimedLab>
            </li>
 	     </security:oscarSec>
