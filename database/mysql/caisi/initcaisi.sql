@@ -1,6 +1,6 @@
 create table Facility (
     id int primary key auto_increment,
-    name varchar(32) NOT NULL, unique(name),
+    name varchar(50) NOT NULL, unique(name),
     description VARCHAR(150),
     contactName varchar(255),
     contactEmail varchar(255),
