@@ -1,6 +1,10 @@
 alter table program drop column userDefined;
 alter table program change program_id id int auto_increment;
+
+alter table program drop foreign key program_ibfk_1;
 alter table program change facility_id facilityId int not null;
+alter table program add foreign key (facilityId) references Facility(id);
+
 alter table program change descr description varchar(255);
 alter table program change max_allowed maxAllowed int NOT NULL;
 alter table program change emergency_number emergencyNumber varchar(255) NOT NULL;

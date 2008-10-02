@@ -37,7 +37,7 @@
 <h1>Provider Service Report Form</h1>
 	
 <h2>Export to csv</h2>
-(This will provide a break down of all unique encounters of a demographic to a provider, broken down by month and for the entire interval as well.)
+(This will provide a break down of all unique encounters of a demographic to a provider, broken down by month and for the entire interval as well. This only does the numbers for a program of type bed or service)
 
 <form method="post" action="provider_service_report_export.jsp" >
 	<table>

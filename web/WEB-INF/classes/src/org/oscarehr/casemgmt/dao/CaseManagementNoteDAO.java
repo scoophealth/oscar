@@ -262,20 +262,20 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	/**
 	 * Get the unique count of demographic Id's based on the providerId and encounterType.
 	 */
-	public static int getUniqueDemographicCountByProviderAndEncounterType(String providerId, EncounterUtil.EncounterType encounterType, Date startDate, Date endDate) {
-		String sqlCommand = null;
+	public static int getUniqueDemographicCountByProviderProgramAndEncounterType(String providerId, int programId, EncounterUtil.EncounterType encounterType, Date startDate, Date endDate) {
+		String sqlCommand = "select count(*) from casemgmt_note where provider_no=? and program_no=? and observation_date>=? and observation_date<?";
 
-		if (encounterType == null) sqlCommand = "select count(*) from casemgmt_note where provider_no=? and observation_date>=? and observation_date<?";
-		else sqlCommand = "select count(*) from casemgmt_note where provider_no=? and observation_date>=? and observation_date<? and encounter_type=?";
+		if (encounterType != null) sqlCommand = sqlCommand+" and encounter_type=?";
 
 		Connection c = null;
 		try {
 			c = DbConnectionFilter.getThreadLocalDbConnection();
 			PreparedStatement ps = c.prepareStatement(sqlCommand);
 			ps.setString(1, providerId);
-			ps.setTimestamp(2, new Timestamp(startDate.getTime()));
-			ps.setTimestamp(3, new Timestamp(endDate.getTime()));
-			if (encounterType != null) ps.setString(4, encounterType.getOldDbValue());
+			ps.setInt(2, programId);
+			ps.setTimestamp(3, new Timestamp(startDate.getTime()));
+			ps.setTimestamp(4, new Timestamp(endDate.getTime()));
+			if (encounterType != null) ps.setString(5, encounterType.getOldDbValue());
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			return (rs.getInt(1));

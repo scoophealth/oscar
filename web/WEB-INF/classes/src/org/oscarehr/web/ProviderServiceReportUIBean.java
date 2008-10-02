@@ -26,8 +26,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.time.DateFormatUtils;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
@@ -37,6 +38,7 @@ import org.oscarehr.util.EncounterUtil.EncounterType;
 public class ProviderServiceReportUIBean {
 
 	private ProviderDao providerDao=(ProviderDao)SpringUtils.getBean("providerDao");
+	private ProgramDao programDao=(ProgramDao)SpringUtils.getBean("programDao");
 	
 	private Date startDate = null;
 	private Date endDate = null;
@@ -49,8 +51,10 @@ public class ProviderServiceReportUIBean {
 
 	public static class DataRow
 	{
-		public String providerName=null;
+		public String programName=null;
+		public String programType=null;
 		public String date=null;
+		public String providerName=null;
 		public int uniqueFaceToFaceEncounters=0;
 		public int uniqueAllEncounters=0;
 	}
@@ -66,6 +70,8 @@ public class ProviderServiceReportUIBean {
 		endCal.add(Calendar.MONTH, 1);
 		MiscUtils.setToBeginningOfMonth(endCal);
 		
+		List<Program> activePrograms=programDao.getAllActivePrograms();
+		
 		List<Provider> providers=providerDao.getActiveProvidersByType("doctor");
 		ArrayList<DataRow> results=new ArrayList<DataRow>();
 		
@@ -73,29 +79,38 @@ public class ProviderServiceReportUIBean {
 		{
 			Calendar tempStart=(Calendar)startCal.clone();
 			
-			while (tempStart.compareTo(endCal) < 0)
+			for (Program program : activePrograms)
 			{
-				Calendar tempEnd=(Calendar)tempStart.clone();
-				tempEnd.add(Calendar.MONTH, 1);
+				if (!Program.BED_TYPE.equals(program.getType()) && !Program.SERVICE_TYPE.equals(program.getType())) continue;
+
+				while (tempStart.compareTo(endCal) < 0)
+				{
+					Calendar tempEnd=(Calendar)tempStart.clone();
+					tempEnd.add(Calendar.MONTH, 1);
+
+					DataRow dataRow=new DataRow();
+					dataRow.programName=program.getName();
+					dataRow.programType=program.getType();
+					dataRow.date=dateFormatter.format(tempStart.getTime());
+					dataRow.providerName=provider.getLastName() + ", "+provider.getFirstName();
+					dataRow.uniqueFaceToFaceEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderProgramAndEncounterType(provider.getProviderNo(), program.getId(), EncounterType.FACE_TO_FACE_WITH_CLIENT, tempStart.getTime(), tempEnd.getTime());
+					dataRow.uniqueAllEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderProgramAndEncounterType(provider.getProviderNo(), program.getId(), null, tempStart.getTime(), tempEnd.getTime());
+					
+					results.add(dataRow);
+					
+					tempStart.add(Calendar.MONTH, 1);
+				}
 
 				DataRow dataRow=new DataRow();
+				dataRow.programName=program.getName();
+				dataRow.programType=program.getType();
+				dataRow.date=dateFormatter.format(startCal.getTime()) + " to " + dateFormatter.format(endCal.getTime());
 				dataRow.providerName=provider.getLastName() + ", "+provider.getFirstName();
-				dataRow.date=dateFormatter.format(tempStart.getTime());
-				dataRow.uniqueFaceToFaceEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderAndEncounterType(provider.getProviderNo(), EncounterType.FACE_TO_FACE_WITH_CLIENT, tempStart.getTime(), tempEnd.getTime());
-				dataRow.uniqueAllEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderAndEncounterType(provider.getProviderNo(), null, tempStart.getTime(), tempEnd.getTime());
+				dataRow.uniqueFaceToFaceEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderProgramAndEncounterType(provider.getProviderNo(), program.getId(), EncounterType.FACE_TO_FACE_WITH_CLIENT, startCal.getTime(), endCal.getTime());
+				dataRow.uniqueAllEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderProgramAndEncounterType(provider.getProviderNo(), program.getId(), null, startCal.getTime(), endCal.getTime());
 				
 				results.add(dataRow);
-				
-				tempStart.add(Calendar.MONTH, 1);
 			}
-
-			DataRow dataRow=new DataRow();
-			dataRow.providerName=provider.getLastName() + ", "+provider.getFirstName();
-			dataRow.date=dateFormatter.format(startCal.getTime()) + " to " + dateFormatter.format(endCal.getTime());
-			dataRow.uniqueFaceToFaceEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderAndEncounterType(provider.getProviderNo(), EncounterType.FACE_TO_FACE_WITH_CLIENT, startCal.getTime(), endCal.getTime());
-			dataRow.uniqueAllEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderAndEncounterType(provider.getProviderNo(), null, startCal.getTime(), endCal.getTime());
-			
-			results.add(dataRow);
 		}
 		
 		return(results);

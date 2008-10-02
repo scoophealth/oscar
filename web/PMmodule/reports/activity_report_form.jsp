@@ -112,7 +112,7 @@
 
 		<tr>
 			<td></td>
-			<td><input type="submit" value="export" /><br />(This may take a long time on large systems.)</td>
+			<td><input type="submit" value="export" /></td>
 		</tr>
 	</table>
 </form>

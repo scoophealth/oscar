@@ -96,7 +96,7 @@
 		// System.err.println(sb.toString());
 		
 		response.setContentType("application/x-download");
-		response.setHeader("Content-Disposition", "attachment; filename=activity_report_" + agencyName+"_"+dateFormatter.format(startDate)+"_"+dateFormatter.format(endDate)+".csv");
+		response.setHeader("Content-Disposition", "attachment; filename=activity_report_" + agencyName+"_"+dateFormatter.format(startCalendar.getTime())+"_"+dateFormatter.format(endCalendar.getTime())+".csv");
 
 		out.write(sb.toString());
 		out.write('\n');
