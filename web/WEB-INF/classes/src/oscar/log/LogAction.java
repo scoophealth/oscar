@@ -18,12 +18,17 @@
  */
 package oscar.log;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import oscar.log.model.Log;
 
 import oscar.login.DBHelp;
+import oscar.oscarDB.DBHandler;
 
 /**
  * @author yilee18
@@ -48,5 +53,37 @@ public class LogAction {
                     + ", content " + content + ", contentId " + contentId + ", ip " + ip);
         }
         return ret;
+    }
+    
+    public static boolean addFullLog(Timestamp dateTime, String provider_no, String action, String content, String contentId, String ip) {
+        boolean ret = false;
+        DBHelp db = new DBHelp();
+        String sql = "insert into log (dateTime,provider_no,action,content,contentId,ip) values('";
+        sql += dateTime+"','"+provider_no+"','"+action+"','"+StringEscapeUtils.escapeSql(content)+"','"+contentId+"','"+ip+"')";
+        try {
+            ret = db.updateDBRecord(sql, provider_no);
+        } catch (SQLException e) {
+            _logger.error("failed to insert into logging table dateTime " + dateTime + ", providerNo " + provider_no
+			  + ", action " + action + ", content " + content + ", contentId " + contentId + ", ip " + ip);
+        }
+        return ret;
+    }
+    
+    public static ArrayList<Log> getLog(String provider_no) throws SQLException {
+	ArrayList<Log> _log = new ArrayList<Log>();
+	
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	ResultSet rs;
+	String sql = "SELECT * FROM log WHERE provider_no = '" + provider_no +"'";
+	rs = db.GetSQL(sql);
+
+	while (rs.next()) {
+	    _log.add(new Log(rs.getTimestamp("dateTime"), provider_no, rs.getString("action"),
+		    rs.getString("content"), rs.getString("contentId"), rs.getString("ip")));
+	}
+	rs.close();
+	db.CloseConn();
+	
+	return _log;
     }
 }
