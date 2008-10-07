@@ -1,1 +1,1 @@
-alter table facility add integratorLastPushTime datetime;
+alter table Facility add integratorLastPushTime datetime;

@@ -1,5 +1,5 @@
-alter table facility add column useQuickConsent tinyint(1) not null;
-update facility set useQuickConsent=1;
+alter table Facility add column useQuickConsent tinyint(1) not null;
+update Facility set useQuickConsent=1;
 
 update bed set facility_id=1 where facility_id=0;
 update room set facility_id=1 where facility_id=0;
@@ -12,7 +12,7 @@ insert into room_demographic select b.room_id,bd.demographic_no,bd.provider_no,r
 
 
 -- insert into access_type (name,type) values ("read RPN ticklers","access");
-update facility set useQuickConsent=1;
+update Facility set useQuickConsent=1;
 
 update bed set facility_id=1 where facility_id=0;
 update room set facility_id=1 where facility_id=0;
