@@ -1079,7 +1079,7 @@ INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue',
 -- Dumping data for table 'provider'
 --
 
-INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','0001-01-01','','','','','','','','1','','');
+INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','0001-01-01','','','','','','','','1','','','');
 
 --
 -- Dumping data for table 'providerExt'
