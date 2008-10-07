@@ -66,6 +66,8 @@ import oscar.appt.ApptStatusData;
 import oscar.appt.AppointmentDAO.Appointment;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.log.LogAction;
+import oscar.log.model.Log;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
@@ -253,8 +255,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		data = demographic.getEmail();
 		if (filled(data)) demo.setEmail(data);
 
-		data = demographic.getProviderNo();
-		if (filled(data)) {
+		String providerNo = demographic.getProviderNo();
+		if (filled(providerNo)) {
 		    cds.DemographicsDocument.Demographics.PrimaryPhysician pph = demo.addNewPrimaryPhysician();
 		    ProviderData provd = new ProviderData(data);
 		    pph.setOHIPPhysicianId(provd.getOhip_no());
@@ -394,7 +396,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		// PERSONAL HISTORY
 		data = bean.socialHistory;
 		if (filled(data)) {
-		    dataPart = extract(data, "===");
+		    dataPart = extract(data, "-----[[", true);
 		    for (int j=0; j<dataPart.size(); j++) {
 			dataIn = (String) dataPart.get(j);
 			patientRec.addNewPersonalHistory().setCategorySummaryLine(dataIn);
@@ -403,7 +405,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		// FAMILY HISTORY
 		data = bean.familyHistory;
 		if (filled(data)) {
-		    dataPart = extract(data, "===");
+		    dataPart = extract(data, "-----[[", true);
 		    for (int j=0; j<dataPart.size(); j++) {
 			dataIn = (String) dataPart.get(j);
 			patientRec.addNewFamilyHistory().setCategorySummaryLine(dataIn);
@@ -412,7 +414,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		// PAST HEALTH
 		data = bean.medicalHistory;
 		if (filled(data)) {
-		    dataPart = extract(data, "===");
+		    dataPart = extract(data, "-----[[", true);
 		    for (int j=0; j<dataPart.size(); j++) {
 			dataIn = (String) dataPart.get(j);
 			patientRec.addNewPastHealth().setCategorySummaryLine(dataIn);
@@ -421,7 +423,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		// RISK FACTORS
 		data = bean.reminders;
 		if (filled(data)) {
-		    dataPart = extract(data, "===");
+		    dataPart = extract(data, "-----[[", true);
 		    for (int j=0; j<dataPart.size(); j++) {
 			dataIn = (String) dataPart.get(j);
 			patientRec.addNewRiskFactors().setCategorySummaryLine(dataIn);
@@ -430,7 +432,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		// CLINCAL NOTES
 		data = bean.encounter;
 		if (filled(data)) {
-		    dataPart = extract(data, "===");
+		    dataPart = extract(data, "-----------------------------------");
 		    for (int j=0; j<dataPart.size(); j++) {
 			dataIn = (String) dataPart.get(j);
 			patientRec.addNewClinicalNotes().setMyClinicalNotesContent(dataIn);
@@ -439,7 +441,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		// PROBLEM LIST
 		data = bean.ongoingConcerns;
 		if (filled(data)) {
-		    dataPart = extract(data, "===");
+		    dataPart = extract(data, "-----[[", true);
 		    for (int j=0; j<dataPart.size(); j++) {
 			dataIn = (String) dataPart.get(j);
 			cds.ProblemListDocument.ProblemList pList = patientRec.addNewProblemList();
@@ -804,7 +806,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		}
 
 		// REPORTS RECEIVED
-	    Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+		Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 		ArrayList edoc_list = new EDocUtil().listDemoDocs(demoNo,currentFacilityId);
 
 		if (!edoc_list.isEmpty()) {
@@ -873,7 +875,29 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			}
 		    }
 		}
-	    
+		
+		// AUDIT INFORMATION
+		if (filled(providerNo)) {
+		    String[] rName = {"dateTime", "provider_no", "action", "content", "contentId", "ip"};
+		    String[] rType = {"date", "string", "string", "string", "string", "string"};
+		    String[] rCont = new String[6];
+		    
+		    ArrayList<Log> logList = LogAction.getLog(providerNo);
+		    for (Log lg : logList) {
+			rCont[0] = lg.getDateTime()==null ? "" : lg.getDateTime().toString();
+			rCont[1] = lg.getProviderNo();
+			rCont[2] = lg.getAction();
+			rCont[3] = lg.getContent();
+			rCont[4] = lg.getContentId();
+			rCont[5] = lg.getIp();
+			
+			/********************************
+			 * write to xml (Residual data) *
+			 ********************************/
+			
+		    }
+		}
+		
 		//export file to temp directory
 		String inFiles = null;
 		try{
@@ -1223,21 +1247,25 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
     
     Vector extract(String source, String separator) {
+	return extract(source, separator, false);
+    }
+    
+    Vector extract(String source, String separator, boolean separatorAsHeader) {
 	Vector exs = new Vector();
 	String src = source.toLowerCase(), sep = separator.toLowerCase();
-	
 	int a = 0, b = src.indexOf(sep)==-1 ? src.length() : src.indexOf(sep);
-	boolean ended = false;
-	while (!ended) {
-	    exs.add(clearBlank(source.substring(a, b)));
-	    a = b + sep.length();
-	    b = src.indexOf(sep, a)==-1 ? src.length() : src.indexOf(sep, a);
-	    if (b-a <= sep.length()) ended = true;
+	while (a<b) {
+	    if (filled(trimBlankLine(source.substring(a, b)))) exs.add(trimBlankLine(source.substring(a, b)));
+	    a = separatorAsHeader ? b : b + sep.length();
+	    int i = separatorAsHeader ? a+sep.length() : a;
+	    b = src.indexOf(sep, i)==-1 ? src.length() : src.indexOf(sep, i);
 	}
 	return exs;
     }
     
-    String clearBlank(String source) {
+    String trimBlankLine(String source) {
+	if (!filled(source)) return "";
+	
 	boolean existBlank = true;
 	while (existBlank) {
 	    if (source.charAt(0)=='\n' || source.charAt(0)=='\r') {
