@@ -579,7 +579,7 @@ public class ProviderData {
 	rs.close();
 	db.CloseConn();
 	
-	if (providerNo!=null) {
+	if (providerNo!=null && !providerNo.trim().equals("")) {
 	    int lastPN = Integer.parseInt(providerNo.substring(1)) + 1;
 	    providerNo = "E" + fillUp(String.valueOf(lastPN), 5, '0');
 	} else {
