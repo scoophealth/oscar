@@ -1239,7 +1239,7 @@ function formPopupHide(){
                         </td>
                         <td>
                           <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                            <html:text property="xml_other1_unit" size="5" maxlength="3" styleId="xml_other1_unit"/>
+                            <html:text property="xml_other1_unit" size="6" maxlength="6" styleId="xml_other1_unit"/>
                           </font>
                         </td>
                       </tr>
@@ -1252,7 +1252,7 @@ function formPopupHide(){
                         </td>
                         <td>
                           <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                            <html:text property="xml_other2_unit" size="5" maxlength="3" styleId="xml_other2_unit"/>
+                            <html:text property="xml_other2_unit" size="6" maxlength="6" styleId="xml_other2_unit"/>
                           </font>
                         </td>
                       </tr>
@@ -1265,7 +1265,7 @@ function formPopupHide(){
                         </td>
                         <td>
                           <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                            <html:text property="xml_other3_unit" size="5" maxlength="3" styleId="xml_other3_unit"/>
+                            <html:text property="xml_other3_unit" size="6" maxlength="6" styleId="xml_other3_unit"/>
                           </font>
                         </td>
                       </tr>
