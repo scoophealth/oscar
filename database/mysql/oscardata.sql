@@ -106,12 +106,14 @@ INSERT INTO ctl_doctype VALUES ('demographic','oldchart','A');
 INSERT INTO ctl_doctype VALUES ('demographic','radiology','A');
 INSERT INTO ctl_doctype VALUES ('demographic','pathology','A');
 INSERT INTO ctl_doctype VALUES ('demographic','others','A');
+INSERT INTO ctl_doctype VALUES ('demographic','photo','A');
 INSERT INTO ctl_doctype VALUES ('provider','resource','A');
 INSERT INTO ctl_doctype VALUES ('provider','desktop','A');
 INSERT INTO ctl_doctype VALUES ('provider','handout','A');
 INSERT INTO ctl_doctype VALUES ('provider','forms','A');
 INSERT INTO ctl_doctype VALUES ('provider','others','A');
 INSERT INTO ctl_doctype VALUES ('provider','share','A');
+INSERT INTO ctl_doctype VALUES ('provider','photo','A');
 
 --
 -- Dumping data for table 'ctl_document'
