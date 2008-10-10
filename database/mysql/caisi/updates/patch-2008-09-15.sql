@@ -1,2 +1,2 @@
-drop table consent;
-drop table consentconsent_interview;
+drop table IF EXISTS consent;
+drop table IF EXISTS consentconsent_interview;
