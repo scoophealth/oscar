@@ -752,12 +752,13 @@ public final class BillingCreateBillingForm
 
         }
      **/
-    BillingSessionBean bean = (BillingSessionBean) request.getSession().
-        getAttribute("billingSessionBean");
-    bean.setStartTimeHr(this.getXml_starttime_hr());
-    bean.setStartTimeMin(this.getXml_starttime_min());
-    bean.setEndTimeHr(this.getXml_endtime_hr());
-    bean.setEndTimeMin(this.getXml_endtime_min());
+    BillingSessionBean bean = (BillingSessionBean) request.getSession().getAttribute("billingSessionBean");
+    if (bean != null){
+        bean.setStartTimeHr(this.getXml_starttime_hr());
+        bean.setStartTimeMin(this.getXml_starttime_min());
+        bean.setEndTimeHr(this.getXml_endtime_hr());
+        bean.setEndTimeMin(this.getXml_endtime_min());
+    }
     request.setAttribute("loadFromSession", "y");
 
     //fixes bug where redirection to wcb form was occurring
