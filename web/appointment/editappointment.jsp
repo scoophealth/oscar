@@ -282,8 +282,11 @@ function onCut() {
               <div align="right"><font face="arial"> <bean:message key="Appointment.formStatus"/> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT">
-            <%
-              String statusCode = bFirstDisp?apptMainBean.getString(rs,"status"):request.getParameter("status");
+            <%     
+              String statusCode = request.getParameter("status");
+              if (rs != null &&  bFirstDisp){
+                  statusCode = apptMainBean.getString(rs,"status");
+              }
               String signOrVerify = "";
               if (statusCode.length()>=2){
               signOrVerify = statusCode.substring(1,2);
@@ -295,14 +298,14 @@ function onCut() {
             %>
               <select name="status" STYLE="width: 154px" HEIGHT="20" border="0">
                 <% for (int i = 0; i < allStatus.size(); i++) { %>
-                <option value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()+signOrVerify%>" <%=((AppointmentStatus)allStatus.get(i)).getStatus().equals(apptMainBean.getString(rs,"status"))?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
+                <option value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()+signOrVerify%>" <%=((AppointmentStatus)allStatus.get(i)).getStatus().equals(statusCode)?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
                 <% } %>
               </select>
             <%
             }
             if (strEditable==null || !strEditable.equalsIgnoreCase("yes")){
             %>
-              <INPUT TYPE="TEXT" NAME="status" VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"status"):request.getParameter("status")%>"  WIDTH="25" HEIGHT="20" border="0" hspace="2">
+              <INPUT TYPE="TEXT" NAME="status" VALUE="<%=statusCode%>"  WIDTH="25" HEIGHT="20" border="0" hspace="2">
             <%}%>
 	   </td>
           </tr>
@@ -452,6 +455,8 @@ function onCut() {
 				GregorianCalendar now=new GregorianCalendar();
 				String strDateTime=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)+" "
 					+	now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
+                                
+                                System.out.println("HERHE");
 %> 
 
               <INPUT TYPE="hidden" NAME="createdatetime" VALUE="<%=strDateTime%>">
