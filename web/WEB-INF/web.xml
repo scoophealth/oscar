@@ -193,6 +193,10 @@
 		<servlet-class>oscar.DocumentUploadServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
+	<servlet-mapping> 
+                <servlet-name>PatientListByAppointment</servlet-name> 
+                <url-pattern>/patientlistbyappt</url-pattern> 
+        </servlet-mapping> 
     
     <servlet>
         <servlet-name>FileUpload</servlet-name>
