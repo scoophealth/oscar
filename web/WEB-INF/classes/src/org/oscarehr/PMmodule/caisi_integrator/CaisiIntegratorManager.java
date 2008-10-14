@@ -90,7 +90,7 @@ public class CaisiIntegratorManager {
 		FacilityWsService service = new FacilityWsService(buildURL(facility, "FacilityService"));
 		FacilityWs port = service.getFacilityWsPort();
 
-		SslUtils.configureSsl(port);
+		CxfUtils.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -126,7 +126,7 @@ public class CaisiIntegratorManager {
 		DemographicWsService service = new DemographicWsService(buildURL(facility, "DemographicService"));
 		DemographicWs port = service.getDemographicWsPort();
 
-		SslUtils.configureSsl(port);
+		CxfUtils.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -138,7 +138,7 @@ public class CaisiIntegratorManager {
 		ProgramWsService service = new ProgramWsService(buildURL(facility, "ProgramService"));
 		ProgramWs port = service.getProgramWsPort();
 
-		SslUtils.configureSsl(port);
+		CxfUtils.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -200,16 +200,16 @@ public class CaisiIntegratorManager {
 	public ProviderWs getProviderWs(int facilityId) throws MalformedURLException {
 		Facility facility = getLocalFacility(facilityId);
 
-		ProviderWsService service = new ProviderWsService(buildURL(facility, "ProviderInfoService"));
+		ProviderWsService service = new ProviderWsService(buildURL(facility, "ProviderService"));
 		ProviderWs port = service.getProviderWsPort();
 
-		SslUtils.configureSsl(port);
+		CxfUtils.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
 	}
 
-	public List<CachedProvider> getAllProviderInfos(int facilityId) throws MalformedURLException {
+	public List<CachedProvider> getAllProviders(int facilityId) throws MalformedURLException {
 		@SuppressWarnings("unchecked")
 		List<CachedProvider> results = (List<CachedProvider>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROVIDERS");
 
@@ -223,9 +223,9 @@ public class CaisiIntegratorManager {
 		return (new ArrayList<CachedProvider>(results));
 	}
 
-	public CachedProvider getProviderInfo(int facilityId, FacilityIdStringCompositePk remoteProviderPk) throws MalformedURLException
+	public CachedProvider getProvider(int facilityId, FacilityIdStringCompositePk remoteProviderPk) throws MalformedURLException
 	{
-		List<CachedProvider> providers=getAllProviderInfos(facilityId);
+		List<CachedProvider> providers=getAllProviders(facilityId);
 		
 		for (CachedProvider cachedProvider : providers) {
 			if (facilityProviderPrimaryKeyEquals(cachedProvider.getFacilityIdStringCompositePk(), remoteProviderPk)) {
@@ -254,7 +254,7 @@ public class CaisiIntegratorManager {
 		ReferralWsService service = new ReferralWsService(buildURL(facility, "ReferralService"));
 		ReferralWs port = service.getReferralWsPort();
 
-		SslUtils.configureSsl(port);
+		CxfUtils.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);

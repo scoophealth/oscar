@@ -47,8 +47,8 @@
 			CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(loggedInFacilityId, remoteFacilityId);
 			FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 			providerPk.setIntegratorFacilityId(remotePrevention.getFacilityPreventionPk().getIntegratorFacilityId());
-			providerPk.setCaisiProviderId(remotePrevention.getCaisiProviderId());
-			CachedProvider cachedProvider=caisiIntegratorManager.getProviderInfo(loggedInFacilityId, providerPk);
+			providerPk.setCaisiItemId(remotePrevention.getCaisiProviderId());
+			CachedProvider cachedProvider=caisiIntegratorManager.getProvider(loggedInFacilityId, providerPk);
 		%>
 		<table style="border-collapse:collapse">
 			<tr>
