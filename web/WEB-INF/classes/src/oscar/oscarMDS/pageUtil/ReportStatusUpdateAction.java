@@ -54,7 +54,7 @@ public class ReportStatusUpdateAction extends Action {
         
         int labNo = Integer.parseInt(request.getParameter("segmentID"));
         String multiID = request.getParameter("multiID");
-        int providerNo = Integer.parseInt(request.getParameter("providerNo"));
+        String providerNo = request.getParameter("providerNo");
         char status = request.getParameter("status").charAt(0);
         String comment = request.getParameter("comment");
         String lab_type = request.getParameter("labType");

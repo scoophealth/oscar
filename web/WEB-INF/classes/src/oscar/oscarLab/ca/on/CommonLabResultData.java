@@ -130,7 +130,7 @@ public class CommonLabResultData {
         return labs;
     }
     
-    public static boolean updateReportStatus(Properties props, int labNo, int providerNo, char status, String comment, String labType) {
+    public static boolean updateReportStatus(Properties props, int labNo, String providerNo, char status, String comment, String labType) {
         
         try {
             DBPreparedHandler db = new DBPreparedHandler();
@@ -149,7 +149,7 @@ public class CommonLabResultData {
                 db.queryExecute(sql, new String[] { comment });
             }
             
-            if ( providerNo != 0){
+            if ( !"0".equals(providerNo)){
                 String recordsToDeleteSql = "select * from providerLabRouting where provider_no='0' and lab_no='"+labNo+"' and lab_type = '"+labType+"'";
                 sql = "delete from providerLabRouting where provider_no='0' and lab_no=? and lab_type = '"+labType+"'";
                 ArchiveDeletedRecords adr = new ArchiveDeletedRecords();
@@ -320,11 +320,11 @@ public class CommonLabResultData {
             if (labs != null && !labs.equals("")){
                 String[] labArray = labs.split(",");
                 for (int j=0; j < labArray.length; j++){
-                    updateReportStatus(props, Integer.parseInt(labArray[j]), Integer.parseInt(provider), 'F', "", labType);
+                    updateReportStatus(props, Integer.parseInt(labArray[j]), provider, 'F', "", labType);
                 }
                 
             }else{
-                updateReportStatus(props, Integer.parseInt(lab), Integer.parseInt(provider), 'F', "",labType);
+                updateReportStatus(props, Integer.parseInt(lab), provider, 'F', "",labType);
             }
         }
         return true;
