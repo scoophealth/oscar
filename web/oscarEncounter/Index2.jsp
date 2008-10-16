@@ -35,19 +35,23 @@
     String demographic$ = request.getParameter("demographicNo") ;
     boolean bPrincipalControl = false;
     boolean bPrincipalDisplay = false;
+    
+    String eChart$ = "_eChart$"+demographic$;
+    
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=true%>" >
 "You have no right to access this page!"
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
 
-<security:oscarSec roleName="<%=roleName$%>" objectName="<%="_eChart$"+demographic$%>" rights="o" reverse="<%=false%>" >
+<security:oscarSec roleName="<%=roleName$%>" objectName="<%=eChart$%>" rights="o" reverse="<%=false%>" >
 You have no rights to access the data!
 <% response.sendRedirect("../noRights.html");  %>
 </security:oscarSec>
 
 <%-- only principal has the save rights --%>
-<security:oscarSec roleName="<%="_principal"%>" objectName="<%="_eChart"%>" rights="ow" reverse="<%=false%>" >
+
+<security:oscarSec roleName="_principal" objectName="_eChart" rights="ow" reverse="<%=false%>" >
 <% 	bPrincipalControl = true;
 	if(EctPatientData.getProviderNo(demographic$).equals((String) session.getAttribute("user")) ) {
 		bPrincipalDisplay = true;
@@ -56,7 +60,7 @@ You have no rights to access the data!
 </security:oscarSec>
 
 <%-- if this patients eChart is read only remove the save rights --%>
-<security:oscarSec roleName="_all" objectName="<%="_eChart$"+demographic$%>" rights="or" reverse="<%=false%>" >
+<security:oscarSec roleName="_all" objectName="<%=eChart$%>" rights="or" reverse="<%=false%>" >
 <%
     bPrincipalControl = true;
     bPrincipalDisplay = false;
