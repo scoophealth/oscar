@@ -52,7 +52,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     String pathview, pathedit;
     if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
         pathview = request.getContextPath() + "/Tickler.do";
-        pathedit = request.getContextPath() + "/Tickler.do?method=edit";
+        pathedit = request.getContextPath() + "/Tickler.do?method=edit&tickler.demographic_webName="+bean.patientLastName + "," + bean.patientFirstName+"&tickler.demographic_no=" + bean.demographicNo;
     }
     else {
         pathview = request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd;

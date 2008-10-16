@@ -8,6 +8,8 @@
 <br/>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
 <html>
 <body>
 <script>
@@ -165,7 +167,7 @@
 			%>
             <html-el:select property="tickler.task_assigned_to" onchange="reassign_tickler('${tickler.tickler_no}')">
             <html:option value="All Providers">All Providers</html:option>
-            <html:options collection="providers" property="provider_no" labelProperty="formattedName" />
+            <html:options collection="providers" property="providerNo" labelProperty="formattedName" />
             </html-el:select>
 		</td> 
 		
@@ -175,7 +177,7 @@
 		
 			<td class="fieldValue" colspan=3">
 					<html:select property="tickler.task_assigned_to">
-			            <html:options collection="providers" property="provider_no"	labelProperty="formattedName" />
+			            <html:options collection="providers" property="providerNo"	labelProperty="formattedName" />
 					</html:select>
 					<input type="button" value="Reassign" onclick="document.ticklerForm.id.value='<c:out value="${tickler.tickler_no}"/>';document.ticklerForm.method.value='reassign';document.ticklerForm.submit();"/>
 				</td>

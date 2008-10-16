@@ -160,14 +160,14 @@
 		<td class="blueText">Provider: <html:select property="filter.provider"
 			onchange="return checkTicklerDate();">
 			<option value="All Providers">All Providers</option>
-			<html:options collection="providers" property="provider_no"
+			<html:options collection="providers" property="providerNo"
 				labelProperty="formattedName" />
 		</html:select></td>
 		<td class="blueText">Task Assigned To: <html:select
 			property="filter.assignee"
 			onchange="return checkTicklerDate();">
 			<option value="All Providers">All Providers</option>
-			<html:options collection="providers" property="provider_no"
+			<html:options collection="providers" property="providerNo"
 				labelProperty="formattedName" />
 		</html:select></td>
 		
@@ -285,17 +285,17 @@ String demographic_name = "";
 			String late_status = "b";			
 			Tickler temp = (Tickler) pageContext.getAttribute("tickler");
 			if (temp != null) {
-				Demographic demographic = (Demographic) temp.getDemographic();
+				org.oscarehr.common.model.Demographic demographic = (org.oscarehr.common.model.Demographic) temp.getDemographic();
 				if (demographic != null) {
 					demographic_name = demographic.getLastName() + ","
 							+ demographic.getFirstName();
 				}
-				Provider provider = (Provider) temp.getProvider();
+				org.oscarehr.common.model.Provider provider = (org.oscarehr.common.model.Provider) temp.getProvider();
 				if (provider != null) {
 					provider_name = provider.getLastName() + ","
 							+ provider.getFirstName();
 				}
-				Provider assignee = (Provider) temp.getAssignee();
+				org.oscarehr.common.model.Provider assignee = (org.oscarehr.common.model.Provider) temp.getAssignee();
 				if (assignee != null) {
 					assignee_name = assignee.getLastName() + ","
 							+ assignee.getFirstName();
