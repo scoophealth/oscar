@@ -157,7 +157,7 @@ function check() {
                                                 <tr class="data">                          
                                                     <td width="5"><a title="<bean:write name="measurementType" property="typeDesc" />"><bean:write name="measurementType" property="typeDisplayName" /></a></td>
                                                     <td>                                                        
-                                                        <logic:iterate id="mInstrc" name="<%="mInstrcs"+ ctr%>" property="measuringInstructionVector">                                                            
+                                                        <logic:iterate id="mInstrc" name="<%=\"mInstrcs\"+ ctr%>" property="measuringInstructionVector">                                                            
                                                             <input type="radio" name='<%= "value(inputMInstrc-" + ctr + ")" %>' value="<bean:write name="mInstrc" property="measuringInstrc"/>" checked/><bean:write name="mInstrc" property="measuringInstrc"/><br>
                                                         </logic:iterate>                                                                                       
                                                     </td>
