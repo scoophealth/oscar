@@ -124,6 +124,13 @@
     div.ImmSet li a:visited { text-decoration:none; color:blue;}
 
     /*h3{font-size: 100%;margin:0 0 10px;padding: 2px 0;color: #497B7B;text-align: center}*/
+
+</style>
+
+<style type="text/css" media="print">
+.DoNotPrint {
+	display: none;
+}
 </style>
 
 <link rel="stylesheet" type="text/css" href="../../share/css/niftyCorners.css" />
@@ -354,9 +361,18 @@ div.recommendations li{
             </div>
         </div>
     </security:oscarSec>
-    <% } %>
 
+
+    <% } %>
+<div>
+
+             <input type="button" class="DoNotPrint" value="Print" onclick="javascript:window.print()">
+
+</div>
 </td>
+
+
+
 <td valign="top" class="MainTableRightColumn">    
 <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
 <div class="recommendations">
