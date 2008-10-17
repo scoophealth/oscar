@@ -125,7 +125,7 @@ function openNewPage(vheight,vwidth,varpage) {
                 <td class="subject" colspan="2">
                 &nbsp;&nbsp;&nbsp;<bean:message key="global.disease"/>                
                 </td>
-                <td align="right" valign="bottom" style="color:white;"><oscar:nameage demographicNo="<%=(String) session.getAttribute("demographicNo")%>"/></td>
+                <td align="right" valign="bottom" style="color:white;"><oscar:nameage demographicNo="<%=(String) session.getAttribute(\"demographicNo\")%>"/></td>
         </tr>
         </table>
     </td>
