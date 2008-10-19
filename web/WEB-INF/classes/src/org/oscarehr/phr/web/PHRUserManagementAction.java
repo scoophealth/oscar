@@ -130,9 +130,9 @@ public class PHRUserManagementAction extends DispatchAction {
             if (e.getClass().getName().indexOf("ActionNotPerformedException") != -1) {
                 ar.addParameter("failmessage", "Error on the myOSCAR server.  Perhaps the user already exists.");
             } else if (e.getClass().getName().indexOf("IndivoException") != -1) {
-                ar.addParameter("failmessage", "Error: Could not contact the myOSCAR server.");
+                ar.addParameter("failmessage", "Error on the myOSCAR server.  Perhaps the user already exists.");
             } else if (e.getClass().getName().indexOf("JAXBException") != -1) {
-                ar.addParameter("failmessage", "Error: Could not generate sharing permissions (JAXBException");
+                ar.addParameter("failmessage", "Error: Could not generate sharing permissions (JAXBException)");
             } else {
                 ar.addParameter("failmessage", "Unknown Error: Check the log file for details.");
             }
