@@ -345,7 +345,7 @@ function popup1(height, width, url, windowName){
                          %>                                
                              <span class="tabs" style="float:right">
                                  View Status
-                                 <select id="viewstatus" name="viewstatus" onchange="window.location.href='?function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus='+this.options[this.selectedIndex].value;">
+                                 <select id="viewstatus" name="viewstatus"  style="text-size:8px; margin-bottom:-4px;" onchange="window.location.href='?function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus='+this.options[this.selectedIndex].value;">
                                      <option value="all" <%=viewstatus.equalsIgnoreCase("all") ? "selected":""%> >All</option>
                                      <option value="deleted" <%=viewstatus.equalsIgnoreCase("deleted") ? "selected":""%> >Deleted</option>
                                      <option value="active" <%=viewstatus.equalsIgnoreCase("active") ? "selected":""%>>Published</option>
