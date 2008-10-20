@@ -89,6 +89,12 @@ input {
     border: 1px solid #7682b1;
 }
 
+select {
+    border: 1px solid #7682b1;
+    font-size: 11px;
+    margin-bottom:-2px;
+}
+
 input.tightCheckbox{
     margin: 0px;
     padding: 0px;
