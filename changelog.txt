@@ -1,3 +1,4 @@
+2008-10-20 : Added ability to delete/undelete eDocs and filter display of eDocs (Randy,2032846)
 2008-10-09 : Added Photo as an option in DMS, don't use update-2008-10-09.sql if you already have this option in your drop downi list. (Dan Brow)
 2008-10-07 : Increased billing unit field size to 6 characters to accommadate percentage billing. (Dan Brow)
 2008-09-26 : fix link to encounter in myOSCAR and added code to insert myOSCAR message into encounter note (Randy)
