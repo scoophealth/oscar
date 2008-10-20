@@ -261,12 +261,12 @@ public class EDocUtil extends SqlUtilBaseS {
         return resultDocs;
     }
 
-    public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort, Integer currentFacilityId) {
+    public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort, String viewstatus, Integer currentFacilityId) {
         // sort must be not null
         // docType = null or = "all" to show all doctypes
         // select publicDoc and sorting from static variables for this class i.e. sort=EDocUtil.SORT_OBSERVATIONDATE
         // sql base (prefix) to avoid repetition in the if-statements
-        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND c.module='"
+        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='"
                 + module + "'";
         // if-statements to select the where condition (suffix)
         if (publicDoc.equals(PUBLIC)) {
@@ -277,8 +277,16 @@ public class EDocUtil extends SqlUtilBaseS {
             if ((docType == null) || (docType.equals("all")) || (docType.equals(""))) sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0";
             else sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0 AND d.doctype='" + docType + "'";
         }
+        
+        if( viewstatus.equals("deleted") ) {
+            sql += " AND d.status = 'D'";
+        }
+        else if( viewstatus.equals("active") ) {
+            sql += " AND d.status != 'D'";
+        }
+        
         sql = sql + " ORDER BY " + sort;
-        log.debug("sql list: " + sql);
+        log.info("sql list: " + sql);
         ResultSet rs = getSQL(sql);
         ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
         try {
@@ -432,6 +440,21 @@ public class EDocUtil extends SqlUtilBaseS {
         return filename;
     }
 
+    public static void undeleteDocument(String documentNo) {
+        // String nowDate = getDmsDateTime();
+        // String sql = "UPDATE document SET status='D', updatedatetime='" + nowDate + "' WHERE document_no=" + documentNo;
+        // runSQL(sql);
+
+        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[1];
+        java.sql.Date od1 = MyDateFormat.getSysDate(getDmsDateTime());
+        param[0] = new DBPreparedHandlerParam(od1);
+
+        String updateSql = "UPDATE document SET status='A', updatedatetime=? WHERE document_no=" + documentNo;
+
+        runPreparedSql(updateSql, param);
+    }
+    
+    
     public static void deleteDocument(String documentNo) {
         // String nowDate = getDmsDateTime();
         // String sql = "UPDATE document SET status='D', updatedatetime='" + nowDate + "' WHERE document_no=" + documentNo;
