@@ -52,7 +52,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
         
     //set lefthand module heading and link
     String winName = "docs" + bean.demographicNo;
-    String url = "popupPage(500,960,'" + winName + "', '" + request.getContextPath() + "/dms/documentReport.jsp?" + 
+    String url = "popupPage(500,1115,'" + winName + "', '" + request.getContextPath() + "/dms/documentReport.jsp?" + 
             "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.providerNo + "')";        
 
     Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.msgDocuments"));
@@ -61,7 +61,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     
     //set the right hand heading link to call addDocument in index jsp
     winName = "addDoc" + bean.demographicNo;    
-    url = "popupPage(500,960,'" + winName + "','" + request.getContextPath() + "/dms/documentReport.jsp?" + 
+    url = "popupPage(500,1115,'" + winName + "','" + request.getContextPath() + "/dms/documentReport.jsp?" + 
             "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.providerNo + "&mode=add" + 
             "&parentAjaxId=" + cmd + "');return false;";            
         
@@ -71,7 +71,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");    
     String js = "";
     Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-    ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, currentFacilityId);
+    ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active", currentFacilityId);
     String dbFormat = "yyyy-MM-dd";
     String serviceDateStr = "";    
     String key;
