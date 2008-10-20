@@ -426,13 +426,14 @@ div.autocomplete ul li {
             ArrayList categoryKeys = new ArrayList();
             ArrayList privatedocs = new ArrayList();
             Integer currentFacilityId = (Integer) session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-            privatedocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort, currentFacilityId);
+            String viewstatus = "active";
+            privatedocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort, viewstatus. currentFacilityId);
 
             categories.add(privatedocs);
             categoryKeys.add(moduleName + "'s Private Documents");
             if (module.equals("provider")) {
                 ArrayList publicdocs = new ArrayList();
-                publicdocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PUBLIC, sort, currentFacilityId);
+                publicdocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PUBLIC, sort, viewstatus, currentFacilityId);
                 categories.add(publicdocs);
                 categoryKeys.add("Public Documents");
             }
