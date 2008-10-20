@@ -523,7 +523,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                                                 
                     }
                     else {
-                        cal.add(Calendar.MONTH,-1);                        
+                        cal.add(Calendar.YEAR,-1);                        
                     }
                     
                     dStaleDate = cal.getTime();
@@ -540,10 +540,36 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                      *  Else show all notes withing the user preference
                     */
                     ArrayList<Boolean>fullTxtFormat = new ArrayList<Boolean>(noteSize);                    
+                    ArrayList<String>colourStyle = new ArrayList<String>(noteSize);
                     int pos;
-                    idx = 0;
+                    idx = 0;                    
+                    boolean isCPP;
                     for(pos = noteSize-1; pos >= 0; --pos) {
                         CaseManagementNote cmNote = (CaseManagementNote)noteList.get(pos);
+                        
+                        isCPP = false;
+                        bgColour = "color:#000000;background-color:#CCCCFF;";
+                        Set nIssues = cmNote.getIssues();
+                        Iterator iterator = nIssues.iterator();
+                        while( iterator.hasNext() ) {
+                            CaseManagementIssue issue = (CaseManagementIssue)iterator.next();
+                            for( int cppIdx = 0; cppIdx < cppCodes.length; ++cppIdx ) {
+                                if(issue.getIssue().getCode().equals(cppCodes[cppIdx])) {
+                                    bgColour = "color:#FFFFFF;background-color:#996633;";
+                                    isCPP = true;
+                                    break;
+                                }                    
+                            }
+                            if( isCPP )
+                                break;
+                        }
+                        
+                        colourStyle.add(bgColour);
+                        
+                        if( isCPP ) {
+                            fullTxtFormat.add(Boolean.FALSE);
+                            continue;
+                        }
                         
                         if( noteSize > numToDisplay ) {
                             if( uProp == null ) {
@@ -572,33 +598,16 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                         }                        
                     }
 
-                    boolean isCPP, fulltxt;
+                    boolean fulltxt;
                     pos = noteSize - 1;
 		    for( idx = 0; idx < noteSize; ++idx ) {
                     
                     CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
-                    noteStr = note.getNote();
-
-                    isCPP = false; 
-                    bgColour = "color:#000000;background-color:#CCCCFF;";
-                    Set nIssues = note.getIssues();
-                    //System.out.println("nIssues " + String.valueOf(nIssues == null));
-                    Iterator iterator = nIssues.iterator();
-                    while( iterator.hasNext() ) {
-                        CaseManagementIssue issue = (CaseManagementIssue)iterator.next();
-                        for( int cppIdx = 0; cppIdx < cppCodes.length; ++cppIdx ) {
-                            if(issue.getIssue().getCode().equals(cppCodes[cppIdx])) {
-                                bgColour = "color:#FFFFFF;background-color:#996633;";
-                                isCPP = true;
-                                break;
-                            }                    
-                        }
-                        if( isCPP )
-                            break;
-                    }
+                    noteStr = note.getNote();                    
                     
                     noteStr = StringEscapeUtils.escapeHtml(noteStr);
-                    fulltxt = fullTxtFormat.get(pos--);                    
+                    fulltxt = fullTxtFormat.get(pos);
+                    bgColour = colourStyle.get(pos--);
                     if( fulltxt ) { 
                         noteStr = noteStr.replaceAll("\n","<br>");                        
                     }
