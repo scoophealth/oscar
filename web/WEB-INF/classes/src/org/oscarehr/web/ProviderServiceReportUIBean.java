@@ -77,12 +77,11 @@ public class ProviderServiceReportUIBean {
 		
 		for (Provider provider : providers)
 		{
-			Calendar tempStart=(Calendar)startCal.clone();
-			
 			for (Program program : activePrograms)
 			{
 				if (!Program.BED_TYPE.equals(program.getType()) && !Program.SERVICE_TYPE.equals(program.getType())) continue;
 
+				Calendar tempStart=(Calendar)startCal.clone();
 				while (tempStart.compareTo(endCal) < 0)
 				{
 					Calendar tempEnd=(Calendar)tempStart.clone();

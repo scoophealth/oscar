@@ -58,6 +58,7 @@
 		endDate = dateFormatter.parse(endDateString);
 		endCalendar = Calendar.getInstance();
 		endCalendar.setTime(endDate);
+		endCalendar.add(Calendar.MONTH, 1);
 	}
 	catch (Exception e)
 	{
