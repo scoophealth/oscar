@@ -117,10 +117,10 @@
 
 		while (tempStartCalendar.compareTo(endCalendar) < 0)
 		{
-			Calendar tempEndCalendar = (Calendar)startCalendar.clone();
-			tempEndCalendar.clear(Calendar.DAY_OF_MONTH);
+			Calendar tempEndCalendar = (Calendar)tempStartCalendar.clone();
 			tempEndCalendar.add(Calendar.MONTH, 1);
-
+			MiscUtils.setToBeginningOfMonth(tempEndCalendar);
+			
 			populationReportUIBean.setStartDate(tempStartCalendar.getTime());
 			populationReportUIBean.setEndDate(tempEndCalendar.getTime());
 			PopulationReportDataObjects.RoleDataGrid roleDataGrid = populationReportUIBean.getRoleDataGrid();
@@ -157,6 +157,7 @@
 			}
 			
 			tempStartCalendar.add(Calendar.MONTH, 1);
+			tempStartCalendar.getTime();
 		}
 	}
 %>
