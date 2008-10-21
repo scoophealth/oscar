@@ -75,7 +75,7 @@
 		sb.append(',');
 		sb.append("Unique clients with face to face encounter");
 		sb.append(',');
-		sb.append("Unique client with any ancounter");
+		sb.append("Unique client with any encounter");
 
 		// for debugging
 		// System.err.println(sb.toString());
