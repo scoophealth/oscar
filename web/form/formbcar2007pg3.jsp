@@ -760,28 +760,28 @@ function calToday(field) {
         </td></tr>
     </table>
 </div>
-<div id="comment2Div" class="demo5" style="top:570px; left:605px; width:280px; height:20px;">
+<div id="comment2Div" class="demo5" style="top:570px; left:635px; width:200px; height:20px;">
     <center><i>1<sup>st</sup> tri: serum & NT 10 - 13<sup>+6</sup> weeks</i></center>
 </div>
-<div id="comment3Div" class="demo5" style="top:592px; left:605px; width:280px; height:20px;">
+<div id="comment3Div" class="demo5" style="top:592px; left:635px; width:200px; height:20px;">
     <center><i>2<sup>nd</sup> tri: serum 15 - 20<sup>+6</sup> weeks</i></center>
 </div>
-<div id="comment6Div" class="demo5" style="top:696px; left:605px; width:280px; height:20px;">
+<div id="comment6Div" class="demo5" style="top:696px; left:635px; width:200px; height:20px;">
     <center><i>Gest diabetes screen at 24 - 28 weeks</i></center>
 </div>
-<div id="comment7Div" class="demo5" style="top:718px; left:605px; width:280px; height:20px;">
+<div id="comment7Div" class="demo5" style="top:718px; left:635px; width:200px; height:20px;">
     <center><i>Discuss fetal movement at 26 - 32 weeks</i></center>
 </div>
-<div id="comment8Div" class="demo5" style="top:740px; left:605px; width:280px; height:20px;">
+<div id="comment8Div" class="demo5" style="top:740px; left:635px; width:200px; height:20px;">
     <center><i>EPDS at 28 - 32 weeks</i></center>
 </div>
-<div id="comment9Div" class="demo5" style="top:762px; left:605px; width:280px; height:30px;">
+<div id="comment9Div" class="demo5" style="top:762px; left:635px; width:200px; height:30px;">
     <center><i>Reassess diet, physical activity, smoking, substance & alcohol use</i></center>
 </div>
-<div id="comment12Div" class="demo5" style="top:828px; left:605px; width:280px; height:20px;">
+<div id="comment12Div" class="demo5" style="top:828px; left:635px; width:200px; height:20px;">
     <center><i>GBS Screen 35 - 37 weeks</i></center>
 </div>
-<div id="comment14Div" class="demo5" style="top:872px; left:605px; width:280px; height:20px;">
+<div id="comment14Div" class="demo5" style="top:872px; left:635px; width:200px; height:20px;">
     <center><i>Send Hospital copy at 36 weeks</i></center>
 </div>
 
