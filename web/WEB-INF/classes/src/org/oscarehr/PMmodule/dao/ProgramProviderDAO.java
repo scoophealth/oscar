@@ -112,6 +112,20 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         return result;
     }
 
+	public ProgramProvider getProgramProvider(String providerNo, long programId, long roleId) {
+
+    	ProgramProvider result = null;
+
+    	@SuppressWarnings("unchecked")
+        List<ProgramProvider> results = getHibernateTemplate().find("from ProgramProvider pp where pp.ProviderNo = ? and pp.ProgramId = ? and pp.RoleId=?", new Object[] { providerNo, programId, roleId });
+
+        if (!results.isEmpty()) {
+            result = results.get(0);
+        }
+
+        return result;
+    }
+    
     public void saveProgramProvider(ProgramProvider pp) {
         if (pp == null) {
             throw new IllegalArgumentException();

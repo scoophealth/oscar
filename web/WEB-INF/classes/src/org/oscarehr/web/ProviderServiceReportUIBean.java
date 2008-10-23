@@ -26,9 +26,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
@@ -37,8 +43,12 @@ import org.oscarehr.util.EncounterUtil.EncounterType;
 
 public class ProviderServiceReportUIBean {
 
+	Logger logger=LogManager.getLogger(ProviderServiceReportUIBean.class);
+	
 	private ProviderDao providerDao=(ProviderDao)SpringUtils.getBean("providerDao");
 	private ProgramDao programDao=(ProgramDao)SpringUtils.getBean("programDao");
+	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
+	private RoleDAO roleDao=(RoleDAO)SpringUtils.getBean("roleDAO");
 	
 	private Date startDate = null;
 	private Date endDate = null;
@@ -71,16 +81,24 @@ public class ProviderServiceReportUIBean {
 		MiscUtils.setToBeginningOfMonth(endCal);
 		
 		List<Program> activePrograms=programDao.getAllActivePrograms();
+		Role doctorRole=null;
+		for (Role role : roleDao.getRoles()) if ("doctor".equals(role.getName())) doctorRole=role;
+		if (doctorRole==null) logger.error("Error, no caisi role named 'doctor' found in database.");
 		
-		List<Provider> providers=providerDao.getActiveProvidersByType("doctor");
+		List<Provider> providers=providerDao.getActiveProviders();
 		ArrayList<DataRow> results=new ArrayList<DataRow>();
 		
 		for (Provider provider : providers)
 		{
 			for (Program program : activePrograms)
 			{
+				// we only want bed and service programs
 				if (!Program.BED_TYPE.equals(program.getType()) && !Program.SERVICE_TYPE.equals(program.getType())) continue;
 
+				// we only want people who are doctors in this program
+				ProgramProvider programProvider=programProviderDao.getProgramProvider(provider.getProviderNo(), program.getId(), doctorRole.getId());
+				if (programProvider==null) continue;
+				
 				Calendar tempStart=(Calendar)startCal.clone();
 				while (tempStart.compareTo(endCal) < 0)
 				{
