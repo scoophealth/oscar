@@ -7253,7 +7253,7 @@ CREATE INDEX dem_merged_dem ON demographic_merged (demographic_no, deleted);
 CREATE INDEX dem_merged_merge ON demographic_merged (merged_to, deleted);
 
 --
---New audit table stores hashes of casemanagement notes
+-- New audit table stores hashes of casemanagement notes
 --
 CREATE TABLE hash_audit (
     `pkid` int(10) NOT NULL auto_increment,
