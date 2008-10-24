@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -259,13 +260,28 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return false;
 	}
 
+	public static class EncounterCounts
+	{
+		public HashMap<EncounterUtil.EncounterType, Integer> uniqueCounts=new HashMap<EncounterUtil.EncounterType, Integer>();
+		public HashMap<EncounterUtil.EncounterType, Integer> nonUniqueCounts=new HashMap<EncounterUtil.EncounterType, Integer>();
+		
+		public EncounterCounts()
+		{
+			// initialise with 0 values as 0 values won't show up in a select
+			for (EncounterUtil.EncounterType tempType : EncounterUtil.EncounterType.values())
+			{
+				uniqueCounts.put(tempType, 0);
+				nonUniqueCounts.put(tempType, 0);
+			}
+		}
+	}
+	
 	/**
-	 * Get the unique count of demographic Id's based on the providerId and encounterType.
+	 * Get the count of demographic Id's based on the providerId and encounterType, 2 numbers will be provided, the unique count and the non unique count (which just represents the number of encounters in general)
+	 * All encounter types are represented in the resulting hashMap, even ones with 0 counts.
 	 */
-	public static int getUniqueDemographicCountByProviderProgramAndEncounterType(String providerId, int programId, EncounterUtil.EncounterType encounterType, Date startDate, Date endDate) {
-		String sqlCommand = "select count(*) from casemgmt_note where provider_no=? and program_no=? and observation_date>=? and observation_date<?";
-
-		if (encounterType != null) sqlCommand = sqlCommand+" and encounter_type=?";
+	public static EncounterCounts getDemographicEncounterCountsByProviderAndProgram(String providerId, int programId, Date startDate, Date endDate) {
+		String sqlCommand = "select encounter_type,count(demographic_no), count(distinct demographic_no) from casemgmt_note where provider_no=? and program_no=? and observation_date>=? and observation_date<? group by encounter_type";
 
 		Connection c = null;
 		try {
@@ -275,10 +291,18 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			ps.setInt(2, programId);
 			ps.setTimestamp(3, new Timestamp(startDate.getTime()));
 			ps.setTimestamp(4, new Timestamp(endDate.getTime()));
-			if (encounterType != null) ps.setString(5, encounterType.getOldDbValue());
+
+			EncounterCounts results=new EncounterCounts();
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			return (rs.getInt(1));
+			
+			while (rs.next())
+			{
+				EncounterUtil.EncounterType encounterType= EncounterUtil.getEncounterTypeFromOldDbValue(rs.getString(1));
+				results.nonUniqueCounts.put(encounterType, rs.getInt(2));
+				results.uniqueCounts.put(encounterType, rs.getInt(3));
+			}
+			
+			return (results);
 		}
 		catch (SQLException e) {
 			throw (new PersistenceException(e));

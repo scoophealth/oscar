@@ -73,9 +73,17 @@
 		sb.append(',');
 		sb.append("Provider Name");
 		sb.append(',');
-		sb.append("Unique clients with face to face encounter");
+		sb.append("total encounters face to face");
 		sb.append(',');
-		sb.append("Unique client with any encounter");
+		sb.append("total encounters by phone");
+		sb.append(',');
+		sb.append("total encounters with out client");
+		sb.append(',');
+		sb.append("unique client encountered face to face");
+		sb.append(',');
+		sb.append("unique clients encountered by phone");
+		sb.append(',');
+		sb.append("unique clients encountered with out client");
 
 		// for debugging
 		// System.err.println(sb.toString());
@@ -98,9 +106,17 @@
 		sb.append(',');
 		sb.append(StringEscapeUtils.escapeCsv(row.providerName));
 		sb.append(',');
-		sb.append(row.uniqueFaceToFaceEncounters);
+		sb.append(row.encounterCounts.nonUniqueCounts.get(EncounterUtil.EncounterType.FACE_TO_FACE_WITH_CLIENT));
 		sb.append(',');
-		sb.append(row.uniqueAllEncounters);
+		sb.append(row.encounterCounts.nonUniqueCounts.get(EncounterUtil.EncounterType.TELEPHONE_WITH_CLIENT));
+		sb.append(',');
+		sb.append(row.encounterCounts.nonUniqueCounts.get(EncounterUtil.EncounterType.ENCOUNTER_WITH_OUT_CLIENT));
+		sb.append(',');
+		sb.append(row.encounterCounts.uniqueCounts.get(EncounterUtil.EncounterType.FACE_TO_FACE_WITH_CLIENT));
+		sb.append(',');
+		sb.append(row.encounterCounts.uniqueCounts.get(EncounterUtil.EncounterType.TELEPHONE_WITH_CLIENT));
+		sb.append(',');
+		sb.append(row.encounterCounts.uniqueCounts.get(EncounterUtil.EncounterType.ENCOUNTER_WITH_OUT_CLIENT));
 		
 		// for debugging
 		// System.err.println(sb.toString());

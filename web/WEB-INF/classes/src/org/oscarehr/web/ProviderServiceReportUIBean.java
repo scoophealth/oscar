@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.LogManager;
@@ -36,6 +37,7 @@ import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO.EncounterCounts;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -65,8 +67,7 @@ public class ProviderServiceReportUIBean {
 		public String programType=null;
 		public String date=null;
 		public String providerName=null;
-		public int uniqueFaceToFaceEncounters=0;
-		public int uniqueAllEncounters=0;
+		public EncounterCounts encounterCounts=null;
 	}
 	
 	public List<DataRow> getDataRows()
@@ -109,9 +110,8 @@ public class ProviderServiceReportUIBean {
 					dataRow.programName=program.getName();
 					dataRow.programType=program.getType();
 					dataRow.date=dateFormatter.format(tempStart.getTime());
-					dataRow.providerName=provider.getLastName() + ", "+provider.getFirstName();
-					dataRow.uniqueFaceToFaceEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderProgramAndEncounterType(provider.getProviderNo(), program.getId(), EncounterType.FACE_TO_FACE_WITH_CLIENT, tempStart.getTime(), tempEnd.getTime());
-					dataRow.uniqueAllEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderProgramAndEncounterType(provider.getProviderNo(), program.getId(), null, tempStart.getTime(), tempEnd.getTime());
+					dataRow.providerName=provider.getLastName() + ", "+provider.getFirstName();					
+					dataRow.encounterCounts=CaseManagementNoteDAO.getDemographicEncounterCountsByProviderAndProgram(provider.getProviderNo(), program.getId(), tempStart.getTime(), tempEnd.getTime());
 					
 					results.add(dataRow);
 					
@@ -123,8 +123,7 @@ public class ProviderServiceReportUIBean {
 				dataRow.programType=program.getType();
 				dataRow.date=dateFormatter.format(startCal.getTime()) + " to " + dateFormatter.format(endCal.getTime());
 				dataRow.providerName=provider.getLastName() + ", "+provider.getFirstName();
-				dataRow.uniqueFaceToFaceEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderProgramAndEncounterType(provider.getProviderNo(), program.getId(), EncounterType.FACE_TO_FACE_WITH_CLIENT, startCal.getTime(), endCal.getTime());
-				dataRow.uniqueAllEncounters=CaseManagementNoteDAO.getUniqueDemographicCountByProviderProgramAndEncounterType(provider.getProviderNo(), program.getId(), null, startCal.getTime(), endCal.getTime());
+				dataRow.encounterCounts=CaseManagementNoteDAO.getDemographicEncounterCountsByProviderAndProgram(provider.getProviderNo(), program.getId(), startCal.getTime(), endCal.getTime());
 				
 				results.add(dataRow);
 			}

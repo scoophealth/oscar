@@ -33,4 +33,10 @@ public class EncounterUtil {
             return(oldDbValue);
         }
     }
+    
+    public static EncounterType getEncounterTypeFromOldDbValue(String oldDbValue)
+    {
+    	for (EncounterType encounterType : EncounterType.values()) if (encounterType.getOldDbValue().equals(oldDbValue)) return(encounterType);
+    	return(null);
+    }
 }
