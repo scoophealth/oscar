@@ -3,7 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*" %>
+<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,oscar.oscarRx.util.*" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <%long start = System.currentTimeMillis();%>
@@ -613,6 +613,12 @@ String regionalIdentifier="";
         }
     }
     
+    function addLuCode(codeToAdd){
+        var frm = document.forms.RxWriteScriptForm;
+        var txt = frm.special.value;
+        frm.special.value =  txt  + "LU Code: " +codeToAdd;
+    }
+    
     function clearWarning(){
        warningArray = new Array(); 
     }    
@@ -998,7 +1004,7 @@ int i;
                                     <b><%= thisForm.getGenericName() %></b>
                                     <%if ( compString != null ){%>
                                     <a href="javascript: function myFunction() {return false; }" title="<%=compString%>" >Components</a>
-                                    <%}%>                                
+                                    <%}%>   
                                 </td>
                                  <td valign=top rowspan=8>
                                                 <select size=20 name="selSpecial" ondblclick="javascript:cmdSpecial_click();">
@@ -1289,6 +1295,29 @@ int i;
                                                    <li>warning</li>
                                                    </ul>
                                                 </div>
+                                                <oscar:oscarPropertiesCheck property="billregion" value="ON">
+                                                <a target="_new" href="https://www.healthinfo.moh.gov.on.ca/formulary/SearchServlet?searchType=drugID&keywords=<%=regionalIdentifier%>">ODB lookup</a>
+                                                <%
+                                                ArrayList<LimitedUseCode> luList = LimitedUseLookup.getLUInfoForDin(regionalIdentifier);
+                                                if (luList != null){ %>
+                                                    
+                                                    <table style="border-width: 1px;border-spacing: 2px;border-style: outset;border-color: black;">
+                                                        <tr>
+                                                            <th colspan="2" align="left">Limited Use Codes</th>
+                                                        </tr> 
+                                                        
+                                                        
+                                                    <%for (LimitedUseCode limitedUseCode : luList){%>
+                                                        <tr>
+                                                            <td valign="top" >
+                                                                <a onclick="javascript:addLuCode('<%=limitedUseCode.getUseId()%>')" href="javascript: return void();"><%=limitedUseCode.getUseId()%></a>&nbsp;
+                                                            </td>
+                                                            <td><%=limitedUseCode.getTxt()%></td>
+                                                        </tr>
+                                                    <%}%>
+                                                    </table>
+                                                <%}%>
+                                                </oscar:oscarPropertiesCheck>
                                             </td>
                                             <td valign=center>
                                                 <input type=button name="cmdSpecial" value="<<" onclick="javascript:cmdSpecial_click();" />
