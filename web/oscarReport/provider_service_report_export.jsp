@@ -84,6 +84,8 @@
 		sb.append("unique clients encountered by phone");
 		sb.append(',');
 		sb.append("unique clients encountered with out client");
+		sb.append(',');
+		sb.append("total unique clients encountered");
 
 		// for debugging
 		// System.err.println(sb.toString());
@@ -117,6 +119,8 @@
 		sb.append(row.encounterCounts.uniqueCounts.get(EncounterUtil.EncounterType.TELEPHONE_WITH_CLIENT));
 		sb.append(',');
 		sb.append(row.encounterCounts.uniqueCounts.get(EncounterUtil.EncounterType.ENCOUNTER_WITH_OUT_CLIENT));
+		sb.append(',');
+		sb.append(row.encounterCounts.totalUniqueCount);
 		
 		// for debugging
 		// System.err.println(sb.toString());
