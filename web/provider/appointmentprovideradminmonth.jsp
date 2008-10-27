@@ -193,18 +193,27 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
 //<!--/oscarMessenger code block -->
 
 
-function selectprovider(s) {
-  if(s.options[s.selectedIndex].value.indexOf("_grp_")!=-1 ) {
-	  var newGroupNo = s.options[s.selectedIndex].value.substring(5) ;
-if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-	  popupOscarRx(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
-}else popupOscarRx(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
-  } else {
-  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
-  else a = self.location.href;
-	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
-	}
-}
+    function selectprovider(s) {
+        if(s.options[s.selectedIndex].value.indexOf("_grp_")!=-1 ) 
+        {
+            var newGroupNo = s.options[s.selectedIndex].value.substring(5) ;
+            <%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){%>
+            {
+                popupOscarRx(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+            }
+            <%}else {%>
+                popupOscarRx(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+            <%}%>
+        } 
+        else 
+        {
+            if(self.location.href.lastIndexOf("&providerview=") > 0 ) 
+                a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
+            else 
+                a = self.location.href;
+            self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
+        }
+    }
 
 function refresh() {
   history.go(0);
