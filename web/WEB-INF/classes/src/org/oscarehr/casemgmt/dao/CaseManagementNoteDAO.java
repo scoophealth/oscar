@@ -278,17 +278,17 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	 * Get the count of demographic Id's based on the providerId and encounterType, 2 numbers will be provided, the unique count and the non unique count (which just represents the
 	 * number of encounters in general) All encounter types are represented in the resulting hashMap, even ones with 0 counts.
 	 */
-	public static EncounterCounts getDemographicEncounterCountsByProviderAndProgram(String providerId, int programId, Date startDate, Date endDate) {
+	public static EncounterCounts getDemographicEncounterCountsByProgramAndRoleId(int programId, int roleId, Date startDate, Date endDate) {
 		Connection c = null;
 		try {
 			EncounterCounts results = new EncounterCounts();
 			c = DbConnectionFilter.getThreadLocalDbConnection();
 			
 			{
-				String sqlCommand = "select encounter_type,count(demographic_no), count(distinct demographic_no) from casemgmt_note where provider_no=? and program_no=? and observation_date>=? and observation_date<? group by encounter_type";
+				String sqlCommand = "select encounter_type,count(demographic_no), count(distinct demographic_no) from casemgmt_note where program_no=? and reporter_caisi_role=? and observation_date>=? and observation_date<? group by encounter_type";
 				PreparedStatement ps = c.prepareStatement(sqlCommand);
-				ps.setString(1, providerId);
-				ps.setInt(2, programId);
+				ps.setInt(1, programId);
+				ps.setInt(2, roleId);
 				ps.setTimestamp(3, new Timestamp(startDate.getTime()));
 				ps.setTimestamp(4, new Timestamp(endDate.getTime()));
 
@@ -302,10 +302,10 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			}
 			
 			{
-				String sqlCommand = "select count(distinct demographic_no) from casemgmt_note where provider_no=? and program_no=? and observation_date>=? and observation_date<?";
+				String sqlCommand = "select count(distinct demographic_no) from casemgmt_note where program_no=? and reporter_caisi_role=? and observation_date>=? and observation_date<?";
 				PreparedStatement ps = c.prepareStatement(sqlCommand);
-				ps.setString(1, providerId);
-				ps.setInt(2, programId);
+				ps.setInt(1, programId);
+				ps.setInt(2, roleId);
 				ps.setTimestamp(3, new Timestamp(startDate.getTime()));
 				ps.setTimestamp(4, new Timestamp(endDate.getTime()));
 
@@ -330,7 +330,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		// now as it'll create complex buggy code so I'll stick with simple slow code until the data model is fixed.
 		// ---
 		// use a hashmap with key=uuid, compare for largest updateDate before adding
-		// resulting hashmap should be al the latest notes
+		// resulting hashmap should be all the latest notes
 
 		return (null);
 	}

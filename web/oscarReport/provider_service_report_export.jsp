@@ -71,8 +71,6 @@
 		sb.append(',');
 		sb.append("Date");
 		sb.append(',');
-		sb.append("Provider Name");
-		sb.append(',');
 		sb.append("total encounters face to face");
 		sb.append(',');
 		sb.append("total encounters by phone");
@@ -105,8 +103,6 @@
 		sb.append(StringEscapeUtils.escapeCsv(row.programType));
 		sb.append(',');
 		sb.append(StringEscapeUtils.escapeCsv(row.date));
-		sb.append(',');
-		sb.append(StringEscapeUtils.escapeCsv(row.providerName));
 		sb.append(',');
 		sb.append(row.encounterCounts.nonUniqueCounts.get(EncounterUtil.EncounterType.FACE_TO_FACE_WITH_CLIENT));
 		sb.append(',');

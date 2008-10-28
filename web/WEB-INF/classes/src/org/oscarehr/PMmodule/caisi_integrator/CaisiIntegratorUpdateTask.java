@@ -63,7 +63,6 @@ import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
-import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.DemographicDao;
@@ -178,6 +177,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		Date currentPushTime = new Date();
 
 		// do all the sync work
+		// in theory sync should only send changed data, but currently due to 
+		// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the data model.
 		pushFacility(facility);
 		pushPrograms(facility);
 		pushProviders(facility);
