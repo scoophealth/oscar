@@ -391,11 +391,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
     
      public ActionForward issueNoteSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {            
             String strNote = request.getParameter("value");
+            //strNote = strNote.trim();
             log.debug("Saving: " + strNote);
             if( strNote == null || strNote.equals("") )
-                return null;
-            
-            strNote = strNote.trim();
+                return null;                        
             
             String providerNo = getProviderNo(request);
             Provider provider = getProvider(request);
@@ -405,14 +404,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                         
             String noteId = request.getParameter("noteId");                                 
             log.debug("SAVING NOTE " + noteId + " STRING: " + strNote);
-            String removeIssue = request.getParameter("removeIssue");
+            String issueChange = request.getParameter("issueChange");
             
             CaseManagementNote note;
             boolean newNote = false;
             //we don't want to try to remove an issue from a new note so we test here
             if( noteId.equals("0") ) {
                 
-                if( removeIssue.equals("true") )
+                if( issueChange.equals("true") )
                     return null;
                 
                 note = new CaseManagementNote();
@@ -422,7 +421,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             else {
                 note = this.caseManagementMgr.getNote(noteId);
                 //if note has not changed don't save
-                if( strNote.equals(note.getNote()) && !removeIssue.equals("true") )
+                
+                if( strNote.equals(note.getNote()) && !issueChange.equals("true") )
                     return null;
             }
             
@@ -436,7 +436,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             
             String programId = (String)request.getSession().getAttribute("case_program_id");			
             note.setProgram_no(programId);
-            
+                        
             WebApplicationContext ctx = this.getSpringContext();
 
             ProgramManager programManager= (ProgramManager)ctx.getBean("programManager");
@@ -462,28 +462,92 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
             note.setReporter_program_team(team);
                         
-            if( newNote ) {
-                Set issueSet = note.getIssues();
-                Set noteSet = new HashSet();;
-                String[] issue_id = request.getParameterValues("issue_id");
+            //update note issues            
+            String sessionFrmName = "caseManagementEntryForm" + demo;
+            CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
+            Set issueSet = new HashSet();
+            Set noteSet = new HashSet();
+            String[] issue_id = request.getParameterValues("issue_id");
+            CheckBoxBean[] existingCaseIssueList = sessionFrm.getIssueCheckList();
+            ArrayList<CheckBoxBean>caseIssueList = new ArrayList<CheckBoxBean>();
+            
+            //copy existing issues for sessionfrm
+            for( int idx = 0; idx < existingCaseIssueList.length; ++idx ) {
+                caseIssueList.add(existingCaseIssueList[idx]);
+            }
+            
+            //first we check if any notes have been removed
+            Set<CaseManagementIssue>noteIssues = note.getIssues();
+            Iterator<CaseManagementIssue>iter = noteIssues.iterator();
+            CaseManagementIssue cIssue;
+            boolean issueExists;
+            StringBuffer issueNames = new StringBuffer();
+            int j;
+            
+            //we've removed all issues so record that
+            if( issue_id == null ) {
+                while( iter.hasNext() ) {
+                    cIssue = iter.next();
+                    issueNames.append(cIssue.getIssue().getDescription() + "\n");                    
+                }
+                strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " Removed following issue(s):\n" + issueNames.toString();
+                note.setNote(strNote);
+            }
+            else {
+                //check to see if we have removed any issues
+                while( iter.hasNext() ) {
+                    cIssue = iter.next();
+                    issueExists = false;                    
+                    for( j = 0; j < issue_id.length; ++j ) {
+                        if( Long.parseLong(issue_id[j]) == cIssue.getIssue_id() ) {
+                            issueExists = true;
+                            break;
+                        }
+                    }
+
+                    if( !issueExists ) {
+                        issueNames.append(cIssue.getIssue().getDescription() + "\n");
+                    }
+                }
+
+                //if we have removed an issue add it to message body
+                if( issueNames.length() > 0 ) {
+                    strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " Removed following issue(s):\n" + issueNames.toString();
+                    note.setNote(strNote);
+                }
+
                 for( int idx = 0; idx < issue_id.length; ++idx ) {
-                    CaseManagementIssue cIssue = this.caseManagementMgr.getIssueById(demo,issue_id[idx]);
+                    cIssue = this.caseManagementMgr.getIssueById(demo,issue_id[idx]);
                     if( cIssue == null ) {
                         Issue issue = this.caseManagementMgr.getIssue(issue_id[idx]);
                         cIssue = this.newIssueToCIssue(demo, issue, Integer.parseInt(programId));                    
-                        cIssue.setNotes(noteSet);                    
+                        cIssue.setNotes(noteSet);
+                        
+                        //we have a new issue so add it to sessionfrm list
+                        CheckBoxBean checkbox = new CheckBoxBean();
+                        checkbox.setIssue(cIssue); 
+                        checkbox.setChecked("off");
+                        checkbox.setUsed(true);
+                        caseIssueList.add(checkbox);
                     }                
                     issueSet.add(cIssue);
-                }
-                note.setIssues(issueSet);
+
+               } //end for
+
+                CheckBoxBean[] newCheckBox = new CheckBoxBean[caseIssueList.size()];
+                newCheckBox = caseIssueList.toArray(newCheckBox);
+                sessionFrm.setIssueCheckList(newCheckBox);
+
             }
+            note.setIssues(issueSet);
+            
             
             /*
              *Remove linked issue(s) and insert message into note
-             */
+             *
             if( removeIssue.equals("true") ) {
-                String[] issue_id = request.getParameterValues("issue_id");
-                Set issueSet = note.getIssues();         
+                issue_id = request.getParameterValues("issue_id");
+                issueSet = note.getIssues();         
                 StringBuffer issueNames = new StringBuffer();
                 for( int idx = 0; idx < issue_id.length; ++idx ) {
                     for(Iterator iter = issueSet.iterator();iter.hasNext();) {
@@ -500,7 +564,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 note.setIssues(tmpIssues);
                 strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " Removed following issue(s):\n" + issueNames.toString();
                 note.setNote(strNote);
-            }
+            }*/
             
             int revision;
                 
@@ -1097,30 +1161,37 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String programId = (String) request.getSession().getAttribute("case_program_id");
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 
-        String demono = getDemographicNo(request);
+        String demono = request.getParameter("amp;demographicNo");
 
         // get current providerNo
-        String providerNo = getProviderNo(request);
+        String providerNo = request.getParameter("amp;providerNo");
 
         // get the issue list have search string
         String search = request.getParameter("issueSearch");
 
         List searchResults;
-        searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);
+        searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);        
 
-        List filteredSearchResults = new ArrayList();
-
-        // remove issues which we already have - we don't want duplicates
+        // remove issues which we already have - we don't want duplicates unless asked for
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
         List existingIssues= caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), providerNo, programId,currentFacilityId);
-
-        Map existingIssuesMap = convertIssueListToMap(existingIssues);
-        for (Iterator iter = searchResults.iterator(); iter.hasNext();) {
-            Issue issue = (Issue) iter.next();
-            if (existingIssuesMap.get(issue.getId()) == null) {
-                filteredSearchResults.add(issue);
-            }
+        List filteredSearchResults;
+        
+        if( request.getParameter("amp;all") != null ) {            
+            filteredSearchResults = new ArrayList(searchResults);
         }
+        else {
+            filteredSearchResults = new ArrayList();
+            Map existingIssuesMap = convertIssueListToMap(existingIssues);
+            for (Iterator iter = searchResults.iterator(); iter.hasNext();) {
+                Issue issue = (Issue) iter.next();
+                if (existingIssuesMap.get(issue.getId()) == null) {
+                    filteredSearchResults.add(issue);
+                }
+            }
+            
+        }
+        
 
         CheckIssueBoxBean[] issueList = new CheckIssueBoxBean[filteredSearchResults.size()];
         for (int i = 0; i < filteredSearchResults.size(); i++) {
@@ -1261,10 +1332,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         // client's new issues
         CheckIssueBoxBean[] issueList = (CheckIssueBoxBean[]) sessionFrm.getNewIssueCheckList();
         int k = 0;
-        for (int i = 0; i < issueList.length; i++) {
-            if (issueList[i].isChecked()) k++;
+        if( issueList != null ) {
+            for (int i = 0; i < issueList.length; i++) {
+                if (issueList[i].isChecked()) k++;
+            }
         }
-
+        
         CheckBoxBean[] caseIssueList = new CheckBoxBean[oldList.length + k];
         for (int i = 0; i < oldList.length; i++) {
             caseIssueList[i] = new CheckBoxBean();
@@ -1284,26 +1357,27 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         	dxProps.load(is);
         }catch(IOException e) {log.warn("Unable to load Dx properties file");}
         
-        for (int i = 0; i < issueList.length; i++) {
-            if (issueList[i].isChecked()) {
-                caseIssueList[oldList.length + k] = new CheckBoxBean();
-                caseIssueList[oldList.length + k].setIssue(newIssueToCIssue(sessionFrm, issueList[i].getIssue(), programId));
-                caseIssueList[oldList.length + k].setChecked("on");
-           
-                
-                //should issue be automagically added to Dx? check config file
-                if(dxProps != null && dxProps.get(issueList[i].getIssue().getCode()) != null) {
-                	String codingSystem = dxProps.getProperty("coding_system");
-                	log.info("adding to Dx");
-                	this.caseManagementMgr.saveToDx(getDemographicNo(request),issueList[i].getIssue().getCode(),codingSystem);
-                	caseIssueList[oldList.length + k].getIssue().setMajor(true);
+        if( issueList != null ) {
+            for (int i = 0; i < issueList.length; i++) {
+                if (issueList[i].isChecked()) {
+                    caseIssueList[oldList.length + k] = new CheckBoxBean();
+                    caseIssueList[oldList.length + k].setIssue(newIssueToCIssue(sessionFrm, issueList[i].getIssue(), programId));
+                    caseIssueList[oldList.length + k].setChecked("on");
+
+
+                    //should issue be automagically added to Dx? check config file
+                    if(dxProps != null && dxProps.get(issueList[i].getIssue().getCode()) != null) {
+                            String codingSystem = dxProps.getProperty("coding_system");
+                            log.info("adding to Dx");
+                            this.caseManagementMgr.saveToDx(getDemographicNo(request),issueList[i].getIssue().getCode(),codingSystem);
+                            caseIssueList[oldList.length + k].getIssue().setMajor(true);
+                    }
+
+                    k++;
+
                 }
-                
-                k++;
-                
             }
         }
-
         cform.setIssueCheckList(caseIssueList);
         sessionFrm.setIssueCheckList(caseIssueList);
        
