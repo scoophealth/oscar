@@ -1743,19 +1743,13 @@ function addIssue2CPP(txtField, listItem) {
 
    if( !found ) {
        var node = document.createElement("LI");
-       var checkbox = document.createElement('input');
-       checkbox.type = 'checkbox';
-       checkbox.id = "issueId";
-       checkbox.name = 'issue_id';
-       checkbox.defaultChecked = true;
-       checkbox.value = nodeId;
-       var txtNode = document.createTextNode(listItem.innerHTML);   
-       node.appendChild(checkbox);
-       node.appendChild(txtNode);
+       
+       var html = "<input type='checkbox' id='issueId' name='issue_id' checked value='" + nodeId + "'>" + listItem.innerHTML;
+       new Insertion.Top(node, html);
+
        $("issueIdList").appendChild(node);   
        $("issueAutocompleteCPP").value = "";
-       curItems = document.forms["frmIssueNotes"].elements["issueId"];
-       size = curItems.length;              
+
    }
 
    $("issueChange").value = true;
