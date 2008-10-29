@@ -38,8 +38,9 @@
     pageContext.setAttribute("providerNo",bean.providerNo, pageContext.PAGE_SCOPE);
 %>
 
-<nested:define id="rowOneSize" name="caseManagementViewForm" property="ectWin.rowOneSize"/>
+<%--<nested:define id="rowOneSize" name="caseManagementViewForm" property="ectWin.rowOneSize"/>
 <nested:define id="rowTwoSize" name="caseManagementViewForm" property="ectWin.rowTwoSize"/>
+--%>
 <html:html locale="true">
   <head>      
         
@@ -217,13 +218,13 @@
 
         /* CPP textareas */
         .rowOne {
-            height: <nested:write name="rowOneSize"/>px;
+            height: <%--<nested:write name="rowOneSize"/>--%>10px;
             width: 97%;
             overflow:auto;
         }
         
         .rowTwo {
-            height: <nested:write name="rowTwoSize"/>px;
+            height: <%--<nested:write name="rowTwoSize"/>--%>10px;
             width:97%;
             margin-left:4px;            
             overflow:auto;
@@ -361,6 +362,14 @@ function init() {
     Calendar.setup({ inputField : "printStartDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printStartDate_cal", singleClick : true, step : 1 });    
     Calendar.setup({ inputField : "printEndDate", ifFormat : "%d-%b-%Y", showsTime :false, button : "printEndDate_cal", singleClick : true, step : 1 });    
     
+    <c:url value="/CaseManagementEntry.do" var="issueURLCPP">
+        <c:param name="method" value="issueList"/>
+        <c:param name="demographicNo" value="${demographicNo}" />
+        <c:param name="providerNo" value="${providerNo}" />
+        <c:param name="all" value="true" />
+    </c:url>
+    var issueAutoCompleterCPP = new Ajax.Autocompleter("issueAutocompleteCPP", "issueAutocompleteListCPP", "<c:out value="${issueURLCPP}" />", {minChars: 4, indicator: 'busy2', afterUpdateElement: addIssue2CPP, onShow: autoCompleteShowMenuCPP, onHide: autoCompleteHideMenuCPP});
+    
     strToday = $F("serverDate");
     
     <nested:notEmpty name="DateError">
@@ -395,15 +404,21 @@ function init() {
               <form id="frmIssueNotes" action="" method="post" onsubmit="return updateCPPNote();">
                   <input type="hidden" id="reloadUrl" name="reloadUrl" value="">
                   <input type="hidden" id="containerDiv" name="containerDiv" value="">
-                  <input type="hidden" id="removeIssue" name="removeIssue" value="">
+                  <input type="hidden" id="issueChange" name="issueChange" value="">
                   <div id="winTitle"></div>
                   <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" wrap="soft"></textarea><br>
-                  <span style="float:right; margin-right:10px;">
-                      <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-cut.png"/>" onclick="$('removeIssue').value='true';" title='<bean:message key="oscarEncounter.Index.btnUnlink"/>'>
+                  <span style="float:right; margin-right:10px;">                      
                       <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;" title='<bean:message key="global.btnExit"/>'>
                   </span>
                   <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
+                  <div id="issueListCPP" style="background-color:#FFFFFF; height:200px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
+                      <div class="enTemplate_name_auto_complete" id="issueAutocompleteListCPP" name="issueAutocompleteListCPP" style="position:relative; left:0px; display:none;"></div>
+                  </div>
+                  Assign Issues&nbsp;<input  tabindex="100" type="text" id="issueAutocompleteCPP" name="issueSearch" style="z-index: 2;" size="25">&nbsp;
+                 
+                  <span id="busy2" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="Working..." /></span>
+                  
               </form>
           </div>
           <div id="printOps" class="printOps">
