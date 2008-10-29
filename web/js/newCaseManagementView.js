@@ -430,7 +430,7 @@ function navBarLoader() {
 }
 
 //display in place editor
-function showEdit(e,title, noteId, editors, date, revision, note, url, containerDiv, reloadUrl) {    
+function showEdit(e,title, noteId, editors, date, revision, note, url, containerDiv, reloadUrl, noteIssues) {    
     //Event.extend(e);
     //e.stop();
     
@@ -465,9 +465,26 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
             editorUl += "</li>";
     }    
     editorUl += "</ul>";
+
+    var noteIssueUl = "<ul id='issueIdList' style='list-style: none outside none; margin:0px;'>";
+    
+    if( noteIssues.length > 0 ) {
+        var issueArray = noteIssues.split(";");    
+        var idx,rows;
+        for( idx = 0,rows=0; idx < issueArray.length; idx+=2, ++rows ) {
+            if( rows % 2 == 0 )
+                noteIssueUl += "<li><input type='checkbox' id='issueId' name='issue_id' checked value='" + issueArray[idx] + "'>" + issueArray[idx+1];
+            else
+                noteIssueUl += "&nbsp; <input type='checkbox' id='issueId' name='issue_id' checked value='" + issueArray[idx] + "'>" + issueArray[idx+1] + "</li>";
+        }
+
+        if( rows % 2 == 0 )
+            noteIssueUl += "</li>";
+    }    
+    noteIssueUl += "</ul>";
     
     var noteInfo = "<div style='float:right;'><i>Date:&nbsp;" + date + "&nbsp;rev<a href='#' onclick='return showHistory(\"" + noteId + "\",event);'>"  + revision + "</a></i></div>" + 
-                    "<div><span style='float:left;'>Editors: </span>" + editorUl  + "</div><br style='clear:both;'>";                                                        
+                    "<div><span style='float:left;'>Editors: </span>" + editorUl + noteIssueUl + "</div><br style='clear:both;'>";                                                        
                     
     $("issueNoteInfo").update(noteInfo);
     $("frmIssueNotes").action = url;   
@@ -497,8 +514,25 @@ function updateCPPNote() {
    
    $('channel').style.visibility ='visible';
    $('showEditNote').style.display='none';
+   
+   var curItems = document.forms["frmIssueNotes"].elements["issueId"];
+   if( typeof curItems.length != "undefined" ) {
+        size = curItems.length;
+      
+       for( var idx = 0; idx < size; ++idx ) {
+            if( !curItems[idx].checked ) {
+                $("issueChange").value = true;
+                break;
+            }
+       }
+   }
+   else {
+        $("issueChange").value = true;
+   }
+
    var params = $("frmIssueNotes").serialize();   
 
+   var sigId = "sig" + caseNote.substr(13);
    var objAjax = new Ajax.Request (                        
                           url,
                             {
@@ -508,13 +542,16 @@ function updateCPPNote() {
                                 onSuccess: function(request) {   
                                                 if( request.responseText.length > 0 )
                                                     $(div).update(request.responseText);
+
+                                                 if( $("issueChange").value == "true" ) {                                                      
+                                                      ajaxUpdateIssues("edit",sigId);
+                                                      $("issueChange").value = false;
+                                                 }
+                                                 
                                            }, 
                                 onFailure: function(request) {
                                                 $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
-                                            },
-                                onComplete: function(request) {
-                                                $("removeIssue").value = "false";
-                                }
+                                            }                                
                             }
 
                       );
@@ -1683,6 +1720,46 @@ function savePage(method, chain) {
         return false;
     }
     
+function addIssue2CPP(txtField, listItem) {
+
+   var nodeId = listItem.id;   
+   var size = 0;
+   var found = false;
+   var curItems = document.forms["frmIssueNotes"].elements["issueId"];
+   
+   if( typeof curItems.length != "undefined" ) {
+        size = curItems.length;
+      
+       for( var idx = 0; idx < size; ++idx ) {
+            if( curItems[idx].value == nodeId ) {
+                found = true;
+                break;
+            }
+       }
+   }
+   else {
+        found = curItems.value == nodeId;
+   }
+
+   if( !found ) {
+       var node = document.createElement("LI");
+       var checkbox = document.createElement('input');
+       checkbox.type = 'checkbox';
+       checkbox.id = "issueId";
+       checkbox.name = 'issue_id';
+       checkbox.defaultChecked = true;
+       checkbox.value = nodeId;
+       var txtNode = document.createTextNode(listItem.innerHTML);   
+       node.appendChild(checkbox);
+       node.appendChild(txtNode);
+       $("issueIdList").appendChild(node);   
+       $("issueAutocompleteCPP").value = "";
+       curItems = document.forms["frmIssueNotes"].elements["issueId"];
+       size = curItems.length;              
+   }
+
+   $("issueChange").value = true;
+}
 
 function saveIssueId(txtField, listItem) {       
     $("newIssueId").value = listItem.id;
@@ -2033,6 +2110,17 @@ function autoCompleteShowMenu(element, update){
     Effect.Appear($("issueTable"), {duration:0.15});    
     Effect.Appear(update,{duration:0.15});
 
+}
+
+function autoCompleteHideMenuCPP(element, update){ 
+    new Effect.Fade(update,{duration:0.15});
+    new Effect.Fade($("issueListCPP"), {duration:0.15});
+
+}
+
+function autoCompleteShowMenuCPP(element, update) {
+    Effect.Appear($("issueListCPP"), {duration:0.15});
+    Effect.Appear(update,{duration:0.15});
 }
     
     function callInProgress(xmlhttp) {
