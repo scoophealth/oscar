@@ -28,12 +28,12 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@ include file="/casemgmt/taglibs.jsp" %>
-<%@page import="java.util.List"%>
+<%@page import="java.util.List, java.util.Set, java.util.Iterator, org.oscarehr.casemgmt.model.CaseManagementIssue"%>
 <%@page import="org.oscarehr.common.model.Provider" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
  <nested:size id="num" name="Notes"/>
 
-<div style="width:10%; float:right; text-align:center;"><h3 style="padding:0px; background-color:<c:out value="${param.hc}"/>" ><a href="#" title='Add Item' onclick="return showEdit(event,'<c:out value="${param.title}"/>','',0,'','','','<%=request.getAttribute("addUrl")%>0', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>');">+</a></h3></div>
+<div style="width:10%; float:right; text-align:center;"><h3 style="padding:0px; background-color:<c:out value="${param.hc}"/>" ><a href="#" title='Add Item' onclick="return showEdit(event,'<c:out value="${param.title}"/>','',0,'','','','<%=request.getAttribute("addUrl")%>0', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>','<%=request.getAttribute("cppIssue")%>');">+</a></h3></div>
 <div style="clear:left; float:left; width:90%;"><h3 style="width:100%; background-color:<c:out value="${param.hc}"/>"><a href="#" onclick="return showIssueHistory('<%=request.getAttribute("issueIds")%>');"><c:out value="${param.title}"/></a></h3></div>
 <div style="clear:both; height:63px; overflow:auto;">
     <ul style="margin-left:5px;">
@@ -54,10 +54,22 @@
                 
                 String noteTxt = note.getNote();
                 noteTxt = noteTxt.replaceAll("\"","");
-                noteTxt = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(noteTxt);             
+                noteTxt = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(noteTxt);         
+                
+                Set<CaseManagementIssue>setIssues = note.getIssues();
+                StringBuffer strNoteIssues = new StringBuffer();
+                CaseManagementIssue iss;
+                Iterator<CaseManagementIssue>iter = setIssues.iterator();
+                while(iter.hasNext()) {
+                    iss = iter.next();
+                    strNoteIssues.append(iss.getIssue_id() + ";" + org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(iss.getIssue().getDescription()));
+                    if( iter.hasNext() ) {
+                        strNoteIssues.append(";");
+                    }
+                }
                 %>
                 <span id="spanListNote<nested:write name="note" property="id"/>" >
-                    <a class="topLinks" onmouseover="this.className='topLinkhover'"  onmouseout="this.className='topLinks'" title="Rev:<nested:write name="note" property="revision"/> - Last update:<nested:write name="note" property="update_date" format="dd-MMM-yyyy"/>" id="listNote<nested:write name="note" property="id"/>" href="#" onclick="showEdit(event, '<c:out value="${param.title}"/>', '<nested:write name="note" property="id"/>','<%=editors.toString()%>','<nested:write name="note" property="observation_date" format="dd-MMM-yyyy"/>','<nested:write name="note" property="revision"/>','<%=noteTxt%>', '<%=request.getAttribute("addUrl")%><nested:write name="note" property="id"/>', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>');return false;"><%=htmlNoteTxt%></a>
+                    <a class="topLinks" onmouseover="this.className='topLinkhover'"  onmouseout="this.className='topLinks'" title="Rev:<nested:write name="note" property="revision"/> - Last update:<nested:write name="note" property="update_date" format="dd-MMM-yyyy"/>" id="listNote<nested:write name="note" property="id"/>" href="#" onclick="showEdit(event, '<c:out value="${param.title}"/>', '<nested:write name="note" property="id"/>','<%=editors.toString()%>','<nested:write name="note" property="observation_date" format="dd-MMM-yyyy"/>','<nested:write name="note" property="revision"/>','<%=noteTxt%>', '<%=request.getAttribute("addUrl")%><nested:write name="note" property="id"/>', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>','<%=strNoteIssues.toString()%>');return false;"><%=htmlNoteTxt%></a>
                 </span>            
             </li>
         </nested:iterate>
