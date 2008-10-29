@@ -107,6 +107,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			// EncounterWindow ectWin = caseForm.getEctWin();
 			String providerNo = getProviderNo(request);
 			caseManagementMgr.saveCPP(cpp, providerNo);
+                        System.out.println("Saved cpp for " + cpp.getDemographic_no());
 			// caseManagementMgr.saveEctWin(ectWin);
 		}
 		else
@@ -547,17 +548,24 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String[] codes = request.getParameterValues("issue_code");
 		List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, codes);
 		StringBuffer checked_issues = new StringBuffer();
+                StringBuffer cppIssues = new StringBuffer();
 		String[] issueIds = new String[issues.size()];
 		int idx = 0;
 		for (Issue issue : issues) {
 			checked_issues.append("&issue_id=" + String.valueOf(issue.getId()));
+                        if( idx > 0 ) {
+                            cppIssues.append(";");
+                        }
+                        cppIssues.append(issue.getId() + ";" + issue.getDescription());
 			issueIds[idx] = String.valueOf(issue.getId());
+                        idx++;
 		}
 
 		// set save Url
-		String addUrl = request.getContextPath() + "/CaseManagementEntry.do?method=issueNoteSave&providerNo=" + providerNo + "&demographicNo=" + demoNo + checked_issues.toString()
-				+ "&noteId=";
+		String addUrl = request.getContextPath() + "/CaseManagementEntry.do?method=issueNoteSave&providerNo=" + providerNo + "&demographicNo=" + demoNo + 
+				"&noteId=";
 		request.setAttribute("addUrl", addUrl);
+                request.setAttribute("cppIssue", cppIssues.toString());
 
 		// set issueIds for retrieving history
 		request.setAttribute("issueIds", StringUtils.join(issueIds, ","));
