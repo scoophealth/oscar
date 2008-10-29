@@ -22,12 +22,14 @@
 */
 -->
 
+<%@ page import="java.util.*,
+				 org.oscarehr.util.SpringUtils,
+				 org.oscarehr.PMmodule.model.*,
+				 org.oscarehr.common.model.Provider,			 
+				 org.oscarehr.PMmodule.dao.ProviderDao"
+%>
 <%@ include file="/taglibs.jsp"%>
-<%@ page import="org.oscarehr.PMmodule.model.*"%>
-<%@ page import="java.util.*"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
-<%@page import="org.oscarehr.util.SpringUtils"%>
 <script>
     function resetClientFields() {
         var form = document.clientManagerForm;
