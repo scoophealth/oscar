@@ -277,20 +277,23 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	/**
 	 * Get the count of demographic Id's based on the providerId and encounterType, 2 numbers will be provided, the unique count and the non unique count (which just represents the
 	 * number of encounters in general) All encounter types are represented in the resulting hashMap, even ones with 0 counts.
+	 * 
+	 * @param programId can be null at which point it's across the entire agency
 	 */
-	public static EncounterCounts getDemographicEncounterCountsByProgramAndRoleId(int programId, int roleId, Date startDate, Date endDate) {
+	public static EncounterCounts getDemographicEncounterCountsByProgramAndRoleId(Integer programId, int roleId, Date startDate, Date endDate) {
 		Connection c = null;
 		try {
 			EncounterCounts results = new EncounterCounts();
 			c = DbConnectionFilter.getThreadLocalDbConnection();
 			
+			// get the numbers broken down by encounter types
 			{
-				String sqlCommand = "select encounter_type,count(demographic_no), count(distinct demographic_no) from casemgmt_note where program_no=? and reporter_caisi_role=? and observation_date>=? and observation_date<? group by encounter_type";
+				String sqlCommand = "select encounter_type,count(demographic_no), count(distinct demographic_no) from casemgmt_note where reporter_caisi_role=? and observation_date>=? and observation_date<?"+(programId==null?"":" and program_no=?")+" group by encounter_type";
 				PreparedStatement ps = c.prepareStatement(sqlCommand);
-				ps.setInt(1, programId);
-				ps.setInt(2, roleId);
-				ps.setTimestamp(3, new Timestamp(startDate.getTime()));
-				ps.setTimestamp(4, new Timestamp(endDate.getTime()));
+				ps.setInt(1, roleId);
+				ps.setTimestamp(2, new Timestamp(startDate.getTime()));
+				ps.setTimestamp(3, new Timestamp(endDate.getTime()));
+				if (programId!=null) ps.setInt(4, programId);
 
 				ResultSet rs = ps.executeQuery();
 
@@ -301,13 +304,14 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 				}
 			}
 			
+			// get the numbers in total, not broken down. 
 			{
-				String sqlCommand = "select count(distinct demographic_no) from casemgmt_note where program_no=? and reporter_caisi_role=? and observation_date>=? and observation_date<?";
+				String sqlCommand = "select count(distinct demographic_no) from casemgmt_note where reporter_caisi_role=? and observation_date>=? and observation_date<?"+(programId==null?"":" and program_no=?");
 				PreparedStatement ps = c.prepareStatement(sqlCommand);
-				ps.setInt(1, programId);
-				ps.setInt(2, roleId);
-				ps.setTimestamp(3, new Timestamp(startDate.getTime()));
-				ps.setTimestamp(4, new Timestamp(endDate.getTime()));
+				ps.setInt(1, roleId);
+				ps.setTimestamp(2, new Timestamp(startDate.getTime()));
+				ps.setTimestamp(3, new Timestamp(endDate.getTime()));
+				if (programId!=null) ps.setInt(4, programId);
 
 				ResultSet rs = ps.executeQuery();
 				rs.next();

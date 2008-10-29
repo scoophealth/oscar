@@ -23,6 +23,7 @@ package org.oscarehr.web;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -30,13 +31,10 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramDao;
-import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
-import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO.EncounterCounts;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -44,9 +42,7 @@ public class ProviderServiceReportUIBean {
 
 	Logger logger = LogManager.getLogger(ProviderServiceReportUIBean.class);
 
-	private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-	private ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 	private RoleDAO roleDao = (RoleDAO) SpringUtils.getBean("roleDAO");
 
 	private Date startDate = null;
@@ -77,44 +73,88 @@ public class ProviderServiceReportUIBean {
 
 		List<Program> activePrograms = programDao.getAllActivePrograms();
 		Role doctorRole = null;
-		for (Role role : roleDao.getRoles())
-			if ("doctor".equals(role.getName())) doctorRole = role;
-		if (doctorRole == null) logger.error("Error, no caisi role named 'doctor' found in database.");
+		for (Role role : roleDao.getRoles()) if ("doctor".equals(role.getName())) doctorRole = role;
+		if (doctorRole == null) 
+		{
+			logger.error("Error, no caisi role named 'doctor' found in database.");
+			return(null);
+		}
 
-		List<Provider> providers = providerDao.getActiveProviders();
 		ArrayList<DataRow> results = new ArrayList<DataRow>();
 
 		for (Program program : activePrograms) {
 			// we only want bed and service programs
 			if (!Program.BED_TYPE.equals(program.getType()) && !Program.SERVICE_TYPE.equals(program.getType())) continue;
 
-			Calendar tempStart = (Calendar) startCal.clone();
-			while (tempStart.compareTo(endCal) < 0) {
-				Calendar tempEnd = (Calendar) tempStart.clone();
-				tempEnd.add(Calendar.MONTH, 1);
+			results.addAll(getProgramNumbers(startCal, endCal, doctorRole, program));
+		}
 
-				DataRow dataRow = new DataRow();
-				dataRow.programName = program.getName();
-				dataRow.programType = program.getType();
-				dataRow.date = dateFormatter.format(tempStart.getTime());
-				dataRow.encounterCounts = CaseManagementNoteDAO.getDemographicEncounterCountsByProgramAndRoleId(program.getId(), doctorRole.getId().intValue(),
-						tempStart.getTime(), tempEnd.getTime());
+		results.addAll(getEntireAgencyNumbers(startCal, endCal, doctorRole));
 
-				results.add(dataRow);
+		return (results);
+	}
 
-				tempStart.add(Calendar.MONTH, 1);
-			}
+	private Collection<? extends DataRow> getEntireAgencyNumbers(Calendar startCal, Calendar endCal, Role doctorRole) {
+		ArrayList<DataRow> results = new ArrayList<DataRow>();
+
+		Calendar tempStart = (Calendar) startCal.clone();
+		while (tempStart.compareTo(endCal) < 0) {
+			Calendar tempEnd = (Calendar) tempStart.clone();
+			tempEnd.add(Calendar.MONTH, 1);
+
+			DataRow dataRow = new DataRow();
+			dataRow.programName = "all programs";
+			dataRow.programType = "all program types";
+			dataRow.date = dateFormatter.format(tempStart.getTime());
+			dataRow.encounterCounts = CaseManagementNoteDAO.getDemographicEncounterCountsByProgramAndRoleId(null, doctorRole.getId().intValue(),
+					tempStart.getTime(), tempEnd.getTime());
+
+			results.add(dataRow);
+
+			tempStart.add(Calendar.MONTH, 1);
+		}
+
+		DataRow dataRow = new DataRow();
+		dataRow.programName = "all programs";
+		dataRow.programType = "all program types";
+		dataRow.date = dateFormatter.format(startCal.getTime()) + " to " + dateFormatter.format(endCal.getTime());
+		dataRow.encounterCounts = CaseManagementNoteDAO.getDemographicEncounterCountsByProgramAndRoleId(null, doctorRole.getId().intValue(), startCal.getTime(),
+				endCal.getTime());
+
+		results.add(dataRow);
+		
+		return(results);
+	}
+
+	private ArrayList<DataRow> getProgramNumbers(Calendar startCal, Calendar endCal, Role doctorRole, Program program) {
+		ArrayList<DataRow> results = new ArrayList<DataRow>();
+
+		Calendar tempStart = (Calendar) startCal.clone();
+		while (tempStart.compareTo(endCal) < 0) {
+			Calendar tempEnd = (Calendar) tempStart.clone();
+			tempEnd.add(Calendar.MONTH, 1);
 
 			DataRow dataRow = new DataRow();
 			dataRow.programName = program.getName();
 			dataRow.programType = program.getType();
-			dataRow.date = dateFormatter.format(startCal.getTime()) + " to " + dateFormatter.format(endCal.getTime());
-			dataRow.encounterCounts = CaseManagementNoteDAO.getDemographicEncounterCountsByProgramAndRoleId(program.getId(), doctorRole.getId().intValue(), startCal.getTime(),
-					endCal.getTime());
+			dataRow.date = dateFormatter.format(tempStart.getTime());
+			dataRow.encounterCounts = CaseManagementNoteDAO.getDemographicEncounterCountsByProgramAndRoleId(program.getId(), doctorRole.getId().intValue(),
+					tempStart.getTime(), tempEnd.getTime());
 
 			results.add(dataRow);
+
+			tempStart.add(Calendar.MONTH, 1);
 		}
 
-		return (results);
+		DataRow dataRow = new DataRow();
+		dataRow.programName = program.getName();
+		dataRow.programType = program.getType();
+		dataRow.date = dateFormatter.format(startCal.getTime()) + " to " + dateFormatter.format(endCal.getTime());
+		dataRow.encounterCounts = CaseManagementNoteDAO.getDemographicEncounterCountsByProgramAndRoleId(program.getId(), doctorRole.getId().intValue(), startCal.getTime(),
+				endCal.getTime());
+
+		results.add(dataRow);
+		
+		return(results);
 	}
 }
