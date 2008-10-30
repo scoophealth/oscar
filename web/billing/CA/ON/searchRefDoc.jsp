@@ -63,6 +63,16 @@
 
       int iRow=0;	   
 	  ResultSet rs = dbObj.searchDBRecord(sql);
+          int startidx = Integer.parseInt(strLimit1);
+          if( startidx > 0 ) {
+            while(rs.next()) {
+                if( ++iRow == startidx ) {
+                    break;
+                }
+          }
+                
+            iRow = 0;
+          }
 		// System.out.println(sql);
 	  while (rs.next()) {
 	    iRow++;
