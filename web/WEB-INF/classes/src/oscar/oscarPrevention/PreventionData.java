@@ -240,7 +240,7 @@ public class PreventionData {
 	 * 
 	 */
 	public ArrayList getExtValues(String injectionType, java.util.Date startDate, java.util.Date endDate, String keyVal) {
-		String sql = "select demographic_no, prevention_date ,val from preventions, preventionsExt where preventions.id = preventionsExt.prevention_id  and prevention_type = ? and prevention_date >= ? and prevention_date <= ? and preventionsExt.keyval = ? and preventions.deleted = '0' and preventions.refused = '0' order by prevention_date";
+		String sql = "select preventions.id as preventions_id, demographic_no, prevention_date ,val from preventions, preventionsExt where preventions.id = preventionsExt.prevention_id  and prevention_type = ? and prevention_date >= ? and prevention_date <= ? and preventionsExt.keyval = ? and preventions.deleted = '0' and preventions.refused = '0' order by prevention_date";
 
 		ArrayList list = new ArrayList();
 		DBHandler dbhandler = null;
@@ -258,6 +258,7 @@ public class PreventionData {
 
 			while (rs.next()) {
 				Hashtable h = new Hashtable();
+                                h.put("preventions_id", rs.getString("preventions_id"));
 				h.put("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
 				h.put("val", oscar.Misc.getString(rs, "val"));
 				h.put("prevention_date", rs.getDate("prevention_date"));
