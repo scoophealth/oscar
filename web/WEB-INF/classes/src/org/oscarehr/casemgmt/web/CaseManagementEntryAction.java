@@ -409,10 +409,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             CaseManagementNote note;
             boolean newNote = false;
             //we don't want to try to remove an issue from a new note so we test here
-            if( noteId.equals("0") ) {
-                
-                if( issueChange.equals("true") )
-                    return null;
+            if( noteId.equals("0") ) {                               
                 
                 note = new CaseManagementNote();
                 note.setDemographic_no(demo);
