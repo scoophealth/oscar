@@ -39,7 +39,7 @@ if(session.getValue("user") == null)
   String startStr = "";
   String endStr   = "";
   String injectionType ="";
-  
+  PreventionData pd = new PreventionData();
     
   if (request.getParameter("startDate") != null && request.getParameter("startDate") != null && request.getParameter("startDate") != null  ){
 
@@ -48,9 +48,7 @@ if(session.getValue("user") == null)
       injectionType = request.getParameter("injectionType");
       
       java.util.Date sDate = UtilDateUtilities.StringToDate(startDate);
-      java.util.Date eDate = UtilDateUtilities.StringToDate(endDate);
-      
-      PreventionData pd = new PreventionData();
+      java.util.Date eDate = UtilDateUtilities.StringToDate(endDate);            
       
       String keyVal = "lot";
       if (injectionType != null && injectionType.equals("RH")){
@@ -205,21 +203,26 @@ table.ele th{
                 <th>Chart #</th>
                 <th>Product #</th>
                 <th>Injection Date</th>
+                <th>Comments</th>
             </tr>
             <% for (int i = 0; i < report.size(); i++){ 
                 Hashtable h = (Hashtable) report.get(i);
                 String demo = (String) h.get("demographic_no");
                 DemographicData.Demographic demog = demoData.getDemographic(demo);
-                
+                String comments = pd.getPreventionComment((String)h.get("preventions_id"));
+                if( comments == null ) {
+                    comments = "";
+                }
             %>
             <tr>
                 <td><%=i+1%></td>
                 <td><%=demog.getFirstName()%></td>
                 <td><%=demog.getLastName()%></td>
-                <td><%=demog.getDateOfBirth()%></td>
+                <td><%=demog.getDob("-")%></td>
                 <td><%=demog.getChartNo()%></td>
                 <td><%=h.get("val")%>&nbsp;</td>
                 <td><%=h.get("prevention_date")%></td>
+                <td><%=comments%></td>
             </tr>
             <%}%>
         </table>
