@@ -311,7 +311,7 @@
                         
             position: absolute;
             display:none;
-            z-index:100;
+            /*z-index:100;*/
             right:100px;
             bottom:200px;                                    
             text-align: center;
@@ -351,8 +351,7 @@ function init() {
     //console.log("navbars " + delta);
     monitorNavBars(null);
     
-    Element.observe(window, "resize", monitorNavBars);
-    new Draggable("showEditNote");
+    Element.observe(window, "resize", monitorNavBars);    
     
     if(!NiftyCheck())
         return;
