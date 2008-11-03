@@ -1,5 +1,5 @@
 <%@ include file="/taglibs.jsp" %>
-<%@ page import="org.caisi.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*" %>
+<%@ page import="org.caisi.model.*, org.oscarehr.common.model.*, org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*" %>
 <%@ page import="java.util.Date" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
@@ -45,7 +45,7 @@
 			<c:forEach var="tickler" items="${ticklers}">				
 				<tr align="center">
 					<%
-String demographic_name = "";
+			String demographic_name = "";
 			String provider_name = "";
 			String assignee_name = "";
 			String status = "Active";
