@@ -6,7 +6,7 @@ ant clean
 ant
 
 pushd ..
-tar cvfz build/tmp/oscar.tar.gz database install build/tmp/*.war
+tar cvfz build/tmp/oscar_beta.tar.gz database install build/tmp/*.war
 popd
 
 echo ----------
