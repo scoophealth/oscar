@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.WebServiceException;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -1011,6 +1012,9 @@ public class ProgramManagerAction extends BaseAction {
 			return (results);
 		}
 		catch (MalformedURLException e) {
+			logger.error("Unexpected Error.", e);
+		}
+		catch (WebServiceException e) {
 			logger.error("Unexpected Error.", e);
 		}
 
