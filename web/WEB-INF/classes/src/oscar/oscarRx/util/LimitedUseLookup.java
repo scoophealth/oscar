@@ -54,6 +54,9 @@ public class LimitedUseLookup {
 
     static public ArrayList<LimitedUseCode> getLUInfoForDin(String din) {
         loadLULookupInformation();
+        if (din == null){
+            return null;
+        }
         return luLookup.get(din);
     }
 
