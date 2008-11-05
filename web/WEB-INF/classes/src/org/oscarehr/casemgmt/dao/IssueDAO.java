@@ -48,7 +48,7 @@ public class IssueDAO extends HibernateDaoSupport {
     
     public Issue findIssueByCode(String code) {        
         List<Issue>list = this.getHibernateTemplate().find("from Issue i where i.code = ?", new Object[] {code});
-        if( list != null )
+        if( list.size() > 0 )
             return list.get(0);
         
         return null;
