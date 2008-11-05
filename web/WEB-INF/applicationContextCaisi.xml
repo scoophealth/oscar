@@ -230,16 +230,6 @@
         <property name="delay" value="180000"/>
         <property name="period" value="300000"/>
     </bean>
-    <bean id="scheduledPopulationReportTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
-          lazy-init="default"  dependency-check="default">
-        <property name="timerTask">
-            <bean class="org.oscarehr.common.task.PopulationReportTask" lazy-init="default"
-                  dependency-check="default"/>
-        </property>
-        <property name="delay" value="240000"/>
-        <!-- run every 60 mins -->
-        <property name="period" value="3600000"/>
-    </bean>
     <bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean" lazy-init="default"
            dependency-check="default">
         <property name="scheduledTimerTasks">
@@ -247,7 +237,6 @@
                 <ref bean="scheduledCaisiIntegratorUpdateTask"/>
                 <ref bean="scheduledBedProgramDischargeTask"/>
                 <ref bean="scheduledErProgramDischargeTask"/>
-                <ref bean="scheduledPopulationReportTask"/>
             </list>
         </property>
     </bean>
