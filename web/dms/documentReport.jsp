@@ -123,7 +123,7 @@ else
     
 String viewstatus = request.getParameter("viewstatus");
 if( viewstatus == null ) {
-    viewstatus = "all";
+    viewstatus = "active";
 }
 %>
 <html:html locale="true">
@@ -370,11 +370,11 @@ function popup1(height, width, url, windowName){
                         <table id="privateDocs" class="docTable">
                            <tr>
                                <td><input class="tightCheckbox" type="checkbox" id="pdfCheck<%=i%>" onclick="checkAll('pdfCheck<%=i%>','privateDocsDiv', 'tightCheckbox<%=i%>');"/></td>
-                               <td width="50%"><b><a href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgDocDesc"/></a></b></td>
-                               <td width="10%"><b><a href="?sort=contenttype&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>">Content</a></b></td>
-                               <td width="10%"><b><a href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>">Type</a></b></td>
-                               <td width="15%"><b><a href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgCreator"/></a></b></td>
-                               <td width="10%"><a href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>" title="Observation Date"><b>Date</b></a></td>
+                               <td width="50%"><b><a href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message key="dms.documentReport.msgDocDesc"/></a></b></td>
+                               <td width="10%"><b><a href="?sort=contenttype&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">Content</a></b></td>
+                               <td width="10%"><b><a href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">Type</a></b></td>
+                               <td width="15%"><b><a href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message key="dms.documentReport.msgCreator"/></a></b></td>
+                               <td width="10%"><a href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>" title="Observation Date"><b>Date</b></a></td>
                               <%-- <td width="10%"><b>Status</b></td> --%>
                                <td width="5%">&nbsp;</td>
                            </tr>
