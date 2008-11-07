@@ -536,6 +536,9 @@ public class ProgramManagerAction extends BaseAction {
 		catch (MalformedURLException e) {
 			logger.error("Unexpected error", e);
 		}
+		catch (WebServiceException e) {
+			logger.error("Unexpected error", e);
+		}
 		
 		setEditAttributes(request, String.valueOf(program.getId()));
 		return mapping.findForward("edit");

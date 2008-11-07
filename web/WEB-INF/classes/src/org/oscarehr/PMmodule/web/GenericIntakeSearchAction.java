@@ -107,6 +107,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		catch (MalformedURLException e) {
 			LOG.error("Unexpected Error.", e);
 		}
+		catch (WebServiceException e) {
+			LOG.error("Unexpected Error.", e);
+		}
 
         return(search(mapping, form, request, response));
     }
@@ -288,6 +291,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 				parameters.append(remoteReferral.getDestinationCaisiProgramId());
 			}
 			catch (MalformedURLException e) {
+				LOG.error("Unexpected error.", e);
+			}
+			catch (WebServiceException e) {
 				LOG.error("Unexpected error.", e);
 			}
         }
