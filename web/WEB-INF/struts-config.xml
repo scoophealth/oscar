@@ -651,6 +651,7 @@
         <action path="/oscarEncounter/displayForms" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayFormAction"></action>
         <action path="/oscarEncounter/displayEForms" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayEFormAction"></action>
         <action path="/oscarEncounter/displayMessages" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMsgAction"></action>
+        <action path="/oscarEncounter/displayBilling" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayBillingAction"></action>
         <action path="/oscarEncounter/displayDocuments" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDocsAction"></action>
         <action path="/oscarEncounter/displayMeasurements" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMeasurementsAction"></action>
         <action path="/oscarEncounter/displayTickler" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayTicklerAction"></action>
@@ -1648,7 +1649,8 @@
             <forward name="showHistory" path="/casemgmt/showHistory.jsp" />
             <forward name="issueAutoCompletion" path="/casemgmt/IssueList.jsp" />
             <forward name="issueList_ajax" path="/casemgmt/noteIssueList.jsp" />
-            <forward name="expired" path="/casemgmt/expired.jsp" />            
+            <forward name="expired" path="/casemgmt/expired.jsp" />   
+            <forward name="surveillance" path="/oscarSurveillance/CheckSurveillance.do" />
         </action>
         <action path="/ClientImage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="clientImageForm" input="/casemgmt/uploadimage.jsp">
             <forward name="success" path="/casemgmt/uploadimage.jsp" />
