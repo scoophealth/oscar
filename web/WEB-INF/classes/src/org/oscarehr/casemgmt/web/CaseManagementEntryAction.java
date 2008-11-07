@@ -185,12 +185,20 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         log.debug("NoteId " + nId);
 
+        String maxTmpSave = oscar.OscarProperties.getInstance().getProperty("maxTmpSave","");
+        System.out.println("maxTmpSave " + maxTmpSave);
         // set date 2 weeks in past so we retrieve more recent saved notes
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, -14);
         Date twoWeeksAgo = cal.getTime();
         log.debug("Get tmp note");
-        CaseManagementTmpSave tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo, demono, programId, twoWeeksAgo);
+        CaseManagementTmpSave tmpsavenote;
+        if( maxTmpSave.equalsIgnoreCase("off") ) {
+            tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo, demono, programId);
+        }
+        else {
+            tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo, demono, programId, twoWeeksAgo);
+        }
         current = System.currentTimeMillis();
         log.debug("Get tmp note " + String.valueOf(current-start));
         start = current;
