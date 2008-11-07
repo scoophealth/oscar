@@ -35,6 +35,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1108,7 +1109,10 @@ public class ClientManagerAction extends BaseAction {
 				request.setAttribute("remotePrograms", results);
 			}
 			catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error(e);
+			}
+			catch (WebServiceException e) {
+				logger.error(e);
 			}
 		}
 
