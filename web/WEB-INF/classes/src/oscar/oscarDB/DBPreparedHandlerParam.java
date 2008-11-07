@@ -50,13 +50,13 @@ public class DBPreparedHandlerParam {
    }
 
    public Date getDateValue() {
-          System.out.println("DBPreparedHandlerParam.getDateValue "+dateValue);
+//          System.out.println("DBPreparedHandlerParam.getDateValue "+dateValue);
 	  return dateValue;
    }
 
    
    public Timestamp getTimestampValue() {
-          System.out.println("DBPreparedHandlerParam.getTimestampValue "+timestampValue);
+//          System.out.println("DBPreparedHandlerParam.getTimestampValue "+timestampValue);
 	  return this.timestampValue;
    }
 
