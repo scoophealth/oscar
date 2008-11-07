@@ -67,6 +67,7 @@ import org.springframework.web.context.WebApplicationContext;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.oscarSurveillance.SurveillanceMaster;
 import oscar.util.UtilDateUtilities;
 
 public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
@@ -1064,6 +1065,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
     public ActionForward saveAndExit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.debug("saveandexit");
         String providerNo = getProviderNo(request);
+        String demoNo = getDemographicNo(request);
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
 
         request.setAttribute("change_flag", "false");
@@ -1077,7 +1079,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         cform.setMethod("view");
         String error = (String)request.getAttribute("DateError");
         if (error != null) {
-            String demoNo = getDemographicNo(request);;
+            
             String varName = "newNote";
             request.getSession().setAttribute(varName, false);
             varName = "saveNote" + demoNo;
@@ -1098,12 +1100,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
         
         String chain = request.getParameter("chain");
+       
+        SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
+        if(!sMaster.surveysEmpty()){  
+            request.setAttribute("demoNo",demoNo);
+            if (chain != null && !chain.equals("")) {   
+                request.setAttribute("proceedURL",chain);
+            }
+            log.debug("sending to surveillance");
+            return  mapping.findForward("surveillance");  
+        }
+        
         if (chain != null && !chain.equals("")) {           
         	ActionForward fwd = new ActionForward();           
         	fwd.setPath(chain);
         	return fwd;
         }
-                
+         
         return mapping.findForward("windowClose");
     }
 
