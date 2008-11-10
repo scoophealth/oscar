@@ -11,7 +11,7 @@ popd
 
 echo ----------
 echo Run the following to upload the archive
-echo - sftp <sf_user>@frs.sourceforge.net
+echo - sftp \<sf_user\>@frs.sourceforge.net
 echo - cd uploads
 echo - put tmp/oscar.tar.gz
 echo ----------
