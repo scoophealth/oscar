@@ -132,16 +132,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	public void run() {
-		logger.debug("CaisiIntegratorUpdateTask starting");
+		logger.info("CaisiIntegratorUpdateTask starting");
 
 		try {
-			List<Facility> facilities = facilityDao.findAll(null);
-
-			for (Facility facility : facilities) {
-				if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
-					pushAllFacilityData(facility);
-				}
-			}
+			pushAllFacilities();
 		}
 		catch (WebServiceException e) {
 			logger.warn("Error connecting to integrator. " + e.getMessage());
@@ -153,10 +147,22 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 
-			logger.debug("CaisiIntegratorUpdateTask finished)");
+			logger.info("CaisiIntegratorUpdateTask finished)");
 		}
 	}
 
+	public void pushAllFacilities() throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
+		List<Facility> facilities = facilityDao.findAll(null);
+
+		for (Facility facility : facilities) {
+			if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
+				pushAllFacilityData(facility);
+			}
+		}
+	}
+
+	
+	
 	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
 		logger.debug("Pushing data for facility : " + facility.getId());
 
