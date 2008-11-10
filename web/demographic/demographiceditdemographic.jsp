@@ -894,7 +894,7 @@ if ( PatStat.equals(Dead) ) {%>
 
                                     <div class="demographicSection">
                                         <h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.formAlert"/></h3>
-                                        <div style="background-color: #EEEEFF;" >
+                                        <div style="background-color: #EEEEFF; color:red;" >
                                         <%=alert%> &nbsp;
                                     </div>
                                 </div>
