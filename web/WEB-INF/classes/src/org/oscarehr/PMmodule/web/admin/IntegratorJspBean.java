@@ -12,6 +12,7 @@ public class IntegratorJspBean {
     
     public static List<CachedFacility> getIntegratorFacilityCommunity(int facilityId) throws IOException
     {
+    	caisiIntegratorManager.flushCachedFacilityInfo(facilityId);
         return(caisiIntegratorManager.getRemoteFacilities(facilityId));
     }
 }

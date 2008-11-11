@@ -32,7 +32,7 @@
 					<td style="border:solid black 1px"><%=x.getContactName()%></td>
 					<td style="border:solid black 1px"><%=x.getContactEmail()%></td>
 					<td style="border:solid black 1px"><%=x.getContactPhone()%></td>
-					<td style="border:solid black 1px"><%=DateFormatUtils.ISO_DATETIME_FORMAT.format(x.getLastUpdated().toGregorianCalendar())%></td>
+					<td style="border:solid black 1px"><%=(x.getLastDataUpdate()!=null?DateFormatUtils.ISO_DATETIME_FORMAT.format(x.getLastDataUpdate().toGregorianCalendar()):"")%></td>
 				</tr>
 			<%
 		}

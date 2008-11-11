@@ -27,14 +27,24 @@ public class FacilitySegmentedTimeClearedHashMap extends TimeClearedHashMap<Stri
     public FacilitySegmentedTimeClearedHashMap(long maxDataAge, long checkPeriod) {
     	super(maxDataAge, checkPeriod);
     }
+ 
+    public static final String getCompositeFacilityKey(Integer facilityId, String key)
+    {
+    	return(facilityId.toString()+':'+key);
+    }
     
 	public Object put(Integer facilityId, String key, Object value)
 	{
-		return(put(facilityId.toString()+':'+key, value));
+		return(put(getCompositeFacilityKey(facilityId, key), value));
 	}
 
 	public Object get(Integer facilityId, String key)
 	{
-		return(get(facilityId.toString()+':'+key));
+		return(get(getCompositeFacilityKey(facilityId, key)));
+	}
+	
+	public Object remove(Integer facilityId, String key)
+	{
+		return(remove(getCompositeFacilityKey(facilityId, key)));
 	}
 }

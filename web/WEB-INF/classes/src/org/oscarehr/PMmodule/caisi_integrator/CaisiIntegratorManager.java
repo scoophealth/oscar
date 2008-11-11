@@ -96,6 +96,11 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
+	public void flushCachedFacilityInfo(int facilityId)
+	{
+		simpleTimeCache.remove(facilityId, "ALL_REMOTE_FACILITIES");
+	}
+	
 	public List<CachedFacility> getRemoteFacilities(int facilityId) throws MalformedURLException {
 		@SuppressWarnings("unchecked")
 		List<CachedFacility> results = (List<CachedFacility>) simpleTimeCache.get(facilityId, "ALL_REMOTE_FACILITIES");
