@@ -420,6 +420,10 @@ public class CaseManagementManager {
         return issueDAO.findIssueByCode(codes);
     }    
     
+    public Issue getIssueInfoByCode(String code) {
+        return issueDAO.findIssueByCode(code);
+    }
+    
     public List getIssueInfoBySearch(String providerNo, String search, List accessRight) {
         List issList = issueDAO.findIssueBySearch(search);
         // filter the issue list by role
