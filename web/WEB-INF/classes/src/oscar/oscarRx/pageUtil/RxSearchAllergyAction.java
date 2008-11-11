@@ -117,7 +117,7 @@ public final class RxSearchAllergyAction extends Action {
         vec  = drugRef.list_search_element_select_categories(frm.getSearchString(),catVec);
         
         //  'id':'0','category':'','name'
-        RxAllergyData.Allergy[] arr = new RxAllergyData.Allergy[vec.size()];
+        RxAllergyData.Allergy[] arr = new RxAllergyData.Allergy[vec==null?0:vec.size()];
         
         Vector classVec = new Vector() ;
         
