@@ -104,6 +104,7 @@
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml</value>
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value> 
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml</value >
+                <!-- value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/chf.xml</value -->
             </list>
         </property>
     </bean>
