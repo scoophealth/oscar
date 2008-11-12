@@ -419,7 +419,8 @@ function popup1(height, width, url, windowName){
                               <%-- <td><%=curdoc.getStatus() == 'D'? "Deleted" : "Active"%></td> --%>
                               <td>
                               <% 
-                                 if( curdoc.getCreatorId().equalsIgnoreCase(moduleid)) {  
+                                 
+                                 if( curdoc.getCreatorId().equalsIgnoreCase(user_no)) {  
                                     if( curdoc.getStatus() == 'D' ) {
                               %>                              
                                         <a href="documentReport.jsp?undelDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>"><img src="<c:out value="${ctx}/images/user-trash.png"/>" title="<bean:message key="dms.documentReport.btnUnDelete"/>"></a> &nbsp; 
