@@ -125,7 +125,7 @@ Sort:
 						<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
 						<img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit/Sign Note" style="cursor:pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
 					</c:when>				
-					<c:when test="${note.signed and note.provider_no eq param.providerNo}">
+					<c:when test="${note.signed and note.providerNo eq param.providerNo}">
 						<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
 						<img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit Note" style="cursor:pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
 					</c:when>
