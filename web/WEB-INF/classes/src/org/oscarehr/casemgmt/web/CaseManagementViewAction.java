@@ -378,7 +378,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			// apply provider filter
 			log.debug("Filter Notes Provider");
 			Set providers = new HashSet();
-			notes = applyProviderFilters(notes, providers, caseForm.getFilter_providers());
+			notes = applyProviderFilter(notes, providers, caseForm.getFilter_providers());
 			current = System.currentTimeMillis();
 			log.debug("FILTER NOTES PROVIDER " + String.valueOf(current - start));
 			start = current;
