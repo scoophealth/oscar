@@ -350,7 +350,7 @@ div.recommendations li{
                         String styleColor = "";
                         if(arr[i].isCurrent()){
                     %>
-                    <li title="<%=rxD%> - <%=rxP%>"  >- <%= org.apache.commons.lang.StringUtils.abbreviate(rxP,24)%></li>
+                    <li title="<%=rxD%> - <%=rxP%>"  >- <%= org.apache.commons.lang.StringUtils.abbreviate(rxP,12)%></li>
                     <%  }
                     }%>
                 </ul>
