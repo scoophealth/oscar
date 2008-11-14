@@ -258,7 +258,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		String providerNo = demographic.getProviderNo();
 		if (filled(providerNo)) {
 		    cds.DemographicsDocument.Demographics.PrimaryPhysician pph = demo.addNewPrimaryPhysician();
-		    ProviderData provd = new ProviderData(data);
+		    ProviderData provd = new ProviderData(providerNo);
 		    pph.setOHIPPhysicianId(provd.getOhip_no());
 		    writeNameSimple(pph.addNewName(), provd.getFirst_name(), provd.getLast_name());
 		}
@@ -873,28 +873,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 				writeNameSimple(rpr.addNewAuthorPhysician(), name[0], name[1]);
 			    }
 			}
-		    }
-		}
-		
-		// AUDIT INFORMATION
-		if (filled(providerNo)) {
-		    String[] rName = {"dateTime", "provider_no", "action", "content", "contentId", "ip"};
-		    String[] rType = {"date", "string", "string", "string", "string", "string"};
-		    String[] rCont = new String[6];
-		    
-		    ArrayList<Log> logList = LogAction.getLog(providerNo);
-		    for (Log lg : logList) {
-			rCont[0] = lg.getDateTime()==null ? "" : lg.getDateTime().toString();
-			rCont[1] = lg.getProviderNo();
-			rCont[2] = lg.getAction();
-			rCont[3] = lg.getContent();
-			rCont[4] = lg.getContentId();
-			rCont[5] = lg.getIp();
-			
-			/********************************
-			 * write to xml (Residual data) *
-			 ********************************/
-			
 		    }
 		}
 		
