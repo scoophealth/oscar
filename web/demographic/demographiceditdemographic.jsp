@@ -829,6 +829,15 @@ div.demographicWrapper {
                                                     }
                                                 %>
                                             </li>
+                                            <%if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
+                                              String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS"); 
+                                              fieldJSP+= "View.jsp";  
+                                            %>
+                                            <jsp:include page="<%=fieldJSP%>">
+                                                <jsp:param name="demo" value="<%=demographic_no%>" />
+                                            </jsp:include>
+                                            <%}%>
+                                            
                                         </ul>
                                         </div>
                                     </div>
@@ -1206,7 +1215,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                             </tr>
                             <tr valign="top">
                                 <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formNewsLetter"/>: </b> </td>
-                              <td colspan="3" align="left" >
+                              <td  align="left" >
                                   <% String newsletter = apptMainBean.getString(rs,"newsletter").trim();
                                      if( newsletter == null || newsletter.equals("")) {
                                         newsletter = "Unknown";
@@ -1218,6 +1227,10 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                         <option value="Paper" <%if(newsletter.equals("Paper")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optPaper"/></option>
                                         <option value="Electronic" <%if(newsletter.equals("Electronic")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic"/></option>
                                     </select>
+                              </td>
+                              <td align="right"><b>SIN:</b> </td>
+                              <td align="left">
+                                <input type="text" name="sin" size="30" value="<%=apptMainBean.getString(rs,"sin")%>">
                               </td>
                             </tr>
                             <tr valign="top">
@@ -1499,6 +1512,17 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                 <input type="text" name="chart_no" size="30" value="<%=apptMainBean.getString(rs,"chart_no")%>">
                               </td>
                             </tr>
+                            <!-- start -->
+                            <%if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
+                                 String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS");
+                                 fieldJSP+= ".jsp";                                    
+                            %>
+                           <jsp:include page="<%=fieldJSP%>">
+                                 <jsp:param name="demo" value="<%=demographic_no%>" />                                         
+                           </jsp:include>
+                           <%}%>
+                            
+                            <!-- end -->
                             <%
                             if (vLocale.getCountry().equals("BR")) { %>
                             <tr valign="top">

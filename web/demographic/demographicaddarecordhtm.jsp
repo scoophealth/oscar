@@ -727,16 +727,17 @@ function checkFormTypeIn() {
          <input type="text" name="language" value="" onBlur="upCaseCtrl(this)" size="19" />
       </td>
     </tr>
-     <tr valign="top">
-      <td  align="right"><b>  <bean:message key="demographic.demographiceditdemographic.cytolNum"/>:</b> </td>
+    <tr valign="top">
+      <td  align="right"><b> Sin#:</b> </td>
       <td align="left"  >
-        <input type="text" name="cytolNum">
-
+        <input type="text" name="sin">
       </td>
-      <td align="right">    
+      
+      
+      <td align="right" rowspan="2">    
          <b>Country of Origin:</b>          
       </td>
-      <td>
+      <td rowspan="2">
           <select name="countryOfOrigin">
               <option value="-1">Not Set</option>
               <%for(CountryCode cc : countryList){ %>
@@ -744,6 +745,14 @@ function checkFormTypeIn() {
               <%}%>
           </select>
       </td>
+    </tr>
+     <tr valign="top">
+      <td  align="right"><b>  <bean:message key="demographic.demographiceditdemographic.cytolNum"/>:</b> </td>
+      <td align="left"  >
+        <input type="text" name="cytolNum">
+
+      </td>
+      <!--  missing rows because of rowspan above -->
     </tr>
     <tr valign="top">
       <td align="right"><b><% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
@@ -920,6 +929,16 @@ document.forms[1].r_doctor_ohip.value = refNo;
         <input type="text" name="chart_no" value="">
       </td>
     </tr>
+    
+     <%if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
+      String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS"); 
+      fieldJSP+= ".jsp";  
+    %>
+    <jsp:include page="<%=fieldJSP%>"/>
+        
+    <%}%>
+
+    
     <%
     if (vLocale.getCountry().equals("BR")) { %>
     <tr valign="top">

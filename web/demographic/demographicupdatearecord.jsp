@@ -59,7 +59,7 @@ if( users != null && users.size() > 0 )
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
   //if action is good, then give me the result
-    String[] param =new String[25];
+    String[] param =new String[26];
 	  param[0]=request.getParameter("last_name");
 	  param[1]=request.getParameter("first_name");
 	  param[2]=request.getParameter("address");
@@ -85,6 +85,7 @@ if( users != null && users.size() > 0 )
 	  param[22]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip><rd>" + request.getParameter("r_doctor") + "</rd>" + (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "") ;  
           param[23] =request.getParameter("countryOfOrigin");
           param[24]=request.getParameter("newsletter");
+          param[25]=request.getParameter("sin");
 	
            java.sql.Date [] dtparam = new java.sql.Date[4];
 	  dtparam[0]=MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date"));
@@ -102,6 +103,11 @@ if( users != null && users.size() > 0 )
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"hPhoneExt",request.getParameter("hPhoneExt"),request.getParameter("hPhoneExtOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"wPhoneExt",request.getParameter("wPhoneExt"),request.getParameter("wPhoneExtOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"cytolNum",request.getParameter("cytolNum"),request.getParameter("cytolNumOrig") );
+     
+     dExt.addKey(proNo,request.getParameter("demographic_no") ,"ethnicity",request.getParameter("ethnicity"),request.getParameter("ethnicityOrig") );
+     dExt.addKey(proNo,request.getParameter("demographic_no") ,"area",request.getParameter("area"),request.getParameter("areaOrig") );
+     dExt.addKey(proNo,request.getParameter("demographic_no") ,"status_number",request.getParameter("status_number"),request.getParameter("status_numberOrig") );
+     
      // customized key
      if(oscarVariables.getProperty("demographicExt") != null) {
 	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
