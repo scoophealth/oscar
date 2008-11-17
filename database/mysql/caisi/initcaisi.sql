@@ -1997,9 +1997,6 @@ create table programSignature (
 -- Caisi Alter Oscar
 alter table preference add `new_tickler_warning_window` varchar(10) NOT NULL default '' after color_template;
 
-create table IntakeRequiredFields (fieldKey varchar(255) not null primary key , isRequired tinyint not null);
-
-
 -- program restriction based on gender
 create table `program_client_restriction` (
     `id` bigint(22) NOT NULL auto_increment,

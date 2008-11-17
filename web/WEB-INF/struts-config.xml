@@ -1507,9 +1507,6 @@
             <forward name="intakea" path="/PMmodule/IntakeA.do" />
             <forward name="intakec" path="/PMmodule/IntakeC.do" />
         </action>
-        <action path="/PMmodule/EditIntake" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
-            <forward name="view" path="/PMmodule/edit_intake.jsp" />
-        </action>
         
         <!-- Generic Intake -->
         <action

@@ -283,9 +283,6 @@
                                rights="r">
             <span>Editor</span>
                 <div>
-                    <span><a href='<%=request.getContextPath()%>/PMmodule/EditIntake.do'>Registration Editor</a></span>
-                </div>
-                <div>
                     <span><a href="javascript:void(0)" onclick="window.open('<%=request.getContextPath()%>/PMmodule/GenericIntake/EditIntake.jsp?id=1&pub=<c:out value="${sessionScope.provider.formattedName}" />');">Intake Form Editor</a></span>
                 </div>
             </security:oscarSec>
