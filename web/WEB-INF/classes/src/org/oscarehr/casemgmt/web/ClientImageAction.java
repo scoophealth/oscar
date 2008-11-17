@@ -22,8 +22,6 @@
 
 package org.oscarehr.casemgmt.web;
 
-import java.util.logging.LogManager;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -47,14 +45,8 @@ public class ClientImageAction extends DispatchAction {
 
 	private ClientImageManager clientImageManager;
 
-	private LogManager logManager;
-
 	public void setClientImageManager(ClientImageManager mgr) {
 		this.clientImageManager = mgr;
-	}
-
-	public void setLogManager(LogManager mgr) {
-		this.logManager = mgr;
 	}
 
 	public ActionForward saveImage(ActionMapping mapping,
