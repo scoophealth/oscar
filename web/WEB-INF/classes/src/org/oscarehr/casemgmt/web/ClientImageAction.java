@@ -68,10 +68,7 @@ public class ClientImageAction extends DispatchAction {
 			
 			try {
 				byte[] imageData = formFile.getFileData();
-				Byte[] imageData2 = new Byte[imageData.length];
-				for(int x=0;x<imageData.length;x++) {
-					imageData2[x] = new Byte(imageData[x]);
-				}
+
 				ClientImage clientImage = new ClientImage();
 				clientImage.setDemographic_no(Long.valueOf(id).longValue());
 				clientImage.setImage_data(imageData);
