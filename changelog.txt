@@ -1,3 +1,10 @@
+2008-11-18 : Caisi Integrator also provides photos when client is copied from remote server.
+2008-11-17 : removed the old RFQ required intake fields editor.
+
+-----------------
+Branch 2008-11-03
+-----------------
+
 2008-10-25:  Added Limited Use Code Integration to Rx (Jay)
 2008-10-20 : Added ability to delete/undelete eDocs and filter display of eDocs (Randy,2032846)
 2008-10-09 : Added Photo as an option in DMS, don't use update-2008-10-09.sql if you already have this option in your drop downi list. (Dan Brow)

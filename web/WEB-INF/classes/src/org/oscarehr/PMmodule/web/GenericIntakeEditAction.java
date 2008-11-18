@@ -55,9 +55,12 @@ import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
+import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
+import org.oscarehr.casemgmt.dao.ClientImageDAO;
+import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.SessionConstants;
@@ -72,10 +75,15 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	private static final String PRINT = "print";
 	private static final String CLIENT_EDIT = "clientEdit";
 
+	private ClientImageDAO clientImageDAO = null;
 	private SurveyManager surveyManager;
 
 	public void setOscarSurveyManager(SurveyManager mgr) {
 		this.surveyManager = mgr;
+	}
+
+	public void setClientImageDAO(ClientImageDAO clientImageDAO) {
+		this.clientImageDAO = clientImageDAO;
 	}
 
 	private CaisiIntegratorManager caisiIntegratorManager = null;
@@ -176,14 +184,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
 		}
 		else {
-			if (clientManager.isClientDependentOfFamily(clientId))
-				request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, true);
-			else
-				request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
+			if (clientManager.isClientDependentOfFamily(clientId)) request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, true);
+			else request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
 		}
 
 		ProgramUtils.addProgramRestrictions(request);
-		
+
 		return mapping.findForward(EDIT);
 	}
 
@@ -274,11 +280,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			if (remoteReferralId != null) {
 				admissionText = getAdmissionText(facilityId, admissionText, remoteReferralId);
 			}
-			
+
 			admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich, admissionText);
-			
+
 			if (remoteReferralId != null) {
-				// doing this after the admit is about as transactional as this is going to get for now. 
+				// doing this after the admit is about as transactional as this is going to get for now.
 				ReferralWs referralWs;
 				try {
 					referralWs = caisiIntegratorManager.getReferralWs(facilityId);
@@ -289,9 +295,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				}
 			}
 
-			//if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
+			// if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
 			if (!formBean.getSelectedServiceProgramIds().isEmpty()) {
-			admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds(), null);
+				admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds(), null);
 			}
 
 			if ("normal".equals(saveWhich)) {
@@ -345,13 +351,32 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(client.getDemographicNo()));
 		request.getSession().setAttribute("intakeCurrentBedCommunityId", oldBedProgramId);
 
-		String remoteFacilityId=StringUtils.trimToNull(request.getParameter("remoteFacilityId"));
-		String remoteDemographicId=StringUtils.trimToNull(request.getParameter("remoteDemographicId"));
-		if (remoteFacilityId!=null && remoteDemographicId!=null)
-		{
+		String remoteFacilityIdStr = StringUtils.trimToNull(request.getParameter("remoteFacilityId"));
+		String remoteDemographicIdStr = StringUtils.trimToNull(request.getParameter("remoteDemographicId"));
+		if (remoteFacilityIdStr != null && remoteDemographicIdStr != null) {
 			try {
-				DemographicWs demographicWs=caisiIntegratorManager.getDemographicWs(facilityId);
-				demographicWs.linkDemographics(providerNo, client.getDemographicNo(), Integer.parseInt(remoteFacilityId), Integer.parseInt(remoteDemographicId));
+				int remoteFacilityId = Integer.parseInt(remoteFacilityIdStr);
+				int remoteDemographicId = Integer.parseInt(remoteDemographicIdStr);
+				DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(facilityId);
+
+				// link the clients
+				demographicWs.linkDemographics(providerNo, client.getDemographicNo(), remoteFacilityId, remoteDemographicId);
+
+				// copy image if exists
+				{
+					FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
+					pk.setIntegratorFacilityId(remoteFacilityId);
+					pk.setCaisiItemId(remoteDemographicId);
+					byte[] image = demographicWs.getCachedDemographicImage(pk);
+
+					if (image != null) {
+						ClientImage clientImage = new ClientImage();
+						clientImage.setDemographic_no(client.getDemographicNo());
+						clientImage.setImage_data(image);
+						clientImage.setImage_type("jpg");
+						clientImageDAO.saveClientImage(clientImage);
+					}
+				}
 			}
 			catch (MalformedURLException e) {
 				LOG.error(e);
@@ -360,7 +385,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				LOG.error(e);
 			}
 		}
-		
+
 		if (("RFQ_admit".equals(saveWhich) || "RFQ_notAdmit".equals(saveWhich)) && oldId != null) {
 			return clientEdit(mapping, form, request, response);
 		}
@@ -392,11 +417,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				sb.append(cachedProvider.getWorkPhone());
 				sb.append(")");
 			}
-			
+
 			sb.append(". ");
 			sb.append("Reason for Referral : ");
 			sb.append(remoteReferral.getReasonForReferral());
-			
+
 			sb.append(". ");
 			sb.append("Presenting Problem : ");
 			sb.append(remoteReferral.getPresentingProblem());
