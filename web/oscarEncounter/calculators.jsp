@@ -77,7 +77,7 @@ if(demo != null){
   </td></tr>
   <tr><td align="center" class="menuLayer">
       <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/riskcalc/index.html?sex=<%= sex%>&age=<%=age%>','CoronaryArteryDiseaseRisk');">
-         Framingham Risk Calculator
+         Framingham/UKPDS Risk Calculator
        </a>
   </td></tr>
 
