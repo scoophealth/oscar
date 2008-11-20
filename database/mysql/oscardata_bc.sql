@@ -14862,7 +14862,7 @@ INSERT INTO billingvisit VALUES ('M','Mental Health Centre','BC');
 INSERT INTO billingvisit VALUES ('T','Practitioner\'s Office - In Publicly Administered Facility','BC');
 INSERT INTO billingvisit VALUES ('G','Hospital - Day Care (Surgery) ','BC');
 INSERT INTO billingvisit VALUES ('F','Private Medical / Surgical Facility','BC');
-INSERT INTO billingvisit VALUES ('A','Practitioner\'s Office - In Community ','BC');
+INSERT INTO billingvisit VALUES ('A','Practitioner\'s Office - In Community','BC');
 
 
 --
@@ -23167,7 +23167,7 @@ INSERT INTO teleplan_refusal_code VALUES (656,'ZC','MISC CREDIT');
 INSERT INTO teleplan_refusal_code VALUES (657,'ZD','MISC DEBIT');
 INSERT INTO teleplan_refusal_code VALUES (658,'ZE','CLAIMS PAID BY AN ADJUDICATOR ACCORDING TO INFORMATION RECEIVED.');
 INSERT INTO teleplan_refusal_code VALUES (659,'ZF','INTERNAL DUPLICATE ADJUSTMENT NOT TO BE USED BY AN ADJUDICATOR');
-INSERT INTO teleplan_refusal_code VALUES (660,'ZG','FOR USE BY AN ADJUDICATOR TO BY-PASS THE 40› KEY ENTRY ENTRY CHARGE');
+INSERT INTO teleplan_refusal_code VALUES (660,'ZG','FOR USE BY AN ADJUDICATOR TO BY-PASS THE 40ï¿½ KEY ENTRY ENTRY CHARGE');
 INSERT INTO teleplan_refusal_code VALUES (661,'ZH','THIS IS A CONSOLIDATED PATIENT VISIT CHA RGE RECORD.');
 INSERT INTO teleplan_refusal_code VALUES (662,'ZI','NOTE RECORD IS NOT PRECEDED BY CORRESPON DENCE CODE EQUAL TO \"N\" OR \"B\" OR PRACTI TIONER NUMBER DOES NOT MATCH C02 RECORD.');
 INSERT INTO teleplan_refusal_code VALUES (663,'ZJ','PHN EQUALS ZERO AND PROVINCE CODE EQUALS ZERO OR BLANKS.');
