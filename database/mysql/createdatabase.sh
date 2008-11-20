@@ -9,7 +9,7 @@ mysql -uroot -p$PASSWORD  $DATABASE_NAME  < oscarinit.sql
 mysql -uroot -p$PASSWORD  $DATABASE_NAME  < oscarinit_bc.sql 
 mysql -uroot -p$PASSWORD  $DATABASE_NAME  < oscardata.sql 
 mysql -uroot -p$PASSWORD  $DATABASE_NAME  < oscardata_bc.sql
-mysql -uroot -p$PASSWORD  $DATABASE_NAME  < bc_service_code_fees.sql
 mysql -uroot -p$PASSWORD  $DATABASE_NAME  < icd9.sql 
 mysql -uroot -p$PASSWORD  $DATABASE_NAME  < caisi/initcaisi.sql
 mysql -uroot -p$PASSWORD  $DATABASE_NAME  < caisi/initcaisidata.sql
+mysql -uroot -p$PASSWORD  $DATABASE_NAME  < measurementMapData.sql
