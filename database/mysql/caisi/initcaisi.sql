@@ -2365,6 +2365,7 @@ create table IntegratorConsent
 	consentToIssues tinyint(1) NOT NULL,
 	consentToNotes tinyint(1) NOT NULL,
 	consentToPreventions tinyint(1) NOT NULL,
+	consentToPhoto tinyint(1) NOT NULL,
 	restrictConsentToHic tinyint(1) NOT NULL,
 
 	formVersion varchar(32),

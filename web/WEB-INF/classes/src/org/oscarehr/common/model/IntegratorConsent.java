@@ -30,6 +30,7 @@ public class IntegratorConsent {
 	private boolean consentToIssues = false;
 	private boolean consentToNotes = false;
 	private boolean consentToPreventions = false;
+	private boolean consentToPhoto = false;
 	private boolean restrictConsentToHic = false;
 
 	private String formVersion;
@@ -116,6 +117,14 @@ public class IntegratorConsent {
 		this.consentToPreventions = consentToPreventions;
 	}
 
+	public boolean isConsentToPhoto() {
+		return consentToPhoto;
+	}
+
+	public void setConsentToPhoto(boolean consentToPhoto) {
+		this.consentToPhoto = consentToPhoto;
+	}
+
 	public boolean isRestrictConsentToHic() {
 		return restrictConsentToHic;
 	}
@@ -123,7 +132,7 @@ public class IntegratorConsent {
 	public void setRestrictConsentToHic(boolean restrictConsentToHic) {
 		this.restrictConsentToHic = restrictConsentToHic;
 	}
-
+	
 	public String getFormVersion() {
 		return formVersion;
 	}
@@ -166,37 +175,38 @@ public class IntegratorConsent {
 	
 	public boolean isConsentToAll()
 	{
-		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&consentToPreventions&&!restrictConsentToHic); 
+		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&consentToPreventions&&consentToPhoto&&!restrictConsentToHic); 
 	}
 
 	public boolean isConsentToAllHic()
 	{
-		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&consentToPreventions&&restrictConsentToHic); 
+		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&consentToPreventions&&consentToPhoto&&restrictConsentToHic); 
 	}
 
 	public boolean isConsentToNone()
 	{
-		return(!consentToStatistics&&!consentToBasicPersonalId&&!consentToHealthCardId&&!consentToIssues&&!consentToPreventions&&!consentToNotes);
+		return(!consentToStatistics&&!consentToBasicPersonalId&&!consentToHealthCardId&&!consentToIssues&&!consentToPreventions&&!consentToPhoto&&!consentToNotes);
 	}
 	
 	public void setConsentToAll()
 	{
-		consentToStatistics=true;
-		consentToBasicPersonalId=true;
-		consentToHealthCardId=true;
-		consentToIssues=true;
-		consentToNotes=true;
-		consentToPreventions=true;
+		setAllConsents(true);
 		restrictConsentToHic=false;
 	}
 	
 	public void setConsentToNone()
 	{
-		consentToStatistics=false;
-		consentToBasicPersonalId=false;
-		consentToHealthCardId=false;
-		consentToIssues=false;
-		consentToNotes=false;
-		consentToPreventions=false;
+		setAllConsents(false);
+	}
+	
+	private void setAllConsents(boolean b)
+	{
+		consentToStatistics=b;
+		consentToBasicPersonalId=b;
+		consentToHealthCardId=b;
+		consentToIssues=b;
+		consentToNotes=b;
+		consentToPreventions=b;
+		consentToPhoto=b;
 	}
 }

@@ -22,6 +22,7 @@
 	integratorConsent.setConsentToIssues(WebUtils.isChecked(request, "Issues"));
 	integratorConsent.setConsentToNotes(WebUtils.isChecked(request, "Notes"));
 	integratorConsent.setConsentToPreventions(WebUtils.isChecked(request, "Preventions"));
+	integratorConsent.setConsentToPhoto(WebUtils.isChecked(request, "Photo"));
 	integratorConsent.setRestrictConsentToHic(WebUtils.isChecked(request, "RestrictToHic"));
    	
 	integratorConsent.setFormVersion("QUICK");
