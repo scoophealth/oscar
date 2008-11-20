@@ -131,10 +131,12 @@ public class EctConConstructSpecialistsScriptsFile
                 for(rs = db.GetSQL(sql); rs.next(); System.out.println("this went this many times = ".concat(String.valueOf(String.valueOf(servId)))))
                 {
                     String name = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(db.getString(rs,"lName"))))).append(", ").append(db.getString(rs,"fName")).append(" ").append(db.getString(rs,"proLetters"))));
+                    name = this.escapeString(name);
                     System.out.println("name : ".concat(String.valueOf(String.valueOf(name))));
                     String specId = db.getString(rs,"specId");
                     String phone = db.getString(rs,"phone");
-                    String address = db.getString(rs,"address");
+                    String address = db.getString(rs,"address");                 
+                    address = this.escapeString(address);
                     String fax = db.getString(rs,"fax");
                     stringBuffer.append(String.valueOf(String.valueOf((new StringBuffer("D(")).append(servId).append(",\"").append(specId).append("\",\"").append(phone).append("\",\"").append(name).append("\",\"").append(fax).append("\",\"").append(address).append("\");\n"))));
                 }
@@ -154,6 +156,12 @@ public class EctConConstructSpecialistsScriptsFile
         javaScriptString = stringBuffer.toString();
         EctConConfigurationJavascriptData configurationJavascriptData = new EctConConfigurationJavascriptData();
         configurationJavascriptData.setJavascript(javaScriptString);
+    }
+    
+    private String escapeString(String s) {
+        s = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(s);
+        s = org.apache.commons.lang.StringEscapeUtils.escapeJava(s);
+        return s;
     }
 
     Vector serviceId;
