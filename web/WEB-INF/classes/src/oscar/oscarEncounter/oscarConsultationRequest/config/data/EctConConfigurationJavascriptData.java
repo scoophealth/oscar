@@ -37,7 +37,7 @@ public class EctConConfigurationJavascriptData {
 	try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             //String quotedString = UtilMisc.charEscape(jscript,'\\');
-            String quotedString = str.q(jscript);
+            String quotedString = org.apache.commons.lang.StringEscapeUtils.escapeSql(jscript);
 	    String sql = "update specialistsJavascript set javascriptString = '" +quotedString+ "' where setId = '1'";
             db.RunSQL(sql);
             db.CloseConn();
