@@ -31,7 +31,7 @@ public class Facility implements Serializable {
     private String integratorPassword=null;
 	@Temporal(TemporalType.TIMESTAMP)
     private Date integratorLastPushTime=null;
-    private boolean useQuickConsent=true;
+    private boolean allowQuickConsent=true;
     private boolean enableIntegratedReferrals=true;
     
     public boolean isEnableIntegratedReferrals() {
@@ -42,12 +42,12 @@ public class Facility implements Serializable {
 		this.enableIntegratedReferrals = enableIntegratedReferrals;
 	}
 
-	public boolean isUseQuickConsent() {
-		return useQuickConsent;
+	public boolean isAllowQuickConsent() {
+		return allowQuickConsent;
 	}
 
-	public void setUseQuickConsent(boolean useQuickConsent) {
-		this.useQuickConsent = useQuickConsent;
+	public void setAllowQuickConsent(boolean allowQuickConsent) {
+		this.allowQuickConsent = allowQuickConsent;
 	}
 
 	public Facility() {

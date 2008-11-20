@@ -1,0 +1,1 @@
+alter table Facility change useQuickConsent allowQuickConsent tinyint(1) not null;

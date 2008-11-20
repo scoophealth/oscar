@@ -384,7 +384,7 @@ public class ClientManagerAction extends BaseAction {
 				consentText = "Consented to some";
 		}
 		request.getSession().setAttribute("integratorConsent", consentText);
-		request.getSession().setAttribute("useQuickConsent", facility.isUseQuickConsent());
+		request.getSession().setAttribute("allowQuickConsent", facility.isAllowQuickConsent());
 
 		return mapping.findForward("edit");
 	}
