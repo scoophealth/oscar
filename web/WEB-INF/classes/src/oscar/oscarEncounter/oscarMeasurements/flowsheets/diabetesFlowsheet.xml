@@ -183,7 +183,7 @@
         guideline="Assess and discuss self-management challenges"
         graphable="no"
         value_name="Discussed"
-        possible_answer="Yes"/> 
+        possible_answer="Yes"/>         
    
     <item 
         prevention_type="Flu"
@@ -196,6 +196,14 @@
         display_name="Pneumococcal vaccine"
         guideline=""
         graphable="no"/>
+
+    <item
+        measurement_type="DMSM"
+        display_name="Diabetes Self Management Goals"
+        guideline="Assess and discuss self management targets"
+        graphable="no"
+        value_name="Discussed"
+        possible_answer="Yes"/>         
         
       
         
@@ -389,6 +397,15 @@
            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
     </measurement>   
  
+     <measurement 
+        type="DMSM"         
+        typeDesc="Diabetes Self Management Goals"      
+        typeDisplayName="Diabetes Self Management Goals" 
+        measuringInstrc="Discussed">  
+        <validationRule
+           name="Yes/No"
+           regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
+    </measurement> 
           
     <measurement 
         type="BP"
