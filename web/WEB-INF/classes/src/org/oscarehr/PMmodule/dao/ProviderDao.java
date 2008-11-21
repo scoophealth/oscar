@@ -117,7 +117,7 @@ public class ProviderDao extends HibernateDaoSupport {
 					+ "(select a.id from Program a where a.facilityId=?)) ORDER BY p.LastName";
 			// JS 2192700 - string facilityId seems to be throwing class cast
 			// exception
-			long intFacilityId = Long.valueOf(facilityId);
+			Integer intFacilityId = Integer.valueOf(facilityId);
 			paramList.add(intFacilityId);
 			Object params[] = paramList.toArray(new Object[paramList.size()]);
 			rs = getHibernateTemplate().find(sSQL, params);

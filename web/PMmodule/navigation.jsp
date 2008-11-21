@@ -74,8 +74,9 @@
 
         alert("Generating report from " + startDate + " to " + endDate + "." + " " + "Please note: it is normal for the generation process to take up to a few minutes to complete, be patient.");
 
-	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Report"/>?' + 'method=report' + '&type=' + type + '&startDate=' + startDate + '&endDate=' + endDate + '&includePast=' + includePast;
-
+        var url = '<html:rewrite action="/PMmodule/GenericIntake/Report"/>?' + 'method=report' + '&type=' + type + '&startDate=' + startDate + '&endDate=' + endDate + '&includePast=' + includePast;
+        
+		location.href = url;
         return false;
     }
 
@@ -199,11 +200,11 @@
             <span>Reporting Tools</span>
 			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
             <div>
-                <a href="javascript:void(0)" onclick="javascript:getIntakeReport('quick')">Registration Intake
+                <a href="javascript:getIntakeReport('quick')" >Registration Intake
                     Report</a>
             </div>
             <div>
-                <a href="javascript:void(0)" onclick="javascript:getIntakeReport('indepth')">Follow-up Intake Report</a>
+                <a href="javascript:getIntakeReport('indepth')">Follow-up Intake Report</a>
             </div>
             <caisi:isModuleLoad moduleName="intakec.enabled">
                 <div>

@@ -193,6 +193,8 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
 
     private void getChildren(Set<Integer> nodeIds, List<IntakeNode> children) {
         for (IntakeNode child : children) {
+        	if(child == null)
+        		continue;
             Integer childId = child.getId();
 
             if (nodeIds.contains(childId)) {

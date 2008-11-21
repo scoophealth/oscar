@@ -183,6 +183,14 @@ public class TicklerManager {
 	        }
 	        pa = null;
 	        
+	        //if this provider wrote the tickler, they should see it..doesn't matter
+	        //about the role based access
+	        if(!add) {
+	        	if(t.getProvider().getProviderNo().equals(providerNo)) {
+	        		add=true;
+	        	}
+	        
+	        }
 	
 	        //apply defaults
 	        if (!add) {

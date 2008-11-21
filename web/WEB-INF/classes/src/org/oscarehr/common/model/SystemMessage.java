@@ -69,6 +69,10 @@ public class SystemMessage {
 		return id;
 	}
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
 	/**
 	 * @deprecated
 	 */

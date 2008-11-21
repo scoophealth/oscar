@@ -84,7 +84,7 @@
 					<th>Soundex on names <a href="javascript:void(0)" onclick="popupHelp('soundex')">?</a></th>
 					<td><html:checkbox property="criteria.searchUsingSoundex" /></td>
 				</tr>
-
+				<%--
 				<tr>
 					<th>Bed Program</th>
 			          <td>
@@ -95,6 +95,7 @@
 			            </html:select>
 			          </td>
 				</tr>
+				 --%>
 				<tr>
 					<th>Admission Date From<br>
 						(yyyy/mm/dd)</th>

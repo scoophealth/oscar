@@ -216,6 +216,67 @@ public class ClientDao extends HibernateDaoSupport {
 		if(bean.getBedProgramId() != null && bean.getBedProgramId().length() > 0) {
 			bedProgramIdCond = " program_id = " + bean.getBedProgramId();
 		}
+		
+// -------- start splice from 1.31 for 2270307
+		DetachedCriteria subq = DetachedCriteria.forClass(Admission.class)
+	    .setProjection(Property.forName("ClientId") );
+		/* 
+		// this code seems not to work properly... Bug 2270307 encapsulates this.
+		if (bean.getProgramDomain() != null && !bean.getProgramDomain().isEmpty() && !bean.isSearchOutsideDomain()) {
+
+			// program domain search
+			StringBuilder programIds = new StringBuilder();
+			for (int x = 0; x < bean.getProgramDomain().size(); x++) {
+				ProgramProvider p = (ProgramProvider)bean.getProgramDomain().get(x);
+				if (x > 0) {
+					programIds.append(",");
+				}
+				programIds.append(p.getProgramId());
+			}		
+			
+			String [] pIds ;			
+			if(bean.getBedProgramId()==null || bean.getBedProgramId().length()==0) {
+				pIds = programIds.toString().split(",");
+			} else {
+				pIds = bean.getBedProgramId().split(",");
+			}
+			
+			Integer [] pIdi = new Integer[pIds.length];
+			for(int i=0;i<pIds.length;i++)
+			{
+				pIdi[i] = Integer.parseInt(pIds[i]);
+			}
+		    subq.add(Restrictions.in("ProgramId", pIdi));	
+			
+		}else{  
+			String extraCond = "";
+			if(bedProgramIdCond.length()>0){
+				String [] pIds ;
+				pIds = bean.getBedProgramId().split(",");
+				Integer [] pIdi = new Integer[pIds.length];
+				for(int i=0;i<pIds.length;i++)
+				{
+					pIdi[i] = Integer.parseInt(pIds[i]);
+				}
+				
+			    subq.add(Restrictions.in("ProgramId", pIdi));		
+			}	
+		}
+		*/
+		if(bean.getDateFrom() != null && bean.getDateFrom().length() > 0) {
+	    	Date dt = MyDateFormat.getSysDate(bean.getDateFrom().trim());
+	    	subq.add(Restrictions.ge("AdmissionDate",dt ));
+	    }
+	    if(bean.getDateTo() != null && bean.getDateTo().length() > 0) {
+	    	Date dt1 =  MyDateFormat.getSysDate(bean.getDateTo().trim());
+	    	subq.add(Restrictions.le("AdmissionDate",dt1));
+	    }
+	    
+	    
+	    criteria.add(Property.forName("DemographicNo").in(subq));
+// -------- end splice from 1.31
+		
+		
 		active = bean.getActive();
 		if("1".equals(active)) {
 			criteria.add(Expression.ge("activeCount", 1));

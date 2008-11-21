@@ -29,13 +29,27 @@ import java.util.Date;
 import org.caisi.model.BaseObject;
 
 public class Allergy extends BaseObject {
+	
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1534944824801618333L;
 	private Long allergyid;
 	private String demographic_no;
 	private Date entry_date;
 	private String description;
 	private String reaction;
+	private String archived;
 	
 	
+	public String getArchived() {
+		return archived;
+	}
+	public void setArchived(String archived) {
+		this.archived = archived;
+	}
 	public Long getAllergyid() {
 		return allergyid;
 	}

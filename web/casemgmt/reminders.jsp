@@ -26,6 +26,19 @@
 <%@ page import="org.oscarehr.casemgmt.model.*" %>
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.*" %>
 
+
+
+<html:hidden property="cpp.primaryPhysician"/>
+<html:hidden property="cpp.primaryCounsellor"/>
+<html:hidden property="cpp.otherFileNumber"/>
+
+<html:hidden property="cpp.familyHistory" />
+<html:hidden property="cpp.medicalHistory" />
+<html:hidden property="cpp.socialHistory" />
+
+<html:hidden property="cpp.pastMedications" />
+<html:hidden property="cpp.otherSupportSystems" />
+
 <table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
 <tr class="title">
 	<td>Reminders</td>

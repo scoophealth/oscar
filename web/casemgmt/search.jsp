@@ -221,6 +221,7 @@ Sort:
 		</tr>
 		<tr bgcolor="<%=bgcolor1 %>">
 			<td width="7%">Note</td>
+			
 			<td width="93%">
 				<c:choose>
 					<c:when test="${note.locked}">

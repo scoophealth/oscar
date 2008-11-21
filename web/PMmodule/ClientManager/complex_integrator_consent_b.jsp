@@ -81,17 +81,26 @@
 			if(typeof(answer1) == 'undefined' || typeof(answer2) == 'undefined' || typeof(answer3) == 'undefined') {
 				alert('You must ask each question, and record whether the client answered correctly');
 				return;
-			}
+			}			
 			
 			//warning about incompetence
 			if(answer1 != 1 || answer2 != 1 || answer3 != 1) {
 				if(confirm('Not all questions were answered correctly. \nSubmitting this form will result in the inability to obtain informed consent')) {
-					form.elements['status'].value = 'unable to obtain informed consent';					
+					//form.elements['status'].value = 'unable to obtain informed consent';
+					form.elements['consent'].value='NONE';					
 				} else {
 					return;
 				}
 			}
-			
+
+			if(form.elements['refusedToSign'].checked == true) {
+				if(confirm('Due to the client refusing to sign, the consent form cannot be completed\nClick ok to exit or cancel to return to form')) {
+					window.close();
+				} else {
+					return;
+				}
+			}
+						
 			if(form.elements['signatureDeclaration'].checked == false) {
 				alert('You must declare that you have obtained the client\'s signature');
 				return;

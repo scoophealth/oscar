@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,6 +49,7 @@ import oscar.util.UtilDateUtilities;
 
 public final class WLSetupDisplayWaitingListAction extends Action {
 
+	private Logger log = Logger.getLogger(WLSetupDisplayWaitingListAction.class);
     public ActionForward execute(ActionMapping mapping,
                                  ActionForm form,
                                  HttpServletRequest request,
@@ -55,7 +57,7 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         throws Exception {
         
     	
-        System.out.println("\n\nWLSetupDisplayWaitingListAction/execute(): just entering.");
+        log.debug("\n\nWLSetupDisplayWaitingListAction/execute(): just entering.");
         
         String update = request.getParameter("update");
         String remove = request.getParameter("remove");//actually not used for now, may in future?
@@ -67,27 +69,27 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         String groupNo = "";
         String providerNo = "";
         
-        System.out.println("\n\nWLSetupDisplayWaitingListAction/execute(): update = " + update);
-        System.out.println("\n\nWLSetupDisplayWaitingListAction/execute(): remove = " + remove);
+        log.debug("\n\nWLSetupDisplayWaitingListAction/execute(): update = " + update);
+        log.debug("\n\nWLSetupDisplayWaitingListAction/execute(): remove = " + remove);
 
     	LazyValidatorForm wlForm = (LazyValidatorForm)form;
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): after  (LazyValidatorForm)form ");
+        log.debug("WLSetupDisplayWaitingListAction/execute(): after  (LazyValidatorForm)form ");
 
         
         String demographicNumSelected =  request.getParameter("demographicNumSelected");
         String wlNoteSelected = request.getParameter("wlNoteSelected");
         String onListSinceSelected =  request.getParameter("onListSinceSelected");
 
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): demographicNumSelected = "+ demographicNumSelected);
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): wlNoteSelected = "+ wlNoteSelected);
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): onListSinceSelected = "+ onListSinceSelected);
+        log.debug("WLSetupDisplayWaitingListAction/execute(): demographicNumSelected = "+ demographicNumSelected);
+        log.debug("WLSetupDisplayWaitingListAction/execute(): wlNoteSelected = "+ wlNoteSelected);
+        log.debug("WLSetupDisplayWaitingListAction/execute(): onListSinceSelected = "+ onListSinceSelected);
         
         
         if(request.getParameter("waitingListId") != null){
         	waitingListId = (String) request.getParameter("waitingListId");
         }
         
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): waitingListId = "+ waitingListId);
+        log.debug("WLSetupDisplayWaitingListAction/execute(): waitingListId = "+ waitingListId);
         if( update != null  &&  update.equalsIgnoreCase("Y") ){
 	        
             demographicNo = request.getParameter(demographicNumSelected);
@@ -113,7 +115,7 @@ public final class WLSetupDisplayWaitingListAction extends Action {
 		        	}
 	
 		        }catch(Exception ex){
-		            System.out.println("WLUpdateDisplayWaitingListAction/execute(): Exception: "+ ex);
+		            log.error("WLUpdateDisplayWaitingListAction/execute(): Exception: "+ ex);
 		        	return (mapping.findForward("failure"));
 		        }
         	}
@@ -131,13 +133,13 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         }
         providerNo = (String)session.getAttribute("user");
         
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): providerNo = "+ providerNo);
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): groupno = "+ groupNo);
+        log.debug("WLSetupDisplayWaitingListAction/execute(): providerNo = "+ providerNo);
+        log.debug("WLSetupDisplayWaitingListAction/execute(): groupno = "+ groupNo);
 
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): waitingListId = "+ waitingListId);
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): demographicNo = "+ demographicNo);
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): waitingListNote = "+ waitingListNote);
-        System.out.println("WLSetupDisplayWaitingListAction/execute(): onListSince = "+ onListSince);
+        log.debug("WLSetupDisplayWaitingListAction/execute(): waitingListId = "+ waitingListId);
+        log.debug("WLSetupDisplayWaitingListAction/execute(): demographicNo = "+ demographicNo);
+        log.debug("WLSetupDisplayWaitingListAction/execute(): waitingListNote = "+ waitingListNote);
+        log.debug("WLSetupDisplayWaitingListAction/execute(): onListSince = "+ onListSince);
 
         WLWaitingListBeanHandler hd = null;
         WLWaitingListNameBeanHandler wlNameHd = null;
@@ -162,11 +164,11 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         if(groupNo != null){
         	phd.setThisGroupProviderVector(groupNo);
         	allProviders = phd.getThisGroupProviderVector();
-        	System.out.println("WLSetupDisplayWaitingListAction/execute(): allProviders.size() = "+ allProviders.size());
+        	log.debug("WLSetupDisplayWaitingListAction/execute(): allProviders.size() = "+ allProviders.size());
                 if (allProviders.size()<=0){
                     ProviderData proData = new ProviderData();
                     proData.getProvider(groupNo);
-                    if (!proData.getLast_name().equals("") && proData.getLast_name() != null && !proData.getFirst_name().equals("") && proData.getFirst_name() != null) {
+                    if (proData.getLast_name() != null && !proData.getLast_name().equals("") && proData.getFirst_name() != null && !proData.getFirst_name().equals("")) {
                         ProviderNameBean proNameBean = new ProviderNameBean(proData.getLast_name() + ", " + proData.getFirst_name(), groupNo);
                         allProviders.add(proNameBean);
                     }

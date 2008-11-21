@@ -79,7 +79,11 @@ public class SystemMessageAction extends DispatchAction {
 		DynaActionForm userForm = (DynaActionForm)form;
 		SystemMessage msg = (SystemMessage)userForm.get("system_message");
 		msg.setCreationDate(new Date());
-		systemMessageDao.persist(msg);
+		if(msg.getId() != null && msg.getId().intValue()>0) {
+			systemMessageDao.merge(msg);
+		} else {
+			systemMessageDao.persist(msg);
+		}
 		
         ActionMessages messages = new ActionMessages();
         messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("system_message.saved"));

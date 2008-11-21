@@ -34,7 +34,7 @@ public class AllergyDAO extends HibernateDaoSupport {
     }
 
     public List getAllergies(String demographic_no) {
-        return this.getHibernateTemplate().find("from Allergy a where a.demographic_no = ?", new Object[] {demographic_no});
+        return this.getHibernateTemplate().find("from Allergy a where a.archived != '1' and a.demographic_no = ? ", new Object[] {demographic_no});
     }
 
 }

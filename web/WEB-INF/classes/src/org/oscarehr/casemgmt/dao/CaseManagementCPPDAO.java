@@ -51,6 +51,8 @@ public class CaseManagementCPPDAO extends HibernateDaoSupport {
         String ofnum = cpp.getOtherFileNumber() == null?"":cpp.getOtherFileNumber();
         String ossystem = cpp.getOtherSupportSystems() == null?"":cpp.getOtherSupportSystems();
         
+        tempcpp.setId(cpp.getId());
+        
         tempcpp.setDemographic_no(cpp.getDemographic_no());
         tempcpp.setFamilyHistory(fhist);
         tempcpp.setMedicalHistory(mhist);
@@ -64,7 +66,7 @@ public class CaseManagementCPPDAO extends HibernateDaoSupport {
         tempcpp.setOtherFileNumber(ofnum);
         tempcpp.setOtherSupportSystems(ossystem);
         tempcpp.setPastMedications(pm);         
-        this.getHibernateTemplate().save(tempcpp);
+        this.getHibernateTemplate().saveOrUpdate(tempcpp);
         
     }
 

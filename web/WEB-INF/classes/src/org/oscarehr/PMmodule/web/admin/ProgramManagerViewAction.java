@@ -479,13 +479,14 @@ public class ProgramManagerViewAction extends BaseAction {
         log.info("do batch discharge");
         String type = request.getParameter("type");
         String admitToProgramId;
-        if (type != null && type.equals("community")) {
+        if (type != null && type.equalsIgnoreCase("community")) {
             admitToProgramId = request.getParameter("batch_discharge_community_program");
         }
-        else if (type != null && type.equals("bed")) {
+        else if (type != null && type.equalsIgnoreCase("bed")) {
             admitToProgramId = request.getParameter("batch_discharge_program");
         }
         else {
+        	log.warn("Invalid program type for batch discharge");
             admitToProgramId = "";
         }
 

@@ -3,6 +3,8 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.springframework.web.context.WebApplicationContext" %>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+
 <%
  	Calendar rightNow = Calendar.getInstance();              
  	int year = rightNow.get(Calendar.YEAR);
@@ -170,7 +172,7 @@
 		    	                  		}
 		                      		}
                       		%>
-                      		<input type="checkbox" name="provider" <%=checked %> value="<c:out value="${provider.provider_no}"/>"/><c:out value="${provider.lastName}"/>,<c:out value="${provider.firstName}"/><br/>
+                      		<input type="checkbox" name="provider" <%=checked %> value="<c:out value="${provider.providerNo}"/>"/><c:out value="${provider.lastName}"/>,<c:out value="${provider.firstName}"/><br/>
                       	</c:forEach>
                       </td>
               </tr>
@@ -198,7 +200,7 @@
                       	<c:choose>
                       	<c:when test="${custom_filter.name != '*Myticklers*'}">
                       		
-                      		<input name="assignee" <%=checked %> type="checkbox" value="<c:out value='${provider.provider_no}'/>"/>
+                      		<input name="assignee" <%=checked %> type="checkbox" value="<c:out value='${provider.providerNo}'/>"/>
                       	
                       	
                       		<c:out value="${provider.lastName}"/>,<c:out value="${provider.firstName}"/><br/>

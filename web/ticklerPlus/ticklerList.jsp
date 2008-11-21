@@ -13,6 +13,33 @@
 <script type="text/javascript" src="../js/checkDate.js"></script>
 
 <script>
+	//filter for provider - will work for other dropdowns as well
+	function filter (term, _id, cellNr){
+		
+		var suche = term.toLowerCase();
+		//suche = trimAll(suche);
+		//alert(suche.length + suche  + _id + cellNr);
+	
+		var table = document.getElementById(_id);
+	
+		if(suche.length < 2){
+			for (var r = 1; r < table.rows.length; r++)
+				table.rows[r].style.display = '';
+			return;
+		}
+
+		
+		var ele;
+		for (var r = 2; r < table.rows.length - 1; r++){
+			//alert(table.rows.length +  table.rows[0].cells[2].innerHTML);
+			ele = table.rows[r].cells[cellNr].innerHTML.replace(/<[^>]+>/g,"");
+			
+			if (ele.toLowerCase().indexOf(suche)>=0 )
+				table.rows[r].style.display = '';
+			else table.rows[r].style.display = 'none';
+		}
+	}
+
 	function batch_operation(method) {
 		var checked=false;
 
@@ -128,6 +155,7 @@
         
 </script>
 
+
 <html:form action="/Tickler">
 	<input type="hidden" name="method" value="save" />
 	<input type="hidden" name="order_tcr" value="asc"/>
@@ -193,7 +221,7 @@
 		
 		<oscar:oscarPropertiesCheck property="clientdropbox" value="off" defaultVal="true">
 		    <html:hidden property="filter.demographic_no"/>
-		    <html:text property="filter.demographic_webName" size="15"/>
+		    <html:text property="filter.demographic_webName" onkeyup="filter(this.value, 'ticklersTbl', 2)" size="15"/>
 		    <span id="clear_button"><input type="button" value="Clear" onclick="clearClientFilter();" /></span>
 		    <script language="JavaScript">showClearButton();</script>
 		    <input type="button" value="Search" onclick="search_demographic();" />
@@ -227,7 +255,7 @@
 	<%@ include file="/ticklerPlus/messages.jsp"%>
 	<br />
 	<table width="100%" border="0" cellpadding="0" cellspacing="1"
-		bgcolor="#C0C0C0">
+		bgcolor="#C0C0C0" id="ticklersTbl" >
 		<tr class="title">
 			<th></th>
 			<th></th>
