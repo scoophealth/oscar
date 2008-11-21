@@ -100,7 +100,7 @@ if(outcome != null){
                                         <option value="PATHL7"
                                                 <oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck> 
                                         >EXCELLERIS</option>
-                                        <option value="GDML">GDML -- TESTING DO NOT USE</option>
+                                        <option value="GDML">GDML</option>
                                         <option value="OTHER">Other</option>
                                     </select>
                                 </td>
