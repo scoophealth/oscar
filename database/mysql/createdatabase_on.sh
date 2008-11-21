@@ -12,3 +12,4 @@ mysql -uroot -p$PASSWORD  $DATABASE_NAME  < oscardata_on.sql
 mysql -uroot -p$PASSWORD  $DATABASE_NAME  < icd9.sql
 mysql -uroot -p$PASSWORD  $DATABASE_NAME  < caisi/initcaisi.sql
 mysql -uroot -p$PASSWORD  $DATABASE_NAME  < caisi/initcaisidata.sql
+mysql -uroot -p$PASSWORD  $DATABASE_NAME  < measurementMapData.sql
