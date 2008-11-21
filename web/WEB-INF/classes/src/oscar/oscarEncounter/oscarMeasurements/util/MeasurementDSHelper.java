@@ -29,6 +29,9 @@
 package oscar.oscarEncounter.oscarMeasurements.util;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.Calendar;
+import java.text.DateFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -156,6 +159,23 @@ public class MeasurementDSHelper {
         this.inRange = inRange;
     }
     
+    public String getDateObserved() {
+        return mdb.getDateObserved();
+    }
     
+    public int getLastDateRecordedInMths() {
+        int mths = 0;
+        
+        Date date = mdb.getDateObservedAsDate();
+        Date now = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        while( calendar.getTime().before(now) ) {
+            calendar.add(Calendar.MONTH, 1);
+            ++mths;
+        }
+        
+        return mths;
+    }
     
 }
