@@ -16,9 +16,52 @@
             outputfields="demographicNo,providerNo">
     select * from measurements m where   m.demographicNo = '${demographic_no}'  and m.type = 'A1C' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)    
  </Numerator>
- <Numerator id ="LDL12" name="Has LDL in last 12 months" type="SQL" description="Number of patient in the denom with at least one LDL test in the last 12months" >
+
+ <Numerator id="A1C6_2" name="Has A1C in last 12 mths less than or equal to 0.07" type="SQL" description="Number of patients in the denom with at least one a1c in last 12 mths less than or equal to 0.07"
+    outputfields="demographicNo,providerNo">
+        select * from measurements m where   m.demographicNo = '${demographic_no}'  and m.type = 'A1C' and  dateObserved &gt; DATE_SUB(now(),INTERVAL 12 Month) and
+        m.dataField &lt;= 0.07
+</Numerator>
+
+ <Numerator id="DMSM" name="Have DM documented self management targets" type="SQL" description="Number of patients in the denom with documented self management targets set in last 12 mths"
+    outputfields="demographicNo,providerNo">
+        select * from measurements m where   m.demographicNo = '${demographic_no}'  and m.type = 'DMSM' and  dateObserved &gt; DATE_SUB(now(),INTERVAL 12 Month)
+        and m.dataField like 'yes'
+</Numerator>
+
+<Numerator id="ACEIorAARB" name="Number of DM patients with current ACE inhibitors or AARB meds" type="SQL" description="Number of DM patients with current ACE inhibitors or AARB meds">
+        select distinct dx.demographic_no from dxresearch dx, demographic d, drugs where dx.dxresearch_code = '250' and dx.coding_system = 'icd9' and dx.status = 'A' and d.demographic_no = dx.demographic_no and d.patient_status = 'AC' and
+        d.demographic_no = drugs.demographic_no and drugs.end_date &gt;= now() and (drugs.GN like '%Lisinopril%' or drugs.BN like '%Zestril%' or drugs.BN like '%Prinvil%' or
+        drugs.BN like '%Zestoretic%' or drugs.GN like '%Ramipril%' or drugs.BN like '%Altace%' or drugs.GN like '%Captopril%' or drugs.BN like '%Capoten%' or drugs.GN like '%Benazepril%' or
+        drugs.BN like '%Lotensin%' or drugs.GN like '%Cilazapril%' or drugs.BN like '%Inhibace%' or drugs.GN like '%Enalapril%' or drugs.BN like '%Vasotec%' or drugs.BN like '%Vaseretic%' or
+        drugs.GN like '%Fosinopril%' or drugs.BN like '%Monopril%' or drugs.GN like '%Perindopril%' or drugs.BN like '%Coversyl%' or drugs.GN like '%Quinapril%' or drugs.BN like '%Accupril%' or 
+        drugs.BN like '%Accuretic%' or drugs.GN like '%Trandolapril%' or drugs.BN like '%Mavik%' or drugs.GN like '%Irbesartan%' or drugs.BN like '%Avapro%' or drugs.BN like '%Avalide%' or
+        drugs.GN like '%Losartan%' or drugs.BN like '%Cozaar%' or drugs.BN like '%Hyzaar%' or drugs.GN like '%Valsartan%' or drugs.BN like '%Diovan%' or drugs.GN like '%Candesartan%' or
+        drugs.BN like '%Atacand%' or drugs.GN like '%Eprosartan%' or drugs.BN like '%Teveten%' or drugs.GN like '%Telmisartan%' or drugs.BN like '%Micardis%')
+</Numerator>
+ 
+<Numerator id ="LDL12" name="Has LDL in last 12 months" type="SQL" description="Number of patient in the denom with at least one LDL test in the last 12months" >
     select * from measurements m where   m.demographicNo = '${demographic_no}'  and m.type = 'LDL' and  dateObserved >  DATE_SUB(now(),INTERVAL 12 Month)    
  </Numerator>
+
+ <Numerator id ="LDL6" name="Has LDL in last 6 months less than or equal to 2" type="SQL" description="Number of patient in the denom with at least one LDL test in the last 6 months with a value less than or equal to 2" >
+    select * from measurements m where   m.demographicNo = '${demographic_no}'  and m.type = 'LDL' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month) and m.dataField &lt;= 2.0
+ </Numerator>
+ 
+<Numerator id="Retinopathy24m" name="Have Retinopathy screeing in last 24 months" type="SQL" description="Number of patients in the denom with a Retinopathy done in last 24mths">
+        select * from measurements m where m.demographicNo = '${demographic_no}'  and m.type = 'EYEE' and  dateObserved &gt; DATE_SUB(now(),INTERVAL 24 Month)
+        and m.dataField like 'yes'
+</Numerator>
+
+<Numerator id="FTE12m" name="Have Foot Exam in last 12 months" type="SQL" description="Number of patients in the denom with a foot exam done in last 24mths">
+        select * from measurements m where m.demographicNo = '${demographic_no}'  and m.type = 'FTE' and  dateObserved &gt; DATE_SUB(now(),INTERVAL 12 Month)
+        and m.dataField like 'yes'
+</Numerator>
+
+<Numerator id="ACR12m" name="Have ACR screening in last 12 months" type="SQL" description="Number of patients in the denom with microalbuminuria screeing done in last 24mths">
+        select * from measurements m where m.demographicNo = '${demographic_no}'  and m.type = 'ACR' and  dateObserved &gt; DATE_SUB(now(),INTERVAL 12 Month)
+</Numerator>
+
  <Numerator id ="BP6" name="Has BP in last 6 months" type="SQL" description="Number of patient in the denom with at least one bp test in the last 6months">
     select * from measurements m where   m.demographicNo = '${demographic_no}'  and m.type = 'BP' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)    
  </Numerator>
@@ -126,6 +169,9 @@ DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birt
  
  <Numerator id ="bplt131" name="BP lower than 131" type="DROOLS"  description="Number of patient in the denom with a bp lower that 131"
             file="testBPlower131.drl"/>
+            
+<Numerator id ="bplt130_80" name="BP lower than or equal to 130/80" type="DROOLS"  description="Number of patient in the denom with a bp lower than or equal to 130/80"
+            file="testBPlower130_80.drl"/>            
  
  <Numerator id ="bpgt0p079" name="BP higher than 139" type="DROOLS"  description="Number of patient in the denom with a bp higher that 139"
             file="testBPabove139.drl"/>
@@ -183,6 +229,17 @@ type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,de
 and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}' and de.demographic_no = d.demographic_no and de.patient_status = 'AC'
 </Denominator>
 
+<Denominator id="DMRega1c12m" name="Diabetes Registry having HbA1c in last 12m"
+description="Number of patient in the DM reg that have a HbA1c in the testing range"
+type="SQL">select distinct dx.demographic_no from dxresearch dx, measurements m, demographic d where dx.dxresearch_code in ('250') and dx.coding_system = 'icd9' and dx.status = 'A' and dx.demographic_no = m.demographicNo and m.type = 'A1C' and  dateObserved >  DATE_SUB(now(),INTERVAL 12 Month) and d.demographic_no = dx.demographic_no and d.patient_status = 'AC'
+</Denominator>
+
+<Denominator id="DMRega1c12mbyP" name="Diabetes Registry having HbA1c in last 12m by practice"
+description="Number of patient in the DM reg that have a HbA1c in the testing range by practice" replaceKeys="provider_no"
+type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,demographic de where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' and d.demographic_no = m.demographicNo and m.type = 'A1C' and  dateObserved >  DATE_SUB(now(),INTERVAL 12 Month)
+and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}' and de.demographic_no = d.demographic_no and de.patient_status = 'AC'
+</Denominator>
+
 <Denominator id="DMRegbp6m" name="Diabetes Registry having BP in last 6m"
 description="Number of patient in the DM reg that have a BP in the testing range"
 type="SQL">select distinct dx.demographic_no from dxresearch dx, measurements m, demographic d where dx.dxresearch_code in ('250') and dx.coding_system = 'icd9' and dx.status = 'A' and dx.demographic_no = m.demographicNo and m.type = 'BP' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month) and d.demographic_no = dx.demographic_no and d.patient_status = 'AC'
@@ -203,6 +260,12 @@ type="SQL">select distinct dx.demographic_no from dxresearch dx, measurements m,
 description="Number of patient in the DM reg that have a LDL in the testing range by practice" replaceKeys="provider_no"
 type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,demographic de  where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' and d.demographic_no = m.demographicNo and m.type = 'LDL' and  dateObserved >  DATE_SUB(now(),INTERVAL 12 Month)
 and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}' and de.demographic_no = d.demographic_no and de.patient_status = 'AC'
+</Denominator>
+
+<Denominator id="DMRegLDL6m" name="Diabetes Registry having LDL in last 6m"
+description="Number of patient in the DM reg that have a LDL in the testing range" replaceKeys="provider_no"
+type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,demographic de  where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' and d.demographic_no = m.demographicNo and m.type = 'LDL' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)
+and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}' and de.demographic_no = d.demographic_no and de.patient_status = 'AC'    
 </Denominator>
 
 <Denominator id="TripWham" name="Diabetes Registry having Triple Indicator in guideline time limit"
