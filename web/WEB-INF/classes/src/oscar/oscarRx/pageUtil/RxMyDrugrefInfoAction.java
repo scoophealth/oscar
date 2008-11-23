@@ -24,7 +24,6 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
-import java.util.Hashtable;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,13 +39,15 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
+import oscar.oscarRx.util.TimingOutCallback;
+import oscar.oscarRx.util.TimingOutCallback.TimeoutException;
 
 
 public final class RxMyDrugrefInfoAction extends DispatchAction {
     
     
     public ActionForward view(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
-        
+        long start = System.currentTimeMillis();
         String provider = (String) request.getSession().getAttribute("user");
         
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
@@ -87,6 +88,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         Collections.sort(all, new MyDrugrefComparator());
         request.setAttribute("warnings",all);
         ///////
+        System.out.println("MyDrugref return time " + (System.currentTimeMillis() - start) );
         return mapping.findForward("success");
     }
     
@@ -262,12 +264,15 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         System.out.println("#CALLDRUGREF-"+procedureName);
         Object object = null;
         String server_url = "http://dev2.mydrugref.org/backend/api";
-        //String server_url = "http://130.113.106.87:3000/backend/api";
+        //String server_url = "http://localhost:8080/oscar_mcmaster/noreturn.jsp";
+        TimingOutCallback callback = new TimingOutCallback(10 * 1000);
         try{
             System.out.println("server_url :"+server_url);
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);
-            object = (Object) server.execute(procedureName, params);
-        }catch (XmlRpcException exception) {
+            //object = (Object) server.execute(procedureName, params);
+            server.executeAsync(procedureName, params, callback);
+            object = callback.waitForResponse();
+        /*}catch (XmlRpcException exception) {
             
             System.err.println("JavaClient: XML-RPC Fault #" +
                     Integer.toString(exception.code) + ": " +
@@ -276,13 +281,19 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
             
             throw new Exception("JavaClient: XML-RPC Fault #" +
                     Integer.toString(exception.code) + ": " +
-                    exception.toString());
-            
-        } catch (Exception exception) {
+                   exception.toString());
+        */
+        } catch (TimeoutException e) {
+            System.out.println("No response from server."+server_url);
+        }catch(Throwable ethrow){
+                System.out.println("Throwing error."+ethrow.getMessage());
+        } 
+        /*catch (Exception exception) {
             System.err.println("JavaClient: " + exception.toString());
             exception.printStackTrace();
             throw new Exception("JavaClient: " + exception.toString());
         }
+        */
         return object;
     }
     
