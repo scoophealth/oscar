@@ -74,7 +74,7 @@ public class importCPP {
                         pstmt.close();
                         
                         System.out.println("Grabbing list of patients and respective cpp");
-                        rs = stmt.executeQuery("select client_id,program_id from admission");
+                        rs = stmt.executeQuery("select client_id,program_id from admission order by client_id");
                         pstmt = con.prepareStatement("select provider_no,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,update_date from casemgmt_cpp where demographic_no = ? and id = (select max(id) from casemgmt_cpp where demographic_no = ?)");
                         PreparedStatement pstmt2 = con.prepareStatement("select id from casemgmt_issue where demographic_no = ? and issue_id = ?");
                         PreparedStatement pstmt3 = con.prepareStatement("insert into casemgmt_issue (demographic_no,issue_id,program_id,type,update_date) values(?,?,?,'nurse',now())",PreparedStatement.RETURN_GENERATED_KEYS);
@@ -85,8 +85,15 @@ public class importCPP {
                         ResultSet rs2,rs3,rs4;
                         long cIssueId;
                         UUID uuid;
+                        ArrayList<Integer> clients = new ArrayList<Integer>();
                         while(rs.next()) {
+                            int client_id = rs.getInt(1);
+                            if( clients.contains( new Integer(client_id) ) ) {
+                                System.out.println("Multiple record for " + client_id + " skipping");
+                                continue;
+                            }
                             
+                            clients.add(client_id);
                             pstmt.setString(1,rs.getString(1));
                             pstmt.setString(2,rs.getString(1));
                             rs2 = pstmt.executeQuery();
