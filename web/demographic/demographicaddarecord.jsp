@@ -264,7 +264,7 @@
        
        dExt.addKey(proNo,dem ,"ethnicity"    ,request.getParameter("ethnicity")    ,"");
        dExt.addKey(proNo,dem ,"area"         ,request.getParameter("area")         ,"");
-       dExt.addKey(proNo,dem ,"status_number",request.getParameter("status_number"),"" );
+       dExt.addKey(proNo,dem ,"statusNum",request.getParameter("statusNum"),"" );
      
        
        

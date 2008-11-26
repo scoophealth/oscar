@@ -38,7 +38,7 @@ Hashtable h2 = new Hashtable();
 %>
 <li>
     Area:       <b><%=getArea(h2,apptMainBean.getString(demoExt.get("area")))%></b>
-    Status #:   <b><%=apptMainBean.getString(demoExt.get("status_num"))%></b>
+    Status #:   <b><%=apptMainBean.getString(demoExt.get("statusNum"))%></b>
     Ethinicity: <b><%=getEth(h,apptMainBean.getString(demoExt.get("ethnicity")) )%></b>    
 </li>
  

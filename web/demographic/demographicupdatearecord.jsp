@@ -106,7 +106,7 @@ if( users != null && users.size() > 0 )
      
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"ethnicity",request.getParameter("ethnicity"),request.getParameter("ethnicityOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"area",request.getParameter("area"),request.getParameter("areaOrig") );
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"status_number",request.getParameter("status_number"),request.getParameter("status_numberOrig") );
+     dExt.addKey(proNo,request.getParameter("demographic_no") ,"statusNum",request.getParameter("statusNum"),request.getParameter("statusNumOrig") );
      
      // customized key
      if(oscarVariables.getProperty("demographicExt") != null) {
