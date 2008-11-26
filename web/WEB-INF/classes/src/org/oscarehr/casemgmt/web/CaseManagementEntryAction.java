@@ -832,6 +832,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         note.setUpdate_date(now);
         if (note.getCreate_date() == null) note.setCreate_date(now);
+        
+        //update encounter type
+        note.setEncounter_type(cform.getCaseNote().getEncounter_type());
 
         /* save note including add signature */
         String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
