@@ -265,9 +265,10 @@
        dExt.addKey(proNo,dem ,"ethnicity"    ,request.getParameter("ethnicity")    ,"");
        dExt.addKey(proNo,dem ,"area"         ,request.getParameter("area")         ,"");
        dExt.addKey(proNo,dem ,"statusNum",request.getParameter("statusNum"),"" );
+       dExt.addKey(proNo,dem ,"given_consent",request.getParameter("given_consent"),"" );
+       
+       
      
-       
-       
        // customized key
        if(oscarVariables.getProperty("demographicExt") != null) {
 	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");

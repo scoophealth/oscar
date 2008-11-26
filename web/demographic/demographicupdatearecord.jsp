@@ -108,6 +108,8 @@ if( users != null && users.size() > 0 )
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"area",request.getParameter("area"),request.getParameter("areaOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"statusNum",request.getParameter("statusNum"),request.getParameter("statusNumOrig") );
      
+     dExt.addKey(proNo,request.getParameter("demographic_no") ,"given_consent",request.getParameter("given_consent"),request.getParameter("given_consentOrig") );
+    
      // customized key
      if(oscarVariables.getProperty("demographicExt") != null) {
 	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
