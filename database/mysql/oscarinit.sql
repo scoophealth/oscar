@@ -557,6 +557,7 @@ CREATE TABLE reportTemplates (
   templatesql text NOT NULL,
   templatexml text NOT NULL,
   active tinyint NOT NULL DEFAULT 1,
+  `type` varchar(32) default null,
   PRIMARY KEY (templateid)
 );
 
