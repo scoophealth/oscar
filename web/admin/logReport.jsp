@@ -180,12 +180,12 @@ function onSub() {
 	  params[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDateEX(eDate, 1));
 	  params[1]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(sDate));
 
-      sql = "select * from log where provider_no='" + providerNo + "' and dateTime <= ?";
+      sql = "select * from log force index (datetime) where provider_no='" + providerNo + "' and dateTime <= ?";
       sql += " and dateTime >= ? and content like '" + content + "' order by dateTime desc ";
 
       if("*".equals(providerNo)) {
 		  bAll = true;
-	      sql = "select * from log where dateTime <= ?";
+	      sql = "select * from log force index (datetime) where dateTime <= ?";
 	      sql += " and dateTime >= ? and content like '" + content + "' order by dateTime desc ";
       }
 //      System.out.println("sql:" + sql);
