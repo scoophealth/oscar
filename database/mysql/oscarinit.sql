@@ -6898,7 +6898,7 @@ CREATE TABLE `log` (
   `content` varchar(80) NOT NULL default '',
   `contentId` varchar(80) default NULL,
   `ip` varchar(30) default NULL,
-  PRIMARY KEY  (`dateTime`, `provider_no`),
+  index  (`dateTime`, `provider_no`),
   INDEX `action` (`action`),
   INDEX `content` (`content`),
   INDEX `contentId` (`contentId`)
