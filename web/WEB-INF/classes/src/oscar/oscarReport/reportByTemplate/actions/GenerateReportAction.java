@@ -25,11 +25,6 @@
 
 package oscar.oscarReport.reportByTemplate.actions;
 
-
-import java.io.StringWriter;
-import java.sql.ResultSet;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,13 +33,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import oscar.oscarDB.DBHandler;
-import oscar.oscarReport.data.RptResultStruct;
-import oscar.oscarReport.reportByTemplate.ReportManager;
-import oscar.oscarReport.reportByTemplate.ReportObject;
-import oscar.util.UtilMisc;
+import oscar.oscarReport.reportByTemplate.Reporter;
+import oscar.oscarReport.reportByTemplate.SQLReporter;
+import oscar.oscarReport.reportByTemplate.ReportFactory;
 
-import com.Ostermiller.util.CSVPrinter;
 /**
  * Created on December 21, 2006, 10:47 AM
  * @author apavel (Paul)
@@ -52,38 +44,16 @@ import com.Ostermiller.util.CSVPrinter;
 public class GenerateReportAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response) {
-        String templateId = request.getParameter("templateId");
-        ReportObject curReport = (new ReportManager()).getReportTemplateNoParam(templateId);
-        Map parameterMap = request.getParameterMap();
-        String sql = curReport.getPreparedSQL(parameterMap);
-        if (sql == "" || sql == null) {
-            request.setAttribute("errormsg", "Error: Cannot find all parameters for the query.  Check the template.");
-            request.setAttribute("templateid", templateId);
-            return mapping.findForward("fail");
+       
+        Reporter reporter = ReportFactory.getReporter(request.getParameter("type"));
+        
+        if( reporter.generateReport(request)) {
+            return mapping.findForward("success");
         }
-        ResultSet rs = null;
-        String rsHtml = "An SQL querry error has occured";
-        String csv = "";
-        try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            rs = db.GetSQL(sql);
-            db.CloseConn();
-            rsHtml = RptResultStruct.getStructure2(rs);  //makes html from the result set
-            StringWriter swr = new StringWriter();
-            CSVPrinter csvp = new CSVPrinter(swr);
-            csvp.writeln(UtilMisc.getArrayFromResultSet(rs));
-            csv = swr.toString();
-            //csv = csv.replace("\\", "\"");  //natural quotes in the data create '\' characters in CSV, xls works fine
-                                              //this line fixes it but messes up XLS generation.
-            //csv = UtilMisc.getCSV(rs);
-        } catch (Exception sqe) {
-            sqe.printStackTrace();
-        }
-        request.setAttribute("csv", csv);
-        request.setAttribute("sql", sql);
-        request.setAttribute("reportobject", curReport);
-        request.setAttribute("resultsethtml", rsHtml);
-        return mapping.findForward("success");
+                
+        return mapping.findForward("fail");
+        
+        
     }
     
 }
