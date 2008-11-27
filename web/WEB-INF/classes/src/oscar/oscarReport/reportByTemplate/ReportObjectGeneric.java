@@ -40,6 +40,7 @@ public class ReportObjectGeneric implements ReportObject {
     private String templateId = "";
     private String title = "";
     private String description = "";
+    private String type = "";
     private int active;
     private ArrayList parameters = new ArrayList(0);
     
@@ -58,10 +59,11 @@ public class ReportObjectGeneric implements ReportObject {
         this.setDescription(description);
     }
     
-    public ReportObjectGeneric(String templateId, String title, String description, ArrayList parameters) {
+    public ReportObjectGeneric(String templateId, String title, String description, String type, ArrayList parameters) {
         this.setTemplateId(templateId);
         this.setTitle(title);
         this.setDescription(description);
+        this.setType(type);
         this.setParameters(parameters);
     }
 
@@ -87,6 +89,14 @@ public class ReportObjectGeneric implements ReportObject {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    
+    public void setType(String type) {
+        this.type = type;
     }
 
     public ArrayList getParameters() {
