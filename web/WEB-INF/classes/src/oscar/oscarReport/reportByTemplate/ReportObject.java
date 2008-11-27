@@ -30,6 +30,7 @@ public interface ReportObject {
     public String getTemplateId();
     public String getTitle();
     public String getDescription();
+    public String getType();
     public ArrayList getParameters();
     public String getPreparedSQL(Map parameters);
     public int getActive();
