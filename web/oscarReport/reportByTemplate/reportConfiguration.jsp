@@ -97,6 +97,7 @@
                <div class="reportDescription"><%=curreport.getDescription()%></div>
                <html:form action="/oscarReport/reportByTemplate/GenerateReportAction" onsubmit="return checkform(this);">
                     <input type="hidden" name="templateId" value="<%=curreport.getTemplateId()%>">
+                    <input type="hidden" name="type" value="<%=curreport.getType()%>">
                     <div class="configDiv">
                        <table class="configTable">
                      <%for (int i=0; i<parameters.size(); i++) {
