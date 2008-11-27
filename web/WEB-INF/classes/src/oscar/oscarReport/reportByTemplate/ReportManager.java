@@ -41,6 +41,7 @@ import org.jdom.output.XMLOutputter;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilXML;
+
 /**
  * Created on December 27, 2006, 10:54 AM
  * @apavel (Paul)
@@ -99,6 +100,7 @@ public class ReportManager {
             if (rs.next()) {
                 String templatetitle = rs.getString("templatetitle");
                 String templatedescription = rs.getString("templatedescription");
+                String type = rs.getString("type") == null?"":rs.getString("type");
                 String paramXML = rs.getString("templatexml");
                 ArrayList params = new ArrayList();
                 if (!paramXML.equals("")) {
@@ -142,7 +144,7 @@ public class ReportManager {
                         params.add(curparam);
                     }
                 }
-                ReportObjectGeneric curreport = new ReportObjectGeneric(templateid, templatetitle, templatedescription, params);
+                ReportObjectGeneric curreport = new ReportObjectGeneric(templateid, templatetitle, templatedescription, type, params);
                 return curreport;
             } else {
                 return new ReportObjectGeneric(templateid, "Template Not Found");
@@ -309,9 +311,14 @@ CREATE TABLE reportTemplates (
 //reading description
                 String templateDescription = StringEscapeUtils.escapeSql(report.getAttributeValue("description"));
                 if (templateDescription == null) return "Error: Attribute 'description' missing in <report> tag";
+//reading type
+                String type = report.getChildTextTrim("type");
+                if( type == null ) {
+                    type = "";
+                }               
 //reading sql
                 String querysql = StringEscapeUtils.escapeSql(report.getChildText("query"));
-                if (querysql == null || querysql.length() == 0) return "Error: The sql query is missing in <report> tag";
+                if (type.equalsIgnoreCase(ReportFactory.SQL_TYPE) && (querysql == null || querysql.length() == 0)) return "Error: The sql query is missing in <report> tag";
 //reading active switch
                 String active = report.getAttributeValue("active");
                 int activeint;
@@ -320,6 +327,7 @@ CREATE TABLE reportTemplates (
                 } catch (Exception e) {
                     activeint = 1;
                 }
+                
 //processing XML for sql storage
                 XMLOutputter templateout = new XMLOutputter();
                 String templateXMLstr = templateout.outputString(report).trim();
@@ -328,11 +336,11 @@ CREATE TABLE reportTemplates (
                 String sql = "";
             
                 if (templateId == null) 
-                    sql = "INSERT INTO reportTemplates (templatetitle, templatedescription, templatesql, templatexml, active) " +
-                        "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + templateXMLstr + "', " + activeint + ")";
+                    sql = "INSERT INTO reportTemplates (templatetitle, templatedescription, templatesql, templatexml, active, type) " +
+                        "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + templateXMLstr + "', " + activeint + ", '" + type + "')";
                 else 
                     sql = "UPDATE reportTemplates SET templatetitle='" + templateTitle + "', templatedescription='" + templateDescription + "', " +
-                        "templatesql='" + querysql + "', templatexml='" + templateXMLstr + "', active=" + activeint + " WHERE templateid='" + templateId + "'";                        
+                        "templatesql='" + querysql + "', templatexml='" + templateXMLstr + "', active=" + activeint + ", type= '" + type + "' WHERE templateid='" + templateId + "'";                        
 
                 try {
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
