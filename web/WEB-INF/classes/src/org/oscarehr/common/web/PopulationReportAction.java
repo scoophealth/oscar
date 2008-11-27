@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -29,6 +30,16 @@ public class PopulationReportAction extends DispatchAction {
 	
 	private PopulationReportManager populationReportManager;
 	
+	private static long lastDataRetrievedTime=0;
+	private static Date currentDateTime = null;
+	private static ShelterPopulation shelterPopulation = null;
+	private static ShelterUsage shelterUsage = null;
+	private static Mortalities mortalities = null;
+	private static Map<String, ReportStatistic> majorMedicalConditions = null;
+	private static Map<String, ReportStatistic> majorMentalIllnesses = null;
+	private static Map<String, ReportStatistic> seriousMedicalConditions = null;
+	private static Map<String, Map<String, String>> categoryCodeDescriptions = null;
+	
 	public void setPopulationReportManager(PopulationReportManager populationReportManager) {
 	    this.populationReportManager = populationReportManager;
     }
@@ -39,15 +50,22 @@ public class PopulationReportAction extends DispatchAction {
 	}
 
 	public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// get attributes
-		Date currentDateTime = Calendar.getInstance().getTime();
-		ShelterPopulation shelterPopulation = populationReportManager.getShelterPopulation();
-		ShelterUsage shelterUsage = populationReportManager.getShelterUsage();
-		Mortalities mortalities = populationReportManager.getMortalities();
-		Map<String, ReportStatistic> majorMedicalConditions = populationReportManager.getMajorMedicalConditions();
-		Map<String, ReportStatistic> majorMentalIllnesses = populationReportManager.getMajorMentalIllnesses();
-		Map<String, ReportStatistic> seriousMedicalConditions = populationReportManager.getSeriousMedicalConditions();
-		Map<String, Map<String, String>> categoryCodeDescriptions = populationReportManager.getCategoryCodeDescriptions();
+
+		// simple caching mechanism (because this report is open to the public and we don't want the public smacking our server around)
+		if (System.currentTimeMillis()-lastDataRetrievedTime>DateUtils.MILLIS_PER_HOUR)
+		{
+			lastDataRetrievedTime=System.currentTimeMillis();
+			
+			// get attributes
+			currentDateTime = Calendar.getInstance().getTime();
+			shelterPopulation = populationReportManager.getShelterPopulation();
+			shelterUsage = populationReportManager.getShelterUsage();
+			mortalities = populationReportManager.getMortalities();
+			majorMedicalConditions = populationReportManager.getMajorMedicalConditions();
+			majorMentalIllnesses = populationReportManager.getMajorMentalIllnesses();
+			seriousMedicalConditions = populationReportManager.getSeriousMedicalConditions();
+			categoryCodeDescriptions = populationReportManager.getCategoryCodeDescriptions();
+		}		
 		 
 		// set attributes
 		request.setAttribute("date", DateTimeFormatUtils.getStringFromDate(currentDateTime, DATE_FORMAT));
