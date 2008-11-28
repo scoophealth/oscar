@@ -807,6 +807,41 @@ should colour be in drools file or some other way
         </java:consequence>
     </rule>
 
+<!-- DMSM -->
+    <rule name="DMSM 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("DMSM") &gt;= 10</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("DMSM") &lt; 12</java:condition>
+        <java:consequence>              
+              System.out.println("DMSM 1 getting called");
+              m.addRecommendation("DMSM","A value for Diabetes Education hasn't been recorded in "+m.getLastDateRecordedInMonths("DMSM")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="DMSM 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("DMSM") &gt;= 12</java:condition>        
+        <java:consequence>              
+              System.out.println("DMSM 2 getting called");
+              m.addWarning("DMSM","A value for Diabetes Self Management Goals hasn't been recorded in "+m.getLastDateRecordedInMonths("DMSM")+" months");
+        </java:consequence>
+    </rule>
+
+     <rule name="DMSM 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("DMSM") ==  -1</java:condition>
+        <java:consequence>              
+              System.out.println("DMSM 3 getting called");
+              m.addWarning("DMSM","A value for Diabetes Self Management Goals has not been recorded");
+        </java:consequence>
+    </rule>
+
 
 </rule-set>
 
