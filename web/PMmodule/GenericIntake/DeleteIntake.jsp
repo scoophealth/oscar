@@ -32,17 +32,25 @@
 
 void removeNode(Integer id, Integer parent, ArrayList nodes) {
     if (id!=null & parent!=null) {
-	IntakeNode pNode = findNode(parent, nodes);
-	List children = pNode.getChildren();
-	for (int i=0; i<children.size(); i++) {
-	    IntakeNode child = (IntakeNode) children.get(i);
-	    if (child.getId().equals(id)) {
-		children.remove(i);
-		pNode.setChildren(children);
-		i = children.size();
+		IntakeNode pNode = findNode(parent, nodes);
+		List children = pNode.getChildren();
+		boolean found=false;
+		for (int i=0; i<children.size(); i++) {
+		    IntakeNode child = (IntakeNode) children.get(i);	 
+		    if (child.getId().equals(id)) {
+			children.remove(i);
+			pNode.setChildren(children);
+			found=true;
+		    }
+		}
+		if(found) {
+	    	//bug fix - positions need to be readjusted
+	    	for (int i=0; i<children.size(); i++) {
+	    		IntakeNode child = (IntakeNode) children.get(i);
+	    		child.setPos(i);
+	    	}
 	    }
-	}
-    }
+    }    
 }
 
 void buildNodes(IntakeNode in, ArrayList aln) {

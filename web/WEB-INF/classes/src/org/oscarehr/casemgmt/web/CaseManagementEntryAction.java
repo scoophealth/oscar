@@ -648,6 +648,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         
         CheckBoxBean[] checkedlist = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
 
+	//bug fix - encounter type was not being updated.
+        String encounterType = request.getParameter("caseNote.encounter_type");
+	if(encounterType != null) {
+	        note.setEncounter_type(encounterType);
+	}
+
         String sign = (String) request.getParameter("sign");
         String includeIssue = (String) request.getParameter("includeIssue");
         if (sign == null || !sign.equals("on")) {
@@ -681,7 +687,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
         }
         catch (Throwable e) {
-            log.error(e);
+            //log.error(e);
             role = "0";
         }
         /*

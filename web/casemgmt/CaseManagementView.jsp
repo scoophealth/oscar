@@ -390,7 +390,7 @@ Progress Note Report View:
 			</tr>
 		</table>
 		<c:if
-			test="${sessionScope.caseManagementViewForm.note_view!='detailed'}">
+			test="${param.note_view!='detailed'}">
 			<table id="test" width="100%" border="0" cellpadding="0"
 				cellspacing="1" bgcolor="#C0C0C0">
 				<tr class="title">

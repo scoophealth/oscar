@@ -932,7 +932,7 @@ public class ProgramManagerAction extends BaseAction {
 			request.setAttribute("accesses", programManager.getProgramAccesses(programId));
 			request.setAttribute("queue", programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId)));
 
-			if (facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals()) {
+			if (facility != null && facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals()) {
 				request.setAttribute("remoteQueue", getRemoteQueue(facility.getId(), Integer.parseInt(programId)));
 			}
 

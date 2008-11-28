@@ -336,7 +336,9 @@ public class DBPreparedHandler {
             stmt = null;
         }
         else {
-            preparedStmt.close();
+		if(preparedStmt != null) {
+	            preparedStmt.close();
+		}
             preparedStmt = null;
         }
     }

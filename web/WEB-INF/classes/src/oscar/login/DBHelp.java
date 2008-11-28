@@ -89,7 +89,7 @@ public class DBHelp {
             _logger.info("updateDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } catch (SQLException e) {
             ret = false;
-            _logger.error("updateDBRecord(sql = " + sql + ", userId = " + userId + ")");
+            _logger.error("updateDBRecord(sql = " + sql + ", userId = " + userId + ")",e);
         } finally {
             db.CloseConn();
         }
