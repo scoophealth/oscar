@@ -1,0 +1,88 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * SQLReporter.java
+ *
+ * Created on November 24, 2008, 3:45 PM
+ *
+ *
+ *
+ */
+
+package oscar.oscarReport.reportByTemplate;
+
+import java.io.StringWriter;
+import java.sql.ResultSet;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarReport.data.RptResultStruct;
+import oscar.oscarReport.reportByTemplate.ReportManager;
+import oscar.oscarReport.reportByTemplate.ReportObject;
+import oscar.util.UtilMisc;
+
+import com.Ostermiller.util.CSVPrinter;
+
+
+/**
+ *
+ * @author rjonasz
+ */
+public class SQLReporter implements Reporter {
+    
+    /** Creates a new instance of SQLReporter */
+    public SQLReporter() {
+    }
+    
+    public boolean generateReport( HttpServletRequest request) {
+        String templateId = request.getParameter("templateId");
+        ReportObject curReport = (new ReportManager()).getReportTemplateNoParam(templateId);
+        Map parameterMap = request.getParameterMap();
+        String sql = curReport.getPreparedSQL(parameterMap);
+        if (sql == "" || sql == null) {
+            request.setAttribute("errormsg", "Error: Cannot find all parameters for the query.  Check the template.");
+            request.setAttribute("templateid", templateId);
+            return false;
+        }
+        ResultSet rs = null;
+        String rsHtml = "An SQL querry error has occured";
+        String csv = "";
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            rs = db.GetSQL(sql);
+            db.CloseConn();
+            rsHtml = RptResultStruct.getStructure2(rs);  //makes html from the result set
+            StringWriter swr = new StringWriter();
+            CSVPrinter csvp = new CSVPrinter(swr);
+            csvp.writeln(UtilMisc.getArrayFromResultSet(rs));
+            csv = swr.toString();
+            //csv = csv.replace("\\", "\"");  //natural quotes in the data create '\' characters in CSV, xls works fine
+                                              //this line fixes it but messes up XLS generation.
+            //csv = UtilMisc.getCSV(rs);
+        } catch (Exception sqe) {
+            sqe.printStackTrace();
+        }
+        request.setAttribute("csv", csv);
+        request.setAttribute("sql", sql);
+        request.setAttribute("reportobject", curReport);
+        request.setAttribute("resultsethtml", rsHtml);
+        
+        return true;
+    }
+}
