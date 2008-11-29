@@ -56,6 +56,24 @@ public class ProviderBillCenter {
         
         return retval;
     }
+
+    public boolean hasProvider(String provider_no){
+        boolean retval = false;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "select provider_no from providerbillcenter where provider_no = '"+provider_no+"' ";
+            ResultSet rs = db.GetSQL(sql);
+            if(rs.next())
+                retval = true;
+            rs.close();
+            db.CloseConn();
+        } catch(SQLException e) {
+            System.out.println("There has been an error while checking if a provider had a bill center");
+            System.out.println(e.getMessage());
+        }
+
+        return retval;
+    }
     
     public void addBillCenter(String provider_no, String billCenterCode){
         
@@ -89,16 +107,19 @@ public class ProviderBillCenter {
     }
     
     public void updateBillCenter(String provider_no, String billCenterCode){
-        
-        try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "update providerbillcenter set billcenter_code = '"+billCenterCode+"' where provider_no = '"+provider_no+"' ";
-            db.RunSQL(sql);
-            db.CloseConn();
-        } catch(SQLException e){
-            System.out.println("There has been an error while updating a provider's bill center");
-            System.out.println(e.getMessage());
-        }
+        if (!hasProvider(provider_no)) {
+            addBillCenter(provider_no, billCenterCode);
+        } else {
+            try {
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                String sql = "update providerbillcenter set billcenter_code = '" + billCenterCode + "' where provider_no = '" + provider_no + "' ";
+                db.RunSQL(sql);
+                db.CloseConn();
+            } catch (SQLException e) {
+                System.out.println("There has been an error while updating a provider's bill center");
+                System.out.println(e.getMessage());
+            }
+        }    
     }
     
     public Properties getAllBillCenter(){
