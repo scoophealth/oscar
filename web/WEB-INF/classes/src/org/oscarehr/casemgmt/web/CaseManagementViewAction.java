@@ -282,7 +282,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			dxMap.put(dx.getCode(), dx);
 		}
 		request.setAttribute("dxMap",dxMap);
+
+		Integer currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+				
+		// UCF
+		log.debug("Fetch Survey List");
+		request.setAttribute("survey_list", surveyMgr.getAllForms(currentFacilityId));
+		current = System.currentTimeMillis();
+		log.debug("Fetch Survey List " + String.valueOf(current - start));
 		
+
 		/* ISSUES */
 		current = System.currentTimeMillis();
 		log.debug("Prep work " + String.valueOf(current - start));
