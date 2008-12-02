@@ -33,7 +33,15 @@ public class AnswerScalarNoteHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
-		indent(preBuilder).append(startLabel(true)).append(getTextInput(getId(), COLS, ROWS, getAnswerValue())).append(endLabel(false)).append(EOL);
+		indent(preBuilder)
+		.append("<tr><td>")
+		.append(startLabel(true))
+		.append(endLabel(false))
+		.append("</td>")
+		.append(getTextInput(getId(), COLS, ROWS, getAnswerValue()))
+		.append("</tr>")
+		.append(EOL);
+		
 		String mquest = "mquests";
 		if (getNoOfSibling()>1) mquest = "mquestm";
 		String pId = "_" + getParent().getId();
@@ -45,7 +53,7 @@ public class AnswerScalarNoteHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	}
 
 	private String getTextInput(String id, Integer cols, Integer rows, String value) {
-		return String.format("<textarea name=\"intake.answerMapped(%s).value\" cols=\"%s\" rows=\"%s\">%s</textarea>", new Object[] { id, cols, rows, value });
+		return String.format("<td><textarea name=\"intake.answerMapped(%s).value\" cols=\"%s\" rows=\"%s\">%s</textarea></td>", new Object[] { id, cols, rows, value });
 	}
 
 }

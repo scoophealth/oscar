@@ -32,7 +32,15 @@ public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
-		indent(preBuilder).append(startLabel(true)).append(getTextInput(getId(), getAnswerValue(), isParentQuestion())).append(endLabel(false)).append(EOL);
+		indent(preBuilder).
+			append("<tr><td>").
+			append(startLabel(true)).
+			append(endLabel(false)).
+			append("</td>").
+			append(getTextInput(getId(), getAnswerValue(), isParentQuestion())).
+			append("</tr>").
+			append(EOL);
+		
 		String mquest = "mquests";
 		if (getNoOfSibling()>1) mquest = "mquestm";
 		String pId = "_" + getParent().getId();
@@ -45,9 +53,9 @@ public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 
 	private String getTextInput(String id, String value, boolean grabHorizontal) {
 		if (grabHorizontal) {
-			return String.format("<input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input>", new Object[] { CLASS_INTAKE_INPUT, id, value });
+			return String.format("<td><input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input></td>", new Object[] { CLASS_INTAKE_INPUT, id, value });
 		} else {
-			return String.format("<input type=\"text\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input>", new Object[] { id, value });
+			return String.format("<td><input type=\"text\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input></td>", new Object[] { id, value });
 		}
 		
 	}
