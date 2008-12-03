@@ -71,6 +71,11 @@ public class BedProgramDischargeTask extends TimerTask {
 
             Program[] bedPrograms = programManager.getBedPrograms();
 
+            if(bedPrograms == null) {
+            	log.error("getBedPrograms returned null");
+            	return;
+            }
+            
             for (Program bedProgram : bedPrograms) {
                 Date dischargeTime = DateTimeFormatUtils.getTimeFromString(DISCHARGE_TIME);
                 Date previousExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime() - PERIOD);
@@ -80,10 +85,15 @@ public class BedProgramDischargeTask extends TimerTask {
                 if (previousExecutionTime.before(dischargeTime) && (dischargeTime.equals(currentExecutionTime) || dischargeTime.before(currentExecutionTime))) {
                     Bed[] reservedBeds = bedManager.getBedsByProgram(bedProgram.getId(), true);
 
+                    if(reservedBeds == null) {
+                    	log.error("getBedsByProgram returned null for bed program with id: " + bedProgram.getId());
+                    	continue;
+                    }
+                    
                     for (Bed reservedBed : reservedBeds) {
                         BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(reservedBed.getId());
-
-                        if (bedDemographic.isExpired()) {
+                        
+                        if (bedDemographic != null && bedDemographic.getId() != null && bedDemographic.isExpired()) {
                             try {
                                 admissionManager.processDischargeToCommunity(Program.DEFAULT_COMMUNITY_PROGRAM_ID, bedDemographic.getId().getDemographicNo(), Provider.SYSTEM_PROVIDER_NO, "bed reservation ended - automatically discharged", "0");
                             }
