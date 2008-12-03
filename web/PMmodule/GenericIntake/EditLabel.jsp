@@ -11,11 +11,12 @@
     buildNodes(itn, nodes);
     
     String lblEdit = request.getParameter("lbledit");
-    String id = request.getParameter("id");
+    Integer id = Integer.parseInt(request.getParameter("id"));
+    Integer nid = Integer.parseInt(request.getParameter("nid"));
     String mandatory = request.getParameter("mandatory");
     String cutPast = request.getParameter("cutpast");
     
-    IntakeNode theNode = findNodeByLabel(Integer.parseInt(id), nodes);
+    IntakeNode theNode = findNode(nid, nodes);
     boolean hasMandatory = (theNode.isQuestion() || theNode.isAnswerCompound());
     boolean hasCutPast = (!theNode.isIntake() && !theNode.isPage() && !theNode.isSection() && !theNode.isAnswerCompound() && theNode.getEq_to_id()!=null);
     boolean isDropbox = (theNode.isAnswerChoice() && !theNode.isAnswerBoolean());
@@ -25,10 +26,10 @@
     
     if (lblEdit != null){
         IntakeNodeLabel iLabel = new IntakeNodeLabel();
-        iLabel.setId(Integer.parseInt(id));
+        iLabel.setId(id);
         iLabel.setLabel(lblEdit);
         
-	writeLabel(iLabel, nodes);
+	writeLabel(nid, iLabel, nodes);
 	if (hasMandatory) {
 	    writeMandatory(mandatory, theNode);
 	}
@@ -66,6 +67,7 @@
     <form action="EditLabel.jsp" method="post">
         <input type="text" name="lbledit" value="<%=val%>"/>
         <input type="hidden" name="id" value="<%=id%>"/>
+	<input type="hidden" name="nid" value="<%=nid%>"/>
         
         <input type="submit" value="update"/>
      <%	if (hasMandatory) { %>
@@ -91,27 +93,20 @@ void buildNodes(IntakeNode in, ArrayList aln) {
     }
 }
 
-IntakeNode findNodeByLabel(Integer labelId, ArrayList nodes) {
+IntakeNode findNode(Integer nodeId, ArrayList nodes) {
     IntakeNode iNode = null;
     for (int i=0; i<nodes.size(); i++) {
 	IntakeNode in = (IntakeNode) nodes.get(i);
-	if (in.getLabel()!=null) {
-	    if (in.getLabel().getId().equals(labelId)) {
-		iNode = in;
-		i = nodes.size();
-	    }
+	if (in.getId().equals(nodeId)) {
+	    iNode = in;
+	    i = nodes.size();
 	}
     }
     return iNode;
 }
 
-IntakeNodeLabel findLabel(Integer labelId, ArrayList nodes) {
-    IntakeNode iNode = findNodeByLabel(labelId, nodes);
-    return iNode.getLabel();
-}
-
-void writeLabel(IntakeNodeLabel iLabel, ArrayList nodes) {
-    IntakeNode iNode = findNodeByLabel(iLabel.getId(), nodes);
+void writeLabel(Integer nodeId, IntakeNodeLabel iLabel, ArrayList nodes) {
+    IntakeNode iNode = findNode(nodeId, nodes);
     iNode.setLabel(iLabel);
 }
 
