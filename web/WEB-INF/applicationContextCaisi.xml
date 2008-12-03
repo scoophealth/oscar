@@ -195,15 +195,6 @@
         </property>
     </bean>
     <!-- ========================= SCHEDULED JOBS ========================= -->
-    <bean id="scheduledCaisiIntegratorUpdateTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
-          lazy-init="default"  dependency-check="default">
-        <property name="timerTask">
-            <bean class="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask" lazy-init="default" dependency-check="default" autowire="byName" />
-        </property>
-        <property name="delay" value="30000"/>
-        <property name="period" value="${INTEGRATOR_UPDATE_PERIOD}"/>
-    </bean>
-    
     <bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
           lazy-init="default"  dependency-check="default">
         <property name="timerTask">
@@ -234,7 +225,6 @@
            dependency-check="default">
         <property name="scheduledTimerTasks">
             <list>
-                <ref bean="scheduledCaisiIntegratorUpdateTask"/>
                 <ref bean="scheduledBedProgramDischargeTask"/>
                 <ref bean="scheduledErProgramDischargeTask"/>
             </list>

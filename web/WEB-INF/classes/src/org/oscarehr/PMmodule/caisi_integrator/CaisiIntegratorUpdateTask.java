@@ -31,6 +31,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -75,61 +76,74 @@ import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.SpringUtils;
+
+import oscar.OscarProperties;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private static final Log logger = LogFactory.getLog(CaisiIntegratorUpdateTask.class);
 
-	private CaisiIntegratorManager caisiIntegratorManager;
-	private FacilityDao facilityDao;
-	private DemographicDao demographicDao;
-	private CaseManagementIssueDAO caseManagementIssueDAO;
-	private ClientImageDAO clientImageDAO;
-	private IntegratorConsentDao integratorConsentDao;
-	private ProgramDao programDao;
-	private ProviderDao providerDao;
-	private PreventionDao preventionDao;
-	private CaseManagementNoteDAO caseManagementNoteDAO;
+	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY="INTEGRATOR_UPDATE_PERIOD";
+	
+	private static Timer timer=new Timer("CaisiIntegratorUpdateTask Timer", true);
+	private static TimerTask timerTask=null;
+	
+	private CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
+	private FacilityDao facilityDao=(FacilityDao)SpringUtils.getBean("facilityDao");
+	private DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
+	private CaseManagementIssueDAO caseManagementIssueDAO=(CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
+	private ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
+	private IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
+	private ProgramDao programDao=(ProgramDao)SpringUtils.getBean("programDao");
+	private ProviderDao providerDao=(ProviderDao)SpringUtils.getBean("providerDao");
+	private PreventionDao preventionDao=(PreventionDao)SpringUtils.getBean("preventionDao");
+	private CaseManagementNoteDAO caseManagementNoteDAO=(CaseManagementNoteDAO)SpringUtils.getBean("CaseManagementNoteDAO");
 
-	public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
-		this.caisiIntegratorManager = mgr;
+	public static void startTask()
+	{
+		synchronized (CaisiIntegratorUpdateTask.class)
+		{
+			if (timerTask==null)
+			{	
+				int period=0;
+				String periodStr=null;
+				try
+				{
+					periodStr=(String)OscarProperties.getInstance().get(INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY);
+					period=Integer.parseInt(periodStr);
+				}
+				catch (Exception e) 
+				{
+					logger.error("CaisiIntegratorUpdateTask not scheduled, period is missing or invalid properties file : "+INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY+'='+periodStr, e);
+					return;
+				}
+				
+				logger.info("Scheduling CaisiIntegratorUpdateTask for period : "+period);
+				timerTask=new CaisiIntegratorUpdateTask();
+				timer.schedule(timerTask, 10000, period);
+			}
+			else
+			{
+				logger.error("Start was called twice on this timer task object.", new Exception());
+			}
+		}
 	}
-
-	public void setFacilityDao(FacilityDao facilityDao) {
-		this.facilityDao = facilityDao;
+	
+	public static void stopTask()
+	{
+		synchronized (CaisiIntegratorUpdateTask.class)
+		{
+			if (timerTask!=null)
+			{
+				timerTask.cancel();
+				timerTask=null;
+				
+				logger.info("CaisiIntegratorUpdateTask has been unscheduled.");
+			}
+		}
 	}
-
-	public void setDemographicDao(DemographicDao demographicDao) {
-		this.demographicDao = demographicDao;
-	}
-
-	public void setCaseManagementIssueDAO(CaseManagementIssueDAO caseManagementIssueDAO) {
-		this.caseManagementIssueDAO = caseManagementIssueDAO;
-	}
-
-	public void setClientImageDAO(ClientImageDAO clientImageDAO) {
-		this.clientImageDAO = clientImageDAO;
-	}
-
-	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
-		this.integratorConsentDao = integratorConsentDao;
-	}
-
-	public void setProgramDao(ProgramDao programDao) {
-		this.programDao = programDao;
-	}
-
-	public void setProviderDao(ProviderDao providerDao) {
-		this.providerDao = providerDao;
-	}
-
-	public void setPreventionDao(PreventionDao preventionDao) {
-		this.preventionDao = preventionDao;
-	}
-
-	public void setCaseManagementNoteDAO(CaseManagementNoteDAO caseManagementNoteDAO) {
-		this.caseManagementNoteDAO = caseManagementNoteDAO;
-	}
+	
 
 	public void run() {
 		logger.info("CaisiIntegratorUpdateTask starting");

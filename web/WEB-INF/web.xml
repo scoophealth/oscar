@@ -123,6 +123,9 @@
     <listener>
         <listener-class>org.oscarehr.common.web.OscarSpringContextLoaderListener</listener-class>
     </listener>
+    <listener>
+        <listener-class>org.oscarehr.util.ContextStartupListener</listener-class>
+    </listener>
     
 	<servlet>
 		<servlet-name>action</servlet-name>

@@ -47,7 +47,7 @@ public class CxfUtils {
 		tslClientParameters.setDisableCNCheck(true);
 		TrustAllManager[] tam = { new TrustAllManager() };
 		tslClientParameters.setTrustManagers(tam);
-		tslClientParameters.setSecureSocketProtocol("SSL");
+		tslClientParameters.setSecureSocketProtocol("SSLv3");
 		httpConduit.setTlsClientParameters(tslClientParameters);
 	}
 }
