@@ -164,7 +164,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	
 	
 	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
-		logger.debug("Pushing data for facility : " + facility.getId());
+		logger.info("Pushing data for facility : " + facility.getId()+" : "+facility.getName());
 
 		// check all parameters are present
 		String integratorBaseUrl = facility.getIntegratorUrl();
