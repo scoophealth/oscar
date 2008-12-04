@@ -21,7 +21,7 @@
 	{ %>
 		<p><b>no client in this program.</b></p>
 		<%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
-		<b>You are in Case Management View! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a>
+		<b>You are in Case Management View! </b> <!-- &nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a> -->
 		<%} else {%>
 		<b>You are in the archive view ! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to Case Management View</a>
 		<%} %>
@@ -32,7 +32,7 @@
 <table border="1" cellpadding="0" bgcolor="<%=userAvail?"#486ebd":"silver"%>" cellspacing="0" width="100%">
 <tr><td>
 <%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
-<b>You are in Case Management View! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a>
+<b>You are in Case Management View! </b> <!-- &nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a> -->
 <%} else {%>
 <b>You are in Archive View ! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to Case Management View</a>
 <%} %>
