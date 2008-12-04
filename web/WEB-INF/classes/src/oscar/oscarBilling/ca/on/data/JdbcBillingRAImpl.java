@@ -544,6 +544,7 @@ public class JdbcBillingRAImpl {
 				String demo_name = "";
 				String localServiceDate = "";
 				String demo_hin = rsdemo.getString("hin") != null ? rsdemo.getString("hin") : "";
+				demo_hin = demo_hin.trim();
 				sql = "select b.provider_no, b.demographic_name, b.hin, b.billing_date, b.billing_time, b.visittype,d.provider_no as fdoc "
 						+ "from billing_on_cheader1 b, demographic d where b.id= " + account+ " and b.demographic_no = d.demographic_no";
 
