@@ -338,7 +338,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		if (demographic.getDateOfBirth() != null) cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));
 		cachedDemographic.setBirthDate(cal);
 
-		cachedDemographic.setFirstName(demographic.getFirstName());
+		cachedDemographic.setHinVersion(demographic.getVer());
 		cachedDemographic.setGender(demographic.getSex());
 
 		// send the request
