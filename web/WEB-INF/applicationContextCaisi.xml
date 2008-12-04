@@ -226,7 +226,7 @@
         <property name="scheduledTimerTasks">
             <list>
                 <ref bean="scheduledBedProgramDischargeTask"/>
-                <ref bean="scheduledErProgramDischargeTask"/>
+<!--            <ref bean="scheduledErProgramDischargeTask"/> -->
             </list>
         </property>
     </bean>
