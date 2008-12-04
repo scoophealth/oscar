@@ -33,6 +33,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ClientDao;
@@ -40,10 +42,8 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.RoleManager;
@@ -74,6 +74,8 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.dx.model.DxResearch;
@@ -107,6 +109,8 @@ public class CaseManagementManager {
     protected DxResearchDAO dxResearchDAO;
    
     private boolean enabled;
+    
+    Log logger = LogFactory.getLog(CaseManagementManager.class);
     
     /*
      *check to see if issue has been saved for this demo before
@@ -468,12 +472,16 @@ public class CaseManagementManager {
     }
     
     /**
-     *substitue function for updateCurrentIssueToCPP
+     *substitute function for updateCurrentIssueToCPP
      *We don't want to clobber existing text in ongoing concerns
      *all we want to do is remove the issue description
      **/
     public void removeIssueFromCPP(String demoNo, CaseManagementIssue issue) {
         CaseManagementCPP cpp = caseManagementCPPDAO.getCPP(demoNo);
+        if(cpp == null) {
+        	logger.error("Cannot remove issue: No CPP found for demographic: " + demoNo);
+        	return;
+        }
         
         String ongoing = cpp.getOngoingConcerns();
         String newOngoing;
@@ -500,7 +508,10 @@ public class CaseManagementManager {
      **/
     public void changeIssueInCPP(String demoNo, CaseManagementIssue origIssue, CaseManagementIssue newIssue) {
         CaseManagementCPP cpp = caseManagementCPPDAO.getCPP(demoNo);
-        
+        if(cpp == null) {
+        	logger.error("Cannot change issue: No CPP found for demographic: " + demoNo);
+        	return;
+        }
         String ongoing = cpp.getOngoingConcerns();
         String newOngoing;
         String description;       
