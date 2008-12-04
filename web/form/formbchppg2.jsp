@@ -1,6 +1,6 @@
 
 <%@ page language="java"%>
-<%@ page import="java.util.*, oscar.util.UtilDateUtilities, oscar.form.*, oscar.form.data.*, oscar.oscarPrevention.PreventionData" %>
+<%@ page import="java.util.*, oscar.util.UtilDateUtilities, oscar.form.*, oscar.form.data.*, oscar.oscarPrevention.PreventionData,oscar.oscarRx.data.RxPrescriptionData" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -36,7 +36,7 @@ if (props == null || (props.getProperty("pg2_medName1", "").equals("") && props.
     
     if (medications.length > 13){
         for (int i=14; i<medications.length && i<28; i++){
-            tempName = medications[i].getBrandName();
+            String tempName = medications[i].getBrandName();
 
             if (tempName == null || tempName.equals("") || tempName.equals("null"))
                 tempName = medications[i].getCustomName();
