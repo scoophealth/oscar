@@ -159,7 +159,7 @@ if (!Array.prototype.indexOf)
 			
 			<display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="remotePrograms" pagesize="200" requestURI="/PMmodule/ClientManager.do">
 				<display:column sortable="true" title="Name">
-					<a href="#javascript:void(0);" onclick="selectRemoteProgram('<c:out value="${program.facilityProgramPrimaryKey.facilityId}" />','<c:out value="${program.facilityProgramPrimaryKey.facilityProgramId}" />');"><c:out value="${program.name}" /></a>
+					<a href="#javascript:void(0);" onclick="selectRemoteProgram('<c:out value="${program.facilityIdIntegerCompositePk.integratorFacilityId}" />','<c:out value="${program.facilityIdIntegerCompositePk.caisiItemId}" />');"><c:out value="${program.name}" /></a>
 				</display:column>
 				<display:column property="type" sortable="true" title="Type"></display:column>
 				<display:column property="description" sortable="false" title="Description"></display:column>
