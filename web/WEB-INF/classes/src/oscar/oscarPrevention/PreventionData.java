@@ -547,13 +547,17 @@ public class PreventionData {
 						addToHashIfNotNull(h, "route", (String) ext.get("route"));
 						summary += "Route: " + ext.get("route") + "\n";
 					}
+					if (ext.containsKey("dose") && !ext.get("dose").equals("")) {
+						addToHashIfNotNull(h, "dose", (String) ext.get("dose"));
+						summary += "Dose: " + ext.get("dose") + "\n";
+					}
 					if (ext.containsKey("lot") && !ext.get("lot").equals("")) {
 						addToHashIfNotNull(h, "lot", (String) ext.get("lot"));
 						summary += "Lot: " + ext.get("lot") + "\n";
 					}
 					if (ext.containsKey("manufacture") && !ext.get("manufacture").equals("")) {
 						addToHashIfNotNull(h, "manufacture", (String) ext.get("manufacture"));
-						summary += "Manufacturer: " + ext.get("manufacture");
+						summary += "Manufacturer: " + ext.get("manufacture") + "\n";
 					}
 					if (ext.containsKey("comments") && !ext.get("comments").equals("")) {
 						addToHashIfNotNull(h, "comments", (String) ext.get("comments"));

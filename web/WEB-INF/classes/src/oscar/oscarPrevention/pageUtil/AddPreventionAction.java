@@ -96,7 +96,8 @@ public class AddPreventionAction  extends Action {
                   
          addHashtoArray(extraData,request.getParameter("location"),"location");
          addHashtoArray(extraData,request.getParameter("lot"),"lot");                 
-         addHashtoArray(extraData,request.getParameter("route"),"route");                 
+         addHashtoArray(extraData,request.getParameter("route"),"route");
+	 addHashtoArray(extraData,request.getParameter("dose"),"dose");
          addHashtoArray(extraData,request.getParameter("comments"),"comments");                 
          addHashtoArray(extraData,request.getParameter("result"),"result");                 
          addHashtoArray(extraData,request.getParameter("reason"),"reason");           
