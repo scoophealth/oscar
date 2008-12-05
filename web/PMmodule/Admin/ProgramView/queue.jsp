@@ -240,11 +240,11 @@
 		<display:setProperty name="paging.banner.placement" value="bottom" />
 		<display:setProperty name="basic.msg.empty_list" value="Queue is empty." />
 		<display:column sortable="false" title="">
-    	    <input type="button" value="Admit" onclick="admitFromRemote('<c:out value="${queue_entry.remoteReferral.remoteReferralId}"/>')" />
+    	    <input type="button" value="Admit" onclick="admitFromRemote('<c:out value="${queue_entry.referral.referralId}"/>')" />
 		</display:column>
 		<display:column property="clientName" sortable="true" title="Client Name" />
-		<display:column property="remoteReferral.referralDate" sortable="true" title="Referral Date" />
+		<display:column property="referral.referralDate" sortable="true" title="Referral Date" />
 		<display:column property="providerName" sortable="true" title="Referring Provider" />
-		<display:column property="remoteReferral.reasonForReferral" sortable="true" title="Notes" />
+		<display:column property="referral.reasonForReferral" sortable="true" title="Notes" />
 	</display:table>
 </c:if>
