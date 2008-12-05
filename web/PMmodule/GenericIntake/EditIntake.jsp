@@ -179,7 +179,7 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
         out.write(in.getLabelStr());
 //out.write("id:"+in.getId() + ":"+in.getLabelStr()+ " : "+in.getNodeTemplate().getId()+" x:"+in.getIndex()+" "+in.getType()+" "+pId+" ");
         out.write(" <a href=\"javascript: void(0);\" onclick=\"add('"+in.getId()+"','1','"+pId+"','"+in.getIndex()+"','"+si+"');\">+</a>");
-        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"','"+in.getId()+");\">[edit]</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"','"+in.getId()+"');\">[edit]</a>");
         if(hasChildren){
             out.write(" <a href=\"javascript: void(0);\" onclick=\"reorder('"+in.getId()+"');\">[reorder children]</a>");
         }
