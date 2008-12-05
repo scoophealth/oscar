@@ -67,24 +67,31 @@
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
 <%
-Date rxDate;
+Date rxDate = oscar.oscarRx.util.RxUtil.Today();
 String rePrint = request.getParameter("rePrint");
 oscar.oscarRx.pageUtil.RxSessionBean bean;
 oscar.oscarRx.data.RxProviderData.Provider provider;
 String signingProvider;
 if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {   
     bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");    
-    rxDate = bean.getStashItem(0).getRxDate();
     signingProvider = bean.getStashItem(0).getProviderNo();
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(signingProvider);
     session.setAttribute("tmpBeanRX", null);
 }
 else {
-    rxDate = oscar.oscarRx.util.RxUtil.Today();
-    rePrint = "";
-    bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+    bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");        
+    rePrint = "";    
     signingProvider = bean.getProviderNo();
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
+}
+
+//set Date to latest in stash
+Date tmp;
+for( int idx = 0; idx < bean.getStashSize(); ++idx ) {
+    tmp = bean.getStashItem(idx).getRxDate();
+    if( tmp.after(rxDate) ) {
+        rxDate = tmp;
+    }
 }
 
 oscar.oscarRx.data.RxPatientData.Patient patient = new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
@@ -248,10 +255,10 @@ String pracNo = provider.getPractitionerNo();
                 <tr valign=bottom style="font-size:6px;">
                     <td height=25px colspan="2">
                         <span style="float:left;">Reprint; Originally Printed:&nbsp;<%=rx.getPrintDate()%></span>                                        
-                        <span style="float:right;">Times Printed:&nbsp;<%=String.valueOf(rx.getNumPrints()+1)%></span>
+                        <span style="float:right;">Times Printed:&nbsp;<%=String.valueOf(rx.getNumPrints())%></span>
                     </td>
                     <input type="hidden" name="origPrintDate" value="<%=rx.getPrintDate()%>">
-                    <input type="hidden" name="numPrints" value="<%=String.valueOf(rx.getNumPrints()+1)%>">
+                    <input type="hidden" name="numPrints" value="<%=String.valueOf(rx.getNumPrints())%>">
                 </tr>
                     
                 <%
