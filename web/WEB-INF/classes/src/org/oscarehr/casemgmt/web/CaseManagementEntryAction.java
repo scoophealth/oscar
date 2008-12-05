@@ -802,6 +802,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             cpp.setUpdate_date(now);
             caseManagementMgr.saveCPP(cpp, providerNo);
         }
+        
+        //update password
+        note.setPassword(cform.getCaseNote().getPassword());
 
         if (note.getPassword() != null && note.getPassword().length() > 0) {
             note.setLocked(true);
@@ -839,9 +842,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         note.setUpdate_date(now);
         if (note.getCreate_date() == null) note.setCreate_date(now);
         
-        //update encounter type
-        note.setEncounter_type(cform.getCaseNote().getEncounter_type());
-
         /* save note including add signature */
         String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
         /* remember the str written into echart */
