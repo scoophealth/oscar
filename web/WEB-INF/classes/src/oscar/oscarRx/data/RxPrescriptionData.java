@@ -285,7 +285,7 @@ public class RxPrescriptionData {
                 
                 datesRePrinted = db.getString(rs,"dates_reprinted");                
                 if( datesRePrinted != null && datesRePrinted.length() > 0 ) {
-                    p.setNumPrints(datesRePrinted.split(",").length);
+                    p.setNumPrints(datesRePrinted.split(",").length + 1);
                 }
                 else {
                     p.setNumPrints(1);
@@ -353,7 +353,7 @@ public class RxPrescriptionData {
                 
                 datesRePrinted = db.getString(rs,"dates_reprinted");
                 if( datesRePrinted != null  && datesRePrinted.length() > 0 )
-                    p.setNumPrints(datesRePrinted.split(",").length);
+                    p.setNumPrints(datesRePrinted.split(",").length + 1);
                 else
                     p.setNumPrints(1);
 
