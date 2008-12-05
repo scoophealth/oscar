@@ -113,7 +113,7 @@ public final class RxChooseDrugAction extends Action {
                 rx.setTakeMin(1);
                 rx.setTakeMax(1);
                 rx.setFrequencyCode("OID");
-                rx.setDuration("1");
+                rx.setDuration("30");
                 rx.setDurationUnit("D");
 
                 bean.setStashIndex(bean.addStashItem(rx));
