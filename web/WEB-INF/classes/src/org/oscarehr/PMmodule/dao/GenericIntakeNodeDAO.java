@@ -209,4 +209,7 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
         }
     }
 
+    public void deleteIntakeNode(IntakeNode intakeNode){
+    	getHibernateTemplate().delete(intakeNode);    		
+    }
 }

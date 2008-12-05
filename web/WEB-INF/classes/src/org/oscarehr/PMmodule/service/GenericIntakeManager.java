@@ -570,6 +570,10 @@ public class GenericIntakeManager {
         public void saveIntakeNode(IntakeNode intakeNode){
             genericIntakeNodeDAO.saveIntakeNode(intakeNode);
         }
+        
+        public void deleteIntakeForm(IntakeNode intakeNode){
+        	genericIntakeNodeDAO.deleteIntakeNode(intakeNode);
+        }
 	
 	public void updateIntakeNode(IntakeNode intakeNode) {
 	    genericIntakeNodeDAO.updateIntakeNode(intakeNode);

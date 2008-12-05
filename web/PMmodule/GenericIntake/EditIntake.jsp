@@ -34,20 +34,38 @@
                popup('300','400',eURL,'rodrnode');
             }
             
-            function saveform(published){
+            function saveform(published,published_form){
                var eURL = "SaveForm.jsp";
                if (published) {
                   eURL += "?published=1";
                }
+               if(published_form) {
+				  eURL += "?published_form=1";
+               }
                popup('200','300',eURL,'sveform');
             }
+
+            function exportform() {
+            	var eURL = "ExportForm.jsp";
+            	popup('200','300',eURL,'exportform');
+            }
+
+            function importform() {
+            	var eURL = "ImportForm.jsp";
+            	popup('300','400',eURL,'importform');
+            }
 	    
-	    function resetform(){
+	    	function resetform(){
                var eURL = "ResetForm.jsp";
                popup('200','300',eURL,'rstform');
             }
 
-        </script>
+		    function deleteform() {
+				var eURL = "DeleteForm.jsp";	
+				popup('200','300',eURL,'delform');	
+	    	}
+	    
+	    </script>
         <style type="text/css">
             @import "<html:rewrite page="/css/genericIntake.css"/>";
         </style>
@@ -132,13 +150,23 @@
         goRunner(iNode,out);
         session.setAttribute("intakeNode", iNode);
 	
+     if(iNode.getPublish_date() == null) {
+    	 //this intake has never been published..safe to delete
+    	 out.write(" <input type=\"button\" value=\"Delete Form\" onclick=\"deleteform();\" />");
+     }
+        
 	out.write("<p>&nbsp;</p>");
-	out.write(" <input type=\"button\" value=\"Save Form\" onclick=\"saveform(publish.checked);\" />");
-        out.write(" <input type=\"checkbox\" name=\"publish\">Publish this as the Registration Intake</input>");
-        out.write("<br>");
+    out.write(" <input type=\"checkbox\" name=\"publish\" onClick=\"if(this.form.publish.checked == true) this.form.publish_form.checked = false\">Publish this as the Registration Intake</input><br/>");
+    out.write(" <input type=\"checkbox\" name=\"publish_form\" onClick=\"if(this.form.publish_form.checked == true) this.form.publish.checked = false\">Publish this as a Form</input><br/>");
+	out.write(" <input type=\"button\" value=\"Save Form\" onclick=\"saveform(publish.checked,publish_form.checked);\" /><br/><br/>");
+
+    out.write("<br>");
+    out.write(" <input type=\"button\" value=\"Import\" onclick=\"importform();\" />&nbsp;");
+    out.write(" <input type=\"button\" value=\"Export\" onclick=\"exportform();\" />");
+    out.write("<br>");
 	out.write(" <input type=\"button\" value=\"Reset\" onclick=\"resetform();\" />");
-        out.write("<p>&nbsp;</p>");
-        out.write(" <input type=\"button\" value=\"Close\" onclick=\"window.close();\" />");
+    out.write("<p>&nbsp;</p>");
+    out.write(" <input type=\"button\" value=\"Close\" onclick=\"window.close();\" />");
         %>
         </form>
     </body>
@@ -300,13 +328,18 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
     out.write(exitElement);
 }
 
+// with deletion, we can't use the count. we need the max for
+// that label, and add 1.
 int getFrmVersion(String frmLabel, List<IntakeNode> iList) {
-    int n=1;
+	int max_form_version=0;	
     for (int i=0; i<iList.size(); i++) {
-	String iLabel = iList.get(i).getLabelStr().trim();
-	if (iLabel.equals(frmLabel.trim())) n++;
+		String iLabel = iList.get(i).getLabelStr().trim();
+		if (iLabel.equals(frmLabel.trim())) {
+			int tmp = iList.get(i).getForm_version().intValue();
+			if(tmp > max_form_version) max_form_version=tmp;		
+		}
     }
-    return n;
+    return ++max_form_version;
 }
 
 %>

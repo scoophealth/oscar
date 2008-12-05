@@ -34,7 +34,7 @@
 			class="IntakeNodeTemplate" column="intake_node_template_id"
 			not-null="true" lazy="false" />
 			
-		<many-to-one name="label" cascade="save-update"
+		<many-to-one name="label" cascade="all"
 			class="IntakeNodeLabel" column="intake_node_label_id"
 			not-null="false" lazy="false" />
 			
@@ -52,7 +52,7 @@
 		
 		<property name="publish_by" column="publish_by" type="string" length="60" />
 		
-		<list name="children" cascade="save-update" inverse="false">
+		<list name="children" cascade="all" inverse="false">
 			<key column="parent_intake_node_id" not-null="false" />
 			<list-index column="pos" />
 			<one-to-many class="IntakeNode" />

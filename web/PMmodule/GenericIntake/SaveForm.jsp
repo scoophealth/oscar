@@ -7,6 +7,7 @@
     WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
     String published = request.getParameter("published");
+    String publishedForm = request.getParameter("published_form");
     IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
     Integer frmVersion = (Integer) session.getAttribute("form_version");
     String publisher = session.getAttribute("publisher").toString();
@@ -22,9 +23,12 @@
     genericIntakeManager.saveIntakeNode(nwItn);
     updateEqId(nwItn, genericIntakeManager);
 
+    if (publishedForm !=null || published != null) {
+    	updatePublish(nwItn, publisher, genericIntakeManager);        
+    }
+    
     if (published!=null) {
-	updatePublish(nwItn, publisher, genericIntakeManager);
-        genericIntakeManager.updateAgencyIntakeQuick(nwItn.getId());
+	    genericIntakeManager.updateAgencyIntakeQuick(nwItn.getId());
     }
     session.removeAttribute("intakeNode");
     session.removeAttribute("lastNodeId");
