@@ -283,11 +283,13 @@ public class RxPrescriptionData {
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
                 p.setDosage(db.getString(rs,"dosage"));
                 
-                datesRePrinted = db.getString(rs,"dates_reprinted");
-                if( datesRePrinted != null )
-                    p.setNumPrints(datesRePrinted.split(",").length+1);
-                else
+                datesRePrinted = db.getString(rs,"dates_reprinted");                
+                if( datesRePrinted != null && datesRePrinted.length() > 0 ) {
+                    p.setNumPrints(datesRePrinted.split(",").length);
+                }
+                else {
                     p.setNumPrints(1);
+                }
                 
                 lst.add(p);
             }
@@ -350,8 +352,8 @@ public class RxPrescriptionData {
                 p.setPrintDate(rs.getDate("date_printed"));
                 
                 datesRePrinted = db.getString(rs,"dates_reprinted");
-                if( datesRePrinted != null )
-                    p.setNumPrints(datesRePrinted.split(",").length+1);
+                if( datesRePrinted != null  && datesRePrinted.length() > 0 )
+                    p.setNumPrints(datesRePrinted.split(",").length);
                 else
                     p.setNumPrints(1);
 
@@ -1418,15 +1420,21 @@ public class Prescription {
             if(rs.next()) {
                 String dates_reprinted = db.getString(rs,1);
                 String now = db.getString(rs,2);
-                if( dates_reprinted != null )
+                if( dates_reprinted != null  && dates_reprinted.length() > 0  )
                     dates_reprinted += "," + now;
                 else
                     dates_reprinted = now;
                 
                 sql = "UPDATE prescription SET dates_reprinted = '" + dates_reprinted + "' WHERE script_no = " + this.getScript_no();
-                if( db.RunSQL(sql))
-                    ret = true;
+                db.RunSQL(sql);
+                ret = true;
+                
+                
+                this.setNumPrints(this.getNumPrints()+1);
+                
+
             }
+            
             
             
         } catch (SQLException e) {
