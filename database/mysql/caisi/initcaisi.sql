@@ -1581,7 +1581,7 @@ CREATE TABLE `program` (
  	id int primary key auto_increment,
 	facilityId int not null,
 	index(facilityId),
-	foreign key (facilityId) references facility(id),
+	foreign key (facilityId) references Facility(id),
 	intakeProgram int,
   `name` varchar(70) NOT NULL default '',
 	description varchar(255),
@@ -1738,7 +1738,7 @@ CREATE TABLE `room` (
   `facility_id` int NOT NULL,
   `assigned_bed`  tinyint(1)  NOT NULL default '1',
   `occupancy`  int(10) NULL default '0',
-  CONSTRAINT `FK_room_facility` FOREIGN KEY (`facility_id`) REFERENCES `facility` (`id`),
+  CONSTRAINT `FK_room_facility` FOREIGN KEY (`facility_id`) REFERENCES `Facility` (`id`),
   PRIMARY KEY  (`room_id`)
 );
 
