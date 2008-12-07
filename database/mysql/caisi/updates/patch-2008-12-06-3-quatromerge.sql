@@ -1,7 +1,7 @@
 delete from app_lookuptable;
 
 LOCK TABLES `app_lookuptable` WRITE;
-INSERT INTO `app_lookuptable` VALUES('AOI', 4.000000000000000e+000, 'app_aboriginal', 'Aboriginal', 0, 0.000000000000000e+000, 1, 0);
+INSERT INTO `app_lookuptable` VALUES('AOI', 4.000000000000000e+000, 'lst_aboriginal', 'Aboriginal', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('AST', 5.000000000000000e+000, 'lst_admission_status', 'Admission Status', 0, 0.000000000000000e+000, 0, 0);
 INSERT INTO `app_lookuptable` VALUES('BTP', 1.000000000000000e+000, 'lst_bed_type', 'Bed Type', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('CET', 8.000000000000000e+000, 'lst_encounter_type', 'Encounter Type', 0, 0.000000000000000e+000, 1, 0);
