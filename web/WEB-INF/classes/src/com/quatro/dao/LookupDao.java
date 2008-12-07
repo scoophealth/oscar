@@ -685,7 +685,7 @@ public class LookupDao extends HibernateDaoSupport {
 		fcd.setActive(!facility.isDisabled());
 		fcd.setOrderByIndex(0);
 		fcd.setLastUpdateDate(Calendar.getInstance());
-		fcd.setLastUpdateUser(facility.getLastUpdateUser());
+		//fcd.setLastUpdateUser(facility.getLastUpdateUser());
 		if(!isNew){
 			this.updateOrgTree(fcd.getCode(), fcd);
 			this.updateOrgStatus(fcd.getCode(), fcd);
