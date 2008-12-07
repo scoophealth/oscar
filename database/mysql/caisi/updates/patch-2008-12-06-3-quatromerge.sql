@@ -17,7 +17,7 @@ INSERT INTO `app_lookuptable` VALUES('CTS', 0.000000000000000e+000, 'lst_actions
 INSERT INTO `app_lookuptable` VALUES('DCT', 6.000000000000000e+000, 'lst_documentcategory', 'Document Category', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('DRN', 4.000000000000000e+000, 'lst_discharge_reason', 'Discharge Reason', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('DTT', 1.000000000000000e+000, 'lst_documenttype', 'Document Type', 0, 0.000000000000000e+000, 0, 0);
-INSERT INTO `app_lookuptable` VALUES('FAC', 1.000000000000000e+000, 'facility', 'Facility', 0, 0.000000000000000e+000, 0, 0);
+INSERT INTO `app_lookuptable` VALUES('FAC', 1.000000000000000e+000, 'Facility', 'Facility', 0, 0.000000000000000e+000, 0, 0);
 INSERT INTO `app_lookuptable` VALUES('FCT', 1.000000000000000e+000, 'lst_field_category', 'Field Category', 0, 0.000000000000000e+000, 0, 0);
 INSERT INTO `app_lookuptable` VALUES('FRA', 3.000000000000000e+000, 'lst_family_relationship', 'Client Family Member Relationship', 0, 0.000000000000000e+000, 1, 1);
 INSERT INTO `app_lookuptable` VALUES('FTY', 1.000000000000000e+000, 'lst_fieldtype', 'Field data types', 0, 0.000000000000000e+000, 0, 0);
@@ -49,7 +49,7 @@ INSERT INTO `app_lookuptable` VALUES('RFT', 4.000000000000000e+000, 'lst_referre
 INSERT INTO `app_lookuptable` VALUES('RHL', 4.000000000000000e+000, 'lst_reasonforhomeless', 'Reason for Homelessness', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('RNA', 4.000000000000000e+000, 'lst_reasonnoadmit', 'Reason for Non-Admittance', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('RNS', 4.000000000000000e+000, 'lst_reason_notsign', 'Reason for not signing Admission Form', 0, 0.000000000000000e+000, 1, 0);
-INSERT INTO `app_lookuptable` VALUES('ROL', 1.000000000000000e+000, 'secrole', 'Roles', 0, 0.000000000000000e+000, 0, 0);
+INSERT INTO `app_lookuptable` VALUES('ROL', 1.000000000000000e+000, 'secRole', 'Roles', 0, 0.000000000000000e+000, 0, 0);
 INSERT INTO `app_lookuptable` VALUES('RPG', 8.000000000000000e+000, 'v_lst_reportgroup', 'Report Group', 0, 0.000000000000000e+000, 0, 0);
 INSERT INTO `app_lookuptable` VALUES('RSV', 4.000000000000000e+000, 'lst_reasonforservice', 'Reason for Service', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('RTP', 1.000000000000000e+000, 'lst_room_type', 'Room Type', 0, 0.000000000000000e+000, 1, 0);
@@ -57,7 +57,7 @@ INSERT INTO `app_lookuptable` VALUES('SCA', 4.000000000000000e+000, 'lst_statusi
 INSERT INTO `app_lookuptable` VALUES('SEC', 2.000000000000000e+000, 'lst_sector', 'Sector', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('SHL', 2.000000000000000e+000, 'lst_shelter', 'Shelters', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('SIM', 4.000000000000000e+000, 'lst_sourceincome', 'Source of Income', 0, 0.000000000000000e+000, 1, 0);
-INSERT INTO `app_lookuptable` VALUES('SIT', 1.000000000000000e+000, 'secsite', 'Authorized Sites', 0, 0.000000000000000e+000, 1, 0);
+INSERT INTO `app_lookuptable` VALUES('SIT', 1.000000000000000e+000, 'secSite', 'Authorized Sites', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('SRT', 3.000000000000000e+000, 'lst_service_restriction', 'Reason for Service Restriction', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('TLT', 1.000000000000000e+000, 'lst_title', 'Title', 0, 0.000000000000000e+000, 1, 0);
 INSERT INTO `app_lookuptable` VALUES('TPT', 4.000000000000000e+000, 'lst_transportation_type', 'Transportation Type', 0, 0.000000000000000e+000, 1, 0);
