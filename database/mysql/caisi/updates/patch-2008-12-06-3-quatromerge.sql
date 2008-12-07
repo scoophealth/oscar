@@ -472,8 +472,8 @@ UNLOCK TABLES;
 delete from lst_casestatus;
 
 LOCK TABLES `lst_casestatus` WRITE;
-INSERT INTO `lst_casestatus` VALUES(0.000000000000000e+000, 'Incomplete', 1, 2.000000000000000e+001, '2001', '2008-10-30 16:38:58');
-INSERT INTO `lst_casestatus` VALUES(1.000000000000000e+000, 'Complete', 1, 1.000000000000000e+001, NULL, NULL);
+INSERT INTO `lst_casestatus` VALUES(1.000000000000000e+000, 'Incomplete', 1, 2.000000000000000e+001, '2001', '2008-10-30 16:38:58');
+INSERT INTO `lst_casestatus` VALUES(2.000000000000000e+000, 'Complete', 1, 1.000000000000000e+001, NULL, NULL);
 UNLOCK TABLES;
 
 delete from lst_complaint_method;
