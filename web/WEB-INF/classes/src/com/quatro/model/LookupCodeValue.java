@@ -1,7 +1,7 @@
 package com.quatro.model;
+import java.util.Calendar;
 import java.util.List;
 public class LookupCodeValue {
-	private int lineId;
 	private String prefix;
 	private String code;
 	private String description;
@@ -12,7 +12,17 @@ public class LookupCodeValue {
 	private String parentCode;
 	private String buf1;
 	private String codeTree;
+	private String codecsv;
 	private String buf2;
+	private String lastUpdateUser;
+	private Calendar lastUpdateDate;
+	private String buf3;
+	private String buf4;
+	private String buf5;
+	private String buf6;
+	private String buf7;
+	private String buf8;
+	private String buf9;
 	
     private int orderByIndex;
     private List associates;
@@ -26,7 +36,7 @@ public class LookupCodeValue {
 	public boolean isActive() {
 		return active;
 	}
-	public void setActive(Boolean active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 	public String getCode() {
@@ -43,6 +53,9 @@ public class LookupCodeValue {
 	}
 	public String getDescription() {
 		return description;
+	}
+	public String getDescriptionJs() {
+		return oscar.Misc.getStringJs(description);
 	}
 	public void setDescription(String description) {
 		this.description = description;
@@ -68,7 +81,7 @@ public class LookupCodeValue {
 	public boolean isSelectable() {
 		return selectable;
 	}
-	public void setSelectable(Boolean selectable) {
+	public void setSelectable(boolean selectable) {
 		this.selectable = selectable;
 	}
 	public String getShortDesc() {
@@ -82,14 +95,7 @@ public class LookupCodeValue {
 	}
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
-	}
-	public int getLineId() {
-		return lineId;
-	}
-	public void setLineId(int lineId) {
-		this.lineId = lineId;
-	}
-    
+	}    
 	public String getCodeId()
 	{
 		return this.prefix + ":" + this.code;
@@ -105,5 +111,65 @@ public class LookupCodeValue {
 	}
 	public void setBuf2(String buf2) {
 		this.buf2 = buf2;
+	}
+	public Calendar getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+	public void setLastUpdateDate(Calendar lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+	public String getLastUpdateUser() {
+		return lastUpdateUser;
+	}
+	public void setLastUpdateUser(String lastUpdateUser) {
+		this.lastUpdateUser = lastUpdateUser;
+	}
+	public String getBuf3() {
+		return buf3;
+	}
+	public void setBuf3(String buf3) {
+		this.buf3 = buf3;
+	}
+	public String getBuf4() {
+		return buf4;
+	}
+	public void setBuf4(String buf4) {
+		this.buf4 = buf4;
+	}
+	public String getBuf5() {
+		return buf5;
+	}
+	public void setBuf5(String buf5) {
+		this.buf5 = buf5;
+	}
+	public String getBuf6() {
+		return buf6;
+	}
+	public void setBuf6(String buf6) {
+		this.buf6 = buf6;
+	}
+	public String getBuf7() {
+		return buf7;
+	}
+	public void setBuf7(String buf7) {
+		this.buf7 = buf7;
+	}
+	public String getBuf8() {
+		return buf8;
+	}
+	public void setBuf8(String buf8) {
+		this.buf8 = buf8;
+	}
+	public String getBuf9() {
+		return buf9;
+	}
+	public void setBuf9(String buf9) {
+		this.buf9 = buf9;
+	}
+	public String getCodecsv() {
+		return codecsv;
+	}
+	public void setCodecsv(String codecsv) {
+		this.codecsv = codecsv;
 	}
 }

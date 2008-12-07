@@ -376,7 +376,19 @@
             </bean>
         </property>
     </bean>
+
+    <!-- Admin Start -->
+
+    <bean id="orgDao" class="com.quatro.dao.ORGDao" autowire="byName" />
     
+    <bean id="orgManager" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="com.quatro.service.ORGManager" autowire="byName">
+              <property name="orgDao" ref="orgDao"/>
+            </bean>
+        </property>
+    </bean>
+
     <bean id="onCallManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="onCallManagerTarget"/>

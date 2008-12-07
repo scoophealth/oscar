@@ -22,8 +22,15 @@
 
 package org.oscarehr.PMmodule.web;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -44,9 +51,17 @@ import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.PMmodule.utility.Utility;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.quatro.service.security.*;
+
+import oscar.OscarProperties;
+
+import com.quatro.common.KeyConstants;
+import com.quatro.model.security.NoAccessException;
+import com.quatro.service.security.SecurityManager;
+import com.quatro.service.security.UserAccessManager;
 
 public abstract class BaseAction extends DispatchAction {
 	
@@ -135,6 +150,11 @@ public abstract class BaseAction extends DispatchAction {
         return ((Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER));
     }
 
+	protected SecurityManager getSecurityManager(HttpServletRequest request)
+	{
+		return (SecurityManager) request.getSession()
+		.getAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER);
+	}
 	protected String getParameter(HttpServletRequest request, String parameterName) {
 		return request.getParameter(parameterName);
 	}
@@ -155,6 +175,173 @@ public abstract class BaseAction extends DispatchAction {
 		path.append(parameters);
 		
 		return new RedirectingActionForward(path.toString());
+	}
+
+	protected void setMenu(HttpServletRequest request,String currentMenu) throws NoAccessException {
+		/*
+		  isPageChangedFlag appeared?
+		*/
+		
+		if (request.getAttribute("pageChanged") == null) {
+			if(request.getParameter("pageChanged")!= null) request.setAttribute("pageChanged", request.getParameter("pageChanged"));
+		}
+		String lastMenu = (String) request.getSession().getAttribute("currMenu");
+		if (lastMenu == null) {
+			initMenu(request);
+		}
+		else
+		{
+			request.getSession().setAttribute(lastMenu, KeyConstants.ACCESS_VIEW);
+		}
+		// check home page access
+		if(!currentMenu.equals(KeyConstants.MENU_HOME))
+		{
+			if (request.getSession().getAttribute(currentMenu).equals(KeyConstants.ACCESS_NULL))
+			{
+				throw new NoAccessException();
+			}
+		}
+		String scrollPosition = (String) request.getParameter("scrollPosition");
+		if(null != scrollPosition) {
+			request.setAttribute("scrPos", scrollPosition);
+		}
+		else
+		{
+			request.setAttribute("scrPos", "0");
+		}
+	}
+
+	private void initMenu(HttpServletRequest request)
+	{
+		SecurityManager sec = getSecurityManager(request);
+		if (sec==null) return;		
+		//Client Management
+		if (sec.GetAccess(KeyConstants.FUN_CLIENT, "").compareTo(KeyConstants.ACCESS_READ) >= 0) {
+			request.getSession().setAttribute(KeyConstants.MENU_CLIENT, KeyConstants.ACCESS_VIEW);
+		} else
+			request.getSession().setAttribute(KeyConstants.MENU_CLIENT, KeyConstants.ACCESS_NULL);
+	
+		//Program
+		if (sec.GetAccess(KeyConstants.FUN_PROGRAM, "").compareTo(KeyConstants.ACCESS_READ) >= 0) {
+			request.getSession().setAttribute(KeyConstants.MENU_PROGRAM, KeyConstants.ACCESS_VIEW);
+		} else
+			request.getSession().setAttribute(KeyConstants.MENU_PROGRAM, KeyConstants.ACCESS_NULL);
+
+		//Facility Management
+		if (sec.GetAccess(KeyConstants.FUN_FACILITY, "").compareTo(KeyConstants.ACCESS_READ) >= 0) {
+			request.getSession().setAttribute(KeyConstants.MENU_FACILITY, KeyConstants.ACCESS_VIEW);
+		} else
+			request.getSession().setAttribute(KeyConstants.MENU_FACILITY, KeyConstants.ACCESS_NULL);
+
+		//Report Runner
+		if (sec.GetAccess(KeyConstants.FUN_REPORTS, "").compareTo(KeyConstants.ACCESS_READ) >= 0) {
+			request.getSession().setAttribute(KeyConstants.MENU_REPORT, KeyConstants.ACCESS_VIEW);
+		} else
+			request.getSession().setAttribute(KeyConstants.MENU_REPORT, KeyConstants.ACCESS_NULL);
+
+		//System Admin
+		if (OscarProperties.getInstance().isAdminOptionOn() && sec.GetAccess("_admin", "").compareTo(KeyConstants.ACCESS_READ) >= 0) {
+			request.getSession().setAttribute(KeyConstants.MENU_ADMIN, KeyConstants.ACCESS_VIEW);
+		} else
+			request.getSession().setAttribute(KeyConstants.MENU_ADMIN, KeyConstants.ACCESS_NULL);
+		request.getSession().setAttribute(KeyConstants.MENU_HOME, KeyConstants.ACCESS_VIEW);
+		request.getSession().setAttribute(KeyConstants.MENU_TASK, KeyConstants.ACCESS_VIEW);
+	}
+	
+	protected ActionForward createRedirectForward(ActionMapping mapping,
+			String forwardName, StringBuffer parameters) {
+		ActionForward forward = mapping.findForward(forwardName);
+		StringBuffer path = new StringBuffer(forward.getPath());
+		path.append(parameters);
+
+		return new RedirectingActionForward(path.toString());
+	}
+	protected ActionForward dispatchMethod(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response, String name) throws Exception
+	{
+		/*
+		String tokenP = (String) request.getParameter("token");
+		if ( name!= null && (name.indexOf("save")>=0 || name.indexOf("login")>=0)) {
+			String tokenS = (String) request.getSession().getAttribute("token"); 
+			if(Utility.isNotNullOrEmptyStr(tokenS)) {
+				if (!Utility.isNotNullOrEmptyStr(tokenP)) throw new Exception("Sorry this page cannot be displayed.");
+				if(!tokenS.equals(tokenP))   throw new Exception("Sorry this page cannot be displayed.");
+			}
+		}
+		*/
+		Calendar startDt = Calendar.getInstance();
+		try {
+			ActionForward fwd =  super.dispatchMethod(mapping, form, request, response, name);
+			if(fwd != null && fwd.getName() != null && fwd.getName().equals("failure")) throw new NoAccessException();
+	        response.setHeader("Expires", "-1");
+	        response.setHeader("Cache-Control",
+	        	"must-revalidate, post-check=0, pre-check=0");
+	        response.setHeader("Pragma", "private");
+	        
+	        if (request.getAttribute("notoken") == null)
+	        {
+	        	request.getSession().setAttribute("token", String.valueOf(Calendar.getInstance().getTimeInMillis()));
+	        }
+	        // do a access log
+	        Calendar endDt = Calendar.getInstance();
+	        long timeSpan = endDt.getTimeInMillis() - startDt.getTimeInMillis();
+	        log(timeSpan,null,name, 1, request);
+	        return fwd;
+		}
+		catch (Exception ex)
+		{
+	        Calendar endDt = Calendar.getInstance();
+	        long timeSpan = endDt.getTimeInMillis()-startDt.getTimeInMillis();
+			log(timeSpan, ex.toString(),name,0, request);
+			throw ex;
+		}
+	}
+	
+	private void log(long timeSpan, String ExName,String method, int result, HttpServletRequest request)
+	{
+		String auditMode = oscar.OscarProperties.getInstance().getProperty("audit_mode");
+        if (auditMode == null || !auditMode.equals("on")) return;
+        HttpSession session = request.getSession();
+        String providerNo = (String) session.getAttribute(KeyConstants.SESSION_KEY_PROVIDERNO);
+        String className = this.toString();
+        if(method == null) method = "unspecified";
+        if (request.getParameter("tab") != null) method = method + "(" + (String)request.getParameter("tab") + ")";
+		if(method.equals("unspecified") && request.getParameter("method") != null) method = method + "(" + (String)request.getParameter("method") + ")";
+        Integer programId = null;
+        try {
+        	programId = (Integer) request.getAttribute("programId");
+        }
+        catch(Exception ex)
+        {
+            if(request.getAttribute("programId") != null) programId = Integer.valueOf((String) request.getAttribute("programId"));
+        }
+        if(programId == null) programId = new Integer(0);
+        String clientId = "";
+        try {
+        	clientId = (String) request.getAttribute("clientId");
+        }
+        catch(Exception ex)
+        {
+        	if (request.getAttribute("clientId") != null)
+        	clientId = ((Integer) request.getAttribute("clientId")).toString();
+        }
+        Integer shelterId = (Integer) session.getAttribute(KeyConstants.SESSION_KEY_SHELTERID);
+        if(shelterId == null) shelterId = new Integer(0);
+        String sessionId = request.getSession().getId();
+        String queryString = request.getRequestURI()  + '?' + request.getQueryString();
+        if(clientId == null) 
+        {
+            HashMap actionParam = (HashMap) request.getAttribute("actionParam");
+            if(actionParam!=null){
+            	clientId = (String) actionParam.get("clientId"); 
+            }
+        }
+        oscar.log.LogAction.logAccess(providerNo, className, method, programId.toString(), shelterId.toString(), clientId, queryString, sessionId, timeSpan, ExName, result);
+		
+	}
+	protected String getClientId(HttpServletRequest request){
+		String clientId=request.getParameter("demoNo");
+		if(Utility.isNotNullOrEmptyStr(clientId)) clientId=request.getParameter("clientId");
+		return clientId;
 	}
 
 }

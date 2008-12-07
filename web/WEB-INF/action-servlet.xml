@@ -2,6 +2,13 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
         "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
+	<bean name="/siteCheckLogin" class="oscar.login.SiteCheckAction" singleton="false">
+		<property name="secSiteManager" ref="secSiteManager" />
+	</bean>
+	<bean name="/shelterSelection" class="oscar.login.ShelterSelectionAction" singleton="false"  autowire="byName"/>
+
+	<bean name="/Home" class="org.oscarehr.PMmodule.web.HomeAction" singleton="false" autowire="byName"/> 
+
 <!-- 
 	<bean name="/topazSave" class="com.quatro.web.TopazSaveAction" singleton="false">
         <property name="topazManager" ref="topazManager"/>
@@ -163,6 +170,10 @@
 	</bean>
 	<bean name="/Lookup/LookupCodeList" class="com.quatro.web.lookup.LookupCodeListAction" singleton="false">
         <property name="lookupManager" ref="lookupManager"/>
+	</bean>
+
+	<bean name="/PMmodule/Admin/ShowORGTree" class="com.quatro.web.admin.ShowORGTreeAction" singleton="false">
+        <property name="orgManager" ref="orgManager"/>
 	</bean>
 
     <!-- Provider Property -->

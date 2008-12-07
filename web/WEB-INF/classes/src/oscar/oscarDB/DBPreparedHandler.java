@@ -24,6 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarDB;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -47,6 +48,28 @@ public class DBPreparedHandler {
     
     public static Connection getConnection() throws SQLException {
         return DbConnectionFilter.getThreadLocalDbConnection();
+    }
+
+    synchronized public void procExecute(String procName, String[] param) throws SQLException {
+    	String sql = "{call " + procName ;
+    	if (param != null && param.length > 0) {
+	    	String prms = "";
+	    	for(int i=0;i< param.length;i++)
+	    	{
+	    		prms += "?,";
+	    	}
+	    	if (!prms.equals("")) sql += "(" + prms.substring(0,prms.length()-1) + ")";
+    	}
+    	
+    	sql += "}";
+    	CallableStatement   stmt = getConnection().prepareCall(sql);
+    	if (param != null && param.length > 0) {
+	        for (int i = 0; i < param.length; i++) {
+	            stmt.setString((i + 1), param[i]);
+	            //System.out.println(param[i]);
+	        }
+    	}
+        stmt.execute();
     }
 
     public void init(String dbDriver, String dbUrl, String dbUser, String dbPwd) throws Exception, SQLException {

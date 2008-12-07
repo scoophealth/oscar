@@ -22,6 +22,7 @@
 package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * This is the object class that relates to the program table. Any customizations belong here.
@@ -34,6 +35,11 @@ public class Program implements Serializable {
     public static final String BED_TYPE = "Bed";
     public static final String COMMUNITY_TYPE = "community";
     public static final String SERVICE_TYPE = "Service";
+
+	public static final String PROGRAM_STATUS_ACTIVE = "1";
+	public static final String PROGRAM_STATUS_INACTIVE = "0";
+
+    private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Integer id;
     private Integer numOfMembers;
@@ -72,6 +78,24 @@ public class Program implements Serializable {
     private int defaultServiceRestrictionDays=30;
     private int facilityId;
 
+   private String lastUpdateUser;
+    private Date lastUpdateDate;
+   
+    public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	public String getLastUpdateUser() {
+		return lastUpdateUser;
+	}
+
+	public void setLastUpdateUser(String lastUpdateUser) {
+		this.lastUpdateUser = lastUpdateUser;
+	}
     // constructors
     public Program() {
         // no arg constructor for JPA

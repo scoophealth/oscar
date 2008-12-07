@@ -14,6 +14,86 @@ TD {
 TH {
 	font-size: 11pt;
 }
+.clsMenu {
+		color:Black;
+		font-family:Tahoma,Verdana,Arial;
+		font-size:11px;
+		text-decoration:none;
+		text-align:center;
+}
+.clsMenu2
+{		font-color:Blue;
+		font-family:Tahoma,Verdana,Arial;
+		font-size:11px;
+		text-decoration:none;
+		text-align: center;
+}
+.clsMenuCell
+{
+	background-color:#F0F0F0;
+	border-color:#A8A8A8;
+	border-width:1px;
+	border-style:Solid;	
+	font-family:Tahoma,Verdana,Arial;
+	cursor:default;
+	padding-left:8px;
+	padding-right:8px;
+	padding-top:4px;
+	padding-bottom:4px;
+}
+.clsMenuCell2
+{
+	background-color:#F0F0F0;
+	border-color:#A8A8A8;
+	border-width:1px;
+	border-style:Solid;	
+	font-family:Tahoma,Verdana,Arial;
+	cursor:default;
+	padding-left:8px;
+	padding-right:8px;
+	padding-top:2px;
+	padding-bottom:2px;
+}
+.clsSearchPages, .clsSearchCells th, .clsSearchCells td
+{
+	background-color:#E0E0E0;
+	border-color:#A8A8A8;
+	border-width:1px;
+	border-style:Solid;	
+	font-family:Tahoma,Verdana,Arial;
+	
+}
+.clsSearchCells th 
+{
+	border-right: 1px solid #333;
+	background-color: #ddd;
+	color: #fff;
+	border-left: 1px solid #fff;
+}
+.clsSearchCells td 
+{
+	border-right: 1px solid #333;
+	background-color: #ddd;
+	color: #fff;
+	border-left: 1px solid #fff;
+}
+.clsHomePageHeader
+{
+  font-size : 20pt;
+  color : blue;
+  font-weight : normal;
+  font-style:italic;  
+  text-align:left;  
+  font-family:Arial Unicode MS;  
+}
+.clsHomePageLabels
+{
+  font-size : 12pt;
+  color : blue;
+  font-weight : normal;  
+  text-align:left;  
+  font-family:Arial Unicode MS;  
+}
 
 .blueText {
 	font-size: 9pt;
@@ -67,8 +147,78 @@ TH {
 	text-align: left;
 }
 
+.pageTitle
+{
+	background-image: url(../images/titleBar2.png); 
+	height:25px;
+	vertical-align:middle;
+    FONT-SIZE: 12pt;
+    font-weight:bold;
+    font-family:Arial Unicode MS;
+    COLOR:white;
+    text-align:center;   
+/*    background-color:#EDDECF;  
+    border-bottom-style:groove;
+    border-bottom-width:thin; 
+    border-left-style: groove;
+    border-left-width:thin; 
+    border-right-style: groove;
+    border-right-width:thin; 
+    border-top-style:groove;
+    border-top-width:thin; */
+ }
+}
+.buttonBar
+{	
+	background-image: url(../images/buttonBar2.png);
+    height:22px;
+	vertical-align:middle;
+    FONT-SIZE: 8pt;
+    font-family:Arial Unicode MS;
+    COLOR: black;
+    border-width:0pt;  
+    border-color:Silver;
+    border-style:solid;
+ }
+.buttonBar2
+{	
+	background-image: url(../images/buttonBar2.png); 
+ 	height:22px;
+ 	vertical-align:middle;
+    FONT-SIZE: 8pt;
+    font-family:Arial Unicode MS;
+    COLOR: black;
+    border-width:0pt;  
+    border-color:Silver;
+    border-style:solid;
+ }
+.buttonBar3
+{	
+	background: #c0c0c0; 
+    FONT-SIZE: 8pt;
+    font-family:Arial Unicode MS;
+    COLOR: black;
+    border-width:0pt;  
+    border-color:Silver;
+    border-style:solid;
+ }
+.buttonBar4
+{	
+    FONT-SIZE: 8pt;
+    font-family:Arial Unicode MS;
+    COLOR: black;
+    border-width:0pt;  
+    border-color:Silver;
+    border-style:solid;
+ }
 .error {
 	color: #FF0000;
+	background-color: #EEEEFF;
+	text-align: left;
+}
+
+.warning {
+	color: #00FFFF;
 	background-color: #EEEEFF;
 	text-align: left;
 }

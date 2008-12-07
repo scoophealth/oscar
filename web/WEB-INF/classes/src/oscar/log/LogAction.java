@@ -25,10 +25,11 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
-import oscar.log.model.Log;
 
+import oscar.log.model.Log;
 import oscar.login.DBHelp;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarDB.DBPreparedHandler;
 
 /**
  * @author yilee18
@@ -85,5 +86,25 @@ public class LogAction {
 	db.CloseConn();
 	
 	return _log;
+    }
+    
+    public static boolean logAccess(String provider_no, String className, String method, String programId, String shelterId,String clientId,
+    		String queryStr,String sessionId,long timeSpan, String ex, int result) {
+        boolean ret = false;
+        DBPreparedHandler db = new DBPreparedHandler();
+        String sql = "insert into access_log (Id,provider_no,ACTIONCLASS,METHOD,QUERYSTRING,PROGRAMID,SHELTERID,CLIENTID,TIMESPAN,EXCEPTION,RESULT, SESSIONID)";
+        sql += " values(seq_log_id.nextval,'" + provider_no + "', '" + className + "','" + method + "'," ; 
+        sql += "'" + queryStr + "'," + programId + "," + shelterId + "," + clientId + "," + String.valueOf(timeSpan) + ",'" + ex + "'," + result + ",'" + sessionId + "')";
+        try {
+            db.queryExecuteUpdate(sql);
+            ret = true;
+        } catch (SQLException e) {
+        	;
+        }
+        finally
+        {
+        	try {db.closeConn();}catch(SQLException e){}
+        }
+        return ret;
     }
 }

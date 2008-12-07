@@ -9,6 +9,7 @@ package oscar.log;
 public class LogConst {
     public static final String LOGIN = "log in";
     public static final String LOGOUT = "log out";
+    public static final String SHELTER_SELECTION="select shelter";
     public static final String READ = "read";
     public static final String ADD = "add";
     public static final String UPDATE = "update";

@@ -1,5 +1,6 @@
 package com.quatro.common;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.servlet.jsp.JspException;
@@ -62,28 +63,52 @@ public class DatePickerTag extends BaseInputTag{
         prepareAttribute(results, "name", sName);
         prepareAttribute(results, "maxlength", "10");
         prepareAttribute(results, "tabindex", getTabindex());
+        prepareAttribute(results, "onblur", "onCalBlur('" + sName + "');");        
+        prepareAttribute(results, "onkeypress", "onCalKeyPress(event,'" + sName + "');");        
         prepareValue(results);
         results.append(this.prepareEventHandlers());
         results.append(this.prepareStyles());
         prepareOtherAttributes(results);
         results.append(this.getElementClose());
-        
+        results.append("</td>");
+
         results.append("<td");
-        prepareAttribute(results, "style", "border:0px;");
-        prepareAttribute(results, "width", "28px");
+        prepareAttribute(results, "style", "border:0px;display:none");
+        prepareAttribute(results, "width", "1px");
         results.append(this.getElementClose());
-        results.append("<a ");
+
+        results.append("<input");
+        prepareAttribute(results, "style", "width:1px;display:none");
+        prepareAttribute(results, "type", "text");
+        String sName1=prepareName(property, name) + "_cal1";
+        prepareAttribute(results, "name", sName1);
+        prepareAttribute(results, "maxlength", "1px");
+        prepareAttribute(results, "tabindex", getTabindex());
+        prepareValue(results);
+        results.append(this.prepareEventHandlers());
+        results.append(this.prepareStyles());
+        prepareOtherAttributes(results);
+        results.append(this.getElementClose());
+        results.append("</td>");
+        	       
+        results.append("<td");
+        prepareAttribute(results, "style", "border:0px");
+        prepareAttribute(results, "width", "1px");
+        results.append(this.getElementClose());
+        results.append("<a href='javascript:void1();' ");
 
         Calendar rightNow = Calendar.getInstance();
 		int year = rightNow.get(Calendar.YEAR);
 		int month = rightNow.get(Calendar.MONTH) + 1;
 
-        prepareAttribute(results, "onclick", "window.open('/" + sRootPath + "/calendar/oscarCalendarPopup.jsp?" + 
-          "type=caisi&openerForm="+ openerForm + "&openerElement=" + sName + "&year=" + year + 
-          "&month=" + month +"', '', 'width=300,height=300');");        
+        prepareAttribute(results, "onclick", "return openDatePickerCalendar('/" + sRootPath + "/calendar/CalendarPopup.jsp?" + 
+          "openerForm="+ openerForm + "&openerElement=" + sName + "&year=" + year + 
+          "&month=" + month +"');");        
+
         results.append(this.getElementClose());
         results.append("<img");
        	prepareAttribute(results, "src", "/" + sRootPath + "/images/timepicker.jpg");
+       	prepareAttribute(results, "border", "0");
         results.append(this.prepareStyles());
         results.append(this.getElementClose());
         results.append("</a>");
@@ -117,7 +142,9 @@ public class DatePickerTag extends BaseInputTag{
     
      protected String formatValue(Object value) throws JspException {
         if (value == null) return "";
-        return TagUtils.getInstance().filter(value.toString());
+
+        String value2 = TagUtils.getInstance().filter(value.toString());
+        return value2.replace('-','/');        
      }
      
 	public TextTag getDtTextTag() {

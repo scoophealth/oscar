@@ -96,7 +96,7 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 		return getParameter(request, TYPE);
 	}
 
-	protected Integer getClientId(HttpServletRequest request) {
+	protected Integer getClientIdAsInteger(HttpServletRequest request) {
 		Integer clientId = null;
 		String clientId_str = getParameter(request, CLIENT_ID);
 		if(clientId_str!=null) {

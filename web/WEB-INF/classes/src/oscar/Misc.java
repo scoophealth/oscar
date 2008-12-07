@@ -472,10 +472,29 @@ public static String space(int i) {
     	if (s==null) return "";
     	return (String) s;
     }
+    
+    public static String replace(String str, String pattern, String replaceTo)
+    {
+    	String[] buff = str.split(pattern);
+    	StringBuffer sb = new StringBuffer();
+    	
+    	sb.append(buff[0]);
+    	for(int i=1; i<buff.length;i++)
+    	{
+    		sb.append(replaceTo);
+    		sb.append(buff[i]);
+    	}
+    	if(str.endsWith(pattern)) sb.append(replaceTo);
+    	
+    	return sb.toString();
+    }
+
     public static String getStringJs(Object s)
     {
     	if (s==null) return "";
-    	return ((String) s).replace("'", "\\'");
+    	String s1 = replace((String) s,"'","\\'");
+    	return replace((String) s1,"\"","&#34;");
+    	//return ((String) s).replace("'", "\\'");
     }
 
     public static String encryptPIN(String sPin){

@@ -22,6 +22,15 @@
             <form-property name="tableDef" type="com.quatro.model.LookupTableDefValue"></form-property>
             <form-property name="codes" type="java.util.List"></form-property>    
         </form-bean>
+		<form-bean name="lookupTreeForm" type="org.apache.struts.validator.DynaValidatorForm">
+        	<form-property name="tableDef" type="com.quatro.model.LookupTableDefValue"></form-property>
+        	<form-property name="tree" type="net.sf.navigator.menu.MenuRepository"></form-property>    
+        	<form-property name="tableId" type="java.lang.String"></form-property>    
+        	<form-property name="keywordName" type="java.lang.String"></form-property>    
+        	<form-property name="openerForm" type="java.lang.String"></form-property>    
+        	<form-property name="codeName" type="java.lang.String"></form-property>    
+        	<form-property name="descName" type="java.lang.String"></form-property>    
+        </form-bean>
         <form-bean name="lookupCodeEditForm" type="com.quatro.web.lookup.LookupCodeEditForm">
         </form-bean>
         <form-bean name="clinicForm" type="org.apache.struts.validator.DynaValidatorForm">
@@ -370,7 +379,9 @@
     
     <action-mappings>
         
-        
+        <action path="/Home" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request"  validate="false">
+            <forward name="home" path="page.home" />
+		</action>
         
         <!-- caisi core action -->
         <action path="/Admin" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="systemMessageForm" input="/admin/admin.jsp" validate="false">
@@ -402,7 +413,16 @@
             <forward name="failure" path="/logout.jsp?login=failed" />
             <forward name="error" path="/loginfailed.jsp" />
             <forward name="caisiPMM" path="/PMmodule/ProviderInfo.do" />
-        </action>        
+            <forward name="shelterSelection" path="/shelterSelection.do" redirect="true"/>
+        </action>       
+        <action path="/siteCheckLogin" scope="request" type="org.springframework.web.struts.DelegatingActionProxy" validate="true" parameter="method">  
+ 			<forward name="shelterSelection" path="/shelterSelection.do"/>
+        </action>   
+        <action path="/shelterSelection" scope="request" type="org.springframework.web.struts.DelegatingActionProxy" validate="true" parameter="method">
+ 			<forward name="shelterSelection" path="page.pmm.shelterSelection"/>
+ 			<forward name="home" path="/Home.do" redirect="true" />
+			<forward name="login" path="/index.jsp" />
+        </action>         
         <action input="/oscarMessenger/SendMessage.jsp" name="msgSendMessageForm" path="/oscarMessenger/SendMessage" scope="request" type="oscar.oscarMessenger.pageUtil.MsgSendMessageAction">
             <forward name="success" path="/oscarMessenger/SentMessage.jsp" />
         </action>
@@ -1755,6 +1775,11 @@
             <forward name="edit" path="/appointment/appointmentstatusedit.jsp"/>
         </action>
         
+
+		<action path="/PMmodule/Admin/ShowORGTree" type="org.springframework.web.struts.DelegatingActionProxy"
+              name="lookupTreeForm" scope="request" parameter="method">
+            <forward name="tree" path="page.admin.showORGTree" />
+        </action>   
     </action-mappings>
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
     <message-resources parameter="oscarResources" />
@@ -1774,4 +1799,8 @@
     <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
         <set-property property="pathnames" value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
     </plug-in>
+    <plug-in className="net.sf.navigator.menu.MenuPlugIn">
+      <set-property property="menuConfig" value="/WEB-INF/menu-config.xml"/>
+    </plug-in>
+
 </struts-config>

@@ -143,9 +143,9 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute("expired_days", strAuth[5]);
             
             // initiate security manager
-            com.quatro.service.security.UserAccessManager userAccessManager = (com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
-            com.quatro.service.security.SecurityManager secManager = userAccessManager.getUserUserSecurityManager(providerNo);
-            session.setAttribute("securitymanager", secManager);
+            //com.quatro.service.security.UserAccessManager userAccessManager = (com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
+            //com.quatro.service.security.SecurityManager secManager = userAccessManager.getUserUserSecurityManager(providerNo);
+            //session.setAttribute("securitymanager", secManager);
             
             String default_pmm = null;
             if (viewType.equalsIgnoreCase("receptionist") || viewType.equalsIgnoreCase("doctor")) {
@@ -177,6 +177,12 @@ public final class LoginAction extends DispatchAction {
             if (where.equals("provider") && default_pmm != null && "enabled".equals(default_pmm)) {
                 where = "caisiPMM";
             }
+
+            String quatroShelter = OscarProperties.getInstance().getProperty("QUATRO_SHELTER");
+            if(quatroShelter!= null && quatroShelter.equals("on")) {
+            	where = "shelterSelection";
+            }
+        
             /*
              * if (OscarProperties.getInstance().isTorontoRFQ()) { where = "caisiPMM"; }
              */

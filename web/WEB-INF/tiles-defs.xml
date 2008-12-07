@@ -3,6 +3,10 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
        "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
 <tiles-definitions>
+	<definition name="page.home" path="/PMmodule/layout_quatro.jsp">
+		<put name="leftNav" value="/PMmodule/navigation_blank.jsp" />
+		<put name="body" value="/PMmodule/Home.jsp" />
+	</definition>
 	<definition
 		name="page.admin.list"
 		path="/PMmodule/layout.jsp">
@@ -434,4 +438,10 @@
 			value="/PMmodule/reports/CustomReportForm.jsp" />
 	</definition>	
 -->
+	<definition name="page.admin.showORGTree"
+		 path="/PMmodule/layout_quatro.jsp"> <put name="leftNav" value="/PMmodule/navigation_blank.jsp" />
+		
+		<put name="body"
+			value="/PMmodule/Admin/Organization/ORGTree.jsp" />
+	</definition>
 </tiles-definitions>

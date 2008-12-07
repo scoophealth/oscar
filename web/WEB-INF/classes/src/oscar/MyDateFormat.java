@@ -28,10 +28,23 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import com.quatro.common.KeyConstants;
+
 public class MyDateFormat {
 	//private int aDateTime;
 	public MyDateFormat() {
 		//this.aDateTime = d;
+	}
+	
+	public static int getDaysDiff(Calendar start, Calendar end){
+		  if(start==null || end==null) return 0;
+		  long days = (end.getTimeInMillis() - start.getTimeInMillis())/(24*60*60*1000);
+		  return (int)days;
+	}
+
+	public static String formatMonthOrDay(String value) {
+	   String str2= "0" + value;
+	   return str2.substring(str2.length()-2, str2.length());
 	}
 	// from 8 (int) to 08 (String), 19 to 19
 	public static String getDigitalXX(int d) {
@@ -60,6 +73,19 @@ public class MyDateFormat {
 			return aDate.substring(0,aDate.indexOf(' '));
 		}
 	}
+
+	public static String getStandardDate(Calendar cal) {
+		if (cal == null) return "";
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+	    return formatter.format(cal.getTime());
+	}
+
+	public static String getStandardDateTime(Calendar cal) {
+		if(cal==null) return "";
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	    return formatter.format(cal.getTime());
+	}
+	
 	//from 2001, 2, 2 to 2001-02-02
 	public static String getMysqlStandardDate(int year,int month, int day) {
 		return (year+ "-"+ getDigitalXX(month)+ "-" +getDigitalXX(day));
@@ -154,8 +180,158 @@ public class MyDateFormat {
         	if(month>0){
         		month = month - 1;
         	}
-            GregorianCalendar cal = new GregorianCalendar(year, month, day);
+            GregorianCalendar cal = new GregorianCalendar(year, month, day,0,0,0);
             return new java.sql.Date(cal.getTime().getTime());
+        }
+            catch (Exception e)
+            {
+                System.out.println("Invalid Date - the input date is in wrong format or out of range");
+                return null;
+            }
+	}
+	public static java.sql.Date dayEnd(String pDate){
+		if (pDate == null || "".equals(pDate)) return null;      
+        try
+        {
+        	char sep = '-';
+        	boolean bnosep = false;
+        	int idx = pDate.indexOf(sep);
+        	if (idx < 0) {
+        		sep='/';
+        		idx= pDate.indexOf(sep);
+        	}
+        	bnosep = idx < 0;
+        	int day, month, year;
+        	if(bnosep) {
+                year = Integer.parseInt(pDate.substring(0, 4));
+                month = Integer.parseInt(pDate.substring(4, 6));
+                day= Integer.parseInt(pDate.substring(6, 8));
+        	}
+        	else
+        	{
+        		year = Integer.parseInt(pDate.substring(0,idx));
+        		int idx1 = pDate.indexOf(sep,idx+1);
+        		month = Integer.parseInt(pDate.substring(idx+1,idx1));
+        		idx = idx1;
+        		idx1 = pDate.indexOf(' ');
+        		if(idx1<0) idx1 = pDate.length();
+        		day = Integer.parseInt(pDate.substring(idx+1,idx1));
+        	}
+        	if(month>0){
+        		month = month - 1;
+        	}
+            GregorianCalendar cal = new GregorianCalendar(year, month, day,23,59,59);
+            return new java.sql.Date(cal.getTime().getTime());
+        }
+            catch (Exception e)
+            {
+                System.out.println("Invalid Date - the input date is in wrong format or out of range");
+                return null;
+            }
+	}
+	
+    //yyyy-mm-dd hh:mm:ss
+	public static Calendar getCalendarwithTime(String pDate){
+	   pDate = pDate.replace('-','/'); 
+       SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); 
+       try{
+         Date date = (Date)formatter.parse(pDate); 
+         Calendar cal=Calendar.getInstance();
+         cal.setTime(date);
+         return cal;
+       }catch(Exception e){
+    	 return null;
+       }
+    }
+
+	public static boolean isBefore(Calendar cal1, Calendar cal2){
+       String str1= getStandardDate(cal1);
+       String str2= getStandardDate(cal2);
+
+       return str1.compareTo(str2)<0;
+	}
+	
+	public static Calendar getCalendar(java.util.Date date){
+		Calendar cal= Calendar.getInstance();
+		cal.setTime(date);
+		return cal;
+	}
+	public static Calendar getCalendar(String pDate,String dateFormat){
+		if (pDate == null || "".equals(pDate)) return null;
+		 GregorianCalendar cal = null;
+		int day, month, year;
+		if(KeyConstants.DATE_YYYYMMDD.equals(dateFormat.toUpperCase()) ||
+				KeyConstants.DATE_YYYYMMDDHHMM.equals(dateFormat.toUpperCase()))
+			return getCalendar(pDate);
+		else if(KeyConstants.DATE_DDMMYYYY.equals(dateFormat.toUpperCase())) 
+		{
+			 year = Integer.parseInt(pDate.substring(4, 8));
+             month = Integer.parseInt(pDate.substring(2, 4));
+             day= Integer.parseInt(pDate.substring(0, 2));
+             if(month>0){
+         		month = month - 1;
+         	}            
+              cal=new GregorianCalendar(year, month, day);
+		}
+		else if(KeyConstants.DATE_MMDDYYYY.equals(dateFormat.toUpperCase())) 
+		{
+			 year = Integer.parseInt(pDate.substring(4, 8));
+             day = Integer.parseInt(pDate.substring(2, 4));
+             month= Integer.parseInt(pDate.substring(0, 2));
+             if(month>0){
+         		month = month - 1;
+         	}            
+              cal=new GregorianCalendar(year, month, day);
+		}
+		return cal;
+	}
+	public static Calendar getCalendar(String pDate)
+    {
+		//date format yyyymmddHHMM or yyyymmdd or yyyy/mm/dd or yyyy-mm-dd
+        if (pDate == null || "".equals(pDate)) return null;
+        if ("TODAY".equals(pDate.toUpperCase())) return Calendar.getInstance();
+        int len =pDate.length();
+        try
+        {
+        	char sep = '-';
+        	boolean bnosep = false;
+        	int idx = pDate.indexOf(sep);
+        	if (idx < 0) {
+        		sep='/';
+        		idx= pDate.indexOf(sep);
+        	}
+        	bnosep = idx < 0;
+        	int day, month, year;
+        	int hour=0,min=0;
+        	if(bnosep && len==8) {
+                year = Integer.parseInt(pDate.substring(0, 4));
+                month = Integer.parseInt(pDate.substring(4, 6));
+                day= Integer.parseInt(pDate.substring(6, 8));
+        	}
+        	else if(bnosep && len==12){
+        		year = Integer.parseInt(pDate.substring(0, 4));
+                month = Integer.parseInt(pDate.substring(4, 6));
+                day= Integer.parseInt(pDate.substring(6, 8));
+                hour =Integer.parseInt(pDate.substring(8, 10));
+                min =Integer.parseInt(pDate.substring(10, 12));
+        	}
+        	else
+        	{
+        		year = Integer.parseInt(pDate.substring(0,idx));
+        		int idx1 = pDate.indexOf(sep,idx+1);
+        		month = Integer.parseInt(pDate.substring(idx+1,idx1));
+        		idx = idx1;
+        		idx1 = pDate.indexOf(' ');
+        		if(idx1<0) idx1 = pDate.length();
+        		day = Integer.parseInt(pDate.substring(idx+1,idx1));
+        	}
+        	if(month>0){
+        		month = month - 1;
+        	}
+            GregorianCalendar cal = null;
+            if(hour>0) cal=new GregorianCalendar(year, month, day,hour,min);
+            else cal=new GregorianCalendar(year, month, day);
+            return cal;
         }
         catch (Exception e)
         {
@@ -228,7 +404,18 @@ public class MyDateFormat {
 		}
 		return temp;
 	}
-
+	 public static Calendar getDayStart(Calendar pDate){
+	    	int year =pDate.get(Calendar.YEAR);
+	    	int month = pDate.get(Calendar.MONTH);
+	    	int day = pDate.get(Calendar.DATE);
+	    	return new GregorianCalendar(year,month,day,0,0,0);
+	    }
+    public static Calendar getDayEnd(Calendar pDate){
+    	int year =pDate.get(Calendar.YEAR);
+    	int month = pDate.get(Calendar.MONTH);
+    	int day = pDate.get(Calendar.DATE);
+    	return new GregorianCalendar(year,month,day,23,59,59);
+    }
 	public static int getAge(int year, int month, int date) {
   	GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);
@@ -250,5 +437,15 @@ public class MyDateFormat {
     int age= MyDateFormat.getAge(year, month, date);
     return age;
 	}
-	
+
+	public static String formatMonthDay(String pValue) {
+		if(pValue==null) return null;
+		
+		if(pValue.length()==1){
+		  return "0" + pValue;
+		}else{
+		  return pValue;
+		}  
+	}
+
 }

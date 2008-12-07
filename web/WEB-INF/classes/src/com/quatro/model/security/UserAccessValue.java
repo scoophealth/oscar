@@ -5,6 +5,7 @@ public class UserAccessValue implements Serializable {
 		
 		String providerNo;
 		String orgCd;
+		String orgCdcsv;
         String functionCd;
         String privilege;
         boolean orgApplicable;
@@ -32,6 +33,12 @@ public class UserAccessValue implements Serializable {
 		}
 		public void setOrgCd(String cd) {
 			orgCd = cd;
+		}
+		public String getOrgCdcsv() {
+			return orgCdcsv;
+		}
+		public void setOrgCdcsv(String cdcsv) {
+			orgCdcsv = cdcsv;
 		}
 		public String getProviderNo() {
 			return providerNo;

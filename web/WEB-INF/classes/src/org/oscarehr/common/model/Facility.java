@@ -33,6 +33,8 @@ public class Facility implements Serializable {
     private Date integratorLastPushTime=null;
     private boolean allowQuickConsent=true;
     private boolean enableIntegratedReferrals=true;
+    //private String lastUpdateUser;
+    //private Date lastUpdateDate;
     
     public boolean isEnableIntegratedReferrals() {
 		return enableIntegratedReferrals;
@@ -180,7 +182,23 @@ public class Facility implements Serializable {
     public void setIntegratorLastPushTime(Date integratorLastPushTime) {
         this.integratorLastPushTime = integratorLastPushTime;
     }
+/*
+	public String getLastUpdateUser() {
+		return lastUpdateUser;
+	}
 
+	public void setLastUpdateUser(String lastUpdateUser) {
+		this.lastUpdateUser = lastUpdateUser;
+	}
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+*/	
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -195,4 +213,5 @@ public class Facility implements Serializable {
     public int hashCode() {
         return (id != null ? id.hashCode() : 0);
     }
+
 }

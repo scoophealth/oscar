@@ -7,10 +7,21 @@ public class LookupTableDefValue {
    String tableName;
    String description;
    boolean active;
+   boolean readonly;
    boolean tree;
    int treeCodeLength;
+   boolean hasActive;
+   boolean hasDisplayOrder;
 
-   public boolean isActive() {
+   public boolean isReadonly() {
+	return readonly;
+}
+
+public void setReadonly(boolean readonly) {
+	this.readonly = readonly;
+}
+
+public boolean isActive() {
 	 return active;
    }
    
@@ -71,6 +82,22 @@ public class LookupTableDefValue {
 
 	public void setTree(boolean tree) {
 		this.tree = tree;
+	}
+
+	public boolean isHasActive() {
+		return hasActive;
+	}
+
+	public void setHasActive(boolean hasActive) {
+		this.hasActive = hasActive;
+	}
+
+	public boolean isHasDisplayOrder() {
+		return hasDisplayOrder;
+	}
+
+	public void setHasDisplayOrder(boolean hasDisplayOrder) {
+		this.hasDisplayOrder = hasDisplayOrder;
 	}
 
 }

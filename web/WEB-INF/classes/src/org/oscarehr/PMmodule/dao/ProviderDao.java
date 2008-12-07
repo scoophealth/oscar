@@ -28,6 +28,9 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -54,12 +57,10 @@ public class ProviderDao extends HibernateDaoSupport {
 			throw new IllegalArgumentException();
 		}
 
-		Provider provider = (Provider) getHibernateTemplate().get(
-				Provider.class, providerNo);
+		Provider provider = (Provider) getHibernateTemplate().get(Provider.class, providerNo);
 
 		if (log.isDebugEnabled()) {
-			log.debug("getProvider: providerNo=" + providerNo + ",found="
-					+ (provider != null));
+			log.debug("getProvider: providerNo=" + providerNo + ",found=" + (provider != null));
 		}
 
 		return provider;
@@ -82,8 +83,7 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("getProviderName: providerNo=" + providerNo + ",result="
-					+ providerName);
+			log.debug("getProviderName: providerNo=" + providerNo + ",result=" + providerName);
 		}
 
 		return providerName;
@@ -98,6 +98,22 @@ public class ProviderDao extends HibernateDaoSupport {
 			log.debug("getProviders: # of results=" + rs.size());
 		}
 		return rs;
+	}
+
+    public List getActiveProviders(Integer programId) {
+        ArrayList paramList = new ArrayList();
+
+    	String sSQL="FROM  SecProvider p where p.status='1' and p.providerNo in " +
+    	"(select sr.providerNo from secUserRole sr, LstOrgcd o " +
+    	" where o.code = 'P' || ? " +
+    	" and o.codecsv  like '%' || sr.orgcd || ',%' " +
+    	" and not (sr.orgcd like 'R%' or sr.orgcd like 'O%'))" +
+    	" ORDER BY p.lastName";
+    		 	
+    	paramList.add(programId);
+    	Object params[] = paramList.toArray(new Object[paramList.size()]);
+
+    	return  getHibernateTemplate().find(sSQL ,params);
 	}
 
 	public List<Provider> getActiveProviders(String facilityId, String programId) {
@@ -176,7 +192,26 @@ public class ProviderDao extends HibernateDaoSupport {
 
 		return results;
 	}
+	
+	public List getShelterIds(String provider_no)
+	{
+//	    return(SqlUtils.selectIntList("select facility_id from secuserrole where provider_no='"+provider_no+'\''));
+		/*
+		String sql = "select distinct substr(codetree,18,7) as shelter_id from lst_orgcd" ;
+		sql += " where code in (select orgcd from secuserrole where provider_no=?)";
+		sql += " and fullcode like '%S%'";
+		*/
+		String sql ="select distinct c.id as shelter_id from lst_shelter c, lst_orgcd a, secUserRole b  where instr('RO',substr(b.orgcd,1,1)) = 0 and a.codecsv like '%' || b.orgcd || ',%'" + 
+				" and b.provider_no=? and a.codecsv like '%S' || c.id  || ',%'";
+	
+		Query query = getSession().createSQLQuery(sql);
+    	((SQLQuery) query).addScalar("shelter_id", Hibernate.INTEGER); 
+    	query.setString(0, provider_no);
+        List lst=query.list();
+        return lst;
 
+	}
+	
 	public List<Provider> getActiveProvidersByType(String type) {
 		@SuppressWarnings("unchecked")
 		List<Provider> results = this.getHibernateTemplate().find(

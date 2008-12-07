@@ -133,12 +133,51 @@ public class OscarProperties extends Properties {
          return getBooleanProperty("AUTO_GENERATE_PROVIDER_NO", "yes") || getBooleanProperty("AUTO_GENERATE_PROVIDER_NO", "true");
      }   
 
+     public boolean isSiteSecured() {
+         return getBooleanProperty("security_site_control", "yes") || getBooleanProperty("security_site_control", "true");
+     }   
+
      public boolean isPINEncripted() {
          return getBooleanProperty("IS_PIN_ENCRYPTED", "yes") || getBooleanProperty("IS_PIN_ENCRYPTED", "true");
      }
-     
+     public boolean isAdminOptionOn()
+     {
+         return getBooleanProperty("with_admin_option", "yes") || getBooleanProperty("with_admin_option", "true");
+     }
+     public boolean isLogAccessClient()
+     {
+         return getBooleanProperty("log_accesses_of_client", "yes") || getBooleanProperty("log_accesses_of_client", "true");
+     }
+     public boolean isLogAccessProgram()
+     {
+         return getBooleanProperty("log_accesses_of_program", "yes") || getBooleanProperty("log_accesses_of_program", "true");
+     }
+     public boolean isAccountLockingEnabled()
+     {
+    	 String val = getProperty("ENABLE_ACCOUNT_LOCKING");
+    	 if (val == null) return false;
+         return val.toUpperCase().startsWith("Y") || val.toUpperCase().startsWith("T");
+     }
      public String getDbType()
      {
     	 return getProperty("db_type");
+     }
+     public String getDbUserName()
+     {
+    	return getProperty("db_username");
+     }
+     public String getDbPassword()
+     {
+    	return getProperty("db_password");
+     }
+     public String getDbUri()
+     {
+    	 return getProperty("db_uri");
+     }
+     public String getDbDriver(){
+    	 return getProperty("db_driver");
+     }
+     public String getBuildDate(){
+    	 return getProperty("builddate");
      }
 }

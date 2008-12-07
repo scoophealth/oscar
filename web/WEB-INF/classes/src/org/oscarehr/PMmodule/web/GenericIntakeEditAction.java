@@ -140,7 +140,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		// end of change
 
 		String intakeType = getType(request);
-		Integer clientId = getClientId(request);
+		Integer clientId = getClientIdAsInteger(request);
 		String providerNo = getProviderNo(request);
 
 		Intake intake = null;
@@ -200,7 +200,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 		String intakeType = getType(request);
 		String providerNo = getProviderNo(request);
-		Integer clientId = getClientId(request);
+		Integer clientId = getClientIdAsInteger(request);
 		Integer intakeId = getIntakeId(request);
 
 		Intake intake = null;

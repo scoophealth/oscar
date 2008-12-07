@@ -1,3 +1,6 @@
+2008-12-07 : First commit for quatro merge
+	     Includes most of the security framework, homepage, ORGtree viewer
+	     Relevant db changes (not yet incorporated into main files until we do some testing)
 2008-11-18 : Caisi Integrator also provides photos when client is copied from remote server.
 2008-11-17 : removed the old RFQ required intake fields editor.
 

@@ -3,28 +3,44 @@ package com.quatro.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Calendar;
 
+import org.caisi.dao.ProviderDAO;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.MyDateFormat;
+import oscar.OscarProperties;
 import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
 
+import com.quatro.common.KeyConstants;
+import com.quatro.model.Attachment;
 import com.quatro.model.FieldDefValue;
 import com.quatro.model.LookupCodeValue;
 import com.quatro.model.LookupTableDefValue;
+import com.quatro.model.LstOrgcd;
+import com.quatro.model.security.SecProvider;
 import com.quatro.util.Utility;
+
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.common.model.Facility;
+import java.util.Calendar;
+
 public class LookupDao extends HibernateDaoSupport {
 
 	/* Column property mappings defined by the generic idx 
 	 *  1 - Code 2 - Description 3 Active 
-	 *  4 - Display Order, aka LineId 5 - ParentCode 6 - Buf1
+	 *  4 - Display Order, 5 - ParentCode 6 - Buf1 7 - CodeTree
+	 *  8 - Last Update User   9 - Last Update Date
+	 *  10 - 16 Buf3 - Buf9   17 - CodeCSV
 	 */
-	
+	private ProviderDao providerDao;
 	public List LoadCodeList(String tableId, boolean activeOnly, String code, String codeDesc)
 	{
 	   return LoadCodeList(tableId,activeOnly,"",code,codeDesc);
@@ -32,7 +48,8 @@ public class LookupDao extends HibernateDaoSupport {
 	
 	public LookupCodeValue GetCode(String tableId,String code)
 	{
-		List lst = LoadCodeList(tableId, true, "", code, "");
+		if (code == null || "".equals(code)) return null;
+		List lst = LoadCodeList(tableId, false, code, "");
 		LookupCodeValue lkv = null;
 		if (lst.size()>0) 
 		{
@@ -43,15 +60,17 @@ public class LookupDao extends HibernateDaoSupport {
 
 	public List LoadCodeList(String tableId,boolean activeOnly,  String parentCode,String code, String codeDesc)
 	{
+		String pCd=parentCode;
+		if("USR".equals(tableId)) parentCode=null;
 		LookupTableDefValue tableDef = GetLookupTableDef(tableId);
 		if (tableDef==null) return(new ArrayList());
-		
 		List fields = LoadFieldDefList(tableId);
-		DBPreparedHandlerParam [] params = new DBPreparedHandlerParam[4];
-		String fieldNames [] = new String[7];
+		DBPreparedHandlerParam [] params = new DBPreparedHandlerParam[100];
+		String fieldNames [] = new String[17];
 		String sSQL1 = "";
 		String sSQL="select distinct ";
-		for (int i = 1; i <= 7; i++)
+		boolean activeFieldExists = true;
+		for (int i = 1; i <= 17; i++)
 		{
 			boolean ok = false;
 			for (int j = 0; j<fields.size(); j++)
@@ -59,23 +78,37 @@ public class LookupDao extends HibernateDaoSupport {
 				FieldDefValue fdef = (FieldDefValue)fields.get(j);
 				if (fdef.getGenericIdx()== i)
 				{
-					sSQL += "s." + fdef.getFieldSQL() + ",";
-					fieldNames[i-1]=fdef.getFieldSQL();
+					if (fdef.getFieldSQL().indexOf('(') >= 0) {
+						sSQL += fdef.getFieldSQL() + " " + fdef.getFieldName()+ ",";
+						fieldNames[i-1]=fdef.getFieldName();
+					}
+					else
+					{
+						sSQL += "s." + fdef.getFieldSQL() + ",";
+						fieldNames[i-1]=fdef.getFieldSQL();
+					}
 					ok = true;
 					break;
 				}
 			}
 			if (!ok) {
-				sSQL += " null field" + i + ",";
+				if (i==3) {
+					activeFieldExists = false;
+					sSQL += " 1 field" + i + ",";
+				}
+				else
+				{				
+					sSQL += " null field" + i + ",";
+				}
 				fieldNames[i-1] = "field" + i;
 			}
 		}
 		sSQL = sSQL.substring(0,sSQL.length()-1);
 	    sSQL +=" from " + tableDef.getTableName() ;
-		sSQL1 = sSQL.replace("s.", "a.") + " a,";	    
+		sSQL1 = oscar.Misc.replace(sSQL,"s.", "a.") + " a,";	    
 		sSQL += " s where 1=1";
 	    int i= 0;
-        if (activeOnly) {
+        if (activeFieldExists && activeOnly) {
 	    	sSQL += " and " + fieldNames[2] + "=?"; 
 	    	params[i++] = new DBPreparedHandlerParam(1);
         }
@@ -84,20 +117,48 @@ public class LookupDao extends HibernateDaoSupport {
 	    	params[i++]= new DBPreparedHandlerParam(parentCode);
 	   }
 	   if (!Utility.IsEmpty(code)) {
-	    	sSQL += " and " + fieldNames[0] + "=?"; 
-	    	params[i++] = new DBPreparedHandlerParam(code);
+		   //org table is different from other tables 
+		   if(tableId.equals("ORG")){
+			   sSQL += " and " + fieldNames[0] + " like ('%'||";
+		    	String [] codes = code.split(",");
+	    		sSQL += "?";
+		    	params[i++] = new DBPreparedHandlerParam(codes[0]);
+		    	for(int k = 1; k<codes.length; k++)
+		    	{
+		    		sSQL += ",?";
+			    	params[i++] = new DBPreparedHandlerParam(codes[k]);
+		    	}
+		    	sSQL += ")";
+		   }else
+		   {
+		    	sSQL += " and " + fieldNames[0] + " in (";
+		    	String [] codes = code.split(",");
+	    		sSQL += "?";
+		    	params[i++] = new DBPreparedHandlerParam(codes[0]);
+		    	for(int k = 1; k<codes.length; k++)
+		    	{
+		    		if(codes[k].equals("")) continue;
+		    		sSQL += ",?";
+			    	params[i++] = new DBPreparedHandlerParam(codes[k]);
+		    	}
+		    	sSQL += ")";
+		   }
 	   }
 	   if (!Utility.IsEmpty(codeDesc)) {
-	    	sSQL += " and " + fieldNames[1] + " like ?"; 
-	    	params[i++]= new DBPreparedHandlerParam("%" + codeDesc + "%");
+	    	sSQL += " and upper(" + fieldNames[1] + ") like ?"; 
+	    	params[i++]= new DBPreparedHandlerParam("%" + codeDesc.toUpperCase() + "%");
 	   }	
 	   
 	   if (tableDef.isTree()) {
 		 sSQL = sSQL1 + "(" + sSQL + ") b";
 		 sSQL += " where b." + fieldNames[6] + " like a." + fieldNames[6] + "||'%'";
 	   }
-	   
-	   sSQL += " order by 7,4,5,2";
+//	   if (tableDef.isTree())
+//	   {
+//		   sSQL += " order by 7,1";
+//	   } else {
+		   sSQL += " order by 4,2";
+//	   }
 	   DBPreparedHandlerParam [] pars = new DBPreparedHandlerParam[i];
 	   for(int j=0; j<i;j++)
 	   {
@@ -106,6 +167,7 @@ public class LookupDao extends HibernateDaoSupport {
 	   
 	   DBPreparedHandler db = new DBPreparedHandler();
 	   ArrayList list = new ArrayList();
+	   
 	   try {
 		   ResultSet rs = db.queryResults(sSQL,pars);
 		   while (rs.next()) {
@@ -113,19 +175,46 @@ public class LookupDao extends HibernateDaoSupport {
 			   lv.setPrefix(tableId);
 			   lv.setCode(rs.getString(1));
 			   lv.setDescription(db.getString(rs, 2));
-			   lv.setActive(1 == Integer.valueOf("0" + db.getString(rs, 3)));
-			   lv.setLineId(Integer.valueOf("0" + db.getString(rs,4)));
+			   lv.setActive(Integer.valueOf("0" + db.getString(rs, 3)).intValue()==1);
+			   lv.setOrderByIndex(Integer.valueOf("0" + db.getString(rs,4)).intValue());
 			   lv.setParentCode(db.getString(rs, 5));
 			   lv.setBuf1(db.getString(rs,6));
 			   lv.setCodeTree(db.getString(rs, 7));
+			   lv.setLastUpdateUser(db.getString(rs,8));
+			   lv.setLastUpdateDate(MyDateFormat.getCalendar(db.getString(rs, 9)));
+			   lv.setBuf3(db.getString(rs,10));
+			   lv.setBuf4(db.getString(rs,11));
+			   lv.setBuf5(db.getString(rs,12));
+			   lv.setBuf6(db.getString(rs,13));
+			   lv.setBuf7(db.getString(rs,14));
+			   lv.setBuf8(db.getString(rs,15));
+			   lv.setBuf9(db.getString(rs,16));
+			   lv.setCodecsv(db.getString(rs, 17));
 			   list.add(lv);
 			}
 			rs.close();
+			//filter by programId for user
+			if("USR".equals(tableId) && !Utility.IsEmpty(pCd)){
+				List userLst = providerDao.getActiveProviders(new Integer(pCd));	
+				ArrayList newLst=new ArrayList();
+				for(int n=0;n<userLst.size();n++){
+					SecProvider sp =(SecProvider)userLst.get(n);
+					for(int m=0;m<list.size();m++){
+						LookupCodeValue lv=(LookupCodeValue)list.get(m);					
+						if(lv.getCode().equals(sp.getProviderNo()))	newLst.add(lv);
+					}
+				}
+				list =newLst;
+			}
 	   }
 	   catch(SQLException e)
 	   {
-		   System.out.println(e.getStackTrace().toString());
+		  e.printStackTrace();
 	   }
+	   finally
+	   {
+		   try {db.closeConn();}catch(SQLException e) {}
+	   }	 
 	   return list;
 	}
 
@@ -155,11 +244,12 @@ public class LookupDao extends HibernateDaoSupport {
 	{
 		String tableName = tableDef.getTableName();
 		List fs = LoadFieldDefList(tableDef.getTableId());
-		String idFieldName = ((FieldDefValue) fs.get(0)).getFieldSQL();
+		String idFieldName = "";
 		
 		String sql = "select ";
 		for(int i=0; i<fs.size(); i++) {
 			FieldDefValue fdv = (FieldDefValue) fs.get(i);
+			if(fdv.getGenericIdx()==1) idFieldName = fdv.getFieldSQL();
 			if (i==0) {
 				sql += fdv.getFieldSQL();
 			}
@@ -168,29 +258,45 @@ public class LookupDao extends HibernateDaoSupport {
 				sql += "," + fdv.getFieldSQL();
 			}
 		}
-		sql += " from " + tableName;
+		sql += " from " + tableName + " s";
 		sql += " where " + idFieldName + "='" + code + "'"; 
+		DBPreparedHandler db = new DBPreparedHandler();
 		try {
-			DBPreparedHandler db = new DBPreparedHandler();
 			ResultSet rs = db.queryResults(sql);
 			if (rs.next()) {
 				for(int i=0; i< fs.size(); i++) 
 				{
 					FieldDefValue fdv = (FieldDefValue) fs.get(i);
 					String val = db.getString(rs, i+1);
+					if("D".equals(fdv.getFieldType()))
+						if(fdv.isEditable()) {
+							val = MyDateFormat.getStandardDate(MyDateFormat.getCalendarwithTime(val));
+						}
+						else
+						{
+							val = MyDateFormat.getStandardDateTime(MyDateFormat.getCalendarwithTime(val));
+						}
 					fdv.setVal(val);
-					if (!Utility.IsEmpty(fdv.getLookupTable()))
-					{
-						LookupCodeValue lkv = GetCode(fdv.getLookupTable(),val);
-						if (lkv != null) fdv.setValDesc(lkv.getDescription());
-					}
 				}
 			}
 			rs.close();
+			for (int i=0; i< fs.size(); i++)
+			{
+				FieldDefValue fdv = (FieldDefValue) fs.get(i);
+				if (!Utility.IsEmpty(fdv.getLookupTable()))
+				{
+					LookupCodeValue lkv = GetCode(fdv.getLookupTable(),fdv.getVal());
+					if (lkv != null) fdv.setValDesc(lkv.getDescription());
+				}
+			}
 		}
 		catch(SQLException e)
 		{
-			System.out.println(e.getStackTrace());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {db.closeConn();}catch(SQLException e){}
 		}
 		return fs;
 	}
@@ -211,14 +317,16 @@ public class LookupDao extends HibernateDaoSupport {
 			}
 		}
 		sql += " from " + tableName;
+		DBPreparedHandler db = new DBPreparedHandler();
 		try {
-			DBPreparedHandler db = new DBPreparedHandler();
 			ResultSet rs = db.queryResults(sql);
 			while (rs.next()) {
 				for(int i=0; i< fs.size(); i++) 
 				{
 					FieldDefValue fdv = (FieldDefValue) fs.get(i);
 					String val = db.getString(rs, i+1);
+					if("D".equals(fdv.getFieldType()))
+						val = MyDateFormat.getStandardDateTime(MyDateFormat.getCalendarwithTime(val));
 					fdv.setVal(val);
 					if (!Utility.IsEmpty(fdv.getLookupTable()))
 					{
@@ -234,6 +342,10 @@ public class LookupDao extends HibernateDaoSupport {
 		{
 			System.out.println(e.getStackTrace());
 		}
+		finally
+		{
+			try {db.closeConn();}catch(SQLException e){};
+		}
 		return codes;
 	}
 	private int GetNextId(String idFieldName, String tableName) throws SQLException
@@ -242,23 +354,108 @@ public class LookupDao extends HibernateDaoSupport {
 		String sql = "select max(" + idFieldName + ")";
 		sql += " from " + tableName;
 		DBPreparedHandler db = new DBPreparedHandler();
-		ResultSet rs = db.queryResults(sql);
-		int id = 0;
-		if (rs.next()) 
-			 id = rs.getInt(1);
-		return id + 1;
+		try {
+			ResultSet rs = db.queryResults(sql);
+			int id = 0;
+			if (rs.next()) 
+				 id = rs.getInt(1);
+			return id + 1;
+		}
+		finally
+		{
+			db.closeConn();
+		}
 	}
 	
 	public String SaveCodeValue(boolean isNew, LookupTableDefValue tableDef, List fieldDefList) throws SQLException
 	{
+		String id = "";
+		if (isNew)
+		{
+			id = InsertCodeValue(tableDef, fieldDefList);
+		}
+		else
+		{
+			id = UpdateCodeValue(tableDef,fieldDefList);
+		}
+		String tableId = tableDef.getTableId();
+		if ("OGN,SHL".indexOf(tableId)>=0)
+		{
+			SaveAsOrgCode(GetCode(tableId, id), tableId); 
+		}
+		if ("PRP".equals(tableId)) {
+			OscarProperties prp = OscarProperties.getInstance();
+			LookupCodeValue prpCd = GetCode(tableId,id);
+			if(prp.getProperty(prpCd.getDescription()) != null) prp.remove(prpCd.getDescription());
+	    	prp.setProperty(prpCd.getDescription(), prpCd.getBuf1().toLowerCase());
+		}
+		return id;
+	}
+	public String SaveCodeValue(boolean isNew, LookupCodeValue codeValue) throws SQLException
+	{
+		String tableId = codeValue.getPrefix();
+		LookupTableDefValue  tableDef = GetLookupTableDef(tableId);
+		List fieldDefList = this.LoadFieldDefList(tableId);
+		for(int i=0; i<fieldDefList.size(); i++)
+		{
+			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
+			
+			switch(fdv.getGenericIdx())
+			{
+			case 1:
+				fdv.setVal(codeValue.getCode());
+				break;
+			case 2:
+				fdv.setVal(codeValue.getDescription());
+				break;
+			case 3:
+				fdv.setVal(codeValue.isActive()?"1":"0");
+				break;
+			case 4:
+				fdv.setVal(String.valueOf(codeValue.getOrderByIndex()));
+				break;
+			case 5:
+				fdv.setVal(codeValue.getParentCode());
+				break;
+			case 6:
+				fdv.setVal(codeValue.getBuf1());
+				break;
+			case 7:
+				fdv.setVal(codeValue.getCodeTree());
+				break;
+			case 8:
+				fdv.setVal(codeValue.getLastUpdateUser());
+				break;
+			case 9:
+				fdv.setVal(MyDateFormat.getStandardDateTime(codeValue.getLastUpdateDate()));
+				break;
+			case 10:
+				fdv.setVal(codeValue.getBuf3());
+			case 11:
+				fdv.setVal(codeValue.getBuf4());
+			case 12:
+				fdv.setVal(codeValue.getBuf5());
+			case 13:
+				fdv.setVal(codeValue.getBuf6());
+			case 14:
+				fdv.setVal(codeValue.getBuf7());
+			case 15:
+				fdv.setVal(codeValue.getBuf8());
+			case 16:
+				fdv.setVal(codeValue.getBuf9());
+			case 17:
+				fdv.setVal(codeValue.getCodecsv());
+			}
+		}
 		if (isNew) 
 		{
 			return InsertCodeValue(tableDef, fieldDefList);
 		}
 		else
+		{
 			return UpdateCodeValue(tableDef,fieldDefList);
+		}
 	}
-	
 	private String InsertCodeValue(LookupTableDefValue tableDef, List fieldDefList) throws SQLException
 	{
 		String tableName = tableDef.getTableName();
@@ -269,12 +466,18 @@ public class LookupDao extends HibernateDaoSupport {
 		String sql = "insert into  " + tableName + "("; 
 		for(int i=0; i< fieldDefList.size(); i++) {
 			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
-			sql += fdv.getFieldName() + ",";
+			sql += fdv.getFieldSQL() + ",";
 			phs +="?,"; 
-			if (fdv.isAuto())
-			{
-				idFieldVal = String.valueOf(GetNextId(fdv.getFieldSQL(), tableName));
-				fdv.setVal(idFieldVal);
+			if (fdv.getGenericIdx() == 1) {
+				if (fdv.isAuto())
+				{
+					idFieldVal = String.valueOf(GetNextId(fdv.getFieldSQL(), tableName));
+					fdv.setVal(idFieldVal);
+				}
+				else
+				{
+					idFieldVal = fdv.getVal();
+				}
 			}
 			if ("S".equals(fdv.getFieldType()))
 			{
@@ -282,7 +485,8 @@ public class LookupDao extends HibernateDaoSupport {
 			}
 			else if ("D".equals(fdv.getFieldType()))
 			{
-				params[i] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(fdv.getVal()));
+				//for last update date Using calendar Instance
+				params[i] = new DBPreparedHandlerParam(new java.sql.Date(MyDateFormat.getCalendarwithTime(fdv.getVal()).getTime().getTime()));
 			}
 			else
 			{
@@ -297,10 +501,16 @@ public class LookupDao extends HibernateDaoSupport {
 		LookupCodeValue lkv= GetCode(tableDef.getTableId(), idFieldVal);
 		if(lkv != null) 
 		{
-			throw new SQLException("The Code Already Exist");
+			throw new SQLException("The Code Already Exists.");
 		}
 		DBPreparedHandler db = new DBPreparedHandler();
-		db.queryExecuteUpdate(sql, params);
+		try{
+			db.queryExecuteUpdate(sql, params);
+		}
+		finally
+		{
+			db.closeConn();
+		}
 		return idFieldVal;
 	}
 	private String UpdateCodeValue(LookupTableDefValue tableDef, List fieldDefList) throws SQLException
@@ -318,14 +528,20 @@ public class LookupDao extends HibernateDaoSupport {
 				idFieldVal = fdv.getVal();
 			}
 			
-			sql += fdv.getFieldName() + "=?,";
+			sql += fdv.getFieldSQL() + "=?,";
 			if ("S".equals(fdv.getFieldType()))
 			{
 				params[i] = new DBPreparedHandlerParam(fdv.getVal());
 			}
 			else if ("D".equals(fdv.getFieldType()))
 			{
-				params[i] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(fdv.getVal()));
+				if (fdv.isEditable()) {
+					params[i] = new DBPreparedHandlerParam(new java.sql.Date(MyDateFormat.getCalendar(fdv.getVal()).getTime().getTime()));
+				}
+				else
+				{
+					params[i] = new DBPreparedHandlerParam(new java.sql.Date(MyDateFormat.getCalendarwithTime(fdv.getVal()).getTime().getTime()));
+				}
 			}
 			else
 			{
@@ -336,7 +552,221 @@ public class LookupDao extends HibernateDaoSupport {
 		sql += " where " + idFieldName + "=?";
 		params[fieldDefList.size()] = params[0];
 		DBPreparedHandler db = new DBPreparedHandler();
-		db.queryExecuteUpdate(sql, params);
+		try {
+			db.queryExecuteUpdate(sql, params);
+		}
+		finally
+		{
+			db.closeConn();
+		}
 		return idFieldVal;
+	}
+	public void SaveAsOrgCode(Program program) throws SQLException
+	{
+		LookupTableDefValue tableDef = this.GetLookupTableDef("ORG");
+		List codeValues = new ArrayList();
+		String  programId = "0000000" + program.getId().toString();
+		programId = "P" + programId.substring(programId.length()-7);
+		String fullCode = "P" + program.getId();
+		
+		String facilityId = "0000000" + String.valueOf(program.getFacilityId());
+		facilityId = "F" + facilityId.substring(facilityId.length()-7); 
+		
+		LookupCodeValue fcd = GetCode("ORG", "F" + program.getFacilityId());
+		fullCode = fcd.getBuf1() + fullCode;
+		
+		boolean isNew = false;
+		LookupCodeValue pcd = GetCode("ORG", "P" + program.getId());
+		if (pcd == null) {
+			isNew = true;
+			pcd = new LookupCodeValue();
+		}
+		pcd.setPrefix("ORG");
+		pcd.setCode("P" + program.getId());
+		pcd.setCodeTree(fcd.getCodeTree() + programId);
+		pcd.setCodecsv(fcd.getCodecsv()+ "P" + program.getId()+",");
+		pcd.setDescription(program.getName());
+		pcd.setBuf1(fullCode);
+		pcd.setActive(Program.PROGRAM_STATUS_ACTIVE.equals(program.getProgramStatus()));
+		pcd.setOrderByIndex(0);
+		pcd.setLastUpdateDate(Calendar.getInstance());
+		pcd.setLastUpdateUser(program.getLastUpdateUser());
+		if(!isNew){
+			this.updateOrgTree(pcd.getCode(), pcd);
+			this.updateOrgStatus(pcd.getCode(), pcd);
+		}
+		this.SaveCodeValue(isNew,pcd);
+	}
+	private void updateOrgTree(String orgCd, LookupCodeValue newCd) throws SQLException
+	{
+		LookupCodeValue oldCd = GetCode("ORG", orgCd);
+		if(!oldCd.getCodecsv().equals(newCd.getCodecsv())) {
+			String oldFullCode = oldCd.getBuf1();
+			String oldTreeCode = oldCd.getCodeTree();
+			String oldCsv = oldCd.getCodecsv();
+			
+			String newFullCode = newCd.getBuf1();
+			String newTreeCode = newCd.getCodeTree();
+			String newCsv = newCd.getCodecsv();
+			String sql = "update lst_orgcd set fullcode =replace(fullcode,'" + oldFullCode + "','" + newFullCode + "')" + 
+											  ",codetree =replace(codetree,'" + oldTreeCode + "','" + newTreeCode + "')" + 
+						                       ",codecsv =replace(codecsv,'" + oldCsv + "','" + newCsv + "')" + 
+						 " where codecsv like '" + oldCsv + "_%'";
+
+			DBPreparedHandler db = new DBPreparedHandler();
+			try{
+				db.queryExecuteUpdate(sql);
+			}
+			finally
+			{
+				db.closeConn();
+			}
+		}
+	
+		
+	}
+
+	private void updateOrgStatus(String orgCd, LookupCodeValue newCd) throws SQLException
+	{
+		LookupCodeValue oldCd = GetCode("ORG", orgCd);
+		if(!newCd.isActive()) {
+			String oldCsv = oldCd.getCodecsv();
+			
+			String sql = "update lst_orgcd set activeyn ='0' where codecsv like '" + oldCsv + "_%'";
+
+			DBPreparedHandler db = new DBPreparedHandler();
+			try{
+				db.queryExecuteUpdate(sql);
+			}
+			finally
+			{
+				db.closeConn();
+			}
+		}
+	
+		
+	}
+	public boolean inOrg(String org1,String org2){
+		boolean isInString=false;
+		String sql="From LstOrgcd a where  a.fullcode like '%"+"?'  ";
+		
+		LstOrgcd orgObj1 =(LstOrgcd)getHibernateTemplate().find(sql,new Object[] {org1});
+		LstOrgcd orgObj2 =(LstOrgcd)getHibernateTemplate().find(sql,new Object[] {org2});
+		if(orgObj2.getFullcode().indexOf(orgObj1.getFullcode())>0) isInString = true;
+		return isInString;
+		
+	}
+	public void SaveAsOrgCode(Facility facility) throws SQLException
+	{
+		LookupTableDefValue tableDef = this.GetLookupTableDef("ORG");
+		List codeValues = new ArrayList();
+		String  facilityId = "0000000" + facility.getId().toString();
+		facilityId = "F" + facilityId.substring(facilityId.length()-7);
+		String fullCode = "F" + facility.getId();
+		
+		String orgId = "0000000" + String.valueOf(facility.getOrgId());
+		orgId = "S" + orgId.substring(orgId.length()-7); 
+		
+		LookupCodeValue ocd = GetCode("ORG", "S" + facility.getOrgId());
+		fullCode = ocd.getBuf1() + fullCode;
+		
+		boolean isNew = false;
+		LookupCodeValue fcd = GetCode("ORG", "F" + facility.getId());
+		if (fcd == null) {
+			isNew = true;
+			fcd = new LookupCodeValue();
+		}
+		fcd.setPrefix("ORG");
+		fcd.setCode("F" + facility.getId());
+		fcd.setCodeTree(ocd.getCodeTree() + facilityId);
+		fcd.setCodecsv(ocd.getCodecsv()+"F" + facility.getId()+",");
+		fcd.setDescription(facility.getName());
+		fcd.setBuf1(fullCode);
+		fcd.setActive(!facility.isDisabled());
+		fcd.setOrderByIndex(0);
+		fcd.setLastUpdateDate(Calendar.getInstance());
+		fcd.setLastUpdateUser(facility.getLastUpdateUser());
+		if(!isNew){
+			this.updateOrgTree(fcd.getCode(), fcd);
+			this.updateOrgStatus(fcd.getCode(), fcd);
+		}
+		this.SaveCodeValue(isNew,fcd);
+	}
+	public void SaveAsOrgCode(LookupCodeValue orgVal, String tableId) throws SQLException
+	{
+		LookupTableDefValue tableDef = this.GetLookupTableDef("ORG");
+		List codeValues = new ArrayList();
+		String orgPrefix = tableId.substring(0,1);
+		String orgPrefixP = "R1";
+		if ("S".equals(orgPrefix)) orgPrefixP = "O";   //parent of Organization is R, parent of Shelter is O.
+
+		String  orgId = "0000000" + orgVal.getCode();
+		orgId = orgPrefix + orgId.substring(orgId.length()-7);
+
+		String orgCd = orgPrefix + orgVal.getCode();
+		String parentCd = orgPrefixP + orgVal.getParentCode();
+		
+		LookupCodeValue pCd = GetCode("ORG",parentCd);
+		if(pCd == null) return;
+		
+		LookupCodeValue ocd = GetCode("ORG", orgCd);
+		boolean isNew = false;
+		if (ocd == null) {
+			isNew = true;
+			ocd = new LookupCodeValue();
+		}
+		ocd.setPrefix("ORG");
+		ocd.setCode(orgCd);
+		ocd.setCodeTree(pCd.getCodeTree() + orgId);
+		ocd.setCodecsv(pCd.getCodecsv()+orgCd+",");
+		ocd.setDescription(orgVal.getDescription());
+		ocd.setBuf1(pCd.getBuf1()+ orgCd);
+		ocd.setActive(orgVal.isActive());
+		ocd.setOrderByIndex(0);
+		ocd.setLastUpdateDate(Calendar.getInstance());
+		ocd.setLastUpdateUser(orgVal.getLastUpdateUser());
+		if(!isNew){
+			this.updateOrgTree(ocd.getCode(), ocd);
+			this.updateOrgStatus(ocd.getCode(), ocd);
+		}
+		this.SaveCodeValue(isNew,ocd);
+	}
+	public void runProcedure(String procName, String [] params) throws SQLException
+	{
+		DBPreparedHandler db = new DBPreparedHandler();
+		db.procExecute(procName, params);
+		db.closeConn();
+	}
+	
+	public int getCountOfActiveClient(String orgCd) throws SQLException{
+		String sql = "select count(*) from admission where admission_status='" +  KeyConstants.INTAKE_STATUS_ADMITTED + "' and  'P' || program_id in (" +
+				" select code from lst_orgcd  where codecsv like '%' || '" +  orgCd  + ",' || '%')";
+		String sql1 = "select count(*) from program_queue where  'P' || program_id in (" +
+		" select code from lst_orgcd  where codecsv like '%' || '" +  orgCd  + ",' || '%')";
+
+		DBPreparedHandler db = new DBPreparedHandler();
+		try {
+			ResultSet rs = db.queryResults(sql);
+			int id = 0;
+			if (rs.next()) 
+				 id = rs.getInt(1);
+			if (id > 0) return id;
+			
+			rs.close();
+			rs = db.queryResults(sql1);
+			if (rs.next()) 
+				 id = rs.getInt(1);
+			rs.close();
+			return id;
+		}
+		finally
+		{
+			db.closeConn();
+		}
+	}
+
+	
+	public void setProviderDao(ProviderDao providerDao) {
+		this.providerDao = providerDao;
 	}
 }
