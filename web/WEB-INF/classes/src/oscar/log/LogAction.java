@@ -70,12 +70,30 @@ public class LogAction {
         return ret;
     }
     
-    public static ArrayList<Log> getLog(String demographic_no) throws SQLException {
+    public static ArrayList<Log> getLogByProvider(String provider_no) throws SQLException {
 	ArrayList<Log> _log = new ArrayList<Log>();
 	
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	ResultSet rs;
-	String sql = "SELECT * FROM log WHERE contentId = '" + demographic_no +"'";
+	String sql = "SELECT * FROM log WHERE provider_no = '" + provider_no +"'";
+	rs = db.GetSQL(sql);
+
+	while (rs.next()) {
+	    _log.add(new Log(rs.getTimestamp("dateTime"), provider_no, rs.getString("action"),
+		    rs.getString("content"), rs.getString("contentId"), rs.getString("ip")));
+	}
+	rs.close();
+	db.CloseConn();
+	
+	return _log;
+    }
+    
+    public static ArrayList<Log> getLogByDemo(String demo_no) throws SQLException {
+	ArrayList<Log> _log = new ArrayList<Log>();
+	
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	ResultSet rs;
+	String sql = "SELECT * FROM log WHERE contentId = '" + demo_no +"'";
 	rs = db.GetSQL(sql);
 
 	while (rs.next()) {
