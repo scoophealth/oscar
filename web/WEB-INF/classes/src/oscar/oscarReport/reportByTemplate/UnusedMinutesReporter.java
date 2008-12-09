@@ -119,7 +119,7 @@ public class UnusedMinutesReporter implements Reporter{
                         
                     }
                     
-                    if( code.equalsIgnoreCase("1") || code.equalsIgnoreCase("2") || code.equalsIgnoreCase("6") ) {
+                    if( code.equalsIgnoreCase("1") || code.equalsIgnoreCase("2") || code.equalsIgnoreCase("3") || code.equalsIgnoreCase("4") || code.equalsIgnoreCase("6") ) {
                         if( iHours > latestApptHour || (iHours == latestApptHour && iMins > latestApptMin)) {
                             unbooked += duration;
                         }
