@@ -167,7 +167,7 @@ public class CaisiIntegratorManager {
 		List<CachedProgram> programs = getRemotePrograms(facilityId);
 		
 		for (CachedProgram cachedProgram : programs) {
-			if (facilityProgramPrimaryKeyEquals(cachedProgram.getFacilityIdIntegerCompositePk(), remoteProgramPk)) {
+			if (facilityIdIntegerPkEquals(cachedProgram.getFacilityIdIntegerCompositePk(), remoteProgramPk)) {
 				return (cachedProgram);
 			}
 		}
@@ -175,7 +175,7 @@ public class CaisiIntegratorManager {
 		return (null);
 	}
 
-    private static boolean facilityProgramPrimaryKeyEquals(FacilityIdIntegerCompositePk o1, FacilityIdIntegerCompositePk o2)
+    private static boolean facilityIdIntegerPkEquals(FacilityIdIntegerCompositePk o1, FacilityIdIntegerCompositePk o2)
 	{
 		try
         {
