@@ -302,8 +302,8 @@ CREATE TABLE `casemgmt_issue` (
 CREATE TABLE `casemgmt_issue_notes` (
   `id` int(10) NOT NULL default '0',
   `note_id` int(10) NOT NULL default '0',
-  PRIMARY KEY  (`id`,`note_id`),
-  KEY `FK5876108D40188B8` (`note_id`)
+  index(`id`),
+  index(`note_id`)
 );
 
 --
