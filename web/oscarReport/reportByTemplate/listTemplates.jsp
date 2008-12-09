@@ -46,7 +46,7 @@ if (templateViewId == null) templateViewId = "";
                 String templateTitle = curReport.getTitle();
                 String selectedTemplate = "";
                 if (templateId.equals(templateViewId)) selectedTemplate = "selectedTemplate";%>
-               <li class="<%=selectedTemplate%>">- <a href="reportConfiguration.jsp?templateid=<%=templateId%>"><%=templateTitle%></a></li>
+               <li class="<%=selectedTemplate%>"><%=String.valueOf(i+1)%>. <a href="reportConfiguration.jsp?templateid=<%=templateId%>"><%=templateTitle%></a></li>
            <% } %>
           </ul>
           <a href="addEditTemplate.jsp" style="color: #226d55; font-size: 10px;">Add Template</a>

@@ -79,7 +79,7 @@
               <ul class="templatelistHP">
                 <%for (int i=0; i<templates.size(); i++) {
                     ReportObject curReport = (ReportObject) templates.get(i);%>
-                   <li>- <a href="reportConfiguration.jsp?templateid=<%=curReport.getTemplateId()%>"><%=curReport.getTitle()%></a></li>
+                   <li><%=String.valueOf(i+1)%>. <a href="reportConfiguration.jsp?templateid=<%=curReport.getTemplateId()%>"><%=curReport.getTitle()%></a></li>
                    <div class="templateDescriptionHP">
                     <%=curReport.getDescription()%>
                    </div>
