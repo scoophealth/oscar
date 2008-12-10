@@ -841,7 +841,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    String[] rType = {"date", "string", "string", "string", "string", "string"};
 		    String[] rCont = new String[6];
 		    
-		    ArrayList<Log> logList = LogAction.getLog(providerNo);
+		    ArrayList<Log> logList = LogAction.getLogByProvider(providerNo);
 		    for (Log lg : logList) {
 			rCont[0] = lg.getDateTime()==null ? "" : lg.getDateTime().toString();
 			rCont[1] = lg.getProviderNo();
