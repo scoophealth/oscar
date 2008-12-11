@@ -376,9 +376,8 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <li><a href="#" onclick ='popupPage(600,900,&quot;<html:rewrite page="/servlet/oscar.DocumentUploadServlet"/>&quot;);return false;'><bean:message key="admin.admin.btnBillingReconcilliation"/></a></li>
           <!--  li><a href="#" onclick ='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/ON/billingRA.jsp"/>&quot;);return false;'><bean:message key="admin.admin.btnBillingReconcilliation"/></a></li-->
           <!--  li><a href="#" onclick ='popupPage(600,1000,&quot;<html:rewrite page="/billing/CA/ON/billingOBECEA.jsp"/>&quot;);return false;'><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a></li-->
-          <oscar:oscarPropertiesCheck property="TESTING" value="yes">
              <li><a href="#" onclick ='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/ON/billStatus.jsp"/>&quot;);return false;'>Invoice Reports</a></li>
-          </oscar:oscarPropertiesCheck>
+          
          <%}%>
       </ul>
   </div>
