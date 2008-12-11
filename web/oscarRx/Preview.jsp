@@ -75,24 +75,27 @@ String signingProvider;
 if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {   
     bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");    
     signingProvider = bean.getStashItem(0).getProviderNo();
+    rxDate = bean.getStashItem(0).getRxDate();
+    System.out.println("RX DATE " + rxDate);
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(signingProvider);
     session.setAttribute("tmpBeanRX", null);
 }
 else {
-    bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");        
+    bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+    
+    //set Date to latest in stash
+    Date tmp;
+    for( int idx = 0; idx < bean.getStashSize(); ++idx ) {
+        tmp = bean.getStashItem(idx).getRxDate();
+        if( tmp.after(rxDate) ) {
+            rxDate = tmp;
+        }
+    }
     rePrint = "";    
     signingProvider = bean.getProviderNo();
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
 }
 
-//set Date to latest in stash
-Date tmp;
-for( int idx = 0; idx < bean.getStashSize(); ++idx ) {
-    tmp = bean.getStashItem(idx).getRxDate();
-    if( tmp.after(rxDate) ) {
-        rxDate = tmp;
-    }
-}
 
 oscar.oscarRx.data.RxPatientData.Patient patient = new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
 
