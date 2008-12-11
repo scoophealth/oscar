@@ -1182,6 +1182,9 @@ int i;
                                         <%for(i=1; i<15; i++){%>
                                             <option value="<%= i%>"><%= i%></option>
                                         <%}%>
+                                        <option value="30">30</option>
+                                        <option value="60">60</option>
+                                        <option value="90">90</option>
                                         <option value="Other">Other</option>
                                     </select>
                                     <input type=text name="txtDuration" size="4" onchange="javascript:calcQty();" style="display:none" />
