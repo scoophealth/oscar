@@ -139,7 +139,16 @@ public class RxDrugRef {
          Vector vec = (Vector) callWebserviceLite("get_drug",params);             
          Hashtable returnVal = (Hashtable) vec.get(0);         
          return returnVal;		         
-     }	
+     }
+     
+     
+     public Hashtable getDrugForm(String pKey) throws Exception {
+	 Vector params = new Vector();
+	 params.addElement(pKey);
+	 Vector vec = (Vector) callWebserviceLite("get_form",params);
+	 Hashtable returnVal = (Hashtable) vec.get(0);
+	 return returnVal;
+     }
         
      
      public Vector suggestAlias(String alias,String aliasComment,String id,String name,String provider)throws Exception{

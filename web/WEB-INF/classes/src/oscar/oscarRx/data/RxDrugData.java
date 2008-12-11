@@ -327,6 +327,13 @@ public class RxDrugData {
         return new DrugMonograph(d.getDrug(pKey,new Boolean(true)));             
     }
     
+    
+    public String getDrugForm(String pKey) throws Exception {
+	RxDrugRef d = new RxDrugRef();
+	Hashtable h = (Hashtable) d.getDrugForm(pKey);
+	return (String) h.get("pharmaceutical_cd_form");
+    }
+    
     public String getGenericName(String pKey) throws Exception{
         RxDrugRef d = new RxDrugRef();
         Hashtable h = (Hashtable) d.getGenericName(pKey);
